@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Field}" TargetType="arc:Field">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Field">
+                <StackPanel>
+                    <Panel IsVisible="{TemplateBinding IsLabelVisible}">
+                        <TextBlock Name="PART_Label"
+                                   IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   Text="{TemplateBinding Label}"
+                                   Margin="{arc:FieldTokenResource LabelMargin}"
+                                   TextWrapping="Wrap" />
+                    </Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <arc:FieldMessage Name="PART_Description"
+                                      Kind="Description"
+                                      Swap="{TemplateBinding MessageSwap}"
+                                      Text="{TemplateBinding Description}" />
+                    <arc:FieldMessage Name="PART_Error"
+                                      Kind="Error"
+                                      Swap="{TemplateBinding MessageSwap}"
+                                      Text="{TemplateBinding ErrorMessage}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ TextBlock#PART_Label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeightSM}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

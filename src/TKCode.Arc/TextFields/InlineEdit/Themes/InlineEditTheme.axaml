@@ -1,0 +1,342 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:InlineEditDisplay}" TargetType="arc:InlineEditDisplay">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InlineEditDisplay">
+                <Border Background="Transparent"
+                        BorderThickness="1"
+                        BorderBrush="Transparent"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Left" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:InlineEditEditor}" TargetType="arc:InlineEditEditor">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InlineEditEditor">
+                <Border Background="Transparent" BorderThickness="1" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       TextWrapping="{TemplateBinding TextWrapping}">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:InlineEditActionButton}" TargetType="arc:InlineEditActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InlineEditActionButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <ContentPresenter HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:InlineEditTokenResource ActionSize}" />
+        <Setter Property="Height" Value="{arc:InlineEditTokenResource ActionSize}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[IsPrimary=True]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{arc:InlineEditTokenResource SaveHoverFill}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.96)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:InlineEditRetryLink}" TargetType="arc:InlineEditRetryLink">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InlineEditRetryLink">
+                <TextBlock Text="{TemplateBinding Text}"
+                           Background="Transparent"
+                           TextDecorations="Underline"
+                           LineHeight="16.8" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:InlineEdit}" TargetType="arc:InlineEdit">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InlineEdit">
+                <StackPanel Margin="{arc:InlineEditTokenResource RootMargin}">
+                    <Border Name="PART_Line"
+                            HorizontalAlignment="Left"
+                            Padding="{arc:InlineEditTokenResource LinePadding}">
+                        <arc:InlineEditBox Name="PART_Box"
+                                           IsMultiline="{TemplateBinding IsMultiline}">
+                            <Border Name="PART_Ring"
+                                    IsHitTestVisible="False"
+                                    Opacity="0" />
+                            <Border Name="PART_Frame"
+                                    IsHitTestVisible="False"
+                                    BorderThickness="1"
+                                    BorderBrush="Transparent"
+                                    Background="Transparent"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" />
+                            <arc:InlineEditDisplay Name="PART_Display">
+                                <arc:FieldSwapText Name="PART_Text" />
+                            </arc:InlineEditDisplay>
+                            <arc:InlineEditEditor Name="PART_Editor"
+                                                  IsVisible="False"
+                                                  PlaceholderText="{TemplateBinding PlaceholderText}"
+                                                  Foreground="{TemplateBinding Foreground}" />
+                            <arc:ArcContentSwap Name="PART_Slot"
+                                                Mode="Pop"
+                                                MinHeight="{arc:InlineEditTokenResource SlotMinHeight}"
+                                                VerticalContentAlignment="Center" />
+                        </arc:InlineEditBox>
+                    </Border>
+                    <arc:SpringSizeDecorator Axis="Height" Spring="Smooth">
+                        <arc:ArcContentSwap Name="PART_Message"
+                                            Mode="BlurSwap"
+                                            AutomationProperties.LiveSetting="Polite" />
+                    </arc:SpringSizeDecorator>
+                    <TextBlock Name="PART_Status"
+                               Height="0"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               AutomationProperties.LiveSetting="Polite" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <!-- Display and field share every metric: border, padding, font and line height. -->
+        <Style Selector="^ /template/ arc|InlineEditDisplay#PART_Display">
+            <Setter Property="Padding" Value="{arc:InlineEditTokenResource TitlePadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|InlineEditEditor#PART_Editor">
+            <Setter Property="Padding" Value="{arc:InlineEditTokenResource TitlePadding}" />
+            <Setter Property="LineHeight" Value="{arc:InlineEditTokenResource TitleLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldSwapText#PART_Text">
+            <Setter Property="LineHeight" Value="{arc:InlineEditTokenResource TitleLineHeight}" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+        </Style>
+        <Style Selector="^[Variant=Body]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Style Selector="^ /template/ arc|InlineEditDisplay#PART_Display">
+                <Setter Property="Padding" Value="{arc:InlineEditTokenResource BodyPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|InlineEditEditor#PART_Editor">
+                <Setter Property="Padding" Value="{arc:InlineEditTokenResource BodyPadding}" />
+                <Setter Property="LineHeight" Value="{arc:InlineEditTokenResource BodyLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldSwapText#PART_Text">
+                <Setter Property="LineHeight" Value="{arc:InlineEditTokenResource BodyLineHeight}" />
+            </Style>
+        </Style>
+        <Style Selector="^:empty /template/ arc|FieldSwapText#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <!-- Multiline: the box fills the line, text wraps, and the actions stack beside the first line. -->
+        <Style Selector="^[IsMultiline=True]">
+            <Style Selector="^ /template/ Border#PART_Line">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Padding" Value="{arc:InlineEditTokenResource MultilineLinePadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldSwapText#PART_Text">
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+            <Style Selector="^ /template/ arc|InlineEditDisplay#PART_Display">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+
+        <!-- While editing the text stays in flow, hidden, mirroring the draft so it sizes the box. -->
+        <Style Selector="^:editing /template/ arc|InlineEditDisplay#PART_Display">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="^:editing[IsMultiline=False] /template/ arc|InlineEditDisplay#PART_Display">
+            <Setter Property="Padding" Value="{arc:InlineEditTokenResource TitleEditingPadding}" />
+            <Setter Property="MinWidth" Value="{arc:InlineEditTokenResource TitleEditingMinWidth}" />
+        </Style>
+        <Style Selector="^:editing[IsMultiline=False][Variant=Body] /template/ arc|InlineEditDisplay#PART_Display">
+            <Setter Property="Padding" Value="{arc:InlineEditTokenResource BodyEditingPadding}" />
+            <Setter Property="MinWidth" Value="{arc:InlineEditTokenResource BodyEditingMinWidth}" />
+        </Style>
+
+        <!-- An optimistic save shows the new text at once, quieter until it lands. -->
+        <Style Selector="^:saving /template/ arc|FieldSwapText#PART_Text">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:saving /template/ arc|InlineEditDisplay#PART_Display">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+
+        <Style Selector="^ /template/ Border#PART_Ring">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+
+        <!-- The frame is the only surface: a hover tint at rest, a bordered field while editing, a danger wash after a failed save. -->
+        <Style Selector="^:text-hover:not(:saving):not(:editing) /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:text-focus:not(:editing) /template/ Border#PART_Ring">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="22" />
+        </Style>
+        <Style Selector="^:editing">
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Ring">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="Margin" Value="1" />
+                <Setter Property="BorderThickness" Value="3" />
+                <Setter Property="CornerRadius" Value="21" />
+            </Style>
+        </Style>
+        <Style Selector="^:invalid">
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Ring">
+                <Setter Property="BorderBrush" Value="{arc:InlineEditTokenResource InvalidRing}" />
+            </Style>
+        </Style>
+        <Style Selector="^:flash /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:InlineEditTokenResource FlashBorder}" />
+            <Setter Property="Background" Value="{arc:InlineEditTokenResource FlashFill}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" />
+                        <arc:ArcBrushTransition Property="BorderBrush" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|FieldSwapText#PART_Text">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <!-- The wash leaves slowly, without movement, once the message has been read. -->
+            <Style Selector="^:flash-off /template/ Border#PART_Frame">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Considered" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Considered" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

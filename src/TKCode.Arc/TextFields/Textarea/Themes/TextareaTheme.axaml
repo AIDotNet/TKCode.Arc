@@ -1,0 +1,106 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Textarea}" TargetType="arc:Textarea">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Textarea">
+                <arc:Field Name="PART_Field"
+                           Label="{TemplateBinding Label}"
+                           Description="{TemplateBinding Description}"
+                           ErrorMessage="{TemplateBinding EffectiveErrorMessage}"
+                           IsLabelVisible="{TemplateBinding IsLabelVisible}"
+                           Size="{TemplateBinding Size}">
+                    <arc:FieldFrame Name="PART_Frame"
+                                    Cursor="IBeam"
+                                    HasFocusRing="True"
+                                    MinHeight="{arc:TextareaTokenResource FrameMinHeight}"
+                                    Padding="{arc:TextareaTokenResource FramePadding}"
+                                    Height="{TemplateBinding FrameHeight}"
+                                    VerticalContentAlignment="Stretch"
+                                    Size="{TemplateBinding Size}"
+                                    IsInvalid="{TemplateBinding IsInvalid}"
+                                    IsReadOnly="{TemplateBinding IsReadOnly}"
+                                    IsFocusActive="{TemplateBinding IsFocused}"
+                                    Prefix="{TemplateBinding Prefix}"
+                                    Suffix="{TemplateBinding Suffix}">
+                        <Panel>
+                            <ScrollViewer Name="PART_ScrollViewer"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto"
+                                          IsScrollChainingEnabled="True"
+                                          BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                                <Panel>
+                                    <TextBlock Name="PART_Placeholder"
+                                               Foreground="{TemplateBinding PlaceholderForeground}"
+                                               Text="{TemplateBinding PlaceholderText}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="Wrap"
+                                               LineHeight="{TemplateBinding LineHeight}"
+                                               VerticalAlignment="Top">
+                                        <TextBlock.IsVisible>
+                                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                                <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                            </MultiBinding>
+                                        </TextBlock.IsVisible>
+                                    </TextBlock>
+                                    <TextPresenter Name="PART_TextPresenter"
+                                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                                   TextWrapping="{TemplateBinding TextWrapping}"
+                                                   LineHeight="{TemplateBinding LineHeight}"
+                                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                   PasswordChar="{TemplateBinding PasswordChar}"
+                                                   RevealPassword="{TemplateBinding RevealPassword}"
+                                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                                   VerticalAlignment="Top" />
+                                </Panel>
+                            </ScrollViewer>
+                            <arc:TextareaResizeGrip Name="PART_ResizeGrip"
+                                                    Cursor="SizeNorthSouth"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Bottom"
+                                                    Margin="{arc:TextareaTokenResource ResizeGripMargin}"
+                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Panel>
+                    </arc:FieldFrame>
+                </arc:Field>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeight}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <Style Selector="^[Size=Large]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeightLG}" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="Opacity" Value="{arc:TextareaTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^[IsResizable=False] /template/ arc|TextareaResizeGrip#PART_ResizeGrip">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|TextareaResizeGrip#PART_ResizeGrip">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

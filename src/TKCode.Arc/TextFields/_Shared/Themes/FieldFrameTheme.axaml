@@ -1,0 +1,112 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:FieldFrame}" TargetType="arc:FieldFrame">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FieldFrame">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="{TemplateBinding HasFocusRing}"
+                            IsHitTestVisible="False"
+                            CornerRadius="{arc:FieldFrameTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <DockPanel>
+                            <ContentPresenter Name="PART_Prefix"
+                                              DockPanel.Dock="Left"
+                                              VerticalAlignment="Center"
+                                              IsVisible="{TemplateBinding Prefix, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Content="{TemplateBinding Prefix}" />
+                            <ContentPresenter Name="PART_Suffix"
+                                              DockPanel.Dock="Right"
+                                              VerticalAlignment="Center"
+                                              IsVisible="{TemplateBinding Suffix, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Content="{TemplateBinding Suffix}" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </DockPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="Spacing" Value="{arc:FieldFrameTokenResource AffixSpacing}" />
+        <Setter Property="Padding" Value="{arc:FieldFrameTokenResource InlinePaddingMD}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^[Size=Small]">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="{arc:FieldFrameTokenResource InlinePaddingSM}" />
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+            <Setter Property="Padding" Value="{arc:FieldFrameTokenResource InlinePaddingLG}" />
+        </Style>
+
+        <!-- At rest the halo is a transparent 6px band; focus contracts it onto the border as it fades in. -->
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Margin" Value="{arc:FieldFrameTokenResource FocusRingRestMargin}" />
+            <Setter Property="BorderThickness" Value="{arc:FieldFrameTokenResource FocusRingRestThickness}" />
+        </Style>
+
+        <!-- Hover and focus darken the border only (no halo, no size change); invalid wins over both. -->
+        <Style Selector="^:pointerover:not(:invalid):not(:disabled):not(:readonly)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-active">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="Margin" Value="{arc:FieldFrameTokenResource FocusRingMargin}" />
+                <Setter Property="BorderThickness" Value="{arc:FieldFrameTokenResource FocusRingThickness}" />
+            </Style>
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:FieldFrameTokenResource DisabledOpacity}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <!-- Colours on fast + standard ease; the halo contracts onto the border on standard. Reduced motion: none (Arc). -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                        <arc:ArcThicknessTransition Property="Margin" Tween="Standard" />
+                        <arc:ArcThicknessTransition Property="BorderThickness" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

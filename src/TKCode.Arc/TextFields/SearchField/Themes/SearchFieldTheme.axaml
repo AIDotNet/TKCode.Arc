@@ -1,0 +1,123 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:SearchField}" TargetType="arc:SearchField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchField">
+                <arc:Field Name="PART_Field"
+                           Label="{TemplateBinding Label}"
+                           Description="{TemplateBinding Description}"
+                           ErrorMessage="{TemplateBinding EffectiveErrorMessage}"
+                           IsLabelVisible="{TemplateBinding IsLabelVisible}"
+                           Size="{TemplateBinding Size}">
+                    <arc:FieldFrame Name="PART_Frame"
+                                    Cursor="IBeam"
+                                    Size="{TemplateBinding Size}"
+                                    IsInvalid="{TemplateBinding IsInvalid}"
+                                    IsReadOnly="{TemplateBinding IsReadOnly}"
+                                    IsFocusActive="{TemplateBinding IsFocused}">
+                        <arc:FieldFrame.Prefix>
+                            <arc:ArcGlyph Name="PART_SearchIcon"
+                                          Data="{x:Static arc:ArcIcons.Search}"
+                                          Size="{arc:SearchFieldTokenResource SearchIconSize}"
+                                          StrokeThickness="{arc:SearchFieldTokenResource IconStroke}" />
+                        </arc:FieldFrame.Prefix>
+                        <arc:FieldFrame.Suffix>
+                            <!-- The slot is always reserved, so the field never changes width as the button comes and goes. -->
+                            <Panel Width="{arc:SearchFieldTokenResource ClearSlotSize}"
+                                   Height="{arc:SearchFieldTokenResource ClearSlotSize}">
+                                <arc:PresenceHost Name="PART_ClearPresence"
+                                                  Mode="Pop"
+                                                  IsPresent="False"
+                                                  EnterScale="{arc:SearchFieldTokenResource ClearEnterScale}">
+                                    <arc:FieldIconButton Name="PART_ClearButton"
+                                                         Cursor="Hand"
+                                                         Width="{arc:SearchFieldTokenResource ClearSlotSize}"
+                                                         Height="{arc:SearchFieldTokenResource ClearSlotSize}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                      Size="{arc:SearchFieldTokenResource ClearIconSize}"
+                                                      StrokeThickness="{arc:SearchFieldTokenResource IconStroke}" />
+                                    </arc:FieldIconButton>
+                                </arc:PresenceHost>
+                            </Panel>
+                        </arc:FieldFrame.Suffix>
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                            <Panel>
+                                <TextBlock Name="PART_Placeholder"
+                                           Foreground="{TemplateBinding PlaceholderForeground}"
+                                           Text="{TemplateBinding PlaceholderText}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           VerticalAlignment="Center">
+                                    <TextBlock.IsVisible>
+                                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                            <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        </MultiBinding>
+                                    </TextBlock.IsVisible>
+                                </TextBlock>
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="NoWrap"
+                                               LineHeight="{TemplateBinding LineHeight}"
+                                               LetterSpacing="{TemplateBinding LetterSpacing}"
+                                               PasswordChar="{TemplateBinding PasswordChar}"
+                                               RevealPassword="{TemplateBinding RevealPassword}"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}"
+                                               VerticalAlignment="Center" />
+                            </Panel>
+                        </ScrollViewer>
+                    </arc:FieldFrame>
+                </arc:Field>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeight}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <Style Selector="^[Size=Large]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeightLG}" />
+        </Style>
+
+        <!-- The glass wakes up with the field: muted at rest, full contrast while searching. -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_SearchIcon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-within /template/ arc|ArcGlyph#PART_SearchIcon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:filled /template/ arc|ArcGlyph#PART_SearchIcon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_SearchIcon">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
