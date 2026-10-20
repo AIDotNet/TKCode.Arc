@@ -166,6 +166,38 @@ public class LiveLoopTests
     }
 
     [AvaloniaFact]
+    public void Frames_Keep_Coming_When_A_Step_Changes_Nothing_On_Screen()
+    {
+        // A loop waiting out a pause draws nothing; the renderer may then deliver no animation frame for its request,
+        // and the scheduler's fallback has to keep the loop going (the real platform clock, not a manual one).
+        var target = new Border { Width = 50, Height = 50 };
+        var window = TestHelpers.Show(target, ArcMotionLevel.Full);
+        var calls = 0;
+        using var loop = new LiveLoop(target, _ =>
+        {
+            calls++;
+            return true;
+        });
+        try
+        {
+            loop.Start();
+            var until = DateTime.UtcNow.AddMilliseconds(500);
+            while (DateTime.UtcNow < until)
+            {
+                var frame = new DispatcherFrame();
+                DispatcherTimer.RunOnce(() => frame.Continue = false, TimeSpan.FromMilliseconds(16));
+                Dispatcher.UIThread.PushFrame(frame);
+            }
+            loop.IsRunning.ShouldBeTrue();
+            calls.ShouldBeGreaterThan(12);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void A_Running_Frame_Allocates_Nothing()
     {
         var probe = new Border { Width = 40, Height = 20 };
