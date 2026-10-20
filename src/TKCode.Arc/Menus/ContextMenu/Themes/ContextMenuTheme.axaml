@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ContextMenu}" TargetType="arc:ContextMenu">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ContextMenu">
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Background="{TemplateBinding Background}"
+                                  Padding="{TemplateBinding Padding}"
+                                  CornerRadius="{TemplateBinding CornerRadius}"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </ControlTemplate>
+        </Setter>
+        <!-- Arc keeps the target outline-free: the menu itself is the response. -->
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+    </ControlTheme>
+</ResourceDictionary>

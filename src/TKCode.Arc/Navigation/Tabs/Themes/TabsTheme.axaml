@@ -1,0 +1,97 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Tabs}" TargetType="arc:Tabs">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="{arc:ArcDesignTokenResource Space1}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Tabs">
+                <StackPanel Orientation="Vertical">
+                    <Border Name="PART_ListShell"
+                            HorizontalAlignment="Left"
+                            BorderThickness="1"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            ClipToBounds="True">
+                        <Panel>
+                            <ScrollViewer Name="PART_ListViewport"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Disabled"
+                                          BringIntoViewOnFocusChange="False">
+                                <arc:TabsListPanel Name="PART_ListPanel" Margin="{arc:TabsTokenResource ListPadding}">
+                                    <arc:GlidingIndicator Name="PART_SelectionPill"
+                                                          Fill="{arc:ArcDesignTokenResource Surface}"
+                                                          Stroke="{arc:ArcDesignTokenResource Border}"
+                                                          StrokeThickness="1"
+                                                          CornerRadius="{arc:TabsTokenResource PillRadius}"
+                                                          BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                                          Spring="Morph" />
+                                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                </arc:TabsListPanel>
+                            </ScrollViewer>
+                            <arc:Button Name="PART_ScrollLeft"
+                                        Classes="tabs-scroll"
+                                        Variant="Ghost"
+                                        IsVisible="False"
+                                        HorizontalAlignment="Left"
+                                        CornerRadius="{arc:TabsTokenResource ScrollStartRadius}"
+                                        AutomationProperties.Name="{TemplateBinding ScrollLeftLabel}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                              Size="{arc:TabsTokenResource ScrollGlyphSize}"
+                                              StrokeThickness="2" />
+                            </arc:Button>
+                            <arc:Button Name="PART_ScrollRight"
+                                        Classes="tabs-scroll"
+                                        Variant="Ghost"
+                                        IsVisible="False"
+                                        HorizontalAlignment="Right"
+                                        CornerRadius="{arc:TabsTokenResource ScrollEndRadius}"
+                                        AutomationProperties.Name="{TemplateBinding ScrollRightLabel}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                              Size="{arc:TabsTokenResource ScrollGlyphSize}"
+                                              StrokeThickness="2" />
+                            </arc:Button>
+                        </Panel>
+                    </Border>
+                    <arc:TabsPanelHost Name="PART_ContentHost"
+                                       Margin="{arc:TabsTokenResource ContentMargin}"
+                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       TextBlock.LineHeight="{arc:TabsTokenResource ContentLineHeight}"
+                                       FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                       FocusRingRadius="{arc:TabsTokenResource ContentFocusRingRadius}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <Style Selector="^ /template/ arc|Button.tabs-scroll">
+            <Setter Property="Width" Value="{arc:TabsTokenResource ScrollButtonWidth}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="IsPressScaleEnabled" Value="False" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.tabs-scroll:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.tabs-scroll:disabled">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

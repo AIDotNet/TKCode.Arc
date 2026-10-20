@@ -1,0 +1,179 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MenuEntry}" TargetType="arc:MenuEntry">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MenuEntry">
+                <DockPanel>
+                    <Border Name="PART_Separator"
+                            DockPanel.Dock="Top"
+                            IsVisible="{TemplateBinding HasSeparatorBefore}"
+                            IsHitTestVisible="False"
+                            />
+                    <Border Name="PART_Row"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Name="PART_Content" ColumnDefinitions="Auto,*,Auto">
+                            <Panel Name="PART_IconSlot"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{TemplateBinding HasIconSlot}">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Data="{TemplateBinding IconGeometry}"
+                                              Size="{arc:MenuEntryTokenResource GlyphSize}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                                <ContentPresenter Name="PART_IconContent"
+                                                  Content="{TemplateBinding IconContent}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                <Ellipse Name="PART_RadioDot"
+                                         Width="{arc:MenuEntryTokenResource RadioDotSize}"
+                                         Height="{arc:MenuEntryTokenResource RadioDotSize}"
+                                         Fill="{TemplateBinding Foreground}"
+                                         IsVisible="{TemplateBinding ShowsRadioDot}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" />
+                            </Panel>
+                            <ContentPresenter Name="PART_Header"
+                                              Grid.Column="1"
+                                              Content="{TemplateBinding Header}"
+                                              ContentTemplate="{TemplateBinding EffectiveHeaderTemplate}"
+                                              VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Gesture"
+                                       Grid.Column="2"
+                                       Text="{TemplateBinding GestureText}"
+                                       IsVisible="{TemplateBinding GestureText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Margin="{arc:MenuEntryTokenResource GestureSpacing}"
+                                       Opacity="{arc:MenuEntryTokenResource GestureOpacity}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_TrailingCheck"
+                                          Grid.Column="2"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:MenuEntryTokenResource GlyphSize}"
+                                          IsVisible="{TemplateBinding ShowsTrailingCheck}"
+                                          Margin="{arc:MenuEntryTokenResource GestureSpacing}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:MenuEntryTokenResource RowInset}" />
+        <Setter Property="CornerRadius" Value="{arc:MenuEntryTokenResource RowRadius}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <!-- Part geometry lives in setters (not in the template) so the variants below can override it. -->
+        <Style Selector="^ /template/ Border#PART_Row">
+            <Setter Property="MinHeight" Value="{arc:MenuEntryTokenResource RowHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_IconSlot">
+            <Setter Property="Width" Value="{arc:MenuEntryTokenResource IconSlotWidth}" />
+            <Setter Property="Margin" Value="{arc:MenuEntryTokenResource IconSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Separator">
+            <Setter Property="Height" Value="{arc:MenuEntryTokenResource SeparatorThickness}" />
+            <Setter Property="Margin" Value="{arc:MenuEntryTokenResource SeparatorMargin}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+
+        <Style Selector="^[IsDestructive=True]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+            <Style Selector="^ /template/ Grid#PART_Content">
+                <Setter Property="Opacity" Value="{arc:MenuEntryTokenResource DisabledOpacity}" />
+            </Style>
+        </Style>
+
+        <!-- Context menu rows: 34px, 16px icon slot with a 9px gap, press with a tint (never a scale). -->
+        <Style Selector="^[Variant=Context]">
+            <Style Selector="^ /template/ Border#PART_Row">
+                <Setter Property="MinHeight" Value="{arc:MenuEntryTokenResource ContextRowHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_IconSlot">
+                <Setter Property="Width" Value="{arc:MenuEntryTokenResource CompactIconSlotWidth}" />
+                <Setter Property="Margin" Value="{arc:MenuEntryTokenResource ContextIconSpacing}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="{arc:MenuEntryTokenResource PressedTint}" />
+            </Style>
+            <Style Selector="^[IsDestructive=True] /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Foreground" Value="{Binding $parent[arc:MenuEntry].Foreground}" />
+            </Style>
+        </Style>
+
+        <!-- Account rows (user menu): 32px, 8px inset, 6px radius, 13px text; the icon lights up under the highlight. -->
+        <Style Selector="^[Variant=Account]">
+            <Setter Property="Padding" Value="{arc:MenuEntryTokenResource AccountRowInset}" />
+            <Setter Property="CornerRadius" Value="{arc:MenuEntryTokenResource AccountRowRadius}" />
+            <Setter Property="FontSize" Value="{arc:MenuEntryTokenResource AccountFontSize}" />
+            <Style Selector="^ /template/ Border#PART_Row">
+                <Setter Property="MinHeight" Value="{arc:MenuEntryTokenResource AccountRowHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_IconSlot">
+                <Setter Property="Width" Value="{arc:MenuEntryTokenResource CompactIconSlotWidth}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Separator">
+                <Setter Property="Height" Value="{arc:MenuEntryTokenResource AccountSeparatorThickness}" />
+                <Setter Property="Background" Value="{arc:MenuEntryTokenResource AccountSeparatorColor}" />
+            </Style>
+            <Style Selector="^:highlighted /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+
+        <!-- Sheet rows (user menu on narrow windows): 46px, 16px text, no shortcut hints. -->
+        <Style Selector="^[Variant=Sheet]">
+            <Setter Property="Padding" Value="{arc:MenuEntryTokenResource AccountRowInset}" />
+            <Setter Property="CornerRadius" Value="{arc:MenuEntryTokenResource AccountRowRadius}" />
+            <Style Selector="^ /template/ Border#PART_Row">
+                <Setter Property="MinHeight" Value="{arc:MenuEntryTokenResource SheetRowHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_IconSlot">
+                <Setter Property="Width" Value="{arc:MenuEntryTokenResource CompactIconSlotWidth}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Gesture">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Separator">
+                <Setter Property="Height" Value="{arc:MenuEntryTokenResource AccountSeparatorThickness}" />
+                <Setter Property="Margin" Value="{arc:MenuEntryTokenResource SheetSeparatorMargin}" />
+                <Setter Property="Background" Value="{arc:MenuEntryTokenResource AccountSeparatorColor}" />
+            </Style>
+            <Style Selector="^:highlighted /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

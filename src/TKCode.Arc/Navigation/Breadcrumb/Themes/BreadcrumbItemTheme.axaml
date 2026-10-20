@@ -1,0 +1,124 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:BreadcrumbItem}" TargetType="arc:BreadcrumbItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BreadcrumbItem">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:BreadcrumbItemTokenResource SeparatorGap}">
+                    <arc:ArcGlyph Name="PART_Separator"
+                                  Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                  Size="{arc:BreadcrumbItemTokenResource SeparatorSize}"
+                                  StrokeThickness="1.75"
+                                  Foreground="{arc:ArcDesignTokenResource BorderStrong}"
+                                  VerticalAlignment="Center" />
+                    <Panel>
+                        <Border Name="PART_Frame"
+                                Background="Transparent"
+                                CornerRadius="{arc:BreadcrumbItemTokenResource CrumbRadius}"
+                                Padding="{TemplateBinding Padding}">
+                            <Panel>
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  VerticalAlignment="Center"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                <ContentPresenter Name="PART_Reserve"
+                                                  Height="0"
+                                                  Opacity="0"
+                                                  IsHitTestVisible="False"
+                                                  VerticalAlignment="Top"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                <Border Name="PART_Underline"
+                                        Height="1"
+                                        VerticalAlignment="Bottom"
+                                        IsHitTestVisible="False"
+                                        Background="{TemplateBinding Foreground}" />
+                                <arc:ArcGlyph Name="PART_OverflowGlyph"
+                                              Data="{x:Static arc:ArcIcons.Ellipsis}"
+                                              Size="{arc:BreadcrumbItemTokenResource SeparatorSize}"
+                                              StrokeThickness="2"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Panel>
+                        </Border>
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="{arc:BreadcrumbItemTokenResource FocusRingMargin}"
+                                BorderThickness="2"
+                                CornerRadius="{arc:BreadcrumbItemTokenResource FocusRingRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:BreadcrumbItemTokenResource CrumbPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="TextBlock.LineHeight" Value="{arc:BreadcrumbItemTokenResource LabelLineHeight}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style Selector="^ /template/ Border#PART_Underline">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_OverflowGlyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:first /template/ arc|ArcGlyph#PART_Separator">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:interactive">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:interactive:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:interactive:pointerover /template/ Border#PART_Underline">
+            <Setter Property="Opacity" Value="{arc:BreadcrumbItemTokenResource UnderlineOpacity}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:overflow /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:overflow /template/ ContentPresenter#PART_Reserve">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:overflow /template/ Border#PART_Underline">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:overflow /template/ arc|ArcGlyph#PART_OverflowGlyph">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:overflow /template/ Border#PART_Frame">
+            <Setter Property="MinWidth" Value="24" />
+        </Style>
+        <Style Selector="^:overflow:pointerover /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Underline">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

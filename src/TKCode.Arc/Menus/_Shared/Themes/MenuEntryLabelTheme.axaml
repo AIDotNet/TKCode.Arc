@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MenuEntryLabel}" TargetType="arc:MenuEntryLabel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MenuEntryLabel">
+                <TextBlock Name="PART_Text"
+                           Margin="{TemplateBinding Padding}"
+                           Text="{TemplateBinding Text}"
+                           TextTrimming="CharacterEllipsis" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:MenuEntryLabelTokenResource LabelInset}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Style Selector="^[Variant=Account]">
+            <Setter Property="Padding" Value="{arc:MenuEntryLabelTokenResource AccountLabelInset}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

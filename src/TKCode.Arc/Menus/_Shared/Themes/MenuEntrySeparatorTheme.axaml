@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MenuEntrySeparator}" TargetType="arc:MenuEntrySeparator">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MenuEntrySeparator">
+                <Border Name="PART_Line" Background="{TemplateBinding Background}" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:MenuEntrySeparatorTokenResource LineThickness}" />
+        <Setter Property="Margin" Value="{arc:MenuEntrySeparatorTokenResource LineMargin}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Style Selector="^[Variant=Account]">
+            <Setter Property="Height" Value="{arc:MenuEntrySeparatorTokenResource AccountLineThickness}" />
+            <Setter Property="Background" Value="{arc:MenuEntrySeparatorTokenResource AccountLineColor}" />
+        </Style>
+        <Style Selector="^[Variant=Sheet]">
+            <Setter Property="Height" Value="{arc:MenuEntrySeparatorTokenResource AccountLineThickness}" />
+            <Setter Property="Margin" Value="{arc:MenuEntrySeparatorTokenResource SheetLineMargin}" />
+            <Setter Property="Background" Value="{arc:MenuEntrySeparatorTokenResource AccountLineColor}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

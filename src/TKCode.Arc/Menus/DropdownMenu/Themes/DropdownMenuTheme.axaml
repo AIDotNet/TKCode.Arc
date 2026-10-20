@@ -1,0 +1,86 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:DropdownMenu}" TargetType="arc:DropdownMenu">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DropdownMenu">
+                <Panel>
+                    <arc:Button Name="PART_Trigger"
+                                Variant="Secondary"
+                                Size="Small"
+                                IsPressScaleEnabled="False"
+                                HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="{arc:DropdownMenuTokenResource TriggerGap}">
+                            <arc:ArcGlyph Name="PART_TriggerIcon"
+                                          Data="{TemplateBinding Icon}"
+                                          IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Size="{arc:DropdownMenuTokenResource TriggerIconSize}"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Center" />
+                            <arc:SpringSizeDecorator Name="PART_LabelSlot"
+                                                     Axis="Width"
+                                                     Spring="Morph"
+                                                     VerticalAlignment="Center">
+                                <arc:ArcContentSwap Name="PART_Label"
+                                                    Mode="BlurSwap"
+                                                    Content="{TemplateBinding Label}" />
+                            </arc:SpringSizeDecorator>
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:DropdownMenuTokenResource ChevronSize}"
+                                          StrokeThickness="{arc:DropdownMenuTokenResource ChevronStroke}"
+                                          RenderTransformOrigin="50%,50%"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </arc:Button>
+                    <ContentPresenter Name="PART_TriggerPresenter"
+                                      Content="{TemplateBinding Trigger}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_TriggerPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- The trigger anchors the menu, so hover, press and open answer in color only. -->
+        <Style Selector="^ /template/ arc|Button#PART_Trigger:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Trigger:pressed">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:DropdownMenuTokenResource TriggerPressedBackground}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|Button#PART_Trigger">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+
+        <Style Selector="^:custom-trigger">
+            <Style Selector="^ /template/ arc|Button#PART_Trigger">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_TriggerPresenter">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

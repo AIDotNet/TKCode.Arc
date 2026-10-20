@@ -1,0 +1,76 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Breadcrumb}" TargetType="arc:Breadcrumb">
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <arc:BreadcrumbPanel ItemSpacing="{arc:BreadcrumbTokenResource CrumbGap}"
+                                     LineSpacing="{arc:BreadcrumbTokenResource LineGap}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Breadcrumb">
+                <Panel>
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <Canvas Name="PART_GhostLayer" IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:BreadcrumbMenu}" TargetType="arc:BreadcrumbMenu">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BreadcrumbMenu">
+                <Border Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        Padding="{arc:BreadcrumbTokenResource MenuPadding}"
+                        MinWidth="{arc:BreadcrumbTokenResource MenuMinWidth}">
+                    <ContentPresenter Content="{TemplateBinding Content}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:BreadcrumbMenuItem}" TargetType="arc:BreadcrumbMenuItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BreadcrumbMenuItem">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:BreadcrumbTokenResource MenuItemRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="{arc:BreadcrumbTokenResource MenuItemMinHeight}" />
+        <Setter Property="Padding" Value="{arc:BreadcrumbTokenResource MenuItemPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

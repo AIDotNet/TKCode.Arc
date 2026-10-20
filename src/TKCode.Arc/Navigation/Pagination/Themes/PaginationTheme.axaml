@@ -1,0 +1,146 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Pagination}" TargetType="arc:Pagination">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Pagination">
+                <arc:PaginationPanel Name="PART_Panel" Spacing="{arc:ArcDesignTokenResource Space1}">
+                    <arc:GlidingIndicator Name="PART_Mark"
+                                          Fill="{arc:ArcDesignTokenResource Surface}"
+                                          Stroke="{arc:ArcDesignTokenResource Border}"
+                                          StrokeThickness="1"
+                                          CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                          BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                          Spring="Morph" />
+                    <arc:PaginationButton Name="PART_Previous" Classes="step">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                      Size="{arc:PaginationTokenResource StepGlyphSize}"
+                                      StrokeThickness="2" />
+                    </arc:PaginationButton>
+                    <arc:PaginationButton Name="PART_First" IsVisible="False" />
+                    <Border Name="PART_EllipsisStart"
+                            IsVisible="False"
+                            Width="{arc:PaginationTokenResource EllipsisWidth}"
+                            Height="{arc:ArcDesignTokenResource ControlSizeSM}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}"
+                                      Size="{arc:PaginationTokenResource StepGlyphSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <arc:PaginationButton Name="PART_Page0" />
+                    <arc:PaginationButton Name="PART_Page1" />
+                    <arc:PaginationButton Name="PART_Page2" />
+                    <arc:PaginationButton Name="PART_Page3" />
+                    <arc:PaginationButton Name="PART_Page4" />
+                    <Border Name="PART_EllipsisEnd"
+                            IsVisible="False"
+                            Width="{arc:PaginationTokenResource EllipsisWidth}"
+                            Height="{arc:ArcDesignTokenResource ControlSizeSM}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}"
+                                      Size="{arc:PaginationTokenResource StepGlyphSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <arc:PaginationButton Name="PART_Last" IsVisible="False" />
+                    <arc:PaginationButton Name="PART_Next" Classes="step">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                      Size="{arc:PaginationTokenResource StepGlyphSize}"
+                                      StrokeThickness="2" />
+                    </arc:PaginationButton>
+                </arc:PaginationPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:PaginationButton}" TargetType="arc:PaginationButton">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PaginationButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="22"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- The shared mark already marks the current page: hovering it adds no fill. -->
+        <Style Selector="^:current:pointerover">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:PaginationTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Only the arrows press in (Arc: scale .96, released on the CSS spring). -->
+        <Style Selector="^.step:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^.step:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

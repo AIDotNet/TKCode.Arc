@@ -1,0 +1,68 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:TabItem}" TargetType="arc:TabItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TabItem">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:TabItemTokenResource TriggerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_HeaderPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:TabItemTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:TabItemTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinWidth" Value="{arc:TabItemTokenResource TriggerMinWidth}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="{arc:TabItemTokenResource InlinePadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:TabItemTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

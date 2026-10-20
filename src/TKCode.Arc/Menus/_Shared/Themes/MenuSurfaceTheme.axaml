@@ -1,0 +1,110 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MenuSurface}" TargetType="arc:MenuSurface">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MenuSurface">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <DockPanel>
+                        <Border Name="PART_Handle"
+                                DockPanel.Dock="Top"
+                                Width="{arc:MenuSurfaceTokenResource HandleWidth}"
+                                Height="{arc:MenuSurfaceTokenResource HandleHeight}"
+                                Margin="{arc:MenuSurfaceTokenResource HandleMargin}"
+                                HorizontalAlignment="Center"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                Background="{arc:ArcDesignTokenResource BorderStrong}"
+                                Cursor="SizeNorthSouth" />
+                        <ContentPresenter Name="PART_HeaderPresenter"
+                                          DockPanel.Dock="Top"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <Panel Name="PART_ItemsHost">
+                                <arc:GlidingIndicator Name="PART_Highlight" Spring="Snappy" />
+                                <ItemsPresenter Name="PART_ItemsPresenter"
+                                                ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            </Panel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource PanelInset}" />
+        <Setter Property="MinWidth" Value="{arc:MenuSurfaceTokenResource DropdownMinWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+
+        <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="CornerRadius" Value="{arc:MenuSurfaceTokenResource HighlightRadius}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Handle">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:danger-highlight /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Fill" Value="{arc:MenuSurfaceTokenResource DangerHighlight}" />
+        </Style>
+
+        <!-- Context menu: 13rem minimum width, 300px maximum height (scrolls beyond). -->
+        <Style Selector="^[Variant=Context]">
+            <Setter Property="MinWidth" Value="{arc:MenuSurfaceTokenResource ContextMinWidth}" />
+            <Setter Property="MaxHeight" Value="{arc:MenuSurfaceTokenResource ContextMaxHeight}" />
+        </Style>
+
+        <!-- Account panel (user menu): 15.5rem, 4px inset, 10px radius, half-pixel border, quiet highlight. -->
+        <Style Selector="^[Variant=Account]">
+            <Setter Property="Width" Value="{arc:MenuSurfaceTokenResource AccountWidth}" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource AccountInset}" />
+            <Setter Property="CornerRadius" Value="{arc:MenuSurfaceTokenResource AccountRadius}" />
+            <Setter Property="BorderThickness" Value="{arc:MenuSurfaceTokenResource AccountBorderThickness}" />
+            <Setter Property="FontSize" Value="{arc:MenuSurfaceTokenResource AccountFontSize}" />
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="Fill" Value="{arc:MenuSurfaceTokenResource AccountHighlight}" />
+                <Setter Property="CornerRadius" Value="{arc:MenuSurfaceTokenResource AccountHighlightRadius}" />
+            </Style>
+        </Style>
+
+        <!-- Sheet (narrow windows): full width along the bottom edge, top-rounded, handle, 16px text. -->
+        <Style Selector="^[Variant=Sheet]">
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource SheetInset}" />
+            <Setter Property="CornerRadius" Value="{arc:MenuSurfaceTokenResource SheetRadius}" />
+            <Setter Property="BorderThickness" Value="{arc:MenuSurfaceTokenResource SheetBorderThickness}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="Fill" Value="{arc:MenuSurfaceTokenResource AccountHighlight}" />
+                <Setter Property="CornerRadius" Value="{arc:MenuSurfaceTokenResource AccountHighlightRadius}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Handle">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

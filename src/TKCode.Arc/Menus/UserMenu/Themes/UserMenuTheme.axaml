@@ -1,0 +1,132 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:UserMenu}" TargetType="arc:UserMenu">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UserMenu">
+                <arc:Button Name="PART_Trigger"
+                            Variant="Ghost"
+                            IsPressScaleEnabled="False"
+                            MinHeight="{arc:UserMenuTokenResource TriggerHeight}"
+                            Height="{arc:UserMenuTokenResource TriggerHeight}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            HorizontalContentAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:UserMenuTokenResource TriggerGap}">
+                        <Panel Name="PART_Face"
+                               Width="{arc:UserMenuTokenResource FaceSize}"
+                               Height="{arc:UserMenuTokenResource FaceSize}"
+                               VerticalAlignment="Center">
+                            <arc:Avatar Name="PART_Avatar"
+                                        DisplayName="{TemplateBinding DisplayName}"
+                                        Source="{TemplateBinding AvatarSource}"
+                                        Width="{arc:UserMenuTokenResource FaceSize}"
+                                        Height="{arc:UserMenuTokenResource FaceSize}"
+                                        FontSize="{arc:UserMenuTokenResource FaceFontSize}" />
+                            <arc:UserMenuPresenceDot Name="PART_StatusDot"
+                                                     Status="{TemplateBinding Status}"
+                                                     IsVisible="{TemplateBinding IsStatusVisible}"
+                                                     DotSize="{arc:UserMenuTokenResource TriggerDotSize}"
+                                                     RingThickness="{arc:UserMenuTokenResource DotRing}"
+                                                     Margin="{arc:UserMenuTokenResource DotMargin}"
+                                                     HorizontalAlignment="Right"
+                                                     VerticalAlignment="Bottom" />
+                        </Panel>
+                        <TextBlock Name="PART_Name"
+                                   Text="{TemplateBinding DisplayName}"
+                                   MaxWidth="{arc:UserMenuTokenResource NameMaxWidth}"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="{arc:UserMenuTokenResource ChevronSize}"
+                                      Margin="{arc:UserMenuTokenResource ChevronMargin}"
+                                      RenderTransformOrigin="50%,50%"
+                                      VerticalAlignment="Center" />
+                    </StackPanel>
+                </arc:Button>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style Selector="^ /template/ arc|Button#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:UserMenuTokenResource TriggerInset}" />
+        </Style>
+        <Style Selector="^ /template/ arc|UserMenuPresenceDot#PART_StatusDot">
+            <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!-- With the name: name and chevron beside the avatar, 10px on the right. -->
+        <Style Selector="^[IsNameVisible=True]">
+            <Style Selector="^ /template/ arc|Button#PART_Trigger">
+                <Setter Property="Padding" Value="{arc:UserMenuTokenResource NamedTriggerInset}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Name">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <!-- The trigger anchors the panel, so it answers hover and press with color, never with scale. -->
+        <Style Selector="^ /template/ arc|Button#PART_Trigger:pressed">
+            <Setter Property="Background" Value="{arc:UserMenuTokenResource TriggerPressedBackground}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|Button#PART_Trigger">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <!-- The presence ring takes the colour of the surface behind the avatar. -->
+        <Style Selector="^:pointerover /template/ arc|UserMenuPresenceDot#PART_StatusDot">
+            <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|UserMenuPresenceDot#PART_StatusDot">
+            <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <!-- Narrow windows: the avatar alone (the menu opens as a bottom sheet). -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ arc|Button#PART_Trigger">
+                <Setter Property="Padding" Value="{arc:UserMenuTokenResource TriggerInset}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Name">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
