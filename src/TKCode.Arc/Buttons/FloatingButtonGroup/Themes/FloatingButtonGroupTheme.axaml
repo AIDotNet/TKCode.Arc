@@ -1,0 +1,96 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Separate soft buttons in a quiet tray; one shared highlight moves underneath their content. -->
+    <ControlTheme x:Key="{x:Type arc:FloatingButtonGroup}" TargetType="arc:FloatingButtonGroup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FloatingButtonGroup">
+                <Border Name="PART_Tray"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Spring="Morph"
+                                              Fill="{arc:FloatingButtonGroupTokenResource HighlightColor}"
+                                              CornerRadius="{arc:FloatingButtonGroupTokenResource HighlightRadiusMD}" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="{arc:FloatingButtonGroupTokenResource ItemGapMD}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:FloatingButtonGroupTokenResource TrayColor}" />
+        <Setter Property="BorderBrush" Value="{arc:FloatingButtonGroupTokenResource TrayEdgeColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:FloatingButtonGroupTokenResource TrayRadiusMD}" />
+        <Setter Property="Padding" Value="{arc:FloatingButtonGroupTokenResource TrayInsetMD}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <Style Selector="^[Variant=Floating]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Style Selector="^ /template/ Border#PART_Tray">
+                <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+            </Style>
+        </Style>
+        <Style Selector="^:small">
+            <Setter Property="CornerRadius" Value="{arc:FloatingButtonGroupTokenResource TrayRadiusSM}" />
+            <Setter Property="Padding" Value="{arc:FloatingButtonGroupTokenResource TrayInsetSM}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:FloatingButtonGroupTokenResource ItemGapSM}" />
+                </ItemsPanelTemplate>
+            </Setter>
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="CornerRadius" Value="{arc:FloatingButtonGroupTokenResource HighlightRadiusSM}" />
+            </Style>
+        </Style>
+        <Style Selector="^:vertical">
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" Spacing="{arc:FloatingButtonGroupTokenResource ItemGapMD}" />
+                </ItemsPanelTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="^:vertical:small">
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" Spacing="{arc:FloatingButtonGroupTokenResource ItemGapSM}" />
+                </ItemsPanelTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="^:pressing /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Fill" Value="{arc:FloatingButtonGroupTokenResource HighlightPressColor}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

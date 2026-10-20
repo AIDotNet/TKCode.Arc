@@ -1,0 +1,13 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Drawn in code on the 24-unit grid; the theme only supplies sizes and the like color (Arc: danger). -->
+    <ControlTheme x:Key="{x:Type arc:IconMorph}" TargetType="arc:IconMorph">
+        <Setter Property="IconSize" Value="{arc:IconMorphTokenResource GlyphExtent}" />
+        <Setter Property="StrokeThickness" Value="{arc:IconMorphTokenResource GlyphStrokeWidth}" />
+        <Setter Property="LikeBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="AutomationProperties.AccessibilityView" Value="Raw" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

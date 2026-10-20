@@ -1,0 +1,113 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ActionButton}" TargetType="arc:ActionButton">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:ActionButtonTokenResource LabelIconGap}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <arc:TextMorph Name="PART_Label"
+                                           Text="{TemplateBinding DisplayLabel}"
+                                           Matching="PrefixSuffix"
+                                           VerticalAlignment="Center"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                            <arc:ButtonsGlyphSwap Name="PART_Icon"
+                                                  Width="{arc:ActionButtonTokenResource IconSlotExtent}"
+                                                  Height="{arc:ActionButtonTokenResource IconSlotExtent}"
+                                                  VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <arc:ButtonsLiveRegion Name="PART_Status" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ActionButtonTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Foreground fill with background text, like the primary Button (not accent). -->
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="Padding" Value="{arc:ActionButtonTokenResource InlinePadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^:pointerover /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:pending">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+            <Setter Property="Opacity" Value="{arc:ActionButtonTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Press: instant scale down, snappy return; wide buttons press shallower. Never while pending. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed:not(:pending)">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+            <Style Selector="^:pressed:wide:not(:pending)">
+                <Setter Property="RenderTransform" Value="scale(0.985)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

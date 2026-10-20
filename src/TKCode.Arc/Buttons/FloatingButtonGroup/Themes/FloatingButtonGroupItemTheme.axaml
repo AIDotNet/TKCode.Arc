@@ -1,0 +1,114 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:FloatingButtonGroupItem}" TargetType="arc:FloatingButtonGroupItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FloatingButtonGroupItem">
+                <Panel>
+                    <!-- A pressed (checked) mode keeps a quiet control-on tint. -->
+                    <Border Name="PART_OnTint"
+                            Opacity="0"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource ControlOn}" />
+                    <Border Name="PART_Body"
+                            Background="Transparent"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Name="PART_Slot" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <arc:ButtonsLabelSizer Name="PART_Sizer" Labels="{TemplateBinding SizerLabels}" />
+                            <arc:ArcContentSwap Name="PART_Phase"
+                                                Mode="BlurSwap"
+                                                HorizontalAlignment="Center"
+                                                Content="{TemplateBinding Phase}" />
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:FloatingButtonGroupItemTokenResource ItemExtentMD}" />
+        <Setter Property="MinWidth" Value="{arc:FloatingButtonGroupItemTokenResource ItemExtentMD}" />
+        <Setter Property="Padding" Value="{arc:FloatingButtonGroupItemTokenResource ItemInsetMD}" />
+        <Setter Property="CornerRadius" Value="{arc:FloatingButtonGroupItemTokenResource ItemRadiusMD}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Style Selector="^:has-icon:not(:icon-only)">
+            <Setter Property="Padding" Value="{arc:FloatingButtonGroupItemTokenResource IconItemInsetMD}" />
+            <Style Selector="^ /template/ arc|ButtonsLabelSizer#PART_Sizer">
+                <Setter Property="Leading" Value="{arc:FloatingButtonGroupItemTokenResource SizerLeading}" />
+            </Style>
+        </Style>
+        <Style Selector="^:icon-only">
+            <Setter Property="Width" Value="{arc:FloatingButtonGroupItemTokenResource ItemExtentMD}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:small">
+            <Setter Property="Height" Value="{arc:FloatingButtonGroupItemTokenResource ItemExtentSM}" />
+            <Setter Property="MinWidth" Value="{arc:FloatingButtonGroupItemTokenResource ItemExtentSM}" />
+            <Setter Property="Padding" Value="{arc:FloatingButtonGroupItemTokenResource ItemInsetSM}" />
+            <Setter Property="CornerRadius" Value="{arc:FloatingButtonGroupItemTokenResource ItemRadiusSM}" />
+        </Style>
+        <Style Selector="^:small:has-icon:not(:icon-only)">
+            <Setter Property="Padding" Value="{arc:FloatingButtonGroupItemTokenResource IconItemInsetSM}" />
+        </Style>
+        <Style Selector="^:small:icon-only">
+            <Setter Property="Width" Value="{arc:FloatingButtonGroupItemTokenResource ItemExtentSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:vertical">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Style Selector="^ /template/ Grid#PART_Slot">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Phase">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+        </Style>
+        <Style Selector="^:vertical:icon-only">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Style Selector="^ /template/ Grid#PART_Slot">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:active, ^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_OnTint">
+            <Setter Property="Opacity" Value="{arc:FloatingButtonGroupItemTokenResource OnTintOpacity}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="{arc:FloatingButtonGroupItemTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_OnTint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

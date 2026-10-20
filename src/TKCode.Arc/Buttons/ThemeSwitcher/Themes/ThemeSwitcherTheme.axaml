@@ -1,0 +1,77 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ThemeSwitcher}" TargetType="arc:ThemeSwitcher">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ThemeSwitcher">
+                <!-- The library Button owns the press scale and focus ring; this theme only animates the icon in place. -->
+                <arc:ThemeSwitcherButton Name="PART_Button"
+                                         Variant="Secondary"
+                                         Size="Small"
+                                         HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:ThemeSwitcherTokenResource IconTextGap}">
+                        <Panel Name="PART_IconWrap"
+                               Width="{arc:ThemeSwitcherTokenResource IconWrapExtent}"
+                               Height="{arc:ThemeSwitcherTokenResource IconWrapExtent}"
+                               RenderTransformOrigin="50%,50%"
+                               VerticalAlignment="Center">
+                            <arc:ButtonsGlyphSwap Name="PART_Icon" Width="18" Height="18" />
+                        </Panel>
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </arc:ThemeSwitcherButton>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style Selector="^[IsIconOnly=False] /template/ arc|Button#PART_Button:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^[IsIconOnly=True]">
+            <Style Selector="^ /template/ TextBlock#PART_Text">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Button">
+                <Setter Property="Width" Value="{arc:ThemeSwitcherTokenResource IconOnlyExtent}" />
+                <Setter Property="Height" Value="{arc:ThemeSwitcherTokenResource IconOnlyExtent}" />
+                <Setter Property="MinHeight" Value="{arc:ThemeSwitcherTokenResource IconOnlyExtent}" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="{arc:ThemeSwitcherTokenResource IconOnlyRadius}" />
+            </Style>
+            <!-- The square answers hover with the muted surface only, no shadow. -->
+            <Style Selector="^ /template/ arc|Button#PART_Button:pointerover /template/ Border#PART_Frame">
+                <Setter Property="BoxShadow" Value="none" />
+            </Style>
+        </Style>
+
+        <!-- Each variant nudges the icon the way its page transition travels, and eases back when the theme returns. -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Panel#PART_IconWrap">
+                <Setter Property="RenderTransform" Value="none" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:dark[Variant=Reveal] /template/ Panel#PART_IconWrap">
+                <Setter Property="RenderTransform" Value="scale(1.08)" />
+            </Style>
+            <Style Selector="^:dark[Variant=Eclipse] /template/ Panel#PART_IconWrap">
+                <Setter Property="RenderTransform" Value="translateX(-2px)" />
+            </Style>
+            <Style Selector="^:dark[Variant=Split] /template/ Panel#PART_IconWrap">
+                <Setter Property="RenderTransform" Value="translateX(1px)" />
+            </Style>
+            <Style Selector="^:dark[Variant=Rise] /template/ Panel#PART_IconWrap">
+                <Setter Property="RenderTransform" Value="translateY(-2px)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

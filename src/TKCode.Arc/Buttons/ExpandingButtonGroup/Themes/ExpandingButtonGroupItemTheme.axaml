@@ -1,0 +1,149 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The box never scales: its width is the animation, so a press answers with the icon and with color. -->
+    <ControlTheme x:Key="{x:Type arc:ExpandingButtonGroupItem}" TargetType="arc:ExpandingButtonGroupItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExpandingButtonGroupItem">
+                <Panel>
+                    <Border Name="PART_Body"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <StackPanel Name="PART_Row"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="{arc:ExpandingButtonGroupItemTokenResource GlyphInsetMD}"
+                                    Spacing="{arc:ExpandingButtonGroupItemTokenResource GlyphGapMD}">
+                            <Panel Name="PART_IconBox"
+                                   Width="{arc:ExpandingButtonGroupItemTokenResource GlyphExtentMD}"
+                                   Height="{arc:ExpandingButtonGroupItemTokenResource GlyphExtentMD}"
+                                   RenderTransformOrigin="50%,50%"
+                                   VerticalAlignment="Center">
+                                <arc:ButtonsGlyphSwap Name="PART_Icon" />
+                            </Panel>
+                            <Grid Name="PART_LabelHost" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw">
+                                <arc:ButtonsLabelSizer Labels="{TemplateBinding SizerLabels}" />
+                                <arc:ArcContentSwap Name="PART_Word"
+                                                    Mode="BlurSwap"
+                                                    HorizontalAlignment="Left"
+                                                    Content="{TemplateBinding Word}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:ExpandingButtonGroupItemTokenResource ActionExtentMD}" />
+        <Setter Property="TrailingInset" Value="{arc:ExpandingButtonGroupItemTokenResource LabelEndMD}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Style Selector="^:small">
+            <Setter Property="Height" Value="{arc:ExpandingButtonGroupItemTokenResource ActionExtentSM}" />
+            <Setter Property="TrailingInset" Value="{arc:ExpandingButtonGroupItemTokenResource LabelEndSM}" />
+            <Style Selector="^ /template/ StackPanel#PART_Row">
+                <Setter Property="Margin" Value="{arc:ExpandingButtonGroupItemTokenResource GlyphInsetSM}" />
+                <Setter Property="Spacing" Value="{arc:ExpandingButtonGroupItemTokenResource GlyphGapSM}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_IconBox">
+                <Setter Property="Width" Value="{arc:ExpandingButtonGroupItemTokenResource GlyphExtentSM}" />
+                <Setter Property="Height" Value="{arc:ExpandingButtonGroupItemTokenResource GlyphExtentSM}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:expanded">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:expanded[Tone=Danger]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:ExpandingButtonGroupItemTokenResource DangerExpandedColor}" />
+        </Style>
+        <!-- The confirmation carries its meaning on the check, with a faint tint behind the whole button. -->
+        <Style Selector="^:done[Tone=Neutral]">
+            <Setter Property="Background" Value="{arc:ExpandingButtonGroupItemTokenResource DoneColor}" />
+            <Style Selector="^ /template/ Panel#PART_IconBox">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+        <Style Selector="^:busy">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^:unavailable">
+            <Setter Property="Cursor" Value="No" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="{arc:ExpandingButtonGroupItemTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:unavailable:expanded">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ExpandingButtonGroupItemTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Panel#PART_IconBox">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed:not(:unavailable) /template/ Panel#PART_IconBox">
+                <Setter Property="RenderTransform" Value="scale(0.86)" />
+            </Style>
+            <Style Selector="^:busy /template/ Panel#PART_IconBox">
+                <Style.Animations>
+                    <Animation Duration="0:0:1.1" IterationCount="Infinite" Easing="CubicEaseInOut">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                        <KeyFrame Cue="50%">
+                            <Setter Property="Opacity" Value="0.45" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:busy /template/ Panel#PART_IconBox">
+                <Setter Property="Opacity" Value="{arc:ExpandingButtonGroupItemTokenResource BusyGlyphOpacity}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

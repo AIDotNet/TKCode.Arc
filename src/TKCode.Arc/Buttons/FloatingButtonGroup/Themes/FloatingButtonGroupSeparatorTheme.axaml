@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:FloatingButtonGroupSeparator}" TargetType="arc:FloatingButtonGroupSeparator">
+        <Setter Property="RuleBrush" Value="{arc:FloatingButtonGroupSeparatorTokenResource RuleColor}" />
+        <Setter Property="Width" Value="1" />
+        <Setter Property="Height" Value="{arc:FloatingButtonGroupSeparatorTokenResource RuleLengthMD}" />
+        <Setter Property="Margin" Value="{arc:FloatingButtonGroupSeparatorTokenResource RuleMargin}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Style Selector="^:small">
+            <Setter Property="Height" Value="{arc:FloatingButtonGroupSeparatorTokenResource RuleLengthSM}" />
+        </Style>
+        <Style Selector="^:vertical">
+            <Setter Property="Width" Value="{arc:FloatingButtonGroupSeparatorTokenResource RuleLengthMD}" />
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Margin" Value="{arc:FloatingButtonGroupSeparatorTokenResource VerticalRuleMargin}" />
+        </Style>
+        <Style Selector="^:vertical:small">
+            <Setter Property="Width" Value="{arc:FloatingButtonGroupSeparatorTokenResource RuleLengthSM}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
