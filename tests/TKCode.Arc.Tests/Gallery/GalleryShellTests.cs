@@ -174,6 +174,8 @@ public class GalleryShellTests
         {
             wide.Select(Entry("Button"));
             Dispatcher.UIThread.RunJobs();
+            // The table of contents follows the page bounds, so lay the window out before checking it (headless Linux may not do it).
+            wide.UpdateLayout();
             var toc = Find<GalleryToc>(wide);
             toc.IsVisible.ShouldBeTrue();
             var rows = toc.GetVisualDescendants().OfType<GalleryNavRow>().Count();
@@ -190,6 +192,8 @@ public class GalleryShellTests
         {
             narrow.Select(Entry("Button"));
             Dispatcher.UIThread.RunJobs();
+            // The table of contents follows the page bounds, so lay the window out before checking it (headless Linux may not do it).
+            narrow.UpdateLayout();
             Find<GalleryToc>(narrow).IsVisible.ShouldBeFalse();
         }
         finally
