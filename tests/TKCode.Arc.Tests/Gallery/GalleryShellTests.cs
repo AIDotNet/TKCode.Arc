@@ -169,13 +169,13 @@ public class GalleryShellTests
     [AvaloniaFact]
     public void On_This_Page_Lists_The_Examples_And_Hides_When_Narrow()
     {
-        var wide = Open(1280);
+        // The page needs 960px for the table of contents. On Linux the headless AtomUI window draws its own frame and title
+        // bar inside the window, so 1280 leaves the page at 928px; 1440 keeps it above the threshold on every platform.
+        var wide = Open(1440);
         try
         {
             wide.Select(Entry("Button"));
             Dispatcher.UIThread.RunJobs();
-            // The table of contents follows the page bounds, so lay the window out before checking it (headless Linux may not do it).
-            wide.UpdateLayout();
             var toc = Find<GalleryToc>(wide);
             var page = Find<GalleryPageView>(wide);
             toc.IsVisible.ShouldBeTrue($"window {wide.Bounds.Width}x{wide.Bounds.Height}, page {page.Bounds.Width}x{page.Bounds.Height}");
@@ -193,8 +193,6 @@ public class GalleryShellTests
         {
             narrow.Select(Entry("Button"));
             Dispatcher.UIThread.RunJobs();
-            // The table of contents follows the page bounds, so lay the window out before checking it (headless Linux may not do it).
-            narrow.UpdateLayout();
             Find<GalleryToc>(narrow).IsVisible.ShouldBeFalse();
         }
         finally
