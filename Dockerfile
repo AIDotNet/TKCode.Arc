@@ -8,6 +8,10 @@ ARG RUNTIME_IMAGE=nginx:1.27-alpine
 FROM ${BUILDER_IMAGE} AS build
 # Passed to the publish when set; empty keeps the version pinned in Directory.Packages.props.
 ARG STREAMMARK_VERSION=
+# WasmBuildNative runs the Emscripten toolchain, which needs python3.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
 # The SDK is the one global.json pins (11.0.100-rc.2). The .NET 10 runtime is needed too: AtomUI's build worker is net10.
 COPY global.json .
