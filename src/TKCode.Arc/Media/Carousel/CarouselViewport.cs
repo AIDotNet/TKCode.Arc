@@ -34,6 +34,7 @@ internal sealed class CarouselViewport : Panel
         if (_clip.Rect != rect)
         {
             _clip.Rect = rect;
+            InvalidateVisual();
         }
         return arranged;
     }

@@ -168,8 +168,8 @@ public class LiveLoopTests
     [AvaloniaFact]
     public void Frames_Keep_Coming_When_A_Step_Changes_Nothing_On_Screen()
     {
-        // A loop waiting out a pause draws nothing; the renderer may then deliver no animation frame for its request,
-        // and the scheduler's fallback has to keep the loop going (the real platform clock, not a manual one).
+        // A loop waiting out a pause draws nothing; with the dispatcher running (as in an app, not a manual clock) its
+        // frames must keep coming anyway.
         var target = new Border { Width = 50, Height = 50 };
         var window = TestHelpers.Show(target, ArcMotionLevel.Full);
         var calls = 0;

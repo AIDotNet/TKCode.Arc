@@ -293,6 +293,8 @@ internal sealed class TabsPanelHost : Control
             _clip ??= new RectangleGeometry();
             _clip.Rect = new Rect(-16, 0, finalSize.Width + 32, finalSize.Height);
             presenter.Clip = _clip;
+            // The clip grows with the height spring; an in-place change needs the visual invalidated to be drawn.
+            presenter.InvalidateVisual();
         }
         else if (presenter.Clip is not null)
         {

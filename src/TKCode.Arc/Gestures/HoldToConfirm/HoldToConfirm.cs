@@ -201,6 +201,8 @@ public class HoldToConfirm : AvaloniaButton
         }
         _fill.IsVisible = value > 0.0005;
         _fillClip.Rect = new Rect(0, 0, Bounds.Width * Math.Clamp(value, 0, 1), Bounds.Height);
+        // A clip geometry changed in place reaches the compositor only when its visual is invalidated.
+        _fill.InvalidateVisual();
     }
 
     private void UpdateAutomation()
