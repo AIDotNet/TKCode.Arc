@@ -1,0 +1,105 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Slider}" TargetType="arc:Slider">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Slider">
+                <StackPanel>
+                    <DockPanel Name="PART_Header">
+                        <StackPanel Name="PART_Readout"
+                                    DockPanel.Dock="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:SliderTokenResource ReadoutGap}"
+                                    Margin="{arc:SliderTokenResource ReadoutMargin}"
+                                    VerticalAlignment="Center"
+                                    IsVisible="{TemplateBinding IsValueVisible}"
+                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                            <arc:SliderNumberText Name="PART_ReadoutLow" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_ReadoutDash"
+                                       IsVisible="False"
+                                       Text="–"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <arc:SliderNumberText Name="PART_ReadoutHigh" IsVisible="False" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   VerticalAlignment="Center"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:SliderTokenResource LabelLineHeight}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </DockPanel>
+                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                        <ContentPresenter Name="PART_Start"
+                                          IsVisible="{TemplateBinding StartContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Content="{TemplateBinding StartContent}"
+                                          Margin="{arc:SliderTokenResource StartMargin}"
+                                          VerticalAlignment="Center" />
+                        <!-- The whole row takes the press; the track is inset by half a thumb. -->
+                        <arc:SliderRail Name="PART_Rail"
+                                        Grid.Column="1"
+                                        Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                        Cursor="Hand"
+                                        TrackBrush="{arc:ArcDesignTokenResource ControlTrack}"
+                                        FillBrush="{arc:ArcDesignTokenResource ControlFill}"
+                                        TickBrush="{arc:SliderTokenResource TickColor}"
+                                        TickOnSource="{arc:ArcDesignTokenResource ControlGlyph}"
+                                        ThumbBrush="{arc:ArcDesignTokenResource ControlThumb}"
+                                        ThumbShadow="{arc:ArcDesignTokenResource ControlThumbShadow}"
+                                        RingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                        ThumbDiameter="{arc:SliderTokenResource ThumbDiameter}"
+                                        TrackThickness="{arc:SliderTokenResource TrackThickness}"
+                                        TickDiameter="{arc:SliderTokenResource TickDiameter}"
+                                        BubbleGap="{arc:SliderTokenResource BubbleGap}"
+                                        BubbleBackground="{arc:ArcDesignTokenResource Foreground}"
+                                        BubbleForeground="{arc:ArcDesignTokenResource Background}"
+                                        BubbleBorderBrush="{arc:SliderTokenResource BubbleBorderColor}"
+                                        BubbleBorderThickness="{arc:SliderTokenResource BubbleBorder}"
+                                        BubbleShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                                        BubbleMinHeight="{arc:SliderTokenResource BubbleMinHeight}"
+                                        BubblePadding="{arc:SliderTokenResource BubbleInset}"
+                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <ContentPresenter Name="PART_End"
+                                          Grid.Column="2"
+                                          IsVisible="{TemplateBinding EndContent, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Content="{TemplateBinding EndContent}"
+                                          Margin="{arc:SliderTokenResource EndMargin}"
+                                          VerticalAlignment="Center" />
+                        <arc:SliderMarkLabels Name="PART_Marks"
+                                              Grid.Row="1"
+                                              Grid.Column="1"
+                                              IsVisible="False"
+                                              Height="{arc:SliderTokenResource MarksHeight}"
+                                              Margin="{arc:SliderTokenResource MarksMargin}"
+                                              FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                              OnForeground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              HoverForeground="{arc:ArcDesignTokenResource Foreground}" />
+                    </Grid>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Style Selector="^:range">
+            <Style Selector="^ /template/ TextBlock#PART_ReadoutDash">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|SliderNumberText#PART_ReadoutHigh">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:SliderTokenResource DisabledOpacity}" />
+            <Style Selector="^ /template/ arc|SliderRail#PART_Rail">
+                <Setter Property="Cursor" Value="No" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
