@@ -18,3 +18,12 @@ TestResults/
 
 # Local work area: Arc reference sources and parallel sandboxes
 .work/
+
+# Signing material: never commit certificates or keys (CI reads them from GitHub secrets)
+*.p12
+*.pfx
+*.cer
+*.key
+*.mobileprovision
+*.keychain
+*.keychain-db

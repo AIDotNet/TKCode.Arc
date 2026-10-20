@@ -1,0 +1,220 @@
+name: Gallery (macOS)
+
+# Builds the Gallery desktop app for macOS, signs it with a Developer ID certificate, notarizes and staples it.
+#   - push of a v* tag:       signed + notarized dmgs are attached to a GitHub release (fails if secrets are missing)
+#   - workflow_dispatch:      signed dmgs as workflow artifacts (unsigned if the secrets are not configured yet)
+#   - pull_request:           unsigned dry run when the packaging tooling changes (never sees the secrets)
+# Setup and local usage: tools/macos/README.md
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      notarize:
+        description: Notarize and staple (needs the APPLE_APP_SPECIFIC_PASSWORD secret)
+        type: boolean
+        default: true
+  pull_request:
+    paths:
+      - tools/macos/**
+      - .github/workflows/gallery-macos.yml
+
+concurrency:
+  group: gallery-macos-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+
+  # ---- Signing parameters (not secret) --------------------------------------------------------------------
+  # Apple ID used by notarytool; its app-specific password is the APPLE_APP_SPECIFIC_PASSWORD secret.
+  APPLE_ID: token@routin.ai
+  # Team ID of the Developer ID certificate.
+  APPLE_TEAM_ID: 42B564FHYL
+  # Must match the certificate inside MACOS_CERTIFICATE_P12_BASE64; the job lists the available identities if not.
+  MACOS_SIGNING_IDENTITY: "Developer ID Application: jiale he (42B564FHYL)"
+  # Bundle name shown in Finder and the Dock, and its reverse-DNS identifier.
+  APP_NAME: TKCode Arc Gallery
+  BUNDLE_ID: ai.routin.tkcode.arc.gallery
+  # ---- Secrets (Settings > Secrets and variables > Actions), read only by the steps that need them -----------
+  #   MACOS_CERTIFICATE_P12_BASE64   base64 of the Developer ID .p12
+  #   MACOS_CERTIFICATE_PASSWORD     password of the .p12
+  #   APPLE_APP_SPECIFIC_PASSWORD    app-specific password of APPLE_ID (appleid.apple.com > Sign-In and Security)
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: ${{ matrix.rid }}
+    runs-on: macos-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        # Both architectures are built on the arm64 runner; self-contained publish cross-compiles.
+        rid: [osx-arm64, osx-x64]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Check signing configuration
+        id: signing
+        env:
+          HAS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 != '' && secrets.MACOS_CERTIFICATE_PASSWORD != '' }}
+          HAS_NOTARY_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD != '' }}
+          IS_PULL_REQUEST: ${{ github.event_name == 'pull_request' }}
+          IS_TAG: ${{ startsWith(github.ref, 'refs/tags/') }}
+          WANT_NOTARIZE: ${{ github.event_name != 'workflow_dispatch' || inputs.notarize }}
+        run: |
+          sign=false
+          notarize=false
+          if [[ "$IS_PULL_REQUEST" != true && "$HAS_CERTIFICATE" == true ]]; then
+            sign=true
+            if [[ "$WANT_NOTARIZE" == true && "$HAS_NOTARY_PASSWORD" == true ]]; then
+              notarize=true
+            fi
+          fi
+
+          if [[ "$IS_TAG" == true && ( "$sign" != true || "$notarize" != true ) ]]; then
+            echo "::error::Release builds must be signed and notarized. Add the secrets MACOS_CERTIFICATE_P12_BASE64, MACOS_CERTIFICATE_PASSWORD and APPLE_APP_SPECIFIC_PASSWORD (see tools/macos/README.md)."
+            exit 1
+          fi
+          if [[ "$sign" != true ]]; then
+            echo "::warning::Building an UNSIGNED dmg (pull request, or the certificate secrets are not configured)."
+          elif [[ "$notarize" != true ]]; then
+            echo "::warning::The dmg is signed but NOT notarized."
+          fi
+
+          echo "sign=$sign" >> "$GITHUB_OUTPUT"
+          echo "notarize=$notarize" >> "$GITHUB_OUTPUT"
+
+      - name: Read version
+        id: version
+        run: |
+          version="$(sed -n 's:.*<ArcVersion>\(.*\)</ArcVersion>.*:\1:p' build/Versions.props)"
+          if [[ -z "$version" ]]; then
+            echo "::error::ArcVersion not found in build/Versions.props"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # Single file keeps Contents/MacOS free of managed .dll files, which codesign would treat as unsigned nested code.
+      - name: Publish
+        run: >
+          dotnet publish gallery/TKCode.Arc.Gallery.Desktop
+          -c Release -f net10.0 -r ${{ matrix.rid }}
+          --self-contained true -p:PublishSingleFile=true
+          -o "$RUNNER_TEMP/publish/${{ matrix.rid }}"
+
+      - name: Create app bundle
+        id: bundle
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          app="$(tools/macos/bundle.sh "$RUNNER_TEMP/publish/${{ matrix.rid }}" "$RUNNER_TEMP/app/${{ matrix.rid }}" | tail -n 1)"
+          echo "app=$app" >> "$GITHUB_OUTPUT"
+
+      - name: Import signing certificate
+        if: steps.signing.outputs.sign == 'true'
+        env:
+          CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          keychain="$RUNNER_TEMP/arc-signing.keychain-db"
+          keychain_password="$(uuidgen)"
+          echo "::add-mask::$keychain_password"
+
+          echo "$CERTIFICATE_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
+          security create-keychain -p "$keychain_password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$keychain_password" "$keychain"
+          security import "$RUNNER_TEMP/certificate.p12" -k "$keychain" -P "$CERTIFICATE_PASSWORD" -f pkcs12 \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain" > /dev/null
+          rm -f "$RUNNER_TEMP/certificate.p12"
+
+          # Put the new keychain first in the search list, keeping the existing ones.
+          keychains=("$keychain")
+          while IFS= read -r existing; do
+            keychains+=("$existing")
+          done < <(security list-keychains -d user | tr -d '"' | sed 's/^ *//')
+          security list-keychains -d user -s "${keychains[@]}"
+
+          echo "MACOS_KEYCHAIN=$keychain" >> "$GITHUB_ENV"
+          echo "Identities in the imported certificate:"
+          security find-identity -v -p codesigning "$keychain"
+
+      - name: Sign, package and notarize
+        env:
+          SIGN: ${{ steps.signing.outputs.sign }}
+          APP: ${{ steps.bundle.outputs.app }}
+          DMG: dist/TKCode.Arc.Gallery-${{ steps.version.outputs.version }}-${{ matrix.rid }}.dmg
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ steps.signing.outputs.notarize == 'true' && secrets.APPLE_APP_SPECIFIC_PASSWORD || '' }}
+        run: |
+          if [[ "$SIGN" != true ]]; then
+            export MACOS_SIGNING_IDENTITY=""
+          fi
+          tools/macos/sign-notarize.sh "$APP" "$DMG"
+
+      - name: Remove signing keychain
+        if: always() && steps.signing.outputs.sign == 'true'
+        run: |
+          if [[ -n "${MACOS_KEYCHAIN:-}" ]]; then
+            security delete-keychain "$MACOS_KEYCHAIN" || true
+          fi
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: gallery-macos-${{ matrix.rid }}
+          path: dist/*.dmg
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: gallery-macos-*
+          merge-multiple: true
+          path: dist
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" dist/*.dmg --clobber
+          else
+            prerelease=""
+            if [[ "$TAG" == *-* ]]; then
+              prerelease="--prerelease"
+            fi
+            gh release create "$TAG" dist/*.dmg --title "$TAG" --generate-notes $prerelease
+          fi
