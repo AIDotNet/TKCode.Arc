@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <RootNamespace>TKCode.Arc.Gallery</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
+        <ProjectReference Include="../../src/TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+</Project>

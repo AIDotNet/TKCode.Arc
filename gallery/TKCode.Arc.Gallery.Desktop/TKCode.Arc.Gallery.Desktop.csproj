@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <RootNamespace>TKCode.Arc.Gallery.Desktop</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <ApplicationManifest Condition="'$(OS)' == 'Windows_NT'"></ApplicationManifest>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
+        <ProjectReference Include="../TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+    </ItemGroup>
+</Project>
