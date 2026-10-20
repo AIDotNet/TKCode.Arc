@@ -1,0 +1,136 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:SortableDataTable}" TargetType="arc:SortableDataTable">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SortableDataTable">
+                <Panel>
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="*,Auto">
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto" />
+                        <Panel Name="PART_Loading"
+                               IsVisible="{TemplateBinding IsLoading}"
+                               Margin="{arc:SortableDataTableTokenResource LoadingInset}">
+                            <Border Background="{TemplateBinding Background}" Opacity="0.6" />
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="10"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <arc:ArcSpinner Width="18" Height="18" VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding LoadingMessage}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           FontSize="{TemplateBinding FontSize}" />
+                            </StackPanel>
+                        </Panel>
+                        <Border Name="PART_Footer"
+                                Grid.Row="1"
+                                IsVisible="{TemplateBinding IsSelectable}"
+                                Height="{arc:SortableDataTableTokenResource FooterHeight}"
+                                Padding="{arc:SortableDataTableTokenResource FooterInset}"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Border Name="PART_CountHost"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        ClipToBounds="False">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:SortableDataTableTokenResource CountGap}">
+                                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
+                                            <arc:ArcContentSwap Mode="Roll"
+                                                                Direction="{TemplateBinding CountDirection}"
+                                                                Content="{TemplateBinding CountText}" />
+                                        </arc:SpringSizeDecorator>
+                                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
+                                            <arc:ArcContentSwap Mode="Roll"
+                                                                Direction="{TemplateBinding NounDirection}"
+                                                                Content="{TemplateBinding CountNoun}" />
+                                        </arc:SpringSizeDecorator>
+                                    </StackPanel>
+                                </Border>
+                                <arc:PresenceHost Grid.Column="1"
+                                                  IsPresent="{TemplateBinding HasSelection}"
+                                                  Mode="Scale"
+                                                  EnterScale="0.96"
+                                                  Spring="Snappy"
+                                                  VerticalAlignment="Center">
+                                    <arc:Button Name="PART_Clear"
+                                                Variant="Ghost"
+                                                Content="{TemplateBinding ClearSelectionLabel}"
+                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                MinHeight="{arc:SortableDataTableTokenResource ClearButtonHeight}"
+                                                Height="{arc:SortableDataTableTokenResource ClearButtonHeight}"
+                                                Padding="{arc:SortableDataTableTokenResource ClearButtonInset}" />
+                                </arc:PresenceHost>
+                            </Grid>
+                        </Border>
+                        <TextBlock Name="PART_Announcer"
+                                   Grid.RowSpan="2"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   ClipToBounds="True"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </Grid>
+                </Border>
+                <!-- The outline is drawn over the clipped content so cells never cover its rounded corners. -->
+                <Border Name="PART_Outline"
+                        IsHitTestVisible="False"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SmallFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="ColumnTintBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="RuleBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="DividerBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="CheckboxBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="CheckboxOnBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        <Setter Property="CheckmarkBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="RowHeight" Value="{arc:SortableDataTableTokenResource RowHeight}" />
+        <Setter Property="HeaderHeight" Value="{arc:SortableDataTableTokenResource HeaderHeight}" />
+        <Setter Property="CompactRowHeight" Value="{arc:SortableDataTableTokenResource CompactRowHeight}" />
+        <Setter Property="CompactHeaderHeight" Value="{arc:SortableDataTableTokenResource CompactHeaderHeight}" />
+        <Setter Property="EmptyRowHeight" Value="{arc:SortableDataTableTokenResource EmptyRowHeight}" />
+        <Setter Property="CellInlinePadding" Value="{arc:SortableDataTableTokenResource CellInlinePadding}" />
+        <Setter Property="PrimaryInsetSelectable" Value="{arc:SortableDataTableTokenResource PrimaryInsetSelectable}" />
+        <Setter Property="SelectColumnWidth" Value="{arc:SortableDataTableTokenResource SelectColumnWidth}" />
+        <Setter Property="MinTableWidth" Value="{arc:SortableDataTableTokenResource MinTableWidth}" />
+        <Setter Property="CompactBreakpoint" Value="{arc:SortableDataTableTokenResource CompactBreakpoint}" />
+
+        <Style Selector="^ /template/ Border#PART_CountHost">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:has-selection /template/ Border#PART_CountHost">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,141 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ReorderableList}" TargetType="arc:ReorderableList">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReorderableList">
+                <Panel>
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" ClipToBounds="False" />
+                    <TextBlock Name="PART_Announcer"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               ClipToBounds="True"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               AutomationProperties.LiveSetting="Polite" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="{arc:ReorderableListTokenResource RowGap}" ClipToBounds="False" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ItemContainerTheme">
+            <ControlTheme TargetType="arc:ReorderableListItem">
+                <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+                <Setter Property="FocusAdorner" Value="{x:Null}" />
+                <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="arc:ReorderableListItem">
+                        <Panel>
+                            <!-- The lifted shadow lives on its own layer and fades in, so a moving row never repaints a growing shadow. -->
+                            <Border Name="PART_Lift"
+                                    Opacity="0"
+                                    IsHitTestVisible="False"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}" />
+                            <Border Name="PART_Row"
+                                    Background="{arc:ArcDesignTokenResource Surface}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                    MinHeight="{arc:ReorderableListTokenResource RowMinHeight}"
+                                    Padding="{arc:ReorderableListTokenResource RowInset}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <arc:ReorderableListHandle Name="PART_Handle"
+                                                               Width="{arc:ReorderableListTokenResource HandleExtent}"
+                                                               Height="{arc:ReorderableListTokenResource HandleExtent}"
+                                                               CornerRadius="{arc:ReorderableListTokenResource HandleRadius}"
+                                                               FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                               VerticalAlignment="Center">
+                                        <arc:ArcGlyph Name="PART_Grip"
+                                                      Data="{x:Static arc:ArcIcons.GripVertical}"
+                                                      Size="{arc:ReorderableListTokenResource HandleGlyphExtent}"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center" />
+                                    </arc:ReorderableListHandle>
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Grid.Column="1"
+                                                      Margin="{arc:ReorderableListTokenResource CopyInset}"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    <arc:ArcContentSwap Grid.Column="2"
+                                                        Mode="Roll"
+                                                        VerticalAlignment="Center"
+                                                        Direction="{TemplateBinding PositionDirection}"
+                                                        Content="{TemplateBinding PositionText}"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                            </Border>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                <Setter Property="ClipToBounds" Value="False" />
+
+                <Style Selector="^ /template/ arc|ReorderableListHandle#PART_Handle">
+                    <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                </Style>
+                <Style Selector="^ /template/ arc|ArcGlyph#PART_Grip">
+                    <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+                </Style>
+                <Style Selector="^:lifted /template/ Border#PART_Lift">
+                    <Setter Property="Opacity" Value="1" />
+                </Style>
+                <Style Selector="^:lifted /template/ arc|ReorderableListHandle#PART_Handle">
+                    <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+                </Style>
+                <Style Selector="^:lifted /template/ arc|ArcGlyph#PART_Grip">
+                    <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                </Style>
+                <Style Selector="^ /template/ arc|ReorderableListHandle#PART_Handle:pointerover arc|ArcGlyph#PART_Grip">
+                    <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                </Style>
+
+                <Style Selector="^:motion-full">
+                    <Style Selector="^ /template/ Border#PART_Lift">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                    <Style Selector="^:lifted /template/ Border#PART_Lift">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                    <Style Selector="^ /template/ arc|ReorderableListHandle#PART_Handle">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <arc:ArcBrushTransition Property="Background" />
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                    <Style Selector="^ /template/ arc|ArcGlyph#PART_Grip">
+                        <Setter Property="Transitions">
+                            <Transitions>
+                                <arc:ArcBrushTransition Property="Foreground" />
+                            </Transitions>
+                        </Setter>
+                    </Style>
+                </Style>
+            </ControlTheme>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

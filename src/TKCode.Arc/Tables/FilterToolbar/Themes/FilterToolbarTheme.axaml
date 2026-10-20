@@ -1,0 +1,176 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:FilterToolbar}" TargetType="arc:FilterToolbar">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FilterToolbar">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        MinHeight="{TemplateBinding MinHeight}">
+                    <Panel>
+                        <arc:FilterToolbarLayout Name="PART_Layout"
+                                                 Gap="{arc:FilterToolbarTokenResource SectionGap}"
+                                                 Breakpoint="{arc:FilterToolbarTokenResource StackBreakpoint}">
+                            <!-- The frame springs to the chip list height, so a new line of chips opens the toolbar instead of snapping it. -->
+                            <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" ClipToBounds="False">
+                                <Panel MinHeight="{arc:ArcDesignTokenResource ControlSizeSM}">
+                                    <arc:FilterToolbarChipPanel Name="PART_Chips" />
+                                    <arc:PresenceHost Name="PART_Empty"
+                                                      IsPresent="{TemplateBinding HasFilters, Converter={x:Static BoolConverters.Not}}"
+                                                      Mode="Rise"
+                                                      Offset="4"
+                                                      IsHitTestVisible="False"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Center">
+                                        <TextBlock Text="{TemplateBinding EmptyText}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </arc:PresenceHost>
+                                </Panel>
+                            </arc:SpringSizeDecorator>
+                            <StackPanel Name="PART_Actions"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:FilterToolbarTokenResource ActionGap}"
+                                        VerticalAlignment="Top">
+                                <arc:FilterToolbarSearchBox Name="PART_Search"
+                                                            IsVisible="{TemplateBinding IsSearchVisible}"
+                                                            Text="{TemplateBinding SearchText, Mode=TwoWay}"
+                                                            PlaceholderText="{TemplateBinding SearchPlaceholder}"
+                                                            Width="{arc:FilterToolbarTokenResource SearchWidth}">
+                                    <arc:FilterToolbarSearchBox.Theme>
+                                        <ControlTheme TargetType="arc:FilterToolbarSearchBox">
+                                            <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+                                            <Setter Property="FocusAdorner" Value="{x:Null}" />
+                                            <Setter Property="Template">
+                                                <ControlTemplate TargetType="arc:FilterToolbarSearchBox">
+                                                    <Panel>
+                                                        <Border Name="PART_Field"
+                                                                Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                                CornerRadius="{TemplateBinding CornerRadius}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <DockPanel>
+                                                                <arc:ArcGlyph DockPanel.Dock="Left"
+                                                                              Data="{x:Static arc:ArcIcons.Search}"
+                                                                              Size="15"
+                                                                              StrokeThickness="1.8"
+                                                                              Margin="0,0,8,0"
+                                                                              VerticalAlignment="Center"
+                                                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                                <Panel VerticalAlignment="Center">
+                                                                    <TextBlock Name="PART_Placeholder"
+                                                                               Text="{TemplateBinding PlaceholderText}"
+                                                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                                               IsHitTestVisible="False"
+                                                                               IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                                                                    <TextPresenter Name="PART_TextPresenter"
+                                                                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                                                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                                                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                                                                   TextWrapping="NoWrap"
+                                                                                   PasswordChar="{TemplateBinding PasswordChar}"
+                                                                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                                                   CaretBrush="{TemplateBinding CaretBrush}" />
+                                                                </Panel>
+                                                            </DockPanel>
+                                                        </Border>
+                                                        <Border Name="PART_FocusRing"
+                                                                IsVisible="False"
+                                                                IsHitTestVisible="False"
+                                                                Margin="-3"
+                                                                BorderThickness="2"
+                                                                CornerRadius="21"
+                                                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                                                    </Panel>
+                                                </ControlTemplate>
+                                            </Setter>
+                                            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+                                            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+                                            <Setter Property="BorderThickness" Value="1" />
+                                            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+                                            <Setter Property="Padding" Value="{arc:FilterToolbarTokenResource SearchInset}" />
+                                            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+                                            <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+                                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                                            <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+                                            <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+                                            <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+                                            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+                                            <Setter Property="Cursor" Value="IBeam" />
+                                            <Style Selector="^:pointerover /template/ Border#PART_Field">
+                                                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+                                            </Style>
+                                            <Style Selector="^:focus /template/ Border#PART_Field">
+                                                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+                                            </Style>
+                                            <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+                                                <Setter Property="IsVisible" Value="True" />
+                                            </Style>
+                                        </ControlTheme>
+                                    </arc:FilterToolbarSearchBox.Theme>
+                                </arc:FilterToolbarSearchBox>
+                                <arc:FilterMenu Name="PART_AddFilter"
+                                                IsVisible="{TemplateBinding HasFields}"
+                                                ActiveFilters="{TemplateBinding ActiveFilters}"
+                                                Label="{TemplateBinding AddFilterLabel}"
+                                                Alignment="{TemplateBinding MenuAlignment}" />
+                                <ContentPresenter Name="PART_ExtraActions"
+                                                  IsVisible="{TemplateBinding Actions, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                  Content="{TemplateBinding Actions}"
+                                                  VerticalAlignment="Center" />
+                                <arc:FilterToolbarChipSlot Name="PART_ClearSlot" Mode="Text" Gap="0">
+                                    <arc:Button Name="PART_ClearAll"
+                                                Variant="Ghost"
+                                                Content="{TemplateBinding ClearAllLabel}"
+                                                FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                MinHeight="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                                Height="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                                Padding="{arc:FilterToolbarTokenResource ClearInset}" />
+                                </arc:FilterToolbarChipSlot>
+                            </StackPanel>
+                        </arc:FilterToolbarLayout>
+                        <TextBlock Name="PART_Announcer"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   ClipToBounds="True"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:FilterToolbarTokenResource ToolbarInset}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <Style Selector="^ /template/ arc|Button#PART_ClearAll">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_ClearAll:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

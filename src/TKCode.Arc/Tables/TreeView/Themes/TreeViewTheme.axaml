@@ -1,0 +1,50 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:TreeView}" TargetType="arc:TreeView">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TreeView">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        ClipToBounds="True">
+                    <ScrollViewer Name="PART_Scroll"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <arc:TreeViewRowsPanel Name="PART_Rows" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{arc:TreeViewTokenResource TreePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:TreeViewTokenResource TreeCornerRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RowForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="RowActiveForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="RowHoverFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SelectionFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="GuideBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="TypeScriptBrush" Value="{arc:TreeViewTokenResource TypeScriptTint}" />
+        <Setter Property="StylesheetBrush" Value="{arc:TreeViewTokenResource StylesheetTint}" />
+        <Setter Property="MarkdownBrush" Value="{arc:TreeViewTokenResource MarkdownTint}" />
+        <Setter Property="JsonBrush" Value="{arc:TreeViewTokenResource JsonTint}" />
+        <Setter Property="RowSlotHeight" Value="{arc:TreeViewTokenResource RowSlotHeight}" />
+        <Setter Property="IndentWidth" Value="{arc:TreeViewTokenResource IndentWidth}" />
+    </ControlTheme>
+</ResourceDictionary>

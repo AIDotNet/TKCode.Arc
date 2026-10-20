@@ -1,0 +1,306 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Icon-only tool buttons of the toolbar, the search pill and the path bar (Arc .tool / .action). -->
+    <ControlTheme x:Key="JsonViewerToolButtonTheme" TargetType="Button">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="16"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:JsonViewerTokenResource ToolSize}" />
+        <Setter Property="Height" Value="{arc:JsonViewerTokenResource ToolSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:JsonViewerTokenResource ToolRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^.inset">
+            <Setter Property="Width" Value="{arc:JsonViewerTokenResource InsetToolSize}" />
+            <Setter Property="Height" Value="{arc:JsonViewerTokenResource InsetToolSize}" />
+            <Setter Property="CornerRadius" Value="{arc:JsonViewerTokenResource InsetToolRadius}" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            </Style>
+        </Style>
+        <Style Selector="^.path-copy">
+            <Setter Property="Width" Value="{arc:JsonViewerTokenResource PathCopySize}" />
+            <Setter Property="Height" Value="{arc:JsonViewerTokenResource PathCopySize}" />
+            <Setter Property="CornerRadius" Value="{arc:JsonViewerTokenResource PathCopyRadius}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The borderless search input inside the pill. -->
+    <ControlTheme x:Key="JsonViewerSearchBoxTheme" TargetType="TextBox">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="TextBox">
+                <Panel Background="Transparent" Margin="{TemplateBinding Padding}">
+                    <TextBlock Name="PART_Watermark"
+                               Text="{TemplateBinding PlaceholderText}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               IsHitTestVisible="False"
+                               IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                    <TextPresenter Name="PART_TextPresenter"
+                                   VerticalAlignment="Center"
+                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   TextWrapping="NoWrap"
+                                   PasswordChar="{TemplateBinding PasswordChar}"
+                                   RevealPassword="{TemplateBinding RevealPassword}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   CaretBrush="{TemplateBinding CaretBrush}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:JsonViewer}" TargetType="arc:JsonViewer">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:JsonViewer">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <Border Name="PART_Toolbar"
+                                IsVisible="{TemplateBinding IsToolbarVisible}"
+                                Padding="{arc:JsonViewerTokenResource ToolbarPadding}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                                <Border Name="PART_SearchPill"
+                                        IsVisible="{TemplateBinding IsSearchable}"
+                                        MinHeight="34"
+                                        Padding="{arc:JsonViewerTokenResource SearchPadding}"
+                                        CornerRadius="{arc:JsonViewerTokenResource SearchRadius}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}"
+                                                      Size="15"
+                                                      VerticalAlignment="Center"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBox Name="PART_Search"
+                                                 Grid.Column="1"
+                                                 Theme="{StaticResource JsonViewerSearchBoxTheme}"
+                                                 PlaceholderText="{TemplateBinding SearchPlaceholder}"
+                                                 Text="{TemplateBinding Query, Mode=TwoWay}"
+                                                 AutomationProperties.Name="Search JSON" />
+                                        <arc:PresenceHost Grid.Column="2"
+                                                          Mode="Fade"
+                                                          Collapse="Width"
+                                                          IsPresent="{TemplateBinding HasQuery}">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Name="PART_MatchCount"
+                                                           Text="{TemplateBinding MatchSummary}"
+                                                           MinWidth="28"
+                                                           Padding="4,0"
+                                                           TextAlignment="Right"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           AutomationProperties.LiveSetting="Polite" />
+                                                <Button Name="PART_PreviousMatch"
+                                                        Classes="inset"
+                                                        Theme="{StaticResource JsonViewerToolButtonTheme}"
+                                                        AutomationProperties.Name="Previous match">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronUp}" Size="15" />
+                                                </Button>
+                                                <Button Name="PART_NextMatch"
+                                                        Classes="inset"
+                                                        Theme="{StaticResource JsonViewerToolButtonTheme}"
+                                                        AutomationProperties.Name="Next match">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}" Size="15" />
+                                                </Button>
+                                            </StackPanel>
+                                        </arc:PresenceHost>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="1"
+                                        Width="1"
+                                        Height="18"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                <Button Name="PART_ExpandAll"
+                                        Grid.Column="2"
+                                        Theme="{StaticResource JsonViewerToolButtonTheme}"
+                                        Margin="0,0,2,0"
+                                        arc:Tooltip.Tip="Expand all"
+                                        AutomationProperties.Name="Expand all">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronsUpDown}" Size="15" />
+                                </Button>
+                                <Button Name="PART_CollapseAll"
+                                        Grid.Column="3"
+                                        Theme="{StaticResource JsonViewerToolButtonTheme}"
+                                        arc:Tooltip.Tip="Collapse all"
+                                        AutomationProperties.Name="Collapse all">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronsDownUp}" Size="15" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                        <ScrollViewer Name="PART_Scroll"
+                                      Grid.Row="1"
+                                      MaxHeight="{TemplateBinding MaxTreeHeight}"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <arc:JsonViewerRowsPanel Name="PART_Rows"
+                                                     Margin="{arc:JsonViewerTokenResource TreePadding}"
+                                                     AutomationProperties.ControlTypeOverride="Tree" />
+                        </ScrollViewer>
+                        <TextBlock Name="PART_Error"
+                                   Grid.Row="1"
+                                   IsVisible="{TemplateBinding HasError}"
+                                   Text="{TemplateBinding ParseError}"
+                                   Margin="16,14"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource Danger}" />
+                        <Border Name="PART_PathBar"
+                                Grid.Row="2"
+                                IsVisible="{TemplateBinding IsPathBarVisible}"
+                                Padding="{arc:JsonViewerTokenResource PathBarPadding}"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="30">
+                                <TextBlock Name="PART_Path"
+                                           Text="{TemplateBinding CurrentPath}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <TextBlock Name="PART_PathType"
+                                           Grid.Column="1"
+                                           Margin="10,0"
+                                           Text="{TemplateBinding CurrentTypeLabel}"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <Button Name="PART_PathCopy"
+                                        Grid.Column="2"
+                                        Classes="path-copy"
+                                        IsVisible="{TemplateBinding CanCopyPath}"
+                                        Theme="{StaticResource JsonViewerToolButtonTheme}"
+                                        AutomationProperties.Name="Copy path">
+                                    <arc:ArcContentSwap Mode="Pop" Width="14" Height="14" Content="{TemplateBinding PathCopyGlyph}" />
+                                </Button>
+                            </Grid>
+                        </Border>
+                        <TextBlock Name="PART_Status"
+                                   Grid.Row="2"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   Text="{TemplateBinding Announcement}"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MaxTreeHeight" Value="{arc:JsonViewerTokenResource TreeMaxHeight}" />
+        <Setter Property="RowForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="StringBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="NumberBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BooleanBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="HighlightFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="RowHoverFill" Value="{arc:JsonViewerTokenResource RowHoverFill}" />
+        <Setter Property="MarkFill" Value="{arc:JsonViewerTokenResource MarkFill}" />
+        <Setter Property="MarkCurrentFill" Value="{arc:JsonViewerTokenResource MarkCurrentFill}" />
+        <Setter Property="ActionPressedFill" Value="{arc:JsonViewerTokenResource ActionPressedFill}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="MonoFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="TreeFontSize" Value="{arc:JsonViewerTokenResource TreeFontSize}" />
+        <Setter Property="SmallFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="RowSlotHeight" Value="{arc:JsonViewerTokenResource RowSlotHeight}" />
+        <Setter Property="IndentWidth" Value="{arc:JsonViewerTokenResource IndentWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:JsonViewerTokenResource CompactWidth}" />
+
+        <Style Selector="^:compact /template/ TextBlock#PART_PathType">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

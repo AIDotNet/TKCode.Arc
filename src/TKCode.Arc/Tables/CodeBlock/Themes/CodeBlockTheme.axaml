@@ -1,0 +1,238 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:CodeBlock}" TargetType="arc:CodeBlock">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeBlock">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel Orientation="Vertical">
+                        <Border Name="PART_Header"
+                                MinHeight="{arc:CodeBlockTokenResource HeaderMinHeight}"
+                                CornerRadius="{arc:CodeBlockTokenResource HeaderCornerRadius}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                Background="{arc:ArcDesignTokenResource SurfaceRaised}">
+                            <DockPanel VerticalAlignment="Center">
+                                <arc:CopyButton Name="PART_Copy"
+                                                DockPanel.Dock="Right"
+                                                Margin="12,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Label="{TemplateBinding CopyLabel}"
+                                                Value="{TemplateBinding Code}" />
+                                <arc:CodeBlockHeaderLabel Name="PART_FileLabel"
+                                                          VerticalAlignment="Center"
+                                                          HorizontalAlignment="Left"
+                                                          FileName="{TemplateBinding DisplayFileName}"
+                                                          Language="{TemplateBinding DisplayLanguage}" />
+                            </DockPanel>
+                        </Border>
+                        <Panel>
+                            <arc:SpringSizeDecorator Name="PART_Size"
+                                                     Axis="Height"
+                                                     Spring="Smooth"
+                                                     ClipToBounds="True">
+                                <arc:CodeBlockViewport Name="PART_Viewport"
+                                                       IsCollapsed="{TemplateBinding IsCollapsed}"
+                                                       CollapsedHeight="{TemplateBinding CollapsedHeight}">
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <TextBlock Name="PART_LineNumbers"
+                                                   IsVisible="{TemplateBinding ShowLineNumbers}"
+                                                   Text="{TemplateBinding LineNumbersText}"
+                                                   TextAlignment="Right"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   Foreground="{arc:CodeBlockTokenResource LineNumberForeground}"
+                                                   AutomationProperties.AccessibilityView="Raw" />
+                                        <ScrollViewer Name="PART_Scroll"
+                                                      Grid.Column="1"
+                                                      HorizontalScrollBarVisibility="Auto"
+                                                      VerticalScrollBarVisibility="Disabled">
+                                            <arc:CodeBlockText Name="PART_Text"
+                                                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                               SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                               SelectionForegroundBrush="{x:Null}"
+                                                               AutomationProperties.Name="Selectable source code" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </arc:CodeBlockViewport>
+                            </arc:SpringSizeDecorator>
+                            <Border Name="PART_CodeFocusRing"
+                                    IsVisible="False"
+                                    IsHitTestVisible="False"
+                                    Margin="4"
+                                    BorderThickness="2"
+                                    CornerRadius="12"
+                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        </Panel>
+                        <arc:CodeBlockExpandButton Name="PART_Expand"
+                                                   IsVisible="{TemplateBinding CanCollapse}"
+                                                   IsExpanded="{TemplateBinding IsExpanded}"
+                                                   CollapsedLabel="{TemplateBinding ShowAllLabel}"
+                                                   ExpandedLabel="{TemplateBinding ShowFewerLinesLabel}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CompactWidth" Value="{arc:CodeBlockTokenResource CompactWidth}" />
+        <Setter Property="CommentBrush" Value="{arc:CodeBlockTokenResource SyntaxComment}" />
+        <Setter Property="StringBrush" Value="{arc:CodeBlockTokenResource SyntaxString}" />
+        <Setter Property="NumberBrush" Value="{arc:CodeBlockTokenResource SyntaxNumber}" />
+        <Setter Property="KeywordBrush" Value="{arc:CodeBlockTokenResource SyntaxKeyword}" />
+        <Setter Property="TypeBrush" Value="{arc:CodeBlockTokenResource SyntaxType}" />
+        <Setter Property="FunctionBrush" Value="{arc:CodeBlockTokenResource SyntaxFunction}" />
+        <Setter Property="PropertyBrush" Value="{arc:CodeBlockTokenResource SyntaxProperty}" />
+        <Setter Property="TagBrush" Value="{arc:CodeBlockTokenResource SyntaxTag}" />
+        <Setter Property="PunctuationBrush" Value="{arc:CodeBlockTokenResource SyntaxPunctuation}" />
+
+        <!-- Sizes live in styles (not template attributes) so the compact layout can override them. -->
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:CodeBlockTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CodeBlockText#PART_Text">
+            <Setter Property="Padding" Value="{arc:CodeBlockTokenResource CodePadding}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:CodeBlockTokenResource CodeLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_LineNumbers">
+            <Setter Property="Padding" Value="{arc:CodeBlockTokenResource LineNumbersPadding}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:CodeBlockTokenResource CodeLineHeight}" />
+        </Style>
+
+        <Style Selector="^:code-focus-visible /template/ Border#PART_CodeFocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Narrow blocks (Arc: max-width 420px): smaller padding and text, icon-only copy. -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Border#PART_Header">
+                <Setter Property="Padding" Value="{arc:CodeBlockTokenResource HeaderPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CopyButton#PART_Copy">
+                <Setter Property="IsIconOnly" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|CodeBlockText#PART_Text">
+                <Setter Property="Padding" Value="{arc:CodeBlockTokenResource CodePaddingCompact}" />
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+                <Setter Property="LineHeight" Value="{arc:CodeBlockTokenResource CodeLineHeightCompact}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_LineNumbers">
+                <Setter Property="Padding" Value="{arc:CodeBlockTokenResource LineNumbersPaddingCompact}" />
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+                <Setter Property="LineHeight" Value="{arc:CodeBlockTokenResource CodeLineHeightCompact}" />
+            </Style>
+        </Style>
+
+        <!-- With line numbers the code keeps a 16px gap from the gutter. -->
+        <Style Selector="^:line-numbers /template/ arc|CodeBlockText#PART_Text">
+            <Setter Property="Padding" Value="16,20,20,20" />
+        </Style>
+        <Style Selector="^:line-numbers:compact /template/ arc|CodeBlockText#PART_Text">
+            <Setter Property="Padding" Value="12,16,16,16" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:CodeBlockExpandButton}" TargetType="arc:CodeBlockExpandButton">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeBlockExpandButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="0,1,0,0"
+                            CornerRadius="{arc:CodeBlockTokenResource ExpandCornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <!-- Both labels reserve the cell, so the chevron never moves when the words change. -->
+                            <Grid VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding CollapsedLabel}" Opacity="0" />
+                                <TextBlock Text="{TemplateBinding ExpandedLabel}" Opacity="0" />
+                                <arc:ArcContentSwap Name="PART_Label"
+                                                    Mode="BlurSwap"
+                                                    HorizontalAlignment="Left"
+                                                    HorizontalContentAlignment="Left"
+                                                    Content="{TemplateBinding CurrentLabel}" />
+                            </Grid>
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="16"
+                                          VerticalAlignment="Center"
+                                          RenderTransform="rotate(0deg)"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="4"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="{arc:CodeBlockTokenResource ExpandMinHeight}" />
+        <Setter Property="Padding" Value="{arc:CodeBlockTokenResource ExpandPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
