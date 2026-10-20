@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Icons.Lucide</AssemblyName>
+        <RootNamespace>TKCode.Arc.Icons.Lucide</RootNamespace>
+        <PackageId>TKCode.Arc.Icons.Lucide</PackageId>
+        <Description>The complete Lucide icon set (ISC) for TKCode.Arc: LucideIcon control and LucideGeometry markup extension.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+    </ItemGroup>
+</Project>

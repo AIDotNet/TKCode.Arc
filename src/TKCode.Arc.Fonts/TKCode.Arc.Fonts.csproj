@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Fonts</AssemblyName>
+        <RootNamespace>TKCode.Arc.Fonts</RootNamespace>
+        <PackageId>TKCode.Arc.Fonts</PackageId>
+        <Description>Geist and Geist Mono (SIL OFL 1.1, Vercel) for TKCode.Arc, registered as fonts:Geist and fonts:GeistMono.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+    </ItemGroup>
+    <ItemGroup>
+        <AvaloniaResource Include="Assets/Geist/*.ttf" />
+        <AvaloniaResource Include="Assets/GeistMono/*.ttf" />
+        <None Include="Assets/OFL.txt" Pack="true" PackagePath="licenses/Geist-OFL.txt" />
+    </ItemGroup>
+</Project>
