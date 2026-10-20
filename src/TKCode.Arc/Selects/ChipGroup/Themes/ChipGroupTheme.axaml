@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ChipGroup}" TargetType="arc:ChipGroup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChipGroup">
+                <!-- The frame follows the rows' height on a smooth spring; it clips only while moving. -->
+                <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" IsExpanded="True">
+                    <arc:ChipGroupPanel Name="PART_Panel" Spacing="{arc:ChipGroupTokenResource ChipGap}" />
+                </arc:SpringSizeDecorator>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="ChipHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="ChipPadding" Value="{arc:ChipGroupTokenResource ChipInlinePadding}" />
+        <Setter Property="ChipFontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+</ResourceDictionary>

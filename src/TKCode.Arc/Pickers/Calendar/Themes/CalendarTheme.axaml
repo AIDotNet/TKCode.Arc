@@ -1,0 +1,84 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Calendar}" TargetType="arc:Calendar">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Calendar">
+                <StackPanel Orientation="Vertical" Background="{TemplateBinding Background}">
+                    <Grid ColumnDefinitions="*,Auto"
+                          MinHeight="{arc:CalendarTokenResource HeaderMinHeight}"
+                          Margin="{arc:CalendarTokenResource HeaderMargin}">
+                        <arc:ArcContentSwap Name="PART_Title"
+                                            Mode="Slide"
+                                            Direction="{TemplateBinding TitleDirection}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            HorizontalContentAlignment="Left"
+                                            Content="{TemplateBinding MonthTitle}"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="2"
+                                    VerticalAlignment="Center"
+                                    Margin="{arc:CalendarTokenResource NavigationMargin}">
+                            <arc:Button Name="PART_Today"
+                                        Classes="calendar-nav"
+                                        Variant="Ghost"
+                                        IsVisible="{TemplateBinding ShowToday}"
+                                        Content="{TemplateBinding TodayLabel}"
+                                        Padding="{arc:CalendarTokenResource TodayButtonPadding}" />
+                            <arc:Button Name="PART_Previous"
+                                        Classes="calendar-nav"
+                                        Variant="Ghost"
+                                        Width="{arc:CalendarTokenResource NavButtonSize}"
+                                        Padding="0">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}" Size="16" />
+                            </arc:Button>
+                            <arc:Button Name="PART_Next"
+                                        Classes="calendar-nav"
+                                        Variant="Ghost"
+                                        Width="{arc:CalendarTokenResource NavButtonSize}"
+                                        Padding="0">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}" Size="16" />
+                            </arc:Button>
+                        </StackPanel>
+                    </Grid>
+                    <arc:CalendarWeekdayRow Name="PART_Weekdays"
+                                            Margin="{arc:CalendarTokenResource WeekdaysMargin}"
+                                            Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                            FontFamily="{TemplateBinding FontFamily}"
+                                            FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                    <arc:CalendarMonthStrip Name="PART_Strip" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MaxWidth" Value="328" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="DayFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="DayForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="DayMutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="DaySelectedForeground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="DayHoverFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SelectionFill" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SelectionHoverFill" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+
+        <Style Selector="^ /template/ arc|Button.calendar-nav">
+            <Setter Property="MinHeight" Value="{arc:CalendarTokenResource NavButtonSize}" />
+            <Setter Property="Height" Value="{arc:CalendarTokenResource NavButtonSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.calendar-nav:disabled">
+            <Setter Property="Opacity" Value="{arc:CalendarTokenResource NavDisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

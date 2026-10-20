@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MorphSelect}" TargetType="arc:MorphSelect">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MorphSelect">
+                <StackPanel Name="PART_Root" Spacing="{arc:ArcDesignTokenResource Space2}">
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <Panel Name="PART_AnchorHost">
+                        <TextBlock Name="PART_Announcer"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                        <arc:MorphSelectAnchor Name="PART_Anchor"
+                                               Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                               MaxContentWidth="{arc:MorphSelectTokenResource TriggerMaxWidth}">
+                            <Panel>
+                                <Border Name="PART_FocusRing"
+                                        IsVisible="False"
+                                        IsHitTestVisible="False"
+                                        Margin="{arc:MorphSelectTokenResource FocusRingMargin}"
+                                        BorderThickness="2"
+                                        CornerRadius="{arc:MorphSelectTokenResource FocusRingRadius}"
+                                        BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                                <!-- One material for both states; the 1px border is drawn inside, so padding is 1px less. -->
+                                <Border Name="PART_Trigger"
+                                        Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                        Padding="13,0,35,0"
+                                        BorderThickness="1"
+                                        CornerRadius="{arc:MorphSelectTokenResource ShapeCornerRadius}"
+                                        Background="{arc:ArcDesignTokenResource Surface}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                        Cursor="Hand">
+                                    <arc:SelectValueRoll Name="PART_Value"
+                                                         VerticalAlignment="Center"
+                                                         TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         EnterTravel="0.5"
+                                                         ExitTravel="0.45"
+                                                         SpringTravel="True"
+                                                         ExitDuration="0:0:0.12"
+                                                         Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                         PlaceholderForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                         IconForeground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </Border>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center"
+                                              Margin="{arc:MorphSelectTokenResource ChevronMargin}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Panel>
+                        </arc:MorphSelectAnchor>
+                        <arc:ArcPopup Name="PART_Popup"
+                                      IsLightDismissEnabled="True"
+                                      TakesFocusFromNativeControl="False"
+                                      WindowManagerAddShadowHint="False" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="OptionHighlight" Value="{arc:MorphSelectTokenResource HighlightColor}" />
+        <Setter Property="ControlFill" Value="{arc:MorphSelectTokenResource ControlFillColor}" />
+
+        <Style Selector="^[PanelAlignment=End]">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:not(:open):not(:disabled) /template/ Border#PART_Trigger:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- While the surface is open its lid stands in for the trigger. -->
+        <Style Selector="^:open /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Trigger">
+            <Setter Property="Opacity" Value="{arc:MorphSelectTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_Trigger">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

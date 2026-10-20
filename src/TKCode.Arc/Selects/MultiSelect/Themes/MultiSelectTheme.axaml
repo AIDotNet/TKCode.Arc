@@ -1,0 +1,271 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MultiSelect}" TargetType="arc:MultiSelect">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MultiSelect">
+                <StackPanel Spacing="{arc:ArcDesignTokenResource Space2}">
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Label}"
+                               IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <Panel>
+                        <TextBlock Name="PART_Announcer"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="{arc:MultiSelectTokenResource FocusRingMargin}"
+                                BorderThickness="2"
+                                CornerRadius="{arc:MultiSelectTokenResource FocusRingRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Border Name="PART_Trigger"
+                                MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                Padding="{arc:MultiSelectTokenResource TriggerPadding}"
+                                BorderThickness="1"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Cursor="Hand">
+                            <DockPanel>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              DockPanel.Dock="Right"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              Margin="{arc:MultiSelectTokenResource ChevronMargin}"
+                                              VerticalAlignment="Center"
+                                              RenderTransformOrigin="50%,50%"
+                                              RenderTransform="rotate(0deg)"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <Panel MinHeight="{arc:MultiSelectTokenResource ValueMinHeight}" VerticalAlignment="Center" ClipToBounds="True">
+                                    <TextBlock Name="PART_Placeholder"
+                                               Text="{TemplateBinding Placeholder}"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               IsHitTestVisible="False"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:MultiSelectChipRow Name="PART_Chips"
+                                                            HorizontalAlignment="Left"
+                                                            VerticalAlignment="Center"
+                                                            ChipMaxWidth="{arc:MultiSelectTokenResource ChipMaxWidth}"
+                                                            ChipPadding="{arc:MultiSelectTokenResource ChipPadding}"
+                                                            ChipSpacing="{arc:MultiSelectTokenResource ChipSpacing}"
+                                                            ChipFontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                            ChipBackground="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                            ChipBorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                            ChipForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                            MoreForeground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </Panel>
+                            </DockPanel>
+                        </Border>
+                        <arc:PresenceHost Name="PART_ClearHost"
+                                          Mode="Pop"
+                                          EnterScale="0.6"
+                                          Spring="Snappy"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Margin="{arc:MultiSelectTokenResource ClearButtonMargin}">
+                            <Button Name="PART_Clear"
+                                    Width="{arc:MultiSelectTokenResource ClearButtonSize}"
+                                    Height="{arc:MultiSelectTokenResource ClearButtonSize}"
+                                    Padding="0"
+                                    Background="Transparent"
+                                    Cursor="Hand"
+                                    RenderTransformOrigin="50%,50%"
+                                    RenderTransform="scale(1)"
+                                    AutomationProperties.Name="Clear selections">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Panel>
+                                            <Border Margin="-3"
+                                                    CornerRadius="14"
+                                                    BorderThickness="2"
+                                                    BorderBrush="{TemplateBinding BorderBrush}" />
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="11">
+                                                <arc:ArcGlyph Data="{x:Static arc:SelectGlyphs.X}"
+                                                              Size="{arc:MultiSelectTokenResource ClearGlyphSize}"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"
+                                                              Foreground="{TemplateBinding Foreground}" />
+                                            </Border>
+                                        </Panel>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </arc:PresenceHost>
+                        <arc:ArcPopup Name="PART_Popup"
+                                      Placement="Bottom"
+                                      MarginToAnchor="{arc:MultiSelectTokenResource MenuOffset}"
+                                      EnterOffset="6"
+                                      EnterScale="0.97"
+                                      IsLightDismissEnabled="True"
+                                      TakesFocusFromNativeControl="False"
+                                      WindowManagerAddShadowHint="False">
+                            <Border Name="PART_Surface"
+                                    Padding="{arc:MultiSelectTokenResource MenuPadding}"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <DockPanel>
+                                    <Border Name="PART_SearchRow"
+                                            DockPanel.Dock="Top"
+                                            IsVisible="False"
+                                            Height="{arc:MultiSelectTokenResource SearchRowHeight}"
+                                            Margin="0,0,0,5"
+                                            Padding="{arc:MultiSelectTokenResource OptionPadding}"
+                                            BorderThickness="0,0,0,1"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                        <DockPanel>
+                                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                                          Data="{x:Static arc:ArcIcons.Search}"
+                                                          Size="16"
+                                                          Margin="0,0,8,0"
+                                                          VerticalAlignment="Center"
+                                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <Decorator Name="PART_SearchHost" VerticalAlignment="Center" />
+                                        </DockPanel>
+                                    </Border>
+                                    <arc:PresenceHost Name="PART_EmptyHost" DockPanel.Dock="Bottom" Mode="Rise" Offset="4" IsPresent="False">
+                                        <TextBlock Text="{TemplateBinding EmptyText}"
+                                                   Padding="12"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </arc:PresenceHost>
+                                    <ScrollViewer Name="PART_Scroll"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <arc:SelectOptionView Name="PART_Options"
+                                                              RowHeight="{arc:MultiSelectTokenResource OptionHeight}"
+                                                              RowCornerRadius="{arc:MultiSelectTokenResource OptionCornerRadius}"
+                                                              RowPadding="{arc:MultiSelectTokenResource OptionPadding}"
+                                                              ContentSpacing="12"
+                                                              CheckMode="Draw"
+                                                              DisabledOpacity="{arc:MultiSelectTokenResource OptionDisabledOpacity}"
+                                                              HighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                              Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                              CheckForeground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </Border>
+                        </arc:ArcPopup>
+                    </Panel>
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MinWidth" Value="200" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- The trigger anchors the menu, so press feedback stays in color; it never scales. -->
+        <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Trigger:pointerover arc|MultiSelectChipRow">
+            <Setter Property="ChipBackground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Trigger, ^:open /template/ Border#PART_Trigger">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|MultiSelectChipRow#PART_Chips">
+            <Setter Property="ChipBackground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:has-selection /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Margin" Value="{arc:MultiSelectTokenResource ChevronMarginWithClear}" />
+        </Style>
+        <Style Selector="^:has-selection /template/ TextBlock#PART_Placeholder">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Trigger">
+            <Setter Property="Opacity" Value="{arc:MultiSelectTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:searchable /template/ Border#PART_SearchRow">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^ /template/ Button#PART_Clear">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Clear:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Clear:focus-visible">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Trigger">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" />
+                        <arc:ArcBrushTransition Property="BorderBrush" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Placeholder">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Button#PART_Clear">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" />
+                        <arc:ArcBrushTransition Property="Foreground" />
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Button#PART_Clear:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.96)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ TextBlock#PART_Placeholder">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
