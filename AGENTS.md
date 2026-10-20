@@ -24,6 +24,7 @@ Read `design/engineering/implementation-guide.md` before writing a component: fi
 - Themes live in `<Component>/Themes/<Component>Theme.axaml`; never create `*Themes.axaml` aggregates.
 - Transitions are declared in ControlTheme setters under `^:motion-full` / `^:motion-reduced` (set `arc:ArcMotion.Tracks="True"`); code-driven motion uses `MotionValue<T>` and must say why ControlTheme cannot express it.
 - C# control-flow bodies always use braces. No reflection; AOT and trimming safe.
+- Every Arc component needs gallery docs pages `gallery/TKCode.Arc.Gallery/Docs/<Category>/<Component>/{en-US,zh-CN,zh-TW}.md` (checked by `GalleryDocsTests`; design/engineering/gallery-app.md section 6.6), and its public properties and events need XML `<summary>` text (they feed the API tables).
 - Do not commit without an explicit request.
 
 ## Verify
