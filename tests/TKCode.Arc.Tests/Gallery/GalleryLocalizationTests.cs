@@ -49,7 +49,7 @@ public class GalleryLocalizationTests
                     // Proper nouns and loanwords may stay the same; everything else must have been translated.
                     if (text == source)
                     {
-                        source.ShouldBeOneOf(["Markdown", "Copy Markdown"], $"{language}: {kind} was left in English");
+                        source.ShouldBeOneOf(["Markdown", "Copy Markdown", "AI"], $"{language}: {kind} was left in English");
                     }
                     foreach (var placeholder in new[] { "{0}", "{1}" })
                     {

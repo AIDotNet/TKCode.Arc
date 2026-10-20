@@ -121,8 +121,10 @@ public class GalleryDocsTests
     [AvaloniaFact]
     public void Code_Tab_Is_Unavailable_Without_A_Page()
     {
-        GalleryDocs.Has("Switch").ShouldBeFalse();
-        var page = (GalleryPageView)GalleryPages.Create(Entry("Switch"));
+        // Every real component has a page, so use an entry that is only planned.
+        var planned = new GalleryEntry("NotYetBuilt", "Not yet built", "not-yet-built", 3, "A component that does not exist.");
+        GalleryDocs.Has(planned.ClassName).ShouldBeFalse();
+        var page = (GalleryPageView)GalleryPages.Create(planned);
         var window = TestHelpers.Show(page);
         try
         {
@@ -134,6 +136,25 @@ public class GalleryDocsTests
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Every_Arc_Component_Has_A_Page_In_Every_Language_That_Is_Up_To_Date()
+    {
+        // The rule for a new component: write Docs/<Category>/<Class>/en-US.md and its translations (design/engineering/gallery-app.md, 6).
+        var entries = GalleryCatalog.Categories.SelectMany(c => c.Entries)
+            .Concat(GalleryCatalog.Extras.Where(c => c.Code == "Content").SelectMany(c => c.Entries));
+        foreach (var entry in entries)
+        {
+            GalleryDocs.Has(entry.ClassName).ShouldBeTrue($"{entry.ClassName} has no docs page");
+            foreach (var language in new[] { "en-US", "zh-CN", "zh-TW" })
+            {
+                var doc = GalleryDocs.Get(entry.ClassName, language).ShouldNotBeNull();
+                doc.Language.ShouldBe(language, $"{entry.ClassName} is not translated into {language}");
+                doc.IsOutdated.ShouldBeFalse($"{entry.ClassName} ({language}) was translated from an older en-US.md");
+                doc.Summary.ShouldNotBeNullOrWhiteSpace();
+            }
         }
     }
 

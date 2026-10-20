@@ -43,7 +43,21 @@ public sealed class GallerySidebar : Border
         public int Matches { get; set; }
         /// <summary>No entry anywhere below: a placeholder group, listed while nothing is filtered.</summary>
         public bool IsPlaceholder => Entries.Count == 0 && Children.All(c => c.IsPlaceholder);
-        public bool IsOpen => Items.IsExpanded && Visible && (Parent?.IsOpen ?? true);
+        public Section? Section { get; set; }
+        public bool IsOpen => Items.IsExpanded && Visible && (Parent?.IsOpen ?? Section?.IsOpen ?? true);
+    }
+
+    /// <summary>A top-level sidebar section (Docs, Components, Blocks): a collapsible header over its groups.</summary>
+    private sealed class Section
+    {
+        public required Control Root { get; init; }
+        public required GalleryNavRow Header { get; init; }
+        public required ArcGlyph Chevron { get; init; }
+        public required TextBlock Count { get; init; }
+        public required SpringSizeDecorator Body { get; init; }
+        public List<Group> Groups { get; } = new();
+        public bool Visible { get; set; } = true;
+        public bool IsOpen => Body.IsExpanded && Visible;
     }
 
     private sealed class Item
@@ -63,9 +77,7 @@ public sealed class GallerySidebar : Border
     private readonly AtomTextBox _search = new();
     private readonly Border _searchBox = new();
     private readonly GallerySegmented _filter = new(GalleryShellLangResourceKind.FilterAll, GalleryShellLangResourceKind.FilterReady, GalleryShellLangResourceKind.FilterPlanned);
-    private readonly SpringSizeDecorator _all = new() { Axis = SpringSizeAxis.Height, IsExpanded = true, Spring = ArcSpring.Smooth };
-    private readonly ArcGlyph _allChevron = new() { Data = ArcIcons.ChevronDown, Size = 14 };
-    private readonly TextBlock _allCount = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 12);
+    private readonly List<Section> _sections = new();
     private readonly TextBlock _empty = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 13);
     private readonly Control _shortcut;
     private readonly Button _clear;
@@ -106,18 +118,14 @@ public sealed class GallerySidebar : Border
         _shortcut = BuildShortcutHint();
 
         var list = new StackPanel { Margin = new Thickness(8, 4, 8, 28) };
-        list.Children.Add(BuildAllHeader());
-        var groups = new StackPanel();
+        // The sections follow uiarc.dev's sidebar order: Docs, Components, Blocks.
+        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Docs, ArcIcons.FileText, [GalleryCatalog.Docs], flatten: true));
         // Arc's groups, then the extras group (not counted among the Arc components in the footer).
-        foreach (var category in GalleryCatalog.AllCategories)
-        {
-            groups.Children.Add(BuildGroup(category).Root);
-        }
+        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Components, ArcIcons.LayoutGrid, GalleryCatalog.AllCategories.ToArray()));
+        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true));
         _empty.Margin = new Thickness(16, 12);
         _empty.IsVisible = false;
-        groups.Children.Add(_empty);
-        _all.Child = groups;
-        list.Children.Add(_all);
+        list.Children.Add(_empty);
 
         ArcTokens.Bind(_indicator, GlidingIndicator.FillProperty, ArcDesignTokenKind.Foreground);
         _indicator.CornerRadius = new CornerRadius(1);
@@ -259,35 +267,66 @@ public sealed class GallerySidebar : Border
         return hint;
     }
 
-    private Control BuildAllHeader()
+    /// <summary>
+    /// A collapsible sidebar section and the groups under it. A flattened section (Docs) shows its one group's rows
+    /// without that group's own header, which would repeat the section's title.
+    /// </summary>
+    private Control BuildSection(GalleryShellLangResourceKind titleKind, Geometry icon, GalleryCategory[] categories,
+        bool isBlockGroups = false, bool flatten = false)
     {
-        ArcTokens.Bind(_allChevron, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        var chevron = new ArcGlyph { Data = ArcIcons.ChevronDown, Size = 14 };
+        ArcTokens.Bind(chevron, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.TextMuted);
+        var count = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 12);
+        var header = BuildSectionHeader(icon, titleKind, chevron, count);
+        var stack = new StackPanel();
+        var body = new SpringSizeDecorator { Axis = SpringSizeAxis.Height, IsExpanded = true, Spring = ArcSpring.Smooth, Child = stack };
+        var root = new StackPanel { Children = { header, body } };
+
+        var section = new Section { Root = root, Header = header, Chevron = chevron, Count = count, Body = body };
+        foreach (var category in categories)
+        {
+            var group = BuildGroup(category, isBlockGroups);
+            group.Section = section;
+            if (flatten)
+            {
+                group.Header.IsVisible = false;
+                group.UserExpanded = true;
+            }
+            section.Groups.Add(group);
+            stack.Children.Add(group.Root);
+        }
+        header.Click += () =>
+        {
+            body.IsExpanded = !body.IsExpanded;
+            chevron.RenderTransform = body.IsExpanded ? null : new RotateTransform(-90);
+            SyncIndicator(animate: false);
+        };
+        _sections.Add(section);
+        return root;
+    }
+
+    private static GalleryNavRow BuildSectionHeader(Geometry icon, GalleryShellLangResourceKind titleKind, ArcGlyph chevron, TextBlock count)
+    {
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto") };
-        var icon = new ArcGlyph { Data = ArcIcons.LayoutGrid, Size = 16, VerticalAlignment = VerticalAlignment.Center };
+        var glyph = new ArcGlyph { Data = icon, Size = 16, VerticalAlignment = VerticalAlignment.Center };
         var title = new TextBlock { Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.Components);
-        _allCount.Margin = new Thickness(0, 0, 8, 0);
-        _allCount.VerticalAlignment = VerticalAlignment.Center;
+        GalleryText.Bind(title, TextBlock.TextProperty, titleKind);
+        count.Margin = new Thickness(0, 0, 8, 0);
+        count.VerticalAlignment = VerticalAlignment.Center;
         Grid.SetColumn(title, 1);
-        Grid.SetColumn(_allCount, 2);
-        Grid.SetColumn(_allChevron, 3);
-        grid.Children.Add(icon);
+        Grid.SetColumn(count, 2);
+        Grid.SetColumn(chevron, 3);
+        grid.Children.Add(glyph);
         grid.Children.Add(title);
-        grid.Children.Add(_allCount);
-        grid.Children.Add(_allChevron);
+        grid.Children.Add(count);
+        grid.Children.Add(chevron);
 
         var header = new GalleryNavRow(grid, fontSize: 14, height: 36, padding: new Thickness(8, 0),
             weight: FontWeight.Medium, rest: ArcDesignTokenKind.Foreground, hoverFill: ArcDesignTokenKind.SurfaceMuted)
         {
             Margin = new Thickness(0, 4, 0, 2)
         };
-        GalleryText.Bind(header, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.Components);
-        header.Click += () =>
-        {
-            _all.IsExpanded = !_all.IsExpanded;
-            _allChevron.RenderTransform = _all.IsExpanded ? null : new RotateTransform(-90);
-            SyncIndicator(animate: false);
-        };
+        GalleryText.Bind(header, Avalonia.Automation.AutomationProperties.NameProperty, titleKind);
         return header;
     }
 
@@ -439,11 +478,18 @@ public sealed class GallerySidebar : Border
         _selected = item;
         item.Row.IsSelected = true;
         item.Row.IsTabStop = true;
-        // Open the selected item's group and every group above it.
+        // Open the selected item's group and every group above it, and the section they sit in.
+        var top = item.Group;
         for (var group = item.Group; group is not null; group = group.Parent)
         {
             group.UserExpanded = true;
             Refresh(group);
+            top = group;
+        }
+        if (top.Section is { } section)
+        {
+            section.Body.IsExpanded = true;
+            section.Chevron.RenderTransform = null;
         }
         // Reveal the row with room around it so it never lands under the fade at the bottom of the list.
         item.Row.BringIntoView(new Rect(0, -12, Math.Max(item.Row.Bounds.Width, 1), Math.Max(item.Row.Bounds.Height, 1) + 44));
@@ -463,7 +509,7 @@ public sealed class GallerySidebar : Border
 
     private void SyncIndicator(bool animate)
     {
-        if (_selected is not { } item || !item.Visible || !item.Group.IsOpen || !_all.IsExpanded || item.Row.Bounds.Height <= 0)
+        if (_selected is not { } item || !item.Visible || !item.Group.IsOpen || item.Row.Bounds.Height <= 0)
         {
             _indicator.Hide(animate: false);
             _lastRect = default;
@@ -513,7 +559,12 @@ public sealed class GallerySidebar : Border
             group.Count.Text = group.Matches.ToString();
             Refresh(group);
         }
-        _allCount.Text = _items.Count(i => i.Visible).ToString();
+        foreach (var section in _sections)
+        {
+            section.Count.Text = section.Groups.Sum(g => g.Matches).ToString();
+            section.Visible = section.Groups.Any(g => g.Visible);
+            section.Root.IsVisible = section.Visible;
+        }
         _empty.IsVisible = !_groups.Any(g => g.Visible);
         UpdateEmptyText();
         _clear.IsVisible = query.Length > 0;

@@ -97,4 +97,5 @@ public enum GalleryShellLangResourceKind
     BlockGroup_SocialProof,
     BlockGroup_Content,
     BlockGroup_Showpieces,
+    Category_Docs,
 }

@@ -547,5 +547,11 @@
         <target state="translated">展示</target>
       </segment>
     </unit>
+    <unit id="Category_Docs">
+      <segment>
+        <source>Docs</source>
+        <target state="translated">文档</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

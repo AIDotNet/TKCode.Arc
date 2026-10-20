@@ -456,5 +456,10 @@
         <source>Showpieces</source>
       </segment>
     </unit>
+    <unit id="Category_Docs">
+      <segment>
+        <source>Docs</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

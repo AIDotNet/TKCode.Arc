@@ -54,11 +54,26 @@ public static partial class GalleryCatalog
     public static readonly GalleryCategory Blocks = new("Blocks", "Blocks", "区块", [],
         Subcategories: BlockCatalog.Groups.Select(g => new GalleryCategory(g.Code, g.Title, g.ChineseTitle, [])).ToArray());
 
-    /// <summary>Arc's groups, then Blocks, then the extras: what the sidebar lists.</summary>
-    public static IEnumerable<GalleryCategory> AllCategories => Categories.Append(Blocks).Concat(Extras);
+    /// <summary>
+    /// The Docs section of the sidebar: the gallery's own documentation pages, listed first, as on uiarc.dev. Not Arc
+    /// components, and their pages are planned.
+    /// </summary>
+    public static readonly GalleryCategory Docs = new("Docs", "Docs", "文档",
+    [
+        new("DocsIntroduction", "Introduction", "introduction", 0, "What Arc is and how the gallery is organized.", IsArc: false),
+        new("DocsInstallation", "Installation", "installation", 0, "Add the Arc packages to a project.", IsArc: false),
+        new("DocsTheming", "Theming", "theming", 0, "Themes, design tokens and appearance.", IsArc: false),
+        new("DocsMotion", "Motion", "motion", 0, "The motion engine and its presets.", IsArc: false),
+        new("DocsAiAndMcp", "AI and MCP", "ai-and-mcp", 0, "Use Arc with AI assistants through MCP.", IsArc: false),
+        new("DocsChangelog", "Changelog", "changelog", 0, "Release notes.", IsArc: false),
+    ], IsArc: false);
 
-    /// <summary>Every entry the gallery lists (Arc components, blocks and extras).</summary>
-    public static IEnumerable<GalleryEntry> AllEntries => AllCategories.SelectMany(c => c.AllEntries);
+    /// <summary>The Components section of the sidebar: Arc's groups, then the extras.</summary>
+    public static IEnumerable<GalleryCategory> AllCategories => Categories.Concat(Extras);
+
+    /// <summary>Every entry the gallery lists: the Docs, Components and Blocks sections.</summary>
+    public static IEnumerable<GalleryEntry> AllEntries =>
+        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries);
 
     /// <summary>Number of Arc components (extras not included).</summary>
     public static int Count => Categories.Sum(c => c.Entries.Length);

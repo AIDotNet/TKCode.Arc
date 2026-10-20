@@ -47,10 +47,14 @@ public sealed class GalleryShell : Grid
     /// <summary>Opens <paramref name="entry"/>'s page and reveals it in the sidebar.</summary>
     public void Select(GalleryEntry entry) => _sidebar.Select(entry);
 
+    /// <summary>Cmd/Ctrl+K: moves the focus to the sidebar search.</summary>
+    internal static bool IsSearchShortcut(KeyEventArgs e) =>
+        e.Key == Key.K && (e.KeyModifiers.HasFlag(KeyModifiers.Meta) || e.KeyModifiers.HasFlag(KeyModifiers.Control));
+
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
-        if (!e.Handled && e.Key == Key.K && (e.KeyModifiers.HasFlag(KeyModifiers.Meta) || e.KeyModifiers.HasFlag(KeyModifiers.Control)))
+        if (!e.Handled && IsSearchShortcut(e))
         {
             _sidebar.FocusSearch();
             e.Handled = true;

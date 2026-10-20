@@ -1,5 +1,6 @@
 using AtomWindow = AtomUI.Desktop.Controls.Window;
 using TKCode.Arc.Gallery.Catalog;
+using Avalonia.Input;
 
 namespace TKCode.Arc.Gallery.Shell;
 
@@ -23,6 +24,16 @@ public sealed class GalleryWindow : AtomWindow
     public GallerySidebar Sidebar => _shell.Sidebar;
 
     public GalleryTopBar TopBar => _shell.TopBar;
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (!e.Handled && GalleryShell.IsSearchShortcut(e))
+        {
+            _shell.Sidebar.FocusSearch();
+            e.Handled = true;
+        }
+    }
 
     /// <summary>Opens <paramref name="entry"/>'s page and reveals it in the sidebar.</summary>
     public void Select(GalleryEntry entry) => _shell.Select(entry);

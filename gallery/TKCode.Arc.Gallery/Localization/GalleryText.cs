@@ -109,6 +109,7 @@ public static class GalleryText
             "Content" => GalleryShellLangResourceKind.Category_Content,
             "Illustrations" => GalleryShellLangResourceKind.Category_Illustrations,
             "Blocks" => GalleryShellLangResourceKind.Category_Blocks,
+            "Docs" => GalleryShellLangResourceKind.Category_Docs,
             _ => null
         };
         kind = found.GetValueOrDefault();
