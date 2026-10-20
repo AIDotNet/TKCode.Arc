@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc</PackageId>
+        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
+        <AtomUIThemeControlCatalog>TKCode.Arc</AtomUIThemeControlCatalog>
+        <!-- Core exposes internals to Arc; both assemblies contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
+        <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+    </ItemGroup>
+</Project>

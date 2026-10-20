@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:HoldToConfirm}" TargetType="arc:HoldToConfirm">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HoldToConfirm">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <!-- Hover: the fill color mixed 6% into the surface. -->
+                    <Border Name="PART_Tint"
+                            Margin="1"
+                            Opacity="0"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource Accent}" />
+                    <Border Padding="{TemplateBinding Padding}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <arc:HoldToConfirmFace Name="PART_Face" />
+                    </Border>
+                    <!-- A second, inverted copy of the face revealed from the leading edge (covers the border too). -->
+                    <Border Name="PART_Fill"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Padding="{TemplateBinding Padding}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource Accent}">
+                        <arc:HoldToConfirmFace Name="PART_FillFace"
+                                               TextElement.Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                    </Border>
+                    <arc:ButtonsLiveRegion Name="PART_Status" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:HoldToConfirmTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="Padding" Value="{arc:HoldToConfirmTokenResource InlinePadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^[Tone=Danger]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="BorderBrush" Value="{arc:HoldToConfirmTokenResource DangerBorder}" />
+            <Style Selector="^ /template/ Border#PART_Fill, ^ /template/ Border#PART_Tint">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ arc|HoldToConfirmFace#PART_FillFace">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Tone=Neutral]">
+            <Style Selector="^ /template/ Border#PART_Fill, ^ /template/ Border#PART_Tint">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^ /template/ arc|HoldToConfirmFace#PART_FillFace">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pointerover:not(:confirmed) /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="{arc:HoldToConfirmTokenResource HoverTintOpacity}" />
+        </Style>
+        <Style Selector="^:confirmed">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+            <Setter Property="Opacity" Value="{arc:HoldToConfirmTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Press depth while holding: 0.97 (0.985 when wider than 220px), snappy; none under reduced motion. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:holding">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+            <Style Selector="^:holding:wide">
+                <Setter Property="RenderTransform" Value="scale(0.985)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
