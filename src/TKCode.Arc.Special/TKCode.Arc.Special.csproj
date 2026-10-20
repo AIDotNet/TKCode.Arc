@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Special</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Special</PackageId>
+        <Description>Special components for TKCode.Arc, the uiarc.dev "Special components" section.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+</Project>

@@ -7,7 +7,7 @@ namespace TKCode.Arc.Tests.Gallery;
 /// <summary>The Blocks group under Components: its subgroups come from the Blocks catalog and it stays out of the Arc component count.</summary>
 public class GalleryBlocksTests
 {
-    private static GalleryCategory Blocks => GalleryCatalog.AllCategories.Single(c => c.Code == "Blocks");
+    private static GalleryCategory Blocks => GalleryCatalog.Blocks;
 
     [AvaloniaFact]
     public void Blocks_Group_Lists_The_Block_Groups_In_Catalog_Order()
@@ -32,6 +32,6 @@ public class GalleryBlocksTests
     public void Blocks_Are_Not_Counted_As_Arc_Components()
     {
         GalleryCatalog.Count.ShouldBe(110);
-        GalleryCatalog.Categories.ShouldNotContain(Blocks);
+        GalleryCatalog.AllCategories.ShouldNotContain(Blocks);
     }
 }

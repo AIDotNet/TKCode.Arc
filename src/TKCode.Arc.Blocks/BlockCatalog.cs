@@ -2,6 +2,8 @@ namespace TKCode.Arc;
 
 /// <summary>A Blocks group: the sidebar category a block is filed under, with its code and English and Chinese titles.</summary>
 /// <param name="Code">The group's folder name under <c>Blocks/</c>.</param>
+/// <param name="Title">The English sidebar title.</param>
+/// <param name="ChineseTitle">The Simplified Chinese sidebar title.</param>
 public sealed record BlockGroup(string Code, string Title, string ChineseTitle);
 
 /// <summary>The Blocks taxonomy, in sidebar order. The groups exist as folders; no block is implemented yet.</summary>
