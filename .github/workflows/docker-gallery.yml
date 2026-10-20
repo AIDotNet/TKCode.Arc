@@ -1,0 +1,66 @@
+name: Docker gallery
+
+# Builds the Gallery WebAssembly host (Dockerfile) on every push and pushes the image to GHCR.
+# Pull requests are built but not pushed. Image: ghcr.io/atomuicommunity/tkcode-arc-gallery.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      streammark_version:
+        description: StreamMark version to build against (empty = the version pinned in Directory.Packages.props)
+        type: string
+        default: ""
+
+concurrency:
+  group: docker-gallery-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    name: Build and push the Gallery image
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image tags
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/atomuicommunity/tkcode-arc-gallery
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            STREAMMARK_VERSION=${{ inputs.streammark_version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
