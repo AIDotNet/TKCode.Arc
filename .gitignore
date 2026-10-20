@@ -2,7 +2,9 @@
 [Bb]in/
 [Oo]bj/
 .artifacts/
+.work/
 artifacts/
+design/
 GeneratedFiles/
 *.user
 *.suo
