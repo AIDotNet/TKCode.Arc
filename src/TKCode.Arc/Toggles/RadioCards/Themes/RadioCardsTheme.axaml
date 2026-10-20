@@ -1,0 +1,243 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:RadioCards}" TargetType="arc:RadioCards">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RadioCards">
+                <!-- The ring is the one moving part: it rides over the cards' borders, so cards never change size. -->
+                <Panel>
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <arc:GlidingIndicator Name="PART_Ring"
+                                          Spring="Morph"
+                                          StrokeThickness="{arc:RadioCardsTokenResource RingStroke}"
+                                          Stroke="{arc:ArcDesignTokenResource ControlOn}"
+                                          CornerRadius="{arc:RadioCardsTokenResource RingRadius}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <arc:RadioCardsPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="GridGap" Value="{arc:RadioCardsTokenResource GridGap}" />
+        <Setter Property="ListGap" Value="{arc:RadioCardsTokenResource ListGap}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:RadioCard}" TargetType="arc:RadioCard">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RadioCard">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:RadioCardsTokenResource CardRadius}" />
+                    <Border Name="PART_Tint"
+                            Background="{arc:ArcDesignTokenResource ControlOn}"
+                            CornerRadius="{arc:RadioCardsTokenResource CardRadius}"
+                            Opacity="0" />
+                    <Border Name="PART_Card"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:RadioCardsTokenResource CardRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="*,Auto">
+                            <Border Name="PART_Indicator"
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    VerticalAlignment="Top"
+                                    Width="{arc:RadioCardsTokenResource IndicatorDiameter}"
+                                    Height="{arc:RadioCardsTokenResource IndicatorDiameter}"
+                                    CornerRadius="{arc:RadioCardsTokenResource IndicatorRadius}"
+                                    BorderThickness="{arc:RadioCardsTokenResource IndicatorBorder}"
+                                    Background="Transparent">
+                                <Border Name="PART_Dot"
+                                        Width="{arc:RadioCardsTokenResource IndicatorDotDiameter}"
+                                        Height="{arc:RadioCardsTokenResource IndicatorDotDiameter}"
+                                        CornerRadius="{arc:RadioCardsTokenResource IndicatorDotRadius}"
+                                        Background="{arc:ArcDesignTokenResource ControlGlyph}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        RenderTransformOrigin="50%,50%"
+                                        RenderTransform="scale(0)" />
+                            </Border>
+                            <StackPanel Name="PART_Body"
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Spacing="{arc:RadioCardsTokenResource BodyGap}">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <ContentPresenter Name="PART_Icon"
+                                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                      Content="{TemplateBinding Icon}"
+                                                      Width="{arc:RadioCardsTokenResource IconDiameter}"
+                                                      Height="{arc:RadioCardsTokenResource IconDiameter}"
+                                                      Margin="{arc:RadioCardsTokenResource IconMargin}"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalContentAlignment="Center"
+                                                      VerticalContentAlignment="Center" />
+                                    <ContentPresenter Name="PART_Label"
+                                                      Grid.Column="1"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      VerticalAlignment="Center"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                                <TextBlock Name="PART_Description"
+                                           IsVisible="{TemplateBinding ShownDescription, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Text="{TemplateBinding ShownDescription}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:RadioCardsTokenResource DescriptionLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <ContentPresenter Name="PART_Meta"
+                                              Grid.Row="1"
+                                              Grid.Column="0"
+                                              Grid.ColumnSpan="3"
+                                              IsVisible="{TemplateBinding Meta, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Content="{TemplateBinding Meta}" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:RadioCardsTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:RadioCardsTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Padding" Value="{arc:RadioCardsTokenResource CardInsetGrid}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+
+        <!-- Token values that states override are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Border#PART_Indicator">
+            <Setter Property="Margin" Value="{arc:RadioCardsTokenResource IndicatorMarginGrid}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Meta">
+            <Setter Property="Margin" Value="{arc:RadioCardsTokenResource MetaMarginGrid}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <!-- List rows: indicator, body, meta on one line. -->
+        <Style Selector="^:list">
+            <Setter Property="Padding" Value="{arc:RadioCardsTokenResource CardInsetList}" />
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="{arc:RadioCardsTokenResource IndicatorMarginList}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Body">
+                <Setter Property="Grid.Column" Value="1" />
+                <Setter Property="Grid.ColumnSpan" Value="1" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Meta">
+                <Setter Property="Grid.Row" Value="0" />
+                <Setter Property="Grid.Column" Value="2" />
+                <Setter Property="Grid.ColumnSpan" Value="1" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="{arc:RadioCardsTokenResource MetaMarginList}" />
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+                <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pointerover:not(:selected):not(:disabled)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:pressed:not(:selected)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^:not(:selected)">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+        </Style>
+        <Style Selector="^:selected">
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Opacity" Value="{arc:RadioCardsTokenResource SelectedTintOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Icon">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Cursor" Value="No" />
+            <Style Selector="^ /template/ ContentPresenter#PART_Label">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Meta">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <!-- P26: the dot pops in on the snappy spring. -->
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

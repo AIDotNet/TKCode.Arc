@@ -1,0 +1,173 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:BillingToggle}" TargetType="arc:BillingToggle">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BillingToggle">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        Padding="{TemplateBinding Padding}">
+                    <!-- One thumb for the whole track, under the labels. -->
+                    <Panel>
+                        <arc:BillingToggleThumb Name="PART_Thumb"
+                                                Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                Shadow="{arc:BillingToggleTokenResource ThumbShadow}" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:BillingToggleTokenResource TrackInset}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="BadgeAccent" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="BadgeInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BadgeTintOpacity" Value="{arc:BillingToggleTokenResource BadgeTintOpacity}" />
+        <Setter Property="BadgeInkMix" Value="{arc:BillingToggleTokenResource BadgeInkMix}" />
+        <Style Selector="^[Size=Large]">
+            <Setter Property="Padding" Value="{arc:BillingToggleTokenResource TrackInsetLG}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:BillingToggleItem}" TargetType="arc:BillingToggleItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BillingToggleItem">
+                <Panel>
+                    <Border Name="PART_Option"
+                            Height="{TemplateBinding Height}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="Transparent">
+                        <StackPanel Name="PART_Content"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:BillingToggleTokenResource LabelGap}"
+                                    VerticalAlignment="Center"
+                                    RenderTransformOrigin="50%,50%">
+                            <ContentPresenter Name="PART_Label"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              VerticalAlignment="Center"
+                                              FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                              TextWrapping="NoWrap" />
+                            <!-- The savings note: quiet until its option is chosen, then it takes the accent tint. -->
+                            <Border Name="PART_Badge"
+                                    IsVisible="{TemplateBinding CurrentBadge, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    Padding="{arc:BillingToggleTokenResource BadgeInset}"
+                                    VerticalAlignment="Center"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                    TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}">
+                                <!-- Every candidate reserves the cell; the visible one crossfades on top. -->
+                                <Grid VerticalAlignment="Center" ClipToBounds="False">
+                                    <TextBlock Text="{TemplateBinding Badge}" Opacity="0" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding ActiveBadge}" Opacity="0" HorizontalAlignment="Center" />
+                                    <arc:ArcContentSwap Name="PART_BadgeText"
+                                                        Mode="BlurSwap"
+                                                        HorizontalAlignment="Center"
+                                                        Content="{TemplateBinding CurrentBadge}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:BillingToggleTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:BillingToggleTokenResource OptionHeight}" />
+        <Setter Property="Padding" Value="{arc:BillingToggleTokenResource OptionInset}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <!-- Token values that states override are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Border#PART_Badge">
+            <Setter Property="Height" Value="{arc:BillingToggleTokenResource BadgeHeight}" />
+            <Setter Property="Background" Value="{arc:BillingToggleTokenResource BadgeBackground}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:badge">
+            <Setter Property="Padding" Value="{arc:BillingToggleTokenResource OptionInsetBadge}" />
+        </Style>
+        <Style Selector="^:large">
+            <Setter Property="Height" Value="{arc:BillingToggleTokenResource OptionHeightLG}" />
+            <Setter Property="Padding" Value="{arc:BillingToggleTokenResource OptionInsetLG}" />
+            <Style Selector="^ /template/ Border#PART_Badge">
+                <Setter Property="Height" Value="{arc:BillingToggleTokenResource BadgeHeightLG}" />
+            </Style>
+        </Style>
+        <Style Selector="^:large:badge">
+            <Setter Property="Padding" Value="{arc:BillingToggleTokenResource OptionInsetBadgeLG}" />
+        </Style>
+        <Style Selector="^:not(:selected):pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:not(:selected):pressed /template/ StackPanel#PART_Content">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Cursor" Value="Arrow" />
+            <Style Selector="^ /template/ Border#PART_Badge">
+                <Setter Property="Background" Value="{TemplateBinding ActiveBadgeBackground}" />
+                <Setter Property="TextElement.Foreground" Value="{TemplateBinding ActiveBadgeForeground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ StackPanel#PART_Content">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Badge">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced:pressed /template/ StackPanel#PART_Content">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,224 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:RadioGroup}" TargetType="arc:RadioGroup">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RadioGroup">
+                <StackPanel>
+                    <ContentPresenter Name="PART_HeaderPresenter"
+                                      IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      Margin="{arc:RadioGroupTokenResource LegendMargin}"
+                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                    <!-- One highlight travels between the rows, drawn over their borders and fills. -->
+                    <Panel>
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Spring="Morph"
+                                              StrokeThickness="1"
+                                              Stroke="{arc:ArcDesignTokenResource ControlOn}"
+                                              CornerRadius="{arc:RadioGroupTokenResource HighlightRadius}" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="{arc:RadioGroupTokenResource RowGap}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:RadioGroupTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:RadioGroupItem}" TargetType="arc:RadioGroupItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RadioGroupItem">
+                <Panel>
+                    <Border Name="PART_Row"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Padding="{arc:RadioGroupTokenResource RowInset}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:RadioGroupTokenResource MarkGap}">
+                            <Panel Name="PART_Mark"
+                                   Width="{arc:RadioGroupTokenResource RingDiameter}"
+                                   Height="{arc:RadioGroupTokenResource RingDiameter}"
+                                   VerticalAlignment="Center"
+                                   RenderTransformOrigin="50%,50%">
+                                <Border Name="PART_Ring"
+                                        BorderThickness="1"
+                                        CornerRadius="{arc:RadioGroupTokenResource RingRadius}"
+                                        Background="Transparent" />
+                                <!-- A faint dot previews the choice while the pointer is down. -->
+                                <Border Name="PART_Preview"
+                                        Width="{arc:RadioGroupTokenResource DotDiameter}"
+                                        Height="{arc:RadioGroupTokenResource DotDiameter}"
+                                        CornerRadius="{arc:RadioGroupTokenResource DotRadius}"
+                                        Background="{arc:ArcDesignTokenResource Foreground}"
+                                        Opacity="0" />
+                                <Border Name="PART_Dot"
+                                        Width="{arc:RadioGroupTokenResource DotDiameter}"
+                                        Height="{arc:RadioGroupTokenResource DotDiameter}"
+                                        CornerRadius="{arc:RadioGroupTokenResource DotRadius}"
+                                        RenderTransformOrigin="50%,50%"
+                                        RenderTransform="scale(0.4)"
+                                        Opacity="0" />
+                            </Panel>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <ContentPresenter Name="PART_Label"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                  LineHeight="{arc:RadioGroupTokenResource LabelLineHeight}"
+                                                  TextWrapping="Wrap" />
+                                <TextBlock Name="PART_Description"
+                                           IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Text="{TemplateBinding Description}"
+                                           Margin="{arc:RadioGroupTokenResource DescriptionMargin}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:RadioGroupTokenResource DescriptionLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:RadioGroupTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:RadioGroupTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <!-- Token values that states override are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Border#PART_Ring">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Dot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- Rows answer a press with color only; the mark is what moves. -->
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Style Selector="^ /template/ Panel#PART_Mark">
+                <Setter Property="RenderTransform" Value="scale(0.88)" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed:not(:selected) /template/ Border#PART_Preview">
+            <Setter Property="Opacity" Value="{arc:RadioGroupTokenResource PreviewOpacity}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Style Selector="^ /template/ Border#PART_Ring">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Label">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+            <Setter Property="Opacity" Value="{arc:RadioGroupTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Panel#PART_Mark">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed /template/ Panel#PART_Mark">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Preview">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <!-- P26: the new dot springs in from 0.4 and fades in on fast; the old one shrinks and fades on instant. -->
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:selected /template/ Border#PART_Dot">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Label">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- Reduced motion: the dot and highlight land at once and the mark does not dip. -->
+        <Style Selector="^:motion-reduced:pressed /template/ Panel#PART_Mark">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

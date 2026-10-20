@@ -1,0 +1,130 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Checkbox}" TargetType="arc:Checkbox">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Checkbox">
+                <Grid ColumnDefinitions="Auto,*" Background="Transparent">
+                    <!-- The 44px hit area; only the 18px square inside it moves. -->
+                    <Panel Name="PART_Box"
+                           Width="{arc:ArcDesignTokenResource ControlSizeMD}"
+                           Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                           VerticalAlignment="Top">
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="{arc:CheckboxTokenResource FocusRingMargin}"
+                                BorderThickness="2"
+                                CornerRadius="{arc:CheckboxTokenResource FocusRingRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Panel Name="PART_Visual"
+                               Width="{arc:CheckboxTokenResource BoxSize}"
+                               Height="{arc:CheckboxTokenResource BoxSize}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               RenderTransformOrigin="50%,50%">
+                            <Border Name="PART_Square"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:CheckboxTokenResource BoxRadius}"
+                                    Background="{arc:ArcDesignTokenResource Surface}" />
+                            <arc:CheckboxMark Name="PART_Mark"
+                                              Fill="{arc:ArcDesignTokenResource ControlOn}"
+                                              Glyph="{arc:ArcDesignTokenResource ControlGlyph}"
+                                              Radius="{arc:CheckboxTokenResource BoxRadiusValue}"
+                                              StrokeThickness="{arc:CheckboxTokenResource MarkStrokeThickness}" />
+                        </Panel>
+                    </Panel>
+                    <StackPanel Name="PART_Copy"
+                                Grid.Column="1"
+                                Margin="{arc:CheckboxTokenResource CopyMargin}"
+                                Spacing="{arc:CheckboxTokenResource CopySpacing}"
+                                VerticalAlignment="Top">
+                        <ContentPresenter Name="PART_Label"
+                                          IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                          LineHeight="{arc:CheckboxTokenResource LabelLineHeight}"
+                                          TextWrapping="Wrap" />
+                        <TextBlock Name="PART_Description"
+                                   IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   Text="{TemplateBinding Description}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:CheckboxTokenResource DescriptionLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <!-- Token values that states override are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Border#PART_Square">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Square, ^:indeterminate /template/ Border#PART_Square">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        </Style>
+        <Style Selector="^:unchecked:pointerover /template/ Border#PART_Square">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:invalid:unchecked /template/ Border#PART_Square">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Panel#PART_Visual">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+            <Style Selector="^ /template/ Panel#PART_Box">
+                <Setter Property="Opacity" Value="{arc:CheckboxTokenResource DisabledOpacity}" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- The square dips on press (instant) and returns on the CSS spring; its border recolors on fast. -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Panel#PART_Visual">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed /template/ Panel#PART_Visual">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Square">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- Reduced motion: no press scale and every state change applies at once. -->
+        <Style Selector="^:motion-reduced:pressed /template/ Panel#PART_Visual">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

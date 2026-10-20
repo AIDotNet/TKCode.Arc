@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:BillingPrice}" TargetType="arc:BillingPrice">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BillingPrice">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:BillingPriceTokenResource PartGap}">
+                    <StackPanel Name="PART_Amount" Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBlock Name="PART_Currency"
+                                   Text="{TemplateBinding Currency}"
+                                   VerticalAlignment="Top"
+                                   Margin="{arc:BillingPriceTokenResource CurrencyMargin}"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:BillingPriceTokenResource CurrencyFontSize}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <arc:AnimatedCounter Name="PART_Counter"
+                                             Value="{TemplateBinding CounterValue}"
+                                             Decimals="{TemplateBinding Decimals}"
+                                             FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                             FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                             FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </StackPanel>
+                    <StackPanel Name="PART_Aside"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Bottom"
+                                Margin="{arc:BillingPriceTokenResource AsideMargin}"
+                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                        <!-- The old price eases its width open on a no-bounce spring while it fades in. -->
+                        <arc:PresenceHost Name="PART_Was"
+                                          IsPresent="{TemplateBinding ShowsWas}"
+                                          Mode="Fade"
+                                          Collapse="Width"
+                                          Spring="Smooth">
+                            <TextBlock Text="{TemplateBinding WasText}"
+                                       Padding="{arc:BillingPriceTokenResource WasInset}"
+                                       TextDecorations="Strikethrough" />
+                        </arc:PresenceHost>
+                        <arc:SpringSizeDecorator Name="PART_PeriodSlot"
+                                                 Axis="Width"
+                                                 Spring="Smooth"
+                                                 IsVisible="{TemplateBinding Period, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <arc:ArcContentSwap Name="PART_Period" Mode="BlurSwap" Content="{TemplateBinding Period}" />
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+</ResourceDictionary>
