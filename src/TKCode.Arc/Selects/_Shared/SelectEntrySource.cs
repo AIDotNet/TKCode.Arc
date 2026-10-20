@@ -283,15 +283,18 @@ internal sealed class SelectTypeahead
 
     public int ResetMilliseconds { get; }
 
+    /// <summary>Millisecond clock; tests freeze it so a slow run cannot split one typed word into two searches.</summary>
+    internal Func<long> Clock { get; set; } = static () => Environment.TickCount64;
+
     /// <summary>True while a search is being typed (Space then belongs to the search, not to selection).</summary>
-    public bool IsTyping => _buffer.Length > 0 && Environment.TickCount64 - _lastAt < ResetMilliseconds;
+    public bool IsTyping => _buffer.Length > 0 && Clock() - _lastAt < ResetMilliseconds;
 
     public void Reset() => _buffer = string.Empty;
 
     /// <summary>Appends <paramref name="text"/> and returns the index of the next match, or -1.</summary>
     public int Next(string text, int current, int count, Func<int, string?> label, Func<int, bool> isEnabled)
     {
-        var now = Environment.TickCount64;
+        var now = Clock();
         _buffer = now - _lastAt > ResetMilliseconds ? text : _buffer + text;
         _lastAt = now;
         if (count == 0 || _buffer.Length == 0)

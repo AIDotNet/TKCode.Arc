@@ -1,8 +1,10 @@
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
 using TKCode.Arc.DesignTokens;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using Avalonia.Media;
 
 namespace TKCode.Arc.Gallery.Pages;
 
@@ -32,13 +34,17 @@ public static partial class GalleryPages
 
     private static Control Placeholder(GalleryEntry entry)
     {
-        var content = GalleryUi.Column(12,
-            GalleryUi.Glyph(ArcIcons.Hourglass, 28, ArcDesignTokenKind.TextMuted),
-            GalleryUi.Text($"{entry.Title} is not built yet.", ArcDesignTokenKind.TextSecondary, 14));
+        var note = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
+        GalleryText.BindFormat(note, TextBlock.TextProperty, GalleryShellLangResourceKind.NotBuiltYet, entry.Title);
+        var content = GalleryUi.Column(12, GalleryUi.Glyph(ArcIcons.Hourglass, 28, ArcDesignTokenKind.TextMuted), note);
         foreach (var child in content.Children)
         {
             child.HorizontalAlignment = HorizontalAlignment.Center;
         }
-        return GalleryUi.Card("Planned", $"{entry.ClassName} is scheduled for phase P{entry.Phase}.", content);
+        var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 18, FontWeight.Medium);
+        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.PlannedTitle);
+        var description = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
+        GalleryText.BindFormat(description, TextBlock.TextProperty, GalleryShellLangResourceKind.PlannedDescription, entry.ClassName, entry.Phase);
+        return GalleryUi.Card("Planned", title, description, content);
     }
 }

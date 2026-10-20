@@ -1,0 +1,192 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc chat-thread.module.css, composer: 10px 12px 12px under a subtle top border; the tray of pending files springs
+        open above the input row; the attach button sits beside a 21px rounded box that holds the growing field and the
+        32px send button riding its bottom edge. While files are dragged over it, the composer takes the accent tint and
+        the box a dashed accent outline.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChatComposer}" TargetType="arc:ChatComposer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatComposer">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <arc:PresenceHost Name="PART_TrayHost"
+                                          Mode="Fade"
+                                          Collapse="Height"
+                                          Spring="Smooth"
+                                          IsPresent="False">
+                            <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Disabled">
+                                <StackPanel Name="PART_Tray"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:ChatComposerTokenResource TrayGap}"
+                                            Margin="{arc:ChatComposerTokenResource TrayPadding}" />
+                            </ScrollViewer>
+                        </arc:PresenceHost>
+                        <DockPanel>
+                            <arc:ChatThreadButton Name="PART_Attach"
+                                                  Role="Attach"
+                                                  DockPanel.Dock="Left"
+                                                  VerticalAlignment="Bottom"
+                                                  Margin="0,0,6,1"
+                                                  IsVisible="{TemplateBinding IsAttachmentEnabled}" />
+                            <Panel>
+                                <Border Name="PART_Box"
+                                        CornerRadius="{arc:ChatComposerTokenResource BoxRadius}"
+                                        BorderThickness="1">
+                                    <DockPanel>
+                                        <arc:ChatThreadButton Name="PART_Send"
+                                                              Role="Send"
+                                                              DockPanel.Dock="Right"
+                                                              VerticalAlignment="Bottom"
+                                                              Margin="{arc:ChatComposerTokenResource SendMargin}" />
+                                        <arc:ChatComposerField Name="PART_Field"
+                                                               MaxFieldHeight="{arc:ChatComposerTokenResource FieldMaxHeight}">
+                                            <arc:ChatComposerTextBox Name="PART_TextBox"
+                                                                     Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                                     PlaceholderText="{TemplateBinding Placeholder}"
+                                                                     IsEnabled="{TemplateBinding IsEnabled}"
+                                                                     AutomationProperties.Name="{TemplateBinding Placeholder}" />
+                                        </arc:ChatComposerField>
+                                    </DockPanel>
+                                </Border>
+                                <arc:ChatComposerDashFrame Name="PART_Dash"
+                                                           IsVisible="False"
+                                                           Stroke="{arc:ArcDesignTokenResource Accent}"
+                                                           CornerRadius="{arc:ChatComposerTokenResource BoxRadius}" />
+                            </Panel>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="{arc:ChatComposerTokenResource ComposerPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+
+        <Style Selector="^ /template/ Border#PART_Box">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:focus-within /template/ Border#PART_Box">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:dragging">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Style Selector="^ /template/ Border#PART_Box">
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <Style Selector="^ /template/ arc|ChatComposerDashFrame#PART_Dash">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Box">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The text: 16px on 22px lines, 9px 6px 9px 16px, no frame of its own; it scrolls past six lines. -->
+    <ControlTheme x:Key="{x:Type arc:ChatComposerTextBox}" TargetType="arc:ChatComposerTextBox">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatComposerTextBox">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Hidden"
+                                  AllowAutoHide="True">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       TextWrapping="Wrap"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       VerticalAlignment="Top">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Top" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="LineHeight" Value="{arc:ChatComposerTokenResource TextLineHeight}" />
+        <Setter Property="Padding" Value="{arc:ChatComposerTokenResource TextPadding}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </ControlTheme>
+
+    <!-- A tray tile: a 56px picture with 12px corners, or a 168 × 56 file card on the surface. -->
+    <ControlTheme x:Key="{x:Type arc:ChatComposerTileFrame}" TargetType="arc:ChatComposerTileFrame">
+        <Setter Property="Width" Value="{arc:ChatComposerTokenResource FileTileWidth}" />
+        <Setter Property="Height" Value="{arc:ChatComposerTokenResource TileSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ChatComposerTokenResource TileRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Style Selector="^[IsImage=True]">
+            <Setter Property="Width" Value="{arc:ChatComposerTokenResource TileSize}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

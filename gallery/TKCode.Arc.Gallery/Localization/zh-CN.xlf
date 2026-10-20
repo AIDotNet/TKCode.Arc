@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Gallery.Localization.GalleryShellLangResourceKind">
+    <unit id="Accent">
+      <segment>
+        <source>Accent</source>
+        <target state="translated">强调色</target>
+      </segment>
+    </unit>
+    <unit id="AccentAmber">
+      <segment>
+        <source>Amber</source>
+        <target state="translated">琥珀</target>
+      </segment>
+    </unit>
+    <unit id="AccentBlue">
+      <segment>
+        <source>Blue</source>
+        <target state="translated">蓝色</target>
+      </segment>
+    </unit>
+    <unit id="AccentCoral">
+      <segment>
+        <source>Coral</source>
+        <target state="translated">珊瑚</target>
+      </segment>
+    </unit>
+    <unit id="AccentGreen">
+      <segment>
+        <source>Green</source>
+        <target state="translated">绿色</target>
+      </segment>
+    </unit>
+    <unit id="AccentNeutral">
+      <segment>
+        <source>Neutral</source>
+        <target state="translated">中性</target>
+      </segment>
+    </unit>
+    <unit id="AccentOrange">
+      <segment>
+        <source>Orange</source>
+        <target state="translated">橙色</target>
+      </segment>
+    </unit>
+    <unit id="AccentRose">
+      <segment>
+        <source>Rose</source>
+        <target state="translated">玫瑰</target>
+      </segment>
+    </unit>
+    <unit id="AccentViolet">
+      <segment>
+        <source>Violet</source>
+        <target state="translated">紫罗兰</target>
+      </segment>
+    </unit>
+    <unit id="Appearance">
+      <segment>
+        <source>Appearance</source>
+        <target state="translated">外观</target>
+      </segment>
+    </unit>
+    <unit id="BackToTop">
+      <segment>
+        <source>Back to top</source>
+        <target state="translated">回到顶部</target>
+      </segment>
+    </unit>
+    <unit id="Category_Activity">
+      <segment>
+        <source>Activity</source>
+        <target state="translated">动态与会话</target>
+      </segment>
+    </unit>
+    <unit id="Category_Avatars">
+      <segment>
+        <source>Avatars</source>
+        <target state="translated">头像与徽标</target>
+      </segment>
+    </unit>
+    <unit id="Category_Buttons">
+      <segment>
+        <source>Buttons</source>
+        <target state="translated">按钮</target>
+      </segment>
+    </unit>
+    <unit id="Category_Cards">
+      <segment>
+        <source>Cards</source>
+        <target state="translated">卡片</target>
+      </segment>
+    </unit>
+    <unit id="Category_Charts">
+      <segment>
+        <source>Charts</source>
+        <target state="translated">图表</target>
+      </segment>
+    </unit>
+    <unit id="Category_Content">
+      <segment>
+        <source>Extras</source>
+        <target state="translated">扩展</target>
+      </segment>
+    </unit>
+    <unit id="Category_Illustrations">
+      <segment>
+        <source>Illustrations</source>
+        <target state="translated">插图</target>
+      </segment>
+    </unit>
+    <unit id="Category_Editors">
+      <segment>
+        <source>Editors</source>
+        <target state="translated">编辑器</target>
+      </segment>
+    </unit>
+    <unit id="Category_Expand">
+      <segment>
+        <source>Expand</source>
+        <target state="translated">展开与滚动</target>
+      </segment>
+    </unit>
+    <unit id="Category_Gestures">
+      <segment>
+        <source>Gestures</source>
+        <target state="translated">手势</target>
+      </segment>
+    </unit>
+    <unit id="Category_Media">
+      <segment>
+        <source>Media</source>
+        <target state="translated">媒体</target>
+      </segment>
+    </unit>
+    <unit id="Category_Menus">
+      <segment>
+        <source>Menus</source>
+        <target state="translated">菜单</target>
+      </segment>
+    </unit>
+    <unit id="Category_Messages">
+      <segment>
+        <source>Messages</source>
+        <target state="translated">消息</target>
+      </segment>
+    </unit>
+    <unit id="Category_Navigation">
+      <segment>
+        <source>Navigation</source>
+        <target state="translated">导航</target>
+      </segment>
+    </unit>
+    <unit id="Category_Overlays">
+      <segment>
+        <source>Overlays</source>
+        <target state="translated">浮层</target>
+      </segment>
+    </unit>
+    <unit id="Category_Pickers">
+      <segment>
+        <source>Pickers</source>
+        <target state="translated">选取器</target>
+      </segment>
+    </unit>
+    <unit id="Category_Progress">
+      <segment>
+        <source>Progress</source>
+        <target state="translated">进度</target>
+      </segment>
+    </unit>
+    <unit id="Category_Selects">
+      <segment>
+        <source>Selects</source>
+        <target state="translated">选择器</target>
+      </segment>
+    </unit>
+    <unit id="Category_Sliders">
+      <segment>
+        <source>Sliders</source>
+        <target state="translated">滑块</target>
+      </segment>
+    </unit>
+    <unit id="Category_SpecialInputs">
+      <segment>
+        <source>Special inputs</source>
+        <target state="translated">特殊输入</target>
+      </segment>
+    </unit>
+    <unit id="Category_Tables">
+      <segment>
+        <source>Tables</source>
+        <target state="translated">表格与数据</target>
+      </segment>
+    </unit>
+    <unit id="Category_TextEffects">
+      <segment>
+        <source>Text effects</source>
+        <target state="translated">文字效果</target>
+      </segment>
+    </unit>
+    <unit id="Category_TextFields">
+      <segment>
+        <source>Text fields</source>
+        <target state="translated">文本输入</target>
+      </segment>
+    </unit>
+    <unit id="Category_Toggles">
+      <segment>
+        <source>Toggles</source>
+        <target state="translated">开关与选项</target>
+      </segment>
+    </unit>
+    <unit id="ClearSearch">
+      <segment>
+        <source>Clear search</source>
+        <target state="translated">清除搜索</target>
+      </segment>
+    </unit>
+    <unit id="Code">
+      <segment>
+        <source>Code</source>
+        <target state="translated">代码</target>
+      </segment>
+    </unit>
+    <unit id="Components">
+      <segment>
+        <source>Components</source>
+        <target state="translated">组件</target>
+      </segment>
+    </unit>
+    <unit id="Copied">
+      <segment>
+        <source>Copied</source>
+        <target state="translated">已复制</target>
+      </segment>
+    </unit>
+    <unit id="CopyMarkdown">
+      <segment>
+        <source>Copy Markdown</source>
+        <target state="translated">复制 Markdown</target>
+      </segment>
+    </unit>
+    <unit id="CopyMarkup">
+      <segment>
+        <source>Copy markup</source>
+        <target state="translated">复制标记</target>
+      </segment>
+    </unit>
+    <unit id="Dark">
+      <segment>
+        <source>Dark</source>
+        <target state="translated">深色</target>
+      </segment>
+    </unit>
+    <unit id="Failed">
+      <segment>
+        <source>Failed</source>
+        <target state="translated">失败</target>
+      </segment>
+    </unit>
+    <unit id="FilterAll">
+      <segment>
+        <source>All</source>
+        <target state="translated">全部</target>
+      </segment>
+    </unit>
+    <unit id="FilterPlanned">
+      <segment>
+        <source>Planned</source>
+        <target state="translated">规划中</target>
+      </segment>
+    </unit>
+    <unit id="FilterReady">
+      <segment>
+        <source>Ready</source>
+        <target state="translated">已实现</target>
+      </segment>
+    </unit>
+    <unit id="Implemented">
+      <segment>
+        <source>Implemented</source>
+        <target state="translated">已实现</target>
+      </segment>
+    </unit>
+    <unit id="ImplementedCount">
+      <segment>
+        <source>{0} of {1}</source>
+        <target state="translated">{0} / {1}</target>
+      </segment>
+    </unit>
+    <unit id="Language">
+      <segment>
+        <source>Language</source>
+        <target state="translated">语言</target>
+      </segment>
+    </unit>
+    <unit id="Light">
+      <segment>
+        <source>Light</source>
+        <target state="translated">浅色</target>
+      </segment>
+    </unit>
+    <unit id="LivePreview">
+      <segment>
+        <source>Live preview</source>
+        <target state="translated">实时预览</target>
+      </segment>
+    </unit>
+    <unit id="Mode">
+      <segment>
+        <source>Mode</source>
+        <target state="translated">模式</target>
+      </segment>
+    </unit>
+    <unit id="Motion">
+      <segment>
+        <source>Motion</source>
+        <target state="translated">动效</target>
+      </segment>
+    </unit>
+    <unit id="MotionFull">
+      <segment>
+        <source>Full</source>
+        <target state="translated">完整</target>
+      </segment>
+    </unit>
+    <unit id="MotionOff">
+      <segment>
+        <source>Off</source>
+        <target state="translated">关闭</target>
+      </segment>
+    </unit>
+    <unit id="MotionReduced">
+      <segment>
+        <source>Reduced</source>
+        <target state="translated">减弱</target>
+      </segment>
+    </unit>
+    <unit id="NoComponentsMatch">
+      <segment>
+        <source>No components match “{0}”.</source>
+        <target state="translated">没有与“{0}”匹配的组件。</target>
+      </segment>
+    </unit>
+    <unit id="NoDocsYet">
+      <segment>
+        <source>No docs page for this component yet</source>
+        <target state="translated">此组件还没有文档页</target>
+      </segment>
+    </unit>
+    <unit id="NotBuiltYet">
+      <segment>
+        <source>{0} is not built yet.</source>
+        <target state="translated">{0} 尚未实现。</target>
+      </segment>
+    </unit>
+    <unit id="NothingHereYet">
+      <segment>
+        <source>Nothing here yet.</source>
+        <target state="translated">这里还没有内容。</target>
+      </segment>
+    </unit>
+    <unit id="OnThisPage">
+      <segment>
+        <source>On this page</source>
+        <target state="translated">本页内容</target>
+      </segment>
+    </unit>
+    <unit id="PlannedDescription">
+      <segment>
+        <source>{0} is scheduled for phase P{1}.</source>
+        <target state="translated">{0} 计划在 P{1} 阶段实现。</target>
+      </segment>
+    </unit>
+    <unit id="PlannedPhase">
+      <segment>
+        <source>Planned · P{0}</source>
+        <target state="translated">规划中 · P{0}</target>
+      </segment>
+    </unit>
+    <unit id="PlannedTitle">
+      <segment>
+        <source>Planned</source>
+        <target state="translated">规划中</target>
+      </segment>
+    </unit>
+    <unit id="Preview">
+      <segment>
+        <source>Preview</source>
+        <target state="translated">预览</target>
+      </segment>
+    </unit>
+    <unit id="Ready">
+      <segment>
+        <source>Ready</source>
+        <target state="translated">已实现</target>
+      </segment>
+    </unit>
+    <unit id="Search">
+      <segment>
+        <source>Search</source>
+        <target state="translated">搜索</target>
+      </segment>
+    </unit>
+    <unit id="SearchComponents">
+      <segment>
+        <source>Search components</source>
+        <target state="translated">搜索组件</target>
+      </segment>
+    </unit>
+    <unit id="ShowImplementedComponents">
+      <segment>
+        <source>Show implemented components</source>
+        <target state="translated">显示已实现的组件</target>
+      </segment>
+    </unit>
+    <unit id="ToggleAppearance">
+      <segment>
+        <source>Toggle light and dark appearance</source>
+        <target state="translated">切换浅色与深色外观</target>
+      </segment>
+    </unit>
+    <unit id="ViewOnArc">
+      <segment>
+        <source>View on uiarc.dev</source>
+        <target state="translated">在 uiarc.dev 查看</target>
+      </segment>
+    </unit>
+    <unit id="Category_Blocks">
+      <segment>
+        <source>Blocks</source>
+        <target state="translated">区块</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Analytics">
+      <segment>
+        <source>Analytics</source>
+        <target state="translated">分析</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Finance">
+      <segment>
+        <source>Finance</source>
+        <target state="translated">财务</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_LineCharts">
+      <segment>
+        <source>Line charts</source>
+        <target state="translated">折线图</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Ai">
+      <segment>
+        <source>AI</source>
+        <target state="translated">AI</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_AppShell">
+      <segment>
+        <source>App shell</source>
+        <target state="translated">应用外壳</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Auth">
+      <segment>
+        <source>Auth</source>
+        <target state="translated">认证</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Settings">
+      <segment>
+        <source>Settings</source>
+        <target state="translated">设置</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_People">
+      <segment>
+        <source>People</source>
+        <target state="translated">人员</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Developer">
+      <segment>
+        <source>Developer</source>
+        <target state="translated">开发者</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Pricing">
+      <segment>
+        <source>Pricing</source>
+        <target state="translated">定价</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Commerce">
+      <segment>
+        <source>Commerce</source>
+        <target state="translated">电商</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Support">
+      <segment>
+        <source>Support</source>
+        <target state="translated">支持</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Media">
+      <segment>
+        <source>Media</source>
+        <target state="translated">媒体</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Projects">
+      <segment>
+        <source>Projects</source>
+        <target state="translated">项目</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Heroes">
+      <segment>
+        <source>Heroes</source>
+        <target state="translated">首屏</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Features">
+      <segment>
+        <source>Features</source>
+        <target state="translated">功能</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_SocialProof">
+      <segment>
+        <source>Social proof</source>
+        <target state="translated">社会证明</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Content">
+      <segment>
+        <source>Content</source>
+        <target state="translated">内容</target>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Showpieces">
+      <segment>
+        <source>Showpieces</source>
+        <target state="translated">展示</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

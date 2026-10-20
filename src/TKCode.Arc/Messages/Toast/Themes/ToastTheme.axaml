@@ -46,7 +46,7 @@
                                         VerticalAlignment="Top">
                                 <arc:ArcGlyph Data="{x:Static arc:MessagesIcons.X}" Size="16" StrokeThickness="2" />
                             </arc:Button>
-                            <arc:MessagesSizeFrame VerticalAlignment="Top">
+                            <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" CrossClipOverflow="12" VerticalAlignment="Top">
                                 <StackPanel Margin="{arc:ToastTokenResource CopyPadding}">
                                     <arc:MessagesTextSwap Name="PART_Title"
                                                           Text="{TemplateBinding Title}"
@@ -62,7 +62,7 @@
                                                           TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
                                                           TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                                 </StackPanel>
-                            </arc:MessagesSizeFrame>
+                            </arc:SpringSizeDecorator>
                         </DockPanel>
                     </Border>
                 </Panel>

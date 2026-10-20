@@ -1,5 +1,6 @@
 using AtomUI;
 using TKCode.Arc;
+using TKCode.Arc.Gallery;
 using AtomUI.Desktop.Controls;
 using AtomUI.Localization;
 using Avalonia;
@@ -20,6 +21,7 @@ public static class TestAppBuilder
                   .UseHeadless(new AvaloniaHeadlessPlatformOptions())
                   .UseAtomUI(builder => builder.UseDesktopControls()
                                                .UseArc()
+                                               .UseArcGallery()
                                                .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
 }
 

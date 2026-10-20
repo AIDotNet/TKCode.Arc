@@ -1,0 +1,221 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The trailing chevron segment: it anchors the menu, so a press only deepens the shared highlight. -->
+    <ControlTheme x:Key="ButtonGroupChevronTheme" TargetType="arc:Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Arc draws its own focus indication; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Button">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Divider"
+                            IsHitTestVisible="False"
+                            Width="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:ButtonGroupTokenResource TriggerExtentMD}" />
+        <Setter Property="Height" Value="{arc:ButtonGroupTokenResource TriggerHeightMD}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^ /template/ Border#PART_Divider">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Margin" Value="{arc:ButtonGroupTokenResource DividerMarginMD}" />
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^.joined /template/ Border#PART_Divider">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.quiet /template/ Border#PART_Divider">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^.small">
+            <Setter Property="Width" Value="{arc:ButtonGroupTokenResource TriggerExtentSM}" />
+            <Setter Property="Height" Value="{arc:ButtonGroupTokenResource TriggerHeightSM}" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Margin" Value="{arc:ButtonGroupTokenResource DividerMarginSM}" />
+            </Style>
+        </Style>
+        <Style Selector="^.vertical">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Height" Value="1" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Margin" Value="{arc:ButtonGroupTokenResource DividerMarginVertical}" />
+            </Style>
+        </Style>
+        <Style Selector="^.solid">
+            <Setter Property="Foreground" Value="{arc:ButtonGroupTokenResource SolidMutedInk}" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Background" Value="{arc:ButtonGroupTokenResource SolidDividerColor}" />
+            </Style>
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.solid:open">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- One surface, several actions: shared border and radius, hairline dividers, one highlight travelling underneath. -->
+    <ControlTheme x:Key="{x:Type arc:ButtonGroup}" TargetType="arc:ButtonGroup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ButtonGroup">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <ScrollViewer Name="PART_Scroller"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <Panel Name="PART_Track">
+                                <arc:GlidingIndicator Name="PART_Highlight"
+                                                      Spring="Snappy"
+                                                      CornerRadius="{arc:ButtonGroupTokenResource HighlightRadius}" />
+                                <StackPanel Name="PART_Row" Orientation="Horizontal">
+                                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                    <arc:ButtonsChevronTrigger Name="PART_MenuButton"
+                                                               Theme="{StaticResource ButtonGroupChevronTheme}"
+                                                               IsVisible="False">
+                                        <arc:ArcGlyph Classes="chevron"
+                                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                      Size="{arc:ButtonGroupTokenResource GlyphExtent}"
+                                                      StrokeThickness="{arc:ButtonGroupTokenResource GlyphStroke}"
+                                                      RenderTransformOrigin="50%,50%" />
+                                    </arc:ButtonsChevronTrigger>
+                                </StackPanel>
+                            </Panel>
+                        </ScrollViewer>
+                    </Border>
+                    <arc:ButtonsLiveRegion Name="PART_Status" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="MenuMinWidth" Value="{arc:ButtonGroupTokenResource MenuMinWidth}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressing /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Fill" Value="{arc:ButtonGroupTokenResource OutlinePressedHighlightColor}" />
+        </Style>
+
+        <!-- Solid: the foreground fill of a primary button; highlight and dividers mixed from the page color. -->
+        <Style Selector="^:solid">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="Fill" Value="{arc:ButtonGroupTokenResource SolidHighlightColor}" />
+            </Style>
+        </Style>
+        <Style Selector="^:solid:pressing /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="Fill" Value="{arc:ButtonGroupTokenResource SolidPressedHighlightColor}" />
+        </Style>
+
+        <Style Selector="^:vertical">
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </Setter>
+            <Style Selector="^ /template/ StackPanel#PART_Row">
+                <Setter Property="Orientation" Value="Vertical" />
+            </Style>
+            <Style Selector="^ /template/ ScrollViewer#PART_Scroller">
+                <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ButtonGroupTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- The chevron turns on the CSS spring while its menu is open. -->
+        <Style Selector="^ /template/ arc|ArcGlyph.chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:menu-open /template/ arc|ArcGlyph.chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+
+        <!-- The highlight deepens at once on press and eases back (fast); reduced motion drops the turn and the fades. -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Fill" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressing /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Fill" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph.chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

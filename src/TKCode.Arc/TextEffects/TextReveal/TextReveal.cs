@@ -313,7 +313,7 @@ public class TextReveal : Control
             using (context.PushOpacityMask(_mask, clip))
             using (context.PushOpacity(opacity))
             {
-                var effect = TextEffectsBlur.Get(BlurRadius * (1 - focus));
+                var effect = ArcBlur.Get(BlurRadius * (1 - focus));
                 if (effect is null)
                 {
                     word.Layout.Draw(context, new Point(word.X, word.Y + dy));

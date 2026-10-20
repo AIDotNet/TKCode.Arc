@@ -1,11 +1,13 @@
 using AtomUI.Theme.Algorithms;
 using AtomUI.Theme.Configuration;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using static TKCode.Arc.Tests.Buttons.ButtonsTestSupport;
@@ -115,6 +117,20 @@ public class ThemeSwitcherTests
             window.Close();
             await TestHelpers.ApplyAsync(null);
         }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(1.0, 320, 200)]
+    [InlineData(2.0, 640, 400)]
+    [InlineData(1.5, 480, 300)]
+    public void The_Snapshot_Draws_The_Whole_Bitmap_On_Scaled_Displays(double scaling, int pixelWidth, int pixelHeight)
+    {
+        // The snapshot is taken at the top level's render scaling, so its DIP size (320x200) is smaller than its pixel
+        // size on a scaled display; the draw source must be the pixels or only the top-left part of the window shows.
+        using var bitmap = new RenderTargetBitmap(new PixelSize(pixelWidth, pixelHeight), new Vector(96 * scaling, 96 * scaling));
+        bitmap.Size.ShouldBe(new Size(320, 200));
+        var source = ThemeSwitcherSnapshot.SourceRect(bitmap);
+        source.ShouldBe(new Rect(0, 0, pixelWidth, pixelHeight));
     }
 
     [AvaloniaFact]

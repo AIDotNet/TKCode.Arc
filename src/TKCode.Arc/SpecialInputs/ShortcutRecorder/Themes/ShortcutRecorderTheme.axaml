@@ -1,0 +1,257 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The recorder: a button that draws its caps, placeholder and recording light (no template). -->
+    <ControlTheme x:Key="{x:Type arc:ShortcutRecorderButton}" TargetType="arc:ShortcutRecorderButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{arc:ShortcutRecorderTokenResource RecorderPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="KeyCapFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="KeyCapFontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="PlaceholderFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="KeyCapEdgeBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="KeyCapFill" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="KeyCapForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentSubtleBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="AccentStrongBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="KeyCapWarningEdge" Value="{arc:ShortcutRecorderTokenResource KeyCapWarningEdge}" />
+        <Setter Property="KeyCapWarningFill" Value="{arc:ShortcutRecorderTokenResource KeyCapWarningFill}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="PromptForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="KeyCapHeight" Value="{arc:ShortcutRecorderTokenResource KeyCapHeight}" />
+        <Setter Property="KeyCapMinWidth" Value="{arc:ShortcutRecorderTokenResource KeyCapMinWidth}" />
+        <Setter Property="KeyCapPadding" Value="{arc:ShortcutRecorderTokenResource KeyCapPadding}" />
+        <Setter Property="KeyCapRadius" Value="{arc:ShortcutRecorderTokenResource KeyCapRadius}" />
+        <Setter Property="KeyCapBottomEdge" Value="{arc:ShortcutRecorderTokenResource KeyCapBottomEdge}" />
+        <Setter Property="KeyCapGap" Value="{arc:ShortcutRecorderTokenResource KeyCapGap}" />
+        <Setter Property="RecordingDotDiameter" Value="{arc:ShortcutRecorderTokenResource RecordingDotDiameter}" />
+        <Setter Property="RecordingDotMargin" Value="{arc:ShortcutRecorderTokenResource RecordingDotMargin}" />
+        <Setter Property="PlaceholderInset" Value="{arc:ShortcutRecorderTokenResource PlaceholderInset}" />
+    </ControlTheme>
+
+    <!-- Reset and clear: 32px, muted glyph; hover, press and keyboard focus fill with SurfaceMuted (no ring in Arc). -->
+    <ControlTheme x:Key="{x:Type arc:ShortcutRecorderActionButton}" TargetType="arc:ShortcutRecorderActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShortcutRecorderActionButton">
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="{TemplateBinding GlyphSize}"
+                                  StrokeThickness="1.75"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:ShortcutRecorderTokenResource ActionButtonSize}" />
+        <Setter Property="Height" Value="{arc:ShortcutRecorderTokenResource ActionButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ShortcutRecorderTokenResource ActionButtonRadius}" />
+        <Setter Property="GlyphSize" Value="{arc:ShortcutRecorderTokenResource ActionGlyphSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- Colours on fast + standard; Arc keeps these transitions under reduced motion. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Conflict links: "Use anyway" (underlined) and the quiet "Cancel". -->
+    <ControlTheme x:Key="{x:Type arc:ShortcutRecorderLink}" TargetType="arc:ShortcutRecorderLink">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShortcutRecorderLink">
+                <TextBlock Name="PART_Text"
+                           Text="{TemplateBinding Text}"
+                           Background="Transparent"
+                           LineHeight="{arc:ShortcutRecorderTokenResource MessageLineHeight}" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="UnderlineOffset" Value="{arc:ShortcutRecorderTokenResource LinkUnderlineOffset}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Style Selector="^:hover">
+            <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[IsQuiet=True]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^[IsQuiet=True]:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- Arc gives the quiet link no focus answer at all; it takes its hover colour so keyboard focus is visible. -->
+        <Style Selector="^[IsQuiet=True]:focus-visible">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="UnderlineBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="UnderlineBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The message row: 12px copy on a 1.4 line, hint TextMuted, warning TextSecondary with a Warning dot. -->
+    <ControlTheme x:Key="{x:Type arc:ShortcutRecorderMessageSlot}" TargetType="arc:ShortcutRecorderMessageSlot">
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TextElement.FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="HintBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="WarningToneBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="StrongBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="WarningDotBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="StrongWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="MessagePadding" Value="{arc:ShortcutRecorderTokenResource MessagePadding}" />
+        <Setter Property="MessageLineHeight" Value="{arc:ShortcutRecorderTokenResource MessageLineHeight}" />
+        <Setter Property="ColumnGap" Value="{arc:ShortcutRecorderTokenResource MessageColumnGap}" />
+        <Setter Property="RowGap" Value="{arc:ShortcutRecorderTokenResource MessageRowGap}" />
+        <Setter Property="WarningDotDiameter" Value="{arc:ShortcutRecorderTokenResource WarningDotDiameter}" />
+        <Setter Property="WarningDotMargin" Value="{arc:ShortcutRecorderTokenResource WarningDotMargin}" />
+        <Setter Property="UnderlineOffset" Value="{arc:ShortcutRecorderTokenResource LinkUnderlineOffset}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ShortcutRecorder}" TargetType="arc:ShortcutRecorder">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShortcutRecorder">
+                <Panel>
+                    <StackPanel>
+                        <arc:Field Name="PART_Field"
+                                   Label="{TemplateBinding Label}"
+                                   IsLabelVisible="{TemplateBinding IsLabelVisible}">
+                            <arc:FieldFrame Name="PART_Frame"
+                                            Padding="0"
+                                            Spacing="0"
+                                            VerticalContentAlignment="Stretch"
+                                            Height="{arc:ArcDesignTokenResource ControlSizeMD}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Border Name="PART_Tint"
+                                            Grid.ColumnSpan="2"
+                                            IsHitTestVisible="False"
+                                            CornerRadius="{arc:ShortcutRecorderTokenResource TintRadius}"
+                                            Background="{arc:ArcDesignTokenResource Accent}" />
+                                    <arc:ShortcutRecorderButton Name="PART_Recorder" />
+                                    <StackPanel Name="PART_Actions"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Spacing="{arc:ShortcutRecorderTokenResource ActionsSpacing}"
+                                                Margin="{arc:ShortcutRecorderTokenResource ActionsMargin}">
+                                        <arc:ShortcutRecorderActionButton Name="PART_ResetButton" />
+                                        <arc:ShortcutRecorderActionButton Name="PART_ClearButton" />
+                                    </StackPanel>
+                                </Grid>
+                            </arc:FieldFrame>
+                        </arc:Field>
+                        <arc:ShortcutRecorderMessageSlot Name="PART_Message" />
+                    </StackPanel>
+                    <arc:SpecialInputsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+
+        <!-- The recording tint: accent at 4% over the surface. -->
+        <Style Selector="^ /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:recording /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="{arc:ShortcutRecorderTokenResource TintOpacity}" />
+        </Style>
+
+        <!--
+            The frame's own answers (hover and any focus inside → Foreground) are replaced by Arc's: hover only while idle,
+            Foreground only while the recorder shows keyboard focus, Accent while recording, Warning on a conflict. Later
+            styles win, matching Arc's cascade (the focus-visible rule outranks the recording and conflict borders).
+        -->
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame:focus-active">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:recording /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:conflict /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:hover:not(:recording):not(:conflict) /template/ arc|FieldFrame#PART_Frame:not(:disabled)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:recorder-focus-visible /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <!-- Field colours on fast + standard; reduced motion: none (Arc sets the control transitions to 0ms). -->
+        <Style Selector="^:motion-full /template/ Border#PART_Tint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

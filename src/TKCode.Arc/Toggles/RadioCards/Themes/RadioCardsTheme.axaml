@@ -12,7 +12,6 @@
                 <Panel>
                     <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
                     <arc:GlidingIndicator Name="PART_Ring"
-                                          Spring="Morph"
                                           StrokeThickness="{arc:RadioCardsTokenResource RingStroke}"
                                           Stroke="{arc:ArcDesignTokenResource ControlOn}"
                                           CornerRadius="{arc:RadioCardsTokenResource RingRadius}" />

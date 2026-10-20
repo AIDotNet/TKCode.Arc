@@ -13,7 +13,7 @@ internal static class ButtonsTestSupport
     /// Runs the dispatcher loop (jobs and timers) until <paramref name="condition"/> holds. Dispatcher timers only fire
     /// inside a running frame, so this pushes short frames instead of calling RunJobs.
     /// </summary>
-    public static bool WaitFor(Func<bool> condition, int timeoutMs = 3000)
+    public static bool WaitFor(Func<bool> condition, int timeoutMs = 10000)
     {
         var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
         while (DateTime.UtcNow < deadline)

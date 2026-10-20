@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -226,7 +227,7 @@ internal sealed class ProgressSwapText : Control
         }
         using (context.PushOpacity(opacity))
         {
-            var effect = ProgressBlur.Get(blur);
+            var effect = ArcBlur.Get(blur);
             if (effect is null)
             {
                 layout.Draw(context, new Point(0, dy));

@@ -40,7 +40,8 @@ public class ActionButtonTests
         var runs = 0;
         var button = new ActionButton
         {
-            ResetAfter = TimeSpan.FromMilliseconds(60),
+            // Long enough that a slow frame cannot run the success timer and the reset timer together.
+            ResetAfter = TimeSpan.FromMilliseconds(400),
             AsyncAction = () =>
             {
                 runs++;

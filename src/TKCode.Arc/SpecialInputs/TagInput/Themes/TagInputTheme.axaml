@@ -1,0 +1,189 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:TagInput}" TargetType="arc:TagInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TagInput">
+                <Panel>
+                    <arc:Field Name="PART_Field"
+                               Label="{TemplateBinding Label}"
+                               Description="{TemplateBinding Description}"
+                               ErrorMessage="{TemplateBinding ErrorMessage}"
+                               IsLabelVisible="{TemplateBinding IsLabelVisible}">
+                        <arc:FieldFrame Name="PART_Frame"
+                                        Cursor="IBeam"
+                                        HasFocusRing="True"
+                                        Padding="0"
+                                        VerticalContentAlignment="Stretch"
+                                        IsInvalid="{TemplateBinding IsInvalid}">
+                            <!-- The shell follows its wrapped rows on the smooth spring and clips like Arc's overflow: hidden. -->
+                            <arc:SpringSizeDecorator Name="PART_Size"
+                                                     Axis="Height"
+                                                     Spring="Smooth"
+                                                     ClipToBounds="True">
+                                <arc:TagInputPanel Name="PART_Panel" />
+                            </arc:SpringSizeDecorator>
+                        </arc:FieldFrame>
+                    </arc:Field>
+                    <arc:SpecialInputsLiveRegion Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <!-- Arc's tag shell rests on Border (not BorderStrong); a mouse hover hints BorderStrong; focus-within answers
+             with Foreground and the 3px halo (FieldFrame); invalid stays Danger. -->
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame:pointerover:not(:focus-active):not(:invalid):not(:disabled)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <Style Selector="^ /template/ arc|TagInputPanel#PART_Panel">
+            <Setter Property="ContentInset" Value="{arc:TagInputTokenResource ContentInset}" />
+            <Setter Property="ItemGap" Value="{arc:TagInputTokenResource ItemGap}" />
+            <Setter Property="EditorBasis" Value="{arc:TagInputTokenResource EditorBasis}" />
+            <Setter Property="MinHeight" Value="{arc:TagInputTokenResource ContentMinHeight}" />
+            <Setter Property="PlaceholderInset" Value="{arc:TagInputTokenResource PlaceholderInset}" />
+            <Setter Property="PlaceholderBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The pill under a tag's label: SurfaceMuted on a 1px Border, fully rounded. -->
+    <ControlTheme x:Key="{x:Type arc:TagInputChipFill}" TargetType="arc:TagInputChipFill">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+    </ControlTheme>
+
+    <!-- The pick ring rides above the fills and below the labels: 1px Accent on AccentSubtle. -->
+    <ControlTheme x:Key="{x:Type arc:TagInputPickRing}" TargetType="arc:TagInputPickRing">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+    </ControlTheme>
+
+    <!-- A tag's label (TypeSM Foreground, no wrapping) and its remove button; the tag itself keeps the default cursor. -->
+    <ControlTheme x:Key="{x:Type arc:TagInputChip}" TargetType="arc:TagInputChip">
+        <Setter Property="Cursor" Value="Arrow" />
+        <Setter Property="MinHeight" Value="{arc:TagInputTokenResource ChipMinHeight}" />
+        <Setter Property="Inset" Value="{arc:TagInputTokenResource ChipInset}" />
+        <Setter Property="LabelGap" Value="{arc:TagInputTokenResource ChipLabelGap}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:TagInputRemoveButton}" TargetType="arc:TagInputRemoveButton">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TagInputRemoveButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{x:Static arc:ArcIcons.X}"
+                                  Size="{arc:TagInputTokenResource RemoveGlyphSize}"
+                                  StrokeThickness="{arc:TagInputTokenResource RemoveGlyphStroke}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="{arc:TagInputTokenResource RemoveFocusRingThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Width" Value="{arc:TagInputTokenResource RemoveButtonDiameter}" />
+        <Setter Property="Height" Value="{arc:TagInputTokenResource RemoveButtonDiameter}" />
+        <Setter Property="PressScale" Value="{arc:TagInputTokenResource RemovePressScale}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^:picked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hovered">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <!-- Colours on fast + standard ease; reduced motion has no transitions (Arc). The press scale is code-driven. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The editor: transparent, no chrome, no visible placeholder (the overlay draws it), TypeSM, 0 5px padding. -->
+    <ControlTheme x:Key="{x:Type arc:TagInputEditor}" TargetType="arc:TagInputEditor">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TagInputEditor">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextWrapping="NoWrap"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}"
+                                       VerticalAlignment="Center" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="{arc:TagInputTokenResource EditorInset}" />
+        <Setter Property="MinWidth" Value="{arc:TagInputTokenResource EditorMinWidth}" />
+        <Setter Property="MinHeight" Value="{arc:TagInputTokenResource EditorMinHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:FieldTextBoxTokenResource TextLineHeight}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="AcceptsTab" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+</ResourceDictionary>

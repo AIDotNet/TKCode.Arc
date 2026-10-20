@@ -1,0 +1,210 @@
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
+using Avalonia;
+
+namespace TKCode.Arc.Gallery.Docs;
+
+/// <summary>
+/// The Code tab's Markdown. A component's page comes in the requested language, or in en-US with a notice when it
+/// has no translation; each <c>&lt;!-- api: Type --&gt;</c> line becomes that type's API reference, built from the
+/// generated <see cref="GalleryDocData"/> (descriptions translated through <c>Docs/Api/&lt;language&gt;.xlf</c>,
+/// defaults read from the Avalonia property metadata).
+/// </summary>
+public static partial class GalleryDocs
+{
+    public const string SourceLanguage = "en-US";
+
+    private const string None = "–";
+
+    private static readonly Dictionary<string, GalleryDocPage[]> s_pages = GalleryDocData.Pages
+        .GroupBy(p => p.ClassName, StringComparer.Ordinal)
+        .ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.Ordinal);
+
+    private static readonly Dictionary<string, GalleryApiType> s_types =
+        GalleryDocData.Types.ToDictionary(t => t.Name, StringComparer.Ordinal);
+
+    private static readonly Dictionary<(string Language, string Key), string> s_translations =
+        GalleryDocData.Translations.ToDictionary(t => (t.Language.ToLowerInvariant(), t.Key), t => t.Text);
+
+    /// <summary>Whether <paramref name="className"/> has a page (in any language).</summary>
+    public static bool Has(string className) => s_pages.ContainsKey(className);
+
+    /// <summary>Every component with a page.</summary>
+    public static IEnumerable<string> ClassNames => s_pages.Keys;
+
+    /// <summary>The languages <paramref name="className"/>'s page is written in, en-US first.</summary>
+    public static IReadOnlyList<string> Languages(string className)
+        => s_pages.TryGetValue(className, out var pages) ? pages.Select(p => p.Language).ToArray() : [];
+
+    /// <summary>The one-sentence summary of <paramref name="className"/>'s page in <paramref name="language"/> (en-US when not translated).</summary>
+    public static string? Summary(string className, string language)
+        => s_pages.TryGetValue(className, out var pages) ? (Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0]).Summary : null;
+
+    /// <summary>
+    /// <paramref name="className"/>'s page in <paramref name="language"/> (en-US when it is not translated), or null when
+    /// the component has no page.
+    /// </summary>
+    public static GalleryDoc? Get(string className, string language)
+    {
+        if (!s_pages.TryGetValue(className, out var pages))
+        {
+            return null;
+        }
+        var page = Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0];
+        var text = GalleryDocText.For(language);
+        var markdown = new StringBuilder();
+        if (!string.Equals(page.Language, language, StringComparison.OrdinalIgnoreCase))
+        {
+            markdown.Append("> ").Append(text.Untranslated).Append("\n\n");
+        }
+        else if (page.IsOutdated)
+        {
+            markdown.Append("> ").Append(text.Outdated).Append("\n\n");
+        }
+        markdown.Append(Directive().Replace(page.Body, match => ApiReference(match.Groups[1].Value, language).TrimEnd()));
+        return new GalleryDoc(page.ClassName, page.Language, language, page.Title, page.Summary, markdown.ToString(), page.IsOutdated);
+    }
+
+    /// <summary>The API reference of <paramref name="typeName"/> as Markdown: a property table, an event table, its
+    /// pseudo-classes and the base class it inherits the rest from.</summary>
+    public static string ApiReference(string typeName, string language)
+    {
+        if (!s_types.TryGetValue(typeName, out var type))
+        {
+            return string.Empty;
+        }
+        var text = GalleryDocText.For(language);
+        var markdown = new StringBuilder();
+        markdown.Append("### ").Append(type.Name).Append("\n\n");
+        if (Translate(language, type.Name, type.Summary) is { } summary)
+        {
+            markdown.Append(summary).Append("\n\n");
+        }
+
+        var properties = type.Members.Where(m => m.Kind == GalleryApiMemberKind.Property).ToList();
+        if (properties.Count > 0)
+        {
+            Row(markdown, text.Property, text.Type, text.Default, text.Description);
+            markdown.Append("|---|---|---|---|\n");
+            foreach (var member in properties)
+            {
+                Row(markdown, Code(member.Name), Code(member.Type), DefaultOf(member, type.Owner), DescriptionCell(member, language, text));
+            }
+            markdown.Append('\n');
+        }
+
+        var events = type.Members.Where(m => m.Kind == GalleryApiMemberKind.Event).ToList();
+        if (events.Count > 0)
+        {
+            Row(markdown, text.Event, text.Arguments, text.Description);
+            markdown.Append("|---|---|---|\n");
+            foreach (var member in events)
+            {
+                Row(markdown, Code(member.Name), Code(member.Type), DescriptionCell(member, language, text));
+            }
+            markdown.Append('\n');
+        }
+
+        if (type.PseudoClasses.Length > 0)
+        {
+            markdown.Append(text.PseudoClasses).Append(' ').Append(string.Join(", ", type.PseudoClasses.Select(p => $"`{p}`"))).Append("\n\n");
+        }
+        if (type.BaseName is { } baseName)
+        {
+            markdown.Append(string.Format(CultureInfo.InvariantCulture, text.Inherits, baseName)).Append("\n\n");
+        }
+        return markdown.ToString();
+    }
+
+    private static GalleryDocPage? Find(GalleryDocPage[] pages, string language)
+        => pages.FirstOrDefault(p => string.Equals(p.Language, language, StringComparison.OrdinalIgnoreCase));
+
+    private static string? Translate(string language, string key, string? english)
+        => s_translations.TryGetValue((language.ToLowerInvariant(), key), out var translated) ? translated : english;
+
+    private static void Row(StringBuilder markdown, params string[] cells)
+    {
+        markdown.Append('|');
+        foreach (var cell in cells)
+        {
+            markdown.Append(' ').Append(cell).Append(" |");
+        }
+        markdown.Append('\n');
+    }
+
+    /// <summary>
+    /// The description, after the read-only and attached tags. The tags stay out of the name cell: StreamMark shrinks
+    /// every column of a table that is too wide, so a wider name column breaks short types and defaults mid-word.
+    /// </summary>
+    private static string DescriptionCell(GalleryApiMember member, string language, GalleryDocText text)
+    {
+        var cell = new StringBuilder();
+        if (member.IsAttached)
+        {
+            cell.Append('*').Append(text.Attached).Append("* ");
+        }
+        if (member.IsReadOnly)
+        {
+            cell.Append('*').Append(text.ReadOnly).Append("* ");
+        }
+        return cell.Append(Escape(Translate(language, member.Key, member.Summary) ?? string.Empty)).ToString();
+    }
+
+    /// <summary>The default from the property metadata of <paramref name="owner"/>, so overridden defaults show.</summary>
+    private static string DefaultOf(GalleryApiMember member, Type owner)
+    {
+        if (member.Property?.GetMetadata(owner) is not IStyledPropertyMetadata metadata)
+        {
+            return None;
+        }
+        return metadata.DefaultValue switch
+        {
+            null => Code("null"),
+            string value => Code($"\"{value}\""),
+            bool value => Code(value ? "true" : "false"),
+            Enum value => Code(value.ToString()),
+            double.NaN => Code("NaN"),
+            IFormattable value => Code(value.ToString(null, CultureInfo.InvariantCulture)),
+            var value => value.ToString() is { Length: > 0 } shown && shown != value.GetType().FullName ? Code(shown) : None
+        };
+    }
+
+    private static string Code(string value) => $"`{Escape(value)}`";
+
+    private static string Escape(string value) => value.Replace("|", "\\|", StringComparison.Ordinal);
+
+    [GeneratedRegex(@"^[ \t]*<!--[ \t]*api:[ \t]*([A-Za-z_][A-Za-z0-9_]*)[ \t]*-->[ \t]*$", RegexOptions.Multiline)]
+    private static partial Regex Directive();
+
+    /// <summary>The words the generated parts of a page are made of, per language (en-US for the rest).</summary>
+    private sealed record GalleryDocText(string Property, string Type, string Default, string Description, string Event,
+                                         string Arguments, string PseudoClasses, string Inherits, string ReadOnly,
+                                         string Attached, string Untranslated, string Outdated)
+    {
+        private static readonly GalleryDocText s_english = new(
+            "Property", "Type", "Default", "Description", "Event", "Arguments", "Pseudo-classes:",
+            "Derives from `{0}`: every member of `{0}` works as well.", "Read-only.", "Attached.",
+            "This page is not translated yet; it shows the English original.",
+            "The English page changed after this translation was made; some details may be out of date.");
+
+        private static readonly GalleryDocText s_simplified = new(
+            "属性", "类型", "默认值", "说明", "事件", "参数", "伪类：",
+            "派生自 `{0}`，`{0}` 的成员同样可用。", "只读。", "附加属性。",
+            "此页尚未翻译，以下为英文原文。",
+            "英文原文在翻译之后有更新，部分内容可能已过时。");
+
+        private static readonly GalleryDocText s_traditional = new(
+            "屬性", "型別", "預設值", "說明", "事件", "引數", "虛擬類別：",
+            "衍生自 `{0}`，`{0}` 的成員同樣可用。", "唯讀。", "附加屬性。",
+            "此頁尚未翻譯，以下為英文原文。",
+            "英文原文在翻譯之後有更新，部分內容可能已過時。");
+
+        public static GalleryDocText For(string language) => language.ToLowerInvariant() switch
+        {
+            "zh-cn" or "zh-hans" or "zh-sg" => s_simplified,
+            "zh-tw" or "zh-hant" or "zh-hk" or "zh-mo" => s_traditional,
+            _ => s_english
+        };
+    }
+}

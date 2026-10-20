@@ -1,0 +1,155 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Control buttons of the Media components: Arc carousel `.control` (Round) and card stack `.control` (Wide). -->
+    <ControlTheme x:Key="{x:Type arc:MediaButton}" TargetType="arc:MediaButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MediaButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:MediaButtonTokenResource ContentGap}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          Data="{TemplateBinding Glyph}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_Label"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:MediaButtonTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="Padding" Value="{arc:MediaButtonTokenResource WideInlinePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+
+        <!-- Base part values live in styles so the state styles below can override them. -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Size" Value="{arc:MediaButtonTokenResource WideGlyphSize}" />
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Label">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:MediaButtonTokenResource WideFocusRingRadius}" />
+        </Style>
+        <Style Selector="^:has-glyph /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-label /template/ ContentPresenter#PART_Label">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^[Shape=Round]">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+                <Setter Property="Size" Value="{arc:MediaButtonTokenResource RoundGlyphSize}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Shape=Wide]:icon-only">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^[Shape=Wide].compact:not(:icon-only)">
+            <Setter Property="Padding" Value="{arc:MediaButtonTokenResource CompactInlinePadding}" />
+        </Style>
+
+        <!-- The approving action follows the selected accent. -->
+        <Style Selector="^[Tone=Primary]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^[Tone=Quiet]">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:pointerover:not(:soft-disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed:not(:soft-disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^[Tone=Quiet]:pointerover:not(:soft-disabled)">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Tone=Primary]:pointerover:not(:soft-disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^[Tone=Primary]:pressed:not(:soft-disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+
+        <!-- aria-disabled: dimmed, inactive, still focusable. -->
+        <Style Selector="^:soft-disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="Opacity" Value="{arc:MediaButtonTokenResource WideDisabledOpacity}" />
+        </Style>
+        <Style Selector="^[Shape=Round]:soft-disabled">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="{arc:MediaButtonTokenResource RoundDisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Colours on fast + standard ease; the press scales to 0.97 on a snappy spring (full motion only). -->
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed:not(:soft-disabled)">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

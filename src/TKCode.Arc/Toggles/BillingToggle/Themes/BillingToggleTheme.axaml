@@ -14,11 +14,12 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                         Padding="{TemplateBinding Padding}">
-                    <!-- One thumb for the whole track, under the labels. -->
+                    <!-- One thumb for the whole track, under the labels: a pill that glides on Arc's own spring. -->
                     <Panel>
-                        <arc:BillingToggleThumb Name="PART_Thumb"
-                                                Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
-                                                Shadow="{arc:BillingToggleTokenResource ThumbShadow}" />
+                        <arc:GlidingIndicator Name="PART_Thumb"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              BoxShadow="{arc:BillingToggleTokenResource ThumbShadow}"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
                         <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
                     </Panel>
                 </Border>

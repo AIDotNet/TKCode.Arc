@@ -32,6 +32,13 @@ public class FieldIconButton : AvaloniaButton
     public static readonly StyledProperty<double> PressScaleProperty =
         AvaloniaProperty.Register<FieldIconButton, double>(nameof(PressScale), 0.96);
 
+    /// <summary>
+    /// Corner radius of the 2px keyboard focus ring, which sits 4px outside the button. Keep it at the button's radius
+    /// plus 4 so the ring stays concentric when a host changes the button's <c>CornerRadius</c>.
+    /// </summary>
+    public static readonly StyledProperty<CornerRadius> FocusRingRadiusProperty =
+        AvaloniaProperty.Register<FieldIconButton, CornerRadius>(nameof(FocusRingRadius));
+
     /// <summary>When true the button reports a toggle state to assistive technology.</summary>
     public bool IsToggle
     {
@@ -51,6 +58,13 @@ public class FieldIconButton : AvaloniaButton
     {
         get => GetValue(PressScaleProperty);
         set => SetValue(PressScaleProperty, value);
+    }
+
+    /// <summary>Corner radius of the keyboard focus ring.</summary>
+    public CornerRadius FocusRingRadius
+    {
+        get => GetValue(FocusRingRadiusProperty);
+        set => SetValue(FocusRingRadiusProperty, value);
     }
 
     private static readonly Avalonia.Media.Transformation.TransformOperations s_identity =

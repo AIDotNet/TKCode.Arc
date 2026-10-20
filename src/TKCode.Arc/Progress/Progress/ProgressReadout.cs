@@ -1,5 +1,6 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -173,7 +174,7 @@ internal sealed class ProgressReadout : Control
                      Matrix.CreateTranslation(center.X, center.Y);
         using (context.PushOpacity(fade))
         {
-            var effect = _checkFull ? ProgressBlur.Get(2 * (1 - fade)) : null;
+            var effect = _checkFull ? ArcBlur.Get(2 * (1 - fade)) : null;
             var box = new Rect(center.X - CheckSize / 2, center.Y - CheckSize / 2, CheckSize, CheckSize);
             using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, box))
             using (context.PushTransform(matrix))

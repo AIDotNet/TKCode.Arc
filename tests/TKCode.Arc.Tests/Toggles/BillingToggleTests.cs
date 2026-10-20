@@ -1,3 +1,5 @@
+using TKCode.Arc.Primitives;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Data;
 using Avalonia.Headless;
@@ -86,13 +88,44 @@ public class BillingToggleTests
     }
 
     [AvaloniaFact]
+    public void Thumb_Glides_On_A_Critically_Damped_Spring()
+    {
+        var clock = new TKCode.Arc.Motion.ManualFrameClock();
+        using var _ = clock.Install();
+        var toggle = new BillingToggle();
+        var window = TestHelpers.Show(toggle, TKCode.Arc.Motion.ArcMotionLevel.Full);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var thumb = TestHelpers.Descendant<GlidingIndicator>(toggle, BillingToggle.ThumbPart);
+            thumb.CornerRadius.TopLeft.ShouldBeGreaterThanOrEqualTo(thumb.CurrentRect.Height / 2);
+            var from = thumb.CurrentRect;
+            toggle.Value = "yearly";
+            Dispatcher.UIThread.RunJobs();
+            var yearly = toggle.ContainerFromIndex(1)!;
+            var target = new Rect(yearly.TranslatePoint(default, thumb)!.Value, yearly.Bounds.Size);
+            var t = CorePrimitives.CoreFrames.Run(clock, 6);
+            // Arc's glide: visualDuration 0.34, bounce 0.
+            BillingToggle.ThumbGlide.ShouldBe(TKCode.Arc.Motion.SpringSpec.FromVisual(0.34, 0));
+            var (dx, _) = TKCode.Arc.Motion.SpringSolver.Evaluate(BillingToggle.ThumbGlide, from.X - target.X, 0, t);
+            thumb.CurrentRect.X.ShouldBe(target.X + dx, 0.01);
+            clock.Advance(TimeSpan.FromSeconds(1));
+            thumb.CurrentRect.X.ShouldBe(target.X, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Thumb_Takes_The_Selected_Option_Box()
     {
         var toggle = new BillingToggle { Value = "yearly" };
         var window = TestHelpers.Show(toggle);
         try
         {
-            var thumb = TestHelpers.Descendant<BillingToggleThumb>(toggle);
+            var thumb = TestHelpers.Descendant<GlidingIndicator>(toggle, BillingToggle.ThumbPart);
             var yearly = toggle.ContainerFromIndex(1)!;
             thumb.CurrentRect.X.ShouldBe(yearly.Bounds.X, 0.01);
             thumb.CurrentRect.Width.ShouldBe(yearly.Bounds.Width, 0.01);

@@ -1,28 +1,11 @@
-using Avalonia;
-using Avalonia.Media;
-
 namespace TKCode.Arc;
 
 /// <summary>
-/// Shared drawing helpers for the field family: cached blur effects (quantized to 0.25px so animated blurs do
-/// not allocate per frame) and the Arc number test used by message copy.
+/// Shared helpers for the field family: the Arc number test used by message copy. Animated blurs use the Core
+/// <see cref="Primitives.ArcBlur"/> cache.
 /// </summary>
 internal static class FieldDrawing
 {
-    private const int Steps = 4;
-    private static readonly IEffect?[] s_blurs = new IEffect?[8 * Steps + 1];
-
-    /// <summary>A cached blur effect for <paramref name="radius"/> px, or null when it rounds to zero.</summary>
-    public static IEffect? Blur(double radius)
-    {
-        var index = (int)Math.Round(Math.Clamp(radius, 0, 8) * Steps);
-        if (index <= 0)
-        {
-            return null;
-        }
-        return s_blurs[index] ??= new ImmutableBlurEffect(index / (double)Steps);
-    }
-
     /// <summary>Arc's number test (<c>/^\d[\d.,/:]*%?$/</c>): counts like "12", "1,204", "3/5", "50%".</summary>
     public static bool IsNumber(string word)
     {

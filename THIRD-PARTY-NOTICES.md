@@ -60,6 +60,138 @@ OR PERFORMANCE OF THIS SOFTWARE.
 - Inter (SIL Open Font License 1.1), used through the `Avalonia.Fonts.Inter` package.
 - Geist and Geist Mono (SIL Open Font License 1.1, Copyright (c) 2023 Vercel, in collaboration with basement.studio), bundled in the optional `TKCode.Arc.Fonts` package; the full license text ships as `licenses/Geist-OFL.txt` (source: `src/TKCode.Arc.Fonts/Assets/OFL.txt`).
 
+## StreamMark — Markdown rendering and code highlighting
+
+`TKCode.Arc` references the StreamMark packages (`TKCode.StreamMark.Core`, `TKCode.StreamMark.Avalonia`,
+`TKCode.StreamMark.Highlighting.TextMate`) as published NuGet binaries. They render the `Markdown` control and
+tokenize the code of `CodeBlock`. StreamMark.Core contains a C# port of remend from vercel/streamdown
+(Apache License 2.0, Copyright 2023 Vercel, Inc.); see StreamMark's own third-party notices.
+
+```
+MIT License
+
+Copyright (c) 2026 StreamMark contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### TextMateSharp and TextMateSharp.Grammars
+
+TextMate tokenization (dependency of `TKCode.StreamMark.Highlighting.TextMate`).
+
+```
+MIT License
+
+Copyright (c) 2021 Daniel Peñalba
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+TextMateSharp.Grammars embeds TextMate grammars, language configurations and color themes, most of them taken
+from Visual Studio Code (MIT License, Copyright (c) Microsoft Corporation) and the grammar repositories it
+bundles (MIT, TextMate bundle license, Apache-2.0, BSD and GitHub licenses). The `cgmanifest.json` files embedded
+in the package record the source and license of each grammar. TKCode.Arc tokenizes with VS Code's Light+ theme
+and paints the result in its own palette.
+
+### Onigwrap and Oniguruma
+
+TextMateSharp runs its regular expressions on the native Oniguruma library through Onigwrap (native libraries per
+runtime identifier). Onigwrap: MIT License, Copyright (c) 2024 Aikawa Yataro, derived from fluentCODE/onigwrap
+(MIT License, Copyright (c) 2015 Fluent Solutions). Oniguruma:
+
+```
+Copyright (c) 2002-2021  K.Kosako  <kkosako0@gmail.com>
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+```
+
+### Markdig
+
+Markdown parsing (dependency of `TKCode.StreamMark.Core`), https://github.com/xoofx/markdig.
+
+```
+BSD 2-Clause License
+
+Copyright (c) Alexandre Mutel
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+```
+
+Optional StreamMark plugins that an application may add (`TKCode.StreamMark.RaTeX`, `TKCode.StreamMark.Mermaid`)
+are not referenced by TKCode.Arc and carry their own notices.
+
 ## Dependencies
 
 - AtomUI (LGPL-3.0), consumed as published NuGet binaries. Applications using TKCode.Arc also

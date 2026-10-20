@@ -35,7 +35,8 @@ public sealed class ArcMotion
     public static readonly AttachedProperty<bool> TracksProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, bool>("Tracks");
 
-    private static readonly AttachedProperty<ArcMotionLevel> TokenLevelProperty =
+    /// <summary>The theme's MotionMode on a tracking control (internal so <see cref="LiveLoop"/> can follow it).</summary>
+    internal static readonly AttachedProperty<ArcMotionLevel> TokenLevelProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, ArcMotionLevel>("TokenLevel", ArcMotionLevel.Full);
 
     private static readonly AttachedProperty<bool> ActiveProperty =

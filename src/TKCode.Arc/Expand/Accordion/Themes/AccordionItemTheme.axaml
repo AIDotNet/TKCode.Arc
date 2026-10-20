@@ -27,17 +27,17 @@
                                               RenderTransformOrigin="50%,50%" />
                             </Grid>
                         </arc:AccordionTrigger>
-                        <arc:ExpandHeightDecorator Name="PART_Panel"
-                                                 Axis="Height"
-                                                 Spring="Smooth"
-                                                 IsExpanded="{TemplateBinding IsExpanded}">
+                        <arc:SpringSizeDecorator Name="PART_Panel"
+                                               Axis="Height"
+                                               Spring="Smooth"
+                                               IsExpanded="{TemplateBinding IsExpanded}">
                             <Border Name="PART_Answer" HorizontalAlignment="Left">
                                 <ContentPresenter Name="PART_ContentPresenter"
                                                   TextWrapping="Wrap"
                                                   Content="{TemplateBinding Content}"
                                                   ContentTemplate="{TemplateBinding ContentTemplate}" />
                             </Border>
-                        </arc:ExpandHeightDecorator>
+                        </arc:SpringSizeDecorator>
                     </StackPanel>
                 </Border>
             </ControlTemplate>

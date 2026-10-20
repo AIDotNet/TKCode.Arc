@@ -9,11 +9,46 @@ namespace TKCode.Arc.Tests.Tables;
 
 public class CodeBlockTests
 {
-    private static List<(string Text, CodeBlockSyntaxKind Kind)> Tokens(string code, string language)
+    /// <summary>Highlights <paramref name="code"/> synchronously through a TextMate session, as CodeBlock does.</summary>
+    private static Highlighted Highlight(string code, string language)
     {
         var spans = new List<CodeBlockSyntaxSpan>();
-        CodeBlockTokenizer.Tokenize(code, language, spans);
-        return spans.Select(s => (code.Substring(s.Start, s.Length), s.Kind)).ToList();
+        using var session = CodeBlockHighlighter.CreateSession(language);
+        session.ShouldNotBeNull(language);
+        CodeBlockHighlighter.AppendSpans(code, session.Update(code), CodeBlockHighlighter.FamilyOf(language), spans);
+        return new Highlighted(code, spans);
+    }
+
+    private sealed record Highlighted(string Code, List<CodeBlockSyntaxSpan> Spans)
+    {
+        /// <summary>The role of the <paramref name="occurrence"/>-th <paramref name="text"/>; every character must share it.</summary>
+        public CodeBlockSyntaxKind this[string text, int occurrence = 0]
+        {
+            get
+            {
+                var index = -1;
+                for (var i = 0; i <= occurrence; i++)
+                {
+                    index = Code.IndexOf(text, index + 1, StringComparison.Ordinal);
+                    index.ShouldBeGreaterThanOrEqualTo(0, text);
+                }
+                var kinds = Enumerable.Range(index, text.Length).Select(At).Distinct().ToList();
+                kinds.Count.ShouldBe(1, $"'{text}' spans {string.Join(", ", kinds)}");
+                return kinds[0];
+            }
+        }
+
+        private CodeBlockSyntaxKind At(int offset)
+        {
+            foreach (var span in Spans)
+            {
+                if (offset >= span.Start && offset < span.Start + span.Length)
+                {
+                    return span.Kind;
+                }
+            }
+            return CodeBlockSyntaxKind.None;
+        }
     }
 
     private static Avalonia.Controls.Window Show(Control control, double width = 800)
@@ -26,56 +61,155 @@ public class CodeBlockTests
     }
 
     [AvaloniaFact]
-    public void Tokenizer_Follows_Arcs_Rules()
+    public void CSharp_Roles()
     {
-        var tokens = Tokens("export function greet(name: string) { return `Hi ${name}` + 42; } // done", "tsx");
-        tokens.ShouldContain(("export", CodeBlockSyntaxKind.Keyword));
-        tokens.ShouldContain(("function", CodeBlockSyntaxKind.Keyword));
-        tokens.ShouldContain(("greet", CodeBlockSyntaxKind.Function));
-        tokens.ShouldContain(("name", CodeBlockSyntaxKind.Property)); // tsx: identifier followed by ':'
-        tokens.ShouldContain(("string", CodeBlockSyntaxKind.Type));
-        tokens.ShouldContain(("`Hi ${name}`", CodeBlockSyntaxKind.String));
-        tokens.ShouldContain(("42", CodeBlockSyntaxKind.Number));
-        tokens.ShouldContain(("// done", CodeBlockSyntaxKind.Comment));
-        tokens.ShouldContain(("{", CodeBlockSyntaxKind.Punctuation));
+        var cs = Highlight("""
+            public sealed class Cart : Control
+            {
+                // Totals update when an item changes.
+                private int _count = 42;
+                public string Name { get; set; } = "Arc";
+                public Task<int> RunAsync(string name) => Task.FromResult(name.Length + 1);
+            }
+            """, "cs");
+        cs["public"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        cs["sealed"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        cs["Cart"].ShouldBe(CodeBlockSyntaxKind.Type);
+        cs["Control"].ShouldBe(CodeBlockSyntaxKind.Type);
+        cs["// Totals update when an item changes."].ShouldBe(CodeBlockSyntaxKind.Comment);
+        cs["42"].ShouldBe(CodeBlockSyntaxKind.Number);
+        cs["\"Arc\""].ShouldBe(CodeBlockSyntaxKind.String);
+        cs["RunAsync"].ShouldBe(CodeBlockSyntaxKind.Function);
+        cs["FromResult"].ShouldBe(CodeBlockSyntaxKind.Function);
+        cs["{"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+        cs["=>"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+        cs["_count"].ShouldBe(CodeBlockSyntaxKind.None);
     }
 
     [AvaloniaFact]
-    public void Tokenizer_Handles_Tags_Json_Keys_And_Unterminated_Quotes()
+    public void TypeScript_Roles()
     {
-        Tokens("<Button onClick={go}>", "tsx").ShouldContain(("Button", CodeBlockSyntaxKind.Tag));
-        Tokens("</div>", "html").ShouldContain(("div", CodeBlockSyntaxKind.Tag));
-        Tokens("<div>", "ts").ShouldNotContain(("div", CodeBlockSyntaxKind.Tag));
-        var json = Tokens("{ \"name\": \"Arc\", \"stars\": 12.5 }", "json");
-        json.ShouldContain(("\"name\"", CodeBlockSyntaxKind.Property));
-        json.ShouldContain(("\"Arc\"", CodeBlockSyntaxKind.String));
-        json.ShouldContain(("12.5", CodeBlockSyntaxKind.Number));
-        // An unterminated quote is plain text and scanning continues after it.
-        Tokens("say \"hello", "tsx").ShouldBe([]);
-        // Digits glued to letters are not numbers (\b), "a-b" is one identifier.
-        Tokens("123abc", "tsx").ShouldBe([]);
-        Tokens("a-b(", "tsx").ShouldContain(("a-b", CodeBlockSyntaxKind.Function));
-        Tokens("/* open", "tsx").ShouldBe([("/", CodeBlockSyntaxKind.Punctuation), ("*", CodeBlockSyntaxKind.Punctuation)]);
+        var ts = Highlight("export function greet(name: string): string { return `Hi ${name}` + 42; } // done", "ts");
+        ts["export"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        ts["function"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        ts["return"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        ts["greet"].ShouldBe(CodeBlockSyntaxKind.Function);
+        ts["string"].ShouldBe(CodeBlockSyntaxKind.Type);
+        ts["`Hi "].ShouldBe(CodeBlockSyntaxKind.String);
+        ts["42"].ShouldBe(CodeBlockSyntaxKind.Number);
+        ts["// done"].ShouldBe(CodeBlockSyntaxKind.Comment);
+        ts["("].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+        ts["+"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+
+        var tsx = Highlight("<Button onClick={go} variant=\"primary\">Save</Button>", "tsx");
+        tsx["Button"].ShouldBe(CodeBlockSyntaxKind.Type); // a component, not an intrinsic element
+        tsx["onClick"].ShouldBe(CodeBlockSyntaxKind.Property);
+        tsx["\"primary\""].ShouldBe(CodeBlockSyntaxKind.String);
+        tsx["<"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+        Highlight("<div className=\"a\" />", "tsx")["div"].ShouldBe(CodeBlockSyntaxKind.Tag);
     }
 
     [AvaloniaFact]
-    public void Tokenizer_Extends_To_CSharp_And_Xaml()
+    public void Json_Roles()
     {
-        Tokens("public sealed class Foo : Control", "cs").ShouldContain(("sealed", CodeBlockSyntaxKind.Keyword));
-        Tokens("var t = Task.Run(x);", "csharp").ShouldContain(("Task", CodeBlockSyntaxKind.Type));
-        var xaml = Tokens("<arc:Button Variant=\"Ghost\" />", "axaml");
-        xaml.ShouldContain(("Button", CodeBlockSyntaxKind.Tag));
-        xaml.ShouldContain(("Variant", CodeBlockSyntaxKind.Property));
-        CodeBlockTokenizer.NormalizeLanguage(".TSX").ShouldBe("tsx");
+        var json = Highlight("{ \"name\": \"Arc\", \"stars\": 12.5, \"private\": true, \"license\": null }", "json");
+        json["\"name\""].ShouldBe(CodeBlockSyntaxKind.Property);
+        json["\"Arc\""].ShouldBe(CodeBlockSyntaxKind.String);
+        json["12.5"].ShouldBe(CodeBlockSyntaxKind.Number);
+        json["true"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        json["null"].ShouldBe(CodeBlockSyntaxKind.Keyword);
+        json["{"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+        json[":"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
     }
 
     [AvaloniaFact]
-    public void Defaults_Match_Arc()
+    public void Xml_Roles()
+    {
+        var xaml = Highlight("<!-- note -->\n<arc:Button Variant=\"Ghost\" Content=\"Save\" />\n<!--\n  two lines\n-->", "axaml");
+        // TextMateSharp's XML grammar scopes only the delimiters; the whole comment is a comment.
+        xaml["<!-- note -->"].ShouldBe(CodeBlockSyntaxKind.Comment);
+        xaml["two lines"].ShouldBe(CodeBlockSyntaxKind.Comment);
+        xaml["Button"].ShouldBe(CodeBlockSyntaxKind.Tag);
+        xaml["Variant"].ShouldBe(CodeBlockSyntaxKind.Property);
+        xaml["\"Ghost\""].ShouldBe(CodeBlockSyntaxKind.String);
+        xaml["/>"].ShouldBe(CodeBlockSyntaxKind.Punctuation);
+
+        var html = Highlight("<div class=\"card\">Hi</div>", "html");
+        html["div"].ShouldBe(CodeBlockSyntaxKind.Tag);
+        html["class"].ShouldBe(CodeBlockSyntaxKind.Property);
+        html["\"card\""].ShouldBe(CodeBlockSyntaxKind.String);
+        html["Hi"].ShouldBe(CodeBlockSyntaxKind.None);
+    }
+
+    [AvaloniaFact]
+    public void Languages_Normalize_And_Unknown_Ones_Stay_Plain()
+    {
+        CodeBlockHighlighter.NormalizeLanguage(".TSX").ShouldBe("tsx");
+        CodeBlockHighlighter.SupportsLanguage("C#").ShouldBeTrue();
+        CodeBlockHighlighter.SupportsLanguage("language-python").ShouldBeTrue();
+        CodeBlockHighlighter.SupportsLanguage("no-such-language").ShouldBeFalse();
+        CodeBlockHighlighter.SupportsLanguage("text").ShouldBeFalse();
+        CodeBlockHighlighter.CreateSession("no-such-language").ShouldBeNull();
+        CodeBlockHighlighter.FamilyOf("{.AXAML}").ShouldBe(CodeBlockLanguageFamily.Markup);
+        CodeBlockHighlighter.FamilyOf("jsonc").ShouldBe(CodeBlockLanguageFamily.Json);
+        CodeBlockHighlighter.FamilyOf("ts").ShouldBe(CodeBlockLanguageFamily.Code);
+    }
+
+    [AvaloniaFact]
+    public async Task Unknown_Language_Shows_Plain_Text()
+    {
+        var block = new CodeBlock { Language = "no-such-language", Code = "return 1;" };
+        var window = Show(block);
+        try
+        {
+            await block.TextPresenter!.WhenHighlighted;
+            block.TextPresenter.SpanCount.ShouldBe(0);
+            block.TextPresenter.Text.ShouldBe("return 1;");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Session_Follows_Code_And_Language_Changes()
+    {
+        var block = new CodeBlock { Language = "cs", Code = "var a = 1;" };
+        var window = Show(block);
+        try
+        {
+            var text = block.TextPresenter!;
+            await text.WhenHighlighted;
+            Dispatcher.UIThread.RunJobs();
+            text.Spans.ShouldContain(s => s.Kind == CodeBlockSyntaxKind.Keyword);
+
+            block.Code = "// changed";
+            await text.WhenHighlighted;
+            Dispatcher.UIThread.RunJobs();
+            text.Spans.ShouldBe([new CodeBlockSyntaxSpan(0, 10, CodeBlockSyntaxKind.Comment)]);
+
+            block.Language = "json";
+            block.Code = "{ \"a\": 1 }";
+            await text.WhenHighlighted;
+            Dispatcher.UIThread.RunJobs();
+            text.Spans.ShouldContain(new CodeBlockSyntaxSpan(2, 3, CodeBlockSyntaxKind.Property));
+            text.Spans.ShouldContain(new CodeBlockSyntaxSpan(7, 1, CodeBlockSyntaxKind.Number));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Defaults_Match_Arc()
     {
         var block = new CodeBlock { Code = "const a = 1;\nconst b = 2;" };
         var window = Show(block);
         try
         {
+            await block.TextPresenter!.WhenHighlighted;
             block.Language.ShouldBe("tsx");
             block.LineCount.ShouldBe(2);
             var label = TestHelpers.Descendant<CodeBlockHeaderLabel>(block);

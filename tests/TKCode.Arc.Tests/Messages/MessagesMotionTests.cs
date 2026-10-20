@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -70,8 +71,8 @@ public class MessagesMotionTests
         try
         {
             Run(window, clock, 0.5);
-            var copy = alert.GetVisualDescendants().OfType<MessagesSizeFrame>().First();
-            var chip = card.GetVisualDescendants().OfType<MessagesSizeFrame>().First();
+            var copy = TestHelpers.Descendant<SpringSizeDecorator>(alert, "PART_CopyFrame");
+            var chip = card.GetVisualDescendants().OfType<SpringSizeDecorator>().First(d => d.Child is MessagesTextSwap { Name: "PART_Change" });
             var height = copy.Bounds.Height;
             var width = chip.Bounds.Width;
             alert.Content = "A much longer description that wraps onto a second line for sure, and even a third line.";

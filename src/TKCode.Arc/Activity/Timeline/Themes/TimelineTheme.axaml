@@ -1,0 +1,294 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc timeline.module.css. The feed is a scroller holding the virtualized rows and the pinned day label (the stand-in
+        for position: sticky, moved by a render transform). Day labels sit on the timeline surface (HeaderBackground).
+    -->
+    <ControlTheme x:Key="{x:Type arc:Timeline}" TargetType="arc:Timeline">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Timeline">
+                <Panel>
+                    <ScrollViewer Name="PART_Scroller"
+                                  Background="{TemplateBinding Background}"
+                                  Padding="{TemplateBinding Padding}"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <Panel Name="PART_Track">
+                            <arc:TimelineList Name="PART_List" />
+                            <arc:TimelineDayHeader Name="PART_Sticky" VerticalAlignment="Top" />
+                        </Panel>
+                    </ScrollViewer>
+                    <arc:ActivityLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HeaderBackground" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="DayGap" Value="{arc:TimelineTokenResource DayGap}" />
+        <Setter Property="MarkerSize" Value="{arc:TimelineTokenResource MarkerSize}" />
+        <Setter Property="MarkerGlyphSize" Value="{arc:TimelineTokenResource MarkerGlyphSize}" />
+        <Setter Property="MarkerGlyphStroke" Value="{arc:TimelineTokenResource MarkerGlyphStroke}" />
+        <Setter Property="FeatherHeight" Value="{arc:TimelineTokenResource FeatherHeight}" />
+        <Setter Property="NarrowWidth" Value="{arc:TimelineTokenResource NarrowWidth}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:TimelineList}" TargetType="arc:TimelineList">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TimelineList">
+                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Focusable" Value="False" />
+    </ControlTheme>
+
+    <!-- .day: 14px / 500 in the foreground, the count in 12px muted tabular figures; padding space-2 space-3 space-2 0. -->
+    <ControlTheme x:Key="{x:Type arc:TimelineDayHeader}" TargetType="arc:TimelineDayHeader">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TimelineDayHeader">
+                <arc:TimelineGrowHost Name="PART_Grow" ClipMargin="0">
+                    <Border Background="{TemplateBinding Background}"
+                            Padding="{arc:TimelineTokenResource DayPadding}">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Right"
+                                        Orientation="Horizontal"
+                                        Margin="{arc:TimelineTokenResource DayCountMargin}"
+                                        Spacing="{arc:TimelineTokenResource DayCountSpacing}"
+                                        VerticalAlignment="Center"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <arc:RollingDigits Name="PART_Count"
+                                                   UseGrouping="False"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Name="PART_CountWord" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Label"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       LineHeight="{arc:TimelineTokenResource DayLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                </arc:TimelineGrowHost>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+
+    <!--
+        .trigger: a 12px / space-3 padded grid with the control radius; a button (hover / press = SurfaceMuted on fast)
+        only when the event has a detail. Its content (text, time, chevron) belongs to the row template.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TimelineTrigger}" TargetType="arc:TimelineTrigger">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TimelineTrigger">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalContentAlignment="Stretch" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:TimelineTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:TimelineTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:TimelineTokenResource TriggerPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Focusable" Value="False" />
+        <Style Selector="^:interactive">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:interactive:pointerover, ^:interactive:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        .item: the marker (28px at 8px) and the line under it in the left column, the content 36px in. A person's portrait
+        sits on a hairline ring; a system event is a quiet node (Surface, TextSecondary icon) tinted 12% by its tone.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TimelineRow}" TargetType="arc:TimelineRow">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TimelineRow">
+                <arc:TimelineGrowHost Name="PART_Grow" ClipMargin="0">
+                    <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                        <Panel>
+                            <Border Name="PART_Segment"
+                                    Width="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    Margin="{arc:TimelineTokenResource SegmentMargin}"
+                                    Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                            <Panel Name="PART_Marker"
+                                   Width="{arc:TimelineTokenResource MarkerSize}"
+                                   Height="{arc:TimelineTokenResource MarkerSize}"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   Margin="{arc:TimelineTokenResource MarkerMargin}">
+                                <Border Name="PART_MarkerFill" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                <Border Name="PART_MarkerTone" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" Opacity="0" />
+                                <Decorator Name="PART_MarkerContent" />
+                                <Border Name="PART_MarkerRing"
+                                        IsHitTestVisible="False"
+                                        BorderThickness="1"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        BorderBrush="{arc:TimelineTokenResource MarkerRingColor}" />
+                            </Panel>
+                            <Panel Name="PART_Content" Margin="{arc:TimelineTokenResource ContentMargin}">
+                                <StackPanel>
+                                    <arc:TimelineTrigger Name="PART_Trigger">
+                                        <DockPanel>
+                                            <arc:ArcGlyph Name="PART_Chevron"
+                                                          DockPanel.Dock="Right"
+                                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                          Size="{arc:TimelineTokenResource ChevronSize}"
+                                                          StrokeThickness="1.75"
+                                                          VerticalAlignment="Top"
+                                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <arc:ArcContentSwap Name="PART_Time"
+                                                                DockPanel.Dock="Right"
+                                                                Mode="BlurSwap"
+                                                                MinWidth="{arc:TimelineTokenResource TimeMinWidth}"
+                                                                Height="{arc:TimelineTokenResource TitleLineHeight}"
+                                                                HorizontalContentAlignment="Right"
+                                                                VerticalContentAlignment="Center"
+                                                                VerticalAlignment="Top"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <StackPanel Spacing="{arc:TimelineTokenResource TextGap}">
+                                                <TextBlock Name="PART_Title"
+                                                           TextWrapping="Wrap"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           LineHeight="{arc:TimelineTokenResource TitleLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <TextBlock Name="PART_Meta"
+                                                           TextWrapping="Wrap"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           LineHeight="{arc:TimelineTokenResource MetaLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </arc:TimelineTrigger>
+                                    <arc:TimelineGrowHost Name="PART_Detail">
+                                        <Border Name="PART_DetailBody">
+                                            <Decorator Name="PART_DetailHost"
+                                                       TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </Border>
+                                    </arc:TimelineGrowHost>
+                                </StackPanel>
+                            </Panel>
+                        </Panel>
+                    </Border>
+                </arc:TimelineGrowHost>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ActorBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+
+        <!-- Values the narrow layout changes live in untriggered styles (template values are local and win over styles). -->
+        <Style Selector="^ /template/ arc|TimelineTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:TimelineTokenResource TriggerPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Time">
+            <Setter Property="Margin" Value="{arc:TimelineTokenResource TimeMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Margin" Value="{arc:TimelineTokenResource ChevronMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DetailBody">
+            <Setter Property="Padding" Value="{arc:TimelineTokenResource DetailPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_MarkerFill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_Marker">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:avatar /template/ Border#PART_MarkerFill">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:success">
+            <Style Selector="^ /template/ Border#PART_MarkerTone">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+                <Setter Property="Opacity" Value="{arc:TimelineTokenResource ToneTintOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Marker">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+        <Style Selector="^:danger">
+            <Style Selector="^ /template/ Border#PART_MarkerTone">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
+                <Setter Property="Opacity" Value="{arc:TimelineTokenResource ToneTintOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Marker">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+        <Style Selector="^:not(:expandable) /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!-- Below 420px the trigger and detail tighten to space-2 inline padding and an 8px column gap. -->
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ arc|TimelineTrigger#PART_Trigger">
+                <Setter Property="Padding" Value="{arc:TimelineTokenResource TriggerPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Time">
+                <Setter Property="Margin" Value="{arc:TimelineTokenResource TimeMarginNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Margin" Value="{arc:TimelineTokenResource ChevronMarginNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_DetailBody">
+                <Setter Property="Padding" Value="{arc:TimelineTokenResource DetailPaddingNarrow}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

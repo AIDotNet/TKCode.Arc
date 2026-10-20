@@ -1,0 +1,258 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:CardStack}" TargetType="arc:CardStack">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardStack">
+                <Panel>
+                    <StackPanel Name="PART_Root">
+                        <!-- The stage reserves the top card plus the edges peeking out below it, so nothing reflows. -->
+                        <arc:CardStackStage Name="PART_Stage">
+                            <ItemsPresenter Name="PART_ItemsPresenter"
+                                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                                            VerticalAlignment="Top" />
+                            <Border Name="PART_Empty" VerticalAlignment="Top" BorderThickness="1">
+                                <Panel>
+                                    <StackPanel Name="PART_DefaultEmpty"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Name="PART_EmptyTitle"
+                                                   Text="All cards reviewed"
+                                                   HorizontalAlignment="Center" />
+                                        <arc:MediaButton Name="PART_StartOverButton"
+                                                         Glyph="{x:Static arc:ArcIcons.RotateCcw}"
+                                                         Content="Start over"
+                                                         HorizontalAlignment="Center" />
+                                    </StackPanel>
+                                    <ContentPresenter Name="PART_EmptyPresenter"
+                                                      Content="{TemplateBinding EmptyContent}"
+                                                      ContentTemplate="{TemplateBinding EmptyContentTemplate}"
+                                                      HorizontalContentAlignment="Center"
+                                                      VerticalContentAlignment="Center" />
+                                </Panel>
+                            </Border>
+                            <Border Name="PART_EmptyRing"
+                                    VerticalAlignment="Top"
+                                    IsHitTestVisible="False"
+                                    BorderThickness="2"
+                                    Margin="{arc:CardStackTokenResource CardFocusRingMargin}"
+                                    CornerRadius="{arc:CardStackTokenResource CardFocusRingRadius}"
+                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        </arc:CardStackStage>
+                        <WrapPanel Name="PART_Controls"
+                                   HorizontalAlignment="Center"
+                                   Orientation="Horizontal">
+                            <arc:MediaButton Name="PART_LeftButton"
+                                             Glyph="{x:Static arc:ArcIcons.X}"
+                                             Content="{TemplateBinding LeftLabel}" />
+                            <arc:MediaButton Name="PART_UndoButton"
+                                             Tone="Quiet"
+                                             Glyph="{x:Static arc:ArcIcons.RotateCcw}"
+                                             Content="Undo" />
+                            <arc:MediaButton Name="PART_RightButton"
+                                             Tone="Primary"
+                                             Glyph="{x:Static arc:ArcIcons.Check}"
+                                             Content="{TemplateBinding RightLabel}" />
+                        </WrapPanel>
+                    </StackPanel>
+                    <arc:MediaLiveRegion Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <arc:CardStackPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemContainerTheme">
+            <ControlTheme TargetType="arc:CardStackCard">
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="arc:CardStackCard">
+                        <Panel>
+                            <!-- Resting cards sit flat on their borders; a card in the hand or in flight floats. -->
+                            <Border Name="PART_Shadow"
+                                    IsHitTestVisible="False"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}" />
+                            <Border Name="PART_Face"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                                    BorderThickness="1"
+                                    Background="{arc:ArcDesignTokenResource Surface}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    ClipToBounds="True">
+                                <Panel>
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      HorizontalContentAlignment="Stretch"
+                                                      VerticalContentAlignment="Stretch" />
+                                    <Border Name="PART_Shade"
+                                            IsHitTestVisible="False"
+                                            Background="{arc:CardStackTokenResource ShadeColor}" />
+                                </Panel>
+                            </Border>
+                            <Border Name="PART_KeepStamp"
+                                    Classes="stamp"
+                                    HorizontalAlignment="Left"
+                                    Background="{arc:CardStackTokenResource KeepStampFill}"
+                                    BorderBrush="{arc:CardStackTokenResource KeepStampBorder}">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{arc:CardStackTokenResource StampGap}"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                                  Size="16"
+                                                  StrokeThickness="2"
+                                                  Foreground="{arc:ArcDesignTokenResource Success}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding KeepLabel}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_PassStamp"
+                                    Classes="stamp"
+                                    HorizontalAlignment="Right"
+                                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{arc:CardStackTokenResource StampGap}"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                  Size="16"
+                                                  StrokeThickness="2"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding PassLabel}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_FocusRing"
+                                    IsHitTestVisible="False"
+                                    BorderThickness="2"
+                                    Margin="{arc:CardStackTokenResource CardFocusRingMargin}"
+                                    CornerRadius="{arc:CardStackTokenResource CardFocusRingRadius}"
+                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+                <Setter Property="ClipToBounds" Value="False" />
+                <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+
+                <Style Selector="^ /template/ Border#PART_Shadow">
+                    <Setter Property="Opacity" Value="0" />
+                </Style>
+                <Style Selector="^:lifted /template/ Border#PART_Shadow">
+                    <Setter Property="Opacity" Value="1" />
+                </Style>
+                <Style Selector="^ /template/ Border.stamp">
+                    <Setter Property="IsVisible" Value="False" />
+                    <Setter Property="IsHitTestVisible" Value="False" />
+                    <Setter Property="VerticalAlignment" Value="Top" />
+                    <Setter Property="Margin" Value="{arc:CardStackTokenResource StampMargin}" />
+                    <Setter Property="Height" Value="{arc:CardStackTokenResource StampHeight}" />
+                    <Setter Property="Padding" Value="{arc:CardStackTokenResource StampPadding}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="AutomationProperties.AccessibilityView" Value="Raw" />
+                </Style>
+                <Style Selector="^ /template/ Border.stamp TextBlock">
+                    <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+                    <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+                    <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                </Style>
+                <!-- Cards returning to the back of the stack carry no verdict. -->
+                <Style Selector="^:top /template/ Border.stamp">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
+                <Style Selector="^:flying /template/ Border.stamp">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
+                <Style Selector="^:top">
+                    <Setter Property="Cursor" Value="Hand" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_FocusRing">
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
+                <Style Selector="^:stage-focus /template/ Border#PART_FocusRing">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
+                <Style Selector="^:motion-full /template/ Border#PART_Shadow">
+                    <Setter Property="Transitions">
+                        <Transitions>
+                            <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        </Transitions>
+                    </Setter>
+                </Style>
+            </ControlTheme>
+        </Setter>
+
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ StackPanel#PART_Root">
+            <Setter Property="Spacing" Value="{arc:CardStackTokenResource RootGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CardStackStage#PART_Stage">
+            <Setter Property="MaxWidth" Value="{arc:CardStackTokenResource StageMaxWidth}" />
+            <Setter Property="Height" Value="{arc:CardStackTokenResource StageHeight}" />
+        </Style>
+        <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter">
+            <Setter Property="Height" Value="{arc:CardStackTokenResource CardHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Empty">
+            <Setter Property="Height" Value="{arc:CardStackTokenResource CardHeight}" />
+            <Setter Property="Padding" Value="{arc:CardStackTokenResource EmptyPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_EmptyRing">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Height" Value="{arc:CardStackTokenResource EmptyRingHeight}" />
+        </Style>
+        <Style Selector="^:reviewed:stage-focus /template/ Border#PART_EmptyRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_DefaultEmpty">
+            <Setter Property="Spacing" Value="{arc:CardStackTokenResource EmptyGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_EmptyTitle">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_EmptyPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:custom-empty /template/ ContentPresenter#PART_EmptyPresenter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:custom-empty /template/ StackPanel#PART_DefaultEmpty">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_Controls">
+            <Setter Property="ItemSpacing" Value="{arc:CardStackTokenResource ControlsGap}" />
+            <Setter Property="LineSpacing" Value="{arc:CardStackTokenResource ControlsGap}" />
+        </Style>
+
+        <!-- Narrow stacks: shorter cards and a tighter column (Arc max-width: 26rem). -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ StackPanel#PART_Root">
+                <Setter Property="Spacing" Value="{arc:CardStackTokenResource CompactRootGap}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CardStackStage#PART_Stage">
+                <Setter Property="Height" Value="{arc:CardStackTokenResource CompactStageHeight}" />
+            </Style>
+            <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter">
+                <Setter Property="Height" Value="{arc:CardStackTokenResource CompactCardHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Empty">
+                <Setter Property="Height" Value="{arc:CardStackTokenResource CompactCardHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_EmptyRing">
+                <Setter Property="Height" Value="{arc:CardStackTokenResource CompactEmptyRingHeight}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

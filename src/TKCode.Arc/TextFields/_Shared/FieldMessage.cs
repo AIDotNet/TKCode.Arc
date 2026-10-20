@@ -1,5 +1,6 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -812,7 +813,7 @@ public class FieldMessage : Control
 
     private static DrawingContext.PushedState? PushBlur(DrawingContext context, double radius, Rect bounds)
     {
-        var effect = FieldDrawing.Blur(radius);
+        var effect = ArcBlur.Get(radius);
         return effect is null ? null : context.PushEffect(effect, bounds);
     }
 

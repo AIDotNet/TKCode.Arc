@@ -1,3 +1,4 @@
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
@@ -132,7 +133,7 @@ internal static class TogglesNavigation
 
 }
 
-/// <summary>The selection indicator a <see cref="TogglesIndicatorTracker"/> drives (a GlidingIndicator or a custom thumb).</summary>
+/// <summary>The selection indicator a <see cref="TogglesIndicatorTracker"/> drives (normally a Core GlidingIndicator).</summary>
 internal interface ITogglesIndicator
 {
     /// <summary>The coordinate space of <see cref="MoveTo"/>.</summary>
@@ -143,16 +144,32 @@ internal interface ITogglesIndicator
     void Hide(bool animate);
 }
 
-/// <summary>Adapts the Core <see cref="GlidingIndicator"/> (P7).</summary>
+/// <summary>Adapts the Core <see cref="GlidingIndicator"/> (P7), optionally on a component's own spring.</summary>
 internal sealed class TogglesGlidingIndicator : ITogglesIndicator
 {
-    public TogglesGlidingIndicator(GlidingIndicator indicator) => Indicator = indicator;
+    private readonly SpringSpec? _spring;
+
+    public TogglesGlidingIndicator(GlidingIndicator indicator, SpringSpec? spring = null)
+    {
+        Indicator = indicator;
+        _spring = spring;
+    }
 
     public GlidingIndicator Indicator { get; }
 
     public Visual Visual => Indicator;
 
-    public void MoveTo(Rect target, bool animate) => Indicator.MoveTo(target, animate);
+    public void MoveTo(Rect target, bool animate)
+    {
+        if (_spring is { } spring)
+        {
+            Indicator.MoveTo(target, spring, animate);
+        }
+        else
+        {
+            Indicator.MoveTo(target, animate);
+        }
+    }
 
     public void Hide(bool animate) => Indicator.Hide(animate);
 }

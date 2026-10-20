@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Automation;
@@ -76,14 +77,13 @@ public class TextShimmer : Control
 
     private Label? _current;
     private readonly List<Label> _leaving = new();
-    private readonly TextEffectsLoop _loop;
+    private readonly LiveLoop _loop;
     private double _sweep;
     private double _pause;
     private bool _started;
     private MotionValue<double>? _glide;
     private MotionValue<double>? _settle;
     private MotionValue<double>? _width;
-    private bool _inViewport = true;
     private IBrush? _band;
     private double _bandEm;
     private bool _layoutDirty = true;
@@ -97,17 +97,10 @@ public class TextShimmer : Control
 
     public TextShimmer()
     {
-        _loop = new TextEffectsLoop(this, Step);
-        EffectiveViewportChanged += (_, e) =>
-        {
-            var bounds = new Rect(Bounds.Size).Inflate(64);
-            var visible = Bounds.Width <= 0 || e.EffectiveViewport.Intersects(bounds);
-            if (visible != _inViewport)
-            {
-                _inViewport = visible;
-                UpdateLoop();
-            }
-        };
+        // P21: the Core loop pauses itself while detached, hidden, off screen (with a 64px margin, so a band that is
+        // about to enter still runs) or below full motion, and resumes where the band stopped.
+        _loop = new LiveLoop(this, Step) { ViewportMargin = 64 };
+        _loop.RunningChanged += OnLoopRunningChanged;
     }
 
     /// <summary>Sweep position: 0 left of the text, 1 right of it.</summary>
@@ -157,36 +150,43 @@ public class TextShimmer : Control
         UpdateLoop();
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        _loop.Stop();
-    }
-
     private void UpdateLoop()
     {
-        var level = ArcMotion.GetEffectiveLevel(this);
-        if (level != ArcMotionLevel.Full)
+        if (ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full)
         {
             _sweep = 0;
         }
-        var run = IsActive && level == ArcMotionLevel.Full && IsVisible && _inViewport &&
-                  TopLevel.GetTopLevel(this) is not null && _glide?.IsAnimating != true;
-        if (run)
+        if (IsActive && _glide?.IsAnimating != true)
         {
-            if (!_loop.IsRunning && !_started)
-            {
-                // The first pass waits a beat; a paused band resumes where it stopped.
-                _pause = _sweep > 0 ? 0 : 0.12;
-                _started = true;
-            }
             _loop.Start();
         }
         else
         {
             _loop.Stop();
+        }
+        if (!_loop.IsRunning)
+        {
             InvalidateVisual();
         }
+    }
+
+    private void OnLoopRunningChanged(bool running)
+    {
+        if (running)
+        {
+            if (!_started)
+            {
+                // The first pass waits a beat; a paused band resumes where it stopped.
+                _pause = _sweep > 0 ? 0 : 0.12;
+                _started = true;
+            }
+            return;
+        }
+        if (ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full)
+        {
+            _sweep = 0;
+        }
+        InvalidateVisual();
     }
 
     private bool Step(double dt)
@@ -412,7 +412,7 @@ public class TextShimmer : Control
         var bounds = new Rect(0, dy, label.Highlight.WidthIncludingTrailingWhitespace, label.Highlight.Height);
         using (context.PushOpacity(opacity))
         {
-            var effect = TextEffectsBlur.Get(blur);
+            var effect = ArcBlur.Get(blur);
             using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, bounds))
             {
                 DrawShimmer(context, label, dy, bounds.Width, bounds.Height);

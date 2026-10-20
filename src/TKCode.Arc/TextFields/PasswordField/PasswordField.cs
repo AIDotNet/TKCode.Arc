@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -115,7 +116,7 @@ public class PasswordField : FieldTextBox
                 if (_presenter is { } presenter)
                 {
                     presenter.Opacity = 0.35 + 0.65 * Math.Clamp(p, 0, 1);
-                    presenter.Effect = FieldDrawing.Blur(2 * (1 - Math.Clamp(p, 0, 1)));
+                    presenter.Effect = ArcBlur.Get(2 * (1 - Math.Clamp(p, 0, 1)));
                 }
             };
         }

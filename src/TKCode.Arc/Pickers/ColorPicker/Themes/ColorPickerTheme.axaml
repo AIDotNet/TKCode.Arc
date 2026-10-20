@@ -1,0 +1,424 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ColorPicker}" TargetType="arc:ColorPicker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ColorPicker">
+                <arc:Field Name="PART_Field"
+                           Label="{TemplateBinding Label}"
+                           IsLabelVisible="False"
+                           Description="{TemplateBinding Description}"
+                           ErrorMessage="{TemplateBinding ErrorMessage}">
+                    <Panel HorizontalAlignment="Left">
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="{arc:ColorPickerTokenResource TriggerFocusRingMargin}"
+                                BorderThickness="2"
+                                CornerRadius="{arc:ColorPickerTokenResource TriggerFocusRingRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Border Name="PART_Trigger"
+                                Height="{arc:ColorPickerTokenResource TriggerHeight}"
+                                Padding="{arc:ColorPickerTokenResource TriggerInset}"
+                                BorderThickness="1"
+                                CornerRadius="{arc:ColorPickerTokenResource TriggerRadius}"
+                                Background="{arc:ColorPickerTokenResource PanelFill}"
+                                BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:ColorPickerTokenResource TriggerGap}">
+                                <arc:ColorPickerChip Width="{arc:ColorPickerTokenResource ChipDiameter}"
+                                                     Height="{arc:ColorPickerTokenResource ChipDiameter}"
+                                                     VerticalAlignment="Center"
+                                                     Color="{TemplateBinding Color}"
+                                                     CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
+                                                     CheckerBase="{arc:ColorPickerTokenResource CheckerBase}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{TemplateBinding Label}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:ColorPickerTokenResource NameLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Text="{TemplateBinding HexValue}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:ColorPickerTokenResource HexLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <arc:PickerMorphPopup Name="PART_Popup"
+                                              TakesFocusFromNativeControl="False"
+                                              WindowManagerAddShadowHint="False" />
+                    </Panel>
+                </arc:Field>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PanelFill" Value="{arc:ColorPickerTokenResource PanelFill}" />
+        <Setter Property="PanelBorder" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FloatShadow" Value="{arc:ColorPickerTokenResource FloatShadow}" />
+
+        <Style Selector="^ /template/ Border#PART_Trigger">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Trigger:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Trigger">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Trigger">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ColorPickerPanel}" TargetType="arc:ColorPickerPanel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ColorPickerPanel">
+                <StackPanel>
+                    <Border Name="PART_Head"
+                            Height="{arc:ColorPickerTokenResource TriggerHeight}"
+                            Padding="{arc:ColorPickerTokenResource HeadInset}">
+                        <DockPanel>
+                            <StackPanel Name="PART_Actions"
+                                        DockPanel.Dock="Right"
+                                        Orientation="Horizontal"
+                                        Spacing="2"
+                                        VerticalAlignment="Center">
+                                <arc:Button Name="PART_Done"
+                                            Classes="color-picker-icon"
+                                            Variant="Ghost">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}" Size="18" />
+                                </arc:Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:ColorPickerTokenResource TriggerGap}">
+                                <arc:ColorPickerChip Name="PART_HeadChip"
+                                                     Width="{arc:ColorPickerTokenResource ChipDiameter}"
+                                                     Height="{arc:ColorPickerTokenResource ChipDiameter}"
+                                                     VerticalAlignment="Center"
+                                                     CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
+                                                     CheckerBase="{arc:ColorPickerTokenResource CheckerBase}" />
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Name="PART_HeadName"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:ColorPickerTokenResource NameLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Name="PART_HeadHex"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:ColorPickerTokenResource HexLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                    <StackPanel Name="PART_Body"
+                                Margin="{arc:ColorPickerTokenResource BodyInset}"
+                                Spacing="{arc:ColorPickerTokenResource BodyGap}">
+                        <arc:ColorPickerPad Name="PART_Area"
+                                            Kind="Area"
+                                            Cursor="Cross"
+                                            Height="{arc:ColorPickerTokenResource AreaHeight}"
+                                            TrackRadius="{arc:ColorPickerTokenResource AreaRadius}"
+                                            CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
+                                            CheckerBase="{arc:ColorPickerTokenResource CheckerBase}"
+                                            FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <arc:ColorPickerPad Name="PART_Hue"
+                                            Kind="Hue"
+                                            Cursor="Hand"
+                                            Margin="{arc:ColorPickerTokenResource SliderMargin}"
+                                            TrackThickness="{arc:ColorPickerTokenResource TrackThickness}"
+                                            CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
+                                            CheckerBase="{arc:ColorPickerTokenResource CheckerBase}"
+                                            FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <arc:ColorPickerPad Name="PART_Alpha"
+                                            Kind="Alpha"
+                                            Cursor="Hand"
+                                            Margin="{arc:ColorPickerTokenResource SliderMargin}"
+                                            TrackThickness="{arc:ColorPickerTokenResource TrackThickness}"
+                                            CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
+                                            CheckerBase="{arc:ColorPickerTokenResource CheckerBase}"
+                                            FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Border Name="PART_Field"
+                                Height="{arc:ColorPickerTokenResource FieldHeight}"
+                                Margin="{arc:ColorPickerTokenResource FieldMargin}"
+                                BorderThickness="1"
+                                CornerRadius="{arc:ColorPickerTokenResource FieldRadius}"
+                                ClipToBounds="True"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                            <DockPanel>
+                                <arc:ColorPickerFormatButton Name="PART_Format" DockPanel.Dock="Left">
+                                    <arc:TextMorph Name="PART_FormatLabel"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </arc:ColorPickerFormatButton>
+                                <Panel>
+                                    <arc:ColorPickerInput Name="PART_Input" />
+                                    <Panel Name="PART_MorphHost"
+                                           IsHitTestVisible="False"
+                                           ClipToBounds="True"
+                                           Margin="{arc:ColorPickerTokenResource InputInset}" />
+                                </Panel>
+                            </DockPanel>
+                        </Border>
+                        <TextBlock Name="PART_Error"
+                                   IsVisible="False"
+                                   Margin="{arc:ColorPickerTokenResource ErrorMargin}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource Danger}"
+                                   AutomationProperties.LiveSetting="Polite" />
+                        <DockPanel Name="PART_Contrast">
+                            <Border Name="PART_Sample"
+                                    DockPanel.Dock="Left"
+                                    Width="{arc:ColorPickerTokenResource SampleWidth}"
+                                    Height="{arc:ColorPickerTokenResource SampleHeight}"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:ColorPickerTokenResource SampleRadius}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    AutomationProperties.AccessibilityView="Raw">
+                                <TextBlock Name="PART_SampleText"
+                                           Text="Aa"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            </Border>
+                            <arc:ColorPickerRatioText Name="PART_Ratio"
+                                                      DockPanel.Dock="Left"
+                                                      Margin="10,0,0,0"
+                                                      VerticalAlignment="Center"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <Panel Name="PART_GradePill"
+                                   DockPanel.Dock="Right"
+                                   Height="{arc:ColorPickerTokenResource GradeHeight}"
+                                   VerticalAlignment="Center">
+                                <Border Name="PART_GradeFill" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                <arc:PickerRollText Name="PART_Grade"
+                                                    Margin="{arc:ColorPickerTokenResource GradeInset}"
+                                                    VerticalAlignment="Center"
+                                                    EnterTravel="0.3"
+                                                    EnterBlur="2"
+                                                    ExitTravel="0.3"
+                                                    ExitDuration="0:0:0.12"
+                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            </Panel>
+                            <TextBlock Name="PART_Against"
+                                       Margin="10,0"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </DockPanel>
+                        <TextBlock Name="PART_ContrastText" IsVisible="False" />
+                        <StackPanel Orientation="Horizontal" Spacing="6" MinHeight="32">
+                            <arc:ColorPickerAddButton Name="PART_Add" VerticalAlignment="Center" />
+                            <arc:ColorPickerSwatchRow Name="PART_Swatches"
+                                                      VerticalAlignment="Center"
+                                                      CheckerColor="{arc:ColorPickerTokenResource CheckerColor}"
+                                                      CheckerBase="{arc:ColorPickerTokenResource CheckerBase}"
+                                                      CurrentRingBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                      FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                      AutomationProperties.Name="Saved colors" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="PreferredWidth" Value="{arc:ColorPickerTokenResource PanelWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <Style Selector="^ /template/ arc|Button.color-picker-icon">
+            <Setter Property="Width" Value="{arc:ColorPickerTokenResource IconButtonSize}" />
+            <Setter Property="Height" Value="{arc:ColorPickerTokenResource IconButtonSize}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ColorPickerTokenResource IconButtonRadius}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Field">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:invalid /template/ Border#PART_Field">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Against">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:grade-pass">
+            <Style Selector="^ /template/ Border#PART_GradeFill">
+                <Setter Property="Background" Value="{arc:ColorPickerTokenResource GradePassFill}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PickerRollText#PART_Grade">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+        <Style Selector="^:grade-large">
+            <Style Selector="^ /template/ Border#PART_GradeFill">
+                <Setter Property="Background" Value="{arc:ColorPickerTokenResource GradeLargeFill}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PickerRollText#PART_Grade">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+        </Style>
+        <Style Selector="^:grade-fail">
+            <Style Selector="^ /template/ Border#PART_GradeFill">
+                <Setter Property="Background" Value="{arc:ColorPickerTokenResource GradeFailFill}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PickerRollText#PART_Grade">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ColorPickerInput}" TargetType="arc:ColorPickerInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ColorPickerInput">
+                <ScrollViewer Name="PART_ScrollViewer"
+                              Padding="{TemplateBinding Padding}"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Disabled">
+                    <TextPresenter Name="PART_TextPresenter"
+                                   VerticalAlignment="Center"
+                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   TextWrapping="NoWrap"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   CaretBrush="{TemplateBinding CaretBrush}" />
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="{arc:ColorPickerTokenResource InputInset}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ColorPickerFormatButton}" TargetType="arc:ColorPickerFormatButton">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ColorPickerFormatButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,0,1,0"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="2"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="MinWidth" Value="{arc:ColorPickerTokenResource FormatMinWidth}" />
+        <Setter Property="Padding" Value="{arc:ColorPickerTokenResource FormatInset}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ColorPickerTokenResource FormatHoverFill}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ColorPickerAddButton}" TargetType="arc:ColorPickerAddButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ColorPickerAddButton">
+                <Panel Background="Transparent">
+                    <arc:ColorPickerDashedRing Name="PART_Ring" Stroke="{TemplateBinding BorderBrush}" />
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                  Size="16"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="999"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

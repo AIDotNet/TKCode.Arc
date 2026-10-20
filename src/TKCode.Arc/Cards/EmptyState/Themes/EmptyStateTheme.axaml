@@ -26,7 +26,7 @@
                                                 Content="{TemplateBinding IconContent}" />
                         </Border>
                         <!-- The copy column follows its content height, so a longer message grows instead of snapping. -->
-                        <arc:MessagesSizeFrame Name="PART_CopyFrame">
+                        <arc:SpringSizeDecorator Name="PART_CopyFrame" Axis="Height" Spring="Smooth" CrossClipOverflow="12">
                             <StackPanel>
                                 <arc:MessagesTextSwap Name="PART_Title"
                                                       Margin="{arc:EmptyStateTokenResource TitleMargin}"
@@ -49,7 +49,7 @@
                                                       TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
                                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                             </StackPanel>
-                        </arc:MessagesSizeFrame>
+                        </arc:SpringSizeDecorator>
                         <ContentPresenter Name="PART_Action"
                                           IsVisible="False"
                                           HorizontalAlignment="Center"

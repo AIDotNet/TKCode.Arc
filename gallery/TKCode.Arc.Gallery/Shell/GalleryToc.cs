@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -21,7 +22,7 @@ public sealed class GalleryToc : Border
     private int _active = -1;
     private Rect _lastRect;
 
-    public GalleryToc(IReadOnlyList<string> titles, Action<int> navigate, Action backToTop, Action openOriginal)
+    public GalleryToc(IReadOnlyList<string> titles, Action<int> navigate, Action backToTop, Action? openOriginal)
     {
         var rows = new StackPanel();
         for (var i = 0; i < titles.Count; i++)
@@ -41,7 +42,8 @@ public sealed class GalleryToc : Border
         _host.Children.Add(_indicator);
         _host.LayoutUpdated += (_, _) => Sync(animate: false);
 
-        var title = GalleryUi.Text("On this page", ArcDesignTokenKind.Foreground, 13, FontWeight.Medium);
+        var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 13, FontWeight.Medium);
+        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.OnThisPage);
         title.Margin = new Thickness(0, 0, 0, 10);
 
         var stack = new StackPanel();
@@ -52,27 +54,34 @@ public sealed class GalleryToc : Border
         SetActive(0);
     }
 
-    private static Control BuildLinks(Action backToTop, Action openOriginal)
+    private static Control BuildLinks(Action backToTop, Action? openOriginal)
     {
         var divider = new Border { Height = 1, Margin = new Thickness(0, 16, 0, 12) };
         ArcTokens.Bind(divider, BackgroundProperty, ArcDesignTokenKind.BorderSubtle);
 
         var stack = new StackPanel { Spacing = 2 };
         stack.Children.Add(divider);
-        stack.Children.Add(Link("View on uiarc.dev", ArcIcons.ExternalLink, openOriginal));
-        stack.Children.Add(Link("Back to top", ArcIcons.ArrowUp, backToTop));
+        // Extras have no Arc original to link to.
+        if (openOriginal is not null)
+        {
+            stack.Children.Add(Link(GalleryShellLangResourceKind.ViewOnArc, ArcIcons.ExternalLink, openOriginal));
+        }
+        stack.Children.Add(Link(GalleryShellLangResourceKind.BackToTop, ArcIcons.ArrowUp, backToTop));
         return stack;
     }
 
-    private static Control Link(string text, Geometry glyph, Action action)
+    private static Control Link(GalleryShellLangResourceKind text, Geometry glyph, Action action)
     {
+        var label = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(label, TextBlock.TextProperty, text);
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
-        row.Children.Add(new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center });
+        row.Children.Add(label);
         row.Children.Add(new ArcGlyph { Data = glyph, Size = 13 });
-        var link = new GalleryNavRow(row, text, fontSize: 12, height: 28, padding: new Thickness(0), radius: 8)
+        var link = new GalleryNavRow(row, fontSize: 12, height: 28, padding: new Thickness(0), radius: 8)
         {
             HorizontalAlignment = HorizontalAlignment.Left
         };
+        GalleryText.Bind(link, Avalonia.Automation.AutomationProperties.NameProperty, text);
         link.Click += action;
         return link;
     }

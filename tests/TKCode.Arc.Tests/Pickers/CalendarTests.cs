@@ -38,6 +38,31 @@ public class CalendarTests
     }
 
     [AvaloniaFact]
+    public void FocusTabbableDay_Focuses_The_Selected_Day_Or_The_First_Open_One()
+    {
+        var calendar = new Calendar { SelectedDate = new DateOnly(2026, 10, 14) };
+        var (_, window) = Show(calendar);
+        try
+        {
+            calendar.FocusTabbableDay().ShouldBeTrue();
+            var focused = Strip(calendar).PresentPane!.FindCell(new DateOnly(2026, 10, 14))!;
+            focused.IsFocused.ShouldBeTrue();
+
+            // Nothing selected and today outside the month: the first day that is not disabled.
+            calendar.SelectedDate = null;
+            calendar.DisplayMonth = new DateOnly(2030, 3, 1);
+            calendar.DisabledDates = d => d.Day < 3;
+            Dispatcher.UIThread.RunJobs();
+            calendar.FocusTabbableDay().ShouldBeTrue();
+            Strip(calendar).PresentPane!.FindCell(new DateOnly(2030, 3, 3))!.IsFocused.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Keyboard_Moves_Focus_Across_Months_And_Selects()
     {
         var selected = new List<DateOnly>();

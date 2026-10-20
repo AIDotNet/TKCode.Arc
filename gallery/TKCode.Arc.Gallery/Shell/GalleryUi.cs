@@ -67,12 +67,18 @@ public static class GalleryUi
     /// Rows center themselves on the stage; anything else stretches to its width.
     /// </summary>
     public static GallerySection Card(string title, string? description, Control content)
+        => Card(title, Text(title, ArcDesignTokenKind.Foreground, 18, FontWeight.Medium),
+            string.IsNullOrEmpty(description) ? null : Text(description, ArcDesignTokenKind.TextSecondary, 14), content);
+
+    /// <summary>A card whose title and description blocks the caller built (for text that follows the language).</summary>
+    /// <param name="title">The name "On this page" lists.</param>
+    public static GallerySection Card(string title, TextBlock titleText, TextBlock? descriptionText, Control content)
     {
         var header = new StackPanel { Spacing = 4 };
-        header.Children.Add(Text(title, ArcDesignTokenKind.Foreground, 18, FontWeight.Medium));
-        if (!string.IsNullOrEmpty(description))
+        header.Children.Add(titleText);
+        if (descriptionText is not null)
         {
-            header.Children.Add(Text(description, ArcDesignTokenKind.TextSecondary, 14));
+            header.Children.Add(descriptionText);
         }
 
         var stage = new Border

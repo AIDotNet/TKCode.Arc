@@ -130,9 +130,15 @@ public sealed class DragTracker : IDisposable
 
     private void OnPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!IsEnabled || _disposed || _recognizer.Phase != DragPhase.Idle)
+        if (!IsEnabled || _disposed || _recognizer.Phase == DragPhase.Dragging)
         {
             return;
+        }
+        if (_recognizer.Phase != DragPhase.Idle)
+        {
+            // A pending or rejected press whose release went elsewhere (a scrolling parent captured it): start over.
+            _recognizer.Cancel();
+            ReleaseCapture();
         }
         var point = e.GetCurrentPoint(_target);
         if (_recognizer.Options.LeftButtonOnly && e.Pointer.Type == PointerType.Mouse && !point.Properties.IsLeftButtonPressed)

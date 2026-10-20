@@ -1,0 +1,435 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- ============================================================== MoneyInput -->
+    <ControlTheme x:Key="{x:Type arc:MoneyInput}" TargetType="arc:MoneyInput">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MoneyInput">
+                <Panel>
+                    <arc:Field Name="PART_Field"
+                               Label="{TemplateBinding Label}"
+                               IsLabelVisible="{TemplateBinding IsLabelVisible}">
+                        <StackPanel>
+                            <!-- One tall shell: the amount on the left, the currency on the right. -->
+                            <arc:FieldFrame Name="PART_Frame"
+                                            IsReadOnly="{TemplateBinding IsReadOnly}"
+                                            IsFocusActive="{TemplateBinding IsFocused}">
+                                <DockPanel>
+                                    <Panel Name="PART_Switch"
+                                           DockPanel.Dock="Right"
+                                           VerticalAlignment="Center"
+                                           Margin="{arc:MoneyInputTokenResource ShellGap}">
+                                        <arc:MoneyInputCurrencyButton Name="PART_CurrencyButton" />
+                                        <TextBlock Name="PART_StaticCode" VerticalAlignment="Center" />
+                                    </Panel>
+                                    <arc:MoneyInputStage Name="PART_Stage">
+                                        <StackPanel Orientation="Horizontal">
+                                            <arc:MoneyInputSymbol Name="PART_PrefixSymbol" />
+                                            <arc:MoneyInputNumber>
+                                                <arc:MoneyInputAmount Name="PART_Amount" />
+                                                <TextPresenter Name="PART_TextPresenter"
+                                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                               CaretBrush="{TemplateBinding CaretBrush}"
+                                                               TextAlignment="Left"
+                                                               TextWrapping="NoWrap" />
+                                            </arc:MoneyInputNumber>
+                                            <arc:MoneyInputSymbol Name="PART_SuffixSymbol" IsSuffix="True" IsVisible="False" />
+                                        </StackPanel>
+                                    </arc:MoneyInputStage>
+                                </DockPanel>
+                            </arc:FieldFrame>
+                            <!-- Quick add chips and the allowed range share one row under the shell. -->
+                            <arc:MoneyInputToolbar Name="PART_Toolbar">
+                                <WrapPanel Name="PART_Chips" />
+                                <Panel Name="PART_RangeHost">
+                                    <TextBlock Name="PART_Range" />
+                                    <TextBlock Name="PART_RangeFlash" Opacity="0" />
+                                </Panel>
+                            </arc:MoneyInputToolbar>
+                        </StackPanel>
+                    </arc:Field>
+                    <arc:SpecialInputsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="Transparent" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MinWidth" Value="0" />
+
+        <!-- Shell geometry (money-input-height 76, RadiusPanel, padding 0 8 0 18); the frame keeps Arc's state language. -->
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="Height" Value="{arc:MoneyInputTokenResource ShellHeight}" />
+            <Setter Property="MinHeight" Value="{arc:MoneyInputTokenResource ShellHeight}" />
+            <Setter Property="Padding" Value="{arc:MoneyInputTokenResource ShellPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+        <!-- Arc darkens the border only while the amount itself is focused, not while the currency switch is. -->
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame.money-quiet:focus-active:not(:pointerover):not(:invalid)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <!-- The amount: display face, 36px, medium, tabular digits without kerning, display tracking. -->
+        <Style Selector="^ /template/ arc|MoneyInputStage#PART_Stage">
+            <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="TextElement.FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="TextElement.LetterSpacing" Value="{arc:MoneyInputTokenResource AmountLetterSpacing}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Cursor" Value="IBeam" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|MoneyInputStage#PART_Stage">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^ /template/ arc|MoneyInputAmount#PART_Amount">
+            <Setter Property="LineHeight" Value="{arc:MoneyInputTokenResource AmountLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="GhostBrush" Value="{arc:MoneyInputTokenResource GhostDigitColor}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MoneyInputSymbol">
+            <Setter Property="LineHeight" Value="{arc:MoneyInputTokenResource AmountLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <!-- The editor only draws the caret and selection; its text is always painted by the amount underneath. -->
+        <Style Selector="^ /template/ TextPresenter#PART_TextPresenter">
+            <Setter Property="LineHeight" Value="{arc:MoneyInputTokenResource AmountLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:MoneyInputTokenResource AmountLetterSpacing}" />
+            <Setter Property="TextElement.Foreground" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- One currency: the static code. -->
+        <Style Selector="^ /template/ TextBlock#PART_StaticCode">
+            <Setter Property="Padding" Value="{arc:MoneyInputTokenResource StaticCodePadding}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <!-- Toolbar: padding-top 12, gaps 8 / 12, chips 6 apart. -->
+        <Style Selector="^ /template/ arc|MoneyInputToolbar#PART_Toolbar">
+            <Setter Property="Margin" Value="{arc:MoneyInputTokenResource ToolbarPadding}" />
+            <Setter Property="RowGap" Value="{arc:MoneyInputTokenResource ToolbarRowGap}" />
+            <Setter Property="ColumnGap" Value="{arc:MoneyInputTokenResource ToolbarColumnGap}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_Chips">
+            <Setter Property="ItemSpacing" Value="{arc:MoneyInputTokenResource ChipSpacing}" />
+            <Setter Property="LineSpacing" Value="{arc:MoneyInputTokenResource ChipSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_RangeHost">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_RangeHost > TextBlock">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Range">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_RangeFlash">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- ============================================================== Quick add chip -->
+    <ControlTheme x:Key="{x:Type arc:MoneyInputChip}" TargetType="arc:MoneyInputChip">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MoneyInputChip">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:MoneyInputTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:MoneyInputTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:MoneyInputTokenResource ChipPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style Selector="^:hover:not(:disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:at-limit">
+            <Setter Property="Opacity" Value="{arc:MoneyInputTokenResource ChipMutedOpacity}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:MoneyInputTokenResource ChipMutedOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Colors on fast + standard; the press scale rides Arc's CSS spring. Reduced motion: no transitions (Arc). -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- ============================================================== Currency switch -->
+    <ControlTheme x:Key="{x:Type arc:MoneyInputCurrencyButton}" TargetType="arc:MoneyInputCurrencyButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MoneyInputCurrencyButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:MoneyInputTokenResource CurrencyButtonGap}"
+                                    VerticalAlignment="Center">
+                            <TextBlock Name="PART_Code"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding Content}" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          VerticalAlignment="Center"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:MoneyInputTokenResource ChevronSize}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:MoneyInputTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:MoneyInputTokenResource CurrencyButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:MoneyInputTokenResource CurrencyButtonPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style Selector="^:hover:not(:disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed:not(:disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- ============================================================== Currency menu -->
+    <ControlTheme x:Key="{x:Type arc:MoneyInputCurrencyMenu}" TargetType="arc:MoneyInputCurrencyMenu">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MoneyInputCurrencyMenu">
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  MaxHeight="{arc:MoneyInputTokenResource MenuListMaxHeight}"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:MoneyInputTokenResource MenuWidth}" />
+        <Setter Property="Padding" Value="{arc:MoneyInputTokenResource MenuPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MoneyInputCurrencyHighlight}" TargetType="arc:MoneyInputCurrencyHighlight">
+        <Setter Property="Fill" Value="{arc:MoneyInputTokenResource HighlightFill}" />
+        <Setter Property="CornerRadius" Value="{arc:MoneyInputTokenResource OptionRadius}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MoneyInputCurrencyList}" TargetType="arc:MoneyInputCurrencyList">
+        <Setter Property="Spacing" Value="{arc:MoneyInputTokenResource OptionSpacing}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:MoneyInputCurrencyOption}" TargetType="arc:MoneyInputCurrencyOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MoneyInputCurrencyOption">
+                <Border Name="PART_Row"
+                        Background="Transparent"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <DockPanel VerticalAlignment="Center">
+                        <arc:MoneyInputCenteredSlot DockPanel.Dock="Left"
+                                                    VerticalAlignment="Center"
+                                                    SlotWidth="{arc:MoneyInputTokenResource OptionSymbolWidth}">
+                            <TextBlock Name="PART_Symbol"
+                                       ClipToBounds="False"
+                                       Text="{TemplateBinding Symbol}" />
+                        </arc:MoneyInputCenteredSlot>
+                        <TextBlock Name="PART_Code"
+                                   DockPanel.Dock="Left"
+                                   VerticalAlignment="Center"
+                                   Text="{TemplateBinding Code}" />
+                        <arc:ArcGlyph Name="PART_Check"
+                                      DockPanel.Dock="Right"
+                                      VerticalAlignment="Center"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="{arc:MoneyInputTokenResource CheckSize}"
+                                      RenderTransformOrigin="50%,50%" />
+                        <TextBlock Name="PART_Name"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="{TemplateBinding CurrencyName}" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="MinHeight" Value="{arc:MoneyInputTokenResource OptionMinHeight}" />
+        <Setter Property="Padding" Value="{arc:MoneyInputTokenResource OptionPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:MoneyInputTokenResource OptionRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <Style Selector="^ /template/ TextBlock#PART_Symbol">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Code">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.6)" />
+        </Style>
+        <Style Selector="^:active, ^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+
+        <!-- Row color on fast; the check fades on fast and grows on Arc's CSS spring. Reduced: the check cuts, the color still fades. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

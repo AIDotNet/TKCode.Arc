@@ -1,0 +1,467 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc chat-thread.module.css. The thread fills the height it is given: a scroller with the virtualized rows (content
+        padding 12px 16px 14px), the jump pill 12px above its bottom edge, two hidden live regions, and the composer.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChatThread}" TargetType="arc:ChatThread">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatThread">
+                <Grid RowDefinitions="*,Auto" Background="{TemplateBinding Background}">
+                    <Panel Name="PART_Viewport" ClipToBounds="True">
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <arc:ChatThreadList Name="PART_List" />
+                        </ScrollViewer>
+                        <arc:PresenceHost Name="PART_PillHost"
+                                          Mode="Rise"
+                                          Offset="12"
+                                          EnterScale="0.94"
+                                          Spring="Morph"
+                                          IsPresent="False"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Bottom"
+                                          Margin="{arc:ChatThreadTokenResource PillMargin}">
+                            <arc:ChatThreadButton Name="PART_Pill" Role="Pill" />
+                        </arc:PresenceHost>
+                        <arc:ActivityLiveRegion Name="PART_TypingRegion" />
+                        <arc:ActivityLiveRegion Name="PART_LogRegion" />
+                    </Panel>
+                    <arc:ChatComposer Name="PART_Composer"
+                                      Grid.Row="1"
+                                      IsVisible="{TemplateBinding IsComposerVisible}"
+                                      Placeholder="{TemplateBinding Placeholder}"
+                                      IsAttachmentEnabled="{TemplateBinding IsAttachmentEnabled}"
+                                      AcceptedFileTypes="{TemplateBinding AcceptedFileTypes}"
+                                      Labels="{TemplateBinding Labels}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="BubbleLineHeight" Value="{arc:ChatThreadTokenResource BubbleLineHeight}" />
+        <Setter Property="BubbleBlockSpacing" Value="{arc:ChatThreadTokenResource BubbleBlockSpacing}" />
+        <Setter Property="GalleryRadius" Value="{arc:ChatThreadTokenResource GalleryRadius}" />
+        <Setter Property="GalleryTileRadius" Value="{arc:ChatThreadTokenResource GalleryTileRadius}" />
+        <Setter Property="FileGap" Value="{arc:ChatThreadTokenResource FileGap}" />
+        <Setter Property="NarrowWidth" Value="{arc:ChatThreadTokenResource NarrowWidth}" />
+        <Setter Property="StackMaxRatioWide" Value="{arc:ChatThreadTokenResource StackMaxRatio}" />
+        <Setter Property="StackMaxRatioNarrow" Value="{arc:ChatThreadTokenResource StackMaxRatioNarrow}" />
+        <Setter Property="PickerOffset" Value="{arc:ChatThreadTokenResource PickerOffset}" />
+        <Setter Property="PickerGap" Value="{arc:ChatThreadTokenResource PickerGap}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentForegroundBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Style Selector="^:narrow /template/ arc|ChatThreadList#PART_List">
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource ContentPaddingNarrow}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The rows: a recycling virtualizing stack (half a viewport realized beyond each edge). -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadList}" TargetType="arc:ChatThreadList">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatThreadList">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                Margin="{TemplateBinding Padding}" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <VirtualizingStackPanel CacheLength="0.5" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:ChatThreadTokenResource ContentPadding}" />
+        <Setter Property="Focusable" Value="False" />
+    </ControlTheme>
+
+    <!-- A day separator: hairlines either side of xs / medium / muted text; 20px above (4px for the first row). -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadDayView}" TargetType="arc:ChatThreadDayView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatThreadDayView">
+                <Grid ColumnDefinitions="*,Auto,*"
+                      ColumnSpacing="{arc:ChatThreadTokenResource DayGap}"
+                      Margin="{TemplateBinding Padding}">
+                    <Border Height="1" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <TextBlock Grid.Column="1"
+                               Text="{TemplateBinding Label}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               VerticalAlignment="Center" />
+                    <Border Grid.Column="2" Height="1" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:ChatThreadTokenResource DayPadding}" />
+        <Setter Property="Focusable" Value="False" />
+        <Style Selector="^[IsFirst=True]">
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource DayPaddingFirst}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The typing row: a group of its own (14px above), the typer's portrait and a 36px bubble of dots. -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadTypingView}" TargetType="arc:ChatThreadTypingView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatThreadTypingView">
+                <arc:ChatThreadRowPanel MaxStackWidth="{arc:ChatThreadTokenResource StackMaxWidth}">
+                    <arc:ChatThreadLinePanel Name="PART_Line" HorizontalAlignment="Left">
+                        <Border Name="PART_Bubble"
+                                Height="{arc:ChatThreadTokenResource TypingHeight}"
+                                Padding="{arc:ChatThreadTokenResource TypingPadding}"
+                                CornerRadius="{arc:ChatThreadTokenResource TypingRadius}"
+                                Background="{arc:ChatThreadTokenResource BubbleFill}">
+                            <arc:ChatThreadTypingDots Name="PART_Dots"
+                                                      Fill="{arc:ArcDesignTokenResource TextMuted}"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center" />
+                        </Border>
+                    </arc:ChatThreadLinePanel>
+                </arc:ChatThreadRowPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Margin" Value="{arc:ChatThreadTokenResource GroupMargin}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+
+    <!--
+        A message: meta (first of a group), the line (portrait in the gutter, pictures, files, bubble, add-reaction button),
+        reactions (spring open) and receipts. 2px between messages of a group, 14px before a group, 10px under a day.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadMessageView}" TargetType="arc:ChatThreadMessageView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatThreadMessageView">
+                <arc:ChatThreadRowPanel Name="PART_Row"
+                                        IsMine="{TemplateBinding IsMine}"
+                                        MaxRatio="{TemplateBinding StackMaxRatio}"
+                                        MaxStackWidth="{arc:ChatThreadTokenResource StackMaxWidth}">
+                    <StackPanel Name="PART_Stack" Spacing="{arc:ChatThreadTokenResource StackGap}">
+                        <StackPanel Name="PART_Meta"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:ChatThreadTokenResource MetaGap}"
+                                    Margin="{arc:ChatThreadTokenResource MetaMargin}">
+                            <TextBlock Name="PART_Author"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Name="PART_Time"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <arc:ChatThreadLinePanel Name="PART_Line" Gap="{arc:ChatThreadTokenResource LineGap}">
+                            <StackPanel Name="PART_Parts" Spacing="{arc:ChatThreadTokenResource StackGap}" />
+                            <arc:ChatThreadButton Name="PART_React" Role="React" />
+                        </arc:ChatThreadLinePanel>
+                        <arc:PresenceHost Name="PART_ReactionsHost"
+                                          Mode="Fade"
+                                          Collapse="Height"
+                                          Spring="Smooth"
+                                          IsPresent="False">
+                            <Border Name="PART_ReactionsClip"
+                                    Margin="{arc:ChatThreadTokenResource ReactionsMargin}">
+                                <arc:ActivityReactionBar Name="PART_Reactions" Variant="Chat" />
+                            </Border>
+                        </arc:PresenceHost>
+                        <StackPanel Name="PART_Receipts"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:ChatThreadTokenResource ReceiptsGap}"
+                                    Margin="{arc:ChatThreadTokenResource ReceiptsPadding}"
+                                    MinHeight="16">
+                            <StackPanel Name="PART_Status" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                <TextBlock Name="PART_StatusText"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                                <arc:ChatThreadButton Name="PART_Retry" Role="Retry">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCw}"
+                                                      Size="12"
+                                                      StrokeThickness="2"
+                                                      VerticalAlignment="Center"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <TextBlock Text="Retry" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:ChatThreadButton>
+                            </StackPanel>
+                            <StackPanel Name="PART_Readers" Orientation="Horizontal" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </arc:ChatThreadRowPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Margin" Value="{arc:ChatThreadTokenResource RowMargin}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="BubbleRadius" Value="{arc:ChatThreadTokenResource BubbleRadius}" />
+        <Setter Property="BubbleTightRadius" Value="{arc:ChatThreadTokenResource BubbleTightRadius}" />
+        <Setter Property="ReaderSize" Value="{arc:ChatThreadTokenResource ReaderSize}" />
+        <Setter Property="ReaderOverlap" Value="{arc:ChatThreadTokenResource ReaderOverlap}" />
+        <Style Selector="^:first">
+            <Setter Property="Margin" Value="{arc:ChatThreadTokenResource GroupMargin}" />
+        </Style>
+        <Style Selector="^:after-day">
+            <Setter Property="Margin" Value="{arc:ChatThreadTokenResource AfterDayMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ReactionsClip">
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource ReactionsPadding}" />
+        </Style>
+        <Style Selector="^:mine /template/ Border#PART_ReactionsClip">
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource ReactionsPaddingMine}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:failed /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <!-- The add-reaction button waits beside the bubble and shows on hover or keyboard focus. -->
+        <Style Selector="^ /template/ arc|ChatThreadButton#PART_React">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|ChatThreadButton#PART_React">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-within /template/ arc|ChatThreadButton#PART_React">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:picker-open /template/ arc|ChatThreadButton#PART_React">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ChatThreadButton#PART_React">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A bubble: 8px 13px 9px, 14px text; others on SurfaceMuted (SurfaceRaised in dark), yours on the accent. -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadBubble}" TargetType="arc:ChatThreadBubble">
+        <Setter Property="Background" Value="{arc:ChatThreadTokenResource BubbleFill}" />
+        <Setter Property="Padding" Value="{arc:ChatThreadTokenResource BubblePadding}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Style Selector="^[IsMine=True]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^[IsFailed=True]">
+            <Setter Property="Opacity" Value="{arc:ChatThreadTokenResource FailedOpacity}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ChatThreadMore}" TargetType="arc:ChatThreadMore">
+        <Setter Property="Background" Value="{arc:ChatThreadTokenResource MoreScrim}" />
+        <Setter Property="TextElement.Foreground" Value="White" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        <Setter Property="TextElement.FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </ControlTheme>
+
+    <!-- The picker: a pill of emoji (4px padding, 2px apart) on the raised surface with the floating shadow (popup). -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadPickerSurface}" TargetType="arc:ChatThreadPickerSurface">
+        <Setter Property="Padding" Value="{arc:ChatThreadTokenResource PickerPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+    </ControlTheme>
+
+    <!-- The small buttons of the thread and its composer, by role. -->
+    <ControlTheme x:Key="{x:Type arc:ChatThreadButton}" TargetType="arc:ChatThreadButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChatThreadButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            RenderTransformOrigin="50%,50%"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^[Role=React]">
+            <Setter Property="Width" Value="{arc:ChatThreadTokenResource ReactButtonSize}" />
+            <Setter Property="Height" Value="{arc:ChatThreadTokenResource ReactButtonSize}" />
+        </Style>
+        <Style Selector="^[Role=React]:pointerover, ^[Role=React][IsOpen=True]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^[Role=Emoji]">
+            <Setter Property="Width" Value="{arc:ChatThreadTokenResource EmojiButtonSize}" />
+            <Setter Property="Height" Value="{arc:ChatThreadTokenResource EmojiButtonSize}" />
+            <Setter Property="FontSize" Value="{arc:ChatThreadTokenResource EmojiFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Role=Emoji]:pointerover, ^[Role=Emoji]:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <Style Selector="^[Role=Retry]">
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource RetryPadding}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Role=Retry]:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <Style Selector="^[Role=Pill]">
+            <Setter Property="Height" Value="{arc:ChatThreadTokenResource PillHeight}" />
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource PillPadding}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Role=Pill] /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+
+        <Style Selector="^[Role=Attach]">
+            <Setter Property="Width" Value="{arc:ChatComposerTokenResource AttachSize}" />
+            <Setter Property="Height" Value="{arc:ChatComposerTokenResource AttachSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^[Role=Attach]:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^[Role=Send]">
+            <Setter Property="Width" Value="{arc:ChatComposerTokenResource SendSize}" />
+            <Setter Property="Height" Value="{arc:ChatComposerTokenResource SendSize}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^[Role=Send][IsReady=True]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <Style Selector="^[Role=Remove]">
+            <Setter Property="Width" Value="{arc:ChatComposerTokenResource RemoveSize}" />
+            <Setter Property="Height" Value="{arc:ChatComposerTokenResource RemoveSize}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+
+        <Style Selector="^[Role=File]">
+            <Setter Property="Padding" Value="{arc:ChatThreadTokenResource FilePadding}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="CornerRadius" Value="{arc:ChatThreadTokenResource FileRadius}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^[Role=File]:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <Style Selector="^[Role=Image]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^[Role=Image] /template/ Border#PART_Frame">
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full[Role=Send]">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full[Role=Emoji]:pointerover /template/ Border#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(1.12)" />
+        </Style>
+        <Style Selector="^:motion-full[Role=Emoji]:pressed /template/ Border#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(0.9)" />
+        </Style>
+        <Style Selector="^:motion-full[Role=Pill]:pressed /template/ Border#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full[Role=Attach]:pressed /template/ Border#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-full[Role=Send][IsReady=True]:pressed /template/ Border#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

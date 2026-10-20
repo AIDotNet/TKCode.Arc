@@ -31,10 +31,10 @@ public sealed class GalleryTheme
         return ApplyAsync();
     }
 
-    public void SetMotion(Window window, ArcMotionLevel level)
+    public void SetMotion(Control owner, ArcMotionLevel level)
     {
         MotionLevel = level;
-        ArcMotion.SetLevel(window, level);
+        ArcMotion.SetLevel(owner, level);
         Changed?.Invoke();
     }
 

@@ -30,7 +30,8 @@ public static class BreadcrumbPage
         var open = new Button { Content = "Open next folder", Variant = ButtonVariant.Secondary, Size = ControlSize.Small };
         open.Click += (_, _) =>
         {
-            var next = folders[(path.Count - 2) % folders.Length];
+            // Truncating to the first crumb leaves one segment, so the offset must stay non-negative.
+            var next = folders[(path.Count + folders.Length - 2) % folders.Length];
             path.Add(next);
         };
         var up = new Button { Content = "Up one level", Variant = ButtonVariant.Ghost, Size = ControlSize.Small };

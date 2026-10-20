@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
     <Project Path="src/TKCode.Arc/TKCode.Arc.csproj" />
+    <Project Path="src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
     <Project Path="src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     <Project Path="src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
   </Folder>
@@ -11,6 +12,8 @@
   </Folder>
   <Folder Name="/gallery/">
     <Project Path="gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
+    <Project Path="gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser.csproj" />
     <Project Path="gallery/TKCode.Arc.Gallery.Desktop/TKCode.Arc.Gallery.Desktop.csproj" />
+    <Project Path="gallery/TKCode.Arc.Gallery.Generators/TKCode.Arc.Gallery.Generators.csproj" />
   </Folder>
 </Solution>

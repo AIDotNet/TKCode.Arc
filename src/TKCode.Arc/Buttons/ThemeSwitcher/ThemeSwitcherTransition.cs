@@ -74,7 +74,7 @@ internal static class ThemeSwitcherTransition
 /// <summary>The old window, drawn over the new one and clipped to the part not yet revealed.</summary>
 internal sealed class ThemeSwitcherSnapshot : Control
 {
-    private readonly IImage _image;
+    private readonly Bitmap _image;
     private readonly ThemeSwitcherVariant _variant;
     private readonly Point _origin;
     private readonly Point _offset;
@@ -85,7 +85,7 @@ internal sealed class ThemeSwitcherSnapshot : Control
     private readonly CombinedGeometry _clip;
     private MotionValue<double>? _progress;
 
-    public ThemeSwitcherSnapshot(IImage image, ThemeSwitcherVariant variant, Point origin, Point offset, Size imageSize)
+    public ThemeSwitcherSnapshot(Bitmap image, ThemeSwitcherVariant variant, Point origin, Point offset, Size imageSize)
     {
         _image = image;
         _variant = variant;
@@ -148,10 +148,17 @@ internal sealed class ThemeSwitcherSnapshot : Control
 
     private static double Distance(Point a, Point b) => Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
 
+    /// <summary>
+    /// The whole bitmap as a draw source. <c>DrawImage</c> reads the source rectangle in pixels, while
+    /// <see cref="Bitmap.Size"/> is in DIPs: on a scaled display (the snapshot is taken at the top level's render
+    /// scaling) <c>new Rect(image.Size)</c> would cover only the top-left <c>1/scaling²</c> of the window and stretch it.
+    /// </summary>
+    internal static Rect SourceRect(Bitmap image) => new(0, 0, image.PixelSize.Width, image.PixelSize.Height);
+
     public override void Render(DrawingContext context)
     {
         var dest = new Rect(-_offset.X, -_offset.Y, _imageSize.Width, _imageSize.Height);
-        var source = new Rect(_image.Size);
+        var source = SourceRect(_image);
         if (_variant == ThemeSwitcherVariant.Rise)
         {
             if (_riseTop <= 0.5)

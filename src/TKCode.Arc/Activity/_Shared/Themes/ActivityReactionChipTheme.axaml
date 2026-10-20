@@ -1,0 +1,148 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc's .reaction pill (comment-thread and chat-thread): 26px, 0 9px 0 7px, Surface fill, TextSecondary 12px/500.
+        The chosen state mixes the accent (accent-dependent colors stay out of control tokens), drawn as accent layers at
+        the token opacities: Comment = AccentSubtle fill + accent ring at 45% over Border; Chat = 8% accent fill + accent
+        ring at 28% with no base border. Hover strengthens the border; a press scales the body (0.94 / 0.95).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ActivityReactionChip}" TargetType="arc:ActivityReactionChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActivityReactionChip">
+                <Panel>
+                    <Panel Name="PART_Body" RenderTransformOrigin="50%,50%">
+                        <Border Name="PART_Base"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}" />
+                        <Border Name="PART_AccentFill"
+                                IsHitTestVisible="False"
+                                Opacity="0"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Background="{arc:ArcDesignTokenResource Accent}" />
+                        <Border Name="PART_AccentRing"
+                                IsHitTestVisible="False"
+                                Opacity="0"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource Accent}" />
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="{TemplateBinding Padding}"
+                                    Spacing="{arc:ActivityReactionChipTokenResource ChipContentGap}"
+                                    VerticalAlignment="Center">
+                            <TextBlock Name="PART_Emoji"
+                                       Text="{TemplateBinding Emoji}"
+                                       FontFamily="{arc:ActivityReactionChipTokenResource EmojiFontFamily}"
+                                       VerticalAlignment="Center" />
+                            <arc:RollingDigits Name="PART_Count"
+                                               Value="{TemplateBinding Count}"
+                                               UseGrouping="False"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               FontFamily="{TemplateBinding FontFamily}"
+                                               FontSize="{TemplateBinding FontSize}"
+                                               FontWeight="{TemplateBinding FontWeight}"
+                                               VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ActivityReactionChipTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:ActivityReactionChipTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:ActivityReactionChipTokenResource ChipPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+        <Style Selector="^ /template/ TextBlock#PART_Emoji">
+            <Setter Property="FontSize" Value="{arc:ActivityReactionChipTokenResource CommentEmojiSize}" />
+        </Style>
+        <Style Selector="^[Variant=Chat]">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Style Selector="^ /template/ TextBlock#PART_Emoji">
+                <Setter Property="FontSize" Value="{arc:ActivityReactionChipTokenResource ChatEmojiSize}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Variant=Comment]:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Style Selector="^ /template/ Border#PART_AccentRing">
+                <Setter Property="Opacity" Value="{arc:ActivityReactionChipTokenResource CommentRingOpacity}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Variant=Chat]:checked">
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Style Selector="^ /template/ Border#PART_AccentRing">
+                <Setter Property="Opacity" Value="{arc:ActivityReactionChipTokenResource ChatRingOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_AccentFill">
+                <Setter Property="Opacity" Value="{arc:ActivityReactionChipTokenResource ChatFillOpacity}" />
+            </Style>
+        </Style>
+        <!-- Hovering a chosen chip strengthens its border like any chip (the accent ring stays on top). -->
+        <Style Selector="^:checked:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Panel#PART_Body">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_AccentFill, ^ /template/ Border#PART_AccentRing">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:pressed /template/ Panel#PART_Body">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-full[Variant=Chat]:pressed /template/ Panel#PART_Body">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

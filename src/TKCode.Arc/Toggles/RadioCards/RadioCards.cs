@@ -1,3 +1,4 @@
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -31,6 +32,9 @@ public enum RadioCardsLayout
 public class RadioCards : SelectingItemsControl
 {
     public const string RingPart = "PART_Ring";
+
+    /// <summary>Arc's ring glide: <c>physical(0.42, 0.14)</c>, a touch less bouncy than the morph preset (0.42 / 0.16).</summary>
+    internal static readonly SpringSpec RingGlide = SpringSpec.FromVisual(0.42, 0.14);
 
     #region 公共属性定义
 
@@ -144,7 +148,7 @@ public class RadioCards : SelectingItemsControl
     {
         base.OnApplyTemplate(e);
         // The ring's 1.5px stroke is centered half a stroke inside the card, like a CSS border.
-        _host.AttachIndicator(e.NameScope.Find<GlidingIndicator>(RingPart), inset: 0.75, fadeInFirst: true);
+        _host.AttachIndicator(e.NameScope.Find<GlidingIndicator>(RingPart), inset: 0.75, fadeInFirst: true, RingGlide);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

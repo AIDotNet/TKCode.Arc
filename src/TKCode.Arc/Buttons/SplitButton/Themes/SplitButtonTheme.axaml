@@ -1,0 +1,216 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- One half of the pill (main action or chevron). Colors only: the group presses in for the main action and the
+         chevron anchors the menu, so neither half scales on its own. -->
+    <ControlTheme x:Key="SplitButtonHalfTheme" TargetType="arc:Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Arc draws its own focus indication; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:SplitButtonTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:SplitButtonTokenResource PrimaryDividerColor}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource StartRadius}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="Padding" Value="{arc:SplitButtonTokenResource PrimaryInset}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource StartRingRadius}" />
+        </Style>
+
+        <Style Selector="^.trigger">
+            <Setter Property="Width" Value="{arc:SplitButtonTokenResource TriggerExtentPrimary}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource EndRadius}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource EndRingRadius}" />
+            </Style>
+        </Style>
+
+        <!-- Secondary: a compact outlined pill with 12px text. -->
+        <Style Selector="^.secondary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="MinWidth" Value="{arc:SplitButtonTokenResource SecondaryActionMinWidth}" />
+            <Setter Property="Padding" Value="{arc:SplitButtonTokenResource SecondaryInset}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillStartRadius}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillStartRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^.secondary.trigger">
+            <Setter Property="Width" Value="{arc:SplitButtonTokenResource TriggerExtentSecondary}" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillEndRadius}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource PillEndRingRadius}" />
+            </Style>
+        </Style>
+
+        <!-- Hover tints each half on its own; press and an open menu go one step deeper. -->
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:SplitButtonTokenResource PrimaryHoverColor}" />
+        </Style>
+        <Style Selector="^.secondary:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed, ^:open">
+            <Setter Property="Background" Value="{arc:SplitButtonTokenResource PrimaryPressedColor}" />
+        </Style>
+        <Style Selector="^.secondary:pressed, ^.secondary:open">
+            <Setter Property="Background" Value="{arc:SplitButtonTokenResource SecondaryPressedColor}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:SplitButtonTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SplitButton}" TargetType="arc:SplitButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SplitButton">
+                <Panel>
+                    <Border Name="PART_Group"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            RenderTransformOrigin="50%,50%">
+                        <StackPanel Orientation="Horizontal">
+                            <arc:Button Name="PART_PrimaryButton"
+                                        Theme="{StaticResource SplitButtonHalfTheme}"
+                                        IsPressScaleEnabled="False"
+                                        Command="{TemplateBinding Command}"
+                                        CommandParameter="{TemplateBinding CommandParameter}">
+                                <arc:SpringSizeDecorator Name="PART_LabelSlot"
+                                                         Axis="Width"
+                                                         Spring="Morph"
+                                                         ClipOverflow="{arc:SplitButtonTokenResource MorphOverflow}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:SplitButtonTokenResource LabelGap}">
+                                        <arc:ButtonsGlyphSwap Name="PART_Icon" VerticalAlignment="Center" />
+                                        <arc:SplitButtonLabel Name="PART_Label"
+                                                              Text="{TemplateBinding Label}"
+                                                              VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:SpringSizeDecorator>
+                            </arc:Button>
+                            <arc:ButtonsChevronTrigger Name="PART_MenuButton"
+                                                       Theme="{StaticResource SplitButtonHalfTheme}"
+                                                       Classes="trigger">
+                                <arc:ArcGlyph Classes="chevron"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="{arc:SplitButtonTokenResource GlyphExtent}"
+                                              StrokeThickness="{arc:SplitButtonTokenResource GlyphStroke}"
+                                              RenderTransformOrigin="50%,50%" />
+                            </arc:ButtonsChevronTrigger>
+                        </StackPanel>
+                    </Border>
+                    <arc:ButtonsLiveRegion Name="PART_Status" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^:secondary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:not(:has-icon) /template/ arc|ButtonsGlyphSwap#PART_Icon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- The chevron turns on the CSS spring while the menu is open. -->
+        <Style Selector="^ /template/ arc|ArcGlyph.chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph.chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph.chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- The whole pill presses in for the main action (instant in, CSS spring back). -->
+        <Style Selector="^ /template/ Border#PART_Group">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:motion-full:primary-pressed /template/ Border#PART_Group">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Group">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:primary-pressed /template/ Border#PART_Group">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TKCode.Arc Gallery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" id="webassembly" />
+    <script type="importmap"></script>
+    <script type='module' src="main#[.{fingerprint}].js"></script>
+</head>
+
+<body style="margin: 0; overflow: hidden">
+<div id="out">
+    <div class="splash">TKCode.Arc Gallery</div>
+</div>
+<style>
+    .splash {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, sans-serif;
+        color: #5b6470;
+        background: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .splash {
+            color: #9aa3ad;
+            background: #141414;
+        }
+    }
+</style>
+</body>
+
+</html>

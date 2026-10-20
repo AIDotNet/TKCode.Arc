@@ -1,0 +1,507 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc card: Surface, 1px Border, RadiusPanel 26. A mouse lifts it 2px (snappy) while the border strengthens (fast)
+        and the shadow rises (standard). Pieces keyed with arc:SharedElement.Key fly into the quick look (P8).
+    -->
+    <ControlTheme x:Key="{x:Type arc:Card}" TargetType="arc:Card">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Card">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Surface"
+                            arc:SharedElement.Key="card"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Border Name="PART_Frame"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                ClipToBounds="True">
+                            <StackPanel>
+                                <Border Name="PART_Media"
+                                        arc:SharedElement.Key="media"
+                                        IsVisible="False"
+                                        ClipToBounds="True"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <Decorator Name="PART_Zoom" MinHeight="{arc:CardTokenResource MediaMinHeight}">
+                                        <ContentPresenter Name="PART_MediaPresenter"
+                                                          HorizontalContentAlignment="Stretch"
+                                                          VerticalContentAlignment="Stretch" />
+                                    </Decorator>
+                                </Border>
+                                <StackPanel Name="PART_Body" Margin="{arc:CardTokenResource ContentPadding}">
+                                    <arc:CardTitle Name="PART_Title"
+                                                   arc:SharedElement.Key="title"
+                                                   Content="{TemplateBinding Title}" />
+                                    <TextBlock Name="PART_Description"
+                                               arc:SharedElement.Key="description"
+                                               arc:SharedElement.Mode="Position"
+                                               IsVisible="False"
+                                               Text="{TemplateBinding Description}"
+                                               HorizontalAlignment="Left"
+                                               TextWrapping="Wrap"
+                                               Margin="{arc:CardTokenResource DescriptionMargin}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="{arc:CardTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <ContentPresenter Name="PART_ContentHost"
+                                                      IsVisible="False"
+                                                      TextWrapping="Wrap"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      LineHeight="{arc:CardTokenResource BodyLineHeight}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <Grid Name="PART_Footer"
+                                          IsVisible="False"
+                                          ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="{arc:CardTokenResource FooterGap}"
+                                          Margin="{arc:CardTokenResource FooterMargin}">
+                                        <Grid Name="PART_Byline"
+                                              arc:SharedElement.Key="byline"
+                                              arc:SharedElement.Mode="Position"
+                                              IsVisible="False"
+                                              ColumnDefinitions="Auto,*"
+                                              ColumnSpacing="{arc:CardTokenResource FooterGap}"
+                                              VerticalAlignment="Center">
+                                            <Border Name="PART_AvatarSlot"
+                                                    IsVisible="False"
+                                                    Width="{arc:CardTokenResource AvatarSlotSize}"
+                                                    Height="{arc:CardTokenResource AvatarSlotSize}"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                    ClipToBounds="True">
+                                                <Viewbox Stretch="UniformToFill">
+                                                    <ContentPresenter Name="PART_AvatarPresenter" />
+                                                </Viewbox>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <ContentPresenter Name="PART_MetaPresenter"
+                                                                  IsVisible="False"
+                                                                  TextTrimming="CharacterEllipsis"
+                                                                  FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                  LineHeight="{arc:CardTokenResource BylineLineHeight}"
+                                                                  Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <arc:CardStatusLine Name="PART_Status"
+                                                                    IsVisible="False"
+                                                                    Text="{TemplateBinding Status}"
+                                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                    LineHeight="{arc:CardTokenResource BylineLineHeight}"
+                                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <ContentPresenter Name="PART_ActionPresenter"
+                                                          Grid.Column="1"
+                                                          arc:SharedElement.Key="action"
+                                                          arc:SharedElement.Mode="Position"
+                                                          IsVisible="False"
+                                                          VerticalAlignment="Center" />
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CardTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:CardTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ScrimBrush" Value="{arc:CardTokenResource ScrimColor}" />
+        <Setter Property="BackdropBlur" Value="{arc:ArcDesignTokenResource BackdropBlurDialog}" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ Border#PART_Surface">
+            <Setter Property="BoxShadow" Value="none" />
+        </Style>
+        <Style Selector="^:has-media /template/ Border#PART_Media">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-content /template/ ContentPresenter#PART_ContentHost">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-footer /template/ Grid#PART_Footer">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-byline /template/ Grid#PART_Byline">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-avatar /template/ Border#PART_AvatarSlot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-meta /template/ ContentPresenter#PART_MetaPresenter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-status /template/ arc|CardStatusLine#PART_Status">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-action /template/ ContentPresenter#PART_ActionPresenter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:interactive">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <!-- A pointed-at card floats a little, so the shadow arrives with the lift. -->
+        <Style Selector="^:hover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:hover /template/ Border#PART_Surface">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        </Style>
+        <!-- Keyboard focus on the title: Arc strengthens the border; the ring makes it visible from a distance. -->
+        <Style Selector="^:trigger-focus">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:trigger-focus:not(:quick-look) /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:hover">
+            <Setter Property="RenderTransform" Value="translateY(-2px)" />
+        </Style>
+        <!-- A press on an interactive card settles the lift before the quick look grows out of it. -->
+        <Style Selector="^:motion-full:hover:pressed">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The title: text-lg / medium / 1.3; a button only when the card has details. -->
+    <ControlTheme x:Key="{x:Type arc:CardTitle}" TargetType="arc:CardTitle">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardTitle">
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Background="{TemplateBinding Background}"
+                                  Content="{TemplateBinding Content}"
+                                  TextWrapping="Wrap"
+                                  LineHeight="{arc:CardTokenResource TitleLineHeight}" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Style Selector="^[IsInteractive=True]">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Close quick look: a 32px frosted circle; it scales from 0.9 after 120ms and presses to 0.94. -->
+    <ControlTheme x:Key="ArcCardCloseButtonTheme" TargetType="Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="16"
+                                      StrokeThickness="1.75"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:CardTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:CardTokenResource CloseButtonSize}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderBrush" Value="{arc:CardTokenResource CloseButtonBorder}" />
+        <Setter Property="Background" Value="{arc:CardTokenResource CloseButtonBackground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Quick look: Arc's panel (SurfaceRaised, RadiusSurface 34, floating shadow, min(100vw − 32, 30rem) wide, at most the
+        viewport tall and scrolling). The frame is a SharedElementFrame, so its corners stay round and morph while it flies.
+        Returning, it takes the card's look (Surface, no shadow) as it lands.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CardQuickLook}" TargetType="arc:CardQuickLook">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CardQuickLook">
+                <arc:SharedElementFrame Name="PART_Frame"
+                                        arc:SharedElement.Key="card"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Panel>
+                        <ScrollViewer Name="PART_Scroll"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <Border Name="PART_Media"
+                                        arc:SharedElement.Key="media"
+                                        IsVisible="False"
+                                        ClipToBounds="True"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <Decorator Name="PART_Zoom" MinHeight="{arc:CardTokenResource MediaMinHeight}">
+                                        <ContentPresenter Name="PART_MediaPresenter"
+                                                          HorizontalContentAlignment="Stretch"
+                                                          VerticalContentAlignment="Stretch" />
+                                    </Decorator>
+                                </Border>
+                                <StackPanel Name="PART_Body" Margin="{arc:CardTokenResource QuickLookContentPadding}">
+                                    <TextBlock Name="PART_Title"
+                                               arc:SharedElement.Key="title"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Text="{TemplateBinding Title}"
+                                               HorizontalAlignment="Left"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:CardTokenResource QuickLookTitleLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Description"
+                                               arc:SharedElement.Key="description"
+                                               arc:SharedElement.Mode="Position"
+                                               IsVisible="False"
+                                               Text="{TemplateBinding Description}"
+                                               MaxWidth="{TemplateBinding DescriptionMeasure}"
+                                               HorizontalAlignment="Left"
+                                               TextWrapping="Wrap"
+                                               Margin="{arc:CardTokenResource DescriptionMargin}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               LineHeight="{arc:CardTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <ContentPresenter Name="PART_ContentHost"
+                                                      IsVisible="False"
+                                                      TextWrapping="Wrap"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      LineHeight="{arc:CardTokenResource BodyLineHeight}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <Grid Name="PART_Footer"
+                                          IsVisible="False"
+                                          ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="{arc:CardTokenResource FooterGap}"
+                                          Margin="{arc:CardTokenResource FooterMargin}">
+                                        <Grid Name="PART_Byline"
+                                              arc:SharedElement.Key="byline"
+                                              arc:SharedElement.Mode="Position"
+                                              IsVisible="False"
+                                              ColumnDefinitions="Auto,*"
+                                              ColumnSpacing="{arc:CardTokenResource FooterGap}"
+                                              VerticalAlignment="Center">
+                                            <Border Name="PART_AvatarSlot"
+                                                    IsVisible="False"
+                                                    Width="{arc:CardTokenResource AvatarSlotSize}"
+                                                    Height="{arc:CardTokenResource AvatarSlotSize}"
+                                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                    ClipToBounds="True">
+                                                <Viewbox Stretch="UniformToFill">
+                                                    <ContentPresenter Name="PART_AvatarPresenter" />
+                                                </Viewbox>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <ContentPresenter Name="PART_MetaPresenter"
+                                                                  IsVisible="False"
+                                                                  TextTrimming="CharacterEllipsis"
+                                                                  FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                  LineHeight="{arc:CardTokenResource BylineLineHeight}"
+                                                                  Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <arc:CardStatusLine Name="PART_Status"
+                                                                    IsVisible="False"
+                                                                    Text="{TemplateBinding Status}"
+                                                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                    LineHeight="{arc:CardTokenResource BylineLineHeight}"
+                                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <ContentPresenter Name="PART_ActionPresenter"
+                                                          Grid.Column="1"
+                                                          arc:SharedElement.Key="action"
+                                                          arc:SharedElement.Mode="Position"
+                                                          IsVisible="False"
+                                                          VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Border Name="PART_Details"
+                                            Margin="{arc:CardTokenResource DetailsMargin}"
+                                            Padding="{arc:CardTokenResource DetailsPadding}"
+                                            BorderThickness="0,1,0,0"
+                                            BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                        <ContentPresenter Name="PART_DetailsPresenter"
+                                                          TextWrapping="Wrap"
+                                                          FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                          LineHeight="{arc:CardTokenResource BodyLineHeight}"
+                                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Panel Name="PART_CloseSlot"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Top"
+                               Margin="{arc:CardTokenResource CloseSlotMargin}">
+                            <Button Name="PART_CloseButton"
+                                    Theme="{StaticResource ArcCardCloseButtonTheme}"
+                                    IsVisible="{TemplateBinding ShowCloseButton}"
+                                    AutomationProperties.Name="{TemplateBinding CloseButtonName}" />
+                        </Panel>
+                    </Panel>
+                </arc:SharedElementFrame>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Margin" Value="{arc:CardTokenResource QuickLookMargin}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{arc:CardTokenResource QuickLookMaxWidth}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ arc|SharedElementFrame#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+        <Style Selector="^:has-media /template/ Border#PART_Media">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-content /template/ ContentPresenter#PART_ContentHost">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-footer /template/ Grid#PART_Footer">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-byline /template/ Grid#PART_Byline">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-avatar /template/ Border#PART_AvatarSlot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-meta /template/ ContentPresenter#PART_MetaPresenter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-status /template/ arc|CardStatusLine#PART_Status">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-action /template/ ContentPresenter#PART_ActionPresenter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Closing: the panel takes the card's look, so it lands exactly where the card sits and hands back without a seam. -->
+        <Style Selector="^:returning">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="^:returning /template/ arc|SharedElementFrame#PART_Frame">
+            <Setter Property="BoxShadow" Value="none" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|SharedElementFrame#PART_Frame">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

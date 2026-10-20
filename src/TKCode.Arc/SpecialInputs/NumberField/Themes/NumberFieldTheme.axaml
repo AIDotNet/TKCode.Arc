@@ -1,0 +1,328 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:NumberField}" TargetType="arc:NumberField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NumberField">
+                <Panel>
+                    <StackPanel>
+                        <!-- Arc .head: the label row is as wide as the shell, so the limit note sits over the stepper it answers. -->
+                        <Grid Name="PART_Head" ColumnDefinitions="*,Auto">
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Background="Transparent"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Bottom" />
+                            <arc:NumberFieldLimitNote Name="PART_LimitNote"
+                                                      Grid.Column="1"
+                                                      TextWrapping="NoWrap"
+                                                      VerticalAlignment="Bottom" />
+                        </Grid>
+                        <arc:FieldFrame Name="PART_Frame"
+                                        Size="{TemplateBinding Size}"
+                                        IsInvalid="{TemplateBinding IsInvalid}"
+                                        IsReadOnly="{TemplateBinding IsReadOnly}"
+                                        IsFocusActive="{TemplateBinding IsFocused}">
+                            <arc:FieldFrame.Prefix>
+                                <arc:FieldIconButton Name="PART_DecreaseButton" Classes="step">
+                                    <arc:NumberFieldStepGlyph Name="PART_DecreaseGlyph" />
+                                </arc:FieldIconButton>
+                            </arc:FieldFrame.Prefix>
+                            <arc:FieldFrame.Suffix>
+                                <arc:FieldIconButton Name="PART_IncreaseButton" Classes="step">
+                                    <arc:NumberFieldStepGlyph Name="PART_IncreaseGlyph" IsPlus="True" />
+                                </arc:FieldIconButton>
+                            </arc:FieldFrame.Suffix>
+                            <!-- Prefix, number and suffix travel as one centered group; the editor overlays the number. -->
+                            <arc:NumberFieldValueGroup Name="PART_ValueGroup" Background="Transparent">
+                                <arc:NumberFieldAffixText Name="PART_PrefixText" />
+                                <arc:RollingDigits Name="PART_Digits" />
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="Left"
+                                               TextWrapping="NoWrap"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}" />
+                                <arc:NumberFieldAffixText Name="PART_SuffixText" />
+                            </arc:NumberFieldValueGroup>
+                        </arc:FieldFrame>
+                        <arc:FieldMessage Name="PART_Description"
+                                          HorizontalAlignment="Left"
+                                          Kind="Description"
+                                          Text="{TemplateBinding Description}" />
+                        <arc:FieldMessage Name="PART_Error"
+                                          HorizontalAlignment="Left"
+                                          Kind="Error"
+                                          Text="{TemplateBinding EffectiveErrorMessage}" />
+                    </StackPanel>
+                    <arc:SpecialInputsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FontFeatures" Value="tnum" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Cursor" Value="Arrow" />
+
+        <Style Selector="^[Size=Small]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        </Style>
+
+        <!-- Head: label (TypeSM medium; Small uses TypeXS) and the limit note (TypeXS medium in the limit color). -->
+        <Style Selector="^ /template/ Grid#PART_Head">
+            <Setter Property="Margin" Value="{arc:NumberFieldTokenResource HeadMargin}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeight}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ TextBlock#PART_Label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:FieldTokenResource LabelLineHeightSM}" />
+        </Style>
+        <Style Selector="^:scrub /template/ TextBlock#PART_Label">
+            <Setter Property="Cursor" Value="SizeWestEast" />
+        </Style>
+        <Style Selector="^ /template/ arc|NumberFieldLimitNote#PART_LimitNote">
+            <Setter Property="Margin" Value="{arc:NumberFieldTokenResource NoteMargin}" />
+            <Setter Property="Foreground" Value="{arc:NumberFieldTokenResource LimitColor}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:NumberFieldTokenResource NoteLineHeight}" />
+        </Style>
+
+        <!-- Shell width per size (Arc nf-width); an explicit Width stretches shell and head to it instead. -->
+        <Style Selector="^[Size=Small]">
+            <Style Selector="^ /template/ Grid#PART_Head">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource ShellWidthSM}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource ShellWidthSM}" />
+                <Setter Property="Padding" Value="{arc:NumberFieldTokenResource ShellPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldIconButton.step">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource StepSizeSM}" />
+                <Setter Property="Height" Value="{arc:NumberFieldTokenResource StepSizeSM}" />
+                <Setter Property="CornerRadius" Value="{arc:NumberFieldTokenResource StepRadius}" />
+                <Setter Property="FocusRingRadius" Value="{arc:NumberFieldTokenResource StepRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Size=Medium]">
+            <Style Selector="^ /template/ Grid#PART_Head">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource ShellWidthMD}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource ShellWidthMD}" />
+                <Setter Property="Padding" Value="{arc:NumberFieldTokenResource ShellPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldIconButton.step">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource StepSizeMD}" />
+                <Setter Property="Height" Value="{arc:NumberFieldTokenResource StepSizeMD}" />
+                <Setter Property="CornerRadius" Value="{arc:NumberFieldTokenResource StepRadius}" />
+                <Setter Property="FocusRingRadius" Value="{arc:NumberFieldTokenResource StepRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Style Selector="^ /template/ Grid#PART_Head">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource ShellWidthLG}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource ShellWidthLG}" />
+                <Setter Property="Padding" Value="{arc:NumberFieldTokenResource ShellPaddingLG}" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldIconButton.step">
+                <Setter Property="Width" Value="{arc:NumberFieldTokenResource StepSizeLG}" />
+                <Setter Property="Height" Value="{arc:NumberFieldTokenResource StepSizeLG}" />
+                <Setter Property="CornerRadius" Value="{arc:NumberFieldTokenResource StepRadiusLG}" />
+                <Setter Property="FocusRingRadius" Value="{arc:NumberFieldTokenResource StepRingRadiusLG}" />
+            </Style>
+        </Style>
+        <Style Selector="^:sized">
+            <Style Selector="^ /template/ Grid#PART_Head">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+
+        <!-- Arc .control: a hairline Border shell; hover (or a hovered scrub label) BorderStrong, focus and scrubbing
+             Foreground, a typed value past a limit a calm warning tint. Keyboard focus on a stepper does not darken it. -->
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Spacing" Value="{arc:NumberFieldTokenResource ShellGap}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame:focus-active">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:scrub-hover /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:scrubbing /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:warn /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:NumberFieldTokenResource WarnBorder}" />
+            <Setter Property="Background" Value="{arc:NumberFieldTokenResource WarnSurface}" />
+        </Style>
+        <Style Selector="^:warn:focus /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:NumberFieldTokenResource WarnBorderFocus}" />
+        </Style>
+        <Style Selector="^:invalid /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+
+        <!-- The value: Foreground medium tabular digits; affixes TextSecondary regular. The editor draws its text only
+             while a draft is open (it is then the mirror); otherwise just the caret and selection over the digits. -->
+        <Style Selector="^ /template/ arc|NumberFieldValueGroup#PART_ValueGroup">
+            <Setter Property="Cursor" Value="IBeam" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|NumberFieldValueGroup#PART_ValueGroup">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <!-- Arc's number-field wheel: snappy, the short way round, glyphs 1.05em apart with an eased fade. While a draft
+             is typed the editor shows the text and the wheels follow without rolling. -->
+        <Style Selector="^ /template/ arc|RollingDigits#PART_Digits">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="WheelSpring" Value="Snappy" />
+            <Setter Property="IsShortestTurn" Value="True" />
+            <Setter Property="GlyphPitch" Value="1.05" />
+            <Setter Property="Falloff" Value="Eased" />
+        </Style>
+        <Style Selector="^:editing /template/ arc|RollingDigits#PART_Digits">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="IsInstant" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|NumberFieldAffixText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^ /template/ TextPresenter#PART_TextPresenter">
+            <Setter Property="TextElement.Foreground" Value="Transparent" />
+            <Setter Property="SelectionForegroundBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^:editing /template/ TextPresenter#PART_TextPresenter">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- Reduced (and Off) motion: no kick or shake; the number briefly takes the limit color instead. -->
+        <Style Selector="^:strain:not(:motion-full) /template/ arc|RollingDigits#PART_Digits">
+            <Setter Property="Foreground" Value="{arc:NumberFieldTokenResource LimitColor}" />
+        </Style>
+
+        <!-- Arc .step: TextSecondary glyph; hover and keyboard focus SurfaceMuted + Foreground; pressed or held a
+             deeper fill and a sinking glyph; at a limit .32 (still focusable and pressable); refused during a strain
+             .6 in the limit color. -->
+        <Style Selector="^ /template/ arc|FieldIconButton.step">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="PressScale" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^ /template/ arc|NumberFieldStepGlyph">
+            <Setter Property="GlyphSize" Value="{arc:NumberFieldTokenResource StepGlyphSize}" />
+            <Setter Property="StrokeThickness" Value="{arc:NumberFieldTokenResource StepGlyphStroke}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton.step:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton.step:pressed">
+            <Setter Property="Background" Value="{arc:NumberFieldTokenResource StepPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:decrease-pressed /template/ arc|FieldIconButton#PART_DecreaseButton">
+            <Setter Property="Background" Value="{arc:NumberFieldTokenResource StepPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:increase-pressed /template/ arc|FieldIconButton#PART_IncreaseButton">
+            <Setter Property="Background" Value="{arc:NumberFieldTokenResource StepPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:at-min /template/ arc|FieldIconButton#PART_DecreaseButton">
+            <Setter Property="Opacity" Value="{arc:NumberFieldTokenResource StepLimitOpacity}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:at-max /template/ arc|FieldIconButton#PART_IncreaseButton">
+            <Setter Property="Opacity" Value="{arc:NumberFieldTokenResource StepLimitOpacity}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton.step:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:strain-min:at-min /template/ arc|FieldIconButton#PART_DecreaseButton">
+            <Setter Property="Opacity" Value="{arc:NumberFieldTokenResource StepStrainOpacity}" />
+            <Setter Property="Foreground" Value="{arc:NumberFieldTokenResource LimitColor}" />
+        </Style>
+        <Style Selector="^:strain-max:at-max /template/ arc|FieldIconButton#PART_IncreaseButton">
+            <Setter Property="Opacity" Value="{arc:NumberFieldTokenResource StepStrainOpacity}" />
+            <Setter Property="Foreground" Value="{arc:NumberFieldTokenResource LimitColor}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton.step:disabled">
+            <Setter Property="Opacity" Value="{arc:NumberFieldTokenResource StepDisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <!-- Stepper colors on fast + standard ease, opacity on standard; reduced motion: instant. -->
+        <Style Selector="^:motion-full /template/ arc|FieldIconButton.step">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|FieldIconButton.step">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

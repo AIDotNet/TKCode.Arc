@@ -1,0 +1,123 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:TimePicker}" TargetType="arc:TimePicker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TimePicker">
+                <arc:Field Name="PART_Field"
+                           Label="{TemplateBinding Label}"
+                           Description="{TemplateBinding Description}"
+                           ErrorMessage="{TemplateBinding ErrorMessage}"
+                           IsLabelVisible="{TemplateBinding IsLabelVisible}"
+                           Size="{TemplateBinding Size}">
+                    <Panel>
+                        <arc:FieldFrame Name="PART_Frame"
+                                        Cursor="Hand"
+                                        HasFocusRing="True"
+                                        Spacing="{arc:TimePickerTokenResource AffixGap}"
+                                        Size="{TemplateBinding Size}"
+                                        IsInvalid="{TemplateBinding IsInvalid}">
+                            <arc:FieldFrame.Prefix>
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Clock3}"
+                                              Size="16"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </arc:FieldFrame.Prefix>
+                            <arc:FieldFrame.Suffix>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              RenderTransformOrigin="50%,50%"
+                                              RenderTransform="rotate(0deg)"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </arc:FieldFrame.Suffix>
+                            <arc:PickerRollText Name="PART_Value"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                ClipToBounds="False"
+                                                ExitDuration="0:0:0.16"
+                                                LineHeight="{arc:TimePickerTokenResource ValueLineHeight}"
+                                                Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                PlaceholderForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </arc:FieldFrame>
+                        <arc:ArcPopup Name="PART_Popup"
+                                      Placement="Bottom"
+                                      MarginToAnchor="{arc:TimePickerTokenResource PopupGap}"
+                                      EnterOffset="6"
+                                      EnterScale="0.97"
+                                      IsLightDismissEnabled="True"
+                                      TakesFocusFromNativeControl="False"
+                                      WindowManagerAddShadowHint="False" />
+                    </Panel>
+                </arc:Field>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MinWidth" Value="160" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <!-- Arc picker trigger: Border at rest; hover, press and open answer with BorderStrong on SurfaceMuted.
+             The trigger anchors the list, so a press never scales it. -->
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldFrame#PART_Frame:pointerover:not(:invalid):not(:disabled):not(:focus-active)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed /template/ arc|FieldFrame#PART_Frame:not(:invalid), ^:open /template/ arc|FieldFrame#PART_Frame:not(:invalid)">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^[Size=Large] /template/ arc|PickerRollText#PART_Value">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:TimePickerPanel}" TargetType="arc:TimePickerPanel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TimePickerPanel">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_Scroll"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <arc:TimePickerList Name="PART_List"
+                                            RowHeight="{arc:TimePickerTokenResource OptionHeight}"
+                                            RowInset="{arc:TimePickerTokenResource OptionInset}"
+                                            RowRadius="{arc:TimePickerTokenResource OptionRadius}"
+                                            DotDiameter="{arc:TimePickerTokenResource DotDiameter}"
+                                            HighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                            Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                            FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                            FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:TimePickerTokenResource ListInset}" />
+    </ControlTheme>
+</ResourceDictionary>

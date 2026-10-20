@@ -1,0 +1,28 @@
+<!-- Publish properties given on the command line (dotnet publish -r … -p:PublishAot=true) would reach this project
+     through the gallery's reference; the compiler loads it, so it is never published itself. -->
+<Project Sdk="Microsoft.NET.Sdk"
+         TreatAsLocalProperty="PublishAot;PublishTrimmed;PublishSingleFile;SelfContained;RuntimeIdentifier;IsAotCompatible;IsTrimmable">
+    <!-- Build-time only: turns Docs/**/*.md, Docs/Api/*.xlf and the TKCode.Arc XML documentation into the gallery's
+         Code tab data (design/decisions/0012-gallery-docs.md). Loaded by the compiler, never shipped. -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <PublishAot>false</PublishAot>
+        <PublishTrimmed>false</PublishTrimmed>
+        <PublishSingleFile>false</PublishSingleFile>
+        <SelfContained>false</SelfContained>
+        <RuntimeIdentifier></RuntimeIdentifier>
+        <IsAotCompatible>false</IsAotCompatible>
+        <IsTrimmable>false</IsTrimmable>
+        <RootNamespace>TKCode.Arc.Gallery.Generators</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <!-- Release tracking files are for shipped analyzers. -->
+        <NoWarn>$(NoWarn);RS2008</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- API reference descriptions for the gallery's Code tab. id = Type or DeclaringType.Member; <source> is the English
+     XML summary the translation was made from (the build warns when the summary changes). -->
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" target-language="zh-CN" datatype="plaintext" original="TKCode.Arc">
+    <body>
+      <trans-unit id="Input">
+        <source>Arc input: a single-line field with a visible label, helper and error rows that open on a spring and rewrite only the words that change, and the Arc frame states (hover and focus darken the border, an error turns it danger, disabled fades). Everything from Avalonia's TextBox is kept: caret, selection, IME, undo, clipboard and a two-way `Text`.</source>
+        <target>Arc 输入框：带可见标签的单行字段，辅助文字行与错误行以弹簧展开，只改写变化的词；外框状态与 Arc 一致（悬停与聚焦加深边框，错误时变为危险色，禁用时变淡）。Avalonia TextBox 的能力全部保留：光标、选择、输入法、撤销、剪贴板与双向绑定的 `Text`。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.Label">
+        <source>The visible label above the frame; also the accessible name.</source>
+        <target>外框上方的可见标签，同时作为无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.Description">
+        <source>Helper copy under the frame (rewrites changed words in place; counts roll).</source>
+        <target>外框下方的辅助文字（原位改写变化的词，数字滚动）。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.ErrorMessage">
+        <source>Error copy under the frame; non-empty makes the field invalid.</source>
+        <target>外框下方的错误提示；非空时字段为无效态。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.IsInvalid">
+        <source>Invalid state; always true while an error is shown.</source>
+        <target>无效态；显示错误时始终为 true。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.IsLabelVisible">
+        <source>When false the label is hidden visually but still names the field.</source>
+        <target>为 false 时标签不显示，但仍作为字段的名称。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.Size">
+        <source>Frame height: Small 36, Medium 44 (default), Large 50.</source>
+        <target>外框高度：Small 36、Medium 44（默认）、Large 50。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.Prefix">
+        <source>Content before the text (icon, unit, currency).</source>
+        <target>文字前面的内容（图标、单位、货币符号）。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.Suffix">
+        <source>Content after the text (unit, action button).</source>
+        <target>文字后面的内容（单位、操作按钮）。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.Placeholder">
+        <source>Hint shown while the field is empty (same as `PlaceholderText`).</source>
+        <target>字段为空时显示的提示（与 `PlaceholderText` 相同）。</target>
+      </trans-unit>
+      <trans-unit id="FieldTextBox.EffectiveErrorMessage">
+        <source>The error actually shown: `ErrorMessage`, else the binding's validation message.</source>
+        <target>实际显示的错误：优先 `ErrorMessage`，否则为绑定的校验消息。</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,7 +1,6 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
-using Avalonia.Animation.Easings;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Collections;
@@ -211,14 +210,13 @@ public class AnnouncementBar : TemplatedControl
 
     private static string StorageKeyFor(string key) => $"arc-announcement:{key}";
 
-    private readonly MotionValue<double> _ring;
+    private readonly MotionTimeline _ring;
     private MessagesPresenceFrame? _presence;
     private AnnouncementBarViewport? _viewport;
     private AvaloniaButton? _previous;
     private AvaloniaButton? _next;
     private AnnouncementBarRing? _ringButton;
     private AvaloniaButton? _dismiss;
-    private PausableTimer? _clock;
     private IDisposable? _windowStateSubscription;
     private bool _isShown = true;
     private double _sideWidth;
@@ -239,8 +237,10 @@ public class AnnouncementBar : TemplatedControl
     public AnnouncementBar()
     {
         Messages.CollectionChanged += (_, _) => OnMessagesChanged();
-        _ring = new MotionValue<double>(this, 0, MotionVectors.Double);
+        // P22: the ring is the rotation clock, a Core timeline (pausable timer, reported every frame).
+        _ring = new MotionTimeline(this);
         _ring.Changed += v => RingProgress = v;
+        _ring.Completed += OnClockElapsed;
         AutomationProperties.SetLandmarkType(this, AutomationLandmarkType.Region);
         AutomationProperties.SetName(this, Label);
     }
@@ -368,8 +368,7 @@ public class AnnouncementBar : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         _windowStateSubscription?.Dispose();
         _windowStateSubscription = null;
-        _clock?.Pause();
-        _ring.Stop();
+        _ring.Pause();
         _running = false;
     }
 
@@ -442,7 +441,6 @@ public class AnnouncementBar : TemplatedControl
         }
         else if (change.Property == IntervalProperty)
         {
-            _clock = null;
             UpdateRunning(restart: true);
         }
         else if (change.Property == LabelProperty)
@@ -474,7 +472,6 @@ public class AnnouncementBar : TemplatedControl
     private void OnIndexChanged()
     {
         ShowCurrent(animate: true);
-        _ring.Jump(0);
         UpdateRunning(restart: true);
         if (Current is { } current)
         {
@@ -535,12 +532,10 @@ public class AnnouncementBar : TemplatedControl
     private void UpdateRunning(bool restart = false)
     {
         var running = IsRotating && IsShown && IsAttached && !IsPaused && !_hovered && !_focused && !_windowHidden;
-        _clock ??= new PausableTimer(Interval, OnClockElapsed);
         if (restart)
         {
-            _clock.Restart(Interval);
-            _clock.Pause();
-            _ring.Jump(0);
+            _ring.Start(Interval);
+            _ring.Pause();
         }
         var wasRunning = _running;
         _running = running;
@@ -548,23 +543,23 @@ public class AnnouncementBar : TemplatedControl
         {
             if (!wasRunning || restart)
             {
-                _clock.Resume();
-                var remaining = _clock.Remaining;
-                if (remaining > TimeSpan.Zero)
+                if (_ring.IsActive)
                 {
-                    _ = _ring.AnimateTo(1, MotionSpec.Tween(remaining, s_linear));
+                    _ring.Resume();
+                }
+                else
+                {
+                    // Never started, or a finished cycle (which advances at once, as the clock always did).
+                    _ring.Start(Interval, _ring.Value);
                 }
             }
         }
         else
         {
-            _clock.Pause();
-            _ring.Stop();
+            _ring.Pause();
         }
         UpdateLive();
     }
-
-    private static readonly Easing s_linear = new LinearEasing();
 
     private void OnClockElapsed()
     {

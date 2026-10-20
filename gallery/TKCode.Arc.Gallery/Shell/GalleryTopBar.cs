@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
@@ -23,17 +24,17 @@ public sealed class GalleryTopBar : Border
     private ArcPopup? _popup;
     private DateTime _closedAt;
 
-    public GalleryTopBar(GalleryTheme theme, Window owner, Action focusSearch)
+    public GalleryTopBar(GalleryTheme theme, Control owner, Action focusSearch)
     {
         _theme = theme;
 
         var left = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 28, VerticalAlignment = VerticalAlignment.Stretch };
         left.Children.Add(BuildBrand());
-        left.Children.Add(BuildTab("Components"));
+        left.Children.Add(BuildTab(GalleryShellLangResourceKind.Components));
 
         _appearance = new Button
         {
-            Content = Labeled(new ArcGlyph { Data = ArcIcons.SlidersHorizontal, Size = 16 }, "Appearance"),
+            Content = Labeled(new ArcGlyph { Data = ArcIcons.SlidersHorizontal, Size = 16 }, GalleryShellLangResourceKind.Appearance),
             Variant = ButtonVariant.Secondary,
             Size = ControlSize.Small,
             IsPressScaleEnabled = false
@@ -47,7 +48,7 @@ public sealed class GalleryTopBar : Border
             Padding = new Thickness(0),
             MinWidth = 36
         };
-        Avalonia.Automation.AutomationProperties.SetName(_themeToggle, "Toggle light and dark appearance");
+        GalleryText.Bind(_themeToggle, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.ToggleAppearance);
         _themeToggle.Click += async (_, _) => await _theme.ToggleDarkAsync();
         _theme.Changed += SyncThemeToggle;
         SyncThemeToggle();
@@ -83,25 +84,29 @@ public sealed class GalleryTopBar : Border
     }
 
     /// <summary>The current section: label with the 2px underline sitting on the bar's bottom border.</summary>
-    private static Control BuildTab(string label)
+    private static Control BuildTab(GalleryShellLangResourceKind label)
     {
+        var text = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 14, FontWeight.Medium);
+        GalleryText.Bind(text, TextBlock.TextProperty, label);
         var tab = new Border
         {
             BorderThickness = new Thickness(0, 0, 0, 2),
             Margin = new Thickness(0, 0, 0, -1),
             VerticalAlignment = VerticalAlignment.Stretch,
-            Child = GalleryUi.Text(label, ArcDesignTokenKind.Foreground, 14, FontWeight.Medium)
+            Child = text
         };
-        ((TextBlock)tab.Child).VerticalAlignment = VerticalAlignment.Center;
+        text.VerticalAlignment = VerticalAlignment.Center;
         ArcTokens.Bind(tab, BorderBrushProperty, ArcDesignTokenKind.Foreground);
         return tab;
     }
 
-    private static Control Labeled(Control glyph, string text)
+    private static Control Labeled(Control glyph, GalleryShellLangResourceKind text)
     {
+        var label = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(label, TextBlock.TextProperty, text);
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         row.Children.Add(glyph);
-        row.Children.Add(new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center });
+        row.Children.Add(label);
         return row;
     }
 
@@ -109,7 +114,8 @@ public sealed class GalleryTopBar : Border
     {
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), MinWidth = 148 };
         var icon = new ArcGlyph { Data = ArcIcons.Search, Size = 16 };
-        var label = new TextBlock { Text = "Search", Margin = new Thickness(8, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center };
+        var label = new TextBlock { Margin = new Thickness(8, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(label, TextBlock.TextProperty, GalleryShellLangResourceKind.Search);
         var hint = GalleryUi.Text(OperatingSystem.IsMacOS() ? "⌘K" : "Ctrl K", ArcDesignTokenKind.TextMuted, 12);
         hint.VerticalAlignment = VerticalAlignment.Center;
         Grid.SetColumn(label, 1);
@@ -136,7 +142,7 @@ public sealed class GalleryTopBar : Border
     }
 
     /// <summary>Opens or closes the Appearance popover.</summary>
-    public void ToggleAppearance(Window owner)
+    public void ToggleAppearance(Control owner)
     {
         if (_popup is { IsOpen: true } open)
         {

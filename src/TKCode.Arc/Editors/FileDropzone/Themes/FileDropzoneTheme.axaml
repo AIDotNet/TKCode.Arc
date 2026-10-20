@@ -1,0 +1,496 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The drop target with its three sheets of paper, the refusal row, and the file list. -->
+    <ControlTheme x:Key="{x:Type arc:FileDropzone}" TargetType="arc:FileDropzone">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileDropzone">
+                <Panel>
+                    <StackPanel>
+                        <Panel Name="PART_ZoneRoot" Background="Transparent">
+                            <arc:FileDropzoneZone Name="PART_Zone"
+                                                  AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                  RestingBorderBrush="{arc:ArcDesignTokenResource Border}" />
+                            <StackPanel>
+                                <arc:FileDropzoneTrigger Name="PART_Trigger">
+                                    <StackPanel>
+                                        <arc:SpringSizeDecorator Name="PART_IconSlot" Axis="Height" Spring="Smooth" IsExpanded="{TemplateBinding IsIconShown}">
+                                            <Panel Width="36" Height="44" Margin="0,10,0,14" HorizontalAlignment="Center">
+                                                <Border Name="PART_SheetBack" Classes="sheet">
+                                                    <Panel>
+                                                        <Border Classes="sheet-line" Width="16" Margin="7,8,0,0" />
+                                                        <Border Classes="sheet-line" Width="11" Margin="7,13,0,0" />
+                                                    </Panel>
+                                                </Border>
+                                                <Border Name="PART_SheetSide" Classes="sheet">
+                                                    <Panel>
+                                                        <Border Classes="sheet-line" Width="16" Margin="7,8,0,0" />
+                                                        <Border Classes="sheet-line" Width="11" Margin="7,13,0,0" />
+                                                    </Panel>
+                                                </Border>
+                                                <Border Name="PART_SheetFront" Classes="sheet">
+                                                    <Panel>
+                                                        <Border Classes="sheet-line" Width="16" Margin="7,8,0,0" />
+                                                        <Border Classes="sheet-line" Width="11" Margin="7,13,0,0" />
+                                                        <arc:ArcGlyph Name="PART_SheetArrow"
+                                                                      Data="{x:Static arc:ArcIcons.ArrowUp}"
+                                                                      Size="14"
+                                                                      StrokeThickness="2"
+                                                                      HorizontalAlignment="Center"
+                                                                      VerticalAlignment="Bottom"
+                                                                      Margin="0,0,0,5"
+                                                                      RenderTransformOrigin="50%,50%" />
+                                                    </Panel>
+                                                </Border>
+                                            </Panel>
+                                        </arc:SpringSizeDecorator>
+                                        <arc:ArcContentSwap Name="PART_Label"
+                                                            Mode="BlurSwap"
+                                                            Content="{TemplateBinding DisplayLabel}"
+                                                            HorizontalContentAlignment="Center"
+                                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <TextBlock Name="PART_Description"
+                                                   Margin="0,6,0,0"
+                                                   Text="{TemplateBinding Description}"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <arc:SpringSizeDecorator Name="PART_NoteSlot" Axis="Height" Spring="Smooth" IsExpanded="{TemplateBinding IsNoteShown}">
+                                            <TextBlock Name="PART_Note"
+                                                       Padding="0,6,0,0"
+                                                       Text="{TemplateBinding NoteText}"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="Wrap"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </arc:SpringSizeDecorator>
+                                    </StackPanel>
+                                </arc:FileDropzoneTrigger>
+                                <Decorator Name="PART_InsideHost" />
+                            </StackPanel>
+                        </Panel>
+                        <arc:SpringSizeDecorator Name="PART_ErrorSlot" Axis="Height" Spring="Smooth">
+                            <Grid ColumnDefinitions="Auto,*" Margin="0,12,0,0">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="14"
+                                              StrokeThickness="2.25"
+                                              Margin="0,3,6,0"
+                                              VerticalAlignment="Top"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                <arc:ArcContentSwap Grid.Column="1"
+                                                    Mode="BlurSwap"
+                                                    Content="{TemplateBinding ErrorMessage}"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource Danger}">
+                                    <arc:ArcContentSwap.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </arc:ArcContentSwap.ContentTemplate>
+                                </arc:ArcContentSwap>
+                            </Grid>
+                        </arc:SpringSizeDecorator>
+                        <Decorator Name="PART_BelowHost" />
+                    </StackPanel>
+                    <arc:EditorsLiveRegion Name="PART_Status" />
+                    <arc:EditorsLiveRegion Name="PART_Alert" IsAssertive="True" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Rest, hover and press: color is the only press response; the target never scales. -->
+        <Style Selector="^ /template/ arc|FileDropzoneZone#PART_Zone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+            <Setter Property="EdgeBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FileDropzoneTrigger#PART_Trigger">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        </Style>
+        <Style Selector="^:hovered /template/ arc|FileDropzoneZone#PART_Zone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="EdgeBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:trigger-pressed /template/ arc|FileDropzoneZone#PART_Zone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:dragover /template/ arc|FileDropzoneZone#PART_Zone">
+            <Setter Property="Solid" Value="1" />
+        </Style>
+        <!-- A folded prompt is a slimmer surface, so its corners step down to the panel radius. -->
+        <Style Selector="^:compact /template/ arc|FileDropzoneZone#PART_Zone">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|FileDropzoneTrigger#PART_Trigger">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FileDropzoneTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:FileDropzoneTokenResource TriggerPadding}" />
+        </Style>
+        <Style Selector="^:rows-inside /template/ arc|FileDropzoneTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:FileDropzoneTokenResource TriggerPaddingInside}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|FileDropzoneTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:FileDropzoneTokenResource TriggerPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact:rows-inside /template/ arc|FileDropzoneTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:FileDropzoneTokenResource TriggerPaddingCompactInside}" />
+        </Style>
+        <Style Selector="^:error /template/ arc|SpringSizeDecorator#PART_ErrorSlot">
+            <Setter Property="IsExpanded" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|SpringSizeDecorator#PART_ErrorSlot">
+            <Setter Property="IsExpanded" Value="False" />
+        </Style>
+        <!-- The list's own padding opens with the first row, so the gap never appears in one frame. -->
+        <Style Selector="^:has-rows /template/ Decorator#PART_BelowHost">
+            <Setter Property="Padding" Value="0,4,0,0" />
+        </Style>
+        <Style Selector="^:inside /template/ Decorator#PART_InsideHost">
+            <Setter Property="Padding" Value="12,0,12,0" />
+        </Style>
+        <Style Selector="^:rows-inside /template/ Decorator#PART_InsideHost">
+            <Setter Property="Padding" Value="12,0,12,12" />
+        </Style>
+
+        <!-- Three sheets of paper: they fan open on hover and spread wider under a file. -->
+        <Style Selector="^ /template/ Border.sheet">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:FileDropzoneTokenResource SheetRadius}" />
+            <Setter Property="BoxShadow" Value="{arc:FileDropzoneTokenResource SheetShadow}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransformOrigin" Value="50%,100%" />
+        </Style>
+        <Style Selector="^ /template/ Border.sheet-line">
+            <Setter Property="Height" Value="2" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="Opacity" Value="0.3" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_SheetArrow">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SheetBack">
+            <Setter Property="RenderTransform" Value="translate(-9px, 2px) rotate(-10deg)" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SheetSide">
+            <Setter Property="RenderTransform" Value="translate(9px, 2px) rotate(10deg)" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SheetFront">
+            <Setter Property="RenderTransform" Value="translate(0px, 0px) rotate(0deg)" />
+        </Style>
+        <Style Selector="^:hovered /template/ Border#PART_SheetBack">
+            <Setter Property="RenderTransform" Value="translate(-13px, 2px) rotate(-15deg)" />
+        </Style>
+        <Style Selector="^:hovered /template/ Border#PART_SheetSide">
+            <Setter Property="RenderTransform" Value="translate(13px, 2px) rotate(15deg)" />
+        </Style>
+        <Style Selector="^:hovered /template/ Border#PART_SheetFront">
+            <Setter Property="RenderTransform" Value="translate(0px, -2px) rotate(0deg)" />
+        </Style>
+        <Style Selector="^:dragover /template/ Border.sheet">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:dragover /template/ Border.sheet-line">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:dragover /template/ arc|ArcGlyph#PART_SheetArrow">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="RenderTransform" Value="translateY(-3px)" />
+        </Style>
+        <Style Selector="^:dragover /template/ Border#PART_SheetBack">
+            <Setter Property="RenderTransform" Value="translate(-20px, -2px) rotate(-22deg)" />
+        </Style>
+        <Style Selector="^:dragover /template/ Border#PART_SheetSide">
+            <Setter Property="RenderTransform" Value="translate(20px, -2px) rotate(22deg)" />
+        </Style>
+        <Style Selector="^:dragover /template/ Border#PART_SheetFront">
+            <Setter Property="RenderTransform" Value="translate(0px, -8px) rotate(0deg)" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|FileDropzoneZone#PART_Zone">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                        <arc:ArcBrushTransition Property="EdgeBrush" Tween="Fast" />
+                        <arc:ArcDoubleTransition Property="Solid" Tween="Standard" />
+                        <arc:SpringCornerRadiusTransition Property="CornerRadius" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|FileDropzoneTrigger#PART_Trigger">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringThicknessTransition Property="Padding" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Decorator#PART_BelowHost">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringThicknessTransition Property="Padding" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Decorator#PART_InsideHost">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringThicknessTransition Property="Padding" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border.sheet">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_SheetArrow">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:FileDropzoneTrigger}" TargetType="arc:FileDropzoneTrigger">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileDropzoneTrigger">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="{TemplateBinding Background}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Stretch" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:FileDropzoneProgressBar}" TargetType="arc:FileDropzoneProgressBar">
+        <Setter Property="Height" Value="4" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+    </ControlTheme>
+
+    <!-- A file row: 40px thumbnail or type icon, name and status, then Retry and Remove. -->
+    <ControlTheme x:Key="{x:Type arc:FileDropzoneRow}" TargetType="arc:FileDropzoneRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileDropzoneRow">
+                <Border Name="PART_Frame"
+                        Margin="0,8,0,0"
+                        MinHeight="{arc:FileDropzoneTokenResource RowMinHeight}"
+                        Padding="9,8,8,8"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                        Background="{arc:ArcDesignTokenResource Surface}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Panel Name="PART_Icon" Width="40" Height="40" VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_TypeIcon"
+                                          Data="{TemplateBinding TypeIcon}"
+                                          Size="20"
+                                          StrokeThickness="1.75"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <Border Name="PART_Thumb"
+                                    ClipToBounds="True"
+                                    CornerRadius="{arc:FileDropzoneTokenResource ThumbRadius}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                <Image Source="{TemplateBinding Preview}" Stretch="UniformToFill" />
+                            </Border>
+                        </Panel>
+                        <StackPanel Name="PART_Copy" Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding NameText}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,1,0,0"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <TextBlock Text="{TemplateBinding SizeText}" VerticalAlignment="Center" />
+                                <TextBlock Text="·" Margin="6,0" VerticalAlignment="Center" IsVisible="{TemplateBinding HasPhase}" />
+                                <arc:ArcContentSwap Mode="BlurSwap" Content="{TemplateBinding PhaseContent}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" IsExpanded="{TemplateBinding IsBarOpen}">
+                                <arc:FileDropzoneProgressBar Name="PART_Bar" Margin="0,7,0,2" />
+                            </arc:SpringSizeDecorator>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <arc:SpringSizeDecorator Axis="Width" Spring="Smooth" IsExpanded="{TemplateBinding CanRetry}">
+                                <arc:FileDropzoneActionButton Name="PART_Retry" Classes="retry" Margin="3,3,6,3" IsVisible="{TemplateBinding CanRetry}">
+                                    <StackPanel Orientation="Horizontal" Spacing="5">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCw}" Size="14" StrokeThickness="2" VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_RetryLabel" Text="Retry" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:FileDropzoneActionButton>
+                            </arc:SpringSizeDecorator>
+                            <arc:FileDropzoneActionButton Name="PART_Remove" Classes="remove">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="16" StrokeThickness="1.75" />
+                            </arc:FileDropzoneActionButton>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:failed /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:FileDropzoneTokenResource FailedRowBorderColor}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Thumb">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Copy">
+            <Setter Property="Margin" Value="12,0" />
+        </Style>
+        <Style Selector="^:thumb /template/ Border#PART_Thumb">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:thumb /template/ arc|ArcGlyph#PART_TypeIcon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!-- On narrow lists Retry keeps only its icon; on the narrowest the type icon steps aside. -->
+        <Style Selector="^:narrow /template/ TextBlock#PART_RetryLabel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|FileDropzoneActionButton#PART_Retry">
+            <Setter Property="Width" Value="{arc:FileDropzoneTokenResource RetryHeight}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:tiny /template/ Panel#PART_Icon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:tiny /template/ StackPanel#PART_Copy">
+            <Setter Property="Margin" Value="5,0,12,0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Frame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Retry is a bordered pill with a label; Remove a round icon button. Quick press, spring release. -->
+    <ControlTheme x:Key="{x:Type arc:FileDropzoneActionButton}" TargetType="arc:FileDropzoneActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileDropzoneActionButton">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.remove">
+            <Setter Property="Width" Value="{arc:FileDropzoneTokenResource RemoveSize}" />
+            <Setter Property="Height" Value="{arc:FileDropzoneTokenResource RemoveSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^.retry">
+            <Setter Property="Height" Value="{arc:FileDropzoneTokenResource RetryHeight}" />
+            <Setter Property="Padding" Value="10,0,12,0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Style Selector="^:pointerover">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

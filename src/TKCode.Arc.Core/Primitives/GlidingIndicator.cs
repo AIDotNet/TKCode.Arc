@@ -8,7 +8,7 @@ namespace TKCode.Arc.Primitives;
 /// <summary>
 /// P7: one indicator that springs its position and size between items (selection rings, hover highlights,
 /// active tabs). Place it in the same coordinate space as the items (for example as the first child of the
-/// items panel host) and call <see cref="MoveTo"/>. Drawn in <see cref="Render"/>: the glide never relayouts.
+/// items panel host) and call <see cref="MoveTo(Rect, bool, ArcSpring?)"/>. Drawn in <see cref="Render"/>: the glide never relayouts.
 /// </summary>
 public class GlidingIndicator : Control
 {
@@ -56,7 +56,21 @@ public class GlidingIndicator : Control
     /// Moves to <paramref name="target"/>. With <paramref name="animate"/> false it snaps (keyboard moves,
     /// container resizes). When it appears from nothing it lands in place and fades in.
     /// </summary>
+    /// <param name="target">The new rectangle in the indicator's coordinates.</param>
+    /// <param name="animate">False snaps there.</param>
+    /// <param name="spring">A preset for this move; defaults to <see cref="Spring"/>.</param>
     public void MoveTo(Rect target, bool animate = true, ArcSpring? spring = null)
+        => MoveTo(target, ArcMotionPresets.Get(spring ?? Spring), animate);
+
+    /// <summary>
+    /// Moves to <paramref name="target"/> on a custom spring (a component whose Arc source uses its own
+    /// <c>visualDuration</c> / <c>bounce</c>, built with <see cref="SpringSpec.FromVisual"/>). Otherwise behaves like
+    /// <see cref="MoveTo(Rect, bool, ArcSpring?)"/>: no animation snaps, appearing from nothing lands in place and fades in.
+    /// </summary>
+    /// <param name="target">The new rectangle in the indicator's coordinates.</param>
+    /// <param name="spring">The spring for this move (position and size).</param>
+    /// <param name="animate">False snaps there.</param>
+    public void MoveTo(Rect target, SpringSpec spring, bool animate = true)
     {
         _rect ??= Create(target);
         _opacity ??= CreateOpacity();
@@ -86,7 +100,7 @@ public class GlidingIndicator : Control
         }
         if (full)
         {
-            _ = _rect.AnimateTo(target, MotionSpec.Spring(spring ?? Spring));
+            _ = _rect.AnimateTo(target, MotionSpec.Spring(spring));
         }
         else
         {
@@ -94,7 +108,7 @@ public class GlidingIndicator : Control
         }
     }
 
-    /// <summary>Fades the indicator out; the next <see cref="MoveTo"/> lands in place again.</summary>
+    /// <summary>Fades the indicator out; the next <see cref="MoveTo(Rect, bool, ArcSpring?)"/> lands in place again.</summary>
     public void Hide(bool animate = true)
     {
         if (_opacity is null)

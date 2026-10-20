@@ -133,6 +133,8 @@ public class MorphSelectTests
     public void Typeahead_Opens_On_The_Match_And_Cycles()
     {
         var select = Zones();
+        // "te" is one search however slowly the machine runs (a fresh "e" would jump to Eastern Time).
+        select.Typeahead.Clock = static () => 1_000_000;
         var window = Show(select);
         try
         {

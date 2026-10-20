@@ -136,7 +136,7 @@ public class HoldToConfirm : AvaloniaButton
     private Control? _fill;
     private ButtonsLiveRegion? _status;
     private readonly RectangleGeometry _fillClip = new();
-    private ButtonsHoldProgress? _progress;
+    private MotionTimeline? _progress;
     private HoldSource _source;
     private Key _heldKey;
     private bool _completing;
@@ -144,13 +144,15 @@ public class HoldToConfirm : AvaloniaButton
 
     private static readonly SpringSpec Rewind = ArcMotionPresets.Smooth;
 
-    private ButtonsHoldProgress Progress
+    /// <summary>P22 hold fill: the Core timeline runs while held (at every motion level) and rewinds on a spring.</summary>
+    private MotionTimeline Progress
     {
         get
         {
             if (_progress is null)
             {
-                _progress = new ButtonsHoldProgress(this, Complete);
+                _progress = new MotionTimeline(this);
+                _progress.Completed += Complete;
                 _progress.Changed += _ => UpdateFill();
             }
             return _progress;
@@ -219,7 +221,7 @@ public class HoldToConfirm : AvaloniaButton
         }
         _source = source;
         SetHolding(true);
-        Progress.Begin(HoldDuration);
+        Progress.Start(HoldDuration, Progress.Value);
     }
 
     /// <summary>Lets go: rewinds unless the hold just completed.</summary>
@@ -231,7 +233,11 @@ public class HoldToConfirm : AvaloniaButton
         }
         _source = HoldSource.None;
         SetHolding(false);
-        Progress.Release(Rewind);
+        // A hold that just completed is no longer active and keeps its full fill.
+        if (Progress.IsActive)
+        {
+            Progress.Rewind(Rewind);
+        }
     }
 
     /// <summary>Cancels a hold in progress (for example when the window loses activation).</summary>
@@ -409,7 +415,7 @@ public class HoldToConfirm : AvaloniaButton
             // A reset rewinds the fill as the label morphs back; a confirmation set from outside fills it.
             if (_source == HoldSource.None && _progress is not null)
             {
-                Progress.Settle(confirmed ? 1 : 0, Rewind);
+                Progress.SettleTo(confirmed ? 1 : 0, Rewind);
             }
             else if (_source == HoldSource.None && confirmed)
             {

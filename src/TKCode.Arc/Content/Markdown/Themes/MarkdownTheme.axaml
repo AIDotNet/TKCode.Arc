@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    xmlns:sm="clr-namespace:StreamMark.Avalonia;assembly=StreamMark.Avalonia"
+                    x:ClassModifier="internal">
+    <!-- The document itself is StreamMark's MarkdownView; Markdown maps its Md.* resources onto ArcDesign tokens. -->
+    <ControlTheme x:Key="{x:Type arc:Markdown}" TargetType="arc:Markdown">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Markdown">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <sm:MarkdownView Name="PART_View" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="BlockSpacing" Value="{arc:MarkdownTokenResource BlockGap}" />
+        <Setter Property="Leading" Value="{arc:MarkdownTokenResource BodyLeading}" />
+    </ControlTheme>
+</ResourceDictionary>

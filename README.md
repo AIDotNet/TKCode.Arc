@@ -5,14 +5,15 @@ TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 110 compone
 with Arc's visual language and spring motion.
 
 - Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
-- Depends on AtomUI 6.2.6 and Avalonia 12.1.4 (exact versions).
+- Depends on AtomUI 6.2.6 and Avalonia 12.1.4 (exact versions), and on
+  [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and code highlighting.
 - Design documents: [design/overview.md](design/overview.md).
 
 ## Packages
 
 | Package | Contents |
 |---|---|
-| `TKCode.Arc` | The components (`UseArc()`), organized like Arc's sidebar. |
+| `TKCode.Arc` | The components (`UseArc()`), organized like Arc's sidebar, plus a streaming `Markdown` control. |
 | `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. |
 | `TKCode.Arc.Icons.Lucide` | The full Lucide set (2155 icons): `LucideIcon` control and `LucideGeometry` markup extension. |
 | `TKCode.Arc.Fonts` | Geist and Geist Mono (`WithArcFonts()`); body text uses Inter from `Avalonia.Fonts.Inter`. |
@@ -68,7 +69,23 @@ await Application.Current!.GetThemeManager()!.ApplyThemeAsync(
 ArcMotion.SetLevel(window, ArcMotionLevel.Reduced);   // Full, Reduced or Off
 ```
 
-Applications must not enable `InvariantGlobalization` (number and date formatting needs culture data).
+Markdown and code: `CodeBlock` highlights out of the box (TextMate grammars painted in Arc's palette), and `Markdown`
+renders a document or a streamed reply with the same styling:
+
+```csharp
+var reply = new Markdown();
+reply.Append("Here is the **fix**:\n\n```csharp\n");
+reply.Append("var total = items.Sum(i => i.Price);\n```\n");
+reply.Complete();
+```
+
+Notes for applications:
+
+- Do not enable `InvariantGlobalization` (number and date formatting needs culture data).
+- Anchored popups (menus, selects, tooltips, popovers) are drawn in the window's overlay layer, so they sit exactly
+  `sideOffset` away from their trigger and never cover it.
+- `Button`, `Calendar`, `Carousel`, `ContextMenu`, `DatePicker`, `Slider`, `SplitButton`, `TabItem`, `TimePicker`,
+  `TreeView` and `TreeViewItem` share names with `Avalonia.Controls`; alias one namespace when a file imports both.
 
 ## Building
 
@@ -83,5 +100,5 @@ dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 
 ## License
 
-MIT. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for Arc (MIT), Lucide (ISC), fonts (OFL)
-and the AtomUI (LGPL-3.0) dependency.
+MIT. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for Arc (MIT), Lucide (ISC), fonts (OFL),
+StreamMark, TextMateSharp, Oniguruma and Markdig, and the AtomUI (LGPL-3.0) dependency.

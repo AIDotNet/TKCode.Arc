@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -30,6 +31,9 @@ public class PopupPlacementTests
             var targetTop = target.TranslatePoint(default, window)!.Value.Y;
             (targetTop - (bubbleTop + bubble.Bounds.Height)).ShouldBe(8, 1);
 
+            // Hit testing reads the composition tree, which only catches up with layout on a render tick.
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
             var centre = target.TranslatePoint(new Point(target.Bounds.Width / 2, target.Bounds.Height / 2), window)!.Value;
             var hit = window.InputHitTest(centre) as Visual;
             hit.ShouldNotBeNull();

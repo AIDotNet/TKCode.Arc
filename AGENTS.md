@@ -8,7 +8,7 @@ Design source of truth: `design/` (start at `design/overview.md`).
 - `src/TKCode.Arc.Core`: ArcDesign tokens, palette, motion engine (`TKCode.Arc.Motion`), shared primitives (`TKCode.Arc.Primitives`), Lucide glyphs.
 - `src/TKCode.Arc`: controls, organized as `<Category>/<Component>/` (category = Arc sidebar group).
 - `tests/`: `TKCode.Arc.Core.Tests` (pure), `TKCode.Arc.Tests` (headless Avalonia).
-- `gallery/`: gallery shell and pages; each category registers its pages in `Pages/<Category>/<Category>Pages.cs` (partial `Register<Category>()`).
+- `gallery/`: gallery shell and pages; each category registers its pages in `Pages/<Category>/<Category>Pages.cs` (partial `Register<Category>()`). The Code tab shows `Docs/<Category>/<Component>/<lang>.md`; `TKCode.Arc.Gallery.Generators` turns `<!-- api: Type -->` into API tables from the TKCode.Arc XML docs and checks translations (design/engineering/gallery-app.md section 6). Shell text comes from `Localization/*.xlf` via `GalleryText` (hosts call `UseArcGallery()`; section 5.1).
 - `tools/lucide/generate_lucide.py`: regenerates Lucide glyph geometry.
 
 ## Implementation handbook

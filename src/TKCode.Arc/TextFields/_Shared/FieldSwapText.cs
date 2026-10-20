@@ -1,4 +1,5 @@
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -272,7 +273,7 @@ internal sealed class FieldSwapText : Control
         }
         var lineOffset = (Math.Max(EffectiveLineHeight, layout.Height) - layout.Height) / 2;
         var origin = new Point(x, padding.Top + lineOffset + dy);
-        var effect = FieldDrawing.Blur(blur);
+        var effect = ArcBlur.Get(blur);
         using (context.PushOpacity(opacity))
         {
             if (effect is null)

@@ -1,3 +1,5 @@
+using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -43,10 +45,13 @@ public sealed class BillingToggleValueChangedEventArgs : RoutedEventArgs
 /// <see cref="ItemsControl.ItemsSource"/>) for other periods. <see cref="Value"/> is two-way. Pair it with
 /// <see cref="BillingPrice"/> for prices that roll to the new amount.
 /// </summary>
-[TemplatePart(ThumbPart, typeof(Control))]
+[TemplatePart(ThumbPart, typeof(GlidingIndicator))]
 public class BillingToggle : SelectingItemsControl
 {
     public const string ThumbPart = "PART_Thumb";
+
+    /// <summary>Arc's <c>glide</c>: <c>{ type: "spring", visualDuration: 0.34, bounce: 0 }</c> (critically damped).</summary>
+    internal static readonly SpringSpec ThumbGlide = SpringSpec.FromVisual(0.34, 0);
 
     /// <summary>Accessible name used when none is set (Arc's <c>label</c> default).</summary>
     public const string DefaultLabel = "Billing period";
@@ -205,7 +210,7 @@ public class BillingToggle : SelectingItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _host.AttachIndicator(e.NameScope.Find<BillingToggleThumb>(ThumbPart), inset: 0, fadeInFirst: false);
+        _host.AttachIndicator(e.NameScope.Find<GlidingIndicator>(ThumbPart), inset: 0, fadeInFirst: false, ThumbGlide);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -417,7 +417,7 @@ public class InViewTitle : Control
                     var bounds = new Rect(word.X - 0.5 * em, word.Y, word.Width + em, _layout.LineHeight);
                     using (context.PushOpacity(opacity))
                     {
-                        var effect = TextEffectsBlur.Get(SoftBlurRadius * (1 - focus));
+                        var effect = ArcBlur.Get(SoftBlurRadius * (1 - focus));
                         using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, bounds))
                         {
                             for (var i = 0; i < word.Letters.Length; i++)
@@ -453,7 +453,7 @@ public class InViewTitle : Control
         }
         using (context.PushOpacity(opacity))
         {
-            var effect = TextEffectsBlur.Get(blur);
+            var effect = ArcBlur.Get(blur);
             if (effect is null)
             {
                 word.Layout.Draw(context, origin);

@@ -1,0 +1,139 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc .field: 1px Border, RadiusControl, Surface; BorderStrong while focused (no hover change); the root fades to
+        .55 when disabled. The shell is drawn here rather than with FieldFrame, whose state language differs (BorderStrong
+        at rest, Foreground on hover and focus). Its height is driven from code on the smooth spring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MentionInput}" TargetType="arc:MentionInput">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MentionInput">
+                <Panel>
+                    <Border Name="PART_Shell"
+                            BorderThickness="1"
+                            VerticalAlignment="Top"
+                            ClipToBounds="True">
+                        <arc:MentionInputTextBox Name="PART_TextBox"
+                                                 PlaceholderText="{TemplateBinding Placeholder}" />
+                    </Border>
+                    <arc:SpecialInputsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="SuggestionHighlight" Value="{arc:MentionInputTokenResource SuggestionHighlightFill}" />
+
+        <Style Selector="^ /template/ Border#PART_Shell">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        </Style>
+        <Style Selector="^:focus-within /template/ Border#PART_Shell">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:MentionInputTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- Arc: border-color and background-color transition fast / standard (kept as short fades when reduced). -->
+        <Style Selector="^:motion-full /template/ Border#PART_Shell">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Shell">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The editor: a plain TextBox whose text is transparent (caret Foreground, selection Accent 24% from code) over the
+        mirror that paints the same text. The padding sits inside the scroller, so text scrolls up to the border as in a
+        textarea; the scrollbar is hidden.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MentionInputTextBox}" TargetType="arc:MentionInputTextBox">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MentionInputTextBox">
+                <Panel Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Hidden"
+                                  IsScrollChainingEnabled="True"
+                                  BringIntoViewOnFocusChange="False">
+                        <Panel Margin="{TemplateBinding Padding}">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Top">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <arc:MentionInputMirror Name="PART_Mirror"
+                                                    TextBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                    PersonFill="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                    PersonForeground="{arc:ArcDesignTokenResource AccentStrong}"
+                                                    ChannelFill="{arc:MentionInputTokenResource ChannelTokenFill}"
+                                                    ChannelForeground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:MentionInputTextPresenter Name="PART_TextPresenter"
+                                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                                           LineHeight="{TemplateBinding LineHeight}"
+                                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                                           VerticalAlignment="Top" />
+                        </Panel>
+                    </ScrollViewer>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="LineHeight" Value="{arc:MentionInputTokenResource EditorLineHeight}" />
+        <Setter Property="LetterSpacing" Value="{arc:MentionInputTokenResource EditorLetterSpacing}" />
+        <Setter Property="Padding" Value="{arc:MentionInputTokenResource EditorPadding}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+    </ControlTheme>
+</ResourceDictionary>

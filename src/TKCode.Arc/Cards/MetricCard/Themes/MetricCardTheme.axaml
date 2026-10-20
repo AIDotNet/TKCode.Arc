@@ -45,11 +45,12 @@
                                                       Data="{TemplateBinding ChangeGlyph}"
                                                       IsVisible="{TemplateBinding ChangeGlyph, Converter={x:Static ObjectConverters.IsNotNull}}" />
                                         <!-- The chip's width springs to the new text instead of snapping. -->
-                                        <arc:MessagesSizeFrame Orientation="Horizontal" UseMorphSpring="True" ClipOverflow="0">
+                                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph" ClipOverflow="0" CrossClipOverflow="0">
                                             <arc:MessagesTextSwap Name="PART_Change"
+                                                                  HorizontalAlignment="Left"
                                                                   LineHeight="{arc:MetricCardTokenResource CopyLineHeight}"
                                                                   TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}" />
-                                        </arc:MessagesSizeFrame>
+                                        </arc:SpringSizeDecorator>
                                     </StackPanel>
                                 </Border>
                             </arc:PresenceHost>

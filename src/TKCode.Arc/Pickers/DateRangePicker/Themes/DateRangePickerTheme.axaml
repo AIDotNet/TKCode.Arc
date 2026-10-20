@@ -1,0 +1,318 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:DateRangePicker}" TargetType="arc:DateRangePicker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DateRangePicker">
+                <arc:Field Name="PART_Field"
+                           Label="{TemplateBinding Label}"
+                           IsLabelVisible="{TemplateBinding IsLabelVisible}"
+                           Description="{TemplateBinding Description}"
+                           ErrorMessage="{TemplateBinding ErrorMessage}">
+                    <Panel HorizontalAlignment="Left">
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="{arc:DateRangePickerTokenResource TriggerFocusRingMargin}"
+                                BorderThickness="2"
+                                CornerRadius="{arc:DateRangePickerTokenResource TriggerFocusRingRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Border Name="PART_Trigger"
+                                Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                                Padding="{arc:DateRangePickerTokenResource TriggerInset}"
+                                BorderThickness="1"
+                                CornerRadius="{arc:DateRangePickerTokenResource TriggerRadius}"
+                                BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:DateRangePickerTokenResource TriggerGap}">
+                                <arc:ArcGlyph Name="PART_TriggerIcon"
+                                              Data="{x:Static arc:ArcIcons.CalendarDays}"
+                                              Size="16"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:PickerRollText Name="PART_Value"
+                                                    VerticalAlignment="Center"
+                                                    Matching="Words"
+                                                    SegmentGap="0.28"
+                                                    EnterTravel="0.45"
+                                                    ExitTravel="0.45"
+                                                    EnterBlur="2"
+                                                    ExitBlur="2"
+                                                    EnterDuration="0:0:0.26"
+                                                    ExitDuration="0:0:0.14"
+                                                    LineHeight="{arc:DateRangePickerTokenResource ValueLineHeight}"
+                                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                    PlaceholderFontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                    Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                    PlaceholderForeground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Border>
+                        <arc:PickerMorphPopup Name="PART_Popup"
+                                              TakesFocusFromNativeControl="False"
+                                              WindowManagerAddShadowHint="False" />
+                    </Panel>
+                </arc:Field>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentSubtleBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="AccentForegroundBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="DayForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="DayMuted" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="DayHoverFill" Value="{arc:DateRangePickerTokenResource DayHoverFill}" />
+        <Setter Property="SurfaceFill" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="SurfaceBorder" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="RestShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        <Setter Property="OpenShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+
+        <!-- One material from trigger to panel: the raised surface with a resting shadow; hover tints it and darkens the border. -->
+        <Style Selector="^ /template/ Border#PART_Trigger">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:not(:open) /template/ Border#PART_Trigger:pointerover">
+            <Setter Property="Background" Value="{arc:DateRangePickerTokenResource TriggerHoverFill}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled /template/ Border#PART_Trigger">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Trigger">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DateRangePickerPanel}" TargetType="arc:DateRangePickerPanel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DateRangePickerPanel">
+                <Border Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <StackPanel Name="PART_Body" Orientation="Horizontal">
+                            <Border Name="PART_RailFrame"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    AutomationProperties.Name="Presets">
+                                <ScrollViewer Name="PART_RailScroll"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <Panel>
+                                        <arc:DateRangePickerRailHighlight Name="PART_RailHighlight"
+                                                                          Fill="{arc:DateRangePickerTokenResource RailHighlightFill}" />
+                                        <StackPanel Name="PART_Rail" Spacing="2" />
+                                    </Panel>
+                                </ScrollViewer>
+                            </Border>
+                            <Panel Name="PART_Calendars" Background="Transparent">
+                                <Decorator Name="PART_MonthsHost" />
+                                <arc:Button Name="PART_Previous"
+                                            Classes="drp-nav"
+                                            Variant="Ghost"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}" Size="16" />
+                                </arc:Button>
+                                <arc:Button Name="PART_Next"
+                                            Classes="drp-nav"
+                                            Variant="Ghost"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}" Size="16" />
+                                </arc:Button>
+                            </Panel>
+                        </StackPanel>
+                        <Border Name="PART_Footer"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <DockPanel>
+                                <StackPanel Name="PART_Actions"
+                                            DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:DateRangePickerTokenResource ActionsGap}">
+                                    <arc:Button Name="PART_Cancel" Classes="drp-action" Variant="Ghost" />
+                                    <arc:Button Name="PART_Apply" Classes="drp-action drp-apply" Variant="Primary" />
+                                </StackPanel>
+                                <StackPanel VerticalAlignment="Center" Spacing="1" Margin="0,0,12,0">
+                                    <Border Name="PART_SummarySlot"
+                                            HorizontalAlignment="Left"
+                                            Height="{arc:DateRangePickerTokenResource ValueLineHeight}" />
+                                    <arc:PickerRollText Name="PART_Count"
+                                                        HorizontalAlignment="Left"
+                                                        MinHeight="{arc:DateRangePickerTokenResource CountLineHeight}"
+                                                        Matching="Words"
+                                                        SegmentGap="0.28"
+                                                        EnterTravel="0.45"
+                                                        ExitTravel="0.45"
+                                                        EnterBlur="2"
+                                                        ExitBlur="2"
+                                                        EnterDuration="0:0:0.26"
+                                                        ExitDuration="0:0:0.14"
+                                                        FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                        <TextBlock Name="PART_Live"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource PanelInset}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <!-- Base values that the compact layout changes live in styles (template values from token resources are local). -->
+        <Style Selector="^ /template/ StackPanel#PART_Body">
+            <Setter Property="Spacing" Value="{arc:DateRangePickerTokenResource BodyGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_RailFrame">
+            <Setter Property="Width" Value="{arc:DateRangePickerTokenResource RailWidth}" />
+            <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource RailInset}" />
+            <Setter Property="BorderThickness" Value="0,0,1,0" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_Calendars">
+            <Setter Property="Margin" Value="{arc:DateRangePickerTokenResource CalendarsInset}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Margin" Value="{arc:DateRangePickerTokenResource FooterMargin}" />
+            <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource FooterInset}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource PanelCompactInset}" />
+            <Style Selector="^ /template/ StackPanel#PART_Body">
+                <Setter Property="Orientation" Value="Vertical" />
+                <Setter Property="Spacing" Value="{arc:DateRangePickerTokenResource BodyCompactGap}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_RailFrame">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource RailCompactInset}" />
+                <Setter Property="Margin" Value="{arc:DateRangePickerTokenResource RailCompactMargin}" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_Calendars">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="Margin" Value="{arc:DateRangePickerTokenResource FooterCompactMargin}" />
+                <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource FooterCompactInset}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ /template/ arc|Button.drp-nav">
+            <Setter Property="Width" Value="{arc:DateRangePickerTokenResource NavButtonSize}" />
+            <Setter Property="Height" Value="{arc:DateRangePickerTokenResource NavButtonSize}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.drp-nav:disabled">
+            <Setter Property="Opacity" Value="{arc:DateRangePickerTokenResource NavDisabledOpacity}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.drp-action">
+            <Setter Property="Height" Value="{arc:DateRangePickerTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource ActionInset}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <!-- Apply is the accent action (Arc's .primary in this component), not the neutral Button primary. -->
+        <Style Selector="^ /template/ arc|Button.drp-apply">
+            <Setter Property="MinWidth" Value="{arc:DateRangePickerTokenResource ApplyMinWidth}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.drp-apply:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.drp-apply:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.drp-apply:disabled">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="Opacity" Value="{arc:DateRangePickerTokenResource ApplyDisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DateRangePickerPresetButton}" TargetType="arc:DateRangePickerPresetButton">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DateRangePickerPresetButton">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"
+                                      Content="{TemplateBinding Content}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:DateRangePickerTokenResource PresetHeight}" />
+        <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource PresetInset}" />
+        <Setter Property="CornerRadius" Value="{arc:DateRangePickerTokenResource PresetRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Style Selector="^:active">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover:not(:active)">
+            <Setter Property="Background" Value="{arc:DateRangePickerTokenResource PresetHoverFill}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:DateRangePickerTokenResource PresetFocusFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

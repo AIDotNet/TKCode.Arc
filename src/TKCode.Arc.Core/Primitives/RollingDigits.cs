@@ -7,6 +7,16 @@ using Avalonia.Media;
 
 namespace TKCode.Arc.Primitives;
 
+/// <summary>How a digit fades as it rolls away from the reading line.</summary>
+public enum RollingDigitsFalloff
+{
+    /// <summary>Opacity falls linearly with the distance (1 − d).</summary>
+    Linear,
+
+    /// <summary>Arc's number-field wheel: stays solid longer, then fades (1 − 1.1·d^1.5).</summary>
+    Eased
+}
+
 /// <summary>
 /// P14 odometer: every digit is a wheel of ten glyphs keyed by place value (999 → 1,000 keeps the ones column),
 /// turning in the direction the whole number moved. New columns grow in on the morph spring; changes ride the
@@ -39,6 +49,26 @@ public class RollingDigits : Control
     public static readonly StyledProperty<bool> UseGroupingProperty =
         AvaloniaProperty.Register<RollingDigits, bool>(nameof(UseGrouping), true);
 
+    /// <summary>Spring for changes after the first reveal (Arc's counters use smooth; its number field uses snappy).</summary>
+    public static readonly StyledProperty<ArcSpring> WheelSpringProperty =
+        AvaloniaProperty.Register<RollingDigits, ArcSpring>(nameof(WheelSpring), ArcSpring.Smooth);
+
+    /// <summary>When true each wheel turns the short way round (9 → 0 goes up by one) instead of following the value.</summary>
+    public static readonly StyledProperty<bool> IsShortestTurnProperty =
+        AvaloniaProperty.Register<RollingDigits, bool>(nameof(IsShortestTurn));
+
+    /// <summary>Distance between neighbouring glyphs on a wheel, in em (Arc's number field spaces them 1.05em apart).</summary>
+    public static readonly StyledProperty<double> GlyphPitchProperty =
+        AvaloniaProperty.Register<RollingDigits, double>(nameof(GlyphPitch), 1.0);
+
+    /// <summary>How rolling glyphs fade with their distance from the reading line.</summary>
+    public static readonly StyledProperty<RollingDigitsFalloff> FalloffProperty =
+        AvaloniaProperty.Register<RollingDigits, RollingDigitsFalloff>(nameof(Falloff));
+
+    /// <summary>When true value changes jump without rolling (for example while the number is being typed).</summary>
+    public static readonly StyledProperty<bool> IsInstantProperty =
+        AvaloniaProperty.Register<RollingDigits, bool>(nameof(IsInstant));
+
     public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<RollingDigits>();
     public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<RollingDigits>();
     public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<RollingDigits>();
@@ -51,6 +81,11 @@ public class RollingDigits : Control
     public string CultureName { get => GetValue(CultureNameProperty); set => SetValue(CultureNameProperty, value); }
     public bool IsArmed { get => GetValue(IsArmedProperty); set => SetValue(IsArmedProperty, value); }
     public bool UseGrouping { get => GetValue(UseGroupingProperty); set => SetValue(UseGroupingProperty, value); }
+    public ArcSpring WheelSpring { get => GetValue(WheelSpringProperty); set => SetValue(WheelSpringProperty, value); }
+    public bool IsShortestTurn { get => GetValue(IsShortestTurnProperty); set => SetValue(IsShortestTurnProperty, value); }
+    public double GlyphPitch { get => GetValue(GlyphPitchProperty); set => SetValue(GlyphPitchProperty, value); }
+    public RollingDigitsFalloff Falloff { get => GetValue(FalloffProperty); set => SetValue(FalloffProperty, value); }
+    public bool IsInstant { get => GetValue(IsInstantProperty); set => SetValue(IsInstantProperty, value); }
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
@@ -58,6 +93,9 @@ public class RollingDigits : Control
 
     /// <summary>The plain text currently shown (for accessibility).</summary>
     public string DisplayText { get; private set; } = string.Empty;
+
+    /// <summary>Wheel targets of the digit columns, most significant first (tests: which way the wheels turned).</summary>
+    internal IReadOnlyList<double> WheelTargets => _columns.Where(c => c.IsDigit && !c.Leaving).Select(c => c.Target).ToList();
 
     private string _formatted = string.Empty;
 
@@ -86,7 +124,7 @@ public class RollingDigits : Control
     static RollingDigits()
     {
         AffectsMeasure<RollingDigits>(FontFamilyProperty, FontSizeProperty, FontWeightProperty, PrefixProperty, SuffixProperty);
-        AffectsRender<RollingDigits>(ForegroundProperty);
+        AffectsRender<RollingDigits>(ForegroundProperty, GlyphPitchProperty, FalloffProperty);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -180,7 +218,7 @@ public class RollingDigits : Control
             }
         }
 
-        var animate = IsLoaded && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
+        var animate = IsLoaded && !IsInstant && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
         var reduced = ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
         var existing = _columns.Where(c => !c.Leaving).ToDictionary(c => c.Key);
         var next = new List<Column>(wanted.Count);
@@ -241,20 +279,24 @@ public class RollingDigits : Control
         var delta = _direction < 0 && column.Revealed
             ? -((column.Digit - digit + 10) % 10)
             : (digit - column.Digit + 10) % 10;
+        if (IsShortestTurn && Math.Abs(delta) > 5)
+        {
+            delta -= Math.Sign(delta) * 10;
+        }
         column.Target += delta;
         column.Digit = digit;
         if (IsArmed)
         {
             return;
         }
-        if (reduced || !IsLoaded)
+        if (reduced || !IsLoaded || IsInstant)
         {
             column.Position?.Jump(column.Target);
         }
         else
         {
             var spec = column.Revealed
-                ? MotionSpec.Spring(ArcSpring.Smooth)
+                ? MotionSpec.Spring(WheelSpring)
                 : MotionSpec.Spring(SpringSpec.FromVisual(0.48, 0), TimeSpan.FromSeconds(Math.Min(column.Order * 0.035, 0.25)));
             _ = column.Position?.AnimateTo(column.Target, spec);
         }
@@ -359,6 +401,8 @@ public class RollingDigits : Control
             x += prefix.WidthIncludingTrailingWhitespace;
         }
         var feather = FontSize * 0.16;
+        var pitch = FontSize * GlyphPitch;
+        var eased = Falloff == RollingDigitsFalloff.Eased;
         foreach (var column in _columns)
         {
             var width = ColumnWidth(column);
@@ -384,9 +428,10 @@ public class RollingDigits : Control
                         }
                         var glyph = _digitGlyphs[d]!;
                         var gx = cellX + (_cellWidth - glyph.WidthIncludingTrailingWhitespace) / 2;
-                        using (context.PushOpacity(1 - abs))
+                        var opacity = eased ? Math.Max(0, 1 - Math.Pow(abs, 1.5) * 1.1) : 1 - abs;
+                        using (context.PushOpacity(opacity))
                         {
-                            context.DrawText(glyph, new Point(gx, offset * FontSize));
+                            context.DrawText(glyph, new Point(gx, offset * pitch));
                         }
                     }
                 }

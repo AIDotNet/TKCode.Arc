@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The row's More actions button anchors a menu, so a press answers with color, never scale. -->
+    <ControlTheme x:Key="SwipeActionsMoreTheme" TargetType="arc:Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Arc draws its own focus indication; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:SwipeActionsRowTokenResource MoreRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:SwipeActionsRowTokenResource MoreRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:SwipeActionsRowTokenResource MoreExtent}" />
+        <Setter Property="Height" Value="{arc:SwipeActionsRowTokenResource MoreExtent}" />
+        <Setter Property="CornerRadius" Value="{arc:SwipeActionsRowTokenResource MoreRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^:pointerover, ^:pressed, ^:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One row: revealed actions drawn underneath, the content on top following the swipe by transform only. -->
+    <ControlTheme x:Key="{x:Type arc:SwipeActionsRow}" TargetType="arc:SwipeActionsRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SwipeActionsRow">
+                <Panel>
+                    <arc:SwipeActionsRowLayers Name="PART_Actions" ActionExtent="{TemplateBinding ActionExtent}" />
+                    <Panel Name="PART_ContentHost">
+                        <Border Name="PART_Body"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                MinHeight="{arc:SwipeActionsRowTokenResource MinRowHeight}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:SwipeActionsRowTokenResource BodyGap}">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="Center" />
+                                <arc:SwipeActionsMoreButton Name="PART_MoreButton"
+                                                            Grid.Column="1"
+                                                            Theme="{StaticResource SwipeActionsMoreTheme}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}"
+                                                  Size="{arc:SwipeActionsRowTokenResource MoreGlyphExtent}"
+                                                  StrokeThickness="{arc:SwipeActionsRowTokenResource GlyphStroke}" />
+                                </arc:SwipeActionsMoreButton>
+                            </Grid>
+                        </Border>
+                        <Border Name="PART_Separator"
+                                Height="1"
+                                VerticalAlignment="Bottom"
+                                IsHitTestVisible="False"
+                                Background="{arc:ArcDesignTokenResource Border}" />
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:SwipeActionsRowTokenResource BodyInset}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="ActionExtent" Value="{arc:SwipeActionsRowTokenResource ActionExtent}" />
+        <Setter Property="MenuMinWidth" Value="{arc:SwipeActionsRowTokenResource MenuMinWidth}" />
+        <Setter Property="ClipToBounds" Value="True" />
+
+        <Style Selector="^ /template/ arc|SwipeActionsRowLayers#PART_Actions">
+            <Setter Property="NeutralFill" Value="{arc:SwipeActionsRowTokenResource NeutralActionColor}" />
+            <Setter Property="NeutralInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="AccentFill" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="DangerFill" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="GlyphExtent" Value="{arc:SwipeActionsRowTokenResource ActionGlyphExtent}" />
+            <Setter Property="GlyphGap" Value="{arc:SwipeActionsRowTokenResource ActionGlyphGap}" />
+            <Setter Property="GlyphStroke" Value="{arc:SwipeActionsRowTokenResource GlyphStroke}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:not(:has-actions) /template/ arc|SwipeActionsMoreButton#PART_MoreButton">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!-- While the content follows a finger the More button stays quiet. -->
+        <Style Selector="^:dragging /template/ arc|SwipeActionsMoreButton#PART_MoreButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

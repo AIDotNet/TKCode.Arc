@@ -1,16 +1,15 @@
 using TKCode.Arc.Motion;
 using Avalonia;
-using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace TKCode.Arc.Primitives;
 
 /// <summary>
 /// P21 loading ring: a 1.5px ring with one open quarter, spinning once every 0.7s (linear).
-/// Spins only while visible and attached; static under reduced motion.
+/// Spins on a Core <see cref="LiveLoop"/> only while attached, visible and in view at full motion, keeping its phase
+/// when it pauses; static under reduced motion. The ring geometry and pen are cached, so a frame allocates nothing.
 /// </summary>
 public class ArcSpinner : Control
 {
@@ -20,15 +19,8 @@ public class ArcSpinner : Control
     public static readonly StyledProperty<double> ThicknessProperty =
         AvaloniaProperty.Register<ArcSpinner, double>(nameof(Thickness), 1.5);
 
-    /// <summary>Current rotation in degrees (animated while spinning).</summary>
-    public static readonly StyledProperty<double> AngleProperty =
-        AvaloniaProperty.Register<ArcSpinner, double>(nameof(Angle));
-
-    public double Angle
-    {
-        get => GetValue(AngleProperty);
-        set => SetValue(AngleProperty, value);
-    }
+    /// <summary>One turn in seconds (Arc: 0.7s).</summary>
+    private const double TurnSeconds = 0.7;
 
     public IBrush? Foreground
     {
@@ -42,66 +34,48 @@ public class ArcSpinner : Control
         set => SetValue(ThicknessProperty, value);
     }
 
-    private static readonly Animation s_spin = new()
-    {
-        Duration = TimeSpan.FromSeconds(0.7),
-        IterationCount = IterationCount.Infinite,
-        Children =
-        {
-            new KeyFrame { Cue = new Cue(0), Setters = { new Setter(AngleProperty, 0d) } },
-            new KeyFrame { Cue = new Cue(1), Setters = { new Setter(AngleProperty, 360d) } }
-        }
-    };
+    /// <summary>Current rotation in degrees.</summary>
+    public double Angle => _angle;
 
-    private CancellationTokenSource? _spinCts;
+    /// <summary>True while frames are being delivered (attached, visible, in view, full motion).</summary>
+    public bool IsSpinning => _loop.IsRunning;
+
+    private readonly LiveLoop _loop;
+    private double _angle;
+    private StreamGeometry? _ring;
+    private Size _ringSize;
+    private double _ringThickness;
+    private Pen? _pen;
 
     static ArcSpinner()
     {
-        AffectsRender<ArcSpinner>(ForegroundProperty, ThicknessProperty, AngleProperty);
+        AffectsRender<ArcSpinner>(ForegroundProperty, ThicknessProperty);
         IsHitTestVisibleProperty.OverrideDefaultValue<ArcSpinner>(false);
         WidthProperty.OverrideDefaultValue<ArcSpinner>(16);
         HeightProperty.OverrideDefaultValue<ArcSpinner>(16);
     }
 
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    public ArcSpinner()
     {
-        base.OnAttachedToVisualTree(e);
-        UpdateSpin();
+        // An infinite Avalonia Animation cannot be started with RunAsync (it throws), and a loop must pause when unseen.
+        _loop = new LiveLoop(this, Step);
+        _loop.Start();
     }
 
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    private bool Step(double seconds)
     {
-        base.OnDetachedFromVisualTree(e);
-        StopSpin();
+        _angle = (_angle + seconds / TurnSeconds * 360) % 360;
+        InvalidateVisual();
+        return true;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsVisibleProperty || change.Property == ArcMotion.LevelProperty)
+        if (change.Property == ForegroundProperty || change.Property == ThicknessProperty)
         {
-            UpdateSpin();
+            _pen = null;
         }
-    }
-
-    private void UpdateSpin()
-    {
-        var shouldSpin = IsVisible && TopLevel.GetTopLevel(this) is not null && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
-        if (shouldSpin && _spinCts is null)
-        {
-            _spinCts = new CancellationTokenSource();
-            _ = s_spin.RunAsync(this, _spinCts.Token);
-        }
-        else if (!shouldSpin)
-        {
-            StopSpin();
-        }
-    }
-
-    private void StopSpin()
-    {
-        _spinCts?.Cancel();
-        _spinCts = null;
     }
 
     public override void Render(DrawingContext context)
@@ -112,9 +86,27 @@ public class ArcSpinner : Control
             return;
         }
         var t = Thickness;
-        var size = Math.Min(Bounds.Width, Bounds.Height);
-        var radius = (size - t) / 2;
-        var center = new Point(Bounds.Width / 2, Bounds.Height / 2);
+        var size = Bounds.Size;
+        if (_ring is null || _ringSize != size || _ringThickness != t)
+        {
+            _ring = CreateRing(size, t);
+            _ringSize = size;
+            _ringThickness = t;
+        }
+        _pen ??= new Pen(brush, t);
+        var center = new Point(size.Width / 2, size.Height / 2);
+        using (context.PushTransform(Matrix.CreateTranslation(-center.X, -center.Y) *
+                                     Matrix.CreateRotation(_angle * Math.PI / 180.0) *
+                                     Matrix.CreateTranslation(center.X, center.Y)))
+        {
+            context.DrawGeometry(null, _pen, _ring);
+        }
+    }
+
+    private static StreamGeometry CreateRing(Size size, double thickness)
+    {
+        var radius = (Math.Min(size.Width, size.Height) - thickness) / 2;
+        var center = new Point(size.Width / 2, size.Height / 2);
         var geometry = new StreamGeometry();
         using (var ctx = geometry.Open())
         {
@@ -125,11 +117,6 @@ public class ArcSpinner : Control
             ctx.ArcTo(end, new Size(radius, radius), 0, true, SweepDirection.Clockwise);
             ctx.EndFigure(false);
         }
-        using (context.PushTransform(Matrix.CreateTranslation(-center.X, -center.Y) *
-                                     Matrix.CreateRotation(Angle * Math.PI / 180.0) *
-                                     Matrix.CreateTranslation(center.X, center.Y)))
-        {
-            context.DrawGeometry(null, new Pen(brush, t), geometry);
-        }
+        return geometry;
     }
 }

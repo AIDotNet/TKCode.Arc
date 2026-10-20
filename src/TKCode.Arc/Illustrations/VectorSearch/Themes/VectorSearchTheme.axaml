@@ -1,0 +1,91 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Illustration frame: a Surface card (RadiusSurface, 1px Border) over a dotted backdrop; the scene canvas scales
+        to the width it is given; under it one caption line (BlurSwap) and the play / pause button. Colors reach the
+        canvas through the token setters below and are cached in its palette.
+    -->
+    <ControlTheme x:Key="{x:Type arc:VectorSearch}" TargetType="arc:VectorSearch">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:VectorSearch">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Panel>
+                            <arc:IllustrationDots DotBrush="{arc:ArcDesignTokenResource Border}" />
+                            <DockPanel Margin="{TemplateBinding Padding}">
+                                <DockPanel Name="PART_Footer" DockPanel.Dock="Bottom" Margin="0,12,0,0">
+                                    <arc:IllustrationPlayButton Name="PART_Play"
+                                                                DockPanel.Dock="Right"
+                                                                Margin="12,0,0,0"
+                                                                IsVisible="{TemplateBinding IsPlaybackButtonVisible}">
+                                        <arc:ArcContentSwap Mode="Pop" />
+                                    </arc:IllustrationPlayButton>
+                                    <arc:ArcContentSwap Name="PART_Caption"
+                                                        Mode="BlurSwap"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Left"
+                                                        IsVisible="{TemplateBinding IsCaptionVisible}"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </DockPanel>
+                                <arc:IllustrationCanvas Name="PART_Canvas" />
+                            </DockPanel>
+                        </Panel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:VectorSearchTokenResource FramePadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="MonoFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="TextSizeXS" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TextSizeSM" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="LineBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SubtleLineBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="StrongLineBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="SurfaceMutedBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="RaisedBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentSubtleBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="AccentForegroundBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="RestingShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        <Setter Property="NodeRadius" Value="{arc:VectorSearchTokenResource NodeRadius}" />
+        <Setter Property="PacketSize" Value="{arc:VectorSearchTokenResource PacketSize}" />
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- The still poster frame has nothing to play. -->
+        <Style Selector="^:poster /template/ arc|IllustrationPlayButton#PART_Play">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

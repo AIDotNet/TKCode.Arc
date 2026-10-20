@@ -307,8 +307,8 @@ public class ConfirmMorph : TemplatedControl
     private MotionValue<double>? _width;
     private int _flight;
     private PausableTimer? _timeout;
-    private ButtonsTimeline? _countdown;
-    private ButtonsHoldProgress? _hold;
+    private MotionTimeline? _countdown;
+    private MotionTimeline? _hold;
     private bool _holdingByKey;
     private TopLevel? _outsideWatch;
     private Window? _window;
@@ -521,10 +521,12 @@ public class ConfirmMorph : TemplatedControl
         _countdown.Start(TimeSpan.FromSeconds(seconds));
     }
 
-    private ButtonsTimeline CreateCountdown()
+    private MotionTimeline CreateCountdown()
     {
-        var timeline = new ButtonsTimeline(this, () => _ = PerformAsync(Work.Confirm));
-        timeline.Tick += p =>
+        // P22: the Core timeline keeps time with a pausable timer and reports every frame, at every motion level.
+        var timeline = new MotionTimeline(this);
+        timeline.Completed += () => _ = PerformAsync(Work.Confirm);
+        timeline.Changed += p =>
         {
             var remaining = 1 - p;
             CountdownProgress = remaining;
@@ -1184,17 +1186,19 @@ public class ConfirmMorph : TemplatedControl
         }
     }
 
-    private ButtonsHoldProgress Hold
+    private MotionTimeline Hold
     {
         get
         {
             if (_hold is null)
             {
-                _hold = new ButtonsHoldProgress(this, () =>
+                // P22: holding runs the timeline from wherever the fill is; letting go early rewinds on a spring.
+                _hold = new MotionTimeline(this);
+                _hold.Completed += () =>
                 {
                     _holdingByKey = false;
                     _ = PerformAsync(Work.Confirm);
-                });
+                };
                 _hold.Changed += _ => UpdateHoldFill();
             }
             return _hold;
@@ -1207,18 +1211,18 @@ public class ConfirmMorph : TemplatedControl
         {
             return;
         }
-        Hold.Begin(HoldDuration);
+        Hold.Start(HoldDuration, Hold.Value);
     }
 
     private void ReleaseHold()
     {
-        if (_hold is not { IsHolding: true })
+        if (_hold is not { IsActive: true })
         {
             return;
         }
         if (_hold.Value < 1)
         {
-            _hold.Release(HoldRewind);
+            _hold.Rewind(HoldRewind);
             _status?.Announce($"Keep holding to {ConfirmLabel.ToLowerInvariant()}");
         }
     }

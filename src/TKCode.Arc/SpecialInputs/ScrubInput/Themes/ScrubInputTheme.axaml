@@ -1,0 +1,277 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The number editor: a frameless text box (Arc .input). -->
+    <ControlTheme x:Key="{x:Type arc:ScrubInputEditor}" TargetType="arc:ScrubInputEditor">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ScrubInputEditor">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="NoWrap"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}"
+                                       VerticalAlignment="Center" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Padding" Value="{arc:ScrubInputTokenResource EditorPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:FieldTextBoxTokenResource SelectionFill}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The unit: plain muted text, or a button that cycles the units (Arc .unit / .unit[data-cycle]). -->
+    <ControlTheme x:Key="{x:Type arc:ScrubInputUnitButton}" TargetType="arc:ScrubInputUnitButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ScrubInputUnitButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <arc:ScrubInputUnitSwap Name="PART_Swap"
+                                                Text="{TemplateBinding Unit}"
+                                                IsAnimated="{TemplateBinding IsCycling}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ScrubInputTokenResource UnitFocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ScrubInputTokenResource UnitFocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="MinWidth" Value="{arc:ScrubInputTokenResource UnitMinWidth}" />
+        <Setter Property="Height" Value="{arc:ScrubInputTokenResource UnitHeight}" />
+        <Setter Property="Padding" Value="{arc:ScrubInputTokenResource UnitPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ScrubInputTokenResource UnitRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^:cycle">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:cycle:hover-fine:not(:disabled)">
+            <Setter Property="Background" Value="{arc:ScrubInputTokenResource UnitHoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:cycle:pressed:not(:motion-reduced)">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Colours and the press scale on fast + standard; reduced motion: instant colours, no scale. -->
+        <Style Selector="^:cycle:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:cycle:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ScrubInput}" TargetType="arc:ScrubInput">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ScrubInput">
+                <Panel Name="PART_Root">
+                    <!-- The shell is a layer behind the row, so it can strain past a limit without stretching the text. -->
+                    <arc:ScrubInputShell Name="PART_Shell" />
+                    <Grid ColumnDefinitions="Auto,*">
+                        <!-- The label is the grab area. -->
+                        <ContentPresenter Name="PART_Handle"
+                                          Grid.Column="0"
+                                          Background="Transparent"
+                                          Content="{TemplateBinding Label}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center"
+                                          VerticalAlignment="Stretch" />
+                        <Border Name="PART_Body" Grid.Column="1">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <arc:ScrubInputEditor Name="PART_Editor" Grid.Column="0" />
+                                <arc:ScrubInputUnitButton Name="PART_Unit" Grid.Column="1" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <!-- The modifier tag (×10 / ×0.1) floats 6px above the field while a scrub uses Shift or Alt. -->
+                    <Border Name="PART_Tag"
+                            IsHitTestVisible="False"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            RenderTransformOrigin="50%,50%">
+                        <TextBlock Name="PART_TagText" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^[Size=Small]">
+            <Setter Property="Height" Value="{arc:ScrubInputTokenResource ShellHeightSM}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ScrubInputTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- Base values that states change live in untriggered styles (template-local values cannot be overridden). -->
+        <Style Selector="^ /template/ ContentPresenter#PART_Handle">
+            <Setter Property="MinWidth" Value="{arc:ScrubInputTokenResource HandleMinWidth}" />
+            <Setter Property="Padding" Value="{arc:ScrubInputTokenResource HandlePadding}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="SizeWestEast" />
+        </Style>
+        <Style Selector="^:text-label /template/ ContentPresenter#PART_Handle">
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+        <Style Selector="^:handle-hover /template/ ContentPresenter#PART_Handle">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:scrubbing /template/ ContentPresenter#PART_Handle">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled /template/ ContentPresenter#PART_Handle">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Body">
+            <Setter Property="Padding" Value="{arc:ScrubInputTokenResource BodyPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ScrubInputUnitButton#PART_Unit">
+            <Setter Property="Margin" Value="{arc:ScrubInputTokenResource UnitMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Tag">
+            <Setter Property="Margin" Value="{arc:ScrubInputTokenResource TagMargin}" />
+            <Setter Property="Padding" Value="{arc:ScrubInputTokenResource TagPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_TagText">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:ScrubInputTokenResource TagLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="ShellBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="ShellBorderBrush" Value="Transparent" />
+            <Setter Property="TrackBrush" Value="{arc:ScrubInputTokenResource TrackFill}" />
+            <Setter Property="CornerRadius" Value="{arc:ScrubInputTokenResource ShellRadius}" />
+        </Style>
+        <Style Selector="^[Size=Small] /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="CornerRadius" Value="{arc:ScrubInputTokenResource ShellRadiusSM}" />
+        </Style>
+
+        <!-- Hover and focus speak through the shell's edge; a scrub darkens the label and the wash. The order mirrors
+             Arc's CSS cascade: the hover rules have the highest specificity and win over scrubbing and invalid. -->
+        <Style Selector="^:focus-within /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="ShellBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="ShellBackground" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:scrubbing /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="ShellBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="TrackBrush" Value="{arc:ScrubInputTokenResource TrackFillActive}" />
+        </Style>
+        <Style Selector="^:invalid /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="ShellBorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="ShellBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:hover:focus-within /template/ arc|ScrubInputShell#PART_Shell">
+            <Setter Property="ShellBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <!-- Colours on fast + standard ease; reduced motion: the instant duration. -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ScrubInputShell#PART_Shell">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="ShellBackground" />
+                        <arc:ArcBrushTransition Property="ShellBorderBrush" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Handle">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ arc|ScrubInputShell#PART_Shell">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="ShellBackground" Tween="Instant" />
+                        <arc:ArcBrushTransition Property="ShellBorderBrush" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Handle">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

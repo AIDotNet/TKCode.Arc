@@ -1,5 +1,7 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.Docs;
+using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -14,11 +16,15 @@ namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
 /// One component page, laid out like a uiarc.dev docs page: breadcrumb, title, summary, usage and status, the
-/// Preview tab, the examples, and a sticky "On this page" list that follows the scroll position.
+/// Preview and Code tabs, the examples, and a sticky "On this page" list that follows the scroll position. Code shows
+/// the component's Markdown page (<see cref="GalleryDocs"/>) in the current AtomUI language and follows language
+/// changes.
 /// </summary>
 public sealed class GalleryPageView : Grid
 {
     private const double MainWidth = 780;
+    // Docs tables need more room than the examples; Arc's docs column is about 890 wide.
+    private const double CodeWidth = 880;
     private const double TocWidth = 196;
     private const double TocMinimumPageWidth = 960;
 
@@ -27,27 +33,36 @@ public sealed class GalleryPageView : Grid
     private readonly Border _padding = new();
     private readonly List<GallerySection> _sections;
     private readonly GalleryToc? _toc;
+    private readonly Control _body;
+    private readonly Panel _content = new();
+    private readonly ColumnDefinition _mainColumn = new(GridLength.Star) { MaxWidth = MainWidth };
+    private readonly PageTab _previewTab = new(GalleryShellLangResourceKind.Preview, ArcIcons.Eye);
+    private readonly PageTab _codeTab = new(GalleryShellLangResourceKind.Code, GalleryIcons.Code);
+    private readonly TextBlock _live = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 13);
+    private readonly CopyButton _copyMarkdown = new() { Variant = CopyButtonVariant.Plain, IsVisible = false };
+    private readonly TextBlock _summary = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 16);
+    private Markdown? _code;
     private MotionValue<double>? _scrollY;
 
     public GalleryPageView(GalleryEntry entry, Control body, bool implemented)
     {
         _entry = entry;
+        _body = body;
         _sections = body.GetLogicalDescendants().OfType<GallerySection>().ToList();
 
         var column = new StackPanel();
         column.Children.Add(BuildBreadcrumb(entry));
         column.Children.Add(Spaced(GalleryUi.Text(entry.Title, ArcDesignTokenKind.Foreground, 44), top: 14));
-        var summary = GalleryUi.Text(entry.Description, ArcDesignTokenKind.TextSecondary, 16);
-        summary.MaxWidth = 640;
-        summary.HorizontalAlignment = HorizontalAlignment.Left;
-        column.Children.Add(Spaced(summary, top: 12));
+        _summary.MaxWidth = 640;
+        _summary.HorizontalAlignment = HorizontalAlignment.Left;
+        column.Children.Add(Spaced(_summary, top: 12));
         column.Children.Add(Spaced(BuildUsage(entry, implemented), top: 24));
         column.Children.Add(Spaced(BuildTabs(), top: 40));
-        column.Children.Add(Spaced(body, top: 32));
+        _content.Children.Add(body);
+        column.Children.Add(Spaced(_content, top: 32));
 
         // The main column fills the page up to MainWidth and stays left; a hugging panel would resize with its content.
-        var fixedWidth = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-        fixedWidth.ColumnDefinitions[0].MaxWidth = MainWidth;
+        var fixedWidth = new Grid { ColumnDefinitions = { _mainColumn, new ColumnDefinition(GridLength.Auto) } };
         fixedWidth.Children.Add(column);
 
         _padding.Padding = new Thickness(56, 36, 56, 96);
@@ -57,7 +72,7 @@ public sealed class GalleryPageView : Grid
 
         if (_sections.Count >= 2)
         {
-            _toc = new GalleryToc(_sections.Select(s => s.Title).ToList(), ScrollToSection, () => ScrollTo(0), OpenOriginal)
+            _toc = new GalleryToc(_sections.Select(s => s.Title).ToList(), ScrollToSection, () => ScrollTo(0), entry.IsArc ? OpenOriginal : null)
             {
                 Width = TocWidth,
                 HorizontalAlignment = HorizontalAlignment.Right,
@@ -69,6 +84,14 @@ public sealed class GalleryPageView : Grid
             _scroll.ScrollChanged += (_, _) => UpdateActiveSection();
             _scroll.AddHandler(PointerWheelChangedEvent, (_, _) => StopScrollAnimation(), Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
         }
+
+        GalleryText.Bind(_live, TextBlock.TextProperty, GalleryShellLangResourceKind.LivePreview);
+        GalleryText.Bind(_copyMarkdown, CopyButton.LabelProperty, GalleryShellLangResourceKind.CopyMarkdown);
+        GalleryText.Bind(_copyMarkdown, CopyButton.CopiedLabelProperty, GalleryShellLangResourceKind.Copied);
+        GalleryText.Bind(_copyMarkdown, CopyButton.FailedLabelProperty, GalleryShellLangResourceKind.Failed);
+        // The summary and the Code tab are the page text that comes from the docs, in the current language.
+        RefreshLanguage();
+        GalleryText.Track(this, RefreshLanguage);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -82,7 +105,8 @@ public sealed class GalleryPageView : Grid
 
     private void UpdateToc()
     {
-        var visible = _toc is not null && Bounds.Width >= TocMinimumPageWidth;
+        // The list follows the examples, so it belongs to the Preview tab.
+        var visible = _toc is not null && !IsShowingCode && Bounds.Width >= TocMinimumPageWidth;
         if (_toc is not null && _toc.IsVisible != visible)
         {
             _toc.IsVisible = visible;
@@ -100,7 +124,9 @@ public sealed class GalleryPageView : Grid
     private static Control BuildBreadcrumb(GalleryEntry entry)
     {
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        row.Children.Add(GalleryUi.Text("Components", ArcDesignTokenKind.TextMuted, 13));
+        var components = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 13);
+        GalleryText.Bind(components, TextBlock.TextProperty, GalleryShellLangResourceKind.Components);
+        row.Children.Add(components);
         row.Children.Add(GalleryUi.Glyph(ArcIcons.ChevronRight, 12, ArcDesignTokenKind.TextMuted));
         row.Children.Add(GalleryUi.Text(entry.Title, ArcDesignTokenKind.Foreground, 13));
         return row;
@@ -115,20 +141,23 @@ public sealed class GalleryPageView : Grid
         }
         left.Children.Add(BuildStatus(entry, implemented));
 
-        var original = new Button
-        {
-            Content = Labeled("View on uiarc.dev", ArcIcons.ExternalLink),
-            Variant = ButtonVariant.Secondary,
-            Size = ControlSize.Small,
-            IsPressScaleEnabled = false
-        };
-        original.Click += (_, _) => OpenOriginal();
-
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-        Grid.SetColumn(original, 1);
-        original.VerticalAlignment = VerticalAlignment.Top;
         grid.Children.Add(left);
-        grid.Children.Add(original);
+        // Extras have no Arc original to link to.
+        if (entry.IsArc)
+        {
+            var original = new Button
+            {
+                Content = Labeled(GalleryShellLangResourceKind.ViewOnArc, ArcIcons.ExternalLink),
+                Variant = ButtonVariant.Secondary,
+                Size = ControlSize.Small,
+                IsPressScaleEnabled = false
+            };
+            original.Click += (_, _) => OpenOriginal();
+            Grid.SetColumn(original, 1);
+            original.VerticalAlignment = VerticalAlignment.Top;
+            grid.Children.Add(original);
+        }
         return grid;
     }
 
@@ -136,7 +165,7 @@ public sealed class GalleryPageView : Grid
     private static Control BuildUsagePill(string markup)
     {
         var copy = new CopyButton { Value = markup, IsIconOnly = true, Variant = CopyButtonVariant.Plain };
-        Avalonia.Automation.AutomationProperties.SetName(copy, "Copy markup");
+        GalleryText.Bind(copy, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.CopyMarkup);
         var text = GalleryUi.Mono(markup, ArcDesignTokenKind.TextSecondary, 13);
         text.Margin = new Thickness(0, 0, 4, 0);
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
@@ -161,7 +190,15 @@ public sealed class GalleryPageView : Grid
     {
         var dot = new Ellipse { Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Center };
         ArcTokens.Bind(dot, Shape.FillProperty, implemented ? ArcDesignTokenKind.Success : ArcDesignTokenKind.Warning);
-        var label = GalleryUi.Text(implemented ? "Ready" : $"Planned · P{entry.Phase}", ArcDesignTokenKind.TextSecondary, 13, FontWeight.Medium);
+        var label = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 13, FontWeight.Medium);
+        if (implemented)
+        {
+            GalleryText.Bind(label, TextBlock.TextProperty, GalleryShellLangResourceKind.Ready);
+        }
+        else
+        {
+            GalleryText.BindFormat(label, TextBlock.TextProperty, GalleryShellLangResourceKind.PlannedPhase, entry.Phase);
+        }
         label.Margin = new Thickness(8, 0, 0, 0);
         label.VerticalAlignment = VerticalAlignment.Center;
         var row = new StackPanel { Orientation = Orientation.Horizontal };
@@ -172,53 +209,139 @@ public sealed class GalleryPageView : Grid
         return chip;
     }
 
-    private static Control Labeled(string text, Geometry glyph)
+    private static Control Labeled(GalleryShellLangResourceKind text, Geometry glyph)
     {
+        var label = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(label, TextBlock.TextProperty, text);
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        row.Children.Add(new TextBlock { Text = text, VerticalAlignment = VerticalAlignment.Center });
+        row.Children.Add(label);
         row.Children.Add(new ArcGlyph { Data = glyph, Size = 14 });
         return row;
     }
 
-    /// <summary>Preview is the live page; Code arrives with CodeBlock (P2) and stays visibly unavailable until then.</summary>
-    private static Control BuildTabs()
+    /// <summary>Preview is the live page; Code is the component's Markdown page, unavailable until one is written.</summary>
+    private Control BuildTabs()
     {
+        _previewTab.IsActive = true;
+        _previewTab.Click += () => ShowCode(false);
+        _codeTab.Click += () => ShowCode(true);
+        if (!GalleryDocs.Has(_entry.ClassName))
+        {
+            _codeTab.IsAvailable = false;
+            GalleryText.Bind(_codeTab, Tooltip.TipProperty, GalleryShellLangResourceKind.NoDocsYet);
+        }
         var tabs = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 24 };
-        tabs.Children.Add(Tab("Preview", ArcIcons.Eye, active: true));
-        var code = Tab("Code", GalleryIcons.Code, active: false);
-        Tooltip.SetTip(code, "Source view arrives with CodeBlock (phase P2)");
-        tabs.Children.Add(code);
+        tabs.Children.Add(_previewTab);
+        tabs.Children.Add(_codeTab);
 
-        var live = GalleryUi.Text("Live preview", ArcDesignTokenKind.TextMuted, 13);
-        live.VerticalAlignment = VerticalAlignment.Center;
+        _live.VerticalAlignment = VerticalAlignment.Center;
+        _copyMarkdown.VerticalAlignment = VerticalAlignment.Center;
+        var actions = new Panel();
+        actions.Children.Add(_live);
+        actions.Children.Add(_copyMarkdown);
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto") };
-        Grid.SetColumn(live, 2);
+        Grid.SetColumn(actions, 2);
         grid.Children.Add(tabs);
-        grid.Children.Add(live);
+        grid.Children.Add(actions);
 
         var line = new Border { BorderThickness = new Thickness(0, 0, 0, 1), Child = grid };
         ArcTokens.Bind(line, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
         return line;
     }
 
-    private static Border Tab(string label, Geometry glyph, bool active)
+    /// <summary>Whether the Code tab is showing.</summary>
+    public bool IsShowingCode => _codeTab.IsActive;
+
+    /// <summary>Switches between the examples and the docs page (Code is ignored when there is no page).</summary>
+    public void ShowCode(bool code)
     {
-        var color = active ? ArcDesignTokenKind.Foreground : ArcDesignTokenKind.TextMuted;
-        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
-        row.Children.Add(GalleryUi.Glyph(glyph, 16, color));
-        row.Children.Add(GalleryUi.Text(label, color, 14, FontWeight.Medium));
-        var tab = new Border
+        if (code == IsShowingCode || (code && !GalleryDocs.Has(_entry.ClassName)))
         {
-            Padding = new Thickness(0, 12),
-            Margin = new Thickness(0, 0, 0, -1),
-            BorderThickness = new Thickness(0, 0, 0, 2),
-            Child = row
-        };
-        if (active)
-        {
-            ArcTokens.Bind(tab, Border.BorderBrushProperty, ArcDesignTokenKind.Foreground);
+            return;
         }
-        return tab;
+        if (code && _code is null)
+        {
+            _code = new Markdown();
+            _content.Children.Add(_code);
+            RefreshLanguage();
+        }
+        _previewTab.IsActive = !code;
+        _codeTab.IsActive = code;
+        _body.IsVisible = !code;
+        if (_code is not null)
+        {
+            _code.IsVisible = code;
+        }
+        _live.IsVisible = !code;
+        _copyMarkdown.IsVisible = code;
+        _mainColumn.MaxWidth = code ? CodeWidth : MainWidth;
+        UpdateToc();
+    }
+
+    /// <summary>
+    /// Shows the summary and the Code tab in the current AtomUI language. A page that is not translated falls back to
+    /// en-US by itself, and a component without a docs page keeps its catalog description.
+    /// </summary>
+    private void RefreshLanguage()
+    {
+        var language = GalleryText.CurrentLanguage;
+        _summary.Text = GalleryDocs.Summary(_entry.ClassName, language) ?? _entry.Description;
+        if (_code is not null && GalleryDocs.Get(_entry.ClassName, language) is { } doc && _code.Text != doc.Markdown)
+        {
+            _code.Text = doc.Markdown;
+            _copyMarkdown.Value = doc.Markdown;
+        }
+    }
+
+    /// <summary>A page tab: a glyph and a label over a 2px underline that marks the active tab.</summary>
+    private sealed class PageTab : Border
+    {
+        private readonly GalleryNavRow _row;
+        private IDisposable? _underline;
+
+        public PageTab(GalleryShellLangResourceKind label, Geometry glyph)
+        {
+            var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+            GalleryText.Bind(text, TextBlock.TextProperty, label);
+            var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
+            content.Children.Add(new ArcGlyph { Data = glyph, Size = 16 });
+            content.Children.Add(text);
+            _row = new GalleryNavRow(content, fontSize: 14, height: 0, padding: new Thickness(0, 12), radius: 8,
+                weight: FontWeight.Medium, rest: ArcDesignTokenKind.TextMuted);
+            GalleryText.Bind(_row, Avalonia.Automation.AutomationProperties.NameProperty, label);
+            _row.Click += () => Click?.Invoke();
+            Margin = new Thickness(0, 0, 0, -1);
+            BorderThickness = new Thickness(0, 0, 0, 2);
+            Child = _row;
+        }
+
+        public event Action? Click;
+
+        public bool IsActive
+        {
+            get => _row.IsSelected;
+            set
+            {
+                _row.IsSelected = value;
+                _underline?.Dispose();
+                _underline = value ? ArcTokens.Bind(this, BorderBrushProperty, ArcDesignTokenKind.Foreground) : null;
+            }
+        }
+
+        /// <summary>
+        /// An unavailable tab cannot be focused or clicked. It is dimmed and shows the default cursor, and it stays
+        /// hoverable (the tooltip sits on the tab itself, which remains enabled) so the tooltip can explain.
+        /// </summary>
+        public bool IsAvailable
+        {
+            get => _row.IsEnabled;
+            set
+            {
+                _row.IsEnabled = value;
+                _row.Cursor = value ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
+                Opacity = value ? 1 : 0.45;
+            }
+        }
     }
 
     private static Control Spaced(Control control, double top)
@@ -229,7 +352,10 @@ public sealed class GalleryPageView : Grid
 
     private void OpenOriginal()
     {
-        _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(new Uri(_entry.ArcUrl));
+        if (_entry.ArcUrl is { } url)
+        {
+            _ = TopLevel.GetTopLevel(this)?.Launcher.LaunchUriAsync(new Uri(url));
+        }
     }
 
     #endregion

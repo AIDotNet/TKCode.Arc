@@ -3,8 +3,12 @@ using TKCode.Arc.Gallery.Pages;
 using TKCode.Arc.Gallery.Shell;
 using AtomUI.Theme.Algorithms;
 using AtomUI.Theme.Configuration;
+using System.Collections.ObjectModel;
+using Avalonia.Automation.Peers;
+using Avalonia.Automation.Provider;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Gallery;
 
@@ -16,6 +20,40 @@ public class GallerySmokeTests
     {
         GalleryCatalog.Count.ShouldBe(110);
         GalleryCatalog.Categories.Length.ShouldBe(22);
+        GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.All(e => e.IsArc && e.ArcUrl != null));
+        // Extras (TKCode components with no Arc original) are listed separately and not counted.
+        GalleryCatalog.Extras.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
+        GalleryCatalog.AllEntries.Count().ShouldBe(110 + GalleryCatalog.Extras.Sum(c => c.Entries.Length));
+        GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
+    }
+
+    [AvaloniaFact]
+    public void Breadcrumb_Page_Opens_Folders_After_The_Path_Is_Cut_Back_To_Its_Root()
+    {
+        var window = TestHelpers.Show(BreadcrumbPage.Create());
+        try
+        {
+            var buttons = window.GetVisualDescendants().OfType<Button>().ToList();
+            var open = buttons.First(b => Equals(b.Content, "Open next folder"));
+            var up = buttons.First(b => Equals(b.Content, "Up one level"));
+            var path = window.GetVisualDescendants().OfType<Breadcrumb>().Select(b => b.ItemsSource).OfType<ObservableCollection<string>>().First();
+            void Press(Button button) => ControlAutomationPeer.CreatePeerForElement(button).GetProvider<IInvokeProvider>()!.Invoke();
+
+            Press(up);
+            path.ShouldBe(["Home"]);
+            Press(open);
+            path.Count.ShouldBe(2);
+            Press(open);
+            Press(open);
+            Press(open);
+            Press(open);
+            path.Count.ShouldBe(6);
+            path.Skip(1).ShouldAllBe(p => p.Length > 0);
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaFact]
@@ -28,7 +66,7 @@ public class GallerySmokeTests
             foreach (var dark in new[] { false, true })
             {
                 await TestHelpers.ApplyAsync(dark ? new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build() : null);
-                foreach (var entry in GalleryCatalog.Categories.SelectMany(c => c.Entries).Where(e => GalleryPages.IsImplemented(e.ClassName)))
+                foreach (var entry in GalleryCatalog.AllEntries.Where(e => GalleryPages.IsImplemented(e.ClassName)))
                 {
                     var page = GalleryPages.Create(entry);
                     var host = new Avalonia.Controls.Window { Content = page, Width = 1000, Height = 800 };

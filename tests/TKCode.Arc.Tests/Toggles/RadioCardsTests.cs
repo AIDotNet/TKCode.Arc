@@ -136,4 +136,33 @@ public class RadioCardsTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Ring_Glides_On_Arcs_Own_Spring()
+    {
+        var clock = new TKCode.Arc.Motion.ManualFrameClock();
+        using var _ = clock.Install();
+        var cards = Plans();
+        cards.SelectedIndex = 0;
+        var window = TestHelpers.Show(cards, TKCode.Arc.Motion.ArcMotionLevel.Full);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var ring = TestHelpers.Descendant<GlidingIndicator>(cards);
+            var from = ring.CurrentRect;
+            cards.SelectedIndex = 1;
+            Dispatcher.UIThread.RunJobs();
+            var card = cards.ContainerFromIndex(1)!;
+            var target = new Rect(card.TranslatePoint(default, ring)!.Value, card.Bounds.Size).Deflate(0.75);
+            var t = CorePrimitives.CoreFrames.Run(clock, 6);
+            // Arc: physical(0.42, 0.14), not the morph preset (0.42, 0.16).
+            RadioCards.RingGlide.ShouldBe(TKCode.Arc.Motion.SpringSpec.FromVisual(0.42, 0.14));
+            var (dx, _) = TKCode.Arc.Motion.SpringSolver.Evaluate(RadioCards.RingGlide, from.X - target.X, 0, t);
+            ring.CurrentRect.X.ShouldBe(target.X + dx, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

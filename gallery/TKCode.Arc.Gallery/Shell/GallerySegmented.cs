@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -23,14 +24,24 @@ public sealed class GallerySegmented : Border
     private Rect _lastRect;
     private int _selectedIndex = -1;
 
-    public GallerySegmented(params string[] labels)
+    /// <summary>Segments with fixed labels (names that are the same in every language).</summary>
+    public GallerySegmented(params string[] labels) : this(labels.Length, i => labels[i], null)
     {
-        for (var i = 0; i < labels.Length; i++)
+    }
+
+    /// <summary>Segments whose labels follow the language.</summary>
+    public GallerySegmented(params GalleryShellLangResourceKind[] labels) : this(labels.Length, null, i => labels[i])
+    {
+    }
+
+    private GallerySegmented(int count, Func<int, string>? label, Func<int, GalleryShellLangResourceKind>? localized)
+    {
+        for (var i = 0; i < count; i++)
         {
             var index = i;
             var segment = new Button
             {
-                Content = labels[i],
+                Content = label?.Invoke(i),
                 Variant = ButtonVariant.Ghost,
                 Size = ControlSize.Small,
                 MinHeight = 30,
@@ -41,6 +52,10 @@ public sealed class GallerySegmented : Border
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 IsPressScaleEnabled = false
             };
+            if (localized is not null)
+            {
+                GalleryText.Bind(segment, ContentControl.ContentProperty, localized(i));
+            }
             segment.Click += (_, _) => Select(index);
             _grid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
             Grid.SetColumn(segment, i);

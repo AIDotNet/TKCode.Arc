@@ -50,7 +50,7 @@ public class GalleryShellTests
         var window = Open();
         try
         {
-            window.Sidebar.VisibleEntries.Count.ShouldBe(GalleryCatalog.Count);
+            window.Sidebar.VisibleEntries.Count.ShouldBe(GalleryCatalog.AllEntries.Count());
 
             window.Sidebar.SearchText = "button";
             var buttons = window.Sidebar.VisibleEntries;
@@ -63,7 +63,7 @@ public class GalleryShellTests
             window.Sidebar.VisibleEntries.ShouldBeEmpty();
 
             window.Sidebar.SearchText = string.Empty;
-            window.Sidebar.VisibleEntries.Count.ShouldBe(GalleryCatalog.Count);
+            window.Sidebar.VisibleEntries.Count.ShouldBe(GalleryCatalog.AllEntries.Count());
         }
         finally
         {
@@ -86,7 +86,7 @@ public class GalleryShellTests
             var planned = window.Sidebar.VisibleEntries;
             planned.ShouldAllBe(e => !GalleryPages.IsImplemented(e.ClassName));
 
-            (ready.Count + planned.Count).ShouldBe(GalleryCatalog.Count);
+            (ready.Count + planned.Count).ShouldBe(GalleryCatalog.AllEntries.Count());
         }
         finally
         {
@@ -114,21 +114,51 @@ public class GalleryShellTests
     }
 
     [AvaloniaFact]
-    public void Planned_Component_Gets_A_Placeholder_Page()
+    public void Extras_Are_Listed_After_Arc_Without_An_Arc_Link()
     {
         var window = Open();
         try
         {
-            // Any component that is still planned (the first one in catalog order).
-            var planned = GalleryCatalog.Categories.SelectMany(c => c.Entries).First(e => !GalleryPages.IsImplemented(e.ClassName));
-            window.Select(planned);
+            var markdown = GalleryCatalog.Extras.SelectMany(c => c.Entries).First(e => e.ClassName == "Markdown");
+            window.Sidebar.VisibleEntries.ShouldContain(markdown);
+            window.Select(markdown);
             Dispatcher.UIThread.RunJobs();
+            var page = Find<GalleryPageView>(window);
+            var texts = page.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+            texts.ShouldContain("Ready");
+            texts.ShouldNotContain("View on uiarc.dev");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 
-            var texts = Find<GalleryPageView>(window).GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+    [AvaloniaFact]
+    public void Every_Arc_Component_Has_A_Page()
+    {
+        GalleryCatalog.Categories.SelectMany(c => c.Entries).Where(e => !GalleryPages.IsImplemented(e.ClassName))
+                      .Select(e => e.ClassName).ShouldBeEmpty();
+    }
+
+    [AvaloniaFact]
+    public void Planned_Component_Gets_A_Placeholder_Page()
+    {
+        // Every Arc component has a page now; the placeholder still serves entries added before their page.
+        var planned = new GalleryEntry("NotYetBuilt", "Not yet built", "not-yet-built", 9, "A component without a page.");
+        GalleryPages.IsImplemented(planned.ClassName).ShouldBeFalse();
+        var page = GalleryPages.Create(planned);
+        var window = TestHelpers.Show(page);
+        try
+        {
+            window.Width = 1280;
+            window.Height = 860;
+            Dispatcher.UIThread.RunJobs();
+            var texts = page.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
             texts.ShouldContain($"Planned · P{planned.Phase}");
             texts.ShouldContain($"{planned.ClassName} is scheduled for phase P{planned.Phase}.");
             // One placeholder section is not enough to need an "On this page" list.
-            window.GetVisualDescendants().OfType<GalleryToc>().ShouldAllBe(t => !t.IsVisible);
+            page.GetVisualDescendants().OfType<GalleryToc>().ShouldAllBe(t => !t.IsVisible);
         }
         finally
         {

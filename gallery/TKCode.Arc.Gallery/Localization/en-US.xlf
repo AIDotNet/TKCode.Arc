@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Gallery.Localization.GalleryShellLangResourceKind">
+    <unit id="Accent">
+      <segment>
+        <source>Accent</source>
+      </segment>
+    </unit>
+    <unit id="AccentAmber">
+      <segment>
+        <source>Amber</source>
+      </segment>
+    </unit>
+    <unit id="AccentBlue">
+      <segment>
+        <source>Blue</source>
+      </segment>
+    </unit>
+    <unit id="AccentCoral">
+      <segment>
+        <source>Coral</source>
+      </segment>
+    </unit>
+    <unit id="AccentGreen">
+      <segment>
+        <source>Green</source>
+      </segment>
+    </unit>
+    <unit id="AccentNeutral">
+      <segment>
+        <source>Neutral</source>
+      </segment>
+    </unit>
+    <unit id="AccentOrange">
+      <segment>
+        <source>Orange</source>
+      </segment>
+    </unit>
+    <unit id="AccentRose">
+      <segment>
+        <source>Rose</source>
+      </segment>
+    </unit>
+    <unit id="AccentViolet">
+      <segment>
+        <source>Violet</source>
+      </segment>
+    </unit>
+    <unit id="Appearance">
+      <segment>
+        <source>Appearance</source>
+      </segment>
+    </unit>
+    <unit id="BackToTop">
+      <segment>
+        <source>Back to top</source>
+      </segment>
+    </unit>
+    <unit id="Category_Activity">
+      <segment>
+        <source>Activity</source>
+      </segment>
+    </unit>
+    <unit id="Category_Avatars">
+      <segment>
+        <source>Avatars</source>
+      </segment>
+    </unit>
+    <unit id="Category_Buttons">
+      <segment>
+        <source>Buttons</source>
+      </segment>
+    </unit>
+    <unit id="Category_Cards">
+      <segment>
+        <source>Cards</source>
+      </segment>
+    </unit>
+    <unit id="Category_Charts">
+      <segment>
+        <source>Charts</source>
+      </segment>
+    </unit>
+    <unit id="Category_Content">
+      <segment>
+        <source>Extras</source>
+      </segment>
+    </unit>
+    <unit id="Category_Illustrations">
+      <segment>
+        <source>Illustrations</source>
+      </segment>
+    </unit>
+    <unit id="Category_Editors">
+      <segment>
+        <source>Editors</source>
+      </segment>
+    </unit>
+    <unit id="Category_Expand">
+      <segment>
+        <source>Expand</source>
+      </segment>
+    </unit>
+    <unit id="Category_Gestures">
+      <segment>
+        <source>Gestures</source>
+      </segment>
+    </unit>
+    <unit id="Category_Media">
+      <segment>
+        <source>Media</source>
+      </segment>
+    </unit>
+    <unit id="Category_Menus">
+      <segment>
+        <source>Menus</source>
+      </segment>
+    </unit>
+    <unit id="Category_Messages">
+      <segment>
+        <source>Messages</source>
+      </segment>
+    </unit>
+    <unit id="Category_Navigation">
+      <segment>
+        <source>Navigation</source>
+      </segment>
+    </unit>
+    <unit id="Category_Overlays">
+      <segment>
+        <source>Overlays</source>
+      </segment>
+    </unit>
+    <unit id="Category_Pickers">
+      <segment>
+        <source>Pickers</source>
+      </segment>
+    </unit>
+    <unit id="Category_Progress">
+      <segment>
+        <source>Progress</source>
+      </segment>
+    </unit>
+    <unit id="Category_Selects">
+      <segment>
+        <source>Selects</source>
+      </segment>
+    </unit>
+    <unit id="Category_Sliders">
+      <segment>
+        <source>Sliders</source>
+      </segment>
+    </unit>
+    <unit id="Category_SpecialInputs">
+      <segment>
+        <source>Special inputs</source>
+      </segment>
+    </unit>
+    <unit id="Category_Tables">
+      <segment>
+        <source>Tables</source>
+      </segment>
+    </unit>
+    <unit id="Category_TextEffects">
+      <segment>
+        <source>Text effects</source>
+      </segment>
+    </unit>
+    <unit id="Category_TextFields">
+      <segment>
+        <source>Text fields</source>
+      </segment>
+    </unit>
+    <unit id="Category_Toggles">
+      <segment>
+        <source>Toggles</source>
+      </segment>
+    </unit>
+    <unit id="ClearSearch">
+      <segment>
+        <source>Clear search</source>
+      </segment>
+    </unit>
+    <unit id="Code">
+      <segment>
+        <source>Code</source>
+      </segment>
+    </unit>
+    <unit id="Components">
+      <segment>
+        <source>Components</source>
+      </segment>
+    </unit>
+    <unit id="Copied">
+      <segment>
+        <source>Copied</source>
+      </segment>
+    </unit>
+    <unit id="CopyMarkdown">
+      <segment>
+        <source>Copy Markdown</source>
+      </segment>
+    </unit>
+    <unit id="CopyMarkup">
+      <segment>
+        <source>Copy markup</source>
+      </segment>
+    </unit>
+    <unit id="Dark">
+      <segment>
+        <source>Dark</source>
+      </segment>
+    </unit>
+    <unit id="Failed">
+      <segment>
+        <source>Failed</source>
+      </segment>
+    </unit>
+    <unit id="FilterAll">
+      <segment>
+        <source>All</source>
+      </segment>
+    </unit>
+    <unit id="FilterPlanned">
+      <segment>
+        <source>Planned</source>
+      </segment>
+    </unit>
+    <unit id="FilterReady">
+      <segment>
+        <source>Ready</source>
+      </segment>
+    </unit>
+    <unit id="Implemented">
+      <segment>
+        <source>Implemented</source>
+      </segment>
+    </unit>
+    <unit id="ImplementedCount">
+      <segment>
+        <source>{0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="Language">
+      <segment>
+        <source>Language</source>
+      </segment>
+    </unit>
+    <unit id="Light">
+      <segment>
+        <source>Light</source>
+      </segment>
+    </unit>
+    <unit id="LivePreview">
+      <segment>
+        <source>Live preview</source>
+      </segment>
+    </unit>
+    <unit id="Mode">
+      <segment>
+        <source>Mode</source>
+      </segment>
+    </unit>
+    <unit id="Motion">
+      <segment>
+        <source>Motion</source>
+      </segment>
+    </unit>
+    <unit id="MotionFull">
+      <segment>
+        <source>Full</source>
+      </segment>
+    </unit>
+    <unit id="MotionOff">
+      <segment>
+        <source>Off</source>
+      </segment>
+    </unit>
+    <unit id="MotionReduced">
+      <segment>
+        <source>Reduced</source>
+      </segment>
+    </unit>
+    <unit id="NoComponentsMatch">
+      <segment>
+        <source>No components match “{0}”.</source>
+      </segment>
+    </unit>
+    <unit id="NoDocsYet">
+      <segment>
+        <source>No docs page for this component yet</source>
+      </segment>
+    </unit>
+    <unit id="NotBuiltYet">
+      <segment>
+        <source>{0} is not built yet.</source>
+      </segment>
+    </unit>
+    <unit id="NothingHereYet">
+      <segment>
+        <source>Nothing here yet.</source>
+      </segment>
+    </unit>
+    <unit id="OnThisPage">
+      <segment>
+        <source>On this page</source>
+      </segment>
+    </unit>
+    <unit id="PlannedDescription">
+      <segment>
+        <source>{0} is scheduled for phase P{1}.</source>
+      </segment>
+    </unit>
+    <unit id="PlannedPhase">
+      <segment>
+        <source>Planned · P{0}</source>
+      </segment>
+    </unit>
+    <unit id="PlannedTitle">
+      <segment>
+        <source>Planned</source>
+      </segment>
+    </unit>
+    <unit id="Preview">
+      <segment>
+        <source>Preview</source>
+      </segment>
+    </unit>
+    <unit id="Ready">
+      <segment>
+        <source>Ready</source>
+      </segment>
+    </unit>
+    <unit id="Search">
+      <segment>
+        <source>Search</source>
+      </segment>
+    </unit>
+    <unit id="SearchComponents">
+      <segment>
+        <source>Search components</source>
+      </segment>
+    </unit>
+    <unit id="ShowImplementedComponents">
+      <segment>
+        <source>Show implemented components</source>
+      </segment>
+    </unit>
+    <unit id="ToggleAppearance">
+      <segment>
+        <source>Toggle light and dark appearance</source>
+      </segment>
+    </unit>
+    <unit id="ViewOnArc">
+      <segment>
+        <source>View on uiarc.dev</source>
+      </segment>
+    </unit>
+    <unit id="Category_Blocks">
+      <segment>
+        <source>Blocks</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Analytics">
+      <segment>
+        <source>Analytics</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Finance">
+      <segment>
+        <source>Finance</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_LineCharts">
+      <segment>
+        <source>Line charts</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Ai">
+      <segment>
+        <source>AI</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_AppShell">
+      <segment>
+        <source>App shell</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Auth">
+      <segment>
+        <source>Auth</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Settings">
+      <segment>
+        <source>Settings</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_People">
+      <segment>
+        <source>People</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Developer">
+      <segment>
+        <source>Developer</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Pricing">
+      <segment>
+        <source>Pricing</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Commerce">
+      <segment>
+        <source>Commerce</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Support">
+      <segment>
+        <source>Support</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Media">
+      <segment>
+        <source>Media</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Projects">
+      <segment>
+        <source>Projects</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Heroes">
+      <segment>
+        <source>Heroes</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Features">
+      <segment>
+        <source>Features</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_SocialProof">
+      <segment>
+        <source>Social proof</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Content">
+      <segment>
+        <source>Content</source>
+      </segment>
+    </unit>
+    <unit id="BlockGroup_Showpieces">
+      <segment>
+        <source>Showpieces</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

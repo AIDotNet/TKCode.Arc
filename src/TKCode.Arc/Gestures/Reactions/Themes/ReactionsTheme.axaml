@@ -1,0 +1,344 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The bar wraps (row gap space-2, column gap 6px); pills and the add button are 32px pills. -->
+    <ControlTheme x:Key="{x:Type arc:Reactions}" TargetType="arc:Reactions">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Reactions">
+                <Panel>
+                    <arc:ReactionsBar Name="PART_Bar"
+                                      ColumnGap="{arc:ReactionsTokenResource ColumnGap}"
+                                      RowGap="{arc:ReactionsTokenResource RowGap}">
+                        <arc:ReactionsAddButton Name="PART_AddButton" />
+                    </arc:ReactionsBar>
+                    <arc:ReactionsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TipDelay" Value="{arc:ReactionsTokenResource TipDelay}" />
+        <Setter Property="PickerOffset" Value="{arc:ReactionsTokenResource PickerOffset}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MinWidth" Value="0" />
+    </ControlTheme>
+
+    <!--
+        A pill: Surface, 1px Border, TextSecondary. The viewer's own reaction takes the accent (AccentSubtle fill, an accent
+        ring at 45%, AccentStrong text and a 22% filled glyph), so the state never rests on color alone. The accent mixes
+        are layered (PART_AccentFill / PART_AccentRing opacity) because accent-dependent colors stay out of control tokens.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReactionsPill}" TargetType="arc:ReactionsPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReactionsPill">
+                <Panel>
+                    <Panel Name="PART_Body" RenderTransformOrigin="50%,50%">
+                        <Border Name="PART_Base"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding CornerRadius}" />
+                        <Border Name="PART_AccentFill"
+                                IsHitTestVisible="False"
+                                Opacity="0"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Background="{arc:ArcDesignTokenResource Accent}" />
+                        <Border Name="PART_Frame"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:ReactionsTokenResource PillContentGap}"
+                                    VerticalAlignment="Center">
+                            <arc:ReactionsGlyph Name="PART_Glyph"
+                                                Data="{TemplateBinding Icon}"
+                                                Size="{arc:ReactionsTokenResource PillGlyphSize}"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                IsFilled="{TemplateBinding IsChecked}"
+                                                FillOpacity="{arc:ReactionsTokenResource GlyphFillOpacity}"
+                                                VerticalAlignment="Center" />
+                            <arc:RollingDigits Name="PART_Count"
+                                               Value="{TemplateBinding Count}"
+                                               UseGrouping="False"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               FontFamily="{TemplateBinding FontFamily}"
+                                               FontSize="{TemplateBinding FontSize}"
+                                               FontWeight="{TemplateBinding FontWeight}"
+                                               VerticalAlignment="Center" />
+                        </StackPanel>
+                        </Border>
+                        <Border Name="PART_AccentRing"
+                                IsHitTestVisible="False"
+                                Opacity="0"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource Accent}" />
+                    </Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:ReactionsTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:ReactionsTokenResource PillPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="KickStiffness" Value="{arc:ReactionsTokenResource KickStiffness}" />
+        <Setter Property="KickDamping" Value="{arc:ReactionsTokenResource KickDamping}" />
+        <Setter Property="KickScaleVelocity" Value="{arc:ReactionsTokenResource KickScaleVelocity}" />
+        <Setter Property="KickRotateVelocity" Value="{arc:ReactionsTokenResource KickRotateVelocity}" />
+
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_AccentRing">
+            <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedRingOpacity}" />
+        </Style>
+        <Style Selector="^:checked:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:checked:pointerover /template/ Border#PART_AccentRing">
+            <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedHoverRingOpacity}" />
+        </Style>
+        <Style Selector="^:checked:pointerover /template/ Border#PART_AccentFill">
+            <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedHoverFillOpacity}" />
+        </Style>
+        <Style Selector="^:checked:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:checked:pressed /template/ Border#PART_AccentFill">
+            <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedPressFillOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Panel#PART_Body">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_AccentFill, ^ /template/ Border#PART_AccentRing">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:pressed /template/ Panel#PART_Body">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The add button anchors the picker: color answers a press, it never scales; open, it holds the hover look. -->
+    <ControlTheme x:Key="{x:Type arc:ReactionsAddButton}" TargetType="arc:ReactionsAddButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReactionsAddButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcContentSwap Name="PART_Glyph"
+                                            Mode="Pop"
+                                            Width="{arc:ReactionsTokenResource PillGlyphSize}"
+                                            Height="{arc:ReactionsTokenResource PillGlyphSize}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding Glyph}"
+                                            TextElement.Foreground="{TemplateBinding Foreground}">
+                            <arc:ArcContentSwap.ContentTemplate>
+                                <DataTemplate DataType="Geometry">
+                                    <arc:ArcGlyph Data="{Binding}" Size="16" StrokeThickness="1.75" />
+                                </DataTemplate>
+                            </arc:ArcContentSwap.ContentTemplate>
+                        </arc:ArcContentSwap>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:ReactionsTokenResource AddButtonWidth}" />
+        <Setter Property="Height" Value="{arc:ReactionsTokenResource PillHeight}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Style Selector="^:pointerover, ^:open">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The picker tray inside the popover surface: options row, then a 22px caption naming the active option. -->
+    <ControlTheme x:Key="{x:Type arc:ReactionsPicker}" TargetType="arc:ReactionsPicker">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReactionsPicker">
+                <StackPanel Spacing="{arc:ReactionsTokenResource PickerGap}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                              Spring="Morph" />
+                        <StackPanel Name="PART_Options"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:ReactionsTokenResource PickerGap}" />
+                    </Panel>
+                    <arc:ArcContentSwap Name="PART_Caption"
+                                        Mode="BlurSwap"
+                                        Height="{arc:ReactionsTokenResource CaptionHeight}"
+                                        HorizontalAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="SurfacePadding" Value="{arc:ReactionsTokenResource PickerPadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+
+    <!--
+        A picker option: a 40px circle. Chosen options carry a ring as well as the tint (so they never read as the hover
+        highlight) and a filled glyph; the lit option's glyph lifts to 1.14 and up 1px on the snappy spring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReactionsPickerOption}" TargetType="arc:ReactionsPickerOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReactionsPickerOption">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_AccentRing"
+                            IsHitTestVisible="False"
+                            Opacity="0"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource Accent}" />
+                    <arc:ReactionsGlyph Name="PART_Glyph"
+                                        Data="{TemplateBinding Icon}"
+                                        Size="{arc:ReactionsTokenResource OptionGlyphSize}"
+                                        Foreground="{TemplateBinding Foreground}"
+                                        IsFilled="{TemplateBinding IsChecked}"
+                                        FillOpacity="{arc:ReactionsTokenResource GlyphFillOpacity}"
+                                        RenderTransformOrigin="50%,50%"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:ReactionsTokenResource OptionExtent}" />
+        <Setter Property="Height" Value="{arc:ReactionsTokenResource OptionExtent}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_AccentRing">
+            <Setter Property="Opacity" Value="{arc:ReactionsTokenResource ReactedRingOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ReactionsGlyph#PART_Glyph">
+                <Setter Property="RenderTransform" Value="translateY(0px) scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:lit /template/ arc|ReactionsGlyph#PART_Glyph">
+            <Setter Property="RenderTransform" Value="translateY(-1px) scale(1.14)" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

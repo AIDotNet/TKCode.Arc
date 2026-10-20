@@ -388,6 +388,14 @@ public class Calendar : TemplatedControl
         }
     }
 
+    /// <summary>
+    /// Moves keyboard focus to the day that owns the roving tab stop: the day last focused, else the selection, else
+    /// today, else the first open day of the shown month. Hosts such as a date picker popup call this so arrow keys work
+    /// at once. Returns false when no day can take focus (the calendar is not shown yet, or every day is disabled).
+    /// </summary>
+    public bool FocusTabbableDay(NavigationMethod method = NavigationMethod.Directional) =>
+        TabbableDate(_month) is { } date && _strip?.PresentPane?.FindCell(date) is { } cell && cell.Focus(method);
+
     /// <summary>Slides to the month containing <paramref name="date"/>.</summary>
     public void GoToMonth(DateOnly date, bool raise = true)
     {

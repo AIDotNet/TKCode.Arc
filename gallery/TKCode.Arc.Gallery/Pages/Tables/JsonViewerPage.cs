@@ -49,7 +49,8 @@ public static class JsonViewerPage
         var items = new JsonArray();
         for (var i = 0; i < 1200; i++)
         {
-            items.Add(new JsonObject
+            // JsonNode overload: the generic Add<T> serializes through reflection (not AOT safe).
+            items.Add((JsonNode)new JsonObject
             {
                 ["id"] = i + 1,
                 ["sku"] = $"SKU-{i + 1:0000}",

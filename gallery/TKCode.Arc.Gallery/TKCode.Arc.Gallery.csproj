@@ -8,5 +8,28 @@
     <ItemGroup>
         <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../../src/TKCode.Arc/TKCode.Arc.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Gallery.Generators/TKCode.Arc.Gallery.Generators.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"
+                          PrivateAssets="all" />
     </ItemGroup>
+
+    <!-- Code tab docs (design/decisions/0012-gallery-docs.md): pages and API translations go to GalleryDocsGenerator.
+         The API translations stay out of Localization/ folders, which AtomUI's language build owns. -->
+    <ItemGroup>
+        <AdditionalFiles Include="Docs/**/*.md" GalleryDocKind="Page" />
+        <AdditionalFiles Include="Docs/Api/*.xlf" GalleryDocKind="ApiTranslation" />
+        <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="GalleryDocKind" />
+    </ItemGroup>
+
+    <!-- The compiler does not load the XML documentation of references, so the TKCode.Arc documentation files are
+         passed to the generator as additional files. -->
+    <Target Name="AddArcDocumentationToGalleryDocs" AfterTargets="ResolveAssemblyReferences" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun;CoreCompile">
+        <ItemGroup>
+            <_GalleryArcReference Include="@(ReferencePath)" Condition="'%(Filename)' == 'TKCode.Arc' or '%(Filename)' == 'TKCode.Arc.Core'" />
+            <_GalleryArcDocumentation Include="@(_GalleryArcReference->'%(RootDir)%(Directory)%(Filename).xml')" />
+            <AdditionalFiles Include="@(_GalleryArcDocumentation)" Condition="Exists('%(FullPath)')" GalleryDocKind="XmlDoc" />
+        </ItemGroup>
+    </Target>
 </Project>

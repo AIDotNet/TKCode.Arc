@@ -1,11 +1,9 @@
 using TKCode.Arc.Motion;
 using Avalonia;
-using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace TKCode.Arc;
 
@@ -205,33 +203,17 @@ internal sealed class MessagesGlyphLayer : Control
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         TextElement.ForegroundProperty.AddOwner<MessagesGlyphLayer>();
 
-    /// <summary>Spinner rotation in degrees.</summary>
-    public static readonly StyledProperty<double> AngleProperty =
-        AvaloniaProperty.Register<MessagesGlyphLayer, double>(nameof(Angle));
-
     public IBrush? Foreground
     {
         get => GetValue(ForegroundProperty);
         set => SetValue(ForegroundProperty, value);
     }
 
-    /// <summary>Spinner rotation in degrees.</summary>
-    public double Angle
-    {
-        get => GetValue(AngleProperty);
-        set => SetValue(AngleProperty, value);
-    }
+    /// <summary>One turn of the loading ring (0.8s, linear).</summary>
+    private const double SpinSeconds = 0.8;
 
-    private static readonly Animation s_spin = new()
-    {
-        Duration = TimeSpan.FromSeconds(0.8),
-        IterationCount = IterationCount.Infinite,
-        Children =
-        {
-            new KeyFrame { Cue = new Cue(0), Setters = { new Setter(AngleProperty, 0d) } },
-            new KeyFrame { Cue = new Cue(1), Setters = { new Setter(AngleProperty, 360d) } }
-        }
-    };
+    /// <summary>Spinner rotation in degrees (advanced by the loop; a field, so a frame allocates nothing).</summary>
+    internal double Angle => _angle;
 
     private readonly ScaleTransform _scale = new();
     private Geometry? _data;
@@ -250,11 +232,12 @@ internal sealed class MessagesGlyphLayer : Control
     private BlurEffect? _blur;
     private MotionValue<double>? _grow;
     private MotionValue<double>? _fade;
-    private CancellationTokenSource? _spinCts;
+    private LiveLoop? _spin;
+    private double _angle;
 
     static MessagesGlyphLayer()
     {
-        AffectsRender<MessagesGlyphLayer>(ForegroundProperty, AngleProperty);
+        AffectsRender<MessagesGlyphLayer>(ForegroundProperty);
         IsHitTestVisibleProperty.OverrideDefaultValue<MessagesGlyphLayer>(false);
     }
 
@@ -266,7 +249,7 @@ internal sealed class MessagesGlyphLayer : Control
 
     internal bool IsSpinner => _spinner;
 
-    internal bool IsSpinning => _spinCts is not null;
+    internal bool IsSpinning => _spin is { IsRunning: true };
 
     public void Configure(double glyphSize, double stroke, double spinnerSize)
     {
@@ -367,47 +350,29 @@ internal sealed class MessagesGlyphLayer : Control
         StopSpin();
     }
 
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-        UpdateSpin();
-    }
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        StopSpin();
-    }
-
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        if (change.Property == IsVisibleProperty || change.Property == ArcMotion.LevelProperty)
-        {
-            UpdateSpin();
-        }
-    }
-
+    /// <summary>
+    /// The ring turns on a Core <see cref="LiveLoop"/> (an infinite Avalonia <c>Animation</c> cannot be started with
+    /// <c>RunAsync</c>): it pauses while hidden, detached, off-screen or below full motion and keeps its phase.
+    /// </summary>
     private void UpdateSpin()
     {
-        var spin = _spinner && IsVisible && TopLevel.GetTopLevel(this) is not null &&
-                   ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
-        if (spin && _spinCts is null)
-        {
-            _spinCts = new CancellationTokenSource();
-            _ = s_spin.RunAsync(this, _spinCts.Token);
-        }
-        else if (!spin)
+        if (!_spinner)
         {
             StopSpin();
+            return;
         }
+        _spin ??= new LiveLoop(this, StepSpin);
+        _spin.Start();
     }
 
-    private void StopSpin()
+    private bool StepSpin(double seconds)
     {
-        _spinCts?.Cancel();
-        _spinCts = null;
+        _angle = (_angle + seconds / SpinSeconds * 360) % 360;
+        InvalidateVisual();
+        return true;
     }
+
+    private void StopSpin() => _spin?.Stop();
 
     public override void Render(DrawingContext context)
     {
@@ -468,7 +433,7 @@ internal sealed class MessagesGlyphLayer : Control
             _ringPenThickness = t;
         }
         var center = new Point(bounds.Width / 2, bounds.Height / 2);
-        using (context.PushTransform(Matrix.CreateRotation(Angle * Math.PI / 180.0) * Matrix.CreateTranslation(center.X, center.Y)))
+        using (context.PushTransform(Matrix.CreateRotation(_angle * Math.PI / 180.0) * Matrix.CreateTranslation(center.X, center.Y)))
         {
             context.DrawGeometry(null, _ringPen, _ring);
         }

@@ -1,0 +1,118 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Carousel}" TargetType="arc:Carousel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Carousel">
+                <Panel>
+                    <StackPanel Name="PART_Root">
+                        <Panel>
+                            <arc:CarouselViewport Name="PART_Viewport" Background="Transparent">
+                                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            </arc:CarouselViewport>
+                            <Border Name="PART_ViewportRing"
+                                    IsVisible="False"
+                                    IsHitTestVisible="False"
+                                    Margin="{arc:CarouselTokenResource ViewportRingMargin}"
+                                    BorderThickness="2"
+                                    CornerRadius="{arc:CarouselTokenResource ViewportRingRadius}"
+                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        </Panel>
+                        <!-- Controls line up with the edges of the centered slide (inset set in code). -->
+                        <DockPanel Name="PART_Controls">
+                            <arc:MediaButton Name="PART_PlayButton"
+                                             DockPanel.Dock="Left"
+                                             Shape="Round"
+                                             IsVisible="False">
+                                <arc:ArcContentSwap Name="PART_PlayIcon"
+                                                    Mode="Pop"
+                                                    Width="{arc:CarouselTokenResource PlayGlyphSlot}"
+                                                    Height="{arc:CarouselTokenResource PlayGlyphSlot}" />
+                            </arc:MediaButton>
+                            <StackPanel Name="PART_Arrows"
+                                        DockPanel.Dock="Right"
+                                        Orientation="Horizontal">
+                                <arc:MediaButton Name="PART_PreviousButton"
+                                                 Shape="Round"
+                                                 Glyph="{x:Static arc:ArcIcons.ChevronLeft}" />
+                                <arc:MediaButton Name="PART_NextButton"
+                                                 Shape="Round"
+                                                 Glyph="{x:Static arc:ArcIcons.ChevronRight}" />
+                            </StackPanel>
+                            <arc:CarouselPager Name="PART_Pager"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" />
+                        </DockPanel>
+                    </StackPanel>
+                    <arc:MediaLiveRegion Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <arc:CarouselTrackPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemContainerTheme">
+            <ControlTheme TargetType="arc:CarouselSlide">
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="arc:CarouselSlide">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="Stretch"
+                                          VerticalContentAlignment="Stretch" />
+                    </ControlTemplate>
+                </Setter>
+                <Setter Property="ClipToBounds" Value="False" />
+            </ControlTheme>
+        </Setter>
+
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+
+        <Style Selector="^ /template/ StackPanel#PART_Root">
+            <Setter Property="Spacing" Value="{arc:CarouselTokenResource RowGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CarouselViewport#PART_Viewport">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:dragging /template/ arc|CarouselViewport#PART_Viewport">
+            <Setter Property="Cursor" Value="SizeWestEast" />
+        </Style>
+        <Style Selector="^:viewport-focus /template/ Border#PART_ViewportRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^ /template/ StackPanel#PART_Arrows">
+            <Setter Property="Spacing" Value="{arc:CarouselTokenResource ControlsGap}" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|MediaButton#PART_PlayButton">
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <!-- On phone widths the row tightens so play, indicators and arrows still fit beside a narrow slide. -->
+        <Style Selector="^:compact /template/ StackPanel#PART_Arrows">
+            <Setter Property="Spacing" Value="{arc:CarouselTokenResource CompactControlsGap}" />
+            <Setter Property="Margin" Value="4,0,0,0" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MediaButton#PART_PlayButton">
+            <Setter Property="Margin" Value="0,0,4,0" />
+        </Style>
+
+        <!-- Resting dots use the strong border colour; the fill fades in as the pill forms, and the drain covers it from
+             the right while rotation runs. -->
+        <Style Selector="^ /template/ arc|CarouselPager#PART_Pager">
+            <Setter Property="DotBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="DotHoverBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="DrainBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

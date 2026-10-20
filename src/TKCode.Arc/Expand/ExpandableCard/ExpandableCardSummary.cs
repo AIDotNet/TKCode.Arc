@@ -1,12 +1,12 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
@@ -34,8 +34,6 @@ internal sealed class ExpandableCardSummary : Control
 
     private static readonly FontFeatureCollection TabularNumbers = new() { FontFeature.Parse("tnum") };
 
-    /// <summary>Blur radii quantized to 0.25px so a running blur allocates nothing per frame.</summary>
-    private static readonly ImmutableBlurEffect[] Blurs = Enumerable.Range(1, 16).Select(i => new ImmutableBlurEffect(i * 0.25)).ToArray();
 
     private sealed class Word
     {
@@ -209,11 +207,11 @@ internal sealed class ExpandableCardSummary : Control
         var origin = word.Position + new Point(0, dy);
         using (context.PushOpacity(opacity))
         {
-            var index = (int)Math.Round(blur * 4) - 1;
-            if (index >= 0)
+            // Core cache: radii quantized to 0.25px, so a running blur allocates nothing per frame (at most 4px here).
+            if (ArcBlur.Get(Math.Min(blur, 4)) is { } effect)
             {
                 var bounds = new Rect(origin, new Size(word.Layout.Width, word.Layout.Height)).Inflate(8);
-                using (context.PushEffect(Blurs[Math.Min(index, Blurs.Length - 1)], bounds))
+                using (context.PushEffect(effect, bounds))
                 {
                     context.DrawText(word.Layout, origin);
                 }

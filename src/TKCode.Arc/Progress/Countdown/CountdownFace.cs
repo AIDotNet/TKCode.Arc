@@ -1,5 +1,6 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -374,7 +375,7 @@ internal sealed class CountdownFace : Control
                 }
                 using (context.PushOpacity(1 - abs))
                 {
-                    var effect = ProgressBlur.Get(abs * 2);
+                    var effect = ArcBlur.Get(abs * 2);
                     using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, cell.Translate(new Vector(0, offset * size))))
                     {
                         context.DrawText(glyph, origin);
@@ -387,7 +388,7 @@ internal sealed class CountdownFace : Control
 
 /// <summary>
 /// The live mark of a finished <see cref="Countdown"/>: a success dot with a ring that swells to 2.6× and fades every
-/// 2s (P21). It pulses only while attached, visible and at full motion.
+/// 2s (P21). It pulses only while attached, visible, on screen and at full motion (<see cref="LiveLoop"/>).
 /// </summary>
 internal sealed class CountdownPulse : Control
 {
@@ -396,7 +397,7 @@ internal sealed class CountdownPulse : Control
 
     public IBrush? Fill { get => GetValue(FillProperty); set => SetValue(FillProperty, value); }
 
-    private readonly ProgressLoop _loop;
+    private readonly LiveLoop _loop;
     private double _phase;
 
     static CountdownPulse()
@@ -408,49 +409,19 @@ internal sealed class CountdownPulse : Control
     public CountdownPulse()
     {
         ClipToBounds = false;
-        _loop = new ProgressLoop(this, dt =>
+        // P21: the Core loop pauses itself while detached, hidden, off screen or below full motion.
+        _loop = new LiveLoop(this, dt =>
         {
             _phase = (_phase + dt / 2.0) % 1;
             InvalidateVisual();
             return true;
         });
+        // Stopping redraws the plain dot.
+        _loop.RunningChanged += _ => InvalidateVisual();
+        _loop.Start();
     }
 
     internal bool IsPulsing => _loop.IsRunning;
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-        UpdateLoop();
-    }
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        _loop.Stop();
-    }
-
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        if (change.Property == IsVisibleProperty || change.Property == ArcMotion.LevelProperty)
-        {
-            UpdateLoop();
-        }
-    }
-
-    internal void UpdateLoop()
-    {
-        if (IsEffectivelyVisible && TopLevel.GetTopLevel(this) is not null && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full)
-        {
-            _loop.Start();
-        }
-        else
-        {
-            _loop.Stop();
-            InvalidateVisual();
-        }
-    }
 
     public override void Render(DrawingContext context)
     {

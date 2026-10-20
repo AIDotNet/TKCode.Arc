@@ -15,8 +15,12 @@ public enum SpringSizeAxis
 
 /// <summary>
 /// P5 / P6: the decorator's size follows its child's desired size on a spring. Only content-driven changes
-/// animate; passive changes (a different available size from the parent) and the first measure jump.
+/// animate; passive changes (a different available size from the parent) and the first measure jump. An unbounded
+/// available size (a stack panel, an auto row) compares equal to itself, so content changes inside stacks spring.
 /// Height mode with <see cref="IsExpanded"/> = false collapses to zero height (disclosure panels).
+/// While the width moves, the child keeps its own width and is pinned by its <c>HorizontalAlignment</c>: Left and
+/// Right hold that edge (a chip that grows to the right), Center and Stretch keep it centered (a button label).
+/// The decorator clips only while it moves (or is collapsed), so focus rings stay whole at rest.
 /// </summary>
 public class SpringSizeDecorator : Decorator
 {
@@ -36,6 +40,14 @@ public class SpringSizeDecorator : Decorator
     /// <summary>Horizontal overflow allowed while a width animation runs (Arc clips with inset -12px).</summary>
     public static readonly StyledProperty<double> ClipOverflowProperty =
         AvaloniaProperty.Register<SpringSizeDecorator, double>(nameof(ClipOverflow), 12);
+
+    /// <summary>
+    /// Overflow kept visible across the moving axis while clipping: left and right of a height animation (a blurred
+    /// line of text, a focus ring), above and below a width animation. NaN (default) keeps none for Height and half
+    /// the height for Width.
+    /// </summary>
+    public static readonly StyledProperty<double> CrossClipOverflowProperty =
+        AvaloniaProperty.Register<SpringSizeDecorator, double>(nameof(CrossClipOverflow), double.NaN);
 
     public SpringSizeAxis Axis
     {
@@ -67,6 +79,16 @@ public class SpringSizeDecorator : Decorator
         set => SetValue(ClipOverflowProperty, value);
     }
 
+    /// <inheritdoc cref="CrossClipOverflowProperty"/>
+    public double CrossClipOverflow
+    {
+        get => GetValue(CrossClipOverflowProperty);
+        set => SetValue(CrossClipOverflowProperty, value);
+    }
+
+    /// <summary>True while the size is springing to a new content size.</summary>
+    public bool IsMoving => _size?.IsAnimating == true;
+
     static SpringSizeDecorator()
     {
         AffectsMeasure<SpringSizeDecorator>(AxisProperty, IsExpandedProperty);
@@ -75,6 +97,7 @@ public class SpringSizeDecorator : Decorator
     private MotionValue<Size>? _size;
     private Size? _lastAvailable;
     private Size _lastTarget;
+    private readonly RectangleGeometry _clip = new();
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -134,8 +157,13 @@ public class SpringSizeDecorator : Decorator
         var desired = child.DesiredSize;
         var rect = Axis switch
         {
-            // The label stays centered and overflows evenly while the slot catches up.
-            SpringSizeAxis.Width => new Rect((finalSize.Width - desired.Width) / 2, 0, desired.Width, finalSize.Height),
+            // The child keeps its width while the slot catches up: pinned to an edge, or centered (overflowing evenly).
+            SpringSizeAxis.Width => new Rect(child.HorizontalAlignment switch
+            {
+                Avalonia.Layout.HorizontalAlignment.Left => 0,
+                Avalonia.Layout.HorizontalAlignment.Right => finalSize.Width - desired.Width,
+                _ => (finalSize.Width - desired.Width) / 2
+            }, 0, desired.Width, finalSize.Height),
             SpringSizeAxis.Height => new Rect(0, 0, finalSize.Width, Math.Max(desired.Height, 0)),
             _ => new Rect(0, 0, desired.Width, desired.Height)
         };
@@ -154,17 +182,27 @@ public class SpringSizeDecorator : Decorator
     private void UpdateClip(Size size)
     {
         var animating = _size?.IsAnimating == true;
+        var cross = CrossClipOverflow;
+        Rect? clip;
         if (Axis == SpringSizeAxis.Width)
         {
-            Clip = animating
-                ? new RectangleGeometry(new Rect(-ClipOverflow, -size.Height * 0.5, size.Width + 2 * ClipOverflow, size.Height * 2))
-                : null;
+            cross = double.IsNaN(cross) ? size.Height * 0.5 : cross;
+            clip = animating ? new Rect(-ClipOverflow, -cross, size.Width + 2 * ClipOverflow, size.Height + 2 * cross) : null;
         }
         else
         {
-            var collapsedOrMoving = animating || !IsExpanded;
-            Clip = collapsedOrMoving ? new RectangleGeometry(new Rect(size)) : null;
+            cross = Axis == SpringSizeAxis.Height && !double.IsNaN(cross) ? cross : 0;
+            clip = animating || !IsExpanded ? new Rect(-cross, 0, size.Width + 2 * cross, size.Height) : null;
         }
+        if (clip is not { } rect)
+        {
+            Clip = null;
+            return;
+        }
+        // One geometry, updated in place: a moving clip allocates nothing per frame.
+        _clip.Rect = rect;
+        Clip = _clip;
+        InvalidateVisual();
     }
 
     // Equals first: an unbounded axis is ∞ on both sides, and ∞ − ∞ is NaN (which would read as "changed").

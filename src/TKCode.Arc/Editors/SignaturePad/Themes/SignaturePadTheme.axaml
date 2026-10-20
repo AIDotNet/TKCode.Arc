@@ -1,0 +1,208 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The signature field: the pad, a toolbar (ink color, nib, history, replay, clear) and the export row. -->
+    <ControlTheme x:Key="{x:Type arc:SignaturePad}" TargetType="arc:SignaturePad">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignaturePad">
+                <Panel>
+                    <StackPanel Spacing="{arc:SignaturePadTokenResource RowGap}">
+                        <arc:SignaturePadCanvas Name="PART_Pad"
+                                                Background="{arc:ArcDesignTokenResource Surface}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                                GuideBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                InkBlack="{arc:ArcDesignTokenResource Foreground}"
+                                                InkBlue="{arc:SignaturePadTokenResource InkBlueColor}"
+                                                InkViolet="{arc:SignaturePadTokenResource InkVioletColor}"
+                                                SweepBrush="{arc:SignaturePadTokenResource SweepColor}"
+                                                HintFontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                SignerFontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                FontFamily="{TemplateBinding FontFamily}" />
+                        <arc:SignaturePadToolbarPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                <arc:SignaturePadChoice Name="PART_Colors"
+                                                        AutomationProperties.Name="Ink color"
+                                                        HighlightFill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                        HighlightStroke="{arc:ArcDesignTokenResource Border}" />
+                                <Border Width="1"
+                                        Height="{arc:SignaturePadTokenResource GroupDividerHeight}"
+                                        Margin="6,0"
+                                        VerticalAlignment="Center"
+                                        Background="{arc:ArcDesignTokenResource Border}" />
+                                <arc:SignaturePadChoice Name="PART_Widths"
+                                                        AutomationProperties.Name="Stroke width"
+                                                        HighlightFill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                        HighlightStroke="{arc:ArcDesignTokenResource Border}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                <arc:SignaturePadIconButton Name="PART_Undo" AutomationProperties.Name="Undo" arc:Tooltip.Tip="Undo">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Undo2}" Size="18" StrokeThickness="1.75" />
+                                </arc:SignaturePadIconButton>
+                                <arc:SignaturePadIconButton Name="PART_Redo" AutomationProperties.Name="Redo" arc:Tooltip.Tip="Redo">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Redo2}" Size="18" StrokeThickness="1.75" />
+                                </arc:SignaturePadIconButton>
+                                <arc:SignaturePadIconButton Name="PART_Replay" AutomationProperties.Name="Replay signature" arc:Tooltip.Tip="Replay signature" />
+                                <arc:SignaturePadIconButton Name="PART_Clear" AutomationProperties.Name="Clear signature" arc:Tooltip.Tip="Clear signature">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Eraser}" Size="18" StrokeThickness="1.75" />
+                                </arc:SignaturePadIconButton>
+                            </StackPanel>
+                        </arc:SignaturePadToolbarPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="6">
+                            <TextBlock Text="Save as"
+                                       Margin="0,0,4,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <arc:Button Name="PART_Png" Variant="Secondary" Size="Small" MinWidth="{arc:SignaturePadTokenResource ExportMinWidth}" />
+                            <arc:Button Name="PART_Svg" Variant="Secondary" Size="Small" MinWidth="{arc:SignaturePadTokenResource ExportMinWidth}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <arc:EditorsLiveRegion Name="PART_Status" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <!-- The pad's edge darkens while a stroke is drawn. -->
+        <Style Selector="^ /template/ arc|SignaturePadCanvas#PART_Pad">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SignaturePadCanvas#PART_Pad:drawing">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|SignaturePadCanvas#PART_Pad">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|SignaturePadCanvas#PART_Pad">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Toolbar icon buttons: 36px pills, secondary text, muted and faded when disabled. -->
+    <ControlTheme x:Key="{x:Type arc:SignaturePadIconButton}" TargetType="arc:SignaturePadIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:SignaturePadTokenResource OptionSize}" />
+        <Setter Property="Height" Value="{arc:SignaturePadTokenResource OptionSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignaturePadIconButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.94)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Ink color and nib options: 36px round radio buttons; the chosen one sits on the gliding highlight. -->
+    <ControlTheme x:Key="{x:Type arc:SignaturePadOption}" TargetType="arc:SignaturePadOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:SignaturePadTokenResource OptionSize}" />
+        <Setter Property="Height" Value="{arc:SignaturePadTokenResource OptionSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignaturePadOption">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover:not(:checked)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

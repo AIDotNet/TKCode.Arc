@@ -1,5 +1,6 @@
 using System.Globalization;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -350,7 +351,7 @@ internal sealed class StepperMarker : Control
         using (context.PushTransform(Matrix.CreateTranslation(-center.X, -center.Y) * Matrix.CreateScale(scale, scale) *
                                      Matrix.CreateTranslation(center.X, center.Y)))
         {
-            var effect = ProgressBlur.Get(blur);
+            var effect = ArcBlur.Get(blur);
             using (effect is null ? default(DrawingContext.PushedState?) : context.PushEffect(effect, box.Inflate(4)))
             {
                 if (glyph.Kind == StepperGlyphKind.Number)

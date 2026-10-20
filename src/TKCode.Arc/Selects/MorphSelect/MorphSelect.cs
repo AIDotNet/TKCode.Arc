@@ -260,6 +260,8 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     internal SelectOptionView? OptionView => _options;
 
+    internal SelectTypeahead Typeahead => _typeahead;
+
     internal MorphSelectSurface? Surface => _surface;
 
     protected override AutomationPeer OnCreateAutomationPeer() => new SelectFieldAutomationPeer(this, this);

@@ -205,8 +205,14 @@ internal sealed class CalendarDayCell : Control
         }
         var rest = IsOutside || IsDisabled ? palette.MutedColor : palette.ForegroundColor;
         var color = Lerp(rest, palette.SelectedForegroundColor, Math.Clamp(Selectedness, 0, 1));
-        var brush = new ImmutableSolidColorBrush(color);
-        _text.SetForegroundBrush(brush);
+        // The number color only changes while selection fades, so the brush is rebuilt per color, not per frame.
+        if (_brush is null || _brush.Color != color || !ReferenceEquals(_brushText, _text))
+        {
+            _brush = new ImmutableSolidColorBrush(color);
+            _brushText = _text;
+            _text.SetForegroundBrush(_brush);
+        }
+        var brush = _brush;
         var opacity = IsDisabled ? (IsOutside ? 0.3 : 0.42) : IsOutside && !IsSelected ? 0.8 : 1;
         var origin = new Point(center.X - _text.Width / 2, center.Y - _text.Height / 2);
         using (context.PushOpacity(opacity))
@@ -240,6 +246,8 @@ internal sealed class CalendarDayCell : Control
     }
 
     private int _textVersion = -1;
+    private ImmutableSolidColorBrush? _brush;
+    private FormattedText? _brushText;
 
     private static Color Lerp(Color a, Color b, double t) => Color.FromArgb(
         (byte)Math.Round(a.A + (b.A - a.A) * t), (byte)Math.Round(a.R + (b.R - a.R) * t),

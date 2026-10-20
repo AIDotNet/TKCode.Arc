@@ -28,6 +28,10 @@ public static partial class GalleryPages
         RegisterActivity();
         RegisterMedia();
         RegisterTextEffects();
+        RegisterBlocks();
+        // Extras (not Arc components).
+        RegisterContent();
+        RegisterIllustrations();
     }
 
     static partial void RegisterButtons();
@@ -52,4 +56,7 @@ public static partial class GalleryPages
     static partial void RegisterActivity();
     static partial void RegisterMedia();
     static partial void RegisterTextEffects();
+    static partial void RegisterBlocks();
+    static partial void RegisterContent();
+    static partial void RegisterIllustrations();
 }

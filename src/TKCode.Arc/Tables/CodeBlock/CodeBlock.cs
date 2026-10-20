@@ -14,7 +14,8 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// A source viewer with a file-name header, lightweight syntax highlighting, a copy action and optional collapsing.
+/// A source viewer with a file-name header, syntax highlighting (TextMate grammars painted in Arc's role palette), a
+/// copy action and optional collapsing.
 /// Long sources collapse to <see cref="MaxLines"/> lines with a toggle that expands the rest in place on a smooth
 /// height spring; new code fades in with a short rise. Long lines scroll horizontally inside the block.
 /// </summary>
@@ -42,7 +43,11 @@ public class CodeBlock : TemplatedControl
     public static readonly StyledProperty<string?> CodeProperty =
         AvaloniaProperty.Register<CodeBlock, string?>(nameof(Code));
 
-    /// <summary>Header label and highlighting mode (Arc default "tsx").</summary>
+    /// <summary>
+    /// Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as <c>cs</c>,
+    /// <c>ts</c>, <c>json</c>, <c>xml</c>/<c>axaml</c>, <c>py</c>, <c>sh</c>. Languages without a TextMate grammar
+    /// show plain text.
+    /// </summary>
     public static readonly StyledProperty<string?> LanguageProperty =
         AvaloniaProperty.Register<CodeBlock, string?>(nameof(Language), "tsx");
 
@@ -324,7 +329,7 @@ public class CodeBlock : TemplatedControl
             code = code.Replace("\t", "  ", StringComparison.Ordinal);
         }
         DisplayCode = code;
-        DisplayLanguage = CodeBlockTokenizer.NormalizeLanguage(Language);
+        DisplayLanguage = CodeBlockHighlighter.NormalizeLanguage(Language);
         var lines = 1;
         foreach (var ch in code.AsSpan())
         {

@@ -33,7 +33,12 @@
                                         VerticalAlignment="Top">
                                 <arc:ArcGlyph Data="{x:Static arc:MessagesIcons.X}" Size="16" StrokeThickness="1.75" />
                             </arc:Button>
-                            <arc:MessagesSizeFrame Name="PART_CopyFrame" VerticalAlignment="Top">
+                            <!-- P6: the copy height springs to new content; 12px either side stays unclipped for the blurred swap. -->
+                            <arc:SpringSizeDecorator Name="PART_CopyFrame"
+                                                     Axis="Height"
+                                                     Spring="Smooth"
+                                                     CrossClipOverflow="12"
+                                                     VerticalAlignment="Top">
                                 <StackPanel>
                                     <arc:MessagesTextSwap Name="PART_Title"
                                                           Text="{TemplateBinding Title}"
@@ -56,7 +61,7 @@
                                                       TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                                 </StackPanel>
-                            </arc:MessagesSizeFrame>
+                            </arc:SpringSizeDecorator>
                         </DockPanel>
                     </Border>
                 </arc:MessagesPresenceFrame>

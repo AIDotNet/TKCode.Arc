@@ -11,6 +11,8 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AtomUI.Desktop.Controls" />
+        <!-- Markdown rendering and TextMate code highlighting (ADR 0011); brings StreamMark.Avalonia and StreamMark.Core. -->
+        <PackageReference Include="TKCode.StreamMark.Highlighting.TextMate" />
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
     </ItemGroup>
     <ItemGroup>

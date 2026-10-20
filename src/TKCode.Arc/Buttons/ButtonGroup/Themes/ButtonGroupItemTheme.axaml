@@ -1,0 +1,159 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- One segment: transparent over the shared highlight, a hairline divider on its leading edge, content that dips
+         in place when pressed. -->
+    <ControlTheme x:Key="{x:Type arc:ButtonGroupItem}" TargetType="arc:ButtonGroupItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Arc draws its own focus indication; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ButtonGroupItem">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Divider"
+                            IsHitTestVisible="False"
+                            Width="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch" />
+                    <Panel Name="PART_Content"
+                           Margin="{TemplateBinding Padding}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           RenderTransformOrigin="50%,50%">
+                        <arc:SpringSizeDecorator Name="PART_Slot"
+                                                 Axis="Width"
+                                                 Spring="Morph"
+                                                 ClipOverflow="{arc:ButtonGroupItemTokenResource MorphOverflow}">
+                            <Grid>
+                                <arc:ButtonsLabelSizer Name="PART_Sizer" Labels="{TemplateBinding SizerLabels}" />
+                                <arc:ArcContentSwap Name="PART_Phase"
+                                                    Mode="BlurSwap"
+                                                    HorizontalAlignment="Center"
+                                                    Content="{TemplateBinding Phase}" />
+                            </Grid>
+                        </arc:SpringSizeDecorator>
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ButtonGroupItemTokenResource SegmentExtentMD}" />
+        <Setter Property="MinWidth" Value="{arc:ButtonGroupItemTokenResource SegmentExtentMD}" />
+        <Setter Property="Padding" Value="{arc:ButtonGroupItemTokenResource SegmentInsetMD}" />
+        <Setter Property="LabelGap" Value="{arc:ButtonGroupItemTokenResource LabelGapMD}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="True" />
+
+        <Style Selector="^ /template/ Border#PART_Divider">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Margin" Value="{arc:ButtonGroupItemTokenResource DividerMarginMD}" />
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_Content">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:has-icon /template/ arc|ButtonsLabelSizer#PART_Sizer">
+            <Setter Property="Leading" Value="{arc:ButtonGroupItemTokenResource SizerLeadingMD}" />
+        </Style>
+
+        <!-- Hairline dividers sit between segments and fade where the highlight arrives. -->
+        <Style Selector="^:joined /template/ Border#PART_Divider">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:quiet /template/ Border#PART_Divider">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:solid /template/ Border#PART_Divider">
+            <Setter Property="Background" Value="{arc:ButtonGroupItemTokenResource SolidDividerColor}" />
+        </Style>
+
+        <!-- Icon only, and labels collapsed to the icon: square segments. -->
+        <Style Selector="^:icon-only, ^:collapsed">
+            <Setter Property="Width" Value="{arc:ButtonGroupItemTokenResource SegmentExtentMD}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style Selector="^:small">
+            <Setter Property="Height" Value="{arc:ButtonGroupItemTokenResource SegmentExtentSM}" />
+            <Setter Property="MinWidth" Value="{arc:ButtonGroupItemTokenResource SegmentExtentSM}" />
+            <Setter Property="Padding" Value="{arc:ButtonGroupItemTokenResource SegmentInsetSM}" />
+            <Setter Property="LabelGap" Value="{arc:ButtonGroupItemTokenResource LabelGapSM}" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Margin" Value="{arc:ButtonGroupItemTokenResource DividerMarginSM}" />
+            </Style>
+            <Style Selector="^:has-icon /template/ arc|ButtonsLabelSizer#PART_Sizer">
+                <Setter Property="Leading" Value="{arc:ButtonGroupItemTokenResource SizerLeadingSM}" />
+            </Style>
+        </Style>
+        <Style Selector="^:small:icon-only, ^:small:collapsed">
+            <Setter Property="Width" Value="{arc:ButtonGroupItemTokenResource SegmentExtentSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <!-- A column: full-width segments led from the start; icon-only ones centred; dividers run across the top. -->
+        <Style Selector="^:vertical">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Style Selector="^ /template/ Panel#PART_Content">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Height" Value="1" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Margin" Value="{arc:ButtonGroupItemTokenResource DividerMarginVertical}" />
+            </Style>
+        </Style>
+        <Style Selector="^:vertical:icon-only /template/ Panel#PART_Content">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Disabled segments stay focusable; their content dims. -->
+        <Style Selector="^:inert">
+            <Setter Property="Cursor" Value="No" />
+            <Style Selector="^ /template/ Panel#PART_Content">
+                <Setter Property="Opacity" Value="{arc:ButtonGroupItemTokenResource InertContentOpacity}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <!-- The press answers inside the segment: content dips (icon-only deeper) and springs back on the CSS spring. -->
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Panel#PART_Content">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed:not(:inert) /template/ Panel#PART_Content">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed:icon-only:not(:inert) /template/ Panel#PART_Content">
+                <Setter Property="RenderTransform" Value="scale(0.9)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

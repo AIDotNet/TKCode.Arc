@@ -46,9 +46,8 @@ internal sealed class SkeletonBlocks : Control
     private const double LineGap = 12;
     private static readonly Easing s_inOut = ArcEasings.InOut;
 
-    private readonly ProgressLoop _loop;
+    private readonly LiveLoop _loop;
     private double _elapsed;
-    private bool _inViewport = true;
 
     static SkeletonBlocks()
     {
@@ -59,17 +58,12 @@ internal sealed class SkeletonBlocks : Control
 
     public SkeletonBlocks()
     {
-        _loop = new ProgressLoop(this, Step);
-        EffectiveViewportChanged += (_, e) =>
-        {
-            var bounds = new Rect(Bounds.Size);
-            var visible = bounds.Width <= 0 || bounds.Height <= 0 || e.EffectiveViewport.Intersects(bounds);
-            if (visible != _inViewport)
-            {
-                _inViewport = visible;
-                UpdateLoop();
-            }
-        };
+        // P21: the Core loop pauses itself while detached, hidden, off screen or below full motion; it finishes
+        // after the last pulse.
+        _loop = new LiveLoop(this, Step);
+        // Stopping redraws the blocks at rest (reduced motion keeps them still).
+        _loop.RunningChanged += _ => InvalidateVisual();
+        _loop.Start();
     }
 
     /// <summary>Clamped line count (Arc: 1–6).</summary>
@@ -99,45 +93,6 @@ internal sealed class SkeletonBlocks : Control
         _elapsed += dt;
         InvalidateVisual();
         return _elapsed < TotalDuration;
-    }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-        UpdateLoop();
-    }
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnDetachedFromVisualTree(e);
-        _loop.Stop();
-    }
-
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        if (change.Property == IsVisibleProperty || change.Property == ArcMotion.LevelProperty)
-        {
-            UpdateLoop();
-        }
-    }
-
-    private void UpdateLoop()
-    {
-        var run = IsVisible && _inViewport && TopLevel.GetTopLevel(this) is not null &&
-                  ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full && _elapsed < TotalDuration;
-        if (run)
-        {
-            _loop.Start();
-        }
-        else
-        {
-            _loop.Stop();
-            if (ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full)
-            {
-                InvalidateVisual();
-            }
-        }
     }
 
     protected override Size MeasureOverride(Size availableSize)

@@ -31,8 +31,10 @@ public enum ContentSwapMode
 
 /// <summary>
 /// Content presenter that animates content changes (Arc primitives P2 blur swap and P3 directional roll).
-/// The outgoing content is popped out of layout: only the incoming content determines the size.
-/// The first content never animates.
+/// The outgoing content is popped out of layout: only the incoming content determines the size, and the outgoing copy
+/// keeps its own size, placed by <see cref="HorizontalContentAlignment"/> / <see cref="VerticalContentAlignment"/>
+/// like the incoming one (Left / Top and Right / Bottom pin it to that edge, so left-aligned text never jumps; Center
+/// and Stretch center it on the slot). The first content never animates.
 /// </summary>
 public class ArcContentSwap : Control
 {
@@ -94,6 +96,11 @@ public class ArcContentSwap : Control
     private Layer? _current;
     private readonly List<Layer> _exiting = new();
 
+    static ArcContentSwap()
+    {
+        AffectsArrange<ArcContentSwap>(HorizontalContentAlignmentProperty, VerticalContentAlignmentProperty);
+    }
+
     private sealed class Layer
     {
         public required ContentPresenter Presenter { get; init; }
@@ -113,6 +120,19 @@ public class ArcContentSwap : Control
         else if (change.Property == ContentTemplateProperty && _current is not null)
         {
             _current.Presenter.ContentTemplate = ContentTemplate;
+        }
+        else if (change.Property == HorizontalContentAlignmentProperty || change.Property == VerticalContentAlignmentProperty)
+        {
+            if (_current is not null)
+            {
+                _current.Presenter.HorizontalContentAlignment = HorizontalContentAlignment;
+                _current.Presenter.VerticalContentAlignment = VerticalContentAlignment;
+            }
+            foreach (var layer in _exiting)
+            {
+                layer.Presenter.HorizontalContentAlignment = HorizontalContentAlignment;
+                layer.Presenter.VerticalContentAlignment = VerticalContentAlignment;
+            }
         }
     }
 
@@ -358,10 +378,21 @@ public class ArcContentSwap : Control
     {
         foreach (var layer in _exiting)
         {
-            // Outgoing content keeps its own size, centered on the slot (it is out of layout).
+            // Outgoing content is out of layout and keeps its own size, aligned on the slot like the incoming content.
             var size = layer.Presenter.DesiredSize;
-            var rect = new Rect((finalSize.Width - size.Width) / 2, (finalSize.Height - size.Height) / 2, size.Width, size.Height);
-            layer.Presenter.Arrange(rect);
+            var x = HorizontalContentAlignment switch
+            {
+                Avalonia.Layout.HorizontalAlignment.Left => 0,
+                Avalonia.Layout.HorizontalAlignment.Right => finalSize.Width - size.Width,
+                _ => (finalSize.Width - size.Width) / 2
+            };
+            var y = VerticalContentAlignment switch
+            {
+                Avalonia.Layout.VerticalAlignment.Top => 0,
+                Avalonia.Layout.VerticalAlignment.Bottom => finalSize.Height - size.Height,
+                _ => (finalSize.Height - size.Height) / 2
+            };
+            layer.Presenter.Arrange(new Rect(x, y, size.Width, size.Height));
         }
         if (_current is not null)
         {

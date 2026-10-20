@@ -1,6 +1,7 @@
 using AtomUI;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
+using TKCode.Arc.Gallery;
 using AtomUI.Desktop.Controls;
 using AtomUI.Localization;
 using Avalonia;
@@ -22,5 +23,6 @@ internal static class Program
                       builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);
                       builder.UseDesktopControls();
                       builder.UseArc();
+                      builder.UseArcGallery();
                   });
 }

@@ -1,3 +1,4 @@
+using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
@@ -27,11 +28,14 @@ internal sealed class TogglesGroupHost
 
     public ITogglesIndicator? Indicator => _tracker?.Indicator;
 
-    /// <summary>Uses <paramref name="indicator"/> (a template part) as the selection indicator.</summary>
-    public void AttachIndicator(GlidingIndicator? indicator, double inset, bool fadeInFirst)
-        => AttachIndicator(indicator is null ? null : new TogglesGlidingIndicator(indicator), inset, fadeInFirst);
+    /// <summary>
+    /// Uses <paramref name="indicator"/> (a template part) as the selection indicator. It glides on
+    /// <paramref name="spring"/> when the component's Arc source has its own spring, otherwise on its Spring preset.
+    /// </summary>
+    public void AttachIndicator(GlidingIndicator? indicator, double inset, bool fadeInFirst, SpringSpec? spring = null)
+        => AttachIndicator(indicator is null ? null : new TogglesGlidingIndicator(indicator, spring), inset, fadeInFirst);
 
-    /// <summary>Uses a custom indicator (for example BillingToggle's thumb).</summary>
+    /// <summary>Uses a custom indicator.</summary>
     public void AttachIndicator(ITogglesIndicator? indicator, double inset, bool fadeInFirst)
     {
         _tracker?.Detach();

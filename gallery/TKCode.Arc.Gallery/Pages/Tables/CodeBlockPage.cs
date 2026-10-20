@@ -61,6 +61,78 @@ public static class CodeBlockPage
                        Code="{Binding Source}" />
         """;
 
+    private static readonly (string Name, string Language, string Code)[] s_languages =
+    [
+        ("CartView.cs", "cs", Csharp),
+        ("greeting.tsx", "tsx", Greeting),
+        ("stats.py", "py", """"
+            from dataclasses import dataclass
+
+            @dataclass
+            class Stats:
+                count: int = 0
+
+                def add(self, value: float) -> "Stats":
+                    """Counts one more sample."""
+                    self.count += 1  # no averaging yet
+                    return self
+            """"),
+        ("main.rs", "rust", """
+            use std::collections::HashMap;
+
+            /// Counts words.
+            fn count(text: &str) -> HashMap<&str, usize> {
+                let mut words = HashMap::new();
+                for word in text.split_whitespace() {
+                    *words.entry(word).or_insert(0) += 1;
+                }
+                words
+            }
+            """),
+        ("greet.go", "go", """
+            package main
+
+            import "fmt"
+
+            // Greet prints a greeting n times.
+            func Greet(name string, n int) {
+            	for i := 0; i < n; i++ {
+            		fmt.Printf("Hello, %s!\n", name)
+            	}
+            }
+            """),
+        ("deploy.sh", "bash", """
+            #!/usr/bin/env bash
+            set -euo pipefail
+            # Build, then publish the gallery.
+            for rid in osx-arm64 win-x64; do
+              dotnet publish -c Release -r "$rid" -o "out/$rid"
+            done
+            """),
+        ("ci.yml", "yaml", """
+            name: build
+            on:
+              push:
+                branches: [main]
+            jobs:
+              test:
+                runs-on: ubuntu-latest
+                steps:
+                  - run: dotnet test # all projects
+            """),
+        ("orders.sql", "sql", """
+            -- Customers with more than five orders
+            SELECT c.name, COUNT(o.id) AS orders
+            FROM customers c
+            JOIN orders o ON o.customer_id = c.id
+            GROUP BY c.name
+            HAVING COUNT(o.id) > 5;
+            """),
+        ("package.json", "json", Config),
+        ("Usage.axaml", "axaml", Xaml),
+        ("notes.txt", "text", "Plain text: languages without a grammar are not highlighted.")
+    ];
+
     public static Control Create()
     {
         var longSource = string.Join("\n", Enumerable.Range(1, 40).Select(i =>
@@ -86,18 +158,33 @@ public static class CodeBlockPage
             return (Control)button;
         }).ToArray());
 
+        var polyglot = new CodeBlock { FileName = s_languages[0].Name, Language = s_languages[0].Language, Code = s_languages[0].Code };
+        var languages = GalleryUi.Row(s_languages.Select(l =>
+        {
+            var button = new Button { Content = l.Language, Variant = ButtonVariant.Secondary, Size = ControlSize.Small };
+            button.Click += (_, _) =>
+            {
+                polyglot.FileName = l.Name;
+                polyglot.Language = l.Language;
+                polyglot.Code = l.Code;
+            };
+            return (Control)button;
+        }).ToArray());
+
         var copied = GalleryUi.Text("Copy the code to see the event.", ArcDesignTokenKind.TextSecondary);
         var main = new CodeBlock { FileName = "greeting.tsx", Code = Greeting };
         main.Copied += (_, _) => copied.Text = $"Copied {main.LineCount} lines at {DateTime.Now:T}";
 
         return GalleryUi.Column(20,
-            GalleryUi.Card("Default", "File name header, lightweight highlighting and a copy action. Long lines scroll inside the block.",
+            GalleryUi.Card("Default", "File name header, syntax highlighting and a copy action. Long lines scroll inside the block.",
                 GalleryUi.Column(12, main, copied)),
             GalleryUi.Card("Collapsible", "IsCollapsible with MaxLines=6: the toggle expands the rest in place on a smooth height spring; the label swaps and the chevron turns.",
                 new CodeBlock { FileName = "pipeline.ts", Language = "ts", Code = longSource, IsCollapsible = true, MaxLines = 6 }),
             GalleryUi.Card("Switching files", "A new file name swaps in while its slot follows the new width; the new source rises in and the height follows on a spring.",
                 GalleryUi.Column(12, switcher, live)),
-            GalleryUi.Card("Line numbers", "ShowLineNumbers adds a gutter (an extension); C# and XAML modes extend Arc's highlighter.",
+            GalleryUi.Card("Languages", "TextMate grammars (StreamMark) cover dozens of languages; every one is painted in Arc's nine syntax roles. Unknown languages stay plain.",
+                GalleryUi.Column(12, languages, polyglot)),
+            GalleryUi.Card("Line numbers", "ShowLineNumbers adds a gutter (an extension).",
                 GalleryUi.Column(12,
                     new CodeBlock { FileName = "CartView.cs", Language = "cs", Code = Csharp, ShowLineNumbers = true },
                     new CodeBlock { FileName = "Usage.axaml", Language = "axaml", Code = Xaml })),
