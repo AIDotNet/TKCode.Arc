@@ -1,4 +1,5 @@
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.Localization;
 using Avalonia.Headless.XUnit;
 
 namespace TKCode.Arc.Tests.Gallery;
