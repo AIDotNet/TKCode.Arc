@@ -177,7 +177,8 @@ public class GalleryShellTests
             // The table of contents follows the page bounds, so lay the window out before checking it (headless Linux may not do it).
             wide.UpdateLayout();
             var toc = Find<GalleryToc>(wide);
-            toc.IsVisible.ShouldBeTrue();
+            var page = Find<GalleryPageView>(wide);
+            toc.IsVisible.ShouldBeTrue($"window {wide.Bounds.Width}x{wide.Bounds.Height}, page {page.Bounds.Width}x{page.Bounds.Height}");
             var rows = toc.GetVisualDescendants().OfType<GalleryNavRow>().Count();
             // One row per example plus the two links under the list.
             rows.ShouldBeGreaterThanOrEqualTo(4 + 2);
