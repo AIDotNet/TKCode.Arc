@@ -64,3 +64,44 @@ jobs:
             STREAMMARK_VERSION=${{ inputs.streammark_version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # Runs the image that was just pushed and checks what matters to the browser: brotli for the
+  # fingerprinted WebAssembly, long-lived caching for it, and revalidation for index.html.
+  smoke:
+    name: Check the pushed image
+    needs: image
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run the image
+        run: |
+          IMAGE="ghcr.io/atomuicommunity/tkcode-arc-gallery:sha-${GITHUB_SHA::7}"
+          docker pull "$IMAGE"
+          docker run -d --name gallery -p 8080:80 "$IMAGE"
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ > /dev/null && break; sleep 1; done
+          WASM=$(docker exec gallery sh -c 'cd /usr/share/nginx/html/_framework && ls *.wasm | grep -E "\.[0-9a-z]{8,}\.wasm$" | head -1')
+          echo "fingerprinted wasm: $WASM"
+          curl -sfI -H 'Accept-Encoding: br' "http://127.0.0.1:8080/_framework/$WASM" | tee wasm.headers
+          grep -qi '^content-encoding: br' wasm.headers
+          grep -qi '^cache-control: public, max-age=31536000, immutable' wasm.headers
+          grep -qi '^content-type: application/wasm' wasm.headers
+          curl -sfI -H 'Accept-Encoding: gzip' http://127.0.0.1:8080/avalonia.js | tee js.headers
+          grep -qi '^content-encoding: gzip' js.headers
+          grep -qi '^cache-control: no-cache' js.headers
+          curl -sfI http://127.0.0.1:8080/ | tee index.headers
+          grep -qi '^cache-control: no-cache' index.headers
+
+      - name: Logs on failure
+        if: failure()
+        run: docker logs gallery || true
