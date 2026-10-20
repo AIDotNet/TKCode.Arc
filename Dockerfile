@@ -9,10 +9,11 @@ FROM ${BUILDER_IMAGE} AS build
 # Passed to the publish when set; empty keeps the version pinned in Directory.Packages.props.
 ARG STREAMMARK_VERSION=
 WORKDIR /src
-# The SDK is the one global.json pins (11.0.100-rc.2), installed from it so the image and the repo agree.
+# The SDK is the one global.json pins (11.0.100-rc.2). The .NET 10 runtime is needed too: AtomUI's build worker is net10.
 COPY global.json .
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh \
     && bash /tmp/dotnet-install.sh --jsonfile global.json --install-dir /opt/dotnet \
+    && bash /tmp/dotnet-install.sh --runtime dotnet --channel 10.0 --install-dir /opt/dotnet \
     && rm /tmp/dotnet-install.sh
 ENV DOTNET_ROOT=/opt/dotnet \
     PATH=/opt/dotnet:$PATH \
