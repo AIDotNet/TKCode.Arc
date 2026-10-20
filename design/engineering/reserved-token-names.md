@@ -1,0 +1,50 @@
+# 保留的 Token 名称（AtomUI 6.2.6 全局 Token）
+
+Own token（`XxxToken` 的属性）与 ArcDesign token 都不能与下列 255 个全局 Token 同名，否则构建报 ATOMUIGEN019。
+常见冲突：`SizeSM/MD/LG/XL`、`PaddingSM`、`MarginXS`、`FontSize`、`LineHeight`、`BorderRadius`、`ControlHeight`、`Motion*`。
+改用带组件语义的名字，例如 `DiameterSM`、`InlinePaddingSM`、`GapSM`、`LabelFontSize`。
+
+清单由 AtomUI 源码 `src/AtomUI.Core/Theme/DesignTokens/Definitions/DesignToken*.cs` 提取。
+
+```text
+BorderRadius BorderRadiusLG BorderRadiusOuter BorderRadiusSM BorderRadiusXS BorderThickness BoxShadows 
+BoxShadowsSecondary BoxShadowsTertiary ColorBgBase ColorBgBlur ColorBgContainer ColorBgContainerDisabled 
+ColorBgElevated ColorBgLayout ColorBgMask ColorBgSolid ColorBgSolidActive ColorBgSolidHover ColorBgSpotlight 
+ColorBgTextActive ColorBgTextHover ColorBlack ColorBorder ColorBorderBg ColorBorderSecondary 
+ColorControlOutline ColorError ColorErrorActive ColorErrorBg ColorErrorBgActive ColorErrorBgHover 
+ColorErrorBorder ColorErrorBorderHover ColorErrorHover ColorErrorOutline ColorErrorText ColorErrorTextActive 
+ColorErrorTextHover ColorFill ColorFillAlter ColorFillContent ColorFillContentHover ColorFillQuaternary 
+ColorFillSecondary ColorFillTertiary ColorFocusBorder ColorHighlight ColorIcon ColorIconHover ColorInfo 
+ColorInfoActive ColorInfoBg ColorInfoBgHover ColorInfoBorder ColorInfoBorderHover ColorInfoHover 
+ColorInfoText ColorInfoTextActive ColorInfoTextHover ColorLink ColorLinkActive ColorLinkHover ColorPalettes 
+ColorPrimary ColorPrimaryActive ColorPrimaryBg ColorPrimaryBgHover ColorPrimaryBorder ColorPrimaryBorderHover 
+ColorPrimaryHover ColorPrimaryText ColorPrimaryTextActive ColorPrimaryTextHover ColorSplit ColorSuccess 
+ColorSuccessActive ColorSuccessBg ColorSuccessBgHover ColorSuccessBorder ColorSuccessBorderHover 
+ColorSuccessHover ColorSuccessText ColorSuccessTextActive ColorSuccessTextHover ColorText ColorTextBase 
+ColorTextDescription ColorTextDisabled ColorTextHeading ColorTextLabel ColorTextLightSolid 
+ColorTextPlaceholder ColorTextQuaternary ColorTextSecondary ColorTextTertiary ColorTransparent ColorWarning 
+ColorWarningActive ColorWarningBg ColorWarningBgHover ColorWarningBorder ColorWarningBorderHover 
+ColorWarningHover ColorWarningOutline ColorWarningText ColorWarningTextActive ColorWarningTextHover 
+ColorWhite ControlHeight ControlHeightLG ControlHeightSM ControlHeightXS ControlInteractiveSize 
+ControlItemBgActive ControlItemBgActiveDisabled ControlItemBgActiveHover ControlItemBgHover 
+ControlOutlineWidth ControlPaddingHorizontal ControlPaddingHorizontalSM EnableMotion EnableWaveSpirit 
+FontFamily FontHeight FontHeightLG FontHeightSM FontSize FontSizeHeading1 FontSizeHeading2 FontSizeHeading3 
+FontSizeHeading4 FontSizeHeading5 FontSizeIcon FontSizeLG FontSizeSM FontSizeXL FontWeightStrong IconSize 
+IconSizeLG IconSizeSM IconSizeXS InputActiveShadow InputContentMargin InputErrorActiveShadow InputPadding 
+InputPaddingLG InputPaddingSM InputWarningActiveShadow LineType LineWidth LineWidthBold LineWidthFocus 
+LinkDecoration LinkFocusDecoration LinkHoverDecoration Margin MarginLG MarginMD MarginSM MarginXL MarginXS 
+MarginXXL MarginXXS MotionBase MotionDurationFast MotionDurationMid MotionDurationSlow MotionDurationVerySlow 
+MotionUnit OpacityImage OpacityLoading Padding PaddingContentHorizontal PaddingContentHorizontalLG 
+PaddingContentHorizontalSM PaddingContentHorizontalXS PaddingContentVertical PaddingContentVerticalLG 
+PaddingContentVerticalSM PaddingLG PaddingMD PaddingSM PaddingXL PaddingXS PaddingXXS RelativeLineHeight 
+RelativeLineHeightHeading1 RelativeLineHeightHeading2 RelativeLineHeightHeading3 RelativeLineHeightHeading4 
+RelativeLineHeightHeading5 RelativeLineHeightLG RelativeLineHeightSM ScreenLG ScreenLGMax ScreenLGMin 
+ScreenMD ScreenMDMax ScreenMDMin ScreenSM ScreenSMMax ScreenSMMin ScreenXL ScreenXLMax ScreenXLMin ScreenXS 
+ScreenXSMax ScreenXSMin ScreenXXL ScreenXXLMax ScreenXXLMin ScreenXXXL ScreenXXXLMin SelectionBackground 
+SelectionForeground Size SizeLG SizeMD SizeMS SizePopupArrow SizeSM SizeStep SizeUnit SizeXL SizeXS SizeXXL 
+SizeXXS Spacing SpacingLG SpacingMD SpacingSM SpacingXL SpacingXS SpacingXXL SpacingXXS UniformlyMargin 
+UniformlyMarginLG UniformlyMarginMD UniformlyMarginSM UniformlyMarginXL UniformlyMarginXS UniformlyMarginXXL 
+UniformlyMarginXXS UniformlyPadding UniformlyPaddingLG UniformlyPaddingMD UniformlyPaddingSM 
+UniformlyPaddingXL UniformlyPaddingXS UniformlyPaddingXXS WaveAnimationRange WaveStartOpacity ZIndexBase 
+ZIndexPopupBase
+```
