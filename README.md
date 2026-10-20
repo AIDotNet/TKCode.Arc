@@ -1,5 +1,7 @@
 # TKCode.Arc
 
+English | [简体中文](README.zh-CN.md)
+
 Arc-style components for Avalonia, built on [AtomUI](https://github.com/AtomUI/AtomUI).
 TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 110 components in 22 groups —
 with Arc's visual language and spring motion.
@@ -97,6 +99,11 @@ dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
+
+## Sponsors
+
+TKCode.Arc is mainly sponsored by [nextco.work](https://nextco.work/), which provides affordable, easy-to-use
+access to Claude, OpenAI and DeepSeek models. Thank you for supporting the project.
 
 ## License
 
