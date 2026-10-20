@@ -1,0 +1,230 @@
+using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Motion;
+using TKCode.Arc.Gallery.Pages;
+using TKCode.Arc.Gallery.Shell;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Headless.XUnit;
+using Avalonia.Input;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
+
+namespace TKCode.Arc.Tests.Gallery;
+
+/// <summary>The gallery shell: sidebar search / filter / selection, page chrome, "On this page" and keyboard shortcuts.</summary>
+public class GalleryShellTests
+{
+    private static GalleryEntry Entry(string className) =>
+        GalleryCatalog.Categories.SelectMany(c => c.Entries).First(e => e.ClassName == className);
+
+    private static GalleryWindow Open(double width = 1280, double height = 860)
+    {
+        var window = new GalleryWindow { Width = width, Height = height };
+        ArcMotion.SetLevel(window, ArcMotionLevel.Off);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        return window;
+    }
+
+    private static T Find<T>(GalleryWindow window) where T : Visual => window.GetVisualDescendants().OfType<T>().First();
+
+    [AvaloniaFact]
+    public void Opens_On_The_First_Component()
+    {
+        var window = Open();
+        try
+        {
+            window.Sidebar.SelectedEntry.ShouldBe(GalleryCatalog.Categories[0].Entries[0]);
+            Find<GalleryPageView>(window).ShouldNotBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Search_Narrows_The_Sidebar_By_Title_Class_And_Slug()
+    {
+        var window = Open();
+        try
+        {
+            window.Sidebar.VisibleEntries.Count.ShouldBe(GalleryCatalog.Count);
+
+            window.Sidebar.SearchText = "button";
+            var buttons = window.Sidebar.VisibleEntries;
+            buttons.ShouldNotBeEmpty();
+            buttons.ShouldAllBe(e => e.Title.Contains("button", StringComparison.OrdinalIgnoreCase) ||
+                                     e.ClassName.Contains("button", StringComparison.OrdinalIgnoreCase) ||
+                                     e.Slug.Contains("button", StringComparison.OrdinalIgnoreCase));
+
+            window.Sidebar.SearchText = "no such component";
+            window.Sidebar.VisibleEntries.ShouldBeEmpty();
+
+            window.Sidebar.SearchText = string.Empty;
+            window.Sidebar.VisibleEntries.Count.ShouldBe(GalleryCatalog.Count);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Ready_And_Planned_Filters_Split_The_Catalog()
+    {
+        var window = Open();
+        try
+        {
+            window.Sidebar.FilterIndex = 1;
+            var ready = window.Sidebar.VisibleEntries;
+            ready.ShouldNotBeEmpty();
+            ready.ShouldAllBe(e => GalleryPages.IsImplemented(e.ClassName));
+
+            window.Sidebar.FilterIndex = 2;
+            var planned = window.Sidebar.VisibleEntries;
+            planned.ShouldAllBe(e => !GalleryPages.IsImplemented(e.ClassName));
+
+            (ready.Count + planned.Count).ShouldBe(GalleryCatalog.Count);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Selecting_An_Entry_Opens_Its_Page()
+    {
+        var window = Open();
+        try
+        {
+            window.Select(Entry("Switch"));
+            Dispatcher.UIThread.RunJobs();
+
+            window.Sidebar.SelectedEntry.ShouldBe(Entry("Switch"));
+            var page = Find<GalleryPageView>(window);
+            page.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ShouldContain("Switch");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Planned_Component_Gets_A_Placeholder_Page()
+    {
+        var window = Open();
+        try
+        {
+            // Any component that is still planned (the first one in catalog order).
+            var planned = GalleryCatalog.Categories.SelectMany(c => c.Entries).First(e => !GalleryPages.IsImplemented(e.ClassName));
+            window.Select(planned);
+            Dispatcher.UIThread.RunJobs();
+
+            var texts = Find<GalleryPageView>(window).GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+            texts.ShouldContain($"Planned · P{planned.Phase}");
+            texts.ShouldContain($"{planned.ClassName} is scheduled for phase P{planned.Phase}.");
+            // One placeholder section is not enough to need an "On this page" list.
+            window.GetVisualDescendants().OfType<GalleryToc>().ShouldAllBe(t => !t.IsVisible);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void On_This_Page_Lists_The_Examples_And_Hides_When_Narrow()
+    {
+        var wide = Open(1280);
+        try
+        {
+            wide.Select(Entry("Button"));
+            Dispatcher.UIThread.RunJobs();
+            var toc = Find<GalleryToc>(wide);
+            toc.IsVisible.ShouldBeTrue();
+            var rows = toc.GetVisualDescendants().OfType<GalleryNavRow>().Count();
+            // One row per example plus the two links under the list.
+            rows.ShouldBeGreaterThanOrEqualTo(4 + 2);
+        }
+        finally
+        {
+            wide.Close();
+        }
+
+        var narrow = Open(900);
+        try
+        {
+            narrow.Select(Entry("Button"));
+            Dispatcher.UIThread.RunJobs();
+            Find<GalleryToc>(narrow).IsVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            narrow.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Arrow_Keys_Move_The_Selection_Through_Visible_Items()
+    {
+        var window = Open();
+        try
+        {
+            var first = window.Sidebar.SelectedEntry!;
+            window.Sidebar.FocusSearch();
+            window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.Sidebar.SelectedEntry.ShouldNotBe(first);
+            window.KeyPressQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.Sidebar.SelectedEntry.ShouldBe(first);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Enter_In_Search_Opens_The_First_Match_And_Escape_Clears()
+    {
+        var window = Open();
+        try
+        {
+            window.Sidebar.FocusSearch();
+            window.Sidebar.SearchText = "switch";
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.Sidebar.SelectedEntry!.ClassName.ShouldBe(window.Sidebar.VisibleEntries[0].ClassName);
+
+            window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            window.Sidebar.SearchText.ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Ctrl_K_Focuses_The_Search_Field()
+    {
+        var window = Open();
+        try
+        {
+            window.Sidebar.IsSearchFocused.ShouldBeFalse();
+            window.KeyPressQwerty(PhysicalKey.K, RawInputModifiers.Control);
+            Dispatcher.UIThread.RunJobs();
+            window.Sidebar.IsSearchFocused.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+}
