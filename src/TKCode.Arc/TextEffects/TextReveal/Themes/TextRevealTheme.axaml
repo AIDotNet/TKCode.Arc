@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:TextReveal}" TargetType="arc:TextReveal">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MaxWidthInChars" Value="{arc:TextRevealTokenResource LineLengthChars}" />
+        <!-- Headings: display type, medium weight, display tracking and leading, text blur. -->
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+        <Setter Property="Tracking" Value="{arc:ArcDesignTokenResource TrackingDisplay}" />
+        <Setter Property="Leading" Value="{arc:TextRevealTokenResource HeadingLeading}" />
+        <Setter Property="BlurRadius" Value="{arc:ArcDesignTokenResource BlurText}" />
+        <Style Selector="^[Level=H1]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type4XL}" />
+        </Style>
+        <Style Selector="^[Level=H3]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+        </Style>
+        <Style Selector="^[Level=Paragraph]">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="Tracking" Value="{arc:ArcDesignTokenResource TrackingBody}" />
+            <Setter Property="Leading" Value="{arc:TextRevealTokenResource ParagraphLeading}" />
+            <Setter Property="BlurRadius" Value="{arc:ArcDesignTokenResource BlurSoft}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,198 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:UsageMeter}" TargetType="arc:UsageMeter">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsageMeter">
+                <StackPanel Orientation="Vertical" Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto" MinHeight="{arc:UsageMeterTokenResource TopMinHeight}">
+                        <TextBlock Name="PART_Title"
+                                   Text="{TemplateBinding Label}"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="22.4"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <Border Name="PART_Badge"
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                Height="{arc:UsageMeterTokenResource BadgeHeight}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                ClipToBounds="True">
+                            <arc:ProgressSizeFrame Axis="Width" ChildAlignment="Right">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="6"
+                                            Margin="{arc:UsageMeterTokenResource BadgePadding}"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcContentSwap Name="PART_BadgeIcon"
+                                                        Mode="Pop"
+                                                        IsVisible="False"
+                                                        VerticalAlignment="Center"
+                                                        AutomationProperties.AccessibilityView="Raw" />
+                                    <arc:ProgressSwapText Name="PART_BadgeText"
+                                                          Text="{TemplateBinding BadgeText}"
+                                                          VerticalAlignment="Center"
+                                                          ExitTween="Instant"
+                                                          FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                          FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </StackPanel>
+                            </arc:ProgressSizeFrame>
+                        </Border>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <arc:RollingDigits Name="PART_Amount"
+                                           Value="{TemplateBinding Headline}"
+                                           Decimals="{TemplateBinding Decimals}"
+                                           UseGrouping="True"
+                                           AutomationProperties.AccessibilityView="Raw"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:ProgressSwapText Name="PART_Caption"
+                                              Text="{TemplateBinding Caption}"
+                                              ExitTween="Instant"
+                                              VerticalAlignment="Bottom"
+                                              Margin="{arc:UsageMeterTokenResource CaptionMargin}"
+                                              FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                    <Decorator Name="PART_BarHost" />
+                    <arc:UsageMeterLegendPanel Name="PART_Legend" Margin="{arc:UsageMeterTokenResource LegendMargin}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="TrackBrush" Value="{arc:UsageMeterTokenResource TrackColor}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="BorderStrongBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+
+        <!-- Status badge: muted at rest, warning / danger washes past the thresholds. -->
+        <Style Selector="^ /template/ Border#PART_Badge">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProgressSwapText#PART_BadgeText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:near /template/ Border#PART_Badge">
+            <Setter Property="Background" Value="{arc:UsageMeterTokenResource NearBadgeBackground}" />
+        </Style>
+        <Style Selector="^:over /template/ Border#PART_Badge">
+            <Setter Property="Background" Value="{arc:UsageMeterTokenResource OverBadgeBackground}" />
+        </Style>
+        <Style Selector="^:near /template/ arc|ProgressSwapText#PART_BadgeText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:over /template/ arc|ProgressSwapText#PART_BadgeText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Badge">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:UsageMeterLegendItem}" TargetType="arc:UsageMeterLegendItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsageMeterLegendItem">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Vertical" Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <arc:ArcContentSwap Name="PART_Key"
+                                                    Mode="Pop"
+                                                    Width="12"
+                                                    Height="12"
+                                                    Content="{TemplateBinding KeyContent}"
+                                                    HorizontalContentAlignment="Center"
+                                                    VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    AutomationProperties.AccessibilityView="Raw" />
+                                <arc:ProgressSwapText Name="PART_Label"
+                                                      Text="{TemplateBinding Label}"
+                                                      VerticalAlignment="Center"
+                                                      LineHeight="19.6"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="4"
+                                        Margin="{arc:UsageMeterTokenResource LegendValueMargin}">
+                                <arc:RollingDigits Name="PART_Value"
+                                                   Value="{TemplateBinding Value}"
+                                                   Decimals="{TemplateBinding Decimals}"
+                                                   AutomationProperties.AccessibilityView="Raw"
+                                                   VerticalAlignment="Bottom"
+                                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Unit"
+                                           Text="{TemplateBinding Unit}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="0,0,0,2"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="16"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:UsageMeterTokenResource LegendItemPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:UsageMeterTokenResource LegendItemRadius}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:dimmed">
+            <Setter Property="Opacity" Value="{arc:UsageMeterTokenResource LegendDimOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

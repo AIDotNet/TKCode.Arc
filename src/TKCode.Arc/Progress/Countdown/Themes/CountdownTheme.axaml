@@ -1,0 +1,116 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Countdown}" TargetType="arc:Countdown">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Countdown">
+                <Border Name="PART_Shell"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        ClipToBounds="True">
+                    <arc:ProgressSizeFrame Name="PART_Frame"
+                                           Axis="Both"
+                                           ChildAlignment="Center"
+                                           VerticalAlignment="Center">
+                        <arc:ProgressPresenceStage IsCentered="True">
+                            <arc:PresenceHost Name="PART_RunningHost"
+                                              Mode="Scale"
+                                              EnterScale="0.92"
+                                              Spring="Morph"
+                                              IsPresent="{TemplateBinding IsRunningShown}">
+                                <arc:CountdownFace Name="PART_Face"
+                                                   Variant="{TemplateBinding Variant}"
+                                                   DigitFontSize="{TemplateBinding DigitSize}"
+                                                   AutomationProperties.AccessibilityView="Raw" />
+                            </arc:PresenceHost>
+                            <arc:PresenceHost Name="PART_DoneHost"
+                                              Mode="Scale"
+                                              EnterScale="0.92"
+                                              Spring="Morph"
+                                              IsPresent="{TemplateBinding IsCompleted}">
+                                <StackPanel Orientation="Horizontal" Spacing="{TemplateBinding DoneGap}">
+                                    <arc:CountdownPulse Name="PART_Pulse"
+                                                        Width="{TemplateBinding PulseSize}"
+                                                        Height="{TemplateBinding PulseSize}"
+                                                        VerticalAlignment="Center" />
+                                    <ContentPresenter Name="PART_Done"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding CompleteContent}"
+                                                      FontSize="{TemplateBinding DoneSize}" />
+                                </StackPanel>
+                            </arc:PresenceHost>
+                        </arc:ProgressPresenceStage>
+                    </arc:ProgressSizeFrame>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+
+        <!-- Large: display digits sized to the container, unit names under them. -->
+        <Style Selector="^ /template/ arc|CountdownFace#PART_Face">
+            <Setter Property="DigitFontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="DigitFontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Tracking" Value="{arc:ArcDesignTokenResource TrackingDisplay}" />
+            <Setter Property="NameFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="NameFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="NameFontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Done">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CountdownPulse#PART_Pulse">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <!-- Compact: one line in a pill whose outline shows the shell's morph. -->
+        <Style Selector="^:compact">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Padding" Value="{arc:CountdownTokenResource CompactPadding}" />
+            <Style Selector="^ /template/ Border#PART_Shell">
+                <Setter Property="MinHeight" Value="{arc:CountdownTokenResource CompactMinHeight}" />
+            </Style>
+            <Style Selector="^ /template/ arc|CountdownFace#PART_Face">
+                <Setter Property="DigitFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+                <Setter Property="Tracking" Value="0" />
+                <Setter Property="NameFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+                <Setter Property="NameFontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Done">
+                <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+        <Style Selector="^:compact:complete">
+            <Setter Property="Background" Value="{arc:CountdownTokenResource CompleteBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:CountdownTokenResource CompleteBorder}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

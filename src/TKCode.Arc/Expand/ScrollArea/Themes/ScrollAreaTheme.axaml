@@ -1,0 +1,59 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ScrollArea}" TargetType="arc:ScrollArea">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ScrollArea">
+                <Panel ClipToBounds="True">
+                    <Border Name="PART_FadeHost" Background="Transparent">
+                      <Border Name="PART_FadeHostY" Background="Transparent">
+                        <ScrollContentPresenter Name="PART_ContentPresenter"
+                                                Background="{TemplateBinding Background}"
+                                                Content="{TemplateBinding Content}"
+                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                Padding="{TemplateBinding Padding}"
+                                                HorizontalSnapPointsType="{TemplateBinding HorizontalSnapPointsType}"
+                                                VerticalSnapPointsType="{TemplateBinding VerticalSnapPointsType}"
+                                                HorizontalSnapPointsAlignment="{TemplateBinding HorizontalSnapPointsAlignment}"
+                                                VerticalSnapPointsAlignment="{TemplateBinding VerticalSnapPointsAlignment}"
+                                                IsScrollChainingEnabled="{TemplateBinding IsScrollChainingEnabled}"
+                                                ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                            <ScrollContentPresenter.GestureRecognizers>
+                                <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                                         CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                                         IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}" />
+                            </ScrollContentPresenter.GestureRecognizers>
+                        </ScrollContentPresenter>
+                      </Border>
+                    </Border>
+                    <arc:ScrollAreaScrollbar Name="PART_VerticalTrack"
+                                             Width="{arc:ScrollAreaTokenResource TrackThickness}"
+                                             HorizontalAlignment="Right"
+                                             VerticalAlignment="Stretch"
+                                             IsVisible="False" />
+                    <arc:ScrollAreaScrollbar Name="PART_HorizontalTrack"
+                                             Height="{arc:ScrollAreaTokenResource TrackThickness}"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Bottom"
+                                             IsVisible="False" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ScrollAreaTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ThumbBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="IsScrollChainingEnabled" Value="True" />
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Progress}" TargetType="arc:Progress">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Progress">
+                <StackPanel Orientation="Vertical">
+                    <Grid Name="PART_Meta"
+                          ColumnDefinitions="*,Auto"
+                          IsVisible="{TemplateBinding HasMeta}"
+                          Margin="{arc:ProgressTokenResource MetaMargin}">
+                        <arc:ProgressSwapText Name="PART_Label"
+                                              Text="{TemplateBinding Label}"
+                                              VerticalAlignment="Center"
+                                              LineHeight="{arc:ProgressTokenResource MetaLineHeight}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <arc:ProgressReadout Name="PART_Readout"
+                                             Grid.Column="1"
+                                             IsVisible="{TemplateBinding IsValueVisible}"
+                                             Margin="{arc:ProgressTokenResource ReadoutMargin}"
+                                             VerticalAlignment="Center"
+                                             LineHeight="{arc:ProgressTokenResource MetaLineHeight}"
+                                             Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                             CheckBrush="{arc:ArcDesignTokenResource Success}" />
+                    </Grid>
+                    <arc:ProgressTrack Name="PART_Track"
+                                       Height="{arc:ProgressTokenResource TrackHeight}"
+                                       TrackBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                       TrackBorderBrush="{arc:ArcDesignTokenResource Border}"
+                                       FillBrush="{arc:ArcDesignTokenResource Accent}"
+                                       CompleteFillBrush="{arc:ArcDesignTokenResource Success}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+    </ControlTheme>
+</ResourceDictionary>

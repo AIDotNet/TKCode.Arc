@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Skeleton}" TargetType="arc:Skeleton">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Skeleton">
+                <arc:ProgressHeightFrame Name="PART_Frame">
+                    <arc:ProgressPresenceStage>
+                        <arc:PresenceHost Name="PART_PlaceholderHost"
+                                          Mode="Fade"
+                                          IsPresent="{TemplateBinding IsPlaceholderShown}">
+                            <arc:SkeletonBlocks Name="PART_Blocks"
+                                                Lines="{TemplateBinding Lines}"
+                                                IsAvatarVisible="{TemplateBinding IsAvatarVisible}"
+                                                BlockBrush="{arc:SkeletonTokenResource BlockColor}"
+                                                BlockRadius="{arc:SkeletonTokenResource BlockRadius}"
+                                                AvatarDiameter="{arc:ArcDesignTokenResource ControlSizeMD}" />
+                        </arc:PresenceHost>
+                        <arc:PresenceHost Name="PART_ContentHost"
+                                          Mode="Rise"
+                                          Offset="{arc:SkeletonTokenResource ContentRise}"
+                                          IsPresent="{TemplateBinding IsContentShown}">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </arc:PresenceHost>
+                    </arc:ProgressPresenceStage>
+                </arc:ProgressHeightFrame>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+</ResourceDictionary>

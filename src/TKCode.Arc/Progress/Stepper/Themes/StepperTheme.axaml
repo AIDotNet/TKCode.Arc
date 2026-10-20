@@ -1,0 +1,162 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Stepper}" TargetType="arc:Stepper">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Stepper">
+                <StackPanel Orientation="Vertical">
+                    <arc:StepperPanel Name="PART_Panel" />
+                    <StackPanel Name="PART_Caption"
+                                IsVisible="{TemplateBinding IsCaptionVisible}"
+                                Margin="{arc:StepperTokenResource CaptionMargin}">
+                        <arc:ProgressHeightFrame ArmWindow="700">
+                            <arc:ProgressSwapText Name="PART_CaptionLabel"
+                                                  Text="{TemplateBinding CaptionLabel}"
+                                                  IsWrapping="True"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                  LineHeight="{arc:StepperTokenResource LabelLineHeight}"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </arc:ProgressHeightFrame>
+                        <arc:ProgressHeightFrame ArmWindow="700">
+                            <arc:ProgressSwapText Name="PART_CaptionDetail"
+                                                  Text="{TemplateBinding CaptionDetail}"
+                                                  IsWrapping="True"
+                                                  Margin="{arc:StepperTokenResource DetailMargin}"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                  LineHeight="{arc:StepperTokenResource DetailLineHeight}" />
+                        </arc:ProgressHeightFrame>
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderStrongBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentStrongBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="AccentForegroundBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="AccentSubtleBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="ErrorDiscBrush" Value="{arc:StepperTokenResource ErrorDisc}" />
+        <Setter Property="ErrorDiscHoverBrush" Value="{arc:StepperTokenResource ErrorDiscHover}" />
+        <Setter Property="ErrorRingBrush" Value="{arc:StepperTokenResource ErrorHalo}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Style Selector="^ /template/ arc|ProgressSwapText#PART_CaptionDetail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:caption-error /template/ arc|ProgressSwapText#PART_CaptionDetail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:StepperItem}" TargetType="arc:StepperItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:StepperItem">
+                <Border Padding="{TemplateBinding Padding}">
+                    <DockPanel Name="PART_Head" Background="Transparent" HorizontalAlignment="Left">
+                        <arc:StepperMarker Name="PART_Marker"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top" />
+                        <StackPanel Name="PART_Text">
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:StepperTokenResource LabelLineHeight}" />
+                            <arc:ProgressHeightFrame Name="PART_DetailFrame" ArmWindow="700">
+                                <arc:ProgressSwapText Name="PART_Detail"
+                                                      Text="{TemplateBinding Detail}"
+                                                      IsWrapping="True"
+                                                      Margin="{arc:StepperTokenResource DetailMargin}"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                      LineHeight="{arc:StepperTokenResource DetailLineHeight}" />
+                            </arc:ProgressHeightFrame>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:StepperTokenResource StepGapHorizontal}" />
+        <!-- Base part values live in styles (not the template) so state styles can override them. -->
+        <Style Selector="^ /template/ arc|StepperMarker#PART_Marker">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Margin" Value="{arc:StepperTokenResource MarkerGapHorizontal}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProgressSwapText#PART_Detail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:last">
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style Selector="^:vertical">
+            <Setter Property="Padding" Value="{arc:StepperTokenResource StepGapVertical}" />
+            <Style Selector="^ /template/ DockPanel#PART_Head">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ arc|StepperMarker#PART_Marker">
+                <Setter Property="DockPanel.Dock" Value="Left" />
+                <Setter Property="Margin" Value="{arc:StepperTokenResource MarkerGapVertical}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Text">
+                <Setter Property="Margin" Value="{arc:StepperTokenResource TextOffsetVertical}" />
+            </Style>
+        </Style>
+        <Style Selector="^:vertical:compact">
+            <Setter Property="Padding" Value="{arc:StepperTokenResource StepGapVerticalCompact}" />
+        </Style>
+        <Style Selector="^:vertical:last">
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ StackPanel#PART_Text">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|StepperMarker#PART_Marker">
+                <Setter Property="Margin" Value="0" />
+            </Style>
+        </Style>
+
+        <!-- Label colors by state; a choosable step brightens under a fine pointer. -->
+        <Style Selector="^:complete /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:current /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:error /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:clickable:pointerover /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ProgressSwapText#PART_Detail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Label">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

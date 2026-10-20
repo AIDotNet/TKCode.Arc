@@ -1,0 +1,131 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ExpandableCard}" TargetType="arc:ExpandableCard">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExpandableCard">
+                <Border Name="PART_Card"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                        ClipToBounds="True">
+                    <StackPanel Orientation="Vertical">
+                        <arc:ExpandableCardTrigger Name="PART_Trigger">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <ContentPresenter Name="PART_HeaderPresenter"
+                                                      Content="{TemplateBinding Header}"
+                                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ExpandableCardSummary Name="PART_Description"
+                                                               Text="{TemplateBinding Description}"
+                                                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                               Margin="{arc:ExpandableCardTokenResource DescriptionMargin}"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               FontWeight="Normal"
+                                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Grid.Column="1"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="{arc:ExpandableCardTokenResource ChevronSize}"
+                                              StrokeThickness="2"
+                                              Margin="{arc:ExpandableCardTokenResource ChevronMargin}"
+                                              VerticalAlignment="Center" />
+                            </Grid>
+                        </arc:ExpandableCardTrigger>
+                        <arc:ExpandableCardPanel Name="PART_Panel">
+                            <Border Name="PART_Details"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ExpandableCardTokenResource DetailsDivider}"
+                                    Padding="{arc:ExpandableCardTokenResource DetailsPadding}">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                  TextBlock.LineHeight="{arc:ExpandableCardTokenResource DetailsLineHeight}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                        </arc:ExpandableCardPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ExpandableCardTrigger:pointerover arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ExpandableCardTrigger}" TargetType="arc:ExpandableCardTrigger">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExpandableCardTrigger">
+                <Panel>
+                    <Border Name="PART_Frame" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          VerticalAlignment="Center"
+                                          HorizontalContentAlignment="Stretch"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="{arc:ExpandableCardTokenResource TriggerMinHeight}" />
+        <Setter Property="Padding" Value="{arc:ExpandableCardTokenResource TriggerPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <!-- The card clips the header to its corners, so the hover fill never changes shape while the card opens or closes. -->
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

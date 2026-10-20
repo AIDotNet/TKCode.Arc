@@ -1,0 +1,144 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:AccordionItem}" TargetType="arc:AccordionItem">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AccordionItem">
+                <Border BorderThickness="{arc:AccordionItemTokenResource RowBorderThickness}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                    <StackPanel Orientation="Vertical">
+                        <arc:AccordionTrigger Name="PART_Trigger">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <ContentPresenter Name="PART_HeaderPresenter"
+                                                  VerticalAlignment="Center"
+                                                  TextWrapping="Wrap"
+                                                  Content="{TemplateBinding Header}"
+                                                  ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Grid.Column="1"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="{arc:AccordionItemTokenResource ChevronSize}"
+                                              StrokeThickness="2"
+                                              VerticalAlignment="Center"
+                                              RenderTransformOrigin="50%,50%" />
+                            </Grid>
+                        </arc:AccordionTrigger>
+                        <arc:ExpandHeightDecorator Name="PART_Panel"
+                                                 Axis="Height"
+                                                 Spring="Smooth"
+                                                 IsExpanded="{TemplateBinding IsExpanded}">
+                            <Border Name="PART_Answer" HorizontalAlignment="Left">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  TextWrapping="Wrap"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                        </arc:ExpandHeightDecorator>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Defaults live in styles (not template attributes) so the size and state styles below can override them. -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Margin" Value="{arc:AccordionItemTokenResource ChevronMargin}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Answer">
+            <Setter Property="Padding" Value="{arc:AccordionItemTokenResource AnswerPadding}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="TextBlock.LineHeight" Value="{arc:AccordionItemTokenResource AnswerLineHeight}" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^ /template/ arc|AccordionTrigger:pointerover arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <!-- lg: page-level FAQs. -->
+        <Style Selector="^:large /template/ arc|AccordionTrigger#PART_Trigger">
+            <Setter Property="MinHeight" Value="{arc:AccordionItemTokenResource TriggerMinHeightLG}" />
+            <Setter Property="Padding" Value="{arc:AccordionItemTokenResource TriggerPaddingLG}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="TextBlock.LineHeight" Value="{arc:AccordionItemTokenResource TriggerLineHeightLG}" />
+        </Style>
+        <Style Selector="^:large /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Margin" Value="{arc:AccordionItemTokenResource ChevronMarginLG}" />
+        </Style>
+        <Style Selector="^:large /template/ Border#PART_Answer">
+            <Setter Property="Padding" Value="{arc:AccordionItemTokenResource AnswerPaddingLG}" />
+            <Setter Property="MaxWidth" Value="{arc:AccordionItemTokenResource AnswerMaxWidthLG}" />
+        </Style>
+        <Style Selector="^:large /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="TextBlock.LineHeight" Value="{arc:AccordionItemTokenResource AnswerLineHeightLG}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:AccordionTrigger}" TargetType="arc:AccordionTrigger">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AccordionTrigger">
+                <Panel>
+                    <Border Name="PART_Frame" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          VerticalAlignment="Center"
+                                          HorizontalContentAlignment="Stretch"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:AccordionItemTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:AccordionItemTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeLG}" />
+        <Setter Property="Padding" Value="{arc:AccordionItemTokenResource TriggerPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="TextBlock.LineHeight" Value="{arc:AccordionItemTokenResource TriggerLineHeight}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

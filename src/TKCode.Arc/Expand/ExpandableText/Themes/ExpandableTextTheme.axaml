@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:ExpandableText}" TargetType="arc:ExpandableText">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExpandableText">
+                <StackPanel Orientation="Vertical" Spacing="{arc:ExpandableTextTokenResource ToggleGap}">
+                    <arc:ExpandableTextViewport Name="PART_Viewport">
+                        <TextBlock Name="PART_Text"
+                                   TextWrapping="Wrap"
+                                   Text="{TemplateBinding Text}"
+                                   Inlines="{TemplateBinding Inlines}"
+                                   LineHeight="{TemplateBinding LineHeight}" />
+                    </arc:ExpandableTextViewport>
+                    <arc:ExpandableTextToggle Name="PART_Toggle"
+                                              IsVisible="{TemplateBinding IsOverflowing}"
+                                              IsOpen="{TemplateBinding IsExpanded}"
+                                              MoreText="{TemplateBinding MoreLabel}"
+                                              LessText="{TemplateBinding LessLabel}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="LineHeight" Value="{arc:ExpandableTextTokenResource TextLineHeight}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ExpandableTextToggle}" TargetType="arc:ExpandableTextToggle">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExpandableTextToggle">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="Transparent"
+                            CornerRadius="{arc:ExpandableTextTokenResource ToggleRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="{arc:ArcDesignTokenResource Space1}" VerticalAlignment="Center">
+                            <Panel VerticalAlignment="Center">
+                                <TextBlock Name="PART_MoreLabel" Text="{TemplateBinding MoreText}" />
+                                <TextBlock Name="PART_LessLabel" Text="{TemplateBinding LessText}" />
+                            </Panel>
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:ExpandableTextTokenResource ChevronSize}"
+                                          StrokeThickness="1.75"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ExpandableTextTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ExpandableTextTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="MinHeight" Value="{arc:ExpandableTextTokenResource ToggleMinHeight}" />
+        <Setter Property="Padding" Value="{arc:ExpandableTextTokenResource TogglePadding}" />
+        <Setter Property="Margin" Value="{arc:ExpandableTextTokenResource ToggleMargin}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- The labels crossfade with a 4px drift and a 2px blur, timed to the opening. -->
+        <Style Selector="^ /template/ TextBlock#PART_MoreLabel">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_LessLabel">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(4px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:expanded /template/ TextBlock#PART_MoreLabel">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-4px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:expanded /template/ TextBlock#PART_LessLabel">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ TextBlock">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Considered" />
+                        <arc:ArcEffectTransition Property="Effect" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
