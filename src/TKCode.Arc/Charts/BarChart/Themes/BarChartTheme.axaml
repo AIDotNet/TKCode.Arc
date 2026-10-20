@@ -1,0 +1,90 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Every chart value is drawn by PART_Plot and animated from code (MotionValue): ControlTheme
+         transitions cannot reach coordinates inside one self-drawn geometry. Tracks gives the chart its
+         motion pseudo-classes so the code reads the cached motion level. -->
+    <ControlTheme x:Key="{x:Type arc:BarChart}" TargetType="arc:BarChart">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BarChart">
+                <StackPanel Spacing="{arc:BarChartTokenResource SectionGap}">
+                    <StackPanel Spacing="2" AutomationProperties.AccessibilityView="Raw">
+                        <arc:ArcContentSwap Name="PART_Kind"
+                                            Mode="Roll"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Left"
+                                            MinHeight="{arc:BarChartTokenResource HeadlineLineHeight}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:RollingDigits Name="PART_Value"
+                                               UseGrouping="True"
+                                               VerticalAlignment="Bottom"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{TemplateBinding Foreground}" />
+                            <arc:ArcContentSwap Name="PART_ValueText"
+                                                Mode="Roll"
+                                                IsVisible="False"
+                                                VerticalAlignment="Bottom"
+                                                TextElement.FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            <TextBlock Text="{TemplateBinding Unit}"
+                                       VerticalAlignment="Bottom"
+                                       Margin="{arc:BarChartTokenResource UnitMargin}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeBase}" />
+                        </StackPanel>
+                        <arc:ArcContentSwap Name="PART_When"
+                                            Mode="Roll"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Left"
+                                            MinHeight="{arc:BarChartTokenResource HeadlineLineHeight}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                    </StackPanel>
+                    <arc:ChartPlot Name="PART_Plot" Focusable="True" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="GutterWidth" Value="{arc:BarChartTokenResource GutterWidth}" />
+        <Setter Property="AxisRowHeight" Value="{arc:BarChartTokenResource AxisRowHeight}" />
+        <Setter Property="MaxBarWidth" Value="{arc:BarChartTokenResource MaxBarWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SubtleBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="StrongBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="RaisedBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="SurfaceMutedBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentStrongBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Series1Brush" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2Brush" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3Brush" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4Brush" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="FloatingShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="RestingShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        <Setter Property="DisplayFontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="TextSizeXS" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TextSizeSM" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TextSizeBase" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="TextSizeLG" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        <Setter Property="TextSize2XL" Value="{arc:ArcDesignTokenResource Type2XL}" />
+    </ControlTheme>
+</ResourceDictionary>

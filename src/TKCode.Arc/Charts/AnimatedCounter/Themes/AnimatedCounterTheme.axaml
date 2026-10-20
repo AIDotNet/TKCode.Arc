@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:AnimatedCounter}" TargetType="arc:AnimatedCounter">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AnimatedCounter">
+                <StackPanel Orientation="Vertical">
+                    <arc:ArcContentSwap Name="PART_Label"
+                                        Mode="BlurSwap"
+                                        IsVisible="{TemplateBinding Label, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                        Content="{TemplateBinding Label}"
+                                        Margin="{arc:AnimatedCounterTokenResource LabelMargin}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                        TextElement.FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightRegular}" />
+                    <arc:RollingDigits Name="PART_Digits"
+                                       Value="{TemplateBinding Value}"
+                                       Decimals="{TemplateBinding Decimals}"
+                                       Prefix="{TemplateBinding Prefix}"
+                                       Suffix="{TemplateBinding Suffix}"
+                                       CultureName="{TemplateBinding CultureName}"
+                                       IsArmed="{TemplateBinding IsArmed}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontWeight="{TemplateBinding FontWeight}"
+                                       Foreground="{TemplateBinding Foreground}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+    </ControlTheme>
+</ResourceDictionary>

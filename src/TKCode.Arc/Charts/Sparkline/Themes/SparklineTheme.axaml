@@ -1,0 +1,92 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Every chart value is drawn by PART_Plot and animated from code (MotionValue): ControlTheme
+         transitions cannot reach coordinates inside one self-drawn geometry. Tracks gives the chart its
+         motion pseudo-classes so the code reads the cached motion level. -->
+    <ControlTheme x:Key="{x:Type arc:Sparkline}" TargetType="arc:Sparkline">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Sparkline">
+                <StackPanel Spacing="{arc:SparklineTokenResource CaptionGap}">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" AutomationProperties.AccessibilityView="Raw">
+                        <arc:ArcContentSwap Name="PART_Label"
+                                            Grid.Column="0"
+                                            Mode="Roll"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalAlignment="Bottom"
+                                            Margin="{arc:SparklineTokenResource LabelMargin}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                        <arc:SpringSizeDecorator Grid.Column="1" Axis="Width" Spring="Morph" VerticalAlignment="Bottom">
+                            <arc:ArcContentSwap Name="PART_Headline"
+                                                Mode="Roll"
+                                                HorizontalContentAlignment="Right"
+                                                TextElement.Foreground="{TemplateBinding Foreground}"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        </arc:SpringSizeDecorator>
+                        <arc:SpringSizeDecorator Grid.Column="2" Axis="Width" Spring="Morph" VerticalAlignment="Bottom" Margin="{arc:SparklineTokenResource AsideMargin}">
+                            <arc:ArcContentSwap Name="PART_Aside"
+                                                Mode="Roll"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        </arc:SpringSizeDecorator>
+                    </Grid>
+                    <arc:ChartPlot Name="PART_Plot" Focusable="True" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="StrokeWidth" Value="{arc:SparklineTokenResource StrokeWidth}" />
+        <!-- The change takes the tone; the scrubbed date is context, not a change, so it stays neutral. -->
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Aside">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:success /template/ arc|ArcContentSwap#PART_Aside">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:warning /template/ arc|ArcContentSwap#PART_Aside">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:danger /template/ arc|ArcContentSwap#PART_Aside">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:scrubbing /template/ arc|ArcContentSwap#PART_Aside">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SubtleBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="StrongBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="RaisedBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="SurfaceMutedBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentStrongBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Series1Brush" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2Brush" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3Brush" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4Brush" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="FloatingShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="RestingShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        <Setter Property="DisplayFontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="TextSizeXS" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TextSizeSM" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TextSizeBase" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="TextSizeLG" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        <Setter Property="TextSize2XL" Value="{arc:ArcDesignTokenResource Type2XL}" />
+    </ControlTheme>
+</ResourceDictionary>

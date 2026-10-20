@@ -1,0 +1,138 @@
+using System.Collections.Specialized;
+using Avalonia;
+using Avalonia.Collections;
+using Avalonia.Data;
+using Avalonia.Media;
+
+namespace TKCode.Arc;
+
+/// <summary>
+/// One series of a chart. Values come from <see cref="Values"/>, or from the chart's <c>ItemsSource</c> through
+/// <see cref="ValueSelector"/> or <see cref="ValueBinding"/>. The <see cref="Key"/> is the series' identity: a
+/// series that keeps its key across data changes morphs instead of redrawing, and keeps its color.
+/// </summary>
+/// <example><code>&lt;arc:ChartSeries Name="Revenue" Values="{Binding Revenue}" /&gt;</code></example>
+public class ChartSeries : AvaloniaObject
+{
+    /// <summary>Stable identity; defaults to <see cref="Name"/>.</summary>
+    public static readonly StyledProperty<string?> KeyProperty =
+        AvaloniaProperty.Register<ChartSeries, string?>(nameof(Key));
+
+    /// <summary>Display name in the legend, the tooltip and the data table.</summary>
+    public static readonly StyledProperty<string?> NameProperty =
+        AvaloniaProperty.Register<ChartSeries, string?>(nameof(Name));
+
+    /// <summary>The values, one per point, oldest first. Missing values count as zero.</summary>
+    public static readonly StyledProperty<IEnumerable<double>?> ValuesProperty =
+        AvaloniaProperty.Register<ChartSeries, IEnumerable<double>?>(nameof(Values));
+
+    /// <summary>Reads this series' value from each item of the chart's <c>ItemsSource</c> (AOT safe).</summary>
+    public static readonly StyledProperty<Func<object, double>?> ValueSelectorProperty =
+        AvaloniaProperty.Register<ChartSeries, Func<object, double>?>(nameof(ValueSelector));
+
+    /// <summary>
+    /// Reads this series' value from each item of the chart's <c>ItemsSource</c>, the path form of
+    /// <see cref="ValueSelector"/>: <c>ValueBinding="{CompiledBinding Revenue, DataType=local:Day}"</c>.
+    /// </summary>
+    public static readonly StyledProperty<BindingBase?> ValueBindingProperty =
+        AvaloniaProperty.Register<ChartSeries, BindingBase?>(nameof(ValueBinding));
+
+    /// <summary>Overrides the palette color (Series1–4, then neutral steps).</summary>
+    public static readonly StyledProperty<Color?> ColorProperty =
+        AvaloniaProperty.Register<ChartSeries, Color?>(nameof(Color));
+
+    /// <summary>Draws a dashed stroke, useful for a previous period or a target.</summary>
+    public static readonly StyledProperty<bool> IsDashedProperty =
+        AvaloniaProperty.Register<ChartSeries, bool>(nameof(IsDashed));
+
+    /// <summary>Fills the area under the line with a faint tint. Null: only the first series has an area.</summary>
+    public static readonly StyledProperty<bool?> HasAreaProperty =
+        AvaloniaProperty.Register<ChartSeries, bool?>(nameof(HasArea));
+
+    /// <inheritdoc cref="KeyProperty"/>
+    public string? Key { get => GetValue(KeyProperty); set => SetValue(KeyProperty, value); }
+
+    /// <inheritdoc cref="NameProperty"/>
+    public string? Name { get => GetValue(NameProperty); set => SetValue(NameProperty, value); }
+
+    /// <inheritdoc cref="ValuesProperty"/>
+    public IEnumerable<double>? Values { get => GetValue(ValuesProperty); set => SetValue(ValuesProperty, value); }
+
+    /// <inheritdoc cref="ValueSelectorProperty"/>
+    public Func<object, double>? ValueSelector { get => GetValue(ValueSelectorProperty); set => SetValue(ValueSelectorProperty, value); }
+
+    /// <inheritdoc cref="ValueBindingProperty"/>
+    [AssignBinding]
+    public BindingBase? ValueBinding { get => GetValue(ValueBindingProperty); set => SetValue(ValueBindingProperty, value); }
+
+    /// <inheritdoc cref="ColorProperty"/>
+    public Color? Color { get => GetValue(ColorProperty); set => SetValue(ColorProperty, value); }
+
+    /// <inheritdoc cref="IsDashedProperty"/>
+    public bool IsDashed { get => GetValue(IsDashedProperty); set => SetValue(IsDashedProperty, value); }
+
+    /// <inheritdoc cref="HasAreaProperty"/>
+    public bool? HasArea { get => GetValue(HasAreaProperty); set => SetValue(HasAreaProperty, value); }
+
+    /// <summary>The identity used for hidden-series lists and morphing.</summary>
+    public string EffectiveKey => Key ?? Name ?? string.Empty;
+
+    /// <summary>Raised when any property or the <see cref="Values"/> collection changes.</summary>
+    internal event EventHandler? Invalidated;
+
+    private INotifyCollectionChanged? _observed;
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == ValuesProperty)
+        {
+            if (_observed is not null)
+            {
+                _observed.CollectionChanged -= OnValuesCollectionChanged;
+            }
+            _observed = change.NewValue as INotifyCollectionChanged;
+            if (_observed is not null)
+            {
+                _observed.CollectionChanged += OnValuesCollectionChanged;
+            }
+        }
+        Invalidated?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnValuesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => Invalidated?.Invoke(this, EventArgs.Empty);
+}
+
+/// <summary>The series of a chart; a chart redraws (and morphs) when the collection or any series changes.</summary>
+public sealed class ChartSeriesCollection : AvaloniaList<ChartSeries>
+{
+    /// <summary>Raised when a series is added, removed or changed.</summary>
+    internal event EventHandler? Invalidated;
+
+    public ChartSeriesCollection()
+    {
+        ResetBehavior = ResetBehavior.Remove;
+        CollectionChanged += OnCollectionChanged;
+    }
+
+    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems is not null)
+        {
+            foreach (ChartSeries series in e.OldItems)
+            {
+                series.Invalidated -= OnSeriesInvalidated;
+            }
+        }
+        if (e.NewItems is not null)
+        {
+            foreach (ChartSeries series in e.NewItems)
+            {
+                series.Invalidated += OnSeriesInvalidated;
+            }
+        }
+        Invalidated?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnSeriesInvalidated(object? sender, EventArgs e) => Invalidated?.Invoke(this, EventArgs.Empty);
+}
