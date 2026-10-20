@@ -1,0 +1,8 @@
+**/bin
+**/obj
+.git
+.github
+design
+docs
+tests
+tools

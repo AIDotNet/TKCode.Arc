@@ -3,7 +3,7 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
         <!-- StreamMark (Markdown rendering and TextMate highlighting, ADR 0011). Only alpha.22 is published. -->
-        <StreamMarkVersion>0.1.0-alpha.22</StreamMarkVersion>
+        <StreamMarkVersion>0.1.0-alpha.23</StreamMarkVersion>
     </PropertyGroup>
     <ItemGroup>
         <!-- AtomUI and Avalonia are pinned exactly: Arc is rebuilt for every AtomUI release (ADR 0001). -->
