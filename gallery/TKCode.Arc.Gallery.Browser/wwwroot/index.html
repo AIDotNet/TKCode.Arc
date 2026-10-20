@@ -12,10 +12,11 @@
 
 <body style="margin: 0; overflow: hidden">
 <div id="out">
-    <div class="splash">TKCode.Arc Gallery</div>
+    <div class="avalonia-splash">TKCode.Arc Gallery</div>
 </div>
 <style>
-    .splash {
+    /* Avalonia adds splash-close once the first frame is drawn. */
+    .avalonia-splash {
         position: absolute;
         inset: 0;
         display: flex;
@@ -24,10 +25,15 @@
         font-family: system-ui, sans-serif;
         color: #5b6470;
         background: #ffffff;
+        pointer-events: none;
+    }
+
+    .avalonia-splash.splash-close {
+        display: none;
     }
 
     @media (prefers-color-scheme: dark) {
-        .splash {
+        .avalonia-splash {
             color: #9aa3ad;
             background: #141414;
         }

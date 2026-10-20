@@ -5,6 +5,10 @@
         <IsPackable>false</IsPackable>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
         <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+        <!-- Skia's WebAssembly code is linked only with WasmBuildNative (needs the wasm-tools-net10 workload). -->
+        <WasmBuildNative>true</WasmBuildNative>
+        <!-- AtomUI's browser TypeMap publish needs SDK 10.0.300 (ATOMUIREG006); this repo builds with SDK 11, so publish is untrimmed. -->
+        <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AtomUI.Desktop.Controls" />
