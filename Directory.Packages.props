@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-        <!-- StreamMark (Markdown rendering and TextMate highlighting, ADR 0011). Only alpha.22 is published. -->
+        <!-- StreamMark (Markdown rendering and TextMate highlighting, ADR 0011). alpha.23 is the first release that runs in the browser. -->
         <StreamMarkVersion>0.1.0-alpha.23</StreamMarkVersion>
     </PropertyGroup>
     <ItemGroup>
