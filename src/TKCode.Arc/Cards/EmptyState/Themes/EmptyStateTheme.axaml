@@ -1,0 +1,70 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:EmptyState}" TargetType="arc:EmptyState">
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EmptyState">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding ContentPadding}">
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <Border Name="PART_IconBlock"
+                                HorizontalAlignment="Center"
+                                Width="{arc:EmptyStateTokenResource IconBlockSize}"
+                                Height="{arc:EmptyStateTokenResource IconBlockSize}"
+                                BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                            <arc:ArcContentSwap Name="PART_Icon"
+                                                Mode="Pop"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Content="{TemplateBinding IconContent}" />
+                        </Border>
+                        <!-- The copy column follows its content height, so a longer message grows instead of snapping. -->
+                        <arc:MessagesSizeFrame Name="PART_CopyFrame">
+                            <StackPanel>
+                                <arc:MessagesTextSwap Name="PART_Title"
+                                                      Margin="{arc:EmptyStateTokenResource TitleMargin}"
+                                                      Text="{TemplateBinding Title}"
+                                                      TextAlignment="Center"
+                                                      TextWrapping="Wrap"
+                                                      IsBalanced="True"
+                                                      LineHeight="{arc:EmptyStateTokenResource TitleLineHeight}"
+                                                      TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                      TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:MessagesTextSwap Name="PART_Description"
+                                                      Margin="{arc:EmptyStateTokenResource DescriptionMargin}"
+                                                      MaxWidth="{arc:EmptyStateTokenResource DescriptionMaxWidth}"
+                                                      Text="{TemplateBinding Description}"
+                                                      TextAlignment="Center"
+                                                      TextWrapping="Wrap"
+                                                      IsBalanced="True"
+                                                      LineHeight="{arc:EmptyStateTokenResource DescriptionLineHeight}"
+                                                      TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </arc:MessagesSizeFrame>
+                        <ContentPresenter Name="PART_Action"
+                                          IsVisible="False"
+                                          HorizontalAlignment="Center"
+                                          Margin="{arc:EmptyStateTokenResource ActionMargin}"
+                                          Content="{TemplateBinding Action}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="InlinePadding" Value="{arc:EmptyStateTokenResource InlinePadding}" />
+        <Style Selector="^:has-action /template/ ContentPresenter#PART_Action">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

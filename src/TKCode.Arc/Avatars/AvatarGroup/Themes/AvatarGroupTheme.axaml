@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:AvatarGroup}" TargetType="arc:AvatarGroup">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AvatarGroup">
+                <arc:AvatarGroupPanel Name="PART_Panel" Background="Transparent" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterMD}" />
+        <Setter Property="Overlap" Value="{arc:AvatarGroupTokenResource StackOverlap}" />
+        <Setter Property="ChipFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="TipPadding" Value="{arc:AvatarGroupTokenResource NamePadding}" />
+        <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="RingHoverBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="ChipBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="ChipForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="TipBackground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TipForeground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Style Selector="^[Size=Small]">
+            <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterSM}" />
+            <Setter Property="ChipFontSize" Value="{arc:AvatarGroupTokenResource ChipFontSizeSM}" />
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterLG}" />
+            <Setter Property="ChipFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+        <Style Selector="^[Size=XLarge]">
+            <Setter Property="Diameter" Value="{arc:AvatarGroupTokenResource DiameterLG}" />
+            <Setter Property="ChipFontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

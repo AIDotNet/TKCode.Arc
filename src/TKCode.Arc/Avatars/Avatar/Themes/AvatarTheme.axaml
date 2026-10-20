@@ -1,0 +1,146 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    xmlns:atom="https://atomui.net"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Avatar}" TargetType="arc:Avatar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Avatar">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Panel>
+                            <TextBlock Name="PART_Initials"
+                                       Text="{TemplateBinding Initials}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            <atom:AsyncImage Name="PART_Image"
+                                             IsVisible="False"
+                                             Source="{TemplateBinding Source}"
+                                             Stretch="UniformToFill" />
+                        </Panel>
+                    </Border>
+                    <arc:PresenceHost Name="PART_StatusHost"
+                                      Mode="Pop"
+                                      IsPresent="{TemplateBinding HasStatus}"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Bottom">
+                        <Border Name="PART_Status"
+                                Width="{arc:AvatarTokenResource StatusSizeMD}"
+                                Height="{arc:AvatarTokenResource StatusSizeMD}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                BorderThickness="{arc:AvatarTokenResource StatusRing}"
+                                BorderBrush="{arc:ArcDesignTokenResource Surface}"
+                                BoxShadow="{arc:AvatarTokenResource StatusHalo}" />
+                    </arc:PresenceHost>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterMD}" />
+        <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterMD}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+
+        <Style Selector="^[Size=Small]">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterSM}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterSM}" />
+            <Setter Property="FontSize" Value="{arc:AvatarTokenResource InitialsFontSizeSM}" />
+            <Style Selector="^ /template/ Border#PART_Status">
+                <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeSM}" />
+                <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeSM}" />
+                <Setter Property="BorderThickness" Value="{arc:AvatarTokenResource StatusRingSM}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterLG}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterLG}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Style Selector="^ /template/ Border#PART_Status">
+                <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeLG}" />
+                <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeLG}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Size=XLarge]">
+            <Setter Property="Width" Value="{arc:AvatarTokenResource DiameterXL}" />
+            <Setter Property="Height" Value="{arc:AvatarTokenResource DiameterXL}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Style Selector="^ /template/ Border#PART_Status">
+                <Setter Property="Width" Value="{arc:AvatarTokenResource StatusSizeXL}" />
+                <Setter Property="Height" Value="{arc:AvatarTokenResource StatusSizeXL}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PresenceHost#PART_StatusHost">
+                <Setter Property="Margin" Value="{arc:AvatarTokenResource StatusMarginXL}" />
+            </Style>
+        </Style>
+        <!-- Base fill lives in a style (not the template) so the Online state can override it. -->
+        <Style Selector="^ /template/ Border#PART_Status">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^[Status=Online] /template/ Border#PART_Status">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <Style Selector="^:show-image">
+            <Style Selector="^ /template/ TextBlock#PART_Initials">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ atom|AsyncImage#PART_Image">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <!-- Set only while a photo is still downloading after mount, so cached photos never fade. -->
+        <Style Selector="^:image-loading /template/ atom|AsyncImage#PART_Image">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="4" />
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced:image-loading /template/ atom|AsyncImage#PART_Image">
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^:not(:image-loading) /template/ atom|AsyncImage#PART_Image">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Enter" />
+                        <arc:ArcEffectTransition Property="Effect" Tween="Enter" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:fallback /template/ TextBlock#PART_Initials">
+                <Style.Animations>
+                    <Animation Duration="0:0:0.24" Easing="0.16,1,0.3,1" FillMode="Both">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="0" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Status">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

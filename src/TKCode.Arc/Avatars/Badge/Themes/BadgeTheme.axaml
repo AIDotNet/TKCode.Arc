@@ -1,0 +1,198 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Badge}" TargetType="arc:Badge">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Badge">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <!-- Info tone: accent mixes are laid over the neutral fill and border (accent-dependent colors). -->
+                    <Border Name="PART_Wash"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="1"
+                            Opacity="0"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource Accent}" />
+                    <Border Name="PART_ToneRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource Accent}" />
+                    <Border Name="PART_Clip"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <arc:SpringSizeDecorator Name="PART_Body"
+                                                 Axis="Width"
+                                                 Spring="Morph"
+                                                 HorizontalAlignment="Left"
+                                                 VerticalAlignment="Center">
+                            <StackPanel Name="PART_Content" Orientation="Horizontal">
+                                <arc:ArcContentSwap Name="PART_Icon"
+                                                    Mode="Pop"
+                                                    IsVisible="False"
+                                                    VerticalAlignment="Center"
+                                                    AutomationProperties.AccessibilityView="Raw"
+                                                    Content="{TemplateBinding Icon}" />
+                                <arc:ArcContentSwap Name="PART_Label"
+                                                    Mode="None"
+                                                    VerticalAlignment="Center"
+                                                    Content="{TemplateBinding Content}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </StackPanel>
+                        </arc:SpringSizeDecorator>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="{arc:BadgeTokenResource PillHeightMD}" />
+        <Setter Property="Padding" Value="{arc:BadgeTokenResource InlinePaddingMD}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <!-- Neutral -->
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+
+        <!-- Base part values live in styles (not the template) so state styles can override them. -->
+        <Style Selector="^ /template/ StackPanel#PART_Content">
+            <Setter Property="Spacing" Value="{arc:BadgeTokenResource ContentGapMD}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ToneRing">
+            <Setter Property="Opacity" Value="{arc:BadgeTokenResource InfoRingOpacity}" />
+        </Style>
+        <Style Selector="^[Size=Small]">
+            <Setter Property="MinHeight" Value="{arc:BadgeTokenResource PillHeightSM}" />
+            <Setter Property="Padding" Value="{arc:BadgeTokenResource InlinePaddingSM}" />
+            <Setter Property="FontSize" Value="{arc:BadgeTokenResource LabelFontSizeSM}" />
+            <Style Selector="^ /template/ StackPanel#PART_Content">
+                <Setter Property="Spacing" Value="{arc:BadgeTokenResource ContentGapSM}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:icon /template/ arc|ArcContentSwap#PART_Icon">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:text /template/ arc|ArcContentSwap#PART_Label">
+            <Setter Property="Mode" Value="BlurSwap" />
+        </Style>
+
+        <!-- Tones: the icon takes the tone color, the label the tone foreground. -->
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Icon">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^[Tone=Success]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="Background" Value="{arc:BadgeTokenResource SuccessBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource SuccessBorder}" />
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Icon">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Tone=Info]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Icon">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ToneRing">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Wash">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^[Tone=Warning]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="Background" Value="{arc:BadgeTokenResource WarningBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource WarningBorder}" />
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Icon">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Tone=Danger]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:BadgeTokenResource DangerBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource DangerBorder}" />
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Icon">
+                <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+
+        <!-- Hover (fine pointers): 32% tone color into the border, 10% into the surface. -->
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:BadgeTokenResource NeutralHoverBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource NeutralHoverBorder}" />
+        </Style>
+        <Style Selector="^[Tone=Success]:pointerover">
+            <Setter Property="Background" Value="{arc:BadgeTokenResource SuccessHoverBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource SuccessHoverBorder}" />
+        </Style>
+        <Style Selector="^[Tone=Warning]:pointerover">
+            <Setter Property="Background" Value="{arc:BadgeTokenResource WarningHoverBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource WarningHoverBorder}" />
+        </Style>
+        <Style Selector="^[Tone=Danger]:pointerover">
+            <Setter Property="Background" Value="{arc:BadgeTokenResource DangerHoverBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:BadgeTokenResource DangerHoverBorder}" />
+        </Style>
+        <Style Selector="^[Tone=Info]:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Style Selector="^ /template/ Border#PART_Wash">
+                <Setter Property="Opacity" Value="{arc:BadgeTokenResource InfoHoverWashOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ToneRing">
+                <Setter Property="Opacity" Value="{arc:BadgeTokenResource InfoHoverRingOpacity}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Wash">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ToneRing">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

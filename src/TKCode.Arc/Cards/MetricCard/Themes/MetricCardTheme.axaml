@@ -1,0 +1,147 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:MetricCard}" TargetType="arc:MetricCard">
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricCard">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                    <StackPanel>
+                        <Grid Name="PART_Top"
+                              ColumnDefinitions="*,Auto"
+                              RowDefinitions="Auto,Auto"
+                              ColumnSpacing="12">
+                            <arc:MessagesTextSwap Name="PART_Label"
+                                                  VerticalAlignment="Center"
+                                                  TextTrimming="CharacterEllipsis"
+                                                  LineHeight="{arc:MetricCardTokenResource CopyLineHeight}"
+                                                  TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                  TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <arc:PresenceHost Name="PART_ChangePresence"
+                                              Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              IsPresent="{TemplateBinding HasChange}"
+                                              Mode="Scale"
+                                              EnterScale="0.96"
+                                              Spring="Snappy">
+                                <Border Name="PART_Chip"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        BorderThickness="1"
+                                        Padding="{arc:MetricCardTokenResource ChipPadding}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <arc:ArcGlyph Name="PART_ChangeGlyph"
+                                                      VerticalAlignment="Center"
+                                                      Size="12"
+                                                      StrokeThickness="2"
+                                                      Data="{TemplateBinding ChangeGlyph}"
+                                                      IsVisible="{TemplateBinding ChangeGlyph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                        <!-- The chip's width springs to the new text instead of snapping. -->
+                                        <arc:MessagesSizeFrame Orientation="Horizontal" UseMorphSpring="True" ClipOverflow="0">
+                                            <arc:MessagesTextSwap Name="PART_Change"
+                                                                  LineHeight="{arc:MetricCardTokenResource CopyLineHeight}"
+                                                                  TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                                        </arc:MessagesSizeFrame>
+                                    </StackPanel>
+                                </Border>
+                            </arc:PresenceHost>
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <arc:AnimatedCounter Name="PART_Value"
+                                                 VerticalAlignment="Bottom"
+                                                 Value="{TemplateBinding Value}"
+                                                 Prefix="{TemplateBinding Prefix}"
+                                                 Suffix="{TemplateBinding Suffix}"
+                                                 Decimals="{TemplateBinding Decimals}"
+                                                 AnimateOnView="True" />
+                            <arc:MetricCardSparkline Name="PART_Sparkline"
+                                                     Grid.Column="1"
+                                                     VerticalAlignment="Bottom"
+                                                     Width="{arc:MetricCardTokenResource SparklineWidth}"
+                                                     Height="{arc:MetricCardTokenResource SparklineHeight}"
+                                                     Values="{TemplateBinding Sparkline}"
+                                                     IsVisible="{TemplateBinding HasSparkline}" />
+                        </Grid>
+                        <arc:MessagesTextSwap Name="PART_Context"
+                                              Margin="{arc:MetricCardTokenResource ContextMargin}"
+                                              TextTrimming="CharacterEllipsis"
+                                              LineHeight="{arc:MetricCardTokenResource CopyLineHeight}"
+                                              TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                              TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:MetricCardTokenResource CardPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <!-- Values that the states below override are set by styles, not in the template. -->
+        <Style Selector="^ /template/ Grid#PART_Top">
+            <Setter Property="Margin" Value="{arc:MetricCardTokenResource TopRowMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Chip">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="(TextElement.Foreground)" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MetricCardSparkline#PART_Sparkline">
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+
+        <!-- A signed change reads its direction in color as well as sign: a faint tint behind, the color on the text. -->
+        <Style Selector="^:up /template/ Border#PART_Chip">
+            <Setter Property="Background" Value="{arc:MetricCardTokenResource UpFill}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="(TextElement.Foreground)" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:down /template/ Border#PART_Chip">
+            <Setter Property="Background" Value="{arc:MetricCardTokenResource DownFill}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="(TextElement.Foreground)" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:up /template/ arc|MetricCardSparkline#PART_Sparkline">
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:down /template/ arc|MetricCardSparkline#PART_Sparkline">
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <!-- Narrow cards tighten their padding and wrap the chip under the label. -->
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:MetricCardTokenResource NarrowCardPadding}" />
+            <Style Selector="^ /template/ Grid#PART_Top">
+                <Setter Property="Margin" Value="{arc:MetricCardTokenResource NarrowTopRowMargin}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PresenceHost#PART_ChangePresence">
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="{arc:MetricCardTokenResource NarrowChipMargin}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_Chip">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
