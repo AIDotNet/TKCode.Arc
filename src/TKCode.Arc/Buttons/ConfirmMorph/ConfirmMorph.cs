@@ -1236,6 +1236,8 @@ public class ConfirmMorph : TemplatedControl
         var value = Math.Clamp(_hold?.Value ?? 0, 0, 1);
         _holdFill.IsVisible = value > 0.0005;
         _holdClip.Rect = new Rect(0, 0, _holdFill.Bounds.Width * value, Math.Max(_holdFill.Bounds.Height, 1));
+        // A clip geometry changed in place reaches the compositor only when its visual is invalidated.
+        _holdFill.InvalidateVisual();
     }
 
     private void OnConfirmPointerPressed(object? sender, PointerPressedEventArgs e)

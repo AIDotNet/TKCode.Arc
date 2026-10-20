@@ -5,7 +5,7 @@ namespace TKCode.Arc.Tests.Gallery;
 
 /// <summary>
 /// The code blocks of a gallery docs page and the check that its XAML examples load. XAML fragments are wrapped in a
-/// <c>StackPanel</c> that declares the default, <c>x</c> and <c>arc</c> namespaces; a block that starts with an element
+/// <c>StackPanel</c> that declares the default, <c>x</c>, <c>arc</c> and <c>ill</c> (illustrations) namespaces; a block that starts with an element
 /// declaring <c>xmlns</c> itself is loaded as written. Loading creates the real controls, so a wrong type name, an unknown
 /// property or an invalid value fails the check. Event handler attributes (<c>Click="OnClick"</c>) cannot load without
 /// code-behind: show handlers in a <c>csharp</c> block instead.
@@ -15,7 +15,8 @@ internal static class DocSnippets
 {
     private const string Wrapper =
         "<StackPanel xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" " +
-        "xmlns:arc=\"https://github.com/AtomUICommunity/TKCode.Arc\">{0}</StackPanel>";
+        "xmlns:arc=\"https://github.com/AtomUICommunity/TKCode.Arc\" " +
+        "xmlns:ill=\"https://github.com/AtomUICommunity/TKCode.Arc/illustrations\">{0}</StackPanel>";
 
     /// <summary>A fenced block: its info-string language (lowercase, may be empty), its text and the 1-based line it starts on.</summary>
     internal sealed record Block(string Language, string Code, int Line)

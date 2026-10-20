@@ -353,6 +353,15 @@ internal sealed class CountdownFace : Control
         var position = wheel.Position?.Value ?? wheel.Digit;
         var presence = Math.Clamp(wheel.Presence?.Value ?? 1, 0, 1) * Math.Clamp(DigitOpacity, 0, 1);
         var baseSize = wheel.Base;
+        var nearest = Math.Round(position);
+        if (presence >= 0.999 && Math.Abs(position - nearest) < 0.0005)
+        {
+            // At rest the glyph sits inside the mask's opaque band: draw it alone. Most wheels of a ticking face are at
+            // rest, so a frame where the seconds roll records one text run per still wheel instead of four layers.
+            var still = Digit((int)(((nearest % baseSize) + baseSize) % baseSize));
+            context.DrawText(still, new Point(cell.X + (cell.Width - still.WidthIncludingTrailingWhitespace) / 2, cell.Y + (size - still.Height) / 2));
+            return;
+        }
         using (context.PushOpacity(presence))
         using (context.PushClip(window))
         using (context.PushOpacityMask(_feather, window))
