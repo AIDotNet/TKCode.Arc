@@ -41,7 +41,7 @@ ARG NGINX_VERSION
 RUN apk add --no-cache build-base pcre2-dev zlib-dev openssl-dev linux-headers brotli-dev git curl
 WORKDIR /src
 RUN curl -sSL https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz | tar -xz \
-    && git clone --depth 1 https://github.com/google/ngx_brotli.git
+    && git clone --depth 1 --recurse-submodules --shallow-submodules https://github.com/google/ngx_brotli.git
 WORKDIR /src/nginx-${NGINX_VERSION}
 RUN ./configure \
         --prefix=/etc/nginx \
