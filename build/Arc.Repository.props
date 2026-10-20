@@ -1,0 +1,9 @@
+<Project>
+    <Import Project="$(MSBuildThisFileDirectory)Versions.props" />
+    <Import Project="$(MSBuildThisFileDirectory)ProjectDefaults.props" />
+    <Import Project="$(MSBuildThisFileDirectory)PackageMetadata.props" />
+    <PropertyGroup>
+        <ArcRepositoryRoot>$(MSBuildThisFileDirectory)../</ArcRepositoryRoot>
+        <PackageOutputPath>$(ArcRepositoryRoot)artifacts/feed</PackageOutputPath>
+    </PropertyGroup>
+</Project>

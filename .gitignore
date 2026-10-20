@@ -1,0 +1,20 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+.artifacts/
+artifacts/
+GeneratedFiles/
+*.user
+*.suo
+.vs/
+.idea/
+*.DotSettings.user
+TestResults/
+# macOS
+.DS_Store
+# Rider / VS Code
+.vscode/*
+!.vscode/settings.json
+
+# Local work area: Arc reference sources and parallel sandboxes
+.work/

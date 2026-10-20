@@ -1,0 +1,27 @@
+<Project>
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
+        <NoWarn>$(NoWarn);CS1591;AVA3001;AVALONIA_X11_CSD</NoWarn>
+        <ArcTargetFrameworks>net10.0;net11.0</ArcTargetFrameworks>
+        <ArcTestTargetFramework Condition="'$(ArcTestTargetFramework)' == ''">net10.0</ArcTestTargetFramework>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+        <ArcIsLibrary Condition="'$(ArcIsLibrary)' == '' and $(MSBuildProjectDirectory.Contains('/src/'))">true</ArcIsLibrary>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(ArcIsLibrary)' == 'true'">
+        <IsPackable>true</IsPackable>
+        <IsTrimmable>true</IsTrimmable>
+        <IsAotCompatible>true</IsAotCompatible>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(ArcIsLibrary)' != 'true'">
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+</Project>

@@ -1,0 +1,24 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- AtomUI and Avalonia are pinned exactly: Arc is rebuilt for every AtomUI release (ADR 0001). -->
+        <PackageVersion Include="AtomUI.Core" Version="[$(AtomUIVersion)]" />
+        <PackageVersion Include="AtomUI.Controls" Version="[$(AtomUIVersion)]" />
+        <PackageVersion Include="AtomUI.Desktop.Controls" Version="[$(AtomUIVersion)]" />
+        <PackageVersion Include="AtomUI.Icons.Shared" Version="[$(AtomUIVersion)]" />
+        <PackageVersion Include="Avalonia" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Desktop" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Headless" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Headless.XUnit" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Fonts.Inter" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Diagnostics" Version="[$(AvaloniaVersion)]" />
+        <!-- Tests -->
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+        <PackageVersion Include="xunit.v3" Version="3.2.2" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+        <PackageVersion Include="Shouldly" Version="4.3.0" />
+    </ItemGroup>
+</Project>

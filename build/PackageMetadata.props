@@ -1,0 +1,18 @@
+<Project>
+    <PropertyGroup>
+        <Version>$(ArcVersion)</Version>
+        <Authors>TKCode.Arc contributors</Authors>
+        <Product>TKCode.Arc</Product>
+        <Description>Arc-style component library for Avalonia, built on AtomUI. Ports the free components of Arc (uiarc.dev) with their visual language and spring motion.</Description>
+        <PackageTags>avalonia;atomui;arc;ui;controls;motion;desktop</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Copyright>Copyright (c) 2026 TKCode.Arc contributors</Copyright>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(IsPackable)' == 'true'">
+        <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="/" Visible="false" />
+        <None Include="$(MSBuildThisFileDirectory)../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" Visible="false" />
+    </ItemGroup>
+</Project>
