@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Core</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Core</PackageId>
+        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
+        <AtomUIThemeControlCatalog>TKCode.Arc</AtomUIThemeControlCatalog>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc" />
+        <InternalsVisibleTo Include="TKCode.Arc.Core.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+    </ItemGroup>
+</Project>
