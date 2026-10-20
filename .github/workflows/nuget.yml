@@ -1,0 +1,176 @@
+name: NuGet
+
+# Packs TKCode.Arc, TKCode.Arc.Core, TKCode.Arc.Fonts and TKCode.Arc.Icons.Lucide and pushes them to nuget.org
+# with Trusted Publishing: the job exchanges its GitHub OIDC token for a short-lived API key, so no key is stored.
+#   - push of a v* tag:                      pack and push
+#   - workflow_dispatch:                     pack; pushes only when "publish" is on
+# The Trusted Publisher policy on nuget.org must name this repository and this workflow file (nuget.yml).
+# Variable NUGET_USER (Settings > Secrets and variables > Actions > Variables): the nuget.org profile name of the policy owner.
+# nuget.org versions cannot be deleted, only unlisted: run once without "publish" and check the packages first.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to pack (empty = the branch the run was started on)
+        type: string
+        default: ""
+      publish:
+        description: Push the packages to nuget.org (off = pack and keep them as a workflow artifact only)
+        type: boolean
+        default: false
+
+# Never cancel a run that may be halfway through pushing.
+concurrency:
+  group: nuget-${{ github.ref }}-${{ inputs.tag }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+  # Package metadata shown on nuget.org; passed on the command line so it also applies to tags cut before it was set.
+  REPOSITORY_URL: https://github.com/AtomUICommunity/TKCode.Arc
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  pack:
+    name: Pack
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Empty on tag pushes, which pack the tag that triggered the run.
+          ref: ${{ inputs.tag }}
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Read version and check it against the tag
+        id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          TAG_INPUT: ${{ inputs.tag }}
+        run: |
+          version="$(sed -n 's:.*<ArcVersion>\(.*\)</ArcVersion>.*:\1:p' build/Versions.props)"
+          if [[ -z "$version" ]]; then
+            echo "::error::ArcVersion not found in build/Versions.props"
+            exit 1
+          fi
+          tag=""
+          if [[ "$EVENT_NAME" == push ]]; then
+            tag="$REF_NAME"
+          elif [[ -n "$TAG_INPUT" ]]; then
+            tag="$TAG_INPUT"
+          fi
+          if [[ -n "$tag" && "$tag" != "v$version" ]]; then
+            echo "::error::Tag $tag does not match ArcVersion $version (expected v$version)."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # Build the whole solution once (as ci.yml does), then pack without rebuilding.
+      - name: Build
+        run: >
+          dotnet build TKCode.Arc.slnx -c Release
+          -p:ContinuousIntegrationBuild=true
+          -p:RepositoryUrl="$REPOSITORY_URL" -p:RepositoryType=git -p:PublishRepositoryUrl=true
+
+      - name: Pack
+        run: >
+          dotnet pack TKCode.Arc.slnx -c Release --no-build -o artifacts/nupkg
+          -p:ContinuousIntegrationBuild=true
+          -p:RepositoryUrl="$REPOSITORY_URL" -p:RepositoryType=git -p:PublishRepositoryUrl=true
+          -p:PackageProjectUrl="$REPOSITORY_URL"
+
+      - name: Check the packages
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide; do
+            for ext in nupkg snupkg; do
+              file="artifacts/nupkg/$id.$VERSION.$ext"
+              if [[ ! -f "$file" ]]; then
+                echo "::error::Missing $file"
+                exit 1
+              fi
+            done
+          done
+          ls -l artifacts/nupkg
+          for pkg in artifacts/nupkg/*.nupkg; do
+            echo "::group::$pkg"
+            unzip -p "$pkg" '*.nuspec'
+            unzip -l "$pkg"
+            echo "::endgroup::"
+          done
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: nupkg
+          path: artifacts/nupkg/*
+          if-no-files-found: error
+          retention-days: 30
+
+  publish:
+    name: Push to nuget.org
+    if: github.event_name == 'push' || inputs.publish
+    needs: pack
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # the OIDC token that NuGet/login exchanges for a short-lived API key
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: nupkg
+          path: nupkg
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Check the nuget.org user
+        env:
+          NUGET_USER: ${{ vars.NUGET_USER }}
+        run: |
+          if [[ -z "$NUGET_USER" ]]; then
+            echo "::error::Set the repository variable NUGET_USER to the nuget.org profile name that owns the Trusted Publisher policy."
+            exit 1
+          fi
+
+      - name: Get a short-lived API key
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      # The matching .snupkg next to each .nupkg is pushed too. Core goes first, the packages that depend on it after.
+      - name: Push
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc; do
+            dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
+              --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
