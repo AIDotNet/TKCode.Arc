@@ -209,12 +209,14 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TAG: ${{ github.ref_name }}
         run: |
+          # gallery-desktop.yml may create the release at the same time: create it, or add to it if it exists.
+          prerelease=""
+          if [[ "$TAG" == *-* ]]; then
+            prerelease="--prerelease"
+          fi
           if gh release view "$TAG" > /dev/null 2>&1; then
             gh release upload "$TAG" dist/*.dmg --clobber
           else
-            prerelease=""
-            if [[ "$TAG" == *-* ]]; then
-              prerelease="--prerelease"
-            fi
-            gh release create "$TAG" dist/*.dmg --title "$TAG" --generate-notes $prerelease
+            gh release create "$TAG" dist/*.dmg --title "$TAG" --generate-notes $prerelease \
+              || gh release upload "$TAG" dist/*.dmg --clobber
           fi

@@ -1,0 +1,140 @@
+name: Gallery (Windows & Linux)
+
+# Builds the Gallery desktop app for Windows and Linux. Neither is signed.
+#   - push of a v* tag:                       the files are attached to the GitHub release of that tag
+#   - workflow_dispatch with a tag:           builds that tag and attaches the files to its existing release
+#   - workflow_dispatch without a tag, and
+#     pull_request touching this file:        dry run, files stay workflow artifacts
+# macOS (signed and notarized) is gallery-macos.yml; both workflows add to the same release.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to build and attach the files to (empty = dry run)
+        type: string
+        default: ""
+  pull_request:
+    paths:
+      - .github/workflows/gallery-desktop.yml
+
+concurrency:
+  group: gallery-desktop-${{ github.ref }}-${{ inputs.tag }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: ${{ matrix.rid }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+          - os: ubuntu-latest
+            rid: linux-x64
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Empty on tag pushes and pull requests, which build the ref that triggered the run.
+          ref: ${{ inputs.tag }}
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Read version
+        id: version
+        run: |
+          version="$(sed -n 's:.*<ArcVersion>\(.*\)</ArcVersion>.*:\1:p' build/Versions.props)"
+          if [[ -z "$version" ]]; then
+            echo "::error::ArcVersion not found in build/Versions.props"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # Single file with the native libraries (Skia, HarfBuzz, ...) bundled: one file to download and run.
+      - name: Publish
+        run: >
+          dotnet publish gallery/TKCode.Arc.Gallery.Desktop
+          -c Release -f net10.0 -r ${{ matrix.rid }}
+          --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -o publish/${{ matrix.rid }}
+
+      - name: Package
+        env:
+          RID: ${{ matrix.rid }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p dist
+          name="TKCode.Arc.Gallery-$VERSION-$RID"
+          if [[ "$RID" == win-* ]]; then
+            cp "publish/$RID/TKCode.Arc.Gallery.Desktop.exe" "dist/$name.exe"
+          else
+            chmod +x "publish/$RID/TKCode.Arc.Gallery.Desktop"
+            tar -czf "dist/$name.tar.gz" -C "publish/$RID" TKCode.Arc.Gallery.Desktop
+          fi
+          ls -l dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: gallery-desktop-${{ matrix.rid }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: GitHub release
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.tag != ''
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: gallery-desktop-*
+          merge-multiple: true
+          path: dist
+
+      - name: Attach to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          # gallery-macos.yml may create the release at the same time: create it, or add to it if it exists.
+          prerelease=""
+          if [[ "$TAG" == *-* ]]; then
+            prerelease="--prerelease"
+          fi
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" dist/* --title "$TAG" --generate-notes $prerelease \
+              || gh release upload "$TAG" dist/* --clobber
+          fi
