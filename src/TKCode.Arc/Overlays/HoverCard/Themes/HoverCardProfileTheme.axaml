@@ -1,0 +1,84 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:HoverCardProfile}" TargetType="arc:HoverCardProfile">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HoverCardProfile">
+                <StackPanel Spacing="{arc:HoverCardProfileTokenResource RowGap}">
+                    <Grid Name="PART_Head"
+                          ColumnDefinitions="Auto,*"
+                          ColumnSpacing="{arc:HoverCardProfileTokenResource HeadGap}">
+                        <arc:Avatar Size="Large"
+                                    DisplayName="{TemplateBinding DisplayName}"
+                                    Source="{TemplateBinding AvatarSource}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Name="PART_Name"
+                                       Text="{TemplateBinding DisplayName}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Role"
+                                       IsVisible="False"
+                                       Text="{TemplateBinding Role}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </Grid>
+                    <arc:OverlayText Name="PART_Bio"
+                                     IsVisible="False"
+                                     Text="{TemplateBinding Bio}"
+                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                     Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <Border Name="PART_Stats"
+                            IsVisible="False"
+                            BorderThickness="0,1,0,0"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            Padding="{arc:HoverCardProfileTokenResource StatsPadding}">
+                        <ItemsControl ItemsSource="{TemplateBinding Stats}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel ItemSpacing="{arc:HoverCardProfileTokenResource StatColumnGap}"
+                                               LineSpacing="{arc:HoverCardProfileTokenResource StatRowGap}" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="arc:HoverCardStat">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Value}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Text="{Binding Label}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                    <ContentPresenter Name="PART_Meta"
+                                      IsVisible="False"
+                                      Content="{TemplateBinding Meta}"
+                                      FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Style Selector="^:has-role /template/ TextBlock#PART_Role">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-bio /template/ TextBlock#PART_Bio">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-stats /template/ Border#PART_Stats">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-meta /template/ ContentPresenter#PART_Meta">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

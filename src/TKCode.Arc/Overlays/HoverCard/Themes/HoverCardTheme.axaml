@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- In place the hover card shows only its Trigger; its Content opens in an anchored PopoverSurface. -->
+    <ControlTheme x:Key="{x:Type arc:HoverCard}" TargetType="arc:HoverCard">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HoverCard">
+                <ContentPresenter Name="PART_TriggerPresenter" Content="{TemplateBinding Trigger}" />
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="CardWidth" Value="{arc:HoverCardTokenResource CardWidth}" />
+        <Setter Property="Offset" Value="{arc:HoverCardTokenResource SideOffset}" />
+    </ControlTheme>
+</ResourceDictionary>

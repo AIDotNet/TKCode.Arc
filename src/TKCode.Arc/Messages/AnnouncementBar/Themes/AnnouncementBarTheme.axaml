@@ -1,0 +1,251 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:AnnouncementBar}" TargetType="arc:AnnouncementBar">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AnnouncementBar">
+                <arc:MessagesPresenceFrame Name="PART_Presence" IsOpen="{TemplateBinding IsShown}">
+                    <Border Name="PART_Bar"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Name="PART_Grid" ColumnDefinitions="Auto,*,Auto">
+                            <!-- Mirrors the controls so the message stays centered on the page. -->
+                            <Panel Name="PART_Side" Width="{TemplateBinding SideWidth}" />
+                            <arc:AnnouncementBarViewport Name="PART_Viewport"
+                                                         Grid.Column="1"
+                                                         VerticalAlignment="Center"
+                                                         MinHeight="{arc:AnnouncementBarTokenResource FaceMinHeight}"
+                                                         FaceMinHeight="{arc:AnnouncementBarTokenResource FaceMinHeight}"
+                                                         LineHeight="{arc:AnnouncementBarTokenResource MessageLineHeight}"
+                                                         MutedForeground="{TemplateBinding MutedForeground}" />
+                            <StackPanel Name="PART_Controls"
+                                        Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:AnnouncementBarTokenResource ControlGap}">
+                                <arc:Button Name="PART_Previous"
+                                            Classes="announcement-icon"
+                                            Variant="Ghost"
+                                            IsPressScaleEnabled="False"
+                                            IsVisible="False">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronUp}" Size="16" StrokeThickness="1.75" />
+                                </arc:Button>
+                                <arc:AnnouncementBarRing Name="PART_Ring"
+                                                         IsVisible="False"
+                                                         Progress="{TemplateBinding RingProgress}" />
+                                <arc:Button Name="PART_Next"
+                                            Classes="announcement-icon"
+                                            Variant="Ghost"
+                                            IsPressScaleEnabled="False"
+                                            IsVisible="False">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}" Size="16" StrokeThickness="1.75" />
+                                </arc:Button>
+                                <arc:Button Name="PART_Dismiss"
+                                            Classes="announcement-icon"
+                                            Variant="Ghost"
+                                            IsPressScaleEnabled="False"
+                                            IsVisible="False">
+                                    <arc:ArcGlyph Data="{x:Static arc:MessagesIcons.X}" Size="16" StrokeThickness="1.75" />
+                                </arc:Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </arc:MessagesPresenceFrame>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:AnnouncementBarTokenResource BarPadding}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <Style Selector="^[Tone=Inverted]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="MutedForeground" Value="{arc:AnnouncementBarTokenResource InvertedMutedForeground}" />
+        </Style>
+
+        <Style Selector="^ /template/ Grid#PART_Grid">
+            <Setter Property="ColumnSpacing" Value="{arc:AnnouncementBarTokenResource ColumnGap}" />
+        </Style>
+
+        <!-- Narrow bars drop the mirror column and read from the start edge. -->
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:AnnouncementBarTokenResource NarrowBarPadding}" />
+            <Style Selector="^ /template/ Grid#PART_Grid">
+                <Setter Property="ColumnSpacing" Value="{arc:AnnouncementBarTokenResource NarrowColumnGap}" />
+            </Style>
+            <Style Selector="^ /template/ arc|AnnouncementBarViewport#PART_Viewport">
+                <Setter Property="IsCentered" Value="False" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:navigable /template/ arc|Button#PART_Previous">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:navigable /template/ arc|Button#PART_Next">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:rotating /template/ arc|AnnouncementBarRing#PART_Ring">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:dismissible /template/ arc|Button#PART_Dismiss">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- 32px round icon buttons in the muted color; hover tints them with the hover color at 10%. -->
+        <Style Selector="^ /template/ arc|Button.announcement-icon">
+            <Setter Property="Width" Value="{arc:AnnouncementBarTokenResource IconDiameter}" />
+            <Setter Property="Height" Value="{arc:AnnouncementBarTokenResource IconDiameter}" />
+            <Setter Property="MinHeight" Value="{arc:AnnouncementBarTokenResource IconDiameter}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{TemplateBinding MutedForeground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AnnouncementBarRing">
+            <Setter Property="Foreground" Value="{TemplateBinding MutedForeground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.announcement-icon:pointerover">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource IconHoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AnnouncementBarRing:pointerover">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource IconHoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.announcement-icon:pressed">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource IconPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AnnouncementBarRing:pressed">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource IconPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Tone=Inverted] /template/ arc|Button.announcement-icon:pointerover">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource InvertedIconHoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^[Tone=Inverted] /template/ arc|AnnouncementBarRing:pointerover">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource InvertedIconHoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^[Tone=Inverted] /template/ arc|Button.announcement-icon:pressed">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource InvertedIconPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^[Tone=Inverted] /template/ arc|AnnouncementBarRing:pressed">
+            <Setter Property="Background" Value="{arc:AnnouncementBarTokenResource InvertedIconPressedFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The pause ring: a toggle (pressed = paused) that draws its own progress. -->
+    <ControlTheme x:Key="{x:Type arc:AnnouncementBarRing}" TargetType="arc:AnnouncementBarRing">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AnnouncementBarRing">
+                <Panel>
+                    <Border Name="PART_Fill"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <arc:AnnouncementBarRingGlyph Name="PART_Glyph"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Progress="{TemplateBinding Progress}"
+                                                  IsPaused="{TemplateBinding IsChecked}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:AnnouncementBarTokenResource IconDiameter}" />
+        <Setter Property="Height" Value="{arc:AnnouncementBarTokenResource IconDiameter}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The call to action: inline text and an arrow that nudges 2px toward the destination on hover. -->
+    <ControlTheme x:Key="{x:Type arc:AnnouncementBarLink}" TargetType="arc:AnnouncementBarLink">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AnnouncementBarLink">
+                <Panel>
+                    <StackPanel Orientation="Horizontal" Spacing="4" Background="Transparent">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}" />
+                        <arc:ArcGlyph Name="PART_Arrow"
+                                      VerticalAlignment="Center"
+                                      Data="{x:Static arc:MessagesIcons.ArrowRight}"
+                                      Size="14"
+                                      StrokeThickness="1.75"
+                                      RenderTransform="translateX(0px)" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,-2"
+                            BorderThickness="2"
+                            CornerRadius="8"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Style Selector="^:pointerover /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="translateX(2px)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

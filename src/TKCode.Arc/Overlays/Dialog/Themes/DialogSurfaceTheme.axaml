@@ -1,0 +1,172 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="ArcDialogCloseButtonTheme" TargetType="Button">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="16"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:DialogSurfaceTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:DialogSurfaceTokenResource CloseButtonSize}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:DialogSurfaceTokenResource CloseButtonBackground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DialogSurface}" TargetType="arc:DialogSurface">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DialogSurface">
+                <!-- The outer border carries the floating shadow; the inner one clips the scrolling content to the radius. -->
+                <Border Name="PART_Shadow"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Border Name="PART_Frame"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <ScrollViewer Name="PART_Scroll"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <Border Name="PART_Header"
+                                        Padding="{arc:DialogSurfaceTokenResource HeaderPadding}"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="{arc:DialogSurfaceTokenResource HeaderGap}">
+                                        <StackPanel>
+                                            <arc:ArcContentSwap Name="PART_Title"
+                                                                Mode="BlurSwap"
+                                                                HorizontalContentAlignment="Left"
+                                                                Content="{TemplateBinding Title}"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}">
+                                                <arc:ArcContentSwap.ContentTemplate>
+                                                    <arc:OverlayTextTemplate />
+                                                </arc:ArcContentSwap.ContentTemplate>
+                                            </arc:ArcContentSwap>
+                                            <arc:ArcContentSwap Name="PART_Description"
+                                                                Mode="BlurSwap"
+                                                                IsVisible="False"
+                                                                HorizontalContentAlignment="Left"
+                                                                Margin="{arc:DialogSurfaceTokenResource DescriptionMargin}"
+                                                                Content="{TemplateBinding Description}"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                                <arc:ArcContentSwap.ContentTemplate>
+                                                    <arc:OverlayTextTemplate />
+                                                </arc:ArcContentSwap.ContentTemplate>
+                                            </arc:ArcContentSwap>
+                                        </StackPanel>
+                                        <Button Name="PART_CloseButton"
+                                                    Theme="{StaticResource ArcDialogCloseButtonTheme}"
+                                                    Grid.Column="1"
+                                                    IsVisible="{TemplateBinding ShowCloseButton}"
+                                                    AutomationProperties.Name="{TemplateBinding CloseButtonName}"
+                                                    Margin="{arc:DialogSurfaceTokenResource CloseButtonMargin}" />
+                                    </Grid>
+                                </Border>
+                                <StackPanel Name="PART_Body" Margin="{arc:DialogSurfaceTokenResource BodyPadding}">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    <ContentPresenter Name="PART_Actions"
+                                                      IsVisible="False"
+                                                      HorizontalAlignment="Right"
+                                                      Margin="{arc:DialogSurfaceTokenResource ActionsMargin}"
+                                                      Content="{TemplateBinding Actions}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ContentTemplate">
+            <arc:OverlayTextTemplate />
+        </Setter>
+        <Setter Property="Margin" Value="{arc:DialogSurfaceTokenResource ViewportMargin}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{arc:DialogSurfaceTokenResource PanelWidthMD}" />
+
+        <Style Selector="^[Size=Small]">
+            <Setter Property="MaxWidth" Value="{arc:DialogSurfaceTokenResource PanelWidthSM}" />
+        </Style>
+        <Style Selector="^[Size=Large]">
+            <Setter Property="MaxWidth" Value="{arc:DialogSurfaceTokenResource PanelWidthLG}" />
+        </Style>
+        <Style Selector="^:has-description /template/ arc|ArcContentSwap#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-actions /template/ ContentPresenter#PART_Actions">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

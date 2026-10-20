@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Alert}" TargetType="arc:Alert">
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Alert">
+                <arc:MessagesPresenceFrame Name="PART_Presence" IsOpen="{TemplateBinding IsOpen}">
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                        <!-- A dock panel measures the copy once per pass, so the height spring sees stable constraints. -->
+                        <DockPanel>
+                            <arc:MessagesGlyphSwap Name="PART_Icon"
+                                                   DockPanel.Dock="Left"
+                                                   Data="{TemplateBinding IconData}"
+                                                   GlyphSize="{arc:AlertTokenResource GlyphSize}"
+                                                   StrokeThickness="2"
+                                                   Margin="{arc:AlertTokenResource GlyphMargin}"
+                                                   VerticalAlignment="Top" />
+                            <arc:Button Name="PART_Dismiss"
+                                        Classes="alert-dismiss"
+                                        DockPanel.Dock="Right"
+                                        Variant="Ghost"
+                                        IsVisible="False"
+                                        VerticalAlignment="Top">
+                                <arc:ArcGlyph Data="{x:Static arc:MessagesIcons.X}" Size="16" StrokeThickness="1.75" />
+                            </arc:Button>
+                            <arc:MessagesSizeFrame Name="PART_CopyFrame" VerticalAlignment="Top">
+                                <StackPanel>
+                                    <arc:MessagesTextSwap Name="PART_Title"
+                                                          Text="{TemplateBinding Title}"
+                                                          TextWrapping="Wrap"
+                                                          LineHeight="{arc:AlertTokenResource TitleLineHeight}"
+                                                          TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                          TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <arc:MessagesTextSwap Name="PART_Description"
+                                                          Text="{TemplateBinding DescriptionText}"
+                                                          Margin="{TemplateBinding DescriptionMargin}"
+                                                          TextWrapping="Wrap"
+                                                          LineHeight="{arc:AlertTokenResource DescriptionLineHeight}"
+                                                          TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                          TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      IsVisible="False"
+                                                      Margin="{TemplateBinding DescriptionMargin}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                      TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </arc:MessagesSizeFrame>
+                        </DockPanel>
+                    </Border>
+                </arc:MessagesPresenceFrame>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:AlertTokenResource SurfacePadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="DescriptionSpacing" Value="{arc:AlertTokenResource DescriptionGap}" />
+
+        <!-- Tone colors the icon only: info accent, success, warning, danger. -->
+        <Style Selector="^ /template/ arc|MessagesGlyphSwap#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^[Tone=Success] /template/ arc|MessagesGlyphSwap#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^[Tone=Warning] /template/ arc|MessagesGlyphSwap#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^[Tone=Danger] /template/ arc|MessagesGlyphSwap#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:rich-content /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Dismiss: 28px round ghost button, muted until hovered. -->
+        <Style Selector="^:dismissible /template/ arc|Button#PART_Dismiss">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.alert-dismiss">
+            <Setter Property="Width" Value="{arc:AlertTokenResource DismissDiameter}" />
+            <Setter Property="Height" Value="{arc:AlertTokenResource DismissDiameter}" />
+            <Setter Property="MinHeight" Value="{arc:AlertTokenResource DismissDiameter}" />
+            <Setter Property="Margin" Value="{arc:AlertTokenResource DismissMargin}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.alert-dismiss:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

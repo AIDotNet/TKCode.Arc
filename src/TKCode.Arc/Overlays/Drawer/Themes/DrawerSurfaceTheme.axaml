@@ -1,0 +1,230 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="ArcDrawerCloseButtonTheme" TargetType="Button">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="16"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:DrawerSurfaceTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:DrawerSurfaceTokenResource CloseButtonSize}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:DrawerSurfaceTokenResource CloseButtonBackground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DrawerSurface}" TargetType="arc:DrawerSurface">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DrawerSurface">
+                <Border Name="PART_Shadow"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Border Name="PART_Frame"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <Panel DockPanel.Dock="Top">
+                                <!-- The header doubles as the drag handle. -->
+                                <Border Name="PART_Header"
+                                        Background="Transparent"
+                                        Padding="{arc:DrawerSurfaceTokenResource SectionPadding}"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="{arc:DrawerSurfaceTokenResource HeaderGap}">
+                                        <StackPanel>
+                                            <arc:ArcContentSwap Name="PART_Title"
+                                                                Mode="BlurSwap"
+                                                                HorizontalContentAlignment="Left"
+                                                                Content="{TemplateBinding Title}"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}">
+                                                <arc:ArcContentSwap.ContentTemplate>
+                                                    <arc:OverlayTextTemplate />
+                                                </arc:ArcContentSwap.ContentTemplate>
+                                            </arc:ArcContentSwap>
+                                            <arc:ArcContentSwap Name="PART_Description"
+                                                                Mode="BlurSwap"
+                                                                IsVisible="False"
+                                                                HorizontalContentAlignment="Left"
+                                                                HorizontalAlignment="Left"
+                                                                MaxWidth="{arc:DrawerSurfaceTokenResource DescriptionMaxWidth}"
+                                                                Margin="{arc:DrawerSurfaceTokenResource DescriptionMargin}"
+                                                                Content="{TemplateBinding Description}"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                                <arc:ArcContentSwap.ContentTemplate>
+                                                    <arc:OverlayTextTemplate />
+                                                </arc:ArcContentSwap.ContentTemplate>
+                                            </arc:ArcContentSwap>
+                                        </StackPanel>
+                                        <Button Name="PART_CloseButton"
+                                                    Theme="{StaticResource ArcDrawerCloseButtonTheme}"
+                                                    Grid.Column="1"
+                                                    IsVisible="{TemplateBinding ShowCloseButton}"
+                                                    AutomationProperties.Name="{TemplateBinding CloseButtonName}"
+                                                    Margin="{arc:DrawerSurfaceTokenResource CloseButtonMargin}" />
+                                    </Grid>
+                                </Border>
+                                <Border Name="PART_Grabber"
+                                        IsVisible="False"
+                                        IsHitTestVisible="False"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Width="{arc:DrawerSurfaceTokenResource GrabberWidth}"
+                                        Height="{arc:DrawerSurfaceTokenResource GrabberHeight}"
+                                        Margin="{arc:DrawerSurfaceTokenResource GrabberMargin}"
+                                        Opacity="{arc:DrawerSurfaceTokenResource GrabberOpacity}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                            </Panel>
+                            <ScrollViewer Name="PART_Body"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto">
+                                <StackPanel Name="PART_BodyContent" Margin="{arc:DrawerSurfaceTokenResource SectionPadding}">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    <ContentPresenter Name="PART_Actions"
+                                                      IsVisible="False"
+                                                      HorizontalAlignment="Right"
+                                                      Margin="{arc:DrawerSurfaceTokenResource ActionsMargin}"
+                                                      Content="{TemplateBinding Actions}" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ContentTemplate">
+            <arc:OverlayTextTemplate />
+        </Setter>
+        <Setter Property="PanelSize" Value="{arc:DrawerSurfaceTokenResource PanelSize}" />
+        <Setter Property="PanelMaxHeight" Value="{arc:DrawerSurfaceTokenResource PanelMaxHeight}" />
+        <Setter Property="ViewportGutter" Value="{arc:DrawerSurfaceTokenResource ViewportGutter}" />
+        <Setter Property="NarrowViewportGutter" Value="{arc:DrawerSurfaceTokenResource NarrowViewportGutter}" />
+        <Setter Property="NarrowBreakpoint" Value="{arc:DrawerSurfaceTokenResource NarrowBreakpoint}" />
+
+        <!-- Only the inner edges carry the hairline; the corner radius sits on the side away from the edge. -->
+        <Style Selector="^[Side=Right]">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="BorderThickness" Value="1,1,0,1" />
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusRight}" />
+        </Style>
+        <Style Selector="^[Side=Right]:narrow">
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusRight}" />
+        </Style>
+        <Style Selector="^[Side=Left]">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="BorderThickness" Value="0,1,1,1" />
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusLeft}" />
+        </Style>
+        <Style Selector="^[Side=Left]:narrow">
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusLeft}" />
+        </Style>
+        <Style Selector="^[Side=Top]">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusTop}" />
+        </Style>
+        <Style Selector="^[Side=Top]:narrow">
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusTop}" />
+        </Style>
+        <Style Selector="^[Side=Bottom]">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusBottom}" />
+        </Style>
+        <Style Selector="^[Side=Bottom]:narrow">
+            <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource NarrowRadiusBottom}" />
+        </Style>
+        <Style Selector="^[Side=Bottom] /template/ Border#PART_Grabber">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^[Side=Top] /template/ Border#PART_Header, ^[Side=Bottom] /template/ Border#PART_Header">
+            <Setter Property="Cursor" Value="SizeNorthSouth" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:DrawerSurfaceTokenResource NarrowSectionPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_BodyContent">
+            <Setter Property="Margin" Value="{arc:DrawerSurfaceTokenResource NarrowSectionPadding}" />
+        </Style>
+        <Style Selector="^:has-description /template/ arc|ArcContentSwap#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-actions /template/ ContentPresenter#PART_Actions">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

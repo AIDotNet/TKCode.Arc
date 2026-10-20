@@ -1,0 +1,101 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:Toast}" TargetType="arc:Toast">
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Toast">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                        <!-- A dock panel measures the copy once per pass, so the height spring sees stable constraints. -->
+                        <DockPanel>
+                            <Border Name="PART_Icon"
+                                    DockPanel.Dock="Left"
+                                    Margin="{arc:ToastTokenResource IconMargin}"
+                                    Width="{arc:ToastTokenResource IconDiameter}"
+                                    Height="{arc:ToastTokenResource IconDiameter}"
+                                    VerticalAlignment="Top"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ToastTokenResource IconFill}"
+                                    BorderBrush="{arc:ToastTokenResource IconRing}">
+                                <!-- Arc's own check: M4 12.5l5 5L20 6.5 at stroke 2.25, drawn in after 0.12s. -->
+                                <arc:StrokeDrawGlyph Name="PART_Check"
+                                                     Data="{x:Static arc:ToastGlyphs.Check}"
+                                                     Size="{arc:ToastTokenResource CheckSize}"
+                                                     Width="{arc:ToastTokenResource CheckSize}"
+                                                     Height="{arc:ToastTokenResource CheckSize}"
+                                                     StrokeThickness="2.25"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center"
+                                                     Foreground="{arc:ArcDesignTokenResource Success}" />
+                            </Border>
+                            <arc:Button Name="PART_Close"
+                                        Classes="toast-close"
+                                        DockPanel.Dock="Right"
+                                        Variant="Ghost"
+                                        VerticalAlignment="Top">
+                                <arc:ArcGlyph Data="{x:Static arc:MessagesIcons.X}" Size="16" StrokeThickness="2" />
+                            </arc:Button>
+                            <arc:MessagesSizeFrame VerticalAlignment="Top">
+                                <StackPanel Margin="{arc:ToastTokenResource CopyPadding}">
+                                    <arc:MessagesTextSwap Name="PART_Title"
+                                                          Text="{TemplateBinding Title}"
+                                                          TextTrimming="CharacterEllipsis"
+                                                          LineHeight="{arc:ToastTokenResource CopyLineHeight}"
+                                                          TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                          TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <arc:MessagesTextSwap Name="PART_Description"
+                                                          Text="{TemplateBinding Description}"
+                                                          Margin="{TemplateBinding DescriptionMargin}"
+                                                          TextWrapping="Wrap"
+                                                          LineHeight="{arc:ToastTokenResource CopyLineHeight}"
+                                                          TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                          TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </arc:MessagesSizeFrame>
+                        </DockPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxToastWidth" Value="{arc:ToastTokenResource MaxToastWidth}" />
+        <Setter Property="Padding" Value="{arc:ToastTokenResource SurfacePadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Background" Value="{arc:ToastTokenResource SurfaceColor}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <Style Selector="^:dragging">
+            <Setter Property="Cursor" Value="SizeWestEast" />
+        </Style>
+
+        <Style Selector="^ /template/ arc|Button.toast-close">
+            <Setter Property="Width" Value="{arc:ToastTokenResource CloseDiameter}" />
+            <Setter Property="Height" Value="{arc:ToastTokenResource CloseDiameter}" />
+            <Setter Property="MinHeight" Value="{arc:ToastTokenResource CloseDiameter}" />
+            <Setter Property="Margin" Value="{arc:ToastTokenResource CloseMargin}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.toast-close:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,173 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:CookieConsent}" TargetType="arc:CookieConsent">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CookieConsent">
+                <!-- The layer spans the bottom edge and lets clicks through; only the surface takes pointer input. -->
+                <Panel Name="PART_Layer" Margin="{arc:CookieConsentTokenResource LayerMargin}">
+                    <arc:CookieConsentSurface Name="PART_Surface"
+                                              SurfaceBackground="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              RingBrush="{arc:ArcDesignTokenResource Border}"
+                                              SurfaceShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                        <!-- Bar: message and three equal-weight buttons. -->
+                        <Border Name="PART_BarFace" Padding="{arc:CookieConsentTokenResource BarPadding}">
+                            <Grid Name="PART_BarGrid" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16">
+                                <TextBlock Name="PART_Message"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           LineSpacing="{arc:CookieConsentTokenResource MessageLineSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                                <Grid Name="PART_BarActions"
+                                      Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      ColumnDefinitions="Auto,Auto,Auto"
+                                      ColumnSpacing="{arc:CookieConsentTokenResource ActionGap}"
+                                      RowSpacing="{arc:CookieConsentTokenResource ActionGap}">
+                                    <arc:Button Name="PART_Customize" Size="Small" Variant="Ghost" />
+                                    <arc:Button Name="PART_BarReject" Grid.Column="1" Size="Small" Variant="Secondary" />
+                                    <arc:Button Name="PART_BarAccept" Grid.Column="2" Size="Small" Variant="Secondary" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Panel: title, description, categories with switches, and the three choices. -->
+                        <Border Name="PART_PanelFace" Padding="{arc:CookieConsentTokenResource PanelPadding}">
+                            <StackPanel Spacing="{arc:CookieConsentTokenResource PanelGap}">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="12"
+                                      Margin="{arc:CookieConsentTokenResource PanelHeadMargin}">
+                                    <TextBlock Name="PART_Title"
+                                               Focusable="True"
+                                               VerticalAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               LineHeight="{arc:CookieConsentTokenResource TitleLineHeight}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:Button Name="PART_Close"
+                                                Classes="cookie-close"
+                                                Grid.Column="1"
+                                                Variant="Ghost"
+                                                IsPressScaleEnabled="False">
+                                        <arc:ArcGlyph Data="{x:Static arc:MessagesIcons.X}" Size="16" StrokeThickness="1.75" />
+                                    </arc:Button>
+                                </Grid>
+                                <TextBlock Name="PART_Description"
+                                           TextWrapping="Wrap"
+                                           LineSpacing="{arc:CookieConsentTokenResource MessageLineSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                                <ScrollViewer Name="PART_ListScroll"
+                                              Margin="{arc:CookieConsentTokenResource ListMargin}"
+                                              MaxHeight="300"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <StackPanel Name="PART_Rows" />
+                                </ScrollViewer>
+                                <Border BorderThickness="0,1,0,0"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                        Padding="{arc:CookieConsentTokenResource PanelActionsPadding}">
+                                    <Grid Name="PART_PanelActions"
+                                          ColumnDefinitions="*,*"
+                                          ColumnSpacing="{arc:CookieConsentTokenResource ActionGap}"
+                                          RowSpacing="{arc:CookieConsentTokenResource ActionGap}">
+                                        <arc:Button Name="PART_PanelReject" Size="Small" Variant="Secondary" HorizontalAlignment="Stretch" />
+                                        <arc:Button Name="PART_PanelAccept" Grid.Column="1" Size="Small" Variant="Secondary" HorizontalAlignment="Stretch" />
+                                        <arc:Button Name="PART_Save" Grid.Row="1" Grid.ColumnSpan="2" Size="Small" Variant="Primary" HorizontalAlignment="Stretch" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Reopen button: the surface folded to 44px. -->
+                        <Panel Name="PART_ChipFace" Height="{arc:CookieConsentTokenResource ChipDiameter}">
+                            <arc:Button Name="PART_Chip"
+                                        Classes="cookie-chip"
+                                        Variant="Ghost"
+                                        IsPressScaleEnabled="False">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Cookie}" Size="20" StrokeThickness="1.75" />
+                            </arc:Button>
+                        </Panel>
+                    </arc:CookieConsentSurface>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+
+        <Style Selector="^ /template/ arc|Button.cookie-close">
+            <Setter Property="Width" Value="{arc:CookieConsentTokenResource CloseDiameter}" />
+            <Setter Property="Height" Value="{arc:CookieConsentTokenResource CloseDiameter}" />
+            <Setter Property="MinHeight" Value="{arc:CookieConsentTokenResource CloseDiameter}" />
+            <Setter Property="Margin" Value="{arc:CookieConsentTokenResource CloseMargin}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.cookie-chip">
+            <Setter Property="Width" Value="{arc:CookieConsentTokenResource ChipDiameter}" />
+            <Setter Property="Height" Value="{arc:CookieConsentTokenResource ChipDiameter}" />
+            <Setter Property="MinHeight" Value="{arc:CookieConsentTokenResource ChipDiameter}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The inline policy link: underlined text, the underline darkens to the text color on hover. -->
+    <ControlTheme x:Key="{x:Type arc:CookieConsentPolicyLink}" TargetType="arc:CookieConsentPolicyLink">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CookieConsentPolicyLink">
+                <Panel Background="Transparent">
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" />
+                    <!-- text-underline-offset: 3px, drawn inside the text box so the link never grows the line. -->
+                    <Border Name="PART_Underline"
+                            Height="1"
+                            Margin="0,0,0,1"
+                            VerticalAlignment="Bottom"
+                            Background="{TemplateBinding BorderBrush}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3,-2"
+                            BorderThickness="2"
+                            CornerRadius="6"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

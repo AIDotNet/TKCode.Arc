@@ -1,0 +1,251 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="ArcBottomSheetCloseButtonTheme" TargetType="Button">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="16"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:BottomSheetSurfaceTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:BottomSheetSurfaceTokenResource CloseButtonSize}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The grabber: a 3.5rem × 1.25rem hit area around a 2.25rem × 5px bar. -->
+    <ControlTheme x:Key="ArcBottomSheetGrabberTheme" TargetType="Button">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Bar"
+                            Width="{arc:BottomSheetSurfaceTokenResource GrabberBarWidth}"
+                            Height="{arc:BottomSheetSurfaceTokenResource GrabberBarHeight}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{TemplateBinding Foreground}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:BottomSheetSurfaceTokenResource GrabberHitWidth}" />
+        <Setter Property="Height" Value="{arc:BottomSheetSurfaceTokenResource GrabberHitHeight}" />
+        <Setter Property="Margin" Value="{arc:BottomSheetSurfaceTokenResource GrabberMargin}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:BottomSheetSurface}" TargetType="arc:BottomSheetSurface">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BottomSheetSurface">
+                <Border Name="PART_Shadow"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Border Name="PART_Frame"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Panel>
+                            <DockPanel Margin="{TemplateBinding Padding}">
+                                <Panel DockPanel.Dock="Top">
+                                    <!-- The whole header is the handle, so a drag can start anywhere above the content. -->
+                                    <Border Name="PART_Header"
+                                            Background="Transparent"
+                                            Cursor="Hand"
+                                            Padding="{arc:BottomSheetSurfaceTokenResource HeaderPadding}">
+                                        <StackPanel>
+                                            <Button Name="PART_Grabber"
+                                                    Theme="{StaticResource ArcBottomSheetGrabberTheme}"
+                                                    AutomationProperties.Name="Expand sheet" />
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  ColumnSpacing="{arc:BottomSheetSurfaceTokenResource HeaderGap}">
+                                                <StackPanel>
+                                                    <arc:OverlayText Name="PART_Title"
+                                                                     Text="{TemplateBinding Title}"
+                                                                     FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                                     FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                     Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                    <arc:OverlayText Name="PART_Description"
+                                                                     IsVisible="False"
+                                                                     Margin="{arc:BottomSheetSurfaceTokenResource DescriptionMargin}"
+                                                                     Text="{TemplateBinding Description}"
+                                                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                     Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                </StackPanel>
+                                                <Button Name="PART_CloseButton"
+                                                    Theme="{StaticResource ArcBottomSheetCloseButtonTheme}"
+                                                    Grid.Column="1"
+                                                    IsVisible="{TemplateBinding ShowCloseButton}"
+                                                    AutomationProperties.Name="{TemplateBinding CloseButtonName}"
+                                                    Margin="{arc:BottomSheetSurfaceTokenResource CloseButtonMargin}" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- A hairline appears only once the content scrolls under the header. -->
+                                    <Border Name="PART_HeaderLine"
+                                            Height="1"
+                                            VerticalAlignment="Bottom"
+                                            IsHitTestVisible="False"
+                                            Opacity="0"
+                                            Background="{arc:ArcDesignTokenResource Border}" />
+                                </Panel>
+                                <ScrollViewer Name="PART_Body"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Hidden">
+                                    <StackPanel Name="PART_BodyContent" Margin="{arc:BottomSheetSurfaceTokenResource BodyPadding}">
+                                        <ContentPresenter Name="PART_ContentPresenter"
+                                                          Content="{TemplateBinding Content}"
+                                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                        <ContentPresenter Name="PART_Actions"
+                                                          IsVisible="False"
+                                                          HorizontalAlignment="Right"
+                                                          Margin="{arc:BottomSheetSurfaceTokenResource ActionsMargin}"
+                                                          Content="{TemplateBinding Actions}" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </DockPanel>
+                            <TextBlock Name="PART_Announcer"
+                                       Width="1"
+                                       Height="1"
+                                       Opacity="0"
+                                       IsHitTestVisible="False"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       AutomationProperties.LiveSetting="Polite" />
+                        </Panel>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1,1,1,0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ContentTemplate">
+            <arc:OverlayTextTemplate />
+        </Setter>
+        <Setter Property="Extension" Value="{arc:BottomSheetSurfaceTokenResource Extension}" />
+        <Setter Property="PanelMaxWidth" Value="{arc:BottomSheetSurfaceTokenResource PanelMaxWidth}" />
+        <Setter Property="NarrowBreakpoint" Value="{arc:BottomSheetSurfaceTokenResource NarrowBreakpoint}" />
+        <Setter Property="Margin" Value="{arc:BottomSheetSurfaceTokenResource SheetMargin}" />
+        <Setter Property="Padding" Value="{arc:BottomSheetSurfaceTokenResource SheetPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+
+        <Style Selector="^:dragging /template/ Border#PART_Header">
+            <Setter Property="Cursor" Value="SizeNorthSouth" />
+        </Style>
+        <Style Selector="^:dragging /template/ Button#PART_Grabber">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:scrolled /template/ Border#PART_HeaderLine">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:expanded /template/ ScrollViewer#PART_Body">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:BottomSheetSurfaceTokenResource NarrowHeaderPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_BodyContent">
+            <Setter Property="Margin" Value="{arc:BottomSheetSurfaceTokenResource NarrowBodyPadding}" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-actions /template/ ContentPresenter#PART_Actions">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_HeaderLine">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

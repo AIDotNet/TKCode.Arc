@@ -1,0 +1,11 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The declarative sheet renders nothing in place; its BottomSheetSurface rises on the overlay layer.
+         No backdrop blur: the dim follows the sheet position instead. -->
+    <ControlTheme x:Key="{x:Type arc:BottomSheet}" TargetType="arc:BottomSheet">
+        <Setter Property="ScrimBrush" Value="{arc:BottomSheetTokenResource ScrimColor}" />
+        <Setter Property="BackdropBlur" Value="0" />
+    </ControlTheme>
+</ResourceDictionary>
