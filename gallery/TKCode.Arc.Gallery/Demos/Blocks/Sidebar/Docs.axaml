@@ -1,0 +1,224 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarDocsDemo">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="arc|Button.version">
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="IsPressScaleEnabled" Value="False" />
+        </Style>
+        <!-- Article typography. -->
+        <Style Selector="TextBlock.h1">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="TextBlock.h2">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Margin" Value="0,30,0,0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="TextBlock.lead">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="24" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="TextBlock.p">
+            <Setter Property="LineHeight" Value="23" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="Border.code">
+            <Setter Property="Padding" Value="16,12" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="Border.code TextBlock">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="20" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- The "On this page" outline: entries on a hairline track; the accent bar glides to the active one. -->
+        <Style Selector="Border.entry">
+            <Setter Property="Padding" Value="12,4,4,4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Border.entry > TextBlock">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="18" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="Border.entry:pointerover > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="Border.entry.active > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="Border.entry:focus-visible">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+    </UserControl.Styles>
+    <Border Height="620"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:Sidebar x:Name="Nav"
+                         DockPanel.Dock="Left"
+                         IsFilterVisible="True"
+                         CollapseButtonPlacement="Filter"
+                         ResizeMode="Overlay"
+                         FilterPlaceholder="Search docs"
+                         SelectedKey="reliability/idempotency">
+                <arc:Sidebar.Header>
+                    <Grid ColumnDefinitions="*,Auto" Margin="6,0,0,0">
+                        <TextBlock VerticalAlignment="Center">
+                            <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Tidewater" />
+                            <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text=" docs" />
+                        </TextBlock>
+                        <arc:DropdownMenu Grid.Column="1" Side="Bottom" Alignment="End">
+                            <arc:DropdownMenu.Trigger>
+                                <arc:Button Classes="version" Variant="Secondary" Size="Small" AutomationProperties.Name="Version">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="v2.4" FontWeight="Medium" />
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}" Size="14" StrokeThickness="2" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </arc:DropdownMenu.Trigger>
+                            <arc:MenuEntry Header="v2.4 (latest)" ToggleType="Radio" GroupName="version" IsChecked="True" />
+                            <arc:MenuEntry Header="v2.3" ToggleType="Radio" GroupName="version" />
+                            <arc:MenuEntry Header="v1.9 (legacy)" ToggleType="Radio" GroupName="version" />
+                        </arc:DropdownMenu>
+                    </Grid>
+                </arc:Sidebar.Header>
+
+                <arc:SidebarSection>
+                    <arc:SidebarItem Key="start" Label="Getting started" Icon="{x:Static arc:ArcIcons.Sparkles}" IsExpanded="True">
+                        <arc:SidebarItem Key="start/introduction" Label="Introduction" />
+                        <arc:SidebarItem Key="start/quickstart" Label="Quickstart" />
+                        <arc:SidebarItem Key="start/authentication" Label="Authentication" />
+                        <arc:SidebarItem Key="start/limits" Label="Rate limits" />
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="shipments" Label="Shipments" Icon="{x:Static arc:ArcIcons.Package}">
+                        <arc:SidebarItem Key="shipments/create" Label="Create a shipment" />
+                        <arc:SidebarItem Key="shipments/track" Label="Track a shipment" />
+                        <arc:SidebarItem Key="shipments/labels" Label="Print labels" />
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="carriers" Label="Carriers" Icon="{x:Static arc:ArcIcons.Globe}">
+                        <arc:SidebarItem Key="carriers/supported" Label="Supported carriers" />
+                        <arc:SidebarItem Key="carriers/service-levels" Label="Service levels" />
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="reliability" Label="Reliability" Icon="{x:Static arc:ArcIcons.Shield}" IsExpanded="True">
+                        <arc:SidebarItem Key="reliability/overview" Label="Overview" />
+                        <arc:SidebarItem Key="reliability/idempotency" Label="Idempotent requests" />
+                        <arc:SidebarItem Key="reliability/failures" Label="Handling failures" />
+                        <arc:SidebarItem Key="reliability/errors" Label="Error codes" />
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="sdks" Label="SDKs" Icon="{x:Static arc:ArcIcons.Code}">
+                        <arc:SidebarItem Key="sdks/node" Label="Node" />
+                        <arc:SidebarItem Key="sdks/python" Label="Python" />
+                        <arc:SidebarItem Key="sdks/go" Label="Go" />
+                    </arc:SidebarItem>
+                </arc:SidebarSection>
+            </arc:Sidebar>
+
+            <Grid ColumnDefinitions="*,Auto" RenderTransform="{Binding #Nav.PageShift}">
+                <!-- Only the idempotency page has an article in this demo; the other pages show a short note. -->
+                <ScrollViewer x:Name="Page"
+                              HorizontalScrollBarVisibility="Disabled"
+                              IsVisible="{Binding #Nav.SelectedKey, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=reliability/idempotency}">
+                    <StackPanel x:Name="Article" Margin="36,32,28,32" MaxWidth="460" HorizontalAlignment="Left">
+                        <TextBlock Classes="h1" Text="Idempotent requests" />
+                        <TextBlock Classes="lead"
+                                   Margin="0,12,0,0"
+                                   Text="Networks fail halfway. An idempotency key lets you send the same request again without booking a second pickup." />
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" Margin="0,18,0,0">
+                            <arc:Avatar DisplayName="Mei Tanaka" Size="Small" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="Mei Tanaka" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Classes="caption" Text="Updated Sep 21, 2026" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <arc:CopyButton Grid.Column="2" Label="Copy link" Value="https://docs.tidewater.example/reliability/idempotency" />
+                        </Grid>
+                        <Border Height="1" Margin="0,18,0,0" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+
+                        <TextBlock x:Name="Section1" Classes="h2" Text="Why requests repeat" />
+                        <TextBlock Classes="p" Margin="0,10,0,0"
+                                   Text="A timeout does not say whether the server saw your request. Mobile clients retry on their own, queues deliver messages twice and people double-click. Without a guard, every repeat books another pickup." />
+
+                        <TextBlock x:Name="Section2" Classes="h2" Text="Choose a key" />
+                        <TextBlock Classes="p" Margin="0,10,0,0"
+                                   Text="Use a value that is unique for each intended action, such as a UUID created when someone opens the booking form. Reuse that key for every retry of the same action, and never across two different actions." />
+
+                        <TextBlock x:Name="Section3" Classes="h2" Text="Send the key" />
+                        <TextBlock Classes="p" Margin="0,10,0,0"
+                                   Text="Add the key to the Idempotency-Key header of any POST request." />
+                        <Border Classes="code" Margin="0,14,0,0">
+                            <TextBlock Text="POST /v2/shipments&#10;Idempotency-Key: 6f1c2d9e-3b7a-4c55-9a40&#10;Content-Type: application/json" />
+                        </Border>
+
+                        <TextBlock x:Name="Section4" Classes="h2" Text="What the server returns" />
+                        <TextBlock Classes="p" Margin="0,10,0,0"
+                                   Text="The first request runs as usual. A repeat with the same key returns the stored response with its original status code and an Idempotent-Replay header, and nothing is booked twice." />
+
+                        <TextBlock x:Name="Section5" Classes="h2" Text="Keys that clash" />
+                        <TextBlock Classes="p" Margin="0,10,0,0"
+                                   Text="When a key arrives with a different body, Tidewater answers 409 and changes nothing. Create a new key whenever the intent changes, even slightly." />
+
+                        <TextBlock x:Name="Section6" Classes="h2" Text="How long keys last" />
+                        <TextBlock Classes="p" Margin="0,10,0,0"
+                                   Text="Keys are kept for 24 hours. After that the same key counts as a new request, so finish your retries within a day." />
+                        <Border Height="280" />
+                    </StackPanel>
+                </ScrollViewer>
+                <StackPanel Margin="40,48"
+                            Spacing="6"
+                            MaxWidth="400"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            IsVisible="{Binding #Nav.SelectedKey, Converter={x:Static ObjectConverters.NotEqual}, ConverterParameter=reliability/idempotency}">
+                    <TextBlock Classes="h1" Text="{Binding #Nav.SelectedItem.Label, FallbackValue=Docs}" />
+                    <TextBlock Classes="lead" Text="This page is a stub in the demo. Open Reliability and choose Idempotent requests to see the outline follow the scroll." />
+                </StackPanel>
+
+                <Panel x:Name="Outline"
+                       Grid.Column="1"
+                       Width="168"
+                       Margin="0,32,16,0"
+                       VerticalAlignment="Top"
+                       IsVisible="{Binding #Nav.SelectedKey, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=reliability/idempotency}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="On this page"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="Medium"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <Panel>
+                            <Border Width="1" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                            <arc:GlidingIndicator x:Name="OutlineBar"
+                                                  Fill="{arc:ArcDesignTokenResource Accent}"
+                                                  CornerRadius="1"
+                                                  Spring="Snappy" />
+                            <StackPanel x:Name="OutlineItems" />
+                        </Panel>
+                    </StackPanel>
+                </Panel>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

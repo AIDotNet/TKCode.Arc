@@ -3,8 +3,26 @@
              xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.SearchResultsPreviewDemo">
     <arc:SearchResults x:Name="Search"
-                       Height="640"
+                       Height="760"
                        Label="Search the workspace"
-                       PlaceholderText="Search docs, issues, files and people"
-                       Query="release" />
+                       PlaceholderText="Search docs, people and files"
+                       Query="launch"
+                       SortOrder="Newest">
+        <arc:SearchResults.Filters>
+            <arc:SearchValueFilter Key="kind" Title="Type">
+                <arc:SearchFilterValue Value="Docs" />
+                <arc:SearchFilterValue Value="People" IsSelected="True" />
+                <arc:SearchFilterValue Value="Files" />
+            </arc:SearchValueFilter>
+            <arc:SearchValueFilter Key="team" Title="Team">
+                <arc:SearchFilterValue Value="Support" />
+                <arc:SearchFilterValue Value="Design" />
+                <arc:SearchFilterValue Value="Engineering" />
+                <arc:SearchFilterValue Value="Growth" />
+                <arc:SearchFilterValue Value="Operations" />
+                <arc:SearchFilterValue Value="Finance" />
+            </arc:SearchValueFilter>
+            <arc:SearchDateFilter Key="edited" Title="Edited" AppliesTo="Docs, Files" />
+        </arc:SearchResults.Filters>
+    </arc:SearchResults>
 </UserControl>

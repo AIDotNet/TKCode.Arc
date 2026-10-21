@@ -6,7 +6,7 @@
         <arc:Button Content="Open command palette"
                     Variant="Secondary"
                     HorizontalAlignment="Center"
-                    Click="OnOpenClick" />
+                    arc:CommandPaletteDialog.Opens="{Binding #Palette}" />
         <TextBlock x:Name="Hint"
                    FontSize="14"
                    TextWrapping="Wrap"
@@ -20,5 +20,19 @@
                    TextAlignment="Center"
                    HorizontalAlignment="Center"
                    Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <!-- Declared once, anywhere: it renders nothing here and shows its palette above the whole window. -->
+        <arc:CommandPaletteDialog x:Name="Palette"
+                                  PlaceholderText="Search commands"
+                                  BackdropBlur="4"
+                                  ItemSelected="OnItemSelected">
+            <arc:CommandPaletteItem Id="new-doc" Label="New document" Group="Create" Icon="{x:Static arc:ArcIcons.FilePlus}" Shortcut="N" />
+            <arc:CommandPaletteItem Id="new-project" Label="New project" Group="Create" Icon="{x:Static arc:ArcIcons.Folder}" />
+            <arc:CommandPaletteItem Id="invite" Label="Invite teammate" Description="Send an email invite" Group="Create" Icon="{x:Static arc:ArcIcons.Users}" />
+            <arc:CommandPaletteItem Id="inbox" Label="Go to inbox" Group="Go to" Icon="{x:Static arc:ArcIcons.Inbox}" Shortcut="G I" />
+            <arc:CommandPaletteItem Id="calendar" Label="Go to calendar" Group="Go to" Icon="{x:Static arc:ArcIcons.Calendar}" Shortcut="G C" />
+            <arc:CommandPaletteItem Id="reports" Label="Go to reports" Group="Go to" Icon="{x:Static arc:ArcIcons.ChartBar}" />
+            <arc:CommandPaletteItem Id="theme" Label="Toggle dark mode" Group="Preferences" Icon="{x:Static arc:ArcIcons.Moon}" Keywords="theme" />
+            <arc:CommandPaletteItem Id="shortcuts" Label="Keyboard shortcuts" Group="Preferences" Icon="{x:Static arc:ArcIcons.Keyboard}" Shortcut="?" />
+        </arc:CommandPaletteDialog>
     </StackPanel>
 </UserControl>

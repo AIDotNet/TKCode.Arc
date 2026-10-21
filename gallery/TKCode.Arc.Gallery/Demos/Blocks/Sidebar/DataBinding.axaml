@@ -4,11 +4,11 @@
              x:Class="TKCode.Arc.Gallery.Demos.SidebarDataBindingDemo">
     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="24" HorizontalAlignment="Center">
         <Border Height="360"
-                CornerRadius="16"
+                CornerRadius="20"
                 BorderThickness="1"
+                ClipToBounds="True"
                 BorderBrush="{arc:ArcDesignTokenResource Border}">
             <arc:Sidebar x:Name="Nav"
-                         CornerRadius="15"
                          BorderThickness="0"
                          IsCollapseButtonVisible="False"
                          SelectedKey="inbox">

@@ -2,52 +2,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.SearchResultsNarrowDemo">
-    <arc:SearchResults Width="380"
-                       Height="520"
+    <!-- Below 560 the filters sit behind a button, in a sheet, and the results take the whole width. -->
+    <arc:SearchResults Width="420"
+                       Height="640"
                        HorizontalAlignment="Center"
-                       Query="invoice"
-                       GroupPreviewCount="2">
-        <arc:SearchResultItem Title="Invoice template"
-                              Kind="Docs"
-                              Location="Finance / Templates"
-                              Meta="Updated 1w ago"
-                              Snippet="Use this template for every customer invoice. Fill in the purchase order number before you send it."
+                       Label="Search the shop"
+                       Query="lamp">
+        <arc:SearchResults.Filters>
+            <arc:SearchValueFilter Key="kind" Title="Type">
+                <arc:SearchFilterValue Value="Products" IsSelected="True" />
+                <arc:SearchFilterValue Value="Guides" />
+            </arc:SearchValueFilter>
+            <arc:SearchValueFilter Key="room" Title="Room">
+                <arc:SearchFilterValue Value="Living room" />
+                <arc:SearchFilterValue Value="Office" />
+                <arc:SearchFilterValue Value="Bedroom" />
+            </arc:SearchValueFilter>
+        </arc:SearchResults.Filters>
+        <arc:SearchResultItem Title="Arc floor lamp" Kind="Products" KindLabel="Product" Location="Lighting / Floor lamps"
+                              Subtitle="Brass, 160 cm"
+                              Snippet="A tall lamp with a long arm that reaches over a sofa or a reading chair."
+                              Caption="€189" Icon="{x:Static arc:ArcIcons.Package}" />
+        <arc:SearchResultItem Title="Desk lamp, dimmable" Kind="Products" KindLabel="Product" Location="Lighting / Desk lamps"
+                              Subtitle="Matt black, 45 cm"
+                              Snippet="Three colour temperatures and a touch dimmer on the base."
+                              Caption="€59" Icon="{x:Static arc:ArcIcons.Package}" />
+        <arc:SearchResultItem Title="Table lamp with linen shade" Kind="Products" KindLabel="Product" Location="Lighting / Table lamps"
+                              Subtitle="Oak, 38 cm"
+                              Snippet="A soft lamp for the bedside, with a switch on the cord."
+                              Caption="€79" Icon="{x:Static arc:ArcIcons.Package}" />
+        <arc:SearchResultItem Title="Choosing a lamp for a small office" Kind="Guides" KindLabel="Guide" Location="Guides / Lighting"
+                              Snippet="Where to put the lamp, which colour temperature to pick and how bright is bright enough."
                               Icon="{x:Static arc:ArcIcons.FileText}" />
-        <arc:SearchResultItem Title="Late invoices"
-                              Kind="Docs"
-                              Location="Finance / Reports"
-                              Meta="Updated 2d ago"
-                              Snippet="Invoices more than 30 days overdue, grouped by customer and account manager."
-                              Icon="{x:Static arc:ArcIcons.ChartBar}" />
-        <arc:SearchResultItem Title="Invoice reminders"
-                              Kind="Docs"
-                              Location="Finance / Playbooks"
-                              Snippet="Send the first reminder after seven days and call the customer after twenty-one."
-                              Icon="{x:Static arc:ArcIcons.FileText}" />
-        <arc:SearchResultItem Title="INV-1042.pdf"
-                              Kind="Files"
-                              Location="Customers / Brightline"
-                              Meta="220 KB"
-                              Icon="{x:Static arc:ArcIcons.File}" />
-        <arc:SearchResultItem Title="Invoices Q2.xlsx"
-                              Kind="Files"
-                              Location="Finance / Exports"
-                              Meta="1.1 MB"
-                              Icon="{x:Static arc:ArcIcons.Table}" />
-        <arc:SearchResultItem Title="Invoice totals do not match the report"
-                              Kind="Issues"
-                              Location="FIN-88 · Reporting"
-                              Meta="Open"
-                              Snippet="The monthly report rounds every invoice line, so the totals drift by a few cents."
-                              Icon="{x:Static arc:ArcIcons.CircleDot}" />
-        <arc:SearchResultItem Title="Automate invoice numbering"
-                              Kind="Issues"
-                              Location="FIN-91 · Billing"
-                              Meta="Planned"
-                              Icon="{x:Static arc:ArcIcons.CircleDot}" />
-        <arc:SearchResultItem Title="Payroll calendar"
-                              Kind="Calendars"
-                              Location="Finance"
-                              Icon="{x:Static arc:ArcIcons.Calendar}" />
     </arc:SearchResults>
 </UserControl>

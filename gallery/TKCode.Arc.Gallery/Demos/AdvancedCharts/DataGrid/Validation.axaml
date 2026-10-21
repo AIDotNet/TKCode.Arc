@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DataGridValidationDemo">
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <arc:Checkbox x:Name="FlagBox" Content="Flag invalid values instead of refusing them" />
+            <arc:Button x:Name="CheckAll" Content="Check all rows" />
+        </StackPanel>
+        <arc:DataGrid x:Name="OrdersGrid"
+                      Label="Orders"
+                      MaxViewportHeight="340"
+                      ShowRowNumbers="False"
+                      ShowTotals="False"
+                      CanInsertRows="True"
+                      PasteOverflow="AppendRows">
+            <arc:DataGridColumn Key="item" Header="Item" Width="190" IsPinned="True">
+                <arc:DataGridColumn.Rules>
+                    <arc:RequiredRule />
+                    <arc:MaxLengthRule Length="24" />
+                </arc:DataGridColumn.Rules>
+            </arc:DataGridColumn>
+            <arc:DataGridColumn Key="qty" Header="Qty" Type="Number" Width="100">
+                <arc:DataGridColumn.Rules>
+                    <arc:RangeRule Minimum="1" Maximum="99" />
+                </arc:DataGridColumn.Rules>
+            </arc:DataGridColumn>
+            <arc:DataGridColumn Key="price" Header="Price" Type="Currency" Decimals="2" Width="120">
+                <arc:DataGridColumn.Rules>
+                    <arc:RangeRule Minimum="0" />
+                </arc:DataGridColumn.Rules>
+                <arc:DataGridColumn.FormatRules>
+                    <arc:DataGridFormatRule Condition="GreaterThan" Value="500" Tone="Warning" Bold="True" />
+                </arc:DataGridColumn.FormatRules>
+            </arc:DataGridColumn>
+            <arc:DataGridColumn Key="status" Header="Status" Type="Select" Width="130">
+                <arc:DataGridColumn.FormatRules>
+                    <arc:DataGridFormatRule Condition="Equal" Value="Late" Tone="Danger" />
+                    <arc:DataGridFormatRule Condition="Equal" Value="Shipped" Tone="Success" />
+                </arc:DataGridColumn.FormatRules>
+            </arc:DataGridColumn>
+            <arc:DataGridColumn Key="due" Header="Due" Type="Date" DateFormat="yyyy-MM-dd" Width="130">
+                <arc:DataGridColumn.FormatRules>
+                    <arc:DataGridFormatRule Condition="LessThan" Value="2026-06-01" Tone="Danger" />
+                </arc:DataGridColumn.FormatRules>
+            </arc:DataGridColumn>
+        </arc:DataGrid>
+        <TextBlock x:Name="Log" Text="Shipped orders are locked. Try a quantity of 0, an empty item, or Ctrl+Shift+Plus to add a row." Opacity="0.7" />
+    </StackPanel>
+</UserControl>

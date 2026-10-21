@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SearchResultsFiltersDemo">
+    <arc:SearchResults x:Name="Search" Height="680" Label="Search the library" Query="harbour">
+        <arc:SearchResults.Filters>
+            <arc:SearchValueFilter Key="kind" Title="Type" />
+            <arc:SearchValueFilter Key="topic" Title="Topic">
+                <arc:SearchFilterValue Value="Navigation" />
+                <arc:SearchFilterValue Value="Weather" />
+                <arc:SearchFilterValue Value="Safety" IsSelected="True" />
+                <arc:SearchFilterValue Value="Maintenance" />
+            </arc:SearchValueFilter>
+            <arc:SearchDateFilter Key="updated" Title="Updated" AppliesTo="Guides, Charts" />
+        </arc:SearchResults.Filters>
+        <arc:SearchResultItem Title="Harbour entry checklist" Kind="Guides" KindLabel="Guide" Location="Navigation / Approach"
+                              Snippet="Check the tide table, call the harbour master on channel 12 and reduce speed at the outer marker."
+                              Icon="{x:Static arc:ArcIcons.FileText}" />
+        <arc:SearchResultItem Title="Harbour lights and marks" Kind="Charts" KindLabel="Chart" Location="Navigation / Charts"
+                              Snippet="Every light and buoy around the harbour with its colour, rhythm and range."
+                              Icon="{x:Static arc:ArcIcons.File}" />
+        <arc:SearchResultItem Title="Storm shelter in the harbour" Kind="Guides" KindLabel="Guide" Location="Safety / Weather"
+                              Snippet="Where to tie up when the wind passes force 8 and how to double the lines."
+                              Icon="{x:Static arc:ArcIcons.FileText}" />
+        <arc:SearchResultItem Title="Winter lay-up and harbour fees" Kind="Guides" KindLabel="Guide" Location="Maintenance / Yard"
+                              Snippet="Prices per metre for the winter months and what the harbour includes."
+                              Icon="{x:Static arc:ArcIcons.FileText}" />
+        <arc:SearchResultItem Title="Ines Duarte" Kind="People" Subtitle="Pilot coordinator, Lisbon"
+                              Snippet="Keeps the harbour pilot rota and knows who is on call this week."
+                              Caption="ines@tidewater.example" AvatarName="Ines Duarte" />
+        <arc:SearchResultItem Title="Marit Haugen" Kind="People" Subtitle="Harbour master, Bergen"
+                              Snippet="Answers questions about berths, fees and the harbour rules."
+                              Caption="marit@tidewater.example" AvatarName="Marit Haugen" />
+    </arc:SearchResults>
+</UserControl>

@@ -3,8 +3,16 @@
              xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.SearchResultsServerSearchDemo">
     <arc:SearchResults x:Name="Search"
-                       Height="560"
+                       Height="600"
                        IsFilteringEnabled="False"
                        Label="Search support"
-                       PlaceholderText="Search tickets and articles" />
+                       PlaceholderText="Search tickets, articles and macros">
+        <arc:SearchResults.Filters>
+            <arc:SearchValueFilter Key="kind" Title="Type">
+                <arc:SearchFilterValue Value="Tickets" />
+                <arc:SearchFilterValue Value="Articles" />
+                <arc:SearchFilterValue Value="Macros" />
+            </arc:SearchValueFilter>
+        </arc:SearchResults.Filters>
+    </arc:SearchResults>
 </UserControl>

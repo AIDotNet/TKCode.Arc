@@ -1,15 +1,39 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:atom="using:AtomUI.Controls.Primitives"
              x:Class="TKCode.Arc.Gallery.Demos.CommandPalettePreviewDemo">
-    <StackPanel Spacing="16" MaxWidth="560" HorizontalAlignment="Center">
-        <arc:CommandPalette x:Name="Palette" ItemSelected="OnItemSelected" />
-        <TextBlock x:Name="LastCommand"
-                   Text="Use the arrow keys and Enter, or click a command."
-                   FontSize="14"
-                   TextWrapping="Wrap"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-    </StackPanel>
+    <!-- The panel keeps the palette on this stage: a non-modal dialog needs no scrim, and an app would not need the panel. -->
+    <atom:ScopeAwareOverlayLayerPanel Height="480">
+        <StackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <arc:Button Content="Open command palette"
+                        Variant="Secondary"
+                        HorizontalAlignment="Center"
+                        arc:CommandPaletteDialog.Opens="{Binding #Palette}" />
+            <TextBlock x:Name="Hint"
+                       FontSize="14"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <TextBlock x:Name="LastCommand"
+                       Text="Nothing run yet."
+                       FontSize="14"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <arc:CommandPaletteDialog x:Name="Palette"
+                                  IsOpen="True"
+                                  IsModal="False"
+                                  PanelWidth="480"
+                                  PlaceholderText="Search board commands"
+                                  ItemSelected="OnItemSelected">
+            <arc:CommandPaletteItem Id="add-task" Group="Tasks" Label="Add a task" Description="Put a new task on the board" Icon="{x:Static arc:ArcIcons.Plus}" Shortcut="N" />
+            <arc:CommandPaletteItem Id="assign" Group="Tasks" Label="Assign to me" Description="Take ownership of the selected task" Icon="{x:Static arc:ArcIcons.User}" Shortcut="A" />
+            <arc:CommandPaletteItem Id="due" Group="Tasks" Label="Set a due date" Description="Pick a deadline from the calendar" Icon="{x:Static arc:ArcIcons.CalendarDays}" />
+            <arc:CommandPaletteItem Id="labels" Group="Board" Label="Group by label" Description="Sort the board into label columns" Icon="{x:Static arc:ArcIcons.Tag}" Shortcut="L" />
+            <arc:CommandPaletteItem Id="invite" Group="Board" Label="Invite a teammate" Description="Send an invitation by email" Icon="{x:Static arc:ArcIcons.Users}" Shortcut="I" />
+            <arc:CommandPaletteItem Id="delete" Group="Danger zone" Label="Delete this board" Description="Remove it with all of its tasks" Icon="{x:Static arc:ArcIcons.Trash2}" Keywords="remove" />
+        </arc:CommandPaletteDialog>
+    </atom:ScopeAwareOverlayLayerPanel>
 </UserControl>

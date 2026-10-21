@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SearchResultsDetailDemo">
+    <StackPanel Spacing="12">
+        <arc:SearchResults x:Name="Search" Height="520" Label="Search the wiki" Query="canary">
+            <arc:SearchResultItem Id="canary" Title="Canary releases" Kind="Pages" KindLabel="Page" Location="Platform / Releases"
+                                  Snippet="Ship to five percent of accounts first and watch the error rate before widening."
+                                  Body="A canary release sends a new build to a small share of accounts before everyone else.&#10;&#10;Start at five percent. If the error rate and the latency stay flat for thirty minutes, widen to twenty-five, then to everyone.&#10;&#10;Keep the previous build warm for a day, so going back is one click."
+                                  Url="https://wiki.example/platform/canary"
+                                  Icon="{x:Static arc:ArcIcons.FileText}">
+                <arc:SearchResultItem.Details>
+                    <arc:SearchResultDetail Label="Owner" Value="Platform team" />
+                    <arc:SearchResultDetail Label="Author" Value="Wen Zhao" AvatarName="Wen Zhao" />
+                    <arc:SearchResultDetail Label="Length" Value="3 min read" />
+                    <arc:SearchResultDetail Label="Last edited" Value="Sep 14, 2026" Note="a week ago" />
+                </arc:SearchResultItem.Details>
+            </arc:SearchResultItem>
+            <arc:SearchResultItem Id="flags" Title="Feature flags" Kind="Pages" KindLabel="Page" Location="Platform / Releases"
+                                  Snippet="Every canary starts as a flag, so a rollback is a switch and not a deploy."
+                                  Body="Every canary release starts as a feature flag.&#10;&#10;Flags are owned by a team and expire after ninety days."
+                                  Url="https://wiki.example/platform/flags"
+                                  Icon="{x:Static arc:ArcIcons.FileText}">
+                <arc:SearchResultItem.Details>
+                    <arc:SearchResultDetail Label="Owner" Value="Platform team" />
+                    <arc:SearchResultDetail Label="Last edited" Value="Aug 2, 2026" Note="2 months ago" />
+                </arc:SearchResultItem.Details>
+            </arc:SearchResultItem>
+            <arc:SearchResultItem Id="pager" Title="On-call handbook" Kind="Pages" KindLabel="Page" Location="Platform / Operations"
+                                  Snippet="Who answers when a canary goes wrong at night, and how to hand over."
+                                  Body="The primary answers within five minutes. The secondary joins if the page is not acknowledged."
+                                  Url="https://wiki.example/platform/on-call"
+                                  Icon="{x:Static arc:ArcIcons.FileText}">
+                <arc:SearchResultItem.Details>
+                    <arc:SearchResultDetail Label="Owner" Value="Platform team" />
+                </arc:SearchResultItem.Details>
+            </arc:SearchResultItem>
+        </arc:SearchResults>
+        <TextBlock x:Name="Status"
+                   Text="Press Enter or click a result to open its detail."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

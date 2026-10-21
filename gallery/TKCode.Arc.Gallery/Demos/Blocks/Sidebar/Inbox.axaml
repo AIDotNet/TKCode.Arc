@@ -1,0 +1,320 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarInboxDemo">
+    <UserControl.Styles>
+        <!-- On the icon rail the footer keeps only its leading 40px (the avatar); the rest fades. -->
+        <Style Selector="arc|Sidebar :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="arc|Sidebar:motion-full :is(Control).rail-fade">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Compose is as wide as the rows while the sidebar is open; on the rail only its icon stays (the pane clips the rest). -->
+        <Style Selector="arc|Button.compose">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="IsPressScaleEnabled" Value="False" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed arc|Button.compose">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="arc|Button.panel-toggle">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="IsPressScaleEnabled" Value="False" />
+        </Style>
+        <!-- One message: unread dot, avatar, sender with a label chip and the time, subject and preview on one line. -->
+        <Style Selector="Border.message">
+            <Setter Property="Padding" Value="0,11" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="Ellipse.unread">
+            <Setter Property="Width" Value="6" />
+            <Setter Property="Height" Value="6" />
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.chip">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="2.5" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Path.star">
+            <Setter Property="Data" Value="{x:Static arc:ArcIcons.Star}" />
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="StrokeThickness" Value="1.5" />
+            <Setter Property="StrokeJoin" Value="Round" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="Width" Value="13" />
+            <Setter Property="Height" Value="13" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+    <Border Height="620"
+            CornerRadius="22"
+            BorderThickness="1"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:Sidebar x:Name="Nav"
+                         DockPanel.Dock="Left"
+                         IsCollapseButtonVisible="False"
+                         ResizeMode="Overlay"
+                         SelectedKey="inbox">
+                <arc:Sidebar.Header>
+                    <arc:Button Classes="compose" Variant="Secondary" Size="Small" AutomationProperties.Name="Compose">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Pencil}" Size="16" StrokeThickness="1.6" />
+                            <TextBlock Classes="rail-fade" Text="Compose" />
+                        </StackPanel>
+                    </arc:Button>
+                </arc:Sidebar.Header>
+
+                <arc:SidebarSection>
+                    <arc:SidebarItem Key="inbox" Label="Inbox" Icon="{x:Static arc:ArcIcons.Inbox}" Badge="5" />
+                    <arc:SidebarItem Key="starred" Label="Starred" Icon="{x:Static arc:ArcIcons.Star}" Badge="2" />
+                    <arc:SidebarItem Key="snoozed" Label="Snoozed" Icon="{x:Static arc:ArcIcons.Clock}" Badge="3" />
+                    <arc:SidebarItem Key="sent" Label="Sent" Icon="{x:Static arc:ArcIcons.Send}" />
+                    <arc:SidebarItem Key="drafts" Label="Drafts" Icon="{x:Static arc:ArcIcons.FileText}" Badge="1" />
+                    <arc:SidebarItem Key="archive" Label="Archive" Icon="{x:Static arc:ArcIcons.Archive}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Labels" IsCollapsible="True">
+                    <arc:SidebarItem Key="labels/design" Label="Design" Badge="4">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series3}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="labels/launch" Label="Launch" Badge="3">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Success}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="labels/research" Label="Research" Badge="2">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series1}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="labels/hiring" Label="Hiring" Badge="1">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series4}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="labels/more"
+                                     Label="More"
+                                     IsAction="True"
+                                     TrailingIcon="{x:Static arc:ArcIcons.ChevronRight}" />
+                </arc:SidebarSection>
+
+                <arc:Sidebar.Footer>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,0">
+                        <arc:Avatar DisplayName="Leah Fox" Size="Small" Status="Online" />
+                        <StackPanel Classes="rail-fade" VerticalAlignment="Center">
+                            <TextBlock Text="Leah Fox" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Classes="caption" Text="leah@pinecrest.studio" />
+                        </StackPanel>
+                    </StackPanel>
+                </arc:Sidebar.Footer>
+            </arc:Sidebar>
+
+            <Grid RowDefinitions="Auto,*,Auto" RenderTransform="{Binding #Nav.PageShift}">
+                <Border Height="56"
+                        Padding="14,0,22,0"
+                        BorderThickness="0,0,0,1"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                        <arc:Button Classes="panel-toggle"
+                                    Variant="Ghost"
+                                    AutomationProperties.Name="Toggle sidebar"
+                                    Click="OnToggleSidebar">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.PanelLeft}" Size="16" StrokeThickness="1.6" />
+                        </arc:Button>
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding #Nav.SelectedItem.Label, FallbackValue=Inbox}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                   FontWeight="Medium"
+                                   VerticalAlignment="Center"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Grid.Column="2"
+                                   Classes="caption"
+                                   Text="8 messages, 5 unread"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Ellipse Classes="unread" />
+                                <arc:Avatar Grid.Column="1" DisplayName="Ines Duarte" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Ines Duarte" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Series3}" />
+                                        <TextBlock Grid.Column="2" Classes="caption" Text="9:42 AM" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Spring lookbook: final selects" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  I trimmed the set to twelve frames and noted the crops that still need a pass." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Ellipse Classes="unread" />
+                                <arc:Avatar Grid.Column="1" DisplayName="Kenji Sato" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Kenji Sato" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Success}" />
+                                        <Path Grid.Column="2" Classes="star" />
+                                        <TextBlock Grid.Column="3" Classes="caption" Text="9:10 AM" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Carton quote: three options" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  The recycled board is the cheapest, and the mill can still make the April date." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Ellipse Classes="unread" />
+                                <arc:Avatar Grid.Column="1" DisplayName="Omar Haddad" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Omar Haddad" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Series3}" />
+                                        <TextBlock Grid.Column="2" Classes="caption" Text="8:18 AM" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Notes from Tuesday's brand sync" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  Three decisions, two open questions and who owns the follow-ups." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Ellipse Classes="unread" />
+                                <arc:Avatar Grid.Column="1" DisplayName="Zara Ali" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Zara Ali" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Series1}" />
+                                        <TextBlock Grid.Column="2" Classes="caption" Text="7:55 AM" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Interview takeaways, batch two" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  People skip the sizing guide on mobile, so the fit notes never get read." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Ellipse Classes="unread" />
+                                <arc:Avatar Grid.Column="1" DisplayName="Mei Tanaka" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Mei Tanaka" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Series4}" />
+                                        <TextBlock Grid.Column="2" Classes="caption" Text="Yesterday" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Portfolio review, senior role" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  Two candidates stood out. Could you take the second interview slot?" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Panel />
+                                <arc:Avatar Grid.Column="1" DisplayName="Jonas Berg" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Jonas Berg" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Success}" />
+                                        <Path Grid.Column="2" Classes="star" />
+                                        <TextBlock Grid.Column="3" Classes="caption" Text="Mon" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Pop-up kit: shipping dates" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  The first crates leave Friday; the rest follow once the signage is cut." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Panel />
+                                <arc:Avatar Grid.Column="1" DisplayName="Priya Nair" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Priya Nair" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Series3}" />
+                                        <TextBlock Grid.Column="2" Classes="caption" Text="Sun" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Packaging 2.0: sign-off checklist" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  Everything is green except the varnish sample, which arrives on Wednesday." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Classes="message">
+                            <Grid ColumnDefinitions="22,Auto,*" ColumnSpacing="10">
+                                <Panel />
+                                <arc:Avatar Grid.Column="1" DisplayName="Tomas Rivera" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="2" Margin="0,0,22,0" Spacing="3">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="Tomas Rivera" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1" Classes="chip" HorizontalAlignment="Left" Background="{arc:ArcDesignTokenResource Success}" />
+                                        <TextBlock Grid.Column="2" Classes="caption" Text="Sat" />
+                                    </Grid>
+                                    <TextBlock TextTrimming="CharacterEllipsis">
+                                        <Run FontWeight="Medium" Foreground="{arc:ArcDesignTokenResource Foreground}" Text="Retail window, final proofs" />
+                                        <Run Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="  I matched the type sizes to the poster and exported the print-ready files." />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+                <Border Grid.Row="2"
+                        Height="44"
+                        Padding="22,0"
+                        BorderThickness="0,1,0,0"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                    <TextBlock Classes="caption"
+                               Text="Drag a message onto a folder, or use Move to"
+                               VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

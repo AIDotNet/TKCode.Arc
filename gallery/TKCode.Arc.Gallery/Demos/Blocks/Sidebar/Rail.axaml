@@ -13,31 +13,31 @@
                     IsChecked="{Binding #Nav.IsCollapsed, Mode=TwoWay}" />
         <Border Width="560"
                 Height="400"
-                CornerRadius="16"
+                CornerRadius="20"
                 BorderThickness="1"
+                ClipToBounds="True"
                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                 Background="{arc:ArcDesignTokenResource Background}">
             <DockPanel>
                 <arc:Sidebar x:Name="Nav"
                              DockPanel.Dock="Left"
-                             CornerRadius="15,0,0,15"
                              IsCollapsed="True"
                              IsCollapseButtonVisible="False"
                              SelectedKey="reports/weekly">
                     <arc:Sidebar.Header>
-                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,3,0,3">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,0">
                             <Border Width="28"
                                     Height="28"
                                     CornerRadius="8"
-                                    Background="{arc:ArcDesignTokenResource Accent}">
-                                <TextBlock Text="N"
+                                    Background="{arc:ArcDesignTokenResource Foreground}">
+                                <TextBlock Text="A"
                                            FontWeight="SemiBold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"
-                                           Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                                           Foreground="{arc:ArcDesignTokenResource Background}" />
                             </Border>
                             <TextBlock Classes="rail-fade"
-                                       Text="Northwind"
+                                       Text="Alder &amp; Co"
                                        FontWeight="Medium"
                                        VerticalAlignment="Center"
                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />

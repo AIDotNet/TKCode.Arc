@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MarkdownOutlineDemo">
+    <Grid ColumnDefinitions="180,*" ColumnSpacing="20">
+        <StackPanel Grid.Column="0" Spacing="8">
+            <TextBlock Text="Outline"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <ListBox x:Name="Outline"
+                     FontSize="13"
+                     Background="Transparent"
+                     SelectionChanged="OnOutlineSelectionChanged" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="12">
+            <WrapPanel ItemSpacing="8" LineSpacing="8">
+                <arc:Input x:Name="FindBox"
+                           Placeholder="Find in document"
+                           Width="180"
+                           Size="Small"
+                           TextChanged="OnFindTextChanged" />
+                <arc:Button Content="Previous" Variant="Secondary" Size="Small" Click="OnPreviousClick" />
+                <arc:Button Content="Next" Variant="Secondary" Size="Small" Click="OnNextClick" />
+                <TextBlock x:Name="Status"
+                           Text="No search"
+                           FontSize="13"
+                           VerticalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </WrapPanel>
+            <ScrollViewer Height="280">
+                <arc:Markdown x:Name="Article" DocumentReady="OnDocumentReady" />
+            </ScrollViewer>
+        </StackPanel>
+    </Grid>
+</UserControl>

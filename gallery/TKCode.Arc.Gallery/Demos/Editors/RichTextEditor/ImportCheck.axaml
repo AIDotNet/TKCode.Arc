@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RichTextEditorImportCheckDemo">
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+        <StackPanel Grid.Column="0" Spacing="12">
+            <TextBlock Text="Markdown to import"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arc:Textarea x:Name="Source"
+                          Height="220"
+                          AcceptsReturn="True"
+                          TextWrapping="Wrap"
+                          FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                          TextChanged="OnSourceChanged" />
+            <WrapPanel ItemSpacing="8" LineSpacing="8">
+                <arc:Button Content="Import if lossless"
+                            Variant="Primary"
+                            Size="Small"
+                            Click="OnImportClick" />
+                <arc:Button Content="Keep original"
+                            Variant="Secondary"
+                            Size="Small"
+                            Click="OnKeepClick" />
+            </WrapPanel>
+            <TextBlock x:Name="Status"
+                       Text="No issues: this source imports as written."
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Spacing="12">
+            <TextBlock Text="Editor"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arc:RichTextEditor x:Name="Editor" Height="220" />
+        </StackPanel>
+    </Grid>
+</UserControl>

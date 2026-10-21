@@ -11,11 +11,11 @@
         </WrapPanel>
         <Border Height="400"
                 HorizontalAlignment="Center"
-                CornerRadius="16"
+                CornerRadius="20"
                 BorderThickness="1"
+                ClipToBounds="True"
                 BorderBrush="{arc:ArcDesignTokenResource Border}">
             <arc:Sidebar x:Name="Nav"
-                         CornerRadius="15"
                          BorderThickness="0"
                          IsCollapseButtonVisible="False"
                          IsFilterVisible="True"

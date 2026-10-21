@@ -1,42 +1,19 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
-             xmlns:generic="using:System.Collections.Generic"
              x:Class="TKCode.Arc.Gallery.Demos.SearchResultsNoResultsDemo">
-    <arc:SearchResults Height="520"
-                       Label="Search the handbook"
-                       PlaceholderText="Search the handbook"
-                       Query="quarterly forecast">
-        <arc:SearchResults.Suggestions>
-            <generic:List x:TypeArguments="x:String">
-                <x:String>budget</x:String>
-                <x:String>expenses</x:String>
-                <x:String>travel</x:String>
-            </generic:List>
-        </arc:SearchResults.Suggestions>
-        <arc:SearchResultItem Id="travel"
-                              Title="Travel policy"
-                              Kind="Policies"
-                              Location="Handbook / Finance"
-                              Snippet="Book flights at least two weeks ahead and keep the receipt for every expense over 25 euros."
+    <arc:SearchResults x:Name="Search" Height="460" Label="Search the library" Query="tide">
+        <arc:SearchResults.Filters>
+            <arc:SearchValueFilter Key="kind" Title="Type">
+                <arc:SearchFilterValue Value="Guides" IsSelected="True" />
+                <arc:SearchFilterValue Value="Charts" />
+            </arc:SearchValueFilter>
+        </arc:SearchResults.Filters>
+        <arc:SearchResultItem Title="Reading the tide table" Kind="Charts" Snippet="How to find high water for your harbour."
+                              Icon="{x:Static arc:ArcIcons.File}" />
+        <arc:SearchResultItem Title="Mooring in a strong tide" Kind="Charts" Snippet="Lines, fenders and the order to tie up."
+                              Icon="{x:Static arc:ArcIcons.File}" />
+        <arc:SearchResultItem Title="Passage planning" Kind="Guides" Snippet="Plan a day trip from start to finish."
                               Icon="{x:Static arc:ArcIcons.FileText}" />
-        <arc:SearchResultItem Id="budget"
-                              Title="Team budget for 2026"
-                              Kind="Policies"
-                              Location="Handbook / Finance"
-                              Snippet="Each team gets a yearly budget for tools, events and training. Ask your lead before you spend more than 500 euros."
-                              Icon="{x:Static arc:ArcIcons.FileText}" />
-        <arc:SearchResultItem Id="expenses"
-                              Title="Submit an expense report"
-                              Kind="How-tos"
-                              Location="Handbook / Finance"
-                              Snippet="Photograph the receipt, add it to a new report and send it to your lead before the end of the month."
-                              Icon="{x:Static arc:ArcIcons.CircleHelp}" />
-        <arc:SearchResultItem Id="laptop"
-                              Title="Order a new laptop"
-                              Kind="How-tos"
-                              Location="Handbook / IT"
-                              Snippet="Laptops are replaced every three years. Order through the IT portal; old devices go back to the office."
-                              Icon="{x:Static arc:ArcIcons.CircleHelp}" />
     </arc:SearchResults>
 </UserControl>

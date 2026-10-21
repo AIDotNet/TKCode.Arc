@@ -1,0 +1,242 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarWorkspaceDemo">
+    <UserControl.Styles>
+        <!-- On the icon rail the header and footer keep only their leading 40px (logo, avatar); the rest fades. -->
+        <Style Selector="arc|Sidebar :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="arc|Sidebar:motion-full :is(Control).rail-fade">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- The switcher's resting block: a 5% wash of the foreground; on the rail only the logo stays. -->
+        <Style Selector="arc|Sidebar Border.switcher-fill">
+            <Setter Property="Opacity" Value="0.05" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed Border.switcher-fill">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="arc|Sidebar:motion-full Border.switcher-fill">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="arc|Button.switcher">
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="4,4,10,4" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="IsPressScaleEnabled" Value="False" />
+        </Style>
+        <Style Selector="Border.column">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="Border.task">
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+    </UserControl.Styles>
+    <!-- The docs page puts the demo on a framed, faintly filled stage; the sidebar floats on it as an inset card. -->
+    <Border Height="690" ClipToBounds="True">
+        <DockPanel>
+            <arc:Sidebar x:Name="Nav"
+                         DockPanel.Dock="Left"
+                         CornerRadius="20"
+                         BorderThickness="1"
+                         IsFilterVisible="True"
+                         CollapseButtonPlacement="Filter"
+                         ResizeMode="Overlay"
+                         FilterPlaceholder="Search"
+                         SelectedKey="projects/spring">
+                <arc:Sidebar.Header>
+                    <Panel>
+                        <Border Classes="switcher-fill"
+                                CornerRadius="12"
+                                IsHitTestVisible="False"
+                                Background="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:Button Classes="switcher" Variant="Ghost" AutomationProperties.Name="Switch workspace">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Border Width="32"
+                                        Height="32"
+                                        CornerRadius="9"
+                                        Background="{arc:ArcDesignTokenResource Accent}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Package}"
+                                                  Size="16"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                                </Border>
+                                <Grid Classes="rail-fade" ColumnDefinitions="*,Auto" Width="160">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="Harbor &amp; Pine"
+                                                   FontWeight="Medium"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Classes="caption" Text="Studio · 11 people" />
+                                    </StackPanel>
+                                    <arc:ArcGlyph Grid.Column="1"
+                                                  Data="{x:Static arc:ArcIcons.ChevronsUpDown}"
+                                                  Size="14"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                            </StackPanel>
+                        </arc:Button>
+                    </Panel>
+                </arc:Sidebar.Header>
+
+                <arc:SidebarSection Header="Favorites">
+                    <arc:SidebarItem Key="fav/guidelines" Label="Brand guidelines" Icon="{x:Static arc:ArcIcons.FileText}" />
+                    <arc:SidebarItem Key="fav/calendar" Label="Launch calendar" Icon="{x:Static arc:ArcIcons.Calendar}" />
+                    <arc:SidebarItem Key="fav/photos" Label="Photo library" Icon="{x:Static arc:ArcIcons.Image}" />
+                    <arc:SidebarItem Key="fav/budget" Label="Budget tracker" Icon="{x:Static arc:ArcIcons.ChartBar}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Projects">
+                    <arc:SidebarItem Key="projects/spring" Label="Spring launch">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series1}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="projects/partner" Label="Partner kit" IsUnread="True">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series2}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="projects/packaging" Label="Packaging 2.0">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series3}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="projects/popups" Label="Retail pop-ups" IsUnread="True">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Series4}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="projects/support" Label="Help center">
+                        <arc:SidebarItem.Icon>
+                            <Ellipse Width="8" Height="8" Fill="{arc:ArcDesignTokenResource Danger}" />
+                        </arc:SidebarItem.Icon>
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="projects/new" Label="New project" IsAction="True" Icon="{x:Static arc:ArcIcons.Plus}" />
+                </arc:SidebarSection>
+
+                <arc:Sidebar.Footer>
+                    <StackPanel Spacing="12">
+                        <StackPanel Classes="rail-fade" Spacing="6">
+                            <arc:Progress Label="Storage" IsValueVisible="True" Value="38" />
+                            <TextBlock Classes="caption" Text="38.4 GB of 100 GB" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,0">
+                            <arc:Avatar DisplayName="Priya Nair" Size="Small" Status="Online" />
+                            <StackPanel Classes="rail-fade" VerticalAlignment="Center">
+                                <TextBlock Text="Priya Nair"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Classes="caption" Text="Active" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </arc:Sidebar.Footer>
+            </arc:Sidebar>
+
+            <!-- The page sits on the stage itself: a project header and a small board. -->
+            <Grid RowDefinitions="Auto,Auto,*" Margin="28,10,8,0" RenderTransform="{Binding #Nav.PageShift}">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <Ellipse Width="10" Height="10" Fill="{arc:ArcDesignTokenResource Series1}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding #Nav.SelectedItem.Label, FallbackValue=Workspace}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                               FontWeight="Medium"
+                               VerticalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <arc:Badge Tone="Success" Content="On track" />
+                        <arc:AvatarGroup Size="Small" Label="Members">
+                            <arc:AvatarGroupMember DisplayName="Priya Nair" />
+                            <arc:AvatarGroupMember DisplayName="Tomas Rivera" />
+                            <arc:AvatarGroupMember DisplayName="Mei Tanaka" />
+                            <arc:AvatarGroupMember DisplayName="Jonas Berg" />
+                        </arc:AvatarGroup>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row="1"
+                           Margin="20,6,0,18"
+                           Text="Eight deliverables across brand, web and retail, due 28 April."
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="12" VerticalAlignment="Top">
+                    <Border Classes="column">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="To do" FontWeight="Medium" Margin="2,0,0,4" />
+                            <Border Classes="task">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Shoot lookbook stills" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="caption" Text="Due Apr 9" />
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="task">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Brief the print vendor" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="caption" Text="Due Apr 11" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="column" Grid.Column="1">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="In progress" FontWeight="Medium" Margin="2,0,0,4" />
+                            <Border Classes="task">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Landing page layout" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="caption" Text="Mei Tanaka" />
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="task">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Retouch hero image" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="caption" Text="Tomas Rivera" />
+                                </StackPanel>
+                            </Border>
+                            <Border Classes="task">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Write launch email" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="caption" Text="Priya Nair" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="column" Grid.Column="2">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Done" FontWeight="Medium" Margin="2,0,0,4" />
+                            <Border Classes="task">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Moodboard approved" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Classes="caption" Text="Apr 2" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>
