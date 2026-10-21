@@ -19,10 +19,10 @@ public class TooltipTests
             var popup = Tooltip.GetPopup(target);
             popup.ShouldNotBeNull();
             popup!.IsOpen.ShouldBeTrue();
-            ((Tooltip)popup.Child!).Content.ShouldBe("Copy link");
+            ((Tooltip)popup.Surface!).Content.ShouldBe("Copy link");
             Tooltip.SetTip(target, "Copied");
             Dispatcher.UIThread.RunJobs();
-            ((Tooltip)popup.Child!).Content.ShouldBe("Copied");
+            ((Tooltip)popup.Surface!).Content.ShouldBe("Copied");
             Tooltip.SetIsOpen(target, false);
             Dispatcher.UIThread.RunJobs();
         }

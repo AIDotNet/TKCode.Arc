@@ -329,7 +329,7 @@ public class MenuSurface : HeaderedItemsControl
     {
         var target = PlacementTarget;
         if (target is null || TopLevel.GetTopLevel(target) is null ||
-            (_popup is null || !ReferenceEquals(_popup.Child, this)) && this.GetVisualParent() is not null)
+            (_popup is null || !ReferenceEquals(_popup.Surface, this)) && this.GetVisualParent() is not null)
         {
             // No anchor, or the surface is placed inline in a layout: it cannot float.
             SetCurrentValue(IsOpenProperty, false);

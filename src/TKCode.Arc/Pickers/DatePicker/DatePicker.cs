@@ -262,7 +262,7 @@ public class DatePicker : FieldTextBox
                 _popup.Child = _panel;
             }
         }
-        _panel = _popup?.Child as DatePickerPanel;
+        _panel = _popup?.Surface as DatePickerPanel;
         SyncText();
         UpdateValue(animate: false, direction: 1);
         UpdateFrame();

@@ -26,7 +26,7 @@ public class PopupPlacementTests
             Dispatcher.UIThread.RunJobs();
             var popup = Tooltip.GetPopup(target)!;
             popup.ShouldUseOverlayLayer.ShouldBeTrue();
-            var bubble = (Control)popup.Child!;
+            var bubble = (Control)popup.Surface!;
             var bubbleTop = bubble.TranslatePoint(default, window)!.Value.Y;
             var targetTop = target.TranslatePoint(default, window)!.Value.Y;
             (targetTop - (bubbleTop + bubble.Bounds.Height)).ShouldBe(8, 1);

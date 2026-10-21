@@ -55,6 +55,51 @@ public class ArcPopup : AtomPopup
         // (hover popups flicker, the anchor stops receiving clicks). In the window's overlay layer the shadow is only
         // paint, as on the web. Native windows remain available per popup (ShouldUseOverlayLayer = false).
         ShouldUseOverlayLayerProperty.OverrideDefaultValue<ArcPopup>(true);
+        // Coerce rather than react: Popup makes the assigned child its logical child before a changed handler runs, so
+        // a handler could no longer move that child into a wrapper.
+        ChildProperty.OverrideMetadata<ArcPopup>(new StyledPropertyMetadata<Control?>(coerce: static (popup, child) =>
+            popup is ArcPopup arcPopup ? arcPopup.HostChild(child) : child));
+    }
+
+    private ArcZoomHost? _zoomHost;
+
+    /// <summary>
+    /// The surface that was assigned to <see cref="Popup.Child"/>. Assigned surfaces are hosted in an
+    /// <see cref="ArcZoomHost"/> so they follow <see cref="ArcZoom"/>; code that needs the surface itself reads this
+    /// instead of <see cref="Popup.Child"/>.
+    /// </summary>
+    public Control? Surface => Child is ArcZoomHost host ? host.Surface : Child;
+
+    /// <summary>The element <see cref="Popup.Child"/> actually holds for an assigned surface (reused while it is the same surface).</summary>
+    private Control? HostChild(Control? surface)
+    {
+        if (surface is null or ArcZoomHost)
+        {
+            // Release the previous surface so another popup (or the same one later) can host it.
+            if (surface is null && _zoomHost is not null)
+            {
+                _zoomHost.Surface = null;
+            }
+            return surface;
+        }
+        if (_zoomHost is null)
+        {
+            _zoomHost = new ArcZoomHost { Scale = ArcZoom.GetScale(this) };
+        }
+        if (!ReferenceEquals(_zoomHost.Surface, surface))
+        {
+            _zoomHost.Surface = null;
+            _zoomHost.Surface = surface;
+        }
+        return _zoomHost;
+    }
+
+    private void SyncZoom()
+    {
+        if (_zoomHost is not null)
+        {
+            _zoomHost.Scale = ArcZoom.GetScale(this);
+        }
     }
 
     public ArcPopup()
@@ -166,8 +211,14 @@ public class ArcPopup : AtomPopup
         }
         if (change.Property == IsOpenProperty && change.GetNewValue<bool>())
         {
-            // Motion level can change while closed (inherited from the placement target).
+            // Motion level can change while closed (inherited from the placement target); so can the zoom, which
+            // the surface must have before the popup measures it.
             UpdateMotions();
+            SyncZoom();
+        }
+        else if (change.Property == ArcZoom.ScaleProperty)
+        {
+            SyncZoom();
         }
         base.OnPropertyChanged(change);
     }

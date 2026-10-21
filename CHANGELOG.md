@@ -8,6 +8,13 @@ and `TKCode.Arc.Icons.Lucide`.
 
 ## Unreleased
 
+### Added
+
+- **Core**: `ArcZoom.Scale`, an inherited attached property for apps that scale their window content. Anchored popups
+  (menus, selects, tooltips, hover cards, popovers) draw in the window's overlay layer, outside the scaled container, so
+  they could not follow the zoom; they now lay out at the inherited scale. `ArcPopup.Surface` returns the surface that
+  was assigned to `Child` (the popup now hosts it in a scaling element, so `Child` itself is that element).
+
 ### Fixed
 
 - TreeView and JsonViewer: a second change to the rows before the next layout pass, while rows from the first change were

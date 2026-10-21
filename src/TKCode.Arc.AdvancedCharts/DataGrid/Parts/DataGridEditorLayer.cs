@@ -492,7 +492,7 @@ internal sealed class DataGridEditorLayer : Control
         var popup = _optionsPopup;
         popup.PlacementTarget = _editor;
         popup.Placement = OpenUp() ? PlacementMode.TopEdgeAlignedLeft : PlacementMode.BottomEdgeAlignedLeft;
-        if (popup.Child is Border border)
+        if (popup.Surface is Border border)
         {
             border.MinWidth = Math.Max(160, _editor.Bounds.Width);
             AutomationProperties.SetName(border, DataGridText.Format(DataGridLangResourceKind.OptionsLabel, _column.Header));
@@ -627,7 +627,7 @@ internal sealed class DataGridEditorLayer : Control
         var popup = _datePopup;
         popup.PlacementTarget = _editor;
         popup.Placement = OpenUp() ? PlacementMode.TopEdgeAlignedLeft : PlacementMode.BottomEdgeAlignedLeft;
-        AutomationProperties.SetName(popup.Child!, DataGridText.Format(DataGridLangResourceKind.CalendarLabel, _column.Header));
+        AutomationProperties.SetName(popup.Surface!, DataGridText.Format(DataGridLangResourceKind.CalendarLabel, _column.Header));
         if (DataGridValueParser.TryParseDate(Text, _grid.EffectiveCulture, out var day))
         {
             _calendar!.SelectedDate = day;
