@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Gallery docs tooling (design/engineering/gallery-app.md, 6.8): checks docs pages without a full build and captures
+         their screenshots. Not part of TKCode.Arc.slnx; build it with `dotnet build tools/docshots`. -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <ArcIsLibrary>false</ArcIsLibrary>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Headless" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
+        <ProjectReference Include="../../gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
+        <!-- The Docs-section pages show Lucide icons in their XAML examples. -->
+        <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The same code block parsing and XAML check as GalleryDocsTests. -->
+        <Compile Include="../../tests/TKCode.Arc.Tests/Gallery/DocSnippets.cs" Link="DocSnippets.cs" />
+    </ItemGroup>
+</Project>
