@@ -1,6 +1,6 @@
 ---
 title: 介绍
-source-hash: 671827ce6fa5
+source-hash: 34ecfe855e77
 ---
 
 # 介绍
@@ -107,7 +107,7 @@ TKCode.Arc 将 [Arc](https://uiarc.dev) 带到 Avalonia：相同的组件分组�
 ## 要求与平台
 
 - **.NET**：这些包面向 `net8.0`、`net10.0` 和 `net11.0`。
-- **Avalonia 与 AtomUI**：Avalonia `12.1.4` 与 AtomUI `6.2.7`，锁定为精确版本。请在你的应用中使用相同的版本。
+- **Avalonia 与 AtomUI**：Avalonia `12.1.4` 与 AtomUI `6.2.8`，锁定为精确版本。请在你的应用中使用相同的版本。
 - **平台**：Windows、macOS 和 Linux 桌面端。图库也可以通过其 WebAssembly 宿主在浏览器中运行。
 - **文本与代码的渲染**：Markdown 与语法高亮使用 StreamMark，由 `TKCode.Arc` 包引入。
 

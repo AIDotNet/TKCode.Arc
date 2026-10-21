@@ -119,7 +119,7 @@ as small, fast-starting single files.
 ## Requirements and platforms
 
 - **.NET**: the packages target `net8.0`, `net10.0` and `net11.0`.
-- **Avalonia and AtomUI**: Avalonia `12.1.4` and AtomUI `6.2.7`, pinned to exact versions. Use the same versions in
+- **Avalonia and AtomUI**: Avalonia `12.1.4` and AtomUI `6.2.8`, pinned to exact versions. Use the same versions in
   your application.
 - **Platforms**: desktop on Windows, macOS and Linux. The gallery also runs in the browser through its WebAssembly
   host.

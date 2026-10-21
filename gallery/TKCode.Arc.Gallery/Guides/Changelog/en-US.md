@@ -11,6 +11,48 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`. `TKCode.Arc.Blocks` and `TKCode.Arc.AdvancedCharts` are built from the repository.
 
+## 0.3.0-preview.1 (2026-10-22)
+
+### Added
+
+- **Core**: `ArcZoom.Scale`, an inherited attached property for apps that scale their window content. Anchored popups
+  (menus, selects, tooltips, hover cards, popovers) draw in the window's overlay layer, outside the scaled container, so
+  they could not follow the zoom; they now lay out at the inherited scale. `ArcPopup.Surface` returns the surface that
+  was assigned to `Child` (the popup now hosts it in a scaling element, so `Child` itself is that element).
+- **ExpandableContent**: the ExpandableText clamp, toggle and motion around any content, such as selectable text, a
+  read-only editor or rendered Markdown. The clamp ends on a line of the content's first visible text (`TextBlock`,
+  `SelectableTextBlock`, or a control that implements the new `IExpandableLineSource`); other content clamps at
+  `Lines × LineHeight`. `ExpandableText` and `ExpandableContent` share the new `ExpandableClamp` base class.
+- **ExpandableText**, **ExpandableContent**: `IsFadeEnabled` turns off the fade over the last line.
+
+### Changed
+
+- AtomUI is pinned to 6.2.8; 0.2.0-preview.1 was built on 6.2.7.
+- **ExpandableText**: while collapsed, the text is laid out only to the line after the clamp, and in full when it opens.
+  A 600-line text measured about 1ms collapsed instead of about 135ms. Text with inline controls is still laid out in
+  full, so a link below the clamp can take focus. The clamp now ends on the text's own line boundaries instead of
+  `Lines × LineHeight`.
+- **ExpandableText**: `Lines`, `IsExpanded`, `MoreLabel`, `LessLabel`, `LineHeight`, `IsOverflowing` and
+  `ExpandedChanged` are now declared on the new `ExpandableClamp` base class. Code that uses them through
+  `ExpandableText` is unchanged.
+
+### Fixed
+
+- **ExpandableText**: a change of `IsExpanded` that arrives with a new data context, for example in a recycled item
+  template, no longer animates or scrolls the page.
+- **Switch**, **Checkbox**: a value that arrives with a new data context, for example when a detail view is reused for
+  the next item, shows at once; the thumb no longer slides and stretches, and the check mark no longer draws in, as if
+  the user had clicked.
+- **Progress**: a `Value` change that leaves the whole percentage unchanged no longer restarts the spring or updates the
+  readout and the accessibility status. A download that reports hundreds of times a second now costs one update per
+  percent.
+- **SegmentedControl** and the other gliding-indicator toggles: a hidden control no longer places its indicator on
+  every layout pass of the window; it is placed when the control is shown again.
+- **GlidingIndicator**: the outline pen is kept between frames instead of being created on every render.
+- TreeView and JsonViewer: a second change to the rows before the next layout pass, while rows from the first change were
+  still closing, threw `IndexOutOfRangeException` in `RowTop`. The panel now refreshes its row geometry as soon as the
+  rows change.
+
 ## 0.2.0-preview.1 (2026-10-21)
 
 ### Added

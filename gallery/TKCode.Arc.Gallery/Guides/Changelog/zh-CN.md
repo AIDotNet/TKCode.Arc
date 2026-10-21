@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 0dcda62ef91e
+source-hash: 350f15cc72a5
 ---
 
 # 更新日志
@@ -8,6 +8,29 @@ source-hash: 0dcda62ef91e
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 和 `TKCode.Arc.Icons.Lucide`。`TKCode.Arc.Blocks` 与 `TKCode.Arc.AdvancedCharts` 从仓库构建。
+
+## 0.3.0-preview.1 (2026-10-22)
+
+### 新增
+
+- **Core**：`ArcZoom.Scale`，一个可继承的附加属性，供缩放窗口内容的应用使用。锚定弹层（菜单、选择器、工具提示、悬停卡片、气泡卡片）绘制在窗口的覆盖层里，位于被缩放的容器之外，因此原先无法跟随缩放；现在它们会按继承到的比例排版。`ArcPopup.Surface` 返回赋给 `Child` 的那个界面元素（弹层现在把它放进一个缩放元素中，因此 `Child` 本身是那个元素）。
+- **ExpandableContent**：把 ExpandableText 的截断、切换按钮和动效用在任意内容上，例如可选择的文本、只读编辑器或渲染后的 Markdown。截断停在内容中第一段可见文本的某一行上（`TextBlock`、`SelectableTextBlock`，或实现了新增 `IExpandableLineSource` 的控件）；其他内容按 `Lines × LineHeight` 截断。`ExpandableText` 与 `ExpandableContent` 共用新增的 `ExpandableClamp` 基类。
+- **ExpandableText**、**ExpandableContent**：`IsFadeEnabled` 可以关闭最后一行上的渐隐。
+
+### 变更
+
+- AtomUI 锁定为 6.2.8；0.2.0-preview.1 基于 6.2.7 构建。
+- **ExpandableText**：折叠时，文本只排版到截断线之后的一行，展开时才完整排版。600 行的文本折叠时测得约 1ms，而不是约 135ms。带有行内控件的文本仍会完整排版，以便截断线以下的链接可以获得焦点。截断现在停在文本自身的行边界上，而不是 `Lines × LineHeight`。
+- **ExpandableText**：`Lines`、`IsExpanded`、`MoreLabel`、`LessLabel`、`LineHeight`、`IsOverflowing` 和 `ExpandedChanged` 现在声明在新增的 `ExpandableClamp` 基类上。通过 `ExpandableText` 使用它们的代码不受影响。
+
+### 修复
+
+- **ExpandableText**：随新的数据上下文到来的 `IsExpanded` 变化（例如在回收的项模板中）不再产生动画，也不再滚动页面。
+- **Switch**、**Checkbox**：随新的数据上下文到来的值（例如详情视图被复用于下一项时）会立即显示；滑块不再滑动和拉伸，对勾也不再像用户点击过那样画出。
+- **Progress**：`Value` 变化但整数百分比不变时，不再重启弹簧，也不再更新读数和无障碍状态。每秒汇报数百次的下载现在每个百分点只更新一次。
+- **SegmentedControl** 以及其他带滑动指示条的切换控件：隐藏的控件不再在窗口的每次布局时放置指示条；控件再次显示时才会放置。
+- **GlidingIndicator**：描边画笔在帧之间保留，不再每次渲染都新建。
+- TreeView 和 JsonViewer：在下次布局之前对行再次做出更改，而第一次更改的行还在关闭过程中，会在 `RowTop` 中抛出 `IndexOutOfRangeException`。面板现在在行变化后立即刷新行的几何信息。
 
 ## 0.2.0-preview.1 (2026-10-21)
 

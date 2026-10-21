@@ -6,7 +6,7 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`
 and `TKCode.Arc.Icons.Lucide`.
 
-## Unreleased
+## 0.3.0-preview.1 - 2026-10-22
 
 ### Added
 
@@ -22,10 +22,14 @@ and `TKCode.Arc.Icons.Lucide`.
 
 ### Changed
 
+- AtomUI is pinned to 6.2.8; 0.2.0-preview.1 was built on 6.2.7.
 - **ExpandableText**: while collapsed, the text is laid out only to the line after the clamp, and in full when it opens.
   A 600-line text measured about 1ms collapsed instead of about 135ms. Text with inline controls is still laid out in
   full, so a link below the clamp can take focus. The clamp now ends on the text's own line boundaries instead of
   `Lines × LineHeight`.
+- **ExpandableText**: `Lines`, `IsExpanded`, `MoreLabel`, `LessLabel`, `LineHeight`, `IsOverflowing` and
+  `ExpandedChanged` are now declared on the new `ExpandableClamp` base class. Code that uses them through
+  `ExpandableText` is unchanged.
 
 ### Fixed
 
@@ -128,6 +132,7 @@ and `TKCode.Arc.Icons.Lucide`.
 
 First preview release.
 
+[0.3.0-preview.1]: https://github.com/AtomUICommunity/TKCode.Arc/compare/v0.2.0-preview.1...v0.3.0-preview.1
 [0.2.0-preview.1]: https://github.com/AtomUICommunity/TKCode.Arc/compare/v0.1.1-preview.1...v0.2.0-preview.1
 [0.1.1-preview.1]: https://github.com/AtomUICommunity/TKCode.Arc/compare/v0.1.0-preview.1...v0.1.1-preview.1
 [0.1.0-preview.1]: https://github.com/AtomUICommunity/TKCode.Arc/releases/tag/v0.1.0-preview.1

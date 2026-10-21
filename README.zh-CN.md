@@ -7,7 +7,7 @@ TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 
 保留 Arc 的视觉语言和弹簧动效。
 
 - 目标框架 `net10.0` 和 `net11.0`；支持桌面平台（Windows、macOS、Linux）。
-- 依赖 AtomUI 6.2.7 和 Avalonia 12.1.4（精确版本），Markdown 与代码高亮依赖
+- 依赖 AtomUI 6.2.8 和 Avalonia 12.1.4（精确版本），Markdown 与代码高亮依赖
   [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate)。
 - 设计文档：[design/overview.md](design/overview.md)。
 - 在线体验站点：<https://docs.tkcode.si/>，在浏览器里查看全部组件。
@@ -23,12 +23,12 @@ TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 
 
 ## 安装
 
-最新预览版为 [`0.2.0-preview.1`](CHANGELOG.md)，已发布到 [NuGet](https://www.nuget.org/packages/TKCode.Arc)：
+最新预览版为 [`0.3.0-preview.1`](CHANGELOG.md)，已发布到 [NuGet](https://www.nuget.org/packages/TKCode.Arc)：
 
 ```bash
-dotnet add package TKCode.Arc --version 0.2.0-preview.1
-dotnet add package TKCode.Arc.Fonts --version 0.2.0-preview.1           # 可选：Geist 与 Geist Mono 字体
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.2.0-preview.1    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 0.3.0-preview.1
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.1           # 可选：Geist 与 Geist Mono 字体
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.1    # 可选：完整的 Lucide 图标集
 ```
 
 `TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks` 与 `TKCode.Arc.AdvancedCharts` 目前只能从本仓库构建，

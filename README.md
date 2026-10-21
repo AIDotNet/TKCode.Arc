@@ -7,7 +7,7 @@ TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 110 compone
 with Arc's visual language and spring motion.
 
 - Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
-- Depends on AtomUI 6.2.7 and Avalonia 12.1.4 (exact versions), and on
+- Depends on AtomUI 6.2.8 and Avalonia 12.1.4 (exact versions), and on
   [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and code highlighting.
 - Design documents: [design/overview.md](design/overview.md).
 - Live demo: <https://docs.tkcode.si/> (the gallery of every component, in the browser).
@@ -23,12 +23,12 @@ with Arc's visual language and spring motion.
 
 ## Install
 
-The latest preview is [`0.2.0-preview.1`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
+The latest preview is [`0.3.0-preview.1`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
 
 ```bash
-dotnet add package TKCode.Arc --version 0.2.0-preview.1
-dotnet add package TKCode.Arc.Fonts --version 0.2.0-preview.1           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.2.0-preview.1    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.3.0-preview.1
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.1           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.1    # optional: the full Lucide set
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks` and `TKCode.Arc.AdvancedCharts` are built from this
