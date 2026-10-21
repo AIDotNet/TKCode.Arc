@@ -6,6 +6,7 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaButton = Avalonia.Controls.Button;
@@ -206,6 +207,29 @@ internal sealed class NotificationCenterReveal : Decorator
     /// <summary>Blur at the hidden end in px (Arc: 2px on "Mark all read").</summary>
     public double BlurRadius { get; set; }
 
+    private double _placeholderHeight;
+
+    /// <summary>
+    /// Height the part takes while it has no content: the panel keeps a cheap host for every notification and gives it
+    /// the height of a row until the row is created (rows are created only near the viewport).
+    /// </summary>
+    public double PlaceholderHeight
+    {
+        get => _placeholderHeight;
+        set
+        {
+            if (Math.Abs(_placeholderHeight - value) < 0.01)
+            {
+                return;
+            }
+            _placeholderHeight = value;
+            if (Child is null)
+            {
+                InvalidateMeasure();
+            }
+        }
+    }
+
     /// <summary>Shown, or showing (false while leaving and after it left).</summary>
     public bool IsShown => _shown;
 
@@ -371,7 +395,11 @@ internal sealed class NotificationCenterReveal : Decorator
     {
         if (Child is not { } child)
         {
-            return default;
+            // An empty host keeps the height of the row it stands for (and collapses with it).
+            return _placeholderHeight <= 0
+                ? default
+                : new Size(double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width,
+                    Math.Min(_placeholderHeight * Math.Clamp(HeightFraction, 0, 1), availableSize.Height));
         }
         child.Measure(CollapsesHeight ? availableSize.WithHeight(double.PositiveInfinity) : availableSize);
         var desired = child.DesiredSize;
@@ -560,5 +588,63 @@ internal sealed class NotificationCenterTitleLine : Panel
             dot.Arrange(new Rect(x, (finalSize.Height - size.Height) / 2, size.Width, size.Height));
         }
         return finalSize;
+    }
+}
+
+/// <summary>
+/// The details of an open row: the longer text and the "Mark read" / "Dismiss" buttons. They are a control of their own so
+/// that a row only pays for them the first time it opens (the two buttons are most of what a row costs to build).
+/// </summary>
+[TemplatePart(ReadTogglePart, typeof(NotificationCenterButton))]
+[TemplatePart(ReadGlyphPart, typeof(ArcContentSwap))]
+[TemplatePart(ReadLabelPart, typeof(ArcContentSwap))]
+[TemplatePart(DismissPart, typeof(NotificationCenterButton))]
+[PseudoClasses(NarrowPseudoClass)]
+internal sealed class NotificationCenterDetails : Avalonia.Controls.Primitives.TemplatedControl
+{
+    public const string ReadTogglePart = "PART_ReadToggle";
+    public const string ReadGlyphPart = "PART_ReadGlyph";
+    public const string ReadLabelPart = "PART_ReadLabel";
+    public const string DismissPart = "PART_Dismiss";
+    public const string NarrowPseudoClass = ":narrow";
+
+    public static readonly StyledProperty<string?> DetailTextProperty =
+        AvaloniaProperty.Register<NotificationCenterDetails, string?>(nameof(DetailText));
+
+    public static readonly StyledProperty<string?> DismissTextProperty =
+        AvaloniaProperty.Register<NotificationCenterDetails, string?>(nameof(DismissText));
+
+    static NotificationCenterDetails()
+    {
+        FocusableProperty.OverrideDefaultValue<NotificationCenterDetails>(false);
+    }
+
+    public string? DetailText { get => GetValue(DetailTextProperty); set => SetValue(DetailTextProperty, value); }
+
+    public string? DismissText { get => GetValue(DismissTextProperty); set => SetValue(DismissTextProperty, value); }
+
+    public NotificationCenterButton? ReadToggle { get; private set; }
+
+    public ArcContentSwap? ReadGlyph { get; private set; }
+
+    public ArcContentSwap? ReadLabel { get; private set; }
+
+    public NotificationCenterButton? Dismiss { get; private set; }
+
+    public void SetTexts(string? detail, string? dismiss)
+    {
+        DetailText = detail;
+        DismissText = dismiss;
+    }
+
+    public void SetNarrow(bool narrow) => PseudoClasses.Set(NarrowPseudoClass, narrow);
+
+    protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        ReadToggle = e.NameScope.Find<NotificationCenterButton>(ReadTogglePart);
+        ReadGlyph = e.NameScope.Find<ArcContentSwap>(ReadGlyphPart);
+        ReadLabel = e.NameScope.Find<ArcContentSwap>(ReadLabelPart);
+        Dismiss = e.NameScope.Find<NotificationCenterButton>(DismissPart);
     }
 }

@@ -1,0 +1,11 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The declarative palette dialog renders nothing in place; its palette is shown on the window's overlay layer. -->
+    <ControlTheme x:Key="{x:Type arc:CommandPaletteDialog}" TargetType="arc:CommandPaletteDialog">
+        <Setter Property="ScrimBrush" Value="{arc:CommandPaletteDialogTokenResource ScrimColor}" />
+        <Setter Property="PanelWidth" Value="{arc:CommandPaletteDialogTokenResource PanelWidth}" />
+        <Setter Property="PanelTopRatio" Value="{arc:CommandPaletteDialogTokenResource PanelTopRatio}" />
+    </ControlTheme>
+</ResourceDictionary>

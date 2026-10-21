@@ -317,9 +317,10 @@
                                     MinHeight="{arc:CommandPaletteTokenResource SearchRowMinHeight}"
                                     BorderThickness="0,0,0,1"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
-                                <DockPanel>
+                                <!-- Source order is the Tab order: the field, then the clear button, then the Esc button. -->
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
                                     <Panel Name="PART_SearchIcon"
-                                           DockPanel.Dock="Left"
+                                           Grid.Column="0"
                                            Width="{arc:CommandPaletteTokenResource SearchIconBox}"
                                            Height="{arc:CommandPaletteTokenResource SearchIconBox}"
                                            VerticalAlignment="Center">
@@ -330,8 +331,24 @@
                                                       HorizontalAlignment="Center"
                                                       VerticalAlignment="Center" />
                                     </Panel>
+                                    <arc:CommandPaletteInput Name="PART_Input"
+                                                             Grid.Column="1"
+                                                             PlaceholderText="{TemplateBinding PlaceholderText}"
+                                                             VerticalAlignment="Center" />
+                                    <arc:CommandPaletteClearButton Name="PART_ClearButton"
+                                                                   Grid.Column="2"
+                                                                   VerticalAlignment="Center">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                      Size="{arc:CommandPaletteTokenResource ClearGlyphSize}"
+                                                      StrokeThickness="2" />
+                                    </arc:CommandPaletteClearButton>
+                                    <arc:CommandPaletteCloseButton Name="PART_CloseButton"
+                                                                   Grid.Column="3"
+                                                                   Content="Esc"
+                                                                   IsVisible="{TemplateBinding ShowCloseButton}"
+                                                                   VerticalAlignment="Center" />
                                     <Border Name="PART_CommandKey"
-                                            DockPanel.Dock="Right"
+                                            Grid.Column="4"
                                             MinWidth="{arc:CommandPaletteTokenResource CommandKeyMinWidth}"
                                             Height="{arc:CommandPaletteTokenResource CommandKeyHeight}"
                                             Padding="{arc:CommandPaletteTokenResource CommandKeyPadding}"
@@ -348,22 +365,7 @@
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center" />
                                     </Border>
-                                    <arc:CommandPaletteCloseButton Name="PART_CloseButton"
-                                                                   DockPanel.Dock="Right"
-                                                                   Content="Esc"
-                                                                   IsVisible="{TemplateBinding ShowCloseButton}"
-                                                                   VerticalAlignment="Center" />
-                                    <arc:CommandPaletteClearButton Name="PART_ClearButton"
-                                                                   DockPanel.Dock="Right"
-                                                                   VerticalAlignment="Center">
-                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
-                                                      Size="{arc:CommandPaletteTokenResource ClearGlyphSize}"
-                                                      StrokeThickness="2" />
-                                    </arc:CommandPaletteClearButton>
-                                    <arc:CommandPaletteInput Name="PART_Input"
-                                                             PlaceholderText="{TemplateBinding PlaceholderText}"
-                                                             VerticalAlignment="Center" />
-                                </DockPanel>
+                                </Grid>
                             </Border>
                             <!-- The frame follows the list height on the smooth spring; the list keeps its own scroll. -->
                             <arc:SpringSizeDecorator Name="PART_ResultsFrame" Axis="Height" Spring="Smooth">
@@ -447,6 +449,10 @@
         </Style>
         <Style Selector="^ /template/ Border#PART_Results">
             <Setter Property="Padding" Value="{arc:CommandPaletteTokenResource ResultsPadding}" />
+        </Style>
+
+        <Style Selector="^:no-hint /template/ Border#PART_CommandKey">
+            <Setter Property="IsVisible" Value="False" />
         </Style>
 
         <!-- At most 480px wide: tighter search row and list, no shortcut caps. -->

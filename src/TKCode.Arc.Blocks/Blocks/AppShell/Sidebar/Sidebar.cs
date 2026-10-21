@@ -20,11 +20,12 @@ using Avalonia.VisualTree;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The app's main navigation (an original TKCode design): a header for a workspace switcher, an optional filter box,
-/// sections of pages with icons, counts and one level of nested pages, and a footer for the signed-in user. The selected
-/// page carries a muted block with an accent bar that glides between rows on a snappy spring; parents open their pages
-/// with a height spring and a turning chevron. The sidebar collapses to a 64px icon rail on a width spring: labels and
-/// counts fade, counts become dots, every page gets a tooltip on the right and a parent shows its pages in a menu.
+/// The app's main navigation (an original TKCode design): a header for a logo or a workspace switcher, an optional filter
+/// box, sections of pages with icons, counts and one level of nested pages, and a footer for the signed-in user. The
+/// selected page carries a muted block behind it and an accent-colored icon; the block glides between rows on a snappy
+/// spring. Parents open their pages with a height spring and a turning chevron. The sidebar collapses to a 64px icon rail
+/// on a width spring: labels and counts fade, counts become dots, every page gets a tooltip on the right and a parent shows
+/// its pages in a menu.
 /// <para>
 /// Keyboard (WAI-ARIA tree model): the list is one tab stop; ↑ / ↓, Home / End move, → opens a parent or enters it, ←
 /// closes it or goes back to the parent, Enter / Space choose, typing jumps to a page by its first letters, and Cmd / Ctrl+B
@@ -35,23 +36,25 @@ namespace TKCode.Arc;
 [TemplatePart(ContentPart, typeof(Panel))]
 [TemplatePart(ScrollViewerPart, typeof(ScrollViewer))]
 [TemplatePart(MarkerBlockPart, typeof(GlidingIndicator))]
-[TemplatePart(MarkerBarPart, typeof(GlidingIndicator))]
 [TemplatePart(FilterPart, typeof(SearchField))]
 [TemplatePart(FilterButtonPart, typeof(SidebarIconButton))]
 [TemplatePart(CollapseButtonPart, typeof(SidebarIconButton))]
+[TemplatePart(FilterCollapseButtonPart, typeof(SidebarIconButton))]
 [TemplatePart(HeaderRowPart, typeof(Control))]
 [TemplatePart(NoMatchesPart, typeof(TextBlock))]
-[PseudoClasses(CollapsedPseudoClass, FilteringPseudoClass)]
+[TemplatePart(PaneHostPart, typeof(Panel))]
+[PseudoClasses(CollapsedPseudoClass, FilteringPseudoClass, FilterToggleSidePseudoClass, OverlayPseudoClass)]
 public class Sidebar : TemplatedControl
 {
+    public const string PaneHostPart = "PART_PaneHost";
     public const string ListPart = "PART_List";
     public const string ContentPart = "PART_Content";
     public const string ScrollViewerPart = "PART_ScrollViewer";
     public const string MarkerBlockPart = "PART_MarkerBlock";
-    public const string MarkerBarPart = "PART_MarkerBar";
     public const string FilterPart = "PART_Filter";
     public const string FilterButtonPart = "PART_FilterButton";
     public const string CollapseButtonPart = "PART_CollapseButton";
+    public const string FilterCollapseButtonPart = "PART_FilterCollapseButton";
     public const string HeaderRowPart = "PART_HeaderRow";
     public const string NoMatchesPart = "PART_NoMatches";
 
@@ -60,6 +63,12 @@ public class Sidebar : TemplatedControl
 
     /// <summary>Set while the filter narrows the pages.</summary>
     public const string FilteringPseudoClass = ":filtering";
+
+    /// <summary>Set while <see cref="ResizeMode"/> is <see cref="SidebarResizeMode.Overlay"/>.</summary>
+    public const string OverlayPseudoClass = ":overlay-resize";
+
+    /// <summary>Set while the collapse button sits beside the filter box (<see cref="CollapseButtonPlacement"/>) instead of in the header row.</summary>
+    public const string FilterToggleSidePseudoClass = ":filter-toggle";
 
     #region Properties
 
@@ -76,15 +85,15 @@ public class Sidebar : TemplatedControl
     public static readonly StyledProperty<bool> IsCollapsedProperty =
         AvaloniaProperty.Register<Sidebar, bool>(nameof(IsCollapsed), defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>Content at the top, beside the collapse button (a workspace switcher). It is hidden on the rail while the collapse button shows.</summary>
+    /// <summary>Content at the top (a logo and title, a workspace switcher), beside the collapse button when that sits in the header row. It is hidden on the rail while the collapse button shows.</summary>
     public static readonly StyledProperty<object?> HeaderProperty =
         AvaloniaProperty.Register<Sidebar, object?>(nameof(Header));
 
-    /// <summary>Content at the bottom (the signed-in user). It keeps its open-width layout on the rail, clipped to the rail; use the <c>:collapsed</c> pseudo-class to adapt it.</summary>
+    /// <summary>Content at the bottom (the signed-in user, a storage meter), under a thin separator. It keeps its open-width layout on the rail, clipped to the rail; use the <c>:collapsed</c> pseudo-class to adapt it.</summary>
     public static readonly StyledProperty<object?> FooterProperty =
         AvaloniaProperty.Register<Sidebar, object?>(nameof(Footer));
 
-    /// <summary>Shows the filter box under the header (hidden on the rail).</summary>
+    /// <summary>Shows the filter box under the header (it becomes a search button on the rail).</summary>
     public static readonly StyledProperty<bool> IsFilterVisibleProperty =
         AvaloniaProperty.Register<Sidebar, bool>(nameof(IsFilterVisible));
 
@@ -100,9 +109,13 @@ public class Sidebar : TemplatedControl
     public static readonly StyledProperty<string> NoMatchesTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(NoMatchesText), "No matches");
 
-    /// <summary>Shows the collapse / expand button (PanelLeft icon) in the header row.</summary>
+    /// <summary>Shows the collapse / expand button (PanelLeft icon). Its place is <see cref="CollapseButtonPlacement"/>.</summary>
     public static readonly StyledProperty<bool> IsCollapseButtonVisibleProperty =
         AvaloniaProperty.Register<Sidebar, bool>(nameof(IsCollapseButtonVisible), true);
+
+    /// <summary>Where the collapse button sits while the sidebar is open: in the header row (default) or beside the filter box. On the rail it always sits at the top.</summary>
+    public static readonly StyledProperty<SidebarCollapseButtonPlacement> CollapseButtonPlacementProperty =
+        AvaloniaProperty.Register<Sidebar, SidebarCollapseButtonPlacement>(nameof(CollapseButtonPlacement));
 
     /// <summary>Accessible name and tooltip of the collapse button while the sidebar is open.</summary>
     public static readonly StyledProperty<string> CollapseButtonTextProperty =
@@ -111,6 +124,14 @@ public class Sidebar : TemplatedControl
     /// <summary>Accessible name and tooltip of the collapse button while the sidebar is the rail.</summary>
     public static readonly StyledProperty<string> ExpandButtonTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(ExpandButtonText), "Expand sidebar");
+
+    /// <summary>How the width change between the open sidebar and the rail reaches the page next to it: <see cref="SidebarResizeMode.Push"/> (default) or <see cref="SidebarResizeMode.Overlay"/>.</summary>
+    public static readonly StyledProperty<SidebarResizeMode> ResizeModeProperty =
+        AvaloniaProperty.Register<Sidebar, SidebarResizeMode>(nameof(ResizeMode));
+
+    /// <summary>Added to the accessible name of a page that has <see cref="SidebarItem.IsUnread"/> ("Inbox, unread").</summary>
+    public static readonly StyledProperty<string> UnreadTextProperty =
+        AvaloniaProperty.Register<Sidebar, string>(nameof(UnreadText), "unread");
 
     /// <summary>Name of the navigation landmark.</summary>
     public static readonly StyledProperty<string> LabelProperty =
@@ -198,6 +219,13 @@ public class Sidebar : TemplatedControl
         set => SetValue(IsCollapseButtonVisibleProperty, value);
     }
 
+    /// <inheritdoc cref="CollapseButtonPlacementProperty"/>
+    public SidebarCollapseButtonPlacement CollapseButtonPlacement
+    {
+        get => GetValue(CollapseButtonPlacementProperty);
+        set => SetValue(CollapseButtonPlacementProperty, value);
+    }
+
     /// <inheritdoc cref="CollapseButtonTextProperty"/>
     public string CollapseButtonText
     {
@@ -210,6 +238,28 @@ public class Sidebar : TemplatedControl
     {
         get => GetValue(ExpandButtonTextProperty);
         set => SetValue(ExpandButtonTextProperty, value);
+    }
+
+    /// <inheritdoc cref="ResizeModeProperty"/>
+    public SidebarResizeMode ResizeMode
+    {
+        get => GetValue(ResizeModeProperty);
+        set => SetValue(ResizeModeProperty, value);
+    }
+
+    /// <summary>
+    /// A transform that slides the page along with an <see cref="SidebarResizeMode.Overlay"/> sidebar: bind the
+    /// <c>RenderTransform</c> of the page next to the sidebar to it (<c>RenderTransform="{Binding #Nav.PageShift}"</c>).
+    /// It is the distance between where the page is laid out (right after the sidebar's new width) and where the pane's edge
+    /// is while it springs, so the page glides instead of jumping. It stays at 0 in <see cref="SidebarResizeMode.Push"/>.
+    /// </summary>
+    public ITransform PageShift => _pageShift;
+
+    /// <inheritdoc cref="UnreadTextProperty"/>
+    public string UnreadText
+    {
+        get => GetValue(UnreadTextProperty);
+        set => SetValue(UnreadTextProperty, value);
     }
 
     /// <inheritdoc cref="LabelProperty"/>
@@ -249,24 +299,32 @@ public class Sidebar : TemplatedControl
     private readonly Dictionary<SidebarItem, SidebarNode> _byItem = new();
     private readonly Dictionary<SidebarSection, SidebarNode> _bySection = new();
     private readonly List<SidebarNode> _navigable = new();
-    private readonly HashSet<SidebarSection> _watchedSections = new();
-    private readonly HashSet<SidebarItem> _watchedItems = new();
+    private readonly Dictionary<object, object> _owners = new(ReferenceEqualityComparer.Instance);
+    private readonly HashSet<SidebarSection> _dirtySections = new();
+    private readonly HashSet<SidebarItem> _dirtyParents = new();
     private readonly ListKeyboardNavigator _navigator;
     private SidebarListPanel? _list;
     private Panel? _content;
     private ScrollViewer? _scroll;
     private GlidingIndicator? _markerBlock;
-    private GlidingIndicator? _markerBar;
     private SearchField? _filter;
     private SidebarIconButton? _filterButton;
     private SidebarIconButton? _collapseButton;
+    private SidebarIconButton? _filterCollapseButton;
     private Control? _headerRow;
     private TextBlock? _noMatches;
     private MenuSurface? _flyout;
     private SidebarNode? _flyoutNode;
     private SidebarNode? _focusNode;
+    private readonly TranslateTransform _pageShift = new();
+    private MotionValue<double>? _paneWidth;
+    private Panel? _paneHost;
+    private SidebarNode? _selectedNode;
+    private SidebarNode? _currentNode;
     private Rect _markerTarget;
     private bool _rebuildPosted;
+    private bool _dirtyAll;
+    private bool _rebuildAll;
     private bool _syncingKey;
 
     static Sidebar()
@@ -281,7 +339,7 @@ public class Sidebar : TemplatedControl
         {
             Wrap = false
         };
-        Sections.CollectionChanged += OnStructureChanged;
+        Sections.CollectionChanged += OnSectionsChanged;
         AutomationProperties.SetName(this, Label);
         AddHandler(KeyDownEvent, OnPreviewKeyDown, RoutingStrategies.Tunnel);
     }
@@ -289,19 +347,26 @@ public class Sidebar : TemplatedControl
     /// <summary>Collapses the sidebar to the icon rail, or opens it from the rail.</summary>
     public void ToggleCollapsed() => SetCurrentValue(IsCollapsedProperty, !IsCollapsed);
 
-    /// <summary>How far the current width falls short of the open width (the rows' layout makes up for it).</summary>
-    internal double LayoutDeficit
+    /// <summary>
+    /// The width the pane shows right now. It is the layout <see cref="Visual.Bounds"/> width, except while an
+    /// <see cref="SidebarResizeMode.Overlay"/> sidebar springs: the layout width has already jumped and the pane catches up.
+    /// </summary>
+    internal double PaneWidth => ResizeMode == SidebarResizeMode.Overlay && _paneWidth is { } motion ? motion.Value : Width;
+
+    /// <summary>How far the layout width falls short of the open width (what the rows are measured with).</summary>
+    internal double MeasureDeficit => DeficitOf(Width);
+
+    /// <summary>How far the pane's current width falls short of the open width (what the rows are arranged with).</summary>
+    internal double ArrangeDeficit => DeficitOf(PaneWidth);
+
+    private double DeficitOf(double width)
     {
-        get
+        var open = OpenWidth;
+        if (double.IsNaN(open) || double.IsNaN(width) || open <= 0)
         {
-            var open = OpenWidth;
-            var width = Width;
-            if (double.IsNaN(open) || double.IsNaN(width) || open <= 0)
-            {
-                return 0;
-            }
-            return Math.Max(0, open - width);
+            return 0;
         }
+        return Math.Max(0, open - width);
     }
 
     /// <summary>The rows the arrow keys move through, in order (tests).</summary>
@@ -311,7 +376,8 @@ public class Sidebar : TemplatedControl
     internal SidebarRow? RowOf(SidebarItem item) => _byItem.TryGetValue(item, out var node) ? node.Row : null;
 
     /// <summary>The heading control of <paramref name="section"/>, if it has one.</summary>
-    internal SidebarSectionHeader? HeaderOf(SidebarSection section) => _bySection.TryGetValue(section, out var node) ? node.Header : null;
+    internal SidebarSectionHeader? HeaderOf(SidebarSection section)
+        => _bySection.TryGetValue(section, out var node) && node.HasHeader ? node.Header : null;
 
     /// <summary>The row the selection marker rests on.</summary>
     internal SidebarRow? MarkerRow => MarkerNode()?.Row;
@@ -320,8 +386,6 @@ public class Sidebar : TemplatedControl
     internal Rect MarkerTarget => _markerTarget;
 
     internal GlidingIndicator? MarkerBlock => _markerBlock;
-
-    internal GlidingIndicator? MarkerBar => _markerBar;
 
     /// <summary>The rail menu of a parent (null until first opened).</summary>
     internal MenuSurface? Flyout => _flyout;
@@ -339,6 +403,10 @@ public class Sidebar : TemplatedControl
         {
             _collapseButton.Click -= OnCollapseButtonClick;
         }
+        if (_filterCollapseButton is not null)
+        {
+            _filterCollapseButton.Click -= OnCollapseButtonClick;
+        }
         if (_filterButton is not null)
         {
             _filterButton.Click -= OnFilterButtonClick;
@@ -349,14 +417,15 @@ public class Sidebar : TemplatedControl
             _filter.RemoveHandler(KeyDownEvent, OnFilterKeyDown);
         }
         base.OnApplyTemplate(e);
+        _paneHost = e.NameScope.Find<Panel>(PaneHostPart);
         _list = e.NameScope.Find<SidebarListPanel>(ListPart);
         _content = e.NameScope.Find<Panel>(ContentPart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _markerBlock = e.NameScope.Find<GlidingIndicator>(MarkerBlockPart);
-        _markerBar = e.NameScope.Find<GlidingIndicator>(MarkerBarPart);
         _filter = e.NameScope.Find<SearchField>(FilterPart);
         _filterButton = e.NameScope.Find<SidebarIconButton>(FilterButtonPart);
         _collapseButton = e.NameScope.Find<SidebarIconButton>(CollapseButtonPart);
+        _filterCollapseButton = e.NameScope.Find<SidebarIconButton>(FilterCollapseButtonPart);
         _headerRow = e.NameScope.Find<Control>(HeaderRowPart);
         _noMatches = e.NameScope.Find<TextBlock>(NoMatchesPart);
         _markerTarget = default;
@@ -369,6 +438,10 @@ public class Sidebar : TemplatedControl
         {
             _collapseButton.Click += OnCollapseButtonClick;
         }
+        if (_filterCollapseButton is not null)
+        {
+            _filterCollapseButton.Click += OnCollapseButtonClick;
+        }
         if (_filterButton is not null)
         {
             _filterButton.Click += OnFilterButtonClick;
@@ -379,7 +452,41 @@ public class Sidebar : TemplatedControl
             _filter.AddHandler(KeyDownEvent, OnFilterKeyDown, RoutingStrategies.Tunnel);
         }
         UpdateChrome();
+        // A new template builds every row again.
+        _dirtyAll = true;
         Rebuild();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        if (_content is not null && _list is not null && (_dirtyAll || (_sections.Count == 0 && Sections.Count > 0)))
+        {
+            // Back on screen after a detach: the rows were released, build them again.
+            _dirtyAll = true;
+            Rebuild();
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        // Off screen the sidebar holds no row and listens to no item: the items and sections it shows (often shared or
+        // static) must not keep it alive. The rows are built again when it returns.
+        if (_content is not null)
+        {
+            _flyout?.Close(returnFocus: false);
+            DiscardAll();
+            _rebuildPosted = false;
+            _dirtyAll = false;
+            _dirtySections.Clear();
+            _dirtyParents.Clear();
+            _selectedNode = null;
+            _currentNode = null;
+            _focusNode = null;
+            _navigable.Clear();
+            _markerTarget = default;
+        }
     }
 
     private void OnListPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -387,29 +494,34 @@ public class Sidebar : TemplatedControl
         if (e.Property == SidebarListPanel.RowGapProperty || e.Property == SidebarListPanel.ChildrenMarginProperty ||
             e.Property == SidebarListPanel.GuideMarginProperty)
         {
+            // The containers read these when they are built.
+            _dirtyAll = true;
+            _rebuildAll = true;
             InvalidateStructure();
-        }
-        else if (e.Property == SidebarListPanel.MarkerBarWidthProperty || e.Property == SidebarListPanel.MarkerBarHeightProperty ||
-                 e.Property == SidebarListPanel.MarkerBarInsetProperty)
-        {
-            UpdateMarker(animate: false, force: true);
         }
     }
 
-    /// <summary>The header row, the collapse button and the filter follow the rail and the visibility switches.</summary>
+    /// <summary>True when the collapse button sits beside the filter box (the filter must show for that).</summary>
+    private bool ToggleBesideFilter => CollapseButtonPlacement == SidebarCollapseButtonPlacement.Filter && IsFilterVisible && IsCollapseButtonVisible;
+
+    /// <summary>The header row, the collapse buttons and the filter follow the rail and the visibility switches.</summary>
     private void UpdateChrome()
     {
         var collapsed = IsCollapsed;
-        if (_collapseButton is not null)
-        {
-            var text = collapsed ? ExpandButtonText : CollapseButtonText;
-            AutomationProperties.SetName(_collapseButton, text);
-            Tooltip.SetTip(_collapseButton, text);
-            Tooltip.SetSide(_collapseButton, collapsed ? TooltipSide.Right : TooltipSide.Bottom);
-        }
+        var beside = ToggleBesideFilter;
+        PseudoClasses.Set(FilterToggleSidePseudoClass, beside);
+        // The header row's button shows while open (header placement) and always on the rail; the filter row's only while open.
+        var headerButton = IsCollapseButtonVisible && (!beside || collapsed);
+        var filterButton = beside && !collapsed;
+        var text = collapsed ? ExpandButtonText : CollapseButtonText;
+        ConfigureCollapseButton(_collapseButton, text, collapsed, headerButton);
+        ConfigureCollapseButton(_filterCollapseButton, text, collapsed, filterButton);
+        // The filter row keeps the button's room while the sidebar is open, so the box does not resize when it fades on the rail.
+        ConfigureVisibility(_collapseButton, headerButton);
+        ConfigureVisibility(_filterCollapseButton, beside);
         if (_headerRow is not null)
         {
-            _headerRow.IsVisible = Header is not null || IsCollapseButtonVisible;
+            _headerRow.IsVisible = Header is not null || headerButton;
         }
         if (_filter is not null)
         {
@@ -425,14 +537,35 @@ public class Sidebar : TemplatedControl
         }
     }
 
+    private static void ConfigureCollapseButton(SidebarIconButton? button, string text, bool collapsed, bool shown)
+    {
+        if (button is null)
+        {
+            return;
+        }
+        AutomationProperties.SetName(button, text);
+        Tooltip.SetTip(button, shown ? text : null);
+        Tooltip.SetSide(button, collapsed ? TooltipSide.Right : TooltipSide.Bottom);
+        // Hidden buttons fade out in the theme; they must not take focus either.
+        button.Focusable = shown;
+    }
+
+    private static void ConfigureVisibility(SidebarIconButton? button, bool visible)
+    {
+        if (button is not null)
+        {
+            button.IsVisible = visible;
+        }
+    }
+
     #endregion
 
     #region Property changes
 
     private static SidebarItem? CoerceSelectedItem(AvaloniaObject sender, SidebarItem? value)
     {
-        // A parent only opens and closes its pages; it is never the selected page.
-        if (value is not null && sender is Sidebar sidebar && sidebar.IsParent(value))
+        // A parent only opens and closes its pages and an action only acts; neither is ever the selected page.
+        if (value is not null && sender is Sidebar sidebar && (value.IsAction || sidebar.IsParent(value)))
         {
             return sidebar.GetValue(SelectedItemProperty);
         }
@@ -501,21 +634,96 @@ public class Sidebar : TemplatedControl
         {
             OnCollapsedChanged(change.GetNewValue<bool>());
         }
+        else if (change.Property == WidthProperty)
+        {
+            OnLayoutWidthChanged(change.GetNewValue<double>());
+        }
+        else if (change.Property == ResizeModeProperty)
+        {
+            PseudoClasses.Set(OverlayPseudoClass, change.GetNewValue<SidebarResizeMode>() == SidebarResizeMode.Overlay);
+            OnLayoutWidthChanged(Width, jump: true);
+        }
         else if (change.Property == FilterTextProperty)
         {
             Refresh(animate: true);
         }
         else if (change.Property == HeaderProperty || change.Property == IsCollapseButtonVisibleProperty ||
                  change.Property == CollapseButtonTextProperty || change.Property == ExpandButtonTextProperty ||
-                 change.Property == FilterPlaceholderProperty)
+                 change.Property == FilterPlaceholderProperty || change.Property == CollapseButtonPlacementProperty ||
+                 change.Property == IsFilterVisibleProperty)
         {
             UpdateChrome();
+        }
+        else if (change.Property == UnreadTextProperty)
+        {
+            foreach (var node in _byItem.Values)
+            {
+                UpdateRowContent(node);
+            }
         }
         else if (change.Property == LabelProperty)
         {
             AutomationProperties.SetName(this, change.GetNewValue<string>());
         }
     }
+
+    #region Pane width (overlay)
+
+    /// <summary>
+    /// In overlay mode the layout width has jumped to its new value; the pane springs there on its own. This is code
+    /// rather than a theme transition because the visual width must move while the layout width stays still: a transition
+    /// on <c>Width</c> would lay out the whole page next to the sidebar on every frame.
+    /// </summary>
+    private void OnLayoutWidthChanged(double width, bool jump = false)
+    {
+        if (ResizeMode != SidebarResizeMode.Overlay)
+        {
+            if (_paneWidth is not null)
+            {
+                // Back to push: the pane is the layout width again.
+                _paneWidth.Jump(double.IsNaN(width) ? 0 : width);
+                SetPageShift(0);
+                _paneHost?.InvalidateArrange();
+            }
+            return;
+        }
+        if (double.IsNaN(width))
+        {
+            return;
+        }
+        if (_paneWidth is null)
+        {
+            _paneWidth = new MotionValue<double>(this, width, MotionVectors.Double);
+            _paneWidth.Changed += OnPaneWidthTick;
+        }
+        else if (jump)
+        {
+            _paneWidth.Jump(width);
+        }
+        else
+        {
+            // Off and Reduced jump, a sidebar that is not on screen yet jumps too (MotionValue decides).
+            _ = _paneWidth.AnimateTo(width, MotionSpec.Spring(ArcSpring.Smooth));
+        }
+        OnPaneWidthTick(_paneWidth.Value);
+    }
+
+    private void OnPaneWidthTick(double value)
+    {
+        // Arrange only: the layout width (and with it the page) is not invalidated.
+        _paneHost?.InvalidateArrange();
+        SetPageShift(ResizeMode == SidebarResizeMode.Overlay && !double.IsNaN(Width) ? value - Width : 0);
+    }
+
+    private void SetPageShift(double x)
+    {
+        if (Math.Abs(_pageShift.X - x) > 0.01)
+        {
+            _pageShift.X = x;
+        }
+    }
+
+    #endregion
 
     private void OnCollapsedChanged(bool collapsed)
     {
@@ -559,9 +767,29 @@ public class Sidebar : TemplatedControl
 
     #region Structure
 
-    private void OnStructureChanged(object? sender, NotifyCollectionChangedEventArgs e) => InvalidateStructure();
+    private void OnSectionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        _dirtyAll = true;
+        InvalidateStructure();
+    }
 
-    /// <summary>Sections or item collections changed: rebuild the rows once, after the current batch of changes.</summary>
+    private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (sender is not null && _owners.TryGetValue(sender, out var owner))
+        {
+            if (owner is SidebarSection section)
+            {
+                _dirtySections.Add(section);
+            }
+            else if (owner is SidebarItem item)
+            {
+                _dirtyParents.Add(item);
+            }
+            InvalidateStructure();
+        }
+    }
+
+    /// <summary>Sections or item collections changed: bring the rows in step once, after the current batch of changes.</summary>
     private void InvalidateStructure()
     {
         if (_content is null || _rebuildPosted)
@@ -578,69 +806,72 @@ public class Sidebar : TemplatedControl
         }, DispatcherPriority.Normal);
     }
 
+    /// <summary>
+    /// Brings the rows in step with the sections and their items. Only what changed is touched: rows of pages that stay
+    /// keep their controls (and their focus and selection state), new pages get new rows, gone pages lose theirs.
+    /// </summary>
     private void Rebuild()
     {
         _rebuildPosted = false;
-        UpdateSubscriptions();
-        if (_content is null || _list is null)
+        if (_content is null || _list is null || TopLevel.GetTopLevel(this) is null)
         {
+            // Off screen (or not templated yet) nothing is built; attaching builds everything that is pending.
+            _dirtyAll = true;
             return;
         }
         var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() as Visual;
         var focusedNode = focused is not null ? NodeFromSource(focused) : null;
-        var focusedItem = focusedNode?.Item;
-        var focusedSection = focusedNode is { IsHeading: true } ? focusedNode.Section : null;
         var tabItem = _focusNode?.Item;
         var tabSection = _focusNode is { IsHeading: true } ? _focusNode.Section : null;
 
-        // A control icon can live in one row only: release it from the rows being replaced.
-        foreach (var node in _byItem.Values)
+        if (_rebuildAll)
         {
-            if (node.Row is { } row)
-            {
-                row.IconContent = null;
-            }
+            DiscardAll();
+            _rebuildAll = false;
+            _dirtyAll = true;
         }
-        _content.Children.Clear();
-        _sections.Clear();
-        _byItem.Clear();
-        _bySection.Clear();
-        _focusNode = null;
 
-        for (var i = 0; i < Sections.Count; i++)
+        // First take away what is gone (a control icon lives in one row only, so a moved page must let go of it first)...
+        foreach (var item in _dirtyParents)
         {
-            var section = Sections[i];
-            if (_bySection.ContainsKey(section))
+            if (_byItem.TryGetValue(item, out var parent))
             {
-                continue;
+                RemoveStaleChildren(parent);
             }
-            var sectionNode = new SidebarNode(section, null, null);
-            var root = new StackPanel();
-            if (i > 0 || !string.IsNullOrEmpty(section.Header))
-            {
-                var header = new SidebarSectionHeader(this, sectionNode);
-                sectionNode.Header = header;
-                root.Children.Add(header);
-            }
-            var body = new StackPanel { Spacing = _list.RowGap };
-            foreach (var item in section.Items)
-            {
-                if (_byItem.ContainsKey(item))
-                {
-                    continue;
-                }
-                var node = BuildItem(section, item, null);
-                sectionNode.SectionItems.Add(node);
-                body.Children.Add(node.Root!);
-            }
-            var bodyHost = new SidebarHeightSpring { Child = body };
-            sectionNode.SectionBody = bodyHost;
-            sectionNode.SectionRoot = root;
-            root.Children.Add(bodyHost);
-            _content.Children.Add(root);
-            _sections.Add(sectionNode);
-            _bySection[section] = sectionNode;
         }
+        if (_dirtyAll)
+        {
+            RemoveStaleSections();
+        }
+        foreach (var section in _dirtySections)
+        {
+            if (_bySection.TryGetValue(section, out var node))
+            {
+                RemoveStaleItems(node);
+            }
+        }
+        // ... then add what is new and put everything in order.
+        if (_dirtyAll)
+        {
+            AddMissingSections();
+        }
+        foreach (var section in _dirtySections)
+        {
+            if (_bySection.TryGetValue(section, out var node))
+            {
+                AddMissingItems(node);
+            }
+        }
+        foreach (var item in _dirtyParents)
+        {
+            if (_byItem.TryGetValue(item, out var parent))
+            {
+                AddMissingChildren(parent);
+            }
+        }
+        _dirtyAll = false;
+        _dirtySections.Clear();
+        _dirtyParents.Clear();
 
         if (SelectedItem is null && SelectedKey is { } key && FindByKey(key) is { } match)
         {
@@ -656,6 +887,7 @@ public class Sidebar : TemplatedControl
         }
 
         // The tab stop stays on the same page or heading when it still exists.
+        _focusNode = null;
         if (tabItem is not null && _byItem.TryGetValue(tabItem, out var tabNode))
         {
             _focusNode = tabNode;
@@ -665,22 +897,273 @@ public class Sidebar : TemplatedControl
             _focusNode = tabHeading;
         }
         Refresh(animate: false);
-        if (focusedItem is not null || focusedSection is not null)
+        if (focusedNode is not null && focused is not null && !this.IsVisualAncestorOf(focused))
         {
-            var target = focusedItem is not null && _byItem.TryGetValue(focusedItem, out var item) ? item
-                : focusedSection is not null && _bySection.TryGetValue(focusedSection, out var heading) ? heading
-                : _focusNode;
-            if (target is not null && _navigable.Contains(target))
+            // The focused row went away: focus moves to the list's tab stop.
+            if (_focusNode is not null && _navigable.Contains(_focusNode))
             {
-                MoveFocus(target, NavigationMethod.Unspecified);
+                MoveFocus(_focusNode, NavigationMethod.Unspecified);
             }
         }
+    }
+
+    private void DiscardAll()
+    {
+        foreach (var sectionNode in _sections.ToArray())
+        {
+            RemoveSection(sectionNode);
+        }
+        _content!.Children.Clear();
+    }
+
+    private void RemoveStaleSections()
+    {
+        var current = new HashSet<SidebarSection>(Sections);
+        foreach (var sectionNode in _sections.ToArray())
+        {
+            if (!current.Contains(sectionNode.Section))
+            {
+                RemoveSection(sectionNode);
+            }
+        }
+    }
+
+    private void RemoveSection(SidebarNode sectionNode)
+    {
+        foreach (var node in sectionNode.SectionItems.ToArray())
+        {
+            RemoveItem(node);
+        }
+        var section = sectionNode.Section;
+        section.PropertyChanged -= OnSectionPropertyChanged;
+        section.Items.CollectionChanged -= OnItemsChanged;
+        _owners.Remove(section.Items);
+        _bySection.Remove(section);
+        _sections.Remove(sectionNode);
+        if (sectionNode.SectionRoot is { } root)
+        {
+            _content?.Children.Remove(root);
+        }
+        if (ReferenceEquals(_focusNode, sectionNode))
+        {
+            _focusNode = null;
+        }
+    }
+
+    /// <summary>Removes a page row (and the rows of its children) from the structure and its container.</summary>
+    private void RemoveItem(SidebarNode node)
+    {
+        foreach (var child in node.Children.ToArray())
+        {
+            RemoveItem(child);
+        }
+        var item = node.Item!;
+        item.PropertyChanged -= OnItemPropertyChanged;
+        if (node.Parent is null)
+        {
+            item.Items.CollectionChanged -= OnItemsChanged;
+            _owners.Remove(item.Items);
+        }
+        if (node.Row is { } row)
+        {
+            // A control icon can live in one row only.
+            row.IconContent = null;
+            row.TrailingContent = null;
+        }
+        _byItem.Remove(item);
+        if (node.Parent is { } parent)
+        {
+            parent.Children.Remove(node);
+            parent.ChildrenRows?.Children.Remove(node.Root!);
+        }
+        else if (_bySection.TryGetValue(node.Section, out var sectionNode))
+        {
+            sectionNode.SectionItems.Remove(node);
+            sectionNode.SectionStack?.Children.Remove(node.Root!);
+        }
+        if (ReferenceEquals(node, _flyoutNode))
+        {
+            _flyout?.Close(returnFocus: false);
+        }
+        if (ReferenceEquals(node, _focusNode))
+        {
+            _focusNode = null;
+        }
+    }
+
+    /// <summary>A parent whose pages are gone (or a page that gained pages) needs a row of the other kind.</summary>
+    private static bool IsRightKind(SidebarNode node) => (node.ChildrenHost is not null) == node.Item!.HasChildren;
+
+    private void RemoveStaleChildren(SidebarNode parent)
+    {
+        if (!IsRightKind(parent))
+        {
+            // The row is rebuilt in its section.
+            var section = parent.Section;
+            RemoveItem(parent);
+            _dirtySections.Add(section);
+            return;
+        }
+        var current = new HashSet<SidebarItem>(parent.Item!.Items);
+        foreach (var child in parent.Children.ToArray())
+        {
+            if (!current.Contains(child.Item!))
+            {
+                RemoveItem(child);
+            }
+        }
+    }
+
+    private void RemoveStaleItems(SidebarNode sectionNode)
+    {
+        var current = new HashSet<SidebarItem>(sectionNode.Section.Items);
+        foreach (var node in sectionNode.SectionItems.ToArray())
+        {
+            if (!current.Contains(node.Item!) || !IsRightKind(node))
+            {
+                RemoveItem(node);
+            }
+        }
+    }
+
+    private void AddMissingSections()
+    {
+        var order = new List<SidebarNode>(Sections.Count);
+        foreach (var section in Sections)
+        {
+            if (_bySection.TryGetValue(section, out var existing))
+            {
+                order.Add(existing);
+                continue;
+            }
+            var node = BuildSection(section);
+            order.Add(node);
+        }
+        var inOrder = order.Count == _content!.Children.Count;
+        for (var i = 0; inOrder && i < order.Count; i++)
+        {
+            inOrder = ReferenceEquals(order[i].SectionRoot, _content.Children[i]);
+        }
+        if (!inOrder)
+        {
+            _content.Children.Clear();
+            foreach (var node in order)
+            {
+                _content.Children.Add(node.SectionRoot!);
+            }
+        }
+        _sections.Clear();
+        _sections.AddRange(order);
+        for (var i = 0; i < order.Count; i++)
+        {
+            order[i].Index = i;
+        }
+    }
+
+    private SidebarNode BuildSection(SidebarSection section)
+    {
+        var sectionNode = new SidebarNode(section, null, null);
+        var root = new StackPanel();
+        // Every section has a heading control (the space above it); the first untitled one stays hidden (see Refresh).
+        var header = new SidebarSectionHeader(this, sectionNode);
+        sectionNode.Header = header;
+        root.Children.Add(header);
+        var body = new StackPanel { Spacing = _list!.RowGap };
+        var bodyHost = new SidebarHeightSpring { Child = body };
+        sectionNode.SectionStack = body;
+        sectionNode.SectionBody = bodyHost;
+        sectionNode.SectionRoot = root;
+        root.Children.Add(bodyHost);
+        _bySection[section] = sectionNode;
+        section.PropertyChanged += OnSectionPropertyChanged;
+        section.Items.CollectionChanged += OnItemsChanged;
+        _owners[section.Items] = section;
+        AddMissingItems(sectionNode);
+        return sectionNode;
+    }
+
+    private void AddMissingItems(SidebarNode sectionNode)
+    {
+        var section = sectionNode.Section;
+        var stack = sectionNode.SectionStack!;
+        var order = new List<SidebarNode>(section.Items.Count);
+        foreach (var item in section.Items)
+        {
+            if (_byItem.TryGetValue(item, out var existing))
+            {
+                if (ReferenceEquals(existing.Section, section) && existing.Parent is null)
+                {
+                    order.Add(existing);
+                }
+                // A page listed twice keeps its first row.
+                continue;
+            }
+            order.Add(BuildItem(section, item, null));
+        }
+        if (!SameOrder(order, stack))
+        {
+            stack.Children.Clear();
+            foreach (var node in order)
+            {
+                stack.Children.Add(node.Root!);
+            }
+        }
+        sectionNode.SectionItems.Clear();
+        sectionNode.SectionItems.AddRange(order);
+    }
+
+    private void AddMissingChildren(SidebarNode parent)
+    {
+        if (parent.ChildrenRows is not { } stack)
+        {
+            return;
+        }
+        var order = new List<SidebarNode>(parent.Item!.Items.Count);
+        foreach (var child in parent.Item.Items)
+        {
+            if (_byItem.TryGetValue(child, out var existing))
+            {
+                if (ReferenceEquals(existing.Parent, parent))
+                {
+                    order.Add(existing);
+                }
+                continue;
+            }
+            order.Add(BuildItem(parent.Section, child, parent));
+        }
+        if (!SameOrder(order, stack))
+        {
+            stack.Children.Clear();
+            foreach (var node in order)
+            {
+                stack.Children.Add(node.Root!);
+            }
+        }
+        parent.Children.Clear();
+        parent.Children.AddRange(order);
+    }
+
+    private static bool SameOrder(List<SidebarNode> order, Panel stack)
+    {
+        if (order.Count != stack.Children.Count)
+        {
+            return false;
+        }
+        for (var i = 0; i < order.Count; i++)
+        {
+            if (!ReferenceEquals(order[i].Root, stack.Children[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private SidebarNode BuildItem(SidebarSection section, SidebarItem item, SidebarNode? parent)
     {
         var node = new SidebarNode(section, item, parent);
         _byItem[item] = node;
+        item.PropertyChanged += OnItemPropertyChanged;
         var row = new SidebarRow(this, node);
         Tooltip.SetSide(row, TooltipSide.Right);
         node.Row = row;
@@ -688,17 +1171,10 @@ public class Sidebar : TemplatedControl
         if (parent is null && item.HasChildren)
         {
             row.IsParent = true;
+            item.Items.CollectionChanged += OnItemsChanged;
+            _owners[item.Items] = item;
             var stack = new StackPanel { Spacing = _list!.RowGap, Margin = _list.ChildrenMargin };
-            foreach (var child in item.Items)
-            {
-                if (_byItem.ContainsKey(child))
-                {
-                    continue;
-                }
-                var childNode = BuildItem(section, child, node);
-                node.Children.Add(childNode);
-                stack.Children.Add(childNode.Root!);
-            }
+            node.ChildrenRows = stack;
             var guide = new Border
             {
                 Width = 1,
@@ -713,15 +1189,22 @@ public class Sidebar : TemplatedControl
             node.ChildrenStack = panel;
             node.ChildrenHost = new SidebarHeightSpring { Child = panel };
             node.Root = new StackPanel { Children = { row, node.ChildrenHost } };
+            AddMissingChildren(node);
         }
         else
         {
+            if (parent is null)
+            {
+                // A page without pages still reports when pages are added (it becomes a parent).
+                item.Items.CollectionChanged += OnItemsChanged;
+                _owners[item.Items] = item;
+            }
             node.Root = row;
         }
         return node;
     }
 
-    private static void UpdateRowContent(SidebarNode node)
+    private void UpdateRowContent(SidebarNode node)
     {
         if (node is not { Item: { } item, Row: { } row })
         {
@@ -739,10 +1222,32 @@ public class Sidebar : TemplatedControl
                 row.IconContent = item.Icon;
                 break;
         }
+        switch (item.TrailingIcon)
+        {
+            case Geometry geometry:
+                row.TrailingContent = null;
+                row.TrailingGlyph = geometry;
+                break;
+            default:
+                row.TrailingGlyph = null;
+                row.TrailingContent = item.TrailingIcon;
+                break;
+        }
         row.Monogram = string.IsNullOrEmpty(item.Label) ? null : char.ToUpperInvariant(item.Label[0]).ToString();
         row.Badge = string.IsNullOrEmpty(item.Badge) ? null : item.Badge;
+        row.IsUnread = item.IsUnread;
+        row.IsAction = item.IsAction;
         row.IsEnabled = item.IsEnabled;
-        AutomationProperties.SetName(row, row.Badge is null ? item.Label : $"{item.Label}, {row.Badge}");
+        var name = item.Label;
+        if (row.Badge is not null)
+        {
+            name = $"{name}, {row.Badge}";
+        }
+        if (item.IsUnread)
+        {
+            name = $"{name}, {UnreadText}";
+        }
+        AutomationProperties.SetName(row, name);
     }
 
     private SidebarItem? FindByKey(string? key)
@@ -755,13 +1260,13 @@ public class Sidebar : TemplatedControl
         {
             foreach (var item in section.Items)
             {
-                if (string.Equals(item.Key, key, StringComparison.Ordinal) && !item.HasChildren)
+                if (string.Equals(item.Key, key, StringComparison.Ordinal) && !item.HasChildren && !item.IsAction)
                 {
                     return item;
                 }
                 foreach (var child in item.Items)
                 {
-                    if (string.Equals(child.Key, key, StringComparison.Ordinal))
+                    if (string.Equals(child.Key, key, StringComparison.Ordinal) && !child.IsAction)
                     {
                         return child;
                     }
@@ -771,72 +1276,10 @@ public class Sidebar : TemplatedControl
         return null;
     }
 
-    private void UpdateSubscriptions()
-    {
-        var sections = new HashSet<SidebarSection>(Sections);
-        var items = new HashSet<SidebarItem>();
-        foreach (var section in Sections)
-        {
-            foreach (var item in section.Items)
-            {
-                items.Add(item);
-                foreach (var child in item.Items)
-                {
-                    items.Add(child);
-                }
-            }
-        }
-        foreach (var section in _watchedSections)
-        {
-            if (!sections.Contains(section))
-            {
-                section.PropertyChanged -= OnSectionPropertyChanged;
-                section.Items.CollectionChanged -= OnStructureChanged;
-            }
-        }
-        foreach (var section in sections)
-        {
-            if (!_watchedSections.Contains(section))
-            {
-                section.PropertyChanged += OnSectionPropertyChanged;
-                section.Items.CollectionChanged += OnStructureChanged;
-            }
-        }
-        foreach (var item in _watchedItems)
-        {
-            if (!items.Contains(item))
-            {
-                item.PropertyChanged -= OnItemPropertyChanged;
-                item.Items.CollectionChanged -= OnStructureChanged;
-            }
-        }
-        foreach (var item in items)
-        {
-            if (!_watchedItems.Contains(item))
-            {
-                item.PropertyChanged += OnItemPropertyChanged;
-                item.Items.CollectionChanged += OnStructureChanged;
-            }
-        }
-        _watchedSections.Clear();
-        _watchedSections.UnionWith(sections);
-        _watchedItems.Clear();
-        _watchedItems.UnionWith(items);
-    }
-
     private void OnSectionPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property == SidebarSection.HeaderProperty || e.Property == SidebarSection.IsCollapsibleProperty)
-        {
-            if (sender is SidebarSection section && _bySection.TryGetValue(section, out var node) && node.Header is not null)
-            {
-                // A heading that stays a heading updates in place; one that appears or goes needs a rebuild.
-                Refresh(animate: true);
-                return;
-            }
-            InvalidateStructure();
-        }
-        else if (e.Property == SidebarSection.IsExpandedProperty)
+        if (e.Property == SidebarSection.HeaderProperty || e.Property == SidebarSection.IsCollapsibleProperty ||
+            e.Property == SidebarSection.IsExpandedProperty)
         {
             Refresh(animate: true);
         }
@@ -853,7 +1296,9 @@ public class Sidebar : TemplatedControl
             Refresh(animate: true);
         }
         else if (e.Property == SidebarItem.LabelProperty || e.Property == SidebarItem.IconProperty ||
-                 e.Property == SidebarItem.BadgeProperty || e.Property == SidebarItem.IsEnabledProperty)
+                 e.Property == SidebarItem.TrailingIconProperty || e.Property == SidebarItem.BadgeProperty ||
+                 e.Property == SidebarItem.IsEnabledProperty || e.Property == SidebarItem.IsUnreadProperty ||
+                 e.Property == SidebarItem.IsActionProperty)
         {
             if (_byItem.TryGetValue(item, out var node))
             {
@@ -878,7 +1323,8 @@ public class Sidebar : TemplatedControl
                     _syncingKey = false;
                 }
             }
-            else if (SelectedItem is null && SelectedKey is { } key && string.Equals(item.Key, key, StringComparison.Ordinal))
+            else if (SelectedItem is null && SelectedKey is { } key && string.Equals(item.Key, key, StringComparison.Ordinal) &&
+                     !item.IsAction && !item.HasChildren)
             {
                 SetCurrentValue(SelectedItemProperty, item);
             }
@@ -949,6 +1395,9 @@ public class Sidebar : TemplatedControl
             sectionNode.SectionBody.Child!.IsHitTestVisible = sectionNode.IsOpen;
             if (sectionNode.Header is { } header)
             {
+                // The first section only has a heading when it has a title; later ones always do (the gap above them).
+                sectionNode.HasHeader = titled || sectionNode.Index > 0;
+                header.IsVisible = sectionNode.HasHeader;
                 header.Title = section.Header;
                 header.IsCollapsible = collapsible;
                 header.IsExpanded = !collapsible || section.IsExpanded || filtering;
@@ -961,7 +1410,7 @@ public class Sidebar : TemplatedControl
                 continue;
             }
             anyShown = true;
-            if (sectionNode.Header is { IsInteractive: true })
+            if (sectionNode.Header is { IsInteractive: true, IsVisible: true })
             {
                 _navigable.Add(sectionNode);
             }
@@ -1023,12 +1472,32 @@ public class Sidebar : TemplatedControl
     private void UpdateSelectionVisuals()
     {
         var marker = MarkerNode();
-        var selected = SelectedItem;
-        foreach (var node in _byItem.Values)
+        var selected = SelectedItem is { } item && _byItem.TryGetValue(item, out var selectedNode) ? selectedNode : null;
+        if (!ReferenceEquals(selected, _selectedNode))
         {
-            var row = node.Row!;
-            row.IsSelected = ReferenceEquals(node.Item, selected);
-            row.IsCurrent = ReferenceEquals(node, marker) && !row.IsSelected;
+            if (_selectedNode?.Row is { } old)
+            {
+                old.IsSelected = false;
+            }
+            _selectedNode = selected;
+        }
+        if (_selectedNode?.Row is { } now)
+        {
+            now.IsSelected = true;
+        }
+        // The marker rests on a closed parent (or the rail) when the selected page is folded away inside it.
+        var current = marker is not null && !ReferenceEquals(marker, selected) ? marker : null;
+        if (!ReferenceEquals(current, _currentNode))
+        {
+            if (_currentNode?.Row is { } old)
+            {
+                old.IsCurrent = false;
+            }
+            _currentNode = current;
+        }
+        if (_currentNode?.Row is { } cur)
+        {
+            cur.IsCurrent = true;
         }
     }
 
@@ -1041,7 +1510,7 @@ public class Sidebar : TemplatedControl
     /// </summary>
     private void UpdateMarker(bool animate, bool force = false)
     {
-        if (_list is null || _markerBlock is null || _markerBar is null)
+        if (_list is null || _markerBlock is null)
         {
             return;
         }
@@ -1050,7 +1519,6 @@ public class Sidebar : TemplatedControl
         {
             _markerTarget = default;
             _markerBlock.Hide(animate);
-            _markerBar.Hide(animate);
             return;
         }
         if (row.Bounds.Width <= 0 || row.TranslatePoint(default, _list) is not { } origin)
@@ -1068,10 +1536,7 @@ public class Sidebar : TemplatedControl
             animate = _markerBlock.HasTarget && !Near(_markerBlock.CurrentRect, _markerTarget);
         }
         _markerTarget = block;
-        var barHeight = Math.Min(_list.MarkerBarHeight, block.Height);
-        var bar = new Rect(block.X + _list.MarkerBarInset, block.Y + (block.Height - barHeight) / 2, _list.MarkerBarWidth, barHeight);
         _markerBlock.MoveTo(block, animate, ArcSpring.Snappy);
-        _markerBar.MoveTo(bar, animate, ArcSpring.Snappy);
     }
 
     private static bool Near(Rect a, Rect b)
@@ -1195,7 +1660,7 @@ public class Sidebar : TemplatedControl
 
     /// <summary>
     /// Chooses a row: a heading folds its section, a parent opens or closes (on the rail it shows its pages in a menu),
-    /// a page becomes the selection and raises <see cref="ItemInvoked"/>.
+    /// a page becomes the selection and raises <see cref="ItemInvoked"/> (an action only raises it).
     /// </summary>
     internal void Activate(SidebarNode node, NavigationMethod method)
     {
@@ -1241,7 +1706,11 @@ public class Sidebar : TemplatedControl
 
     private void Invoke(SidebarItem item)
     {
-        SetCurrentValue(SelectedItemProperty, item);
+        // An action acts without becoming the selected page.
+        if (!item.IsAction)
+        {
+            SetCurrentValue(SelectedItemProperty, item);
+        }
         RaiseEvent(new SidebarItemInvokedEventArgs(ItemInvokedEvent, item));
         Execute(item.Command, item.CommandParameter);
         Execute(SelectCommand, item);

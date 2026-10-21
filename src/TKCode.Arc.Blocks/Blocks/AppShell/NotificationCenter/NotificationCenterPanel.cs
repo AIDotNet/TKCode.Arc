@@ -28,6 +28,7 @@ namespace TKCode.Arc;
 [TemplatePart(UnreadViewPart, typeof(NotificationCenterButton))]
 [TemplatePart(MarkAllRevealPart, typeof(NotificationCenterReveal))]
 [TemplatePart(MarkAllPart, typeof(NotificationCenterButton))]
+[TemplatePart(ScrollPart, typeof(ScrollViewer))]
 [TemplatePart(ListPart, typeof(StackPanel))]
 [TemplatePart(EmptyRevealPart, typeof(NotificationCenterReveal))]
 [TemplatePart(EmptyTitlePart, typeof(ArcContentSwap))]
@@ -48,6 +49,7 @@ internal sealed class NotificationCenterPanel : TemplatedControl
     public const string UnreadViewPart = "PART_UnreadView";
     public const string MarkAllRevealPart = "PART_MarkAllReveal";
     public const string MarkAllPart = "PART_MarkAll";
+    public const string ScrollPart = "PART_Scroll";
     public const string ListPart = "PART_List";
     public const string EmptyRevealPart = "PART_EmptyReveal";
     public const string EmptyTitlePart = "PART_EmptyTitle";
@@ -110,8 +112,26 @@ internal sealed class NotificationCenterPanel : TemplatedControl
     public static readonly StyledProperty<double> NarrowBreakpointProperty =
         AvaloniaProperty.Register<NotificationCenterPanel, double>(nameof(NarrowBreakpoint), 380);
 
+    /// <summary>Rows that are always created when the list is filled, before any layout says what is on screen.</summary>
+    internal const int MinRealized = 12;
+
+    /// <summary>Most rows created in one pass; the rest follow on the next one, so a fast scroll never stalls a frame.</summary>
+    private const int RealizePerPass = 6;
+
+    /// <summary>Rows kept for reuse (rows far outside the viewport go back here instead of staying in the tree).</summary>
+    private const int PoolLimit = 12;
+
+    /// <summary>Rows are created this far (at least) above and below the viewport, and kept up to three times that far.</summary>
+    private const double MinWindowMargin = 240;
+
+    private const double FallbackRowHeight = 66;
+
     private readonly NotificationCenter _owner;
     private readonly Dictionary<object, RowEntry> _rows = new();
+    private readonly Stack<NotificationCenterRow> _pool = new();
+    private readonly double[] _rowHeight = [double.NaN, double.NaN];
+    private ScrollViewer? _scroll;
+    private bool _windowQueued;
     private readonly List<Control> _order = new();
     private ArcContentSwap? _count;
     private ArcContentSwap? _summary;
@@ -195,6 +215,7 @@ internal sealed class NotificationCenterPanel : TemplatedControl
         _unreadView = e.NameScope.Find<NotificationCenterButton>(UnreadViewPart);
         _markAllReveal = e.NameScope.Find<NotificationCenterReveal>(MarkAllRevealPart);
         _markAll = e.NameScope.Find<NotificationCenterButton>(MarkAllPart);
+        _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _list = e.NameScope.Find<StackPanel>(ListPart);
         _emptyReveal = e.NameScope.Find<NotificationCenterReveal>(EmptyRevealPart);
         _emptyTitle = e.NameScope.Find<ArcContentSwap>(EmptyTitlePart);
@@ -229,12 +250,19 @@ internal sealed class NotificationCenterPanel : TemplatedControl
         {
             _clearRead.Click += OnClearReadClick;
         }
+        if (_scroll is not null)
+        {
+            _scroll.ScrollChanged += OnScrollChanged;
+        }
         if (_list is not null)
         {
             AutomationProperties.SetControlTypeOverride(_list, AutomationControlType.List);
             _list.Children.Clear();
+            _list.AddHandler(GotFocusEvent, OnListGotFocus);
         }
         _rows.Clear();
+        _pool.Clear();
+        _rowHeight[0] = _rowHeight[1] = double.NaN;
         _shownUnread = -1;
         _shownRead = -1;
         _shownView = null;
@@ -243,6 +271,11 @@ internal sealed class NotificationCenterPanel : TemplatedControl
 
     private void Detach()
     {
+        if (_scroll is not null)
+        {
+            _scroll.ScrollChanged -= OnScrollChanged;
+        }
+        _list?.RemoveHandler(GotFocusEvent, OnListGotFocus);
         if (_close is not null)
         {
             _close.Click -= OnCloseClick;
@@ -449,11 +482,16 @@ internal sealed class NotificationCenterPanel : TemplatedControl
 
     #region Rows
 
+    /// <summary>
+    /// One notification of the list: its host is always there (a cheap decorator that holds the row's place and plays the
+    /// presence), its <see cref="Row"/> exists only while the notification is near the viewport.
+    /// </summary>
     private sealed class RowEntry
     {
         public required object Key { get; init; }
         public required NotificationCenterReveal Host { get; init; }
-        public required NotificationCenterRow Row { get; init; }
+        public required NotificationItem Item { get; set; }
+        public NotificationCenterRow? Row { get; set; }
         public int Index { get; set; }
     }
 
@@ -480,39 +518,55 @@ internal sealed class NotificationCenterPanel : TemplatedControl
             var expanded = Equals(_owner.ExpandedKey, key);
             if (_rows.TryGetValue(key, out var entry))
             {
-                // A row present before keeps its element (no rise); a leaving one turns back.
-                entry.Row.Update(item, expanded, !opening, bulk ? Cascade(i) : TimeSpan.Zero);
-                if (opening)
+                entry.Item = item;
+                entry.Host.PlaceholderHeight = EstimateHeight(item);
+                if (entry.Row is { } row)
                 {
-                    // The panel mounts its rows again each time it opens: they settle in with the stagger.
-                    entry.Host.Set(true);
-                    entry.Row.PlayRise(Stagger(i));
+                    // A row present before keeps its element (no rise); a leaving one turns back.
+                    row.Update(item, expanded, !opening, bulk ? Cascade(i) : TimeSpan.Zero);
+                    if (opening)
+                    {
+                        // The panel mounts its rows again each time it opens: they settle in with the stagger.
+                        entry.Host.Set(true);
+                        row.PlayRise(Stagger(i));
+                    }
+                    else if (!entry.Host.IsShown)
+                    {
+                        entry.Host.Show(animate: true, fadeIn: false);
+                    }
                 }
-                else if (!entry.Host.IsShown)
+                else if (!entry.Host.IsShown || opening)
                 {
-                    entry.Host.Show(animate: true, fadeIn: false);
+                    entry.Host.Set(true);
                 }
             }
             else
             {
-                entry = CreateRow(key, item);
+                entry = CreateEntry(key, item);
                 _rows[key] = entry;
-                // Mounted in place (the list order is fixed below), then brought into its first state without motion.
                 list.Children.Insert(Math.Min(i, list.Children.Count), entry.Host);
-                entry.Row.SetNarrow(_narrow);
-                entry.Row.ApplyTemplate();
-                entry.Row.Update(item, expanded, animate: false, TimeSpan.Zero);
-                if (opening)
+                if (i < MinRealized)
                 {
-                    entry.Host.Set(true);
+                    // The first rows are created now, in place, and brought into their first state without motion.
+                    Realize(entry, expanded);
+                    if (opening)
+                    {
+                        entry.Host.Set(true);
+                    }
+                    else
+                    {
+                        entry.Host.Show(animate: true, fadeIn: false);
+                    }
+                    entry.Row!.PlayRise(Stagger(i));
                 }
                 else
                 {
-                    entry.Host.Show(animate: true, fadeIn: false);
+                    // Further rows stand in as empty hosts until the viewport reaches them.
+                    entry.Host.Set(true);
                 }
-                entry.Row.PlayRise(Stagger(i));
             }
             entry.Index = i;
+            NumberRow(entry, visible.Count);
             shown.Add(entry.Host);
         }
 
@@ -521,6 +575,7 @@ internal sealed class NotificationCenterPanel : TemplatedControl
             if (!used.Contains(entry.Key) && entry.Host.IsShown)
             {
                 // Rows close their own height on the way out, so the list and the panel close the gap together.
+                // A host without a row is only a place holder: it leaves at once.
                 entry.Host.Hide(!opening, bulk ? Cascade(entry.Index) : TimeSpan.Zero);
             }
         }
@@ -557,16 +612,74 @@ internal sealed class NotificationCenterPanel : TemplatedControl
         {
             RemoveHost(children[^1]);
         }
+        QueueWindowUpdate();
     }
 
-    private RowEntry CreateRow(object key, NotificationItem item)
+    private RowEntry CreateEntry(object key, NotificationItem item)
     {
-        var row = new NotificationCenterRow(_owner, item);
-        var host = new NotificationCenterReveal { Child = row, ClipToBounds = true };
+        var host = new NotificationCenterReveal { ClipToBounds = true, PlaceholderHeight = EstimateHeight(item) };
         host.Set(false);
-        var entry = new RowEntry { Key = key, Host = host, Row = row };
+        var entry = new RowEntry { Key = key, Host = host, Item = item };
+        host.Tag = entry;
         host.Hidden += (_, _) => OnRowHidden(entry);
         return entry;
+    }
+
+    /// <summary>Gives the entry a row (a pooled one when there is one) in its first state, without motion.</summary>
+    private void Realize(RowEntry entry, bool expanded)
+    {
+        if (entry.Row is not null)
+        {
+            return;
+        }
+        NotificationCenterRow row;
+        if (_pool.Count > 0)
+        {
+            row = _pool.Pop();
+            row.Item = entry.Item;
+        }
+        else
+        {
+            row = new NotificationCenterRow(_owner, entry.Item);
+        }
+        entry.Row = row;
+        entry.Host.Child = row;
+        row.SetNarrow(_narrow);
+        row.ApplyTemplate();
+        row.ResetRise();
+        row.Update(entry.Item, expanded, animate: false, TimeSpan.Zero);
+        NumberRow(entry, _owner.VisibleItems.Count);
+    }
+
+    /// <summary>Tells assistive technology where a row stands in the whole list, although only the rows near the viewport exist.</summary>
+    private static void NumberRow(RowEntry entry, int count)
+    {
+        if (entry.Row is { } row)
+        {
+            AutomationProperties.SetPositionInSet(row, entry.Index + 1);
+            AutomationProperties.SetSizeOfSet(row, count);
+        }
+    }
+
+    /// <summary>Takes the row off the entry and keeps it for the next row that comes into view.</summary>
+    private void Unrealize(RowEntry entry)
+    {
+        if (entry.Row is not { } row)
+        {
+            return;
+        }
+        entry.Row = null;
+        entry.Host.Child = null;
+        Recycle(row);
+    }
+
+    private void Recycle(NotificationCenterRow row)
+    {
+        row.Release();
+        if (_pool.Count < PoolLimit)
+        {
+            _pool.Push(row);
+        }
     }
 
     private void OnRowHidden(RowEntry entry)
@@ -574,6 +687,10 @@ internal sealed class NotificationCenterPanel : TemplatedControl
         if (entry.Host.IsShown)
         {
             return;
+        }
+        if (entry.Row is null)
+        {
+            KeepViewStill(entry.Host);
         }
         if (_rows.TryGetValue(entry.Key, out var current) && ReferenceEquals(current, entry))
         {
@@ -585,18 +702,206 @@ internal sealed class NotificationCenterPanel : TemplatedControl
     private void RemoveHost(Control host)
     {
         _list?.Children.Remove(host);
-        if (host is NotificationCenterReveal { Child: NotificationCenterRow row })
+        if (host is NotificationCenterReveal { Tag: RowEntry entry } reveal)
         {
-            foreach (var pair in _rows.Where(p => ReferenceEquals(p.Value.Row, row)).ToList())
+            if (_rows.TryGetValue(entry.Key, out var current) && ReferenceEquals(current, entry))
             {
-                _rows.Remove(pair.Key);
+                _rows.Remove(entry.Key);
+            }
+            if (entry.Row is { } row)
+            {
+                entry.Row = null;
+                reveal.Child = null;
+                Recycle(row);
             }
         }
     }
 
-    /// <summary>The shown row of <paramref name="item"/>, if any.</summary>
-    internal NotificationCenterRow? RowOf(NotificationItem item) =>
-        _rows.Values.FirstOrDefault(r => ReferenceEquals(r.Row.Item, item) && r.Host.IsShown)?.Row;
+    /// <summary>The shown row of <paramref name="item"/>, if any (it is created when it was only a place holder).</summary>
+    internal NotificationCenterRow? RowOf(NotificationItem item)
+    {
+        foreach (var entry in _rows.Values)
+        {
+            if (ReferenceEquals(entry.Item, item) && entry.Host.IsShown)
+            {
+                if (entry.Row is null)
+                {
+                    Realize(entry, Equals(_owner.ExpandedKey, entry.Key));
+                }
+                return entry.Row;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>The number of rows that exist right now (the others are place holders).</summary>
+    internal int RealizedRowCount => _rows.Values.Count(e => e.Row is not null);
+
+    private double EstimateHeight(NotificationItem item)
+    {
+        var height = _rowHeight[item.HasActor ? 1 : 0];
+        if (double.IsNaN(height))
+        {
+            height = _rowHeight[item.HasActor ? 0 : 1];
+        }
+        return double.IsNaN(height) ? FallbackRowHeight : height;
+    }
+
+    #endregion
+
+    #region Row window
+
+    private void OnScrollChanged(object? sender, ScrollChangedEventArgs e) => UpdateWindow();
+
+    private void QueueWindowUpdate()
+    {
+        if (_windowQueued)
+        {
+            return;
+        }
+        _windowQueued = true;
+        Dispatcher.UIThread.Post(UpdateWindow, DispatcherPriority.Loaded);
+    }
+
+    /// <summary>
+    /// Creates the rows that are near the viewport (up to a viewport away, at least 240px) and gives the ones far away
+    /// (more than three times that) back to the pool. Rows with focus, expanded rows and leaving rows stay.
+    /// </summary>
+    internal void UpdateWindow()
+    {
+        _windowQueued = false;
+        if (_list is null || _scroll is null || _list.Children.Count == 0 || _scroll.Viewport.Height <= 0 ||
+            _list.TranslatePoint(default, _scroll) is not { } origin)
+        {
+            return;
+        }
+        var viewport = _scroll.Viewport.Height;
+        var margin = Math.Max(viewport, MinWindowMargin);
+        double near = -margin, far = viewport + margin, keepNear = -3 * margin, keepFar = viewport + 3 * margin;
+        var budget = RealizePerPass;
+        var pending = false;
+        var measured = false;
+        var children = _list.Children;
+        for (var i = 0; i < children.Count; i++)
+        {
+            if (children[i] is not NotificationCenterReveal { Tag: RowEntry entry } host || !host.IsShown)
+            {
+                continue;
+            }
+            var bounds = host.Bounds;
+            if (bounds.Height <= 0)
+            {
+                // Not laid out yet: the next layout reports again.
+                continue;
+            }
+            var top = origin.Y + bounds.Y;
+            var bottom = top + bounds.Height;
+            if (bottom >= near && top <= far)
+            {
+                if (entry.Row is null)
+                {
+                    if (budget > 0)
+                    {
+                        budget--;
+                        Realize(entry, Equals(_owner.ExpandedKey, entry.Key));
+                    }
+                    else
+                    {
+                        pending = true;
+                    }
+                }
+                else
+                {
+                    measured |= MeasureRow(entry, host);
+                }
+            }
+            else if (entry.Row is { } row && (bottom < keepNear || top > keepFar) && !row.IsKeyboardFocusWithin &&
+                     !row.IsExpanded && !Equals(_owner.ExpandedKey, entry.Key))
+            {
+                Unrealize(entry);
+            }
+        }
+        if (measured)
+        {
+            ApplyRowHeights();
+        }
+        if (pending)
+        {
+            QueueWindowUpdate();
+        }
+    }
+
+    /// <summary>Learns the height of a resting row, so the place holders match it.</summary>
+    private bool MeasureRow(RowEntry entry, NotificationCenterReveal host)
+    {
+        if (entry.Row is not { IsExpanded: false } || host.HeightFraction < 0.999 || host.Bounds.Height <= 0)
+        {
+            return false;
+        }
+        var kind = entry.Item.HasActor ? 1 : 0;
+        var height = host.Bounds.Height;
+        if (!double.IsNaN(_rowHeight[kind]) && Math.Abs(_rowHeight[kind] - height) < 0.5)
+        {
+            return false;
+        }
+        _rowHeight[kind] = height;
+        return true;
+    }
+
+    private void ApplyRowHeights()
+    {
+        foreach (var entry in _rows.Values)
+        {
+            if (entry.Row is null)
+            {
+                entry.Host.PlaceholderHeight = EstimateHeight(entry.Item);
+            }
+        }
+    }
+
+    /// <summary>
+    /// A place holder that leaves above the viewport takes its height with it; the scroll offset gives it back, so the
+    /// rows in view do not jump.
+    /// </summary>
+    private void KeepViewStill(NotificationCenterReveal host)
+    {
+        if (_scroll is not { } scroll || _list is null || scroll.Offset.Y <= 0 || host.Bounds.Height <= 0 ||
+            _list.TranslatePoint(default, scroll) is not { } origin)
+        {
+            return;
+        }
+        if (origin.Y + host.Bounds.Bottom <= 0)
+        {
+            scroll.Offset = new Vector(scroll.Offset.X, Math.Max(0, scroll.Offset.Y - host.Bounds.Height));
+        }
+    }
+
+    /// <summary>Keyboard focus reached a row: the rows around it are created, so Tab and Shift+Tab always find a neighbor.</summary>
+    private void OnListGotFocus(object? sender, FocusChangedEventArgs e)
+    {
+        if (_list is null || e.Source is not Visual source)
+        {
+            return;
+        }
+        Visual? host = source;
+        while (host is not null && !ReferenceEquals(host.GetVisualParent(), _list))
+        {
+            host = host.GetVisualParent();
+        }
+        if (host is null)
+        {
+            return;
+        }
+        var children = _list.Children;
+        var at = children.IndexOf((Control)host);
+        for (var i = Math.Max(0, at - 4); i <= Math.Min(children.Count - 1, at + 4); i++)
+        {
+            if (children[i] is NotificationCenterReveal { Tag: RowEntry { Row: null } entry } neighbor && neighbor.IsShown)
+            {
+                Realize(entry, Equals(_owner.ExpandedKey, entry.Key));
+            }
+        }
+    }
 
     #endregion
 
@@ -648,7 +953,7 @@ internal sealed class NotificationCenterPanel : TemplatedControl
             PseudoClasses.Set(NarrowPseudoClass, narrow);
             foreach (var entry in _rows.Values)
             {
-                entry.Row.SetNarrow(narrow);
+                entry.Row?.SetNarrow(narrow);
             }
         }
     }

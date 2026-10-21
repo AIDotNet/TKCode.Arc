@@ -29,7 +29,12 @@ namespace TKCode.Arc;
 /// keywords); ↓ / ↑ / Home / End move one shared highlight (a 70ms slide for keys, a snappy spring for the pointer),
 /// Enter runs the highlighted command (or, after typing, the top match), Escape clears the query and then raises
 /// <see cref="CloseRequested"/>. Cmd/Ctrl+K anywhere in the window focuses the field. While filtering, the remaining
-/// rows glide into place and the results frame springs to the new height.
+/// rows glide into place and the results frame springs to the new height. Only the rows near the visible part of the
+/// list exist, so a thousand commands cost the same as ten.
+/// <para>
+/// The control itself is inline, like Arc's: it does not open or close. For a popup that opens on Cmd+K (or from a
+/// button) over the page and closes with a key, use <see cref="CommandPaletteDialog"/>, which hosts a palette.
+/// </para>
 /// Ported from Arc's free command-palette block (MIT, Copyright (c) 2026 Elia Kuratli).
 /// </summary>
 [TemplatePart(SurfacePart, typeof(Border))]
@@ -43,7 +48,7 @@ namespace TKCode.Arc;
 [TemplatePart(HighlightPart, typeof(Control))]
 [TemplatePart(ListPart, typeof(Panel))]
 [TemplatePart(EmptyPart, typeof(Control))]
-[PseudoClasses(NarrowPseudoClass, NarrowestPseudoClass, HasQueryPseudoClass)]
+[PseudoClasses(NarrowPseudoClass, NarrowestPseudoClass, HasQueryPseudoClass, NoHintPseudoClass)]
 public class CommandPalette : TemplatedControl
 {
     public const string SurfacePart = "PART_Surface";
@@ -58,14 +63,17 @@ public class CommandPalette : TemplatedControl
     public const string ListPart = "PART_List";
     public const string EmptyPart = "PART_Empty";
 
-    /// <summary>Set while the palette is at most 480px wide: tighter padding, no shortcut caps.</summary>
+    /// <summary>Set while the window is at most 480px wide (Arc's <c>max-width: 480px</c> media query): tighter padding, no shortcut caps.</summary>
     public const string NarrowPseudoClass = ":narrow";
 
-    /// <summary>Set while the palette is at most 340px wide: rows also tighten their sides.</summary>
+    /// <summary>Set while the window is at most 340px wide: rows also tighten their sides.</summary>
     public const string NarrowestPseudoClass = ":narrowest";
 
     /// <summary>Set while the query has text.</summary>
     public const string HasQueryPseudoClass = ":has-query";
+
+    /// <summary>Set while <see cref="ShortcutHint"/> is empty: the shortcut cap is hidden.</summary>
+    public const string NoHintPseudoClass = ":no-hint";
 
     /// <summary>Widths at or below which the narrow layouts apply (Arc's media queries).</summary>
     private const double NarrowWidth = 480;
@@ -102,7 +110,7 @@ public class CommandPalette : TemplatedControl
     public static readonly StyledProperty<bool> IsShortcutEnabledProperty =
         AvaloniaProperty.Register<CommandPalette, bool>(nameof(IsShortcutEnabled), true);
 
-    /// <summary>Text of the shortcut cap at the end of the search row; null shows "⌘ K" on macOS and "Ctrl K" elsewhere.</summary>
+    /// <summary>Text of the shortcut cap at the end of the search row; null shows "⌘ K" on macOS and "Ctrl K" elsewhere, an empty string hides the cap.</summary>
     public static readonly StyledProperty<string?> ShortcutHintProperty =
         AvaloniaProperty.Register<CommandPalette, string?>(nameof(ShortcutHint));
 
@@ -145,9 +153,12 @@ public class CommandPalette : TemplatedControl
     public static readonly RoutedEvent<CommandPaletteItemSelectedEventArgs> ItemSelectedEvent =
         RoutedEvent.Register<CommandPalette, CommandPaletteItemSelectedEventArgs>(nameof(ItemSelected), RoutingStrategies.Bubble);
 
-    /// <summary>Raised by Escape in an empty field or by the "Esc" button: the host should close the palette.</summary>
-    public static readonly RoutedEvent<RoutedEventArgs> CloseRequestedEvent =
-        RoutedEvent.Register<CommandPalette, RoutedEventArgs>(nameof(CloseRequested), RoutingStrategies.Bubble);
+    /// <summary>
+    /// Raised by Escape in an empty field or by the "Esc" button: the host should close the palette. Escape is not marked
+    /// handled, so an overlay around the palette can also close on it (<see cref="CommandPaletteDialog"/> does).
+    /// </summary>
+    public static readonly RoutedEvent<CommandPaletteCloseRequestedEventArgs> CloseRequestedEvent =
+        RoutedEvent.Register<CommandPalette, CommandPaletteCloseRequestedEventArgs>(nameof(CloseRequested), RoutingStrategies.Bubble);
 
     /// <inheritdoc cref="ItemsSourceProperty"/>
     public IEnumerable<CommandPaletteItem>? ItemsSource { get => GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value); }
@@ -207,6 +218,33 @@ public class CommandPalette : TemplatedControl
         private set => SetAndRaise(EffectiveShortcutHintProperty, ref _effectiveShortcutHint, value);
     }
 
+    /// <summary>
+    /// Set by <see cref="CommandPaletteDialog"/> while it presents the palette: the dialog's presence fades the palette in
+    /// and out, so the palette's own entrance only moves it (a second fade would square the curve) and the palette's own
+    /// Cmd/Ctrl+K handler stays off (the dialog toggles).
+    /// </summary>
+    internal bool IsHosted
+    {
+        get => _hosted;
+        set
+        {
+            if (_hosted == value)
+            {
+                return;
+            }
+            _hosted = value;
+            ApplyEntrance();
+            if (_hosted)
+            {
+                DetachShortcut();
+            }
+            else if (_attached)
+            {
+                AttachShortcut();
+            }
+        }
+    }
+
     /// <summary>Inline commands (used when <see cref="ItemsSource"/> is null).</summary>
     [Content]
     public AvaloniaList<CommandPaletteItem> Items { get; } = new();
@@ -225,7 +263,7 @@ public class CommandPalette : TemplatedControl
     }
 
     /// <inheritdoc cref="CloseRequestedEvent"/>
-    public event EventHandler<RoutedEventArgs>? CloseRequested
+    public event EventHandler<CommandPaletteCloseRequestedEventArgs>? CloseRequested
     {
         add => AddHandler(CloseRequestedEvent, value);
         remove => RemoveHandler(CloseRequestedEvent, value);
@@ -243,7 +281,12 @@ public class CommandPalette : TemplatedControl
     private enum RefreshReason
     {
         Query,
-        Data
+
+        /// <summary>The commands changed in a way that needs every one of them to be looked at again (and watched again).</summary>
+        Data,
+
+        /// <summary>Commands were added; they are already watched.</summary>
+        Added
     }
 
     private static readonly MotionSpec s_enter = MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter);
@@ -281,7 +324,6 @@ public class CommandPalette : TemplatedControl
     private CommandPaletteHighlightMove _activeMove;
     private bool _highlightDirty;
     private bool _scrollPending;
-    private CommandPaletteRow? _activeRow;
     private CommandPaletteItem? _pressed;
     private Point _lastPointer = new(double.NaN, double.NaN);
 
@@ -293,9 +335,12 @@ public class CommandPalette : TemplatedControl
     private bool _entranceArmed;
     private bool _focusPending;
     private bool _attached;
+    private bool _hosted;
     private TopLevel? _shortcutHost;
+    private IDisposable? _clientSizeSubscription;
     private INotifyCollectionChanged? _watchedSource;
     private readonly HashSet<CommandPaletteItem> _watched = new();
+    private readonly HashSet<CommandPaletteItem> _keep = new();
     private bool _syncingText;
 
     static CommandPalette()
@@ -406,11 +451,10 @@ public class CommandPalette : TemplatedControl
         _emptyOpacity = null;
         _emptyRise = null;
         _emptyBlur = null;
-        _activeRow = null;
         _view = ResultsView.None;
         _leaving = false;
         UpdateAutomation();
-        UpdateWidthClass(Bounds.Width);
+        UpdateWidthClass(TopLevel.GetTopLevel(this)?.ClientSize.Width ?? 0);
         Refresh(RefreshReason.Data);
     }
 
@@ -459,6 +503,7 @@ public class CommandPalette : TemplatedControl
         else if (change.Property == ShortcutHintProperty)
         {
             EffectiveShortcutHint = ShortcutHint ?? DefaultShortcutHint;
+            PseudoClasses.Set(NoHintPseudoClass, EffectiveShortcutHint.Length == 0);
         }
         else if (change.Property == LabelProperty || change.Property == ClearButtonLabelProperty ||
                  change.Property == CloseButtonLabelProperty || change.Property == ResultsLabelProperty)
@@ -496,6 +541,7 @@ public class CommandPalette : TemplatedControl
         base.OnAttachedToVisualTree(e);
         _attached = true;
         AttachShortcut();
+        AttachWidthClass();
         WatchSource();
         Refresh(RefreshReason.Data);
         ArmEntrance();
@@ -506,6 +552,8 @@ public class CommandPalette : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         _attached = false;
         DetachShortcut();
+        _clientSizeSubscription?.Dispose();
+        _clientSizeSubscription = null;
         WatchSource();
         WatchItems(Array.Empty<CommandPaletteItem>());
         _entranceArmed = false;
@@ -560,6 +608,11 @@ public class CommandPalette : TemplatedControl
         {
             _ = _entrance.AnimateTo(1, MotionSpec.Spring(ArcSpring.Smooth));
         }
+        if (_hosted)
+        {
+            _entranceOpacity.Jump(1);
+            return;
+        }
         _ = Animate(_entranceOpacity, 1, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Enter), level);
     }
 
@@ -586,7 +639,7 @@ public class CommandPalette : TemplatedControl
         _surfaceScale.ScaleX = scale;
         _surfaceScale.ScaleY = scale;
         _surfaceTranslate.Y = 6 * (1 - p);
-        _surface.Opacity = Math.Clamp(opacity, 0, 1);
+        _surface.Opacity = _hosted ? 1 : Math.Clamp(opacity, 0, 1);
     }
 
     #endregion
@@ -597,11 +650,32 @@ public class CommandPalette : TemplatedControl
     {
         if (ItemsSource is null)
         {
-            Refresh(RefreshReason.Data);
+            OnCollectionChanged(e);
         }
     }
 
-    private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => Refresh(RefreshReason.Data);
+    private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnCollectionChanged(e);
+
+    private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+    {
+        // Adding commands one by one (a long list filled in a loop) watches only the new ones instead of every command again.
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems is { } added)
+        {
+            if (_attached)
+            {
+                foreach (var item in added)
+                {
+                    if (item is CommandPaletteItem command && _watched.Add(command))
+                    {
+                        command.PropertyChanged += OnItemPropertyChanged;
+                    }
+                }
+            }
+            Refresh(RefreshReason.Added);
+            return;
+        }
+        Refresh(RefreshReason.Data);
+    }
 
     private void WatchSource()
     {
@@ -624,7 +698,8 @@ public class CommandPalette : TemplatedControl
     /// <summary>Follows property changes of the listed commands while the palette is in a window (no leaks from long-lived items).</summary>
     private void WatchItems(IReadOnlyList<CommandPaletteItem> source)
     {
-        var keep = new HashSet<CommandPaletteItem>();
+        var keep = _keep;
+        keep.Clear();
         if (_attached)
         {
             foreach (var item in source)
@@ -715,23 +790,8 @@ public class CommandPalette : TemplatedControl
                 _activeIndex = -1;
             }
         }
-        if (reason == RefreshReason.Data && _list is not null)
-        {
-            var keys = new HashSet<object>();
-            var names = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var item in source)
-            {
-                if (item is not null)
-                {
-                    keys.Add(CommandPaletteFilter.KeyOf(item));
-                    keys.Add(item);
-                    names.Add(string.IsNullOrEmpty(item.Group) ? DefaultGroup : item.Group);
-                }
-            }
-            _list.Prune(keys, names);
-        }
         ApplyView(glide);
-        UpdateActive(reason == RefreshReason.Data ? CommandPaletteHighlightMove.Glide : CommandPaletteHighlightMove.Jump, scroll: false);
+        UpdateActive(reason != RefreshReason.Query ? CommandPaletteHighlightMove.Glide : CommandPaletteHighlightMove.Jump, scroll: false);
     }
 
     #endregion
@@ -923,12 +983,14 @@ public class CommandPalette : TemplatedControl
         _activeMove = move;
         _scrollPending = scroll;
         _highlightDirty = true;
-        if (_list is { IsVisible: true })
+        if (_list is { IsVisible: true, IsMeasureValid: false } or { IsVisible: true, IsArrangeValid: false })
         {
+            // The list is about to lay out (new rows, new positions): the highlight is placed when it has arranged.
             _list.InvalidateArrange();
         }
         else
         {
+            // Positions are final, so moving the highlight needs no layout pass at all.
             PlaceHighlight();
         }
     }
@@ -946,13 +1008,7 @@ public class CommandPalette : TemplatedControl
             return;
         }
         var entry = ActiveItem is { } item && _view == ResultsView.Results && !_leaving ? _list.FindRow(item) : null;
-        var row = entry?.Row;
-        if (!ReferenceEquals(row, _activeRow))
-        {
-            _activeRow?.SetActive(false);
-            _activeRow = row;
-            row?.SetActive(true);
-        }
+        _list.SetActiveItem(entry?.Item);
         if (entry is null || double.IsNaN(entry.Y))
         {
             _highlightDirty = false;
@@ -971,7 +1027,17 @@ public class CommandPalette : TemplatedControl
             if (_scrollPending)
             {
                 _scrollPending = false;
-                Dispatcher.UIThread.Post(ScrollActiveIntoView, DispatcherPriority.Background);
+                if (_list.IsMeasureValid && _list.IsArrangeValid)
+                {
+                    // Positions are final (an arrow key or the pointer): scroll in the same frame, so the highlight never
+                    // sits outside the viewport for a frame.
+                    ScrollActiveIntoView();
+                }
+                else
+                {
+                    // Inside a layout pass (the data changed): scroll once it is over.
+                    Dispatcher.UIThread.Post(ScrollActiveIntoView, DispatcherPriority.Background);
+                }
             }
         }
         else if (Math.Abs(_highlight.TargetTop - top) > 0.5)
@@ -1068,7 +1134,7 @@ public class CommandPalette : TemplatedControl
                 else
                 {
                     // Left unhandled so an overlay around the palette can close on Escape too.
-                    RaiseEvent(new RoutedEventArgs(CloseRequestedEvent));
+                    RaiseEvent(new CommandPaletteCloseRequestedEventArgs(CloseRequestedEvent, CommandPaletteCloseReason.Escape));
                 }
                 break;
         }
@@ -1112,7 +1178,7 @@ public class CommandPalette : TemplatedControl
     private void OnCloseClick(object? sender, RoutedEventArgs e)
     {
         e.Handled = true;
-        RaiseEvent(new RoutedEventArgs(CloseRequestedEvent));
+        RaiseEvent(new CommandPaletteCloseRequestedEventArgs(CloseRequestedEvent, CommandPaletteCloseReason.CloseButton));
     }
 
     private void Choose(CommandPaletteItem item)
@@ -1141,9 +1207,9 @@ public class CommandPalette : TemplatedControl
 
     private void OnRowAutomationSelected(CommandPaletteRow row)
     {
-        if (row.Item is { IsEnabled: true } item && _visible.IndexOf(item) is >= 0 and var index)
+        if (row.Item is { IsEnabled: true } item && _list?.FindRow(item) is { } entry)
         {
-            SetActiveIndex(index, CommandPaletteHighlightMove.Keyboard);
+            SetActiveIndex(entry.ItemIndex, CommandPaletteHighlightMove.Keyboard);
         }
     }
 
@@ -1164,15 +1230,11 @@ public class CommandPalette : TemplatedControl
             return;
         }
         _lastPointer = position;
-        if (_list.HitRow(e.GetPosition(_list))?.Row?.Item is not { IsEnabled: true } item)
+        if (_list.HitRow(e.GetPosition(_list)) is not { Item: { IsEnabled: true } } hit)
         {
             return;
         }
-        var index = _visible.IndexOf(item);
-        if (index >= 0)
-        {
-            SetActiveIndex(index, CommandPaletteHighlightMove.Pointer);
-        }
+        SetActiveIndex(hit.ItemIndex, CommandPaletteHighlightMove.Pointer);
     }
 
     private void OnListPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -1181,7 +1243,7 @@ public class CommandPalette : TemplatedControl
         {
             return;
         }
-        _pressed = _list.HitRow(e.GetPosition(_list))?.Row?.Item;
+        _pressed = _list.HitRow(e.GetPosition(_list))?.Item;
         if (_pressed is not null)
         {
             // Pressing a row keeps the focus in the field.
@@ -1197,7 +1259,7 @@ public class CommandPalette : TemplatedControl
         {
             return;
         }
-        if (ReferenceEquals(_list.HitRow(e.GetPosition(_list))?.Row?.Item, pressed))
+        if (ReferenceEquals(_list.HitRow(e.GetPosition(_list))?.Item, pressed))
         {
             e.Handled = true;
             Choose(pressed);
@@ -1298,6 +1360,10 @@ public class CommandPalette : TemplatedControl
 
     private void AttachShortcut()
     {
+        if (_hosted)
+        {
+            return;
+        }
         var top = TopLevel.GetTopLevel(this);
         if (ReferenceEquals(top, _shortcutHost))
         {
@@ -1317,8 +1383,14 @@ public class CommandPalette : TemplatedControl
 
     private void OnTopLevelKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Handled || e.Key != Key.K || (e.KeyModifiers & (KeyModifiers.Meta | KeyModifiers.Control)) == 0 ||
+        if (e.Handled || e.Key != Key.K || (e.KeyModifiers != KeyModifiers.Meta && e.KeyModifiers != KeyModifiers.Control) ||
             !IsShortcutEnabled || !IsEffectivelyVisible || !IsEffectivelyEnabled || _input is null)
+        {
+            return;
+        }
+        // While a modal that does not contain this palette is on top (a dialog, a palette dialog), the page behind it
+        // does not answer the shortcut.
+        if (_shortcutHost is { } top && TopModal(top) is { } modal && !modal.Contains(this))
         {
             return;
         }
@@ -1333,10 +1405,46 @@ public class CommandPalette : TemplatedControl
         FocusInput();
     }
 
-    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    /// <summary>The topmost open modal. A presence that does not trap focus (a non-modal palette) is a popup, not a modal, and does not count.</summary>
+    private static ModalPresence? TopModal(TopLevel topLevel)
     {
-        base.OnSizeChanged(e);
-        UpdateWidthClass(e.NewSize.Width);
+        var modals = ModalPresence.GetModals(topLevel);
+        for (var i = modals.Count - 1; i >= 0; i--)
+        {
+            if (modals[i].IsOpen && modals[i].TrapFocus)
+            {
+                return modals[i];
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Arc's narrow layouts are <c>@media (max-width: 480px)</c> rules: they follow the window, not the palette, so a
+    /// popup 440px wide in a desktop window keeps its shortcut caps (and a palette in a side panel does too).
+    /// </summary>
+    private void AttachWidthClass()
+    {
+        _clientSizeSubscription?.Dispose();
+        _clientSizeSubscription = null;
+        if (TopLevel.GetTopLevel(this) is { } top)
+        {
+            _clientSizeSubscription = top.GetObservable(TopLevel.ClientSizeProperty).Subscribe(new ClientSizeObserver(this));
+            UpdateWidthClass(top.ClientSize.Width);
+        }
+    }
+
+    private sealed class ClientSizeObserver(CommandPalette owner) : IObserver<Size>
+    {
+        public void OnCompleted()
+        {
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnNext(Size value) => owner.UpdateWidthClass(value.Width);
     }
 
     private void UpdateWidthClass(double width)

@@ -10,11 +10,11 @@ internal readonly record struct SearchMatchRange(int Start, int Length)
 internal readonly record struct SearchResultsHit(SearchResultItem Item, int Tier, int Order);
 
 /// <summary>
-/// Matching, ranking, highlighting and snippet windows for <see cref="SearchResults"/>. Queries split on white space
-/// into terms; an item matches when every term occurs (ordinal, ignoring case) in its title, snippet, location or one
-/// of its keywords. Ranking looks at the first term only: the title starts with it, then a word of the title starts
-/// with it, then the title contains it, then everything else; ties keep the source order. Every method works on
-/// spans and caller-owned lists, so a keystroke allocates only the terms and the result list's growth.
+/// Matching, ranking tiers, highlighting and snippet windows for <see cref="SearchResults"/>. Queries split on white
+/// space into terms; an item matches when every term occurs (ordinal, ignoring case) in its title, subtitle, snippet,
+/// caption, location, body or one of its keywords. Ranking looks at the first term only: the title starts with it, then a
+/// word of the title starts with it, then the title contains it, then everything else; ties keep the source order. Every
+/// method works on spans and caller-owned lists, so a keystroke allocates only the terms.
 /// </summary>
 internal static class SearchResultsMatcher
 {
@@ -33,10 +33,6 @@ internal static class SearchResultsMatcher
     private static readonly Comparison<SearchMatchRange> s_byStart = static (a, b) => a.Start != b.Start
         ? a.Start.CompareTo(b.Start)
         : b.Length.CompareTo(a.Length);
-
-    private static readonly Comparison<SearchResultsHit> s_byRank = static (a, b) => a.Tier != b.Tier
-        ? a.Tier.CompareTo(b.Tier)
-        : a.Order.CompareTo(b.Order);
 
     /// <summary>Fills <paramref name="terms"/> with the distinct white-space separated words of <paramref name="query"/>.</summary>
     public static void Tokenize(string? query, List<string> terms)
@@ -83,12 +79,27 @@ internal static class SearchResultsMatcher
     public static bool Contains(string? text, string term)
         => text is not null && text.AsSpan().IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0;
 
-    /// <summary>True when every term occurs in the title, snippet, location or a keyword (no terms match everything).</summary>
-    public static bool Matches(string title, string? snippet, string? location, IList<string>? keywords, List<string> terms)
+    /// <summary>
+    /// True when every term occurs in the title, subtitle, snippet, caption, location, body or a keyword of
+    /// <paramref name="item"/> (no terms match everything).
+    /// </summary>
+    public static bool MatchesItem(SearchResultItem item, List<string> terms)
     {
+        if (terms.Count == 0)
+        {
+            return true;
+        }
+        var title = item.Title;
+        var snippet = item.Snippet;
+        var subtitle = item.Subtitle;
+        var location = item.Location;
+        var caption = item.Caption;
+        var body = item.Body;
+        var keywords = item.Keywords;
         foreach (var term in terms)
         {
-            if (Contains(title, term) || Contains(snippet, term) || Contains(location, term) || ContainsKeyword(keywords, term))
+            if (Contains(title, term) || Contains(snippet, term) || Contains(subtitle, term) || Contains(location, term) ||
+                Contains(caption, term) || Contains(body, term) || ContainsKeyword(keywords, term))
             {
                 continue;
             }
@@ -145,32 +156,6 @@ internal static class SearchResultsMatcher
     }
 
     private static bool IsWordStart(ReadOnlySpan<char> text, int index) => index == 0 || !char.IsLetterOrDigit(text[index - 1]);
-
-    /// <summary>
-    /// Fills <paramref name="hits"/> with the items that match <paramref name="terms"/>, ranked; with
-    /// <paramref name="filter"/> false every item is kept in its source order (the server already searched).
-    /// </summary>
-    public static void Search(IReadOnlyList<SearchResultItem> items, List<string> terms, bool filter, List<SearchResultsHit> hits)
-    {
-        hits.Clear();
-        for (var order = 0; order < items.Count; order++)
-        {
-            var item = items[order];
-            if (!filter || terms.Count == 0)
-            {
-                hits.Add(new SearchResultsHit(item, TierTitleStart, order));
-                continue;
-            }
-            if (Matches(item.Title, item.Snippet, item.Location, item.Keywords, terms))
-            {
-                hits.Add(new SearchResultsHit(item, Tier(item.Title, terms[0]), order));
-            }
-        }
-        if (filter && terms.Count > 0 && hits.Count > 1)
-        {
-            hits.Sort(s_byRank);
-        }
-    }
 
     /// <summary>
     /// Fills <paramref name="ranges"/> with every occurrence of every term in <paramref name="text"/>, sorted, with

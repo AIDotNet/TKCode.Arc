@@ -67,6 +67,13 @@ internal sealed class CommandPaletteHighlight : Control
     private static readonly TimeSpan s_fadeIn = TimeSpan.FromMilliseconds(80);
     private static readonly TimeSpan s_fadeOut = TimeSpan.FromMilliseconds(100);
 
+    // One spec per kind of move, built once: a pointer sweep retargets the highlight on every row it crosses.
+    private static readonly MotionSpec s_pointer = MotionSpec.Spring(ArcSpring.Snappy);
+    private static readonly MotionSpec s_keys = MotionSpec.Tween(s_keyTravel, ArcEasings.Enter);
+    private static readonly MotionSpec s_glide = MotionSpec.Spring(ArcSpring.Smooth);
+    private static readonly MotionSpec s_in = MotionSpec.Tween(s_fadeIn, ArcEasings.Standard);
+    private static readonly MotionSpec s_out = MotionSpec.Tween(s_fadeOut, ArcEasings.Standard);
+
     private MotionValue<Vector>? _box;
     private MotionValue<double>? _opacity;
     private bool _shown;
@@ -112,13 +119,13 @@ internal sealed class CommandPaletteHighlight : Control
         switch (move)
         {
             case CommandPaletteHighlightMove.Pointer:
-                _ = _box.AnimateTo(target, MotionSpec.Spring(ArcSpring.Snappy));
+                _ = _box.AnimateTo(target, s_pointer);
                 break;
             case CommandPaletteHighlightMove.Keyboard:
-                _ = _box.AnimateTo(target, MotionSpec.Tween(s_keyTravel, ArcEasings.Enter));
+                _ = _box.AnimateTo(target, s_keys);
                 break;
             case CommandPaletteHighlightMove.Glide:
-                _ = _box.AnimateTo(target, MotionSpec.Spring(ArcSpring.Smooth));
+                _ = _box.AnimateTo(target, s_glide);
                 break;
             default:
                 _box.Jump(target);
@@ -131,7 +138,7 @@ internal sealed class CommandPaletteHighlight : Control
         }
         else if (_opacity.Target < 1)
         {
-            _ = _opacity.AnimateTo(1, MotionSpec.Tween(s_fadeIn, ArcEasings.Standard));
+            _ = _opacity.AnimateTo(1, s_in);
         }
     }
 
@@ -148,7 +155,7 @@ internal sealed class CommandPaletteHighlight : Control
         }
         else if (_opacity.Target > 0)
         {
-            _ = _opacity.AnimateTo(0, MotionSpec.Tween(s_fadeOut, ArcEasings.Standard));
+            _ = _opacity.AnimateTo(0, s_out);
         }
     }
 
@@ -179,6 +186,12 @@ internal sealed class CommandPaletteHighlight : Control
         }
         var radius = CornerRadius;
         var rounded = new RoundedRect(new Rect(0, box.X, Bounds.Width, box.Y), radius.TopLeft, radius.TopRight, radius.BottomRight, radius.BottomLeft);
+        if (_opacity.Value >= 0.999)
+        {
+            // Resting: no opacity group (an offscreen layer) for a rectangle.
+            context.DrawRectangle(fill, null, rounded);
+            return;
+        }
         using (context.PushOpacity(_opacity.Value))
         {
             context.DrawRectangle(fill, null, rounded);

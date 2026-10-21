@@ -8,6 +8,7 @@ using Avalonia.Controls.Documents;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 
@@ -195,7 +196,7 @@ internal sealed class SearchResultsCursor : Control
 /// Text with highlighted matches: a handful of pooled <see cref="Run"/>s (plain and marked, so no text style
 /// overrides), and a rounded mark drawn behind every match. The mark rectangles are measured once per text layout.
 /// </summary>
-internal sealed class SearchResultsMarkedText : TextBlock
+internal class SearchResultsMarkedText : TextBlock
 {
     public static readonly StyledProperty<IBrush?> MarkBackgroundProperty =
         AvaloniaProperty.Register<SearchResultsMarkedText, IBrush?>(nameof(MarkBackground));
@@ -386,6 +387,12 @@ internal sealed class SearchResultsMarkedText : TextBlock
     }
 }
 
+/// <summary>A paragraph of the detail body: marked text with its own theme (it is added by code, outside any template).</summary>
+internal sealed class SearchResultsParagraph : SearchResultsMarkedText
+{
+    protected override Type StyleKeyOverride => typeof(SearchResultsParagraph);
+}
+
 /// <summary>The focusable result list: one tab stop whose active descendant is the cursor row (a listbox).</summary>
 internal sealed class SearchResultsListHost : Panel
 {
@@ -424,194 +431,113 @@ internal sealed class SearchResultsListHost : Panel
     }
 }
 
-/// <summary>The facet row: a tab list (one tab stop, arrows move between the facets).</summary>
-internal sealed class SearchResultsFacetPanel : StackPanel
+
+/// <summary>
+/// The results area of the pane: the scrolling list takes the height it needs up to what the pane leaves, and the key
+/// hint footer sits right under it (at the bottom of the pane once the list fills it). Measured here instead of with
+/// a star row because a short list must not leave a gap before the footer.
+/// </summary>
+internal sealed class SearchResultsPaneLayout : Panel
 {
-    static SearchResultsFacetPanel()
+    public static readonly StyledProperty<double> FooterGapProperty =
+        AvaloniaProperty.Register<SearchResultsPaneLayout, double>(nameof(FooterGap));
+
+    static SearchResultsPaneLayout()
     {
-        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<SearchResultsFacetPanel>(AutomationControlType.Tab);
-        KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue<SearchResultsFacetPanel>(KeyboardNavigationMode.Once);
-    }
-}
-
-/// <summary>One facet tab: its label and a rolling count of the results it holds for the current query.</summary>
-[PseudoClasses(SelectedPseudoClass, DimmedPseudoClass)]
-internal sealed class SearchResultsFacet : TemplatedControl
-{
-    public const string SelectedPseudoClass = ":selected";
-    public const string DimmedPseudoClass = ":dimmed";
-
-    public static readonly StyledProperty<string?> LabelProperty =
-        AvaloniaProperty.Register<SearchResultsFacet, string?>(nameof(Label));
-
-    public static readonly StyledProperty<double> CountProperty =
-        AvaloniaProperty.Register<SearchResultsFacet, double>(nameof(Count));
-
-    public static readonly StyledProperty<bool> IsSelectedProperty =
-        AvaloniaProperty.Register<SearchResultsFacet, bool>(nameof(IsSelected));
-
-    public static readonly StyledProperty<bool> IsDimmedProperty =
-        AvaloniaProperty.Register<SearchResultsFacet, bool>(nameof(IsDimmed));
-
-    public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
-    public double Count { get => GetValue(CountProperty); set => SetValue(CountProperty, value); }
-    public bool IsSelected { get => GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
-    public bool IsDimmed { get => GetValue(IsDimmedProperty); set => SetValue(IsDimmedProperty, value); }
-
-    /// <summary>The <see cref="SearchResults.SelectedKind"/> value this facet stands for (null for All).</summary>
-    public string? Key { get; set; }
-
-    /// <summary>Position in the facet row.</summary>
-    public int Index { get; set; }
-
-    /// <summary>Raised when the facet is pressed.</summary>
-    public event EventHandler? Activated;
-
-    static SearchResultsFacet()
-    {
-        FocusableProperty.OverrideDefaultValue<SearchResultsFacet>(true);
+        AffectsMeasure<SearchResultsPaneLayout>(FooterGapProperty);
     }
 
-    public SearchResultsFacet()
-    {
-        // Only the selected facet is a tab stop (roving tab index).
-        IsTabStop = false;
-    }
+    /// <summary>Space between the list and the footer.</summary>
+    public double FooterGap { get => GetValue(FooterGapProperty); set => SetValue(FooterGapProperty, value); }
 
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    protected override Size MeasureOverride(Size availableSize)
     {
-        base.OnPropertyChanged(change);
-        if (change.Property == IsSelectedProperty)
+        if (Children.Count == 0)
         {
-            PseudoClasses.Set(SelectedPseudoClass, IsSelected);
-            IsTabStop = IsSelected;
+            return default;
         }
-        else if (change.Property == IsDimmedProperty)
+        var body = Children[0];
+        var footer = Children.Count > 1 ? Children[1] : null;
+        var footerHeight = 0.0;
+        if (footer is not null && footer.IsVisible)
         {
-            PseudoClasses.Set(DimmedPseudoClass, IsDimmed);
+            footer.Measure(new Size(availableSize.Width, double.PositiveInfinity));
+            footerHeight = footer.DesiredSize.Height + FooterGap;
         }
-        if (change.Property == LabelProperty || change.Property == CountProperty)
-        {
-            AutomationProperties.SetName(this, $"{Label}, {Count:0}");
-        }
+        var room = double.IsInfinity(availableSize.Height) ? double.PositiveInfinity : Math.Max(0, availableSize.Height - footerHeight);
+        body.Measure(new Size(availableSize.Width, room));
+        return new Size(availableSize.Width, body.DesiredSize.Height + footerHeight);
     }
 
-    protected override void OnPointerPressed(PointerPressedEventArgs e)
+    protected override Size ArrangeOverride(Size finalSize)
     {
-        base.OnPointerPressed(e);
-        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        if (Children.Count == 0)
         {
-            e.Handled = true;
-            Focus(NavigationMethod.Pointer);
-            Activated?.Invoke(this, EventArgs.Empty);
+            return finalSize;
         }
-    }
-
-    internal void Activate() => Activated?.Invoke(this, EventArgs.Empty);
-
-    protected override AutomationPeer OnCreateAutomationPeer() => new FacetAutomationPeer(this);
-
-    private sealed class FacetAutomationPeer : ControlAutomationPeer, ISelectionItemProvider
-    {
-        public FacetAutomationPeer(SearchResultsFacet owner) : base(owner)
+        var body = Children[0];
+        var footer = Children.Count > 1 ? Children[1] : null;
+        var footerHeight = footer is { IsVisible: true } ? footer.DesiredSize.Height + FooterGap : 0;
+        var height = Math.Min(body.DesiredSize.Height, Math.Max(0, finalSize.Height - footerHeight));
+        body.Arrange(new Rect(0, 0, finalSize.Width, height));
+        if (footer is { IsVisible: true })
         {
+            footer.Arrange(new Rect(0, height + FooterGap, finalSize.Width, footer.DesiredSize.Height));
         }
-
-        private SearchResultsFacet Facet => (SearchResultsFacet)Owner;
-
-        protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.TabItem;
-
-        public bool IsSelected => Facet.IsSelected;
-
-        public ISelectionProvider? SelectionContainer => null;
-
-        public void AddToSelection() => Facet.Activate();
-
-        public void RemoveFromSelection()
-        {
-        }
-
-        public void Select() => Facet.Activate();
-    }
-}
-
-/// <summary>The heading of a kind's group in the All facet: the kind and its result count.</summary>
-internal sealed class SearchResultGroupHeader : TemplatedControl
-{
-    public static readonly StyledProperty<string?> LabelProperty =
-        AvaloniaProperty.Register<SearchResultGroupHeader, string?>(nameof(Label));
-
-    public static readonly StyledProperty<string?> CountTextProperty =
-        AvaloniaProperty.Register<SearchResultGroupHeader, string?>(nameof(CountText));
-
-    public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
-    public string? CountText { get => GetValue(CountTextProperty); set => SetValue(CountTextProperty, value); }
-
-    /// <summary>The facet key of the group.</summary>
-    public string? Key { get; set; }
-
-    static SearchResultGroupHeader()
-    {
-        FocusableProperty.OverrideDefaultValue<SearchResultGroupHeader>(false);
-        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<SearchResultGroupHeader>(AutomationControlType.HeaderItem);
-    }
-
-    public SearchResultGroupHeader()
-    {
-        AutomationProperties.SetHeadingLevel(this, 3);
-        RenderTransform = new TranslateTransform();
-    }
-
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        if (change.Property == LabelProperty || change.Property == CountTextProperty)
-        {
-            AutomationProperties.SetName(this, $"{Label}, {CountText}");
-        }
+        return finalSize;
     }
 }
 
 /// <summary>
-/// One result: an icon block, the title with its matches marked, the location, the snippet window and the meta
-/// text. Pooled by <see cref="SearchResults"/>: <see cref="SetData"/> swaps in a new item without re-templating.
+/// One result: a leading avatar or icon, the title with its matches marked, a subtitle, a snippet window and a caption.
+/// Pooled by <see cref="SearchResults"/>: <see cref="SetData"/> swaps in a new item without re-templating, and does
+/// nothing when the item, the query and the layout settings are the ones it already shows.
 /// </summary>
 [TemplatePart(TitlePart, typeof(SearchResultsMarkedText))]
+[TemplatePart(SubtitlePart, typeof(SearchResultsMarkedText))]
 [TemplatePart(SnippetPart, typeof(SearchResultsMarkedText))]
-[PseudoClasses(ActivePseudoClass, CompactPseudoClass, HasSnippetPseudoClass, HasLocationPseudoClass, HasMetaPseudoClass)]
+[TemplatePart(CaptionPart, typeof(SearchResultsMarkedText))]
+[PseudoClasses(ActivePseudoClass, HasSubtitlePseudoClass, HasSnippetPseudoClass, HasCaptionPseudoClass, AvatarPseudoClass)]
 internal sealed class SearchResultRow : TemplatedControl
 {
     public const string TitlePart = "PART_Title";
+    public const string SubtitlePart = "PART_Subtitle";
     public const string SnippetPart = "PART_Snippet";
+    public const string CaptionPart = "PART_Caption";
     public const string ActivePseudoClass = ":active";
-    public const string CompactPseudoClass = ":compact";
+    public const string HasSubtitlePseudoClass = ":has-subtitle";
     public const string HasSnippetPseudoClass = ":has-snippet";
-    public const string HasLocationPseudoClass = ":has-location";
-    public const string HasMetaPseudoClass = ":has-meta";
+    public const string HasCaptionPseudoClass = ":has-caption";
+    public const string AvatarPseudoClass = ":avatar";
 
-    public static readonly DirectProperty<SearchResultRow, object?> IconContentProperty =
-        AvaloniaProperty.RegisterDirect<SearchResultRow, object?>(nameof(IconContent), o => o.IconContent);
+    public static readonly DirectProperty<SearchResultRow, object?> LeadContentProperty =
+        AvaloniaProperty.RegisterDirect<SearchResultRow, object?>(nameof(LeadContent), o => o.LeadContent);
 
-    public static readonly DirectProperty<SearchResultRow, string?> LocationTextProperty =
-        AvaloniaProperty.RegisterDirect<SearchResultRow, string?>(nameof(LocationText), o => o.LocationText);
-
-    public static readonly DirectProperty<SearchResultRow, string?> MetaTextProperty =
-        AvaloniaProperty.RegisterDirect<SearchResultRow, string?>(nameof(MetaText), o => o.MetaText);
-
-    private object? _iconContent;
-    private string? _locationText;
-    private string? _metaText;
-    private readonly ArcGlyph _glyph = new() { Size = 16, StrokeThickness = 1.75 };
-    private readonly List<SearchMatchRange> _titleRanges = new();
-    private readonly List<SearchMatchRange> _snippetRanges = new();
-    private string _title = string.Empty;
-    private string? _snippet;
-    private string? _location;
-    private string? _meta;
-    private string? _kindLabel;
-    private bool _compact;
+    private object? _leadContent;
+    // A plain 16px icon, centered on the title's first line (22 high) in the 36px lead column.
+    private readonly ArcGlyph _glyph = new()
+    {
+        Size = 16,
+        StrokeThickness = 1.75,
+        HorizontalAlignment = HorizontalAlignment.Center,
+        VerticalAlignment = VerticalAlignment.Top,
+        Margin = new Thickness(0, 3, 0, 0)
+    };
+    private Avatar? _avatar;
+    private readonly List<SearchMatchRange> _ranges = new();
     private SearchResultsMarkedText? _titleText;
+    private SearchResultsMarkedText? _subtitleText;
     private SearchResultsMarkedText? _snippetText;
+    private SearchResultsMarkedText? _captionText;
+    private string? _title;
+    private string? _subtitle;
+    private string? _snippet;
+    private string? _caption;
+    private string _kindLabel = string.Empty;
+    private string? _shownQuery;
+    private int _shownBudget = -1;
+    private bool _hasAvatar;
+    private SnippetWindow _window;
 
     static SearchResultRow()
     {
@@ -623,9 +549,8 @@ internal sealed class SearchResultRow : TemplatedControl
         RenderTransform = new TranslateTransform();
     }
 
-    public object? IconContent { get => _iconContent; private set => SetAndRaise(IconContentProperty, ref _iconContent, value); }
-    public string? LocationText { get => _locationText; private set => SetAndRaise(LocationTextProperty, ref _locationText, value); }
-    public string? MetaText { get => _metaText; private set => SetAndRaise(MetaTextProperty, ref _metaText, value); }
+    /// <summary>The avatar or icon shown before the text.</summary>
+    public object? LeadContent { get => _leadContent; private set => SetAndRaise(LeadContentProperty, ref _leadContent, value); }
 
     /// <summary>The shown item (null while pooled).</summary>
     public SearchResultItem? Item { get; private set; }
@@ -637,32 +562,88 @@ internal sealed class SearchResultRow : TemplatedControl
     public bool IsActive { get; private set; }
 
     internal SearchResultsMarkedText? TitleText => _titleText;
+    internal SearchResultsMarkedText? SubtitleText => _subtitleText;
     internal SearchResultsMarkedText? SnippetText => _snippetText;
+    internal SearchResultsMarkedText? CaptionText => _captionText;
 
-    public void SetData(SearchResultItem item, string? kindLabel, List<SearchMatchRange> titleRanges, string? snippet,
-                        List<SearchMatchRange> snippetRanges)
+    /// <summary>What the row shows is already <paramref name="item"/> for <paramref name="query"/> at this snippet budget.</summary>
+    public bool Shows(SearchResultItem item, string query, int budget)
+        => ReferenceEquals(Item, item) && _shownBudget == budget && string.Equals(_shownQuery, query, StringComparison.Ordinal);
+
+    /// <summary>
+    /// Shows <paramref name="item"/>: marks the <paramref name="terms"/> in its texts, cuts the snippet to a window
+    /// around the first match and picks the avatar or icon.
+    /// </summary>
+    public void SetData(SearchResultItem item, string subtitle, string kindLabel, string query, List<string> terms, in SnippetWindow window)
     {
         Item = item;
+        _shownQuery = query;
+        _shownBudget = window.Budget;
+        _window = window;
         _kindLabel = kindLabel;
         _title = item.Title;
-        _titleRanges.Clear();
-        _titleRanges.AddRange(titleRanges);
-        _snippet = string.IsNullOrEmpty(snippet) ? null : snippet;
-        _snippetRanges.Clear();
-        if (_snippet is not null)
+        _subtitle = string.IsNullOrEmpty(subtitle) ? null : subtitle;
+        _caption = string.IsNullOrEmpty(item.Caption) ? null : item.Caption;
+        // The passage that shows why the item matched: its snippet, or the paragraph of its body that has the words
+        // (line breaks folded: a row shows one flowing passage).
+        var passage = item.Snippet;
+        if (terms.Count > 0 && !string.IsNullOrEmpty(item.Body) && !AnyTerm(passage, terms) && AnyTerm(item.Body, terms))
         {
-            _snippetRanges.AddRange(snippetRanges);
+            passage = ParagraphWith(item.Body, terms);
         }
-        _location = string.IsNullOrEmpty(item.Location) ? null : item.Location;
-        _meta = string.IsNullOrEmpty(item.Meta) ? null : item.Meta;
+        else if (passage is not null && passage.AsSpan().IndexOfAny('\r', '\n') >= 0)
+        {
+            passage = string.Join(' ', SearchResultsDetailBody.SplitParagraphs(passage));
+        }
+        _snippet = string.IsNullOrEmpty(passage) ? null : passage;
         IsEnabled = item.IsEnabled;
-        IconContent = item.Icon switch
+        var avatar = !string.IsNullOrEmpty(item.AvatarName) || item.Avatar is not null;
+        if (avatar != _hasAvatar)
+        {
+            _hasAvatar = avatar;
+            PseudoClasses.Set(AvatarPseudoClass, avatar);
+        }
+        LeadContent = avatar ? AvatarFor(item) : item.Icon switch
         {
             Geometry geometry => Glyph(geometry),
             Control control => control,
             _ => Glyph(ArcIcons.FileText)
         };
-        Push();
+        Push(terms, window);
+    }
+
+    private static string ParagraphWith(string body, List<string> terms)
+    {
+        string? first = null;
+        foreach (var paragraph in SearchResultsDetailBody.SplitParagraphs(body))
+        {
+            first ??= paragraph;
+            if (AnyTerm(paragraph, terms))
+            {
+                return paragraph;
+            }
+        }
+        return first ?? body;
+    }
+
+    private static bool AnyTerm(string? text, List<string> terms)
+    {
+        foreach (var term in terms)
+        {
+            if (SearchResultsMatcher.Contains(text, term))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Avatar AvatarFor(SearchResultItem item)
+    {
+        _avatar ??= new Avatar { Size = AvatarSize.Medium };
+        _avatar.DisplayName = item.AvatarName ?? item.Title;
+        _avatar.Source = item.Avatar;
+        return _avatar;
     }
 
     private ArcGlyph Glyph(Geometry data)
@@ -675,7 +656,9 @@ internal sealed class SearchResultRow : TemplatedControl
     public void Release()
     {
         Item = null;
-        IconContent = null;
+        _shownQuery = null;
+        _shownBudget = -1;
+        LeadContent = null;
         SetActive(false);
         Opacity = 1;
         if (RenderTransform is TranslateTransform lift)
@@ -693,47 +676,73 @@ internal sealed class SearchResultRow : TemplatedControl
         }
     }
 
-    public void SetCompact(bool compact)
-    {
-        if (_compact != compact)
-        {
-            _compact = compact;
-            PseudoClasses.Set(CompactPseudoClass, compact);
-            Push();
-        }
-    }
-
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         _titleText = e.NameScope.Find<SearchResultsMarkedText>(TitlePart);
+        _subtitleText = e.NameScope.Find<SearchResultsMarkedText>(SubtitlePart);
         _snippetText = e.NameScope.Find<SearchResultsMarkedText>(SnippetPart);
-        Push();
+        _captionText = e.NameScope.Find<SearchResultsMarkedText>(CaptionPart);
+        if (Item is not null)
+        {
+            Push(Terms, _window);
+        }
     }
 
-    private void Push()
+    private List<string> Terms { get; set; } = new();
+
+    private void Push(List<string> terms, in SnippetWindow window)
     {
-        // Narrow rows fold the meta text into the location line.
-        var location = _compact && _meta is not null
-            ? (_location is null ? _meta : $"{_location} · {_meta}")
-            : _location;
-        LocationText = location;
-        MetaText = _meta;
+        Terms = terms;
+        PseudoClasses.Set(HasSubtitlePseudoClass, _subtitle is not null);
         PseudoClasses.Set(HasSnippetPseudoClass, _snippet is not null);
-        PseudoClasses.Set(HasLocationPseudoClass, location is not null);
-        PseudoClasses.Set(HasMetaPseudoClass, _meta is not null);
-        _titleText?.SetContent(_title, _titleRanges);
-        _snippetText?.SetContent(_snippet, _snippetRanges);
-        var name = _title;
-        if (!string.IsNullOrEmpty(_kindLabel))
+        PseudoClasses.Set(HasCaptionPseudoClass, _caption is not null);
+        SetMarked(_titleText, _title, terms);
+        SetMarked(_subtitleText, _subtitle, terms);
+        SetMarked(_captionText, _caption, terms);
+        if (_snippetText is not null)
+        {
+            if (_snippet is null)
+            {
+                _snippetText.SetContent(null, null);
+            }
+            else
+            {
+                var text = window.MaxLength > 0
+                    ? SearchResultsMatcher.Window(_snippet, terms, window.Lead, window.Budget, window.MaxLength, _ranges)
+                    : _snippet;
+                if (window.MaxLength <= 0)
+                {
+                    SearchResultsMatcher.FindRanges(text.AsSpan(), terms, _ranges);
+                }
+                _snippetText.SetContent(text, _ranges);
+            }
+        }
+        var name = _title ?? string.Empty;
+        if (_kindLabel.Length > 0)
         {
             name += ", " + _kindLabel;
         }
-        if (_location is not null)
+        if (_subtitle is not null)
         {
-            name += ", " + _location;
+            name += ", " + _subtitle;
         }
         AutomationProperties.SetName(this, name);
+    }
+
+    private void SetMarked(SearchResultsMarkedText? target, string? text, List<string> terms)
+    {
+        if (target is null)
+        {
+            return;
+        }
+        if (text is null)
+        {
+            target.SetContent(null, null);
+            return;
+        }
+        SearchResultsMatcher.FindRanges(text.AsSpan(), terms, _ranges);
+        target.SetContent(text, _ranges);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new RowAutomationPeer(this);
@@ -769,3 +778,6 @@ internal sealed class SearchResultRow : TemplatedControl
         }
     }
 }
+
+/// <summary>How a long snippet is cut around its first match (see <see cref="SearchResultsMatcher.Window"/>); a zero <see cref="MaxLength"/> shows it whole.</summary>
+internal readonly record struct SnippetWindow(int Lead, int Budget, int MaxLength);

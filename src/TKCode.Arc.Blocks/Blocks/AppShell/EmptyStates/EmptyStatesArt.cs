@@ -189,7 +189,11 @@ internal sealed class EmptyStatesArt : Control
             return;
         }
         _sway.Retarget(x, y);
-        _loop.Start();
+        if (!_loop.IsActive)
+        {
+            // A running loop already wants frames; the pointer moves hundreds of times a second.
+            _loop.Start();
+        }
     }
 
     #endregion
@@ -465,7 +469,10 @@ internal sealed class EmptyStatesArt : Control
         if (_sway.Target[0] != 0 || _sway.Target[1] != 0)
         {
             _sway.Retarget(0, 0);
-            _loop.Start();
+            if (!_loop.IsActive)
+            {
+                _loop.Start();
+            }
         }
     }
 

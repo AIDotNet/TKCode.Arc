@@ -74,6 +74,11 @@ internal sealed class NotificationCenterPresence : IDisposable
     private TopLevel? _topLevel;
     private bool _closing;
     private int _generation;
+    private Point _origin;
+    private Size _originSize;
+    private bool _originAbove;
+    private bool _originKnown;
+    private BaseMotionActor? _originActor;
 
     public NotificationCenterPresence(NotificationCenterPanel panel)
     {
@@ -249,13 +254,24 @@ internal sealed class NotificationCenterPresence : IDisposable
     /// <summary>Transform origin in actor coordinates: the middle of the panel edge facing the bell (Radix's origin).</summary>
     private Point Origin()
     {
+        // Both motion values call Apply every frame; the origin only moves with the panel's size, its flip or its frame.
         var bounds = Panel.Bounds;
+        var above = IsAbove;
+        if (_originKnown && _originSize == bounds.Size && _originAbove == above && ReferenceEquals(_originActor, _actor))
+        {
+            return _origin;
+        }
         var topLeft = default(Point);
         if (_actor is { } actor && Panel.TranslatePoint(default, actor) is { } p)
         {
             topLeft = p;
         }
-        return new Point(topLeft.X + bounds.Width / 2, topLeft.Y + (IsAbove ? bounds.Height : 0));
+        _origin = new Point(topLeft.X + bounds.Width / 2, topLeft.Y + (above ? bounds.Height : 0));
+        _originSize = bounds.Size;
+        _originAbove = above;
+        _originActor = _actor;
+        _originKnown = true;
+        return _origin;
     }
 
     #region Outside press and Escape

@@ -21,6 +21,8 @@ namespace TKCode.Arc;
 /// it mounts (the panel opening or a view adding it), staggered by its index.
 /// </summary>
 [TemplatePart(ArticlePart, typeof(Border))]
+[TemplatePart(VisualPart, typeof(Panel))]
+[TemplatePart(EventIconPart, typeof(Border))]
 [TemplatePart(TogglePart, typeof(NotificationCenterButton))]
 [TemplatePart(DotPart, typeof(NotificationCenterDot))]
 [TemplatePart(DetailsPart, typeof(NotificationCenterReveal))]
@@ -33,6 +35,9 @@ namespace TKCode.Arc;
 internal sealed class NotificationCenterRow : TemplatedControl
 {
     public const string ArticlePart = "PART_Article";
+    public const string VisualPart = "PART_Visual";
+    public const string EventIconPart = "PART_EventIcon";
+    public const string AvatarPart = "PART_Avatar";
     public const string TogglePart = "PART_Toggle";
     public const string DotPart = "PART_Dot";
     public const string DetailsPart = "PART_Details";
@@ -80,9 +85,14 @@ internal sealed class NotificationCenterRow : TemplatedControl
     private readonly TranslateTransform _rise = new();
     private MotionValue<double>? _riseProgress;
     private Border? _article;
+    private Panel? _visual;
+    private Border? _eventIcon;
+    private Avatar? _avatar;
     private NotificationCenterButton? _toggle;
     private NotificationCenterDot? _dot;
     private NotificationCenterReveal? _details;
+    private NotificationCenterDetails? _content;
+    private bool _narrow;
     private NotificationCenterButton? _readToggle;
     private ArcContentSwap? _readGlyph;
     private ArcContentSwap? _readLabel;
@@ -120,9 +130,9 @@ internal sealed class NotificationCenterRow : TemplatedControl
     /// <summary>The title-and-preview button (focus target after marking or dismissing a neighbor).</summary>
     public NotificationCenterButton? Toggle => _toggle;
 
-    internal NotificationCenterButton? ReadToggle => _readToggle;
+    internal NotificationCenterButton? ReadToggle => EnsureDetails() ? _readToggle : null;
 
-    internal NotificationCenterButton? DismissButton => _dismiss;
+    internal NotificationCenterButton? DismissButton => EnsureDetails() ? _dismiss : null;
 
     internal NotificationCenterReveal? Details => _details;
 
@@ -133,13 +143,17 @@ internal sealed class NotificationCenterRow : TemplatedControl
         Detach();
         base.OnApplyTemplate(e);
         _article = e.NameScope.Find<Border>(ArticlePart);
+        _visual = e.NameScope.Find<Panel>(VisualPart);
+        _eventIcon = e.NameScope.Find<Border>(EventIconPart);
         _toggle = e.NameScope.Find<NotificationCenterButton>(TogglePart);
         _dot = e.NameScope.Find<NotificationCenterDot>(DotPart);
         _details = e.NameScope.Find<NotificationCenterReveal>(DetailsPart);
-        _readToggle = e.NameScope.Find<NotificationCenterButton>(ReadTogglePart);
-        _readGlyph = e.NameScope.Find<ArcContentSwap>(ReadGlyphPart);
-        _readLabel = e.NameScope.Find<ArcContentSwap>(ReadLabelPart);
-        _dismiss = e.NameScope.Find<NotificationCenterButton>(DismissPart);
+        // The details (the two buttons and the text) are built when the row first opens: a row is mostly never opened.
+        _content = null;
+        _readToggle = null;
+        _readGlyph = null;
+        _readLabel = null;
+        _dismiss = null;
         if (_article is not null)
         {
             _article.RenderTransform = _rise;
@@ -149,17 +163,13 @@ internal sealed class NotificationCenterRow : TemplatedControl
         {
             _toggle.Click += OnToggleClick;
         }
-        if (_readToggle is not null)
-        {
-            _readToggle.Click += OnReadToggleClick;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click += OnDismissClick;
-        }
         // The first state of every part lands without motion.
         _dot?.SetPresent(!_isRead, animate: false);
         _details?.Set(_expanded);
+        if (_expanded)
+        {
+            EnsureDetails();
+        }
         _readLabelText = null;
         UpdateReadAction(animate: false);
         UpdateAutomation();
@@ -212,6 +222,7 @@ internal sealed class NotificationCenterRow : TemplatedControl
         TimeText = item.Time;
         PreviewText = item.Description ?? (actor is not null ? labels.FromActor(actor) : labels.ViewDetails);
         DetailText = item.Description ?? (actor is not null ? labels.SharedUpdate(actor) : labels.ReadyToReview);
+        _content?.SetTexts(DetailText, labels.Dismiss);
         ActorName = item.ActorName;
         ActorSource = item.ActorSource;
         DismissText = labels.Dismiss;
@@ -222,6 +233,7 @@ internal sealed class NotificationCenterRow : TemplatedControl
             _ => ArcIcons.MessageCircle
         };
         PseudoClasses.Set(ActorPseudoClass, item.HasActor);
+        UpdateVisual(item.HasActor);
         PseudoClasses.Set(SuccessPseudoClass, item.Tone == NotificationTone.Success);
         PseudoClasses.Set(WarningPseudoClass, item.Tone == NotificationTone.Warning);
 
@@ -238,6 +250,7 @@ internal sealed class NotificationCenterRow : TemplatedControl
             {
                 if (expanded)
                 {
+                    EnsureDetails();
                     _details.Show(animate);
                 }
                 else
@@ -247,6 +260,28 @@ internal sealed class NotificationCenterRow : TemplatedControl
             }
         }
         UpdateAutomation();
+    }
+
+    /// <summary>
+    /// The person's avatar, or the tone icon. The avatar is a heavy control (a template of its own), so only the rows of
+    /// a person's update create one, and a row reused for another notification keeps it hidden or shown as needed.
+    /// </summary>
+    private void UpdateVisual(bool hasActor)
+    {
+        if (hasActor && _avatar is null && _visual is not null)
+        {
+            _avatar = new Avatar { Name = AvatarPart, Size = AvatarSize.Medium };
+            _visual.Children.Insert(0, _avatar);
+        }
+        if (_avatar is not null)
+        {
+            _avatar.IsVisible = hasActor;
+            if (hasActor)
+            {
+                _avatar.DisplayName = ActorName;
+                _avatar.Source = ActorSource;
+            }
+        }
     }
 
     /// <summary>The Mark read / Mark unread action: the glyph pops and the label rises into the new state.</summary>
@@ -331,6 +366,25 @@ internal sealed class NotificationCenterRow : TemplatedControl
         return value;
     }
 
+    /// <summary>Shows the row at rest (no rise in progress); a row taken from the pool starts here.</summary>
+    public void ResetRise()
+    {
+        _riseProgress?.Jump(1);
+        if (_article is not null)
+        {
+            _article.Opacity = 1;
+        }
+        _rise.Y = 0;
+    }
+
+    /// <summary>Clears what only belongs to the notification the row showed (hover, motion), before it goes to the pool.</summary>
+    public void Release()
+    {
+        ResetRise();
+        PseudoClasses.Set(HoverPseudoClass, false);
+        RenderTransform = null;
+    }
+
     /// <summary>Moves focus to the row's title button.</summary>
     public bool FocusToggle(NavigationMethod method) => _toggle?.Focus(method) == true;
 
@@ -347,5 +401,53 @@ internal sealed class NotificationCenterRow : TemplatedControl
     }
 
     /// <summary>Applies the panel's narrow layout (viewport ≤ 380).</summary>
-    public void SetNarrow(bool narrow) => PseudoClasses.Set(NarrowPseudoClass, narrow);
+    public void SetNarrow(bool narrow)
+    {
+        _narrow = narrow;
+        PseudoClasses.Set(NarrowPseudoClass, narrow);
+        _content?.SetNarrow(narrow);
+    }
+
+    /// <summary>
+    /// Builds the details of the row (its own control with its own template) the first time they are needed, and wires
+    /// the two buttons. Returns false when the row is not in a window yet, so nothing can be built.
+    /// </summary>
+    private bool EnsureDetails()
+    {
+        if (_content is not null)
+        {
+            return true;
+        }
+        if (_details is null)
+        {
+            ApplyTemplate();
+        }
+        if (_details is null)
+        {
+            return false;
+        }
+        var labels = _owner.Labels;
+        var content = new NotificationCenterDetails();
+        content.SetTexts(DetailText, labels.Dismiss);
+        content.SetNarrow(_narrow);
+        _details.Child = content;
+        content.ApplyTemplate();
+        _content = content;
+        _readToggle = content.ReadToggle;
+        _readGlyph = content.ReadGlyph;
+        _readLabel = content.ReadLabel;
+        _dismiss = content.Dismiss;
+        if (_readToggle is not null)
+        {
+            _readToggle.Click += OnReadToggleClick;
+        }
+        if (_dismiss is not null)
+        {
+            _dismiss.Click += OnDismissClick;
+        }
+        _readLabelText = null;
+        UpdateReadAction(animate: false);
+        UpdateAutomation();
+        return true;
+    }
 }

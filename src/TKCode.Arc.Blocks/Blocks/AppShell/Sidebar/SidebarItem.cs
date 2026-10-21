@@ -71,9 +71,24 @@ public class SidebarItem : AvaloniaObject
     public static readonly StyledProperty<object?> IconProperty =
         AvaloniaProperty.Register<SidebarItem, object?>(nameof(Icon));
 
+    /// <summary>An icon after the label, in the label's muted color (for example a chevron on a "More" row): a 24x24 Lucide <see cref="Avalonia.Media.Geometry"/> or any control.</summary>
+    public static readonly StyledProperty<object?> TrailingIconProperty =
+        AvaloniaProperty.Register<SidebarItem, object?>(nameof(TrailingIcon));
+
     /// <summary>A short count at the end of the row (for example "12"); on the icon rail it becomes a dot on the icon. Null shows nothing.</summary>
     public static readonly StyledProperty<string?> BadgeProperty =
         AvaloniaProperty.Register<SidebarItem, string?>(nameof(Badge));
+
+    /// <summary>Marks the page as having something new: a small accent dot at the end of the row, a stronger label, and a dot on the icon on the rail.</summary>
+    public static readonly StyledProperty<bool> IsUnreadProperty =
+        AvaloniaProperty.Register<SidebarItem, bool>(nameof(IsUnread));
+
+    /// <summary>
+    /// Makes the row an action instead of a page: muted, never selected. Choosing it raises <see cref="Sidebar.ItemInvoked"/>
+    /// and runs the commands, but <see cref="Sidebar.SelectedItem"/> stays (for example "New project", "More").
+    /// </summary>
+    public static readonly StyledProperty<bool> IsActionProperty =
+        AvaloniaProperty.Register<SidebarItem, bool>(nameof(IsAction));
 
     /// <summary>Whether the child pages of a parent are shown (two-way).</summary>
     public static readonly StyledProperty<bool> IsExpandedProperty =
@@ -116,11 +131,32 @@ public class SidebarItem : AvaloniaObject
         set => SetValue(IconProperty, value);
     }
 
+    /// <inheritdoc cref="TrailingIconProperty"/>
+    public object? TrailingIcon
+    {
+        get => GetValue(TrailingIconProperty);
+        set => SetValue(TrailingIconProperty, value);
+    }
+
     /// <inheritdoc cref="BadgeProperty"/>
     public string? Badge
     {
         get => GetValue(BadgeProperty);
         set => SetValue(BadgeProperty, value);
+    }
+
+    /// <inheritdoc cref="IsUnreadProperty"/>
+    public bool IsUnread
+    {
+        get => GetValue(IsUnreadProperty);
+        set => SetValue(IsUnreadProperty, value);
+    }
+
+    /// <inheritdoc cref="IsActionProperty"/>
+    public bool IsAction
+    {
+        get => GetValue(IsActionProperty);
+        set => SetValue(IsActionProperty, value);
     }
 
     /// <inheritdoc cref="IsExpandedProperty"/>
@@ -180,4 +216,28 @@ public sealed class SidebarItemInvokedEventArgs : RoutedEventArgs
 
     /// <summary>The page that was chosen (it is now <see cref="Sidebar.SelectedItem"/>).</summary>
     public SidebarItem Item { get; }
+}
+
+/// <summary>Where an open <see cref="Sidebar"/> shows its collapse button.</summary>
+public enum SidebarCollapseButtonPlacement
+{
+    /// <summary>At the end of the header row, beside <see cref="Sidebar.Header"/>.</summary>
+    Header,
+
+    /// <summary>Beside the filter box (needs <see cref="Sidebar.IsFilterVisible"/>; otherwise it stays in the header row).</summary>
+    Filter
+}
+
+/// <summary>How a <see cref="Sidebar"/>'s change of width reaches the page next to it.</summary>
+public enum SidebarResizeMode
+{
+    /// <summary>The layout width springs, so the page next to the sidebar is laid out again on every frame. Works in any host.</summary>
+    Push,
+
+    /// <summary>
+    /// The layout width jumps at once (the page is laid out once) and only the pane springs, drawn above the page.
+    /// Bind the page's <c>RenderTransform</c> to <see cref="Sidebar.PageShift"/> so the page slides along; this is much
+    /// cheaper than <see cref="Push"/> for pages with a lot of text or controls.
+    /// </summary>
+    Overlay
 }

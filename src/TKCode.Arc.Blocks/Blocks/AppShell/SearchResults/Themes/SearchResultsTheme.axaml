@@ -2,6 +2,153 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
                     x:ClassModifier="internal">
+
+    <!-- A text link: muted, full contrast on hover. Used for "Clear all". -->
+    <ControlTheme x:Key="SearchResultsLinkButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,-2"
+                            BorderThickness="2"
+                            CornerRadius="8"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      FontSize="{TemplateBinding FontSize}"
+                                      FontWeight="{TemplateBinding FontWeight}"
+                                      Padding="{TemplateBinding Padding}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The small round remove button inside a chip. -->
+    <ControlTheme x:Key="SearchResultsRemoveButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="12"
+                                      StrokeThickness="2"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="22" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The round close button of the detail and the sheets. -->
+    <ControlTheme x:Key="SearchResultsCloseButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="24"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="16"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:SearchResultsTokenResource SurfaceCloseSize}" />
+        <Setter Property="Height" Value="{arc:SearchResultsTokenResource SurfaceCloseSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
     <ControlTheme x:Key="{x:Type arc:SearchResults}" TargetType="arc:SearchResults">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -10,90 +157,171 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        Padding="{TemplateBinding Padding}">
-                    <!-- The column never grows past 760 and stays centered in wider frames. -->
-                    <DockPanel Name="PART_Column" MaxWidth="{arc:SearchResultsTokenResource ContentMaxWidth}">
-                        <StackPanel DockPanel.Dock="Top">
-                            <arc:SearchField Name="PART_SearchField"
-                                             Size="Large"
-                                             IsLabelVisible="False" />
-                            <!-- Facets: the Tabs list look; the row scrolls inside its track when it is too wide. -->
-                            <Border Name="PART_FacetTrack"
-                                    HorizontalAlignment="Left"
-                                    Margin="{arc:SearchResultsTokenResource FacetsMargin}"
-                                    BorderThickness="1"
-                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                    CornerRadius="{arc:SearchResultsTokenResource FacetTrackRadius}"
-                                    ClipToBounds="True">
-                                <ScrollViewer Name="PART_FacetScroll"
-                                              HorizontalScrollBarVisibility="Hidden"
-                                              VerticalScrollBarVisibility="Disabled"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Grid RowDefinitions="Auto,Auto,*">
+                        <!-- The search field; its suggestions pop up under it. -->
+                        <Border Name="PART_Header" Grid.Row="0" Padding="{arc:SearchResultsTokenResource HeaderPadding}">
+                            <Panel Name="PART_FieldFrame">
+                                <arc:SearchResultsField Name="PART_Field" />
+                                <arc:ArcPopup Name="PART_SuggestionsPopup"
+                                              Placement="Bottom"
+                                              MarginToAnchor="{arc:SearchResultsTokenResource SuggestionOffset}"
+                                              EnterOffset="6"
+                                              EnterScale="0.97"
+                                              IsLightDismissEnabled="False"
+                                              TakesFocusFromNativeControl="False"
+                                              WindowManagerAddShadowHint="False">
+                                    <Border Name="PART_SuggestionSurface"
+                                            Padding="{arc:SearchResultsTokenResource SuggestionPadding}"
+                                            BorderThickness="1"
+                                            CornerRadius="{arc:SearchResultsTokenResource SuggestionSurfaceRadius}"
+                                            Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                            BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                        <arc:SearchResultsSuggestionList Name="PART_SuggestionList" />
+                                    </Border>
+                                </arc:ArcPopup>
+                            </Panel>
+                        </Border>
+                        <Border Name="PART_HeaderRule" Grid.Row="1" Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+
+                        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+                            <!-- Filters column (a sheet behind a button on narrow screens). -->
+                            <Border Name="PART_FiltersColumn"
+                                    Grid.Column="0"
+                                    Width="{arc:SearchResultsTokenResource FiltersWidth}"
+                                    BorderThickness="0,0,1,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled"
                                               BringIntoViewOnFocusChange="False">
-                                    <Panel Margin="{arc:SearchResultsTokenResource FacetTrackInset}">
-                                        <arc:GlidingIndicator Name="PART_FacetSelection"
-                                                              Spring="Morph"
-                                                              Fill="{arc:ArcDesignTokenResource Surface}"
-                                                              Stroke="{arc:ArcDesignTokenResource Border}"
-                                                              StrokeThickness="1"
-                                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
-                                                              CornerRadius="{arc:SearchResultsTokenResource FacetPillRadius}" />
-                                        <arc:SearchResultsFacetPanel Name="PART_Facets"
-                                                                     Orientation="Horizontal"
-                                                                     Spacing="{arc:SearchResultsTokenResource FacetGap}" />
-                                    </Panel>
+                                    <arc:SearchResultsFilters Name="PART_Filters"
+                                                              Margin="{arc:SearchResultsTokenResource FiltersPadding}" />
                                 </ScrollViewer>
                             </Border>
-                            <Panel Margin="{arc:SearchResultsTokenResource StatsMargin}">
-                                <arc:ArcContentSwap Name="PART_Stats"
-                                                    Mode="Fade"
-                                                    HorizontalAlignment="Left"
-                                                    HorizontalContentAlignment="Left"
-                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                                <TextBlock Name="PART_Status"
-                                           Height="0"
-                                           Opacity="0"
-                                           IsHitTestVisible="False"
-                                           AutomationProperties.LiveSetting="Polite" />
-                            </Panel>
-                        </StackPanel>
-                        <arc:ScrollArea Name="PART_ResultsScroll" Orientation="Vertical">
-                            <Panel Name="PART_ResultsArea">
-                                <arc:PresenceHost Name="PART_ResultsPresence"
-                                                  Mode="Fade"
-                                                  VerticalAlignment="Top">
-                                    <arc:SearchResultsListHost Name="PART_ListHost">
-                                        <arc:SearchResultsCursor Name="PART_Cursor"
-                                                                 Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                                                 RingBrush="{arc:ArcDesignTokenResource FocusRing}"
-                                                                 CornerRadius="{arc:SearchResultsTokenResource RowRadius}" />
-                                        <StackPanel Name="PART_List"
-                                                    Spacing="{arc:SearchResultsTokenResource RowGap}" />
-                                    </arc:SearchResultsListHost>
-                                </arc:PresenceHost>
-                                <arc:PresenceHost Name="PART_LoadingPresence"
-                                                  Mode="Fade"
-                                                  IsPresent="False"
-                                                  VerticalAlignment="Top">
-                                    <StackPanel Spacing="{arc:SearchResultsTokenResource SkeletonGap}">
-                                        <arc:Skeleton Lines="2" IsAvatarVisible="True" Margin="{arc:SearchResultsTokenResource SkeletonInset}" />
-                                        <arc:Skeleton Lines="2" IsAvatarVisible="True" Margin="{arc:SearchResultsTokenResource SkeletonInset}" />
-                                        <arc:Skeleton Lines="2" IsAvatarVisible="True" Margin="{arc:SearchResultsTokenResource SkeletonInset}" />
-                                        <arc:Skeleton Lines="2" IsAvatarVisible="True" Margin="{arc:SearchResultsTokenResource SkeletonInset}" />
+
+                            <Grid Name="PART_Pane"
+                                  Grid.Column="1"
+                                  RowDefinitions="Auto,Auto,*"
+                                  Margin="{arc:SearchResultsTokenResource PanePadding}">
+                                <!-- Count, time and sort. -->
+                                <Grid Name="PART_PaneHeader"
+                                      Grid.Row="0"
+                                      ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto">
+                                    <StackPanel Name="PART_Stats"
+                                                Grid.Row="0"
+                                                Grid.Column="0"
+                                                Orientation="Horizontal"
+                                                Spacing="6"
+                                                VerticalAlignment="Center">
+                                        <arc:RollingDigits Name="PART_Count"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_CountText"
+                                                   IsVisible="False"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   VerticalAlignment="Center" />
+                                        <arc:RollingDigits Name="PART_Elapsed"
+                                                           IsVisible="False"
+                                                           Decimals="2"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_Status"
+                                                   Width="0"
+                                                   Height="0"
+                                                   Opacity="0"
+                                                   IsHitTestVisible="False"
+                                                   AutomationProperties.LiveSetting="Polite" />
                                     </StackPanel>
-                                </arc:PresenceHost>
-                                <arc:PresenceHost Name="PART_EmptyPresence"
-                                                  Mode="Fade"
-                                                  IsPresent="False"
-                                                  VerticalAlignment="Top">
-                                    <arc:EmptyState Name="PART_Empty"
-                                                    Icon="{x:Static arc:ArcIcons.Search}" />
-                                </arc:PresenceHost>
-                            </Panel>
-                        </arc:ScrollArea>
-                    </DockPanel>
+                                    <arc:Button Name="PART_FiltersButton"
+                                                Grid.Row="0"
+                                                Grid.Column="1"
+                                                IsVisible="False"
+                                                HorizontalAlignment="Right"
+                                                Variant="Secondary"
+                                                Size="Small">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.SlidersHorizontal}" Size="16" VerticalAlignment="Center" />
+                                            <TextBlock Text="{TemplateBinding FiltersButtonText}" VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_FilterBadge"
+                                                       Text="{TemplateBinding ActiveFilterCount}"
+                                                       IsVisible="False"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </arc:Button>
+                                    <arc:SegmentedControl Name="PART_Sort"
+                                                          Grid.Row="0"
+                                                          Grid.Column="1"
+                                                          HorizontalAlignment="Right"
+                                                          AutomationProperties.Name="Sort" />
+                                </Grid>
+
+                                <!-- The active filters; the bar grows and shrinks with its content. -->
+                                <arc:SpringSizeDecorator Name="PART_ChipsHost"
+                                                         Grid.Row="1"
+                                                         Axis="Height"
+                                                         Spring="Smooth"
+                                                         IsExpanded="False">
+                                    <arc:SearchResultsChipBar Name="PART_Chips"
+                                                              Margin="{arc:SearchResultsTokenResource ChipBarMargin}" />
+                                </arc:SpringSizeDecorator>
+
+                                <arc:SearchResultsPaneLayout Name="PART_PaneLayout" Grid.Row="2" FooterGap="{arc:SearchResultsTokenResource HintsGap}">
+                                    <arc:ScrollArea Name="PART_ResultsScroll" Orientation="Vertical">
+                                        <Panel Name="PART_ResultsArea">
+                                            <arc:PresenceHost Name="PART_ResultsPresence"
+                                                              Mode="Fade"
+                                                              VerticalAlignment="Top">
+                                                <arc:SearchResultsListHost Name="PART_ListHost" Margin="{arc:SearchResultsTokenResource ListMargin}">
+                                                    <arc:SearchResultsCursor Name="PART_Cursor"
+                                                                             Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                                             RingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                                             CornerRadius="{arc:SearchResultsTokenResource RowRadius}" />
+                                                    <StackPanel>
+                                                        <StackPanel Name="PART_List" Spacing="{arc:SearchResultsTokenResource ListGap}" />
+                                                        <arc:Button Name="PART_More"
+                                                                    IsVisible="False"
+                                                                    Variant="Ghost"
+                                                                    Size="Small"
+                                                                    Margin="16,4,0,0"
+                                                                    HorizontalAlignment="Left" />
+                                                    </StackPanel>
+                                                </arc:SearchResultsListHost>
+                                            </arc:PresenceHost>
+                                            <!-- The skeleton rows are added when loading starts: hidden ones would keep invalidating layout. -->
+                                            <arc:PresenceHost Name="PART_LoadingPresence"
+                                                              Mode="Fade"
+                                                              IsPresent="False"
+                                                              VerticalAlignment="Top" />
+                                            <arc:PresenceHost Name="PART_EmptyPresence"
+                                                              Mode="Fade"
+                                                              IsPresent="False"
+                                                              VerticalAlignment="Top">
+                                                <arc:EmptyState Name="PART_Empty"
+                                                                Icon="{x:Static arc:ArcIcons.Search}" />
+                                            </arc:PresenceHost>
+                                        </Panel>
+                                    </arc:ScrollArea>
+
+                                    <!-- Key hints: the footer follows the list. -->
+                                    <StackPanel Name="PART_Hints"
+                                                Orientation="Horizontal"
+                                                Spacing="{arc:SearchResultsTokenResource HintGap}"
+                                                VerticalAlignment="Center">
+                                        <Border Classes="key"><arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowUp}" Size="12" StrokeThickness="2" /></Border>
+                                        <Border Classes="key"><arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowDown}" Size="12" StrokeThickness="2" /></Border>
+                                        <TextBlock Classes="hint" Text="{TemplateBinding HintMoveText}" Margin="2,0,0,0" />
+                                        <Border Classes="key"><arc:ArcGlyph Data="{x:Static arc:ArcIcons.CornerDownLeft}" Size="12" StrokeThickness="2" /></Border>
+                                        <TextBlock Classes="hint" Text="{TemplateBinding HintOpenText}" Margin="2,0,0,0" />
+                                        <Border Classes="key"><TextBlock Classes="hint" Text="{TemplateBinding ShortcutText}" /></Border>
+                                        <TextBlock Classes="hint" Text="{TemplateBinding HintSearchText}" Margin="2,0,0,0" />
+                                    </StackPanel>
+                                </arc:SearchResultsPaneLayout>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -101,8 +329,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="{arc:SearchResultsTokenResource FrameRadius}" />
-        <Setter Property="Padding" Value="{arc:SearchResultsTokenResource FramePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
@@ -112,132 +339,492 @@
         <Setter Property="SnippetLead" Value="{arc:SearchResultsTokenResource SnippetLead}" />
         <Setter Property="SnippetMaxLength" Value="{arc:SearchResultsTokenResource SnippetMaxLength}" />
         <Setter Property="SnippetMaxLines" Value="{arc:SearchResultsTokenResource SnippetMaxLines}" />
-        <Setter Property="FacetEdgeFade" Value="{arc:SearchResultsTokenResource FacetEdgeFade}" />
-        <Setter Property="MoreMargin" Value="{arc:SearchResultsTokenResource MoreMargin}" />
+        <Setter Property="RowTextInset" Value="{arc:SearchResultsTokenResource RowTextInset}" />
+        <Setter Property="SkeletonInset" Value="{arc:SearchResultsTokenResource SkeletonInset}" />
+        <Setter Property="SkeletonGap" Value="{arc:SearchResultsTokenResource SkeletonGap}" />
+        <Setter Property="ListMargin" Value="{arc:SearchResultsTokenResource ListMargin}" />
 
-        <Style Selector="^:narrow">
-            <Setter Property="Padding" Value="{arc:SearchResultsTokenResource NarrowFramePadding}" />
+        <!-- Hints under the results. -->
+        <Style Selector="^ /template/ TextBlock.hint">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Border.key">
+            <Setter Property="MinWidth" Value="{arc:SearchResultsTokenResource HintKeySize}" />
+            <Setter Property="Height" Value="{arc:SearchResultsTokenResource HintKeySize}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="CornerRadius" Value="{arc:SearchResultsTokenResource HintKeyRadius}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border.key > arc|ArcGlyph">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Border.key > TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="^:filtered /template/ TextBlock#PART_FilterBadge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:no-filters /template/ Border#PART_FiltersColumn">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Narrow: one column; the filters sit behind a button, the sort moves under the count. -->
+        <Style Selector="^:narrow /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:SearchResultsTokenResource NarrowHeaderPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_FiltersColumn">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ Grid#PART_PaneHeader">
+            <Setter Property="RowSpacing" Value="{arc:SearchResultsTokenResource HeaderRowGap}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Grid#PART_Pane">
+            <Setter Property="Margin" Value="{arc:SearchResultsTokenResource NarrowPanePadding}" />
+        </Style>
+        <Style Selector="^:narrow:not(:no-filters) /template/ arc|Button#PART_FiltersButton">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SegmentedControl#PART_Sort">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:narrow:no-filters /template/ arc|SegmentedControl#PART_Sort">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
         </Style>
     </ControlTheme>
 
-    <!-- One facet tab: label and rolling count. The selected block glides behind the facets (PART_FacetSelection). -->
-    <ControlTheme x:Key="{x:Type arc:SearchResultsFacet}" TargetType="arc:SearchResultsFacet">
-        <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <Setter Property="ClipToBounds" Value="False" />
+    <!-- The search input: glass, text, a clear button, and the keycap of the shortcut. -->
+    <ControlTheme x:Key="{x:Type arc:SearchResultsField}" TargetType="arc:SearchResultsField">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Template">
-            <ControlTemplate TargetType="arc:SearchResultsFacet">
-                <Panel>
-                    <Border Name="PART_Body"
-                            Background="Transparent"
-                            MinHeight="{arc:SearchResultsTokenResource FacetHeight}"
-                            Padding="{arc:SearchResultsTokenResource FacetInset}"
-                            CornerRadius="{arc:SearchResultsTokenResource FacetPillRadius}">
-                        <StackPanel Name="PART_Content"
+            <ControlTemplate TargetType="arc:SearchResultsField">
+                <Border Name="PART_Frame"
+                        MinHeight="{arc:SearchResultsTokenResource FieldMinHeight}"
+                        Padding="{arc:SearchResultsTokenResource FieldInset}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:SearchResultsTokenResource FieldRadius}"
+                        Cursor="IBeam">
+                    <DockPanel>
+                        <arc:ArcGlyph Name="PART_SearchIcon"
+                                      DockPanel.Dock="Left"
+                                      Data="{x:Static arc:ArcIcons.Search}"
+                                      Size="{arc:SearchResultsTokenResource FieldIconSize}"
+                                      StrokeThickness="2"
+                                      Margin="0,0,12,0"
+                                      VerticalAlignment="Center" />
+                        <StackPanel DockPanel.Dock="Right"
                                     Orientation="Horizontal"
-                                    Spacing="{arc:SearchResultsTokenResource FacetCountGap}"
+                                    Spacing="10"
+                                    Margin="12,0,0,0"
                                     VerticalAlignment="Center">
-                            <TextBlock Name="PART_Label"
-                                       Text="{TemplateBinding Label}"
-                                       VerticalAlignment="Center" />
-                            <arc:RollingDigits Name="PART_Count"
-                                               Value="{TemplateBinding Count}"
-                                               VerticalAlignment="Center" />
+                            <Panel Width="{arc:SearchResultsTokenResource ClearButtonSize}"
+                                   Height="{arc:SearchResultsTokenResource ClearButtonSize}">
+                                <arc:PresenceHost Name="PART_ClearPresence"
+                                                  Mode="Pop"
+                                                  IsPresent="False"
+                                                  EnterScale="0.8">
+                                    <arc:FieldIconButton Name="PART_ClearButton"
+                                                         Cursor="Hand"
+                                                         Width="{arc:SearchResultsTokenResource ClearButtonSize}"
+                                                         Height="{arc:SearchResultsTokenResource ClearButtonSize}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                      Size="{arc:SearchResultsTokenResource ClearIconSize}"
+                                                      StrokeThickness="2" />
+                                    </arc:FieldIconButton>
+                                </arc:PresenceHost>
+                            </Panel>
+                            <Border Name="PART_Keycap"
+                                    MinWidth="{arc:SearchResultsTokenResource KeycapSize}"
+                                    Height="{arc:SearchResultsTokenResource KeycapSize}"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:SearchResultsTokenResource KeycapRadius}"
+                                    IsHitTestVisible="False">
+                                <TextBlock Text="{TemplateBinding ShortcutText}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
                         </StackPanel>
-                    </Border>
-                    <Border Name="PART_FocusRing"
-                            IsHitTestVisible="False"
-                            Margin="{arc:SearchResultsTokenResource FacetFocusRingMargin}"
-                            BorderThickness="2"
-                            CornerRadius="{arc:SearchResultsTokenResource FacetFocusRingRadius}"
-                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
-                </Panel>
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+                            <Panel>
+                                <TextBlock Name="PART_Placeholder"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           Text="{TemplateBinding PlaceholderText}"
+                                           VerticalAlignment="Center">
+                                    <TextBlock.IsVisible>
+                                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                            <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        </MultiBinding>
+                                    </TextBlock.IsVisible>
+                                </TextBlock>
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="NoWrap"
+                                               LineHeight="{TemplateBinding LineHeight}"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}"
+                                               VerticalAlignment="Center" />
+                            </Panel>
+                        </ScrollViewer>
+                    </DockPanel>
+                </Border>
             </ControlTemplate>
         </Setter>
-        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
-        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
-        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
-        <Setter Property="Cursor" Value="Hand" />
 
-        <Style Selector="^ /template/ arc|RollingDigits#PART_Count">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="LineHeight" Value="22.4" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <!-- State-driven values live in styles (template attributes would be local values). -->
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Keycap">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_SearchIcon">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
-            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
         </Style>
-        <Style Selector="^ /template/ StackPanel#PART_Content">
-            <Setter Property="Opacity" Value="1" />
+        <Style Selector="^:pointerover /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
-        <Style Selector="^ /template/ Border#PART_FocusRing">
+        <Style Selector="^:focus /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus /template/ arc|ArcGlyph#PART_SearchIcon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus /template/ Border#PART_Keycap">
             <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^:pointerover">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
-        <Style Selector="^:selected">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
-        <Style Selector="^:selected /template/ arc|RollingDigits#PART_Count">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
-        </Style>
-        <!-- No results for the query: the facet fades back but keeps its place. -->
-        <Style Selector="^:dimmed /template/ StackPanel#PART_Content">
-            <Setter Property="Opacity" Value="{arc:SearchResultsTokenResource DimmedFacetOpacity}" />
-        </Style>
-        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+        <Style Selector="^:filled /template/ Border#PART_Keycap">
             <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus:filled /template/ Border#PART_Keycap">
+            <Setter Property="IsVisible" Value="False" />
         </Style>
 
         <Style Selector="^:motion-full">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
-                </Transitions>
-            </Setter>
-            <Style Selector="^ /template/ StackPanel#PART_Content">
+            <Style Selector="^ /template/ Border#PART_Frame">
                 <Setter Property="Transitions">
                     <Transitions>
-                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="Background" />
+                        <arc:ArcBrushTransition Property="BorderBrush" />
                     </Transitions>
                 </Setter>
             </Style>
-        </Style>
-        <Style Selector="^:motion-reduced">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
-                </Transitions>
-            </Setter>
-            <Style Selector="^ /template/ StackPanel#PART_Content">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_SearchIcon">
                 <Setter Property="Transitions">
                     <Transitions>
-                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                        <arc:ArcBrushTransition Property="Foreground" />
                     </Transitions>
                 </Setter>
             </Style>
         </Style>
     </ControlTheme>
 
-    <!-- The heading above a kind's group in All: the kind and its count. -->
-    <ControlTheme x:Key="{x:Type arc:SearchResultGroupHeader}" TargetType="arc:SearchResultGroupHeader">
+    <!-- The suggestions under the field. The cursor block behind the rows marks the active one. -->
+    <ControlTheme x:Key="{x:Type arc:SearchResultsSuggestionList}" TargetType="arc:SearchResultsSuggestionList">
         <Setter Property="Template">
-            <ControlTemplate TargetType="arc:SearchResultGroupHeader">
-                <StackPanel Orientation="Horizontal"
-                            Margin="{TemplateBinding Padding}"
-                            Spacing="{arc:SearchResultsTokenResource GroupHeaderGap}">
-                    <TextBlock Name="PART_Label"
-                               Text="{TemplateBinding Label}"
-                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                    <TextBlock Name="PART_Count"
-                               Text="{TemplateBinding CountText}"
-                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <ControlTemplate TargetType="arc:SearchResultsSuggestionList">
+                <Panel>
+                    <arc:SearchResultsCursor Name="PART_Cursor"
+                                             Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                             CornerRadius="{arc:SearchResultsTokenResource SuggestionRowRadius}" />
+                    <StackPanel Name="PART_Rows" Spacing="{arc:SearchResultsTokenResource SuggestionRowGap}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsSuggestionLabel}" TargetType="arc:SearchResultsSuggestionLabel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsSuggestionLabel">
+                <TextBlock Text="{TemplateBinding Text}"
+                           Margin="{arc:SearchResultsTokenResource SuggestionLabelMargin}"
+                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsSuggestionRow}" TargetType="arc:SearchResultsSuggestionRow">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsSuggestionRow">
+                <Border Name="PART_Frame"
+                        Background="Transparent"
+                        Height="{arc:SearchResultsTokenResource SuggestionRowHeight}"
+                        Padding="{arc:SearchResultsTokenResource SuggestionRowInset}"
+                        CornerRadius="{arc:SearchResultsTokenResource SuggestionRowRadius}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{arc:SearchResultsTokenResource SuggestionIconGap}">
+                        <Panel Width="16" Height="16" VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Search" Data="{x:Static arc:ArcIcons.Search}" Size="16" StrokeThickness="1.75" />
+                            <arc:ArcGlyph Name="PART_Clock" Data="{x:Static arc:ArcIcons.Clock}" Size="16" StrokeThickness="1.75" IsVisible="False" />
+                        </Panel>
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding Text}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Enter"
+                                      Grid.Column="2"
+                                      Data="{x:Static arc:ArcIcons.CornerDownLeft}"
+                                      Size="16"
+                                      StrokeThickness="1.75"
+                                      IsVisible="False"
+                                      VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Search">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Clock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Enter">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:recent /template/ arc|ArcGlyph#PART_Search">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:recent /template/ arc|ArcGlyph#PART_Clock">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:active /template/ arc|ArcGlyph#PART_Enter">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:active /template/ arc|ArcGlyph#PART_Search">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:active /template/ arc|ArcGlyph#PART_Clock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The filters column. -->
+    <ControlTheme x:Key="{x:Type arc:SearchResultsFilters}" TargetType="arc:SearchResultsFilters">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsFilters">
+                <StackPanel Spacing="{arc:SearchResultsTokenResource FiltersHeaderGap}">
+                    <Grid ColumnDefinitions="*,Auto" MinHeight="24">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   IsVisible="{TemplateBinding IsTitleVisible}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   VerticalAlignment="Center" />
+                        <arc:PresenceHost Grid.Column="1"
+                                          Mode="Fade"
+                                          IsPresent="{TemplateBinding HasActiveFilters}"
+                                          VerticalAlignment="Center">
+                            <Button Name="PART_Clear"
+                                    Theme="{StaticResource SearchResultsLinkButtonTheme}"
+                                    Content="{TemplateBinding ClearAllText}" />
+                        </arc:PresenceHost>
+                    </Grid>
+                    <StackPanel Name="PART_Groups" Spacing="{arc:SearchResultsTokenResource FilterGroupGap}" />
                 </StackPanel>
             </ControlTemplate>
         </Setter>
-        <Setter Property="Padding" Value="{arc:SearchResultsTokenResource GroupHeaderInset}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsFilterGroup}" TargetType="arc:SearchResultsFilterGroup">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsFilterGroup">
+                <StackPanel Spacing="{arc:SearchResultsTokenResource FilterGroupTitleGap}">
+                    <TextBlock Text="{TemplateBinding Title}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <StackPanel Name="PART_Rows" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsFilterRow}" TargetType="arc:SearchResultsFilterRow">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsFilterRow">
+                <!-- The checkbox keeps its 44px hit area; the margins trim it to a 34px row with the box flush left. -->
+                <arc:Checkbox Name="PART_Check"
+                              Margin="{arc:SearchResultsTokenResource FilterCheckMargin}"
+                              HorizontalAlignment="Stretch">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Count"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding CountText}"
+                                   Margin="{arc:SearchResultsTokenResource FilterCountMargin}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </arc:Checkbox>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:dimmed /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsDateRange}" TargetType="arc:SearchResultsDateRange">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsDateRange">
+                <StackPanel>
+                    <WrapPanel ItemSpacing="6">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{TemplateBinding RangeText}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </WrapPanel>
+                    <arc:Slider Name="PART_Slider"
+                                IsRange="True"
+                                IsValueVisible="False"
+                                SmallChange="1"
+                                LargeChange="30"
+                                MinStepsBetweenThumbs="0"
+                                Margin="0,-17,0,0" />
+                    <TextBlock Text="{TemplateBinding Caption}"
+                               IsVisible="{TemplateBinding Caption, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               Margin="0,8,0,0" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <!-- The active filters bar. -->
+    <ControlTheme x:Key="{x:Type arc:SearchResultsChipBar}" TargetType="arc:SearchResultsChipBar">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsChipBar">
+                <Border Name="PART_Frame"
+                        BorderThickness="1"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        CornerRadius="{arc:SearchResultsTokenResource ChipBarRadius}"
+                        Padding="{arc:SearchResultsTokenResource ChipBarPadding}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <WrapPanel Name="PART_Chips"
+                                   ItemSpacing="{arc:SearchResultsTokenResource ChipGap}"
+                                   LineSpacing="{arc:SearchResultsTokenResource ChipGap}"
+                                   VerticalAlignment="Center" />
+                        <Button Name="PART_Clear"
+                                Grid.Column="1"
+                                Theme="{StaticResource SearchResultsLinkButtonTheme}"
+                                Content="{TemplateBinding ClearAllText}"
+                                Margin="0,0,10,0"
+                                VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsChip}" TargetType="arc:SearchResultsChip">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsChip">
+                <Border Name="PART_Frame"
+                        MinHeight="{arc:SearchResultsTokenResource ChipHeight}"
+                        Padding="{arc:SearchResultsTokenResource ChipInset}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <TextBlock Name="PART_Group"
+                                   Text="{TemplateBinding Group}"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Dot"
+                                   Text="·"
+                                   Margin="-2,0"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   VerticalAlignment="Center" />
+                        <Button Name="PART_Remove"
+                                Theme="{StaticResource SearchResultsRemoveButtonTheme}"
+                                Margin="2,0,0,0"
+                                VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
-        <Setter Property="IsHitTestVisible" Value="False" />
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Group">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Dot">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
     </ControlTheme>
 
     <!-- One result row. The cursor block behind the rows marks the active one (PART_Cursor). -->
@@ -249,65 +836,62 @@
                         Background="Transparent"
                         CornerRadius="{arc:SearchResultsTokenResource RowRadius}"
                         Padding="{arc:SearchResultsTokenResource RowInset}">
-                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto">
-                        <Border Name="PART_IconBlock"
-                                Grid.RowSpan="3"
-                                VerticalAlignment="Top"
-                                Width="{arc:SearchResultsTokenResource IconBlockSize}"
-                                Height="{arc:SearchResultsTokenResource IconBlockSize}"
-                                Margin="{arc:SearchResultsTokenResource IconBlockMargin}"
-                                CornerRadius="{arc:SearchResultsTokenResource IconBlockRadius}">
-                            <ContentPresenter Content="{TemplateBinding IconContent}"
-                                              HorizontalAlignment="Center"
-                                              VerticalAlignment="Center" />
-                        </Border>
-                        <arc:SearchResultsMarkedText Name="PART_Title"
-                                                     Grid.Column="1"
-                                                     VerticalAlignment="Top"
-                                                     TextTrimming="CharacterEllipsis"
-                                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                                     FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                                     Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                     LineHeight="{arc:SearchResultsTokenResource TitleLineHeight}"
-                                                     MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
-                                                     MarkForeground="{arc:ArcDesignTokenResource Foreground}"
-                                                     MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                                     MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
-                                                     MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
-                        <TextBlock Name="PART_Meta"
-                                   Grid.Column="2"
-                                   VerticalAlignment="Top"
-                                   Text="{TemplateBinding MetaText}"
-                                   Margin="{arc:SearchResultsTokenResource MetaMargin}"
-                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                   LineHeight="{arc:SearchResultsTokenResource TitleLineHeight}" />
-                        <TextBlock Name="PART_Location"
-                                   Grid.Row="1"
-                                   Grid.Column="1"
-                                   Grid.ColumnSpan="2"
-                                   Text="{TemplateBinding LocationText}"
-                                   TextTrimming="CharacterEllipsis"
-                                   Margin="{arc:SearchResultsTokenResource LocationMargin}"
-                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                   LineHeight="{arc:SearchResultsTokenResource CaptionLineHeight}" />
-                        <arc:SearchResultsMarkedText Name="PART_Snippet"
-                                                     Grid.Row="2"
-                                                     Grid.Column="1"
-                                                     Grid.ColumnSpan="2"
-                                                     TextWrapping="Wrap"
-                                                     TextTrimming="WordEllipsis"
-                                                     MaxLines="{arc:SearchResultsTokenResource SnippetMaxLines}"
-                                                     Margin="{arc:SearchResultsTokenResource SnippetMargin}"
-                                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                                     Foreground="{arc:ArcDesignTokenResource TextSecondary}"
-                                                     LineHeight="{arc:SearchResultsTokenResource SnippetLineHeight}"
-                                                     MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
-                                                     MarkForeground="{arc:ArcDesignTokenResource Foreground}"
-                                                     MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                                     MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
-                                                     MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
+                    <Grid ColumnDefinitions="Auto,*">
+                        <ContentPresenter Name="PART_Lead"
+                                          Width="{arc:SearchResultsTokenResource LeadSize}"
+                                          Margin="{arc:SearchResultsTokenResource LeadMargin}"
+                                          VerticalAlignment="Top"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Top"
+                                          Content="{TemplateBinding LeadContent}" />
+                        <StackPanel Grid.Column="1">
+                            <arc:SearchResultsMarkedText Name="PART_Title"
+                                                         TextTrimming="CharacterEllipsis"
+                                                         FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                         FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                         LineHeight="{arc:SearchResultsTokenResource TitleLineHeight}"
+                                                         MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                         MarkForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                         MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
+                                                         MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
+                            <arc:SearchResultsMarkedText Name="PART_Subtitle"
+                                                         TextTrimming="CharacterEllipsis"
+                                                         Margin="{arc:SearchResultsTokenResource SubtitleMargin}"
+                                                         FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                         Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                         LineHeight="{arc:SearchResultsTokenResource SubtitleLineHeight}"
+                                                         MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                         MarkForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                         MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
+                                                         MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
+                            <arc:SearchResultsMarkedText Name="PART_Snippet"
+                                                         TextWrapping="Wrap"
+                                                         TextTrimming="WordEllipsis"
+                                                         MaxLines="{arc:SearchResultsTokenResource SnippetMaxLines}"
+                                                         Margin="{arc:SearchResultsTokenResource SnippetMargin}"
+                                                         FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                         Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                         LineHeight="{arc:SearchResultsTokenResource SnippetLineHeight}"
+                                                         MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                         MarkForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                         MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
+                                                         MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
+                            <arc:SearchResultsMarkedText Name="PART_Caption"
+                                                         TextTrimming="CharacterEllipsis"
+                                                         Margin="{arc:SearchResultsTokenResource CaptionMargin}"
+                                                         FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                         Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                         LineHeight="{arc:SearchResultsTokenResource SubtitleLineHeight}"
+                                                         MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                         MarkForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                         MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
+                                                         MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
+                        </StackPanel>
                     </Grid>
                 </Border>
             </ControlTemplate>
@@ -316,34 +900,32 @@
         <Setter Property="Cursor" Value="Hand" />
 
         <!-- State-driven values live in styles (template attributes would be local values). -->
-        <Style Selector="^ /template/ Border#PART_IconBlock">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_Lead">
             <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
-        <Style Selector="^ /template/ TextBlock#PART_Meta">
+        <Style Selector="^ /template/ TextBlock#PART_Subtitle">
             <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^ /template/ TextBlock#PART_Location">
+        <Style Selector="^ /template/ TextBlock#PART_Snippet">
             <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^ /template/ arc|SearchResultsMarkedText#PART_Snippet">
+        <Style Selector="^ /template/ TextBlock#PART_Caption">
             <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^:has-meta /template/ TextBlock#PART_Meta">
+        <Style Selector="^:has-subtitle /template/ TextBlock#PART_Subtitle">
             <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^:compact /template/ TextBlock#PART_Meta">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
-        <Style Selector="^:has-location /template/ TextBlock#PART_Location">
+        <Style Selector="^:has-snippet /template/ TextBlock#PART_Snippet">
             <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^:has-snippet /template/ arc|SearchResultsMarkedText#PART_Snippet">
+        <Style Selector="^:has-caption /template/ TextBlock#PART_Caption">
             <Setter Property="IsVisible" Value="True" />
         </Style>
-        <!-- Under the cursor (itself surface-muted) the icon block turns to the surface and the glyph wakes up. -->
-        <Style Selector="^:active /template/ Border#PART_IconBlock">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <!-- An avatar is as tall as the column is wide; a plain icon takes only its own height. -->
+        <Style Selector="^:avatar /template/ ContentPresenter#PART_Lead">
+            <Setter Property="Height" Value="{arc:SearchResultsTokenResource LeadSize}" />
+        </Style>
+        <Style Selector="^:active /template/ ContentPresenter#PART_Lead">
             <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
         <!-- Dimmed on the frame: the row's own opacity carries the reveal. -->
@@ -353,13 +935,159 @@
         <Style Selector="^:disabled">
             <Setter Property="Cursor" Value="Arrow" />
         </Style>
+    </ControlTheme>
 
-        <Style Selector="^:motion-full /template/ Border#PART_IconBlock">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
-                </Transitions>
-            </Setter>
+    <!-- The panel of the detail dialog, the detail sheet and the narrow filters sheet. -->
+    <ControlTheme x:Key="{x:Type arc:SearchResultsSurface}" TargetType="arc:SearchResultsSurface">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsSurface">
+                <Border Name="PART_Shadow"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        CornerRadius="{arc:SearchResultsTokenResource SurfaceRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Border Name="PART_Frame"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:SearchResultsTokenResource SurfaceRadius}"
+                            ClipToBounds="True">
+                        <Grid RowDefinitions="Auto,Auto,*,Auto">
+                            <Border Name="PART_Grabber"
+                                    Grid.Row="0"
+                                    IsVisible="False"
+                                    Width="{arc:SearchResultsTokenResource GrabberWidth}"
+                                    Height="{arc:SearchResultsTokenResource GrabberHeight}"
+                                    Margin="0,10,0,0"
+                                    HorizontalAlignment="Center"
+                                    CornerRadius="2"
+                                    Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                            <Grid Grid.Row="1"
+                                  ColumnDefinitions="*,Auto"
+                                  Margin="{arc:SearchResultsTokenResource SurfaceHeaderPadding}">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Top"
+                                           Margin="0,2,16,0" />
+                                <Button Name="PART_Close"
+                                        Grid.Column="1"
+                                        Theme="{StaticResource SearchResultsCloseButtonTheme}" />
+                            </Grid>
+                            <ScrollViewer Name="PART_Scroll"
+                                          Grid.Row="2"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto"
+                                          BringIntoViewOnFocusChange="False">
+                                <ContentPresenter Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  Padding="{arc:SearchResultsTokenResource SurfaceBodyPadding}" />
+                            </ScrollViewer>
+                            <ContentPresenter Name="PART_Actions"
+                                              Grid.Row="3"
+                                              Content="{TemplateBinding Actions}"
+                                              Padding="{arc:SearchResultsTokenResource SurfaceActionsPadding}" />
+                        </Grid>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^:sheet /template/ Border#PART_Shadow">
+            <Setter Property="CornerRadius" Value="{arc:SearchResultsTokenResource SheetRadius}" />
         </Style>
+        <Style Selector="^:sheet /template/ Border#PART_Frame">
+            <Setter Property="CornerRadius" Value="{arc:SearchResultsTokenResource SheetRadius}" />
+        </Style>
+        <Style Selector="^:sheet /template/ Border#PART_Grabber">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsDetailBody}" TargetType="arc:SearchResultsDetailBody">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsDetailBody">
+                <StackPanel>
+                    <arc:SearchResultsMarkedText Name="PART_Heading"
+                                                 TextWrapping="Wrap"
+                                                 FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                 FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                 LineHeight="26"
+                                                 Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                 MarkBackground="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                 MarkForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                 MarkFontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                 MarkRadius="{arc:SearchResultsTokenResource MarkRadius}"
+                                                 MarkInflate="{arc:SearchResultsTokenResource MarkInflate}" />
+                    <arc:SearchResultsMarkedText Name="PART_Subtitle"
+                                                 Margin="0,2,0,0"
+                                                 FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                 LineHeight="{arc:SearchResultsTokenResource SubtitleLineHeight}"
+                                                 Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <StackPanel Name="PART_Paragraphs"
+                                Margin="0,16,0,0"
+                                Spacing="{arc:SearchResultsTokenResource DetailParagraphGap}" />
+                    <Border Name="PART_TableFrame"
+                            Margin="0,20,0,0"
+                            BorderThickness="0,0,0,1"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                        <StackPanel Name="PART_Table" />
+                    </Border>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <!-- A paragraph of the detail body. -->
+    <ControlTheme x:Key="{x:Type arc:SearchResultsParagraph}" TargetType="arc:SearchResultsParagraph">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="21" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MarkBackground" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="MarkForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MarkFontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="MarkRadius" Value="{arc:SearchResultsTokenResource MarkRadius}" />
+        <Setter Property="MarkInflate" Value="{arc:SearchResultsTokenResource MarkInflate}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SearchResultsDetailRow}" TargetType="arc:SearchResultsDetailRow">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SearchResultsDetailRow">
+                <Border BorderThickness="0,1,0,0"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        MinHeight="{arc:SearchResultsTokenResource DetailTableRowHeight}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                        <TextBlock Text="{TemplateBinding Label}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="8"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center">
+                            <ContentPresenter Content="{TemplateBinding AvatarContent}" VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Value}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Note}"
+                                       IsVisible="{TemplateBinding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Margin="-2,0,0,0"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
     </ControlTheme>
 </ResourceDictionary>

@@ -410,6 +410,7 @@ public class PageHeader : SelectingItemsControl
     private bool _isTight;
     private double _tabsMaskWidth = -1;
     private INotifyCollectionChanged? _breadcrumbSource;
+    private bool _attached;
 
     static PageHeader()
     {
@@ -672,15 +673,7 @@ public class PageHeader : SelectingItemsControl
         }
         else if (change.Property == BreadcrumbsProperty)
         {
-            if (_breadcrumbSource is not null)
-            {
-                _breadcrumbSource.CollectionChanged -= OnBreadcrumbSourceChanged;
-            }
-            _breadcrumbSource = change.NewValue as INotifyCollectionChanged;
-            if (_breadcrumbSource is not null)
-            {
-                _breadcrumbSource.CollectionChanged += OnBreadcrumbSourceChanged;
-            }
+            ObserveBreadcrumbs();
             UpdateBreadcrumbs();
         }
         else if (change.Property == PrimaryActionProperty)
@@ -749,7 +742,10 @@ public class PageHeader : SelectingItemsControl
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
-        UpdateBreakpoints(e.NewSize.Width);
+        if (e.WidthChanged)
+        {
+            UpdateBreakpoints(e.NewSize.Width);
+        }
     }
 
     private void UpdateBreakpoints(double width)
@@ -931,6 +927,56 @@ public class PageHeader : SelectingItemsControl
 
     #region Breadcrumbs
 
+    /// <summary>
+    /// Follows the breadcrumb collection only while the header is in a window: a view model's collection outlives pages,
+    /// so a subscription kept after the header left would keep the whole header alive.
+    /// </summary>
+    private void ObserveBreadcrumbs()
+    {
+        if (_breadcrumbSource is not null)
+        {
+            _breadcrumbSource.CollectionChanged -= OnBreadcrumbSourceChanged;
+            _breadcrumbSource = null;
+        }
+        if (_attached && Breadcrumbs is INotifyCollectionChanged source)
+        {
+            _breadcrumbSource = source;
+            source.CollectionChanged += OnBreadcrumbSourceChanged;
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        ObserveBreadcrumbs();
+        SyncWatched();
+        if (_secondaryPanel is not null)
+        {
+            // Back in a window: what changed while it was away shows now.
+            UpdateBreadcrumbs();
+            RebuildSecondary();
+            UpdatePrimary();
+            RebuildMenu();
+            RequestFoldEvaluation();
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        ObserveBreadcrumbs();
+        foreach (var action in _watched.ToArray())
+        {
+            action.PropertyChanged -= OnActionPropertyChanged;
+            action.StateChanged -= OnActionStateChanged;
+        }
+        _watched.Clear();
+        _pageScroll?.Stop();
+        _tabScroll?.Stop();
+    }
+
     private void OnBreadcrumbSourceChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_isNarrow)
@@ -1015,6 +1061,10 @@ public class PageHeader : SelectingItemsControl
 
     private void SyncWatched()
     {
+        if (!_attached)
+        {
+            return;
+        }
         var wanted = new HashSet<PageHeaderAction>(Actions);
         wanted.UnionWith(MoreActions);
         if (PrimaryAction is { } primary)
@@ -1036,7 +1086,7 @@ public class PageHeader : SelectingItemsControl
 
     private void Watch(PageHeaderAction action)
     {
-        if (_watched.Add(action))
+        if (_attached && _watched.Add(action))
         {
             action.PropertyChanged += OnActionPropertyChanged;
             action.StateChanged += OnActionStateChanged;

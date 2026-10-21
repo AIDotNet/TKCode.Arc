@@ -60,7 +60,7 @@ public static class BlockCatalog
             "Four empty states in one illustration whose shapes morph between scenes as you switch tabs.",
             IsArcPort: true),
         new("SearchResults", "Search results", "search-results", "AppShell",
-            "Search across kinds of content with facet tabs and live counts, grouped results with highlighted matches, and keyboard navigation.",
+            "A workspace search page with a suggestions popup, filters whose counts follow the query, a date range, sorting, removable filter chips, highlighted results and a detail sheet.",
             IsArcPort: false),
         new("SettingsPage", "Settings page", "settings-page", "Settings",
             "A full settings page: section navigation with an account card, the chosen section beside it, and a save bar for unsaved changes.",

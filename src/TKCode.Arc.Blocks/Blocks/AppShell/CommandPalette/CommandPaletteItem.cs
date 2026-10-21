@@ -90,6 +90,52 @@ public class CommandPaletteItem : AvaloniaObject
     /// <inheritdoc cref="TagProperty"/>
     public object? Tag { get => GetValue(TagProperty); set => SetValue(TagProperty, value); }
 
+    private string? _haystack;
+
+    /// <summary>The lower-cased text the filter looks in (label, description, group and keywords joined by spaces), built once.</summary>
+    internal string Haystack => _haystack ??= BuildHaystack();
+
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == LabelProperty || change.Property == DescriptionProperty || change.Property == GroupProperty ||
+            change.Property == KeywordsProperty)
+        {
+            _haystack = null;
+        }
+    }
+
+    private string BuildHaystack()
+    {
+        // The fields are joined (empty ones left out), so a query may run across two of them, as in Arc.
+        var builder = new System.Text.StringBuilder();
+        Append(builder, Label);
+        Append(builder, Description);
+        Append(builder, Group);
+        if (Keywords is { } keywords)
+        {
+            foreach (var keyword in keywords)
+            {
+                Append(builder, keyword);
+            }
+        }
+        return builder.ToString().ToLowerInvariant();
+    }
+
+    private static void Append(System.Text.StringBuilder builder, string? text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+        if (builder.Length > 0)
+        {
+            builder.Append(' ');
+        }
+        builder.Append(text);
+    }
+
     /// <summary>Returns the label.</summary>
     public override string ToString() => Label;
 }
@@ -127,33 +173,7 @@ internal static class CommandPaletteFilter
     public static string Normalize(string? query) => (query ?? string.Empty).Trim().ToLowerInvariant();
 
     public static bool Matches(CommandPaletteItem item, string normalized)
-    {
-        if (normalized.Length == 0)
-        {
-            return true;
-        }
-        // The fields are joined (empty ones left out), so a query may run across two of them, as in Arc.
-        var parts = new List<string>(4);
-        Add(parts, item.Label);
-        Add(parts, item.Description);
-        Add(parts, item.Group);
-        if (item.Keywords is { } keywords)
-        {
-            foreach (var keyword in keywords)
-            {
-                Add(parts, keyword);
-            }
-        }
-        return string.Join(' ', parts).ToLowerInvariant().Contains(normalized, StringComparison.Ordinal);
-    }
-
-    private static void Add(List<string> parts, string? text)
-    {
-        if (!string.IsNullOrEmpty(text))
-        {
-            parts.Add(text);
-        }
-    }
+        => normalized.Length == 0 || item.Haystack.Contains(normalized, StringComparison.Ordinal);
 
     /// <summary>Filters <paramref name="items"/> and groups the matches in the order each group first appears among them.</summary>
     public static List<CommandPaletteGroup> Group(IReadOnlyList<CommandPaletteItem> items, string normalized, string defaultGroup)
@@ -189,6 +209,32 @@ internal static class CommandPaletteFilter
         {
             return true;
         }
+        // Filtering keeps the order, so the new list is normally a subsequence of the old one: walk both once, allocating nothing.
+        var j = 0;
+        var subsequence = true;
+        for (var i = 0; i < next.Count; i++)
+        {
+            var key = KeyOf(next[i]);
+            while (j < previous.Count && !Equals(KeyOf(previous[j]), key))
+            {
+                j++;
+            }
+            if (j == previous.Count)
+            {
+                subsequence = false;
+                break;
+            }
+            if (Math.Abs(j - i) > GlideRows)
+            {
+                return false;
+            }
+            j++;
+        }
+        return subsequence || ShouldGlideReordered(previous, next);
+    }
+
+    private static bool ShouldGlideReordered(IReadOnlyList<CommandPaletteItem> previous, IReadOnlyList<CommandPaletteItem> next)
+    {
         var before = new Dictionary<object, int>(previous.Count);
         for (var i = 0; i < previous.Count; i++)
         {

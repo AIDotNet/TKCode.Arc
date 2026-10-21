@@ -223,9 +223,14 @@ internal sealed class PageHeaderFoldSlot : Decorator
             return finalSize;
         }
         child.Arrange(new Rect(0, 0, child.DesiredSize.Width, finalSize.Height));
-        _clip.Rect = new Rect(-ClipBleed, -ClipBleed, finalSize.Width + ClipBleed, finalSize.Height + 2 * ClipBleed);
-        Clip = _clip;
-        InvalidateVisual();
+        var clip = new Rect(-ClipBleed, -ClipBleed, finalSize.Width + ClipBleed, finalSize.Height + 2 * ClipBleed);
+        if (!ReferenceEquals(Clip, _clip) || _clip.Rect != clip)
+        {
+            // The same clip is not written (and the slot not repainted) on every layout pass of the header.
+            _clip.Rect = clip;
+            Clip = _clip;
+            InvalidateVisual();
+        }
         return finalSize;
     }
 }

@@ -183,6 +183,7 @@ public class EmptyStates : TemplatedControl
     private EmptyStatesPhase _from = EmptyStatesPhase.Idle;
     private bool _ready;
     private bool _syncing;
+    private bool _attached;
 
     static EmptyStates()
     {
@@ -194,7 +195,6 @@ public class EmptyStates : TemplatedControl
         _items.CollectionChanged += OnItemsChanged;
         AutomationProperties.SetName(this, Label);
         AutomationProperties.SetLandmarkType(this, AutomationLandmarkType.Region);
-        Watch();
     }
 
     /// <summary>The items the tabs show: <see cref="Items"/>, or Arc's four scenes while it is empty.</summary>
@@ -349,7 +349,10 @@ public class EmptyStates : TemplatedControl
         Update();
     }
 
-    /// <summary>Follows property changes of the listed items (copy edits update the view in place).</summary>
+    /// <summary>
+    /// Follows property changes of the listed items (copy edits update the view in place), while the block is in a window:
+    /// items often outlive the page that shows them, and a subscription kept after the block left would keep it alive.
+    /// </summary>
     private void Watch()
     {
         foreach (var item in _watched)
@@ -357,11 +360,35 @@ public class EmptyStates : TemplatedControl
             item.PropertyChanged -= OnItemPropertyChanged;
         }
         _watched.Clear();
+        if (!_attached)
+        {
+            return;
+        }
         foreach (var item in EffectiveItems)
         {
             item.PropertyChanged += OnItemPropertyChanged;
             _watched.Add(item);
         }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        Watch();
+        if (_ready)
+        {
+            // Back in a window: what changed in the items while it was away shows now.
+            UpdateTabHeaders();
+            Update();
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        Watch();
     }
 
     private void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -516,7 +543,11 @@ public class EmptyStates : TemplatedControl
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
-        ApplyDensity(e.NewSize.Width);
+        // The copy block springs the block's height for half a second after a switch: only the width sets the density.
+        if (e.WidthChanged)
+        {
+            ApplyDensity(e.NewSize.Width);
+        }
     }
 
     /// <summary>Arc's container queries on the block's own width (cqi).</summary>

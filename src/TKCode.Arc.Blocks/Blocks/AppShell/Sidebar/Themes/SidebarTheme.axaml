@@ -2,13 +2,24 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
                     x:ClassModifier="internal">
-    <!-- The Sidebar block (original TKCode design): pane, header row, filter, scrolling list with the gliding marker, footer. -->
+    <!-- The Sidebar block (original TKCode design): pane, header row, filter row, scrolling list with the gliding marker, footer. -->
     <ControlTheme x:Key="{x:Type arc:Sidebar}" TargetType="arc:Sidebar">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Sidebar">
-                <Panel>
-                    <!-- The edge line is drawn over the pane, so it takes no width: rows are exactly 236 open and 40 on the rail. -->
+                <arc:SidebarPaneHost Name="PART_PaneHost">
+                    <arc:SidebarPaneHost.Styles>
+                        <!-- The filter box is a row-high rounded box (not Arc's pill): 32 high, the rows' radius, a hairline border. -->
+                        <Style Selector="arc|SearchField#PART_Filter /template/ arc|FieldFrame#PART_Frame">
+                            <Setter Property="MinHeight" Value="{arc:SidebarTokenResource FilterHeight}" />
+                            <Setter Property="CornerRadius" Value="{arc:SidebarTokenResource RowRadius}" />
+                            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+                        </Style>
+                        <Style Selector="arc|SearchField#PART_Filter /template/ arc|FieldFrame#PART_Frame:not(:pointerover):not(:focus-active)">
+                            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+                        </Style>
+                    </arc:SidebarPaneHost.Styles>
+                    <!-- The edge line is drawn over the pane, so it takes no width: rows are exactly 216 open and 40 on the rail. -->
                     <Border Name="PART_Pane"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}"
@@ -25,21 +36,29 @@
                                 </arc:SidebarOpenWidthHost>
                                 <arc:SidebarIconButton Name="PART_CollapseButton"
                                                        Grid.Column="1"
-                                                       Glyph="{x:Static arc:ArcIcons.PanelLeft}"
-                                                       IsVisible="{TemplateBinding IsCollapseButtonVisible}" />
+                                                       Glyph="{x:Static arc:ArcIcons.PanelLeft}" />
                             </Grid>
                             <Panel Name="PART_FilterRow"
                                    Grid.Row="1"
                                    Margin="{arc:SidebarTokenResource FilterMargin}"
                                    IsVisible="{TemplateBinding IsFilterVisible}">
-                                <arc:SidebarOpenWidthHost>
-                                    <arc:SearchField Name="PART_Filter"
-                                                     Size="Small"
-                                                     IsLabelVisible="False"
-                                                     Label="{TemplateBinding FilterPlaceholder}"
-                                                     PlaceholderText="{TemplateBinding FilterPlaceholder}"
-                                                     Text="{TemplateBinding FilterText, Mode=TwoWay}" />
-                                </arc:SidebarOpenWidthHost>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <arc:SidebarOpenWidthHost>
+                                        <arc:SearchField Name="PART_Filter"
+                                                         Size="Small"
+                                                         IsLabelVisible="False"
+                                                         Label="{TemplateBinding FilterPlaceholder}"
+                                                         PlaceholderText="{TemplateBinding FilterPlaceholder}"
+                                                         Text="{TemplateBinding FilterText, Mode=TwoWay}" />
+                                    </arc:SidebarOpenWidthHost>
+                                    <arc:SidebarIconButton Name="PART_FilterCollapseButton"
+                                                           Grid.Column="1"
+                                                           Width="{arc:SidebarTokenResource FilterHeight}"
+                                                           Height="{arc:SidebarTokenResource FilterHeight}"
+                                                           Margin="{arc:SidebarTokenResource FilterToggleMargin}"
+                                                           IsVisible="False"
+                                                           Glyph="{x:Static arc:ArcIcons.PanelLeft}" />
+                                </Grid>
                                 <arc:SidebarIconButton Name="PART_FilterButton"
                                                        Glyph="{x:Static arc:ArcIcons.Search}"
                                                        HorizontalAlignment="Left" />
@@ -55,17 +74,10 @@
                                                       RowGap="{arc:SidebarTokenResource RowGap}"
                                                       ChildrenMargin="{arc:SidebarTokenResource ChildrenMargin}"
                                                       GuideMargin="{arc:SidebarTokenResource GuideMargin}"
-                                                      GuideBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                                      MarkerBarWidth="{arc:SidebarTokenResource MarkerBarWidth}"
-                                                      MarkerBarHeight="{arc:SidebarTokenResource MarkerBarHeight}"
-                                                      MarkerBarInset="{arc:SidebarTokenResource MarkerBarInset}">
+                                                      GuideBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                     <arc:GlidingIndicator Name="PART_MarkerBlock"
-                                                          Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                          Fill="{arc:SidebarTokenResource RowSelectedFill}"
                                                           CornerRadius="{arc:SidebarTokenResource RowRadius}"
-                                                          Spring="Snappy" />
-                                    <arc:GlidingIndicator Name="PART_MarkerBar"
-                                                          Fill="{arc:ArcDesignTokenResource Accent}"
-                                                          CornerRadius="{arc:SidebarTokenResource MarkerBarRadius}"
                                                           Spring="Snappy" />
                                     <StackPanel Name="PART_Content" />
                                     <TextBlock Name="PART_NoMatches"
@@ -78,6 +90,13 @@
                                                Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                                 </arc:SidebarListPanel>
                             </ScrollViewer>
+                            <Border Name="PART_FooterSeparator"
+                                    Grid.Row="3"
+                                    Height="1"
+                                    VerticalAlignment="Top"
+                                    IsHitTestVisible="False"
+                                    Background="{arc:ArcDesignTokenResource Border}"
+                                    IsVisible="{TemplateBinding Footer, Converter={x:Static ObjectConverters.IsNotNull}}" />
                             <arc:SidebarOpenWidthHost Name="PART_FooterHost"
                                                       Grid.Row="3"
                                                       ClipsWhenNarrow="True"
@@ -95,15 +114,15 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}" />
-                </Panel>
+                </arc:SidebarPaneHost>
             </ControlTemplate>
         </Setter>
 
         <Setter Property="OpenWidth" Value="{arc:SidebarTokenResource ExpandedWidth}" />
         <Setter Property="Width" Value="{arc:SidebarTokenResource ExpandedWidth}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
-        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Background" Value="{arc:SidebarTokenResource PaneFill}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="0,0,1,0" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -132,6 +151,13 @@
             <Setter Property="Opacity" Value="1" />
             <Setter Property="IsHitTestVisible" Value="True" />
         </Style>
+        <Style Selector="^ /template/ arc|SidebarIconButton#PART_FilterCollapseButton">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:collapsed /template/ arc|SidebarIconButton#PART_FilterCollapseButton">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
         <!-- The rail has no room for a scroll bar; the wheel and the keyboard still scroll it. -->
         <Style Selector="^:collapsed /template/ ScrollViewer#PART_ScrollViewer">
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
@@ -141,8 +167,14 @@
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
 
-        <!-- The width springs (smooth) between the open sidebar and the rail; reduced motion changes it at once. -->
-        <Style Selector="^:motion-full">
+        <!-- Overlay: the layout width jumps and the pane (springing in code) is drawn above the page next to it. -->
+        <Style Selector="^:overlay-resize">
+            <Setter Property="ZIndex" Value="1" />
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+
+        <!-- Push: the width springs (smooth) between the open sidebar and the rail; reduced motion changes it at once. -->
+        <Style Selector="^:motion-full:not(:overlay-resize)">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:SpringDoubleTransition Property="Width" Spring="Smooth" />
@@ -171,6 +203,20 @@
             </Setter>
         </Style>
         <Style Selector="^:motion-reduced /template/ arc|SidebarIconButton#PART_FilterButton">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|SidebarIconButton#PART_FilterCollapseButton">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|SidebarIconButton#PART_FilterCollapseButton">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
@@ -245,7 +291,7 @@
         </Style>
     </ControlTheme>
 
-    <!-- One page row: icon, label, count, chevron; the selection block underneath is the sidebar's gliding marker. -->
+    <!-- One page row: icon, label, count or unread dot, chevron; the selection block underneath is the sidebar's gliding marker. -->
     <ControlTheme x:Key="{x:Type arc:SidebarRow}" TargetType="arc:SidebarRow">
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
@@ -256,7 +302,7 @@
                             Background="{TemplateBinding Background}"
                             CornerRadius="{arc:SidebarTokenResource RowRadius}" />
                     <arc:SidebarOpenWidthHost Name="PART_Layout" Margin="{TemplateBinding Padding}">
-                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                        <Grid ColumnDefinitions="Auto,*">
                             <Panel Name="PART_IconSlot"
                                    Width="{arc:SidebarTokenResource RowGlyphSize}"
                                    Height="{arc:SidebarTokenResource RowGlyphSize}"
@@ -273,34 +319,55 @@
                                 <TextBlock Name="PART_Monogram"
                                            IsVisible="False"
                                            Text="{TemplateBinding Monogram}"
-                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontSize="{arc:SidebarTokenResource RowFontSize}"
                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center" />
                             </Panel>
-                            <TextBlock Name="PART_Label"
-                                       Grid.Column="1"
-                                       Text="{TemplateBinding Label}"
-                                       TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center" />
-                            <TextBlock Name="PART_Badge"
-                                       Grid.Column="2"
-                                       Text="{TemplateBinding Badge}"
-                                       Margin="{arc:SidebarTokenResource BadgeMargin}"
-                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                       VerticalAlignment="Center" />
-                            <arc:ArcGlyph Name="PART_Chevron"
-                                          Grid.Column="3"
-                                          Data="{x:Static arc:ArcIcons.ChevronRight}"
-                                          Size="{arc:SidebarTokenResource ChevronSize}"
-                                          StrokeThickness="{arc:SidebarTokenResource ChevronStroke}"
-                                          Margin="{arc:SidebarTokenResource ChevronMargin}"
-                                          IsVisible="{TemplateBinding IsParent}"
-                                          VerticalAlignment="Center"
-                                          RenderTransformOrigin="50%,50%" />
+                            <!-- Everything after the icon is one group: on the rail it fades as one layer per row. -->
+                            <Grid Name="PART_TextGroup" Grid.Column="1" ColumnDefinitions="*,Auto,Auto,Auto">
+                                <arc:SidebarInlinePanel VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Label"
+                                               Text="{TemplateBinding Label}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" />
+                                    <Panel Name="PART_Trailing"
+                                           Margin="{arc:SidebarTokenResource TrailingMargin}"
+                                           VerticalAlignment="Center">
+                                        <arc:ArcGlyph Name="PART_TrailingGlyph"
+                                                      Data="{TemplateBinding TrailingGlyph}"
+                                                      Size="{arc:SidebarTokenResource ChevronSize}"
+                                                      StrokeThickness="{arc:SidebarTokenResource ChevronStroke}" />
+                                        <ContentPresenter Name="PART_TrailingPresenter" Content="{TemplateBinding TrailingContent}" />
+                                    </Panel>
+                                </arc:SidebarInlinePanel>
+                                <TextBlock Name="PART_Badge"
+                                           Grid.Column="1"
+                                           Text="{TemplateBinding Badge}"
+                                           Margin="{arc:SidebarTokenResource BadgeMargin}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           VerticalAlignment="Center" />
+                                <Ellipse Name="PART_UnreadDot"
+                                         Grid.Column="2"
+                                         IsHitTestVisible="False"
+                                         Width="{arc:SidebarTokenResource UnreadDotSize}"
+                                         Height="{arc:SidebarTokenResource UnreadDotSize}"
+                                         Margin="{arc:SidebarTokenResource BadgeMargin}"
+                                         VerticalAlignment="Center"
+                                         Fill="{arc:ArcDesignTokenResource Accent}" />
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Grid.Column="3"
+                                              Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                              Size="{arc:SidebarTokenResource ChevronSize}"
+                                              StrokeThickness="{arc:SidebarTokenResource ChevronStroke}"
+                                              Margin="{arc:SidebarTokenResource ChevronMargin}"
+                                              IsVisible="{TemplateBinding IsParent}"
+                                              VerticalAlignment="Center"
+                                              RenderTransformOrigin="50%,50%" />
+                            </Grid>
                         </Grid>
                     </arc:SidebarOpenWidthHost>
+                    <!-- The rail's dot: a count or an unread mark sits on the icon's top right corner. -->
                     <Ellipse Name="PART_Dot"
                              IsHitTestVisible="False"
                              Width="{arc:SidebarTokenResource BadgeDotSize}"
@@ -325,19 +392,34 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
-        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontSize" Value="{arc:SidebarTokenResource RowFontSize}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ClipToBounds" Value="False" />
 
-        <!-- Part defaults live in styles so the state styles below can change them. -->
+        <Style Selector="^:nested">
+            <Setter Property="Height" Value="{arc:SidebarTokenResource NestedRowHeight}" />
+        </Style>
+
+        <!-- Part defaults live in styles so the state styles below can change them: label secondary, icon and count muted. -->
         <Style Selector="^ /template/ TextBlock#PART_Label">
-            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Monogram">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_TrailingGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         </Style>
         <Style Selector="^ /template/ TextBlock#PART_Badge">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_TextGroup">
             <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
-            <Setter Property="Opacity" Value="1" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             <Setter Property="RenderTransform" Value="rotate(0deg)" />
         </Style>
@@ -347,30 +429,69 @@
         <Style Selector="^:not(:has-badge) /template/ TextBlock#PART_Badge">
             <Setter Property="IsVisible" Value="False" />
         </Style>
+        <Style Selector="^:not(:unread) /template/ Ellipse#PART_UnreadDot">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:not(:has-trailing) /template/ Panel#PART_Trailing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
         <Style Selector="^:not(:has-icon) /template/ Panel#PART_IconSlot">
             <Setter Property="IsVisible" Value="False" />
         </Style>
 
         <Style Selector="^:hovered">
             <Setter Property="Background" Value="{arc:SidebarTokenResource RowHoverFill}" />
+        </Style>
+        <Style Selector="^:hovered /template/ TextBlock#PART_Label">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
-        <Style Selector="^:pressed">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-        </Style>
-        <Style Selector="^:selected">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-        <Style Selector="^:current">
-            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
-            <Setter Property="RenderTransform" Value="rotate(90deg)" />
+        <Style Selector="^:hovered /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         </Style>
         <Style Selector="^:hovered /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:pressed /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <!-- Something new: the label reads stronger. -->
+        <Style Selector="^:unread /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <!-- An action is muted, whatever else is going on. -->
+        <Style Selector="^:action /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:action:hovered /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- The selected page: a muted block (the marker) behind it, the label at full contrast, the icon in the accent color. -->
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:selected /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:current /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:selected /template/ TextBlock#PART_Badge">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(90deg)" />
         </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:SidebarTokenResource DisabledOpacity}" />
@@ -380,17 +501,14 @@
             <Setter Property="IsVisible" Value="True" />
         </Style>
 
-        <!-- The icon rail: the text fades (fast) and the count becomes a dot; a page without an icon shows its initial. -->
-        <Style Selector="^:rail /template/ TextBlock#PART_Label">
-            <Setter Property="Opacity" Value="0" />
-        </Style>
-        <Style Selector="^:rail /template/ TextBlock#PART_Badge">
-            <Setter Property="Opacity" Value="0" />
-        </Style>
-        <Style Selector="^:rail /template/ arc|ArcGlyph#PART_Chevron">
+        <!-- The icon rail: the text group fades (fast) and a count or unread mark becomes a dot; a page without an icon shows its initial. -->
+        <Style Selector="^:rail /template/ Grid#PART_TextGroup">
             <Setter Property="Opacity" Value="0" />
         </Style>
         <Style Selector="^:rail:has-badge:not(:nested) /template/ Ellipse#PART_Dot">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:rail:unread:not(:nested) /template/ Ellipse#PART_Dot">
             <Setter Property="Opacity" Value="1" />
         </Style>
         <Style Selector="^:rail:not(:has-icon):not(:nested) /template/ Panel#PART_IconSlot">
@@ -403,7 +521,6 @@
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                     <arc:ArcBrushTransition Property="Background" Tween="Fast" />
                 </Transitions>
             </Setter>
@@ -411,11 +528,18 @@
         <Style Selector="^:motion-full /template/ TextBlock#PART_Label">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="^:motion-full /template/ TextBlock#PART_Badge">
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Grid#PART_TextGroup">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
@@ -432,21 +556,12 @@
         <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
-                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                     <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
                 </Transitions>
             </Setter>
         </Style>
         <!-- Reduced motion: the text only fades; the chevron turns at once. -->
-        <Style Selector="^:motion-reduced /template/ TextBlock#PART_Label">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^:motion-reduced /template/ TextBlock#PART_Badge">
+        <Style Selector="^:motion-reduced /template/ Grid#PART_TextGroup">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
@@ -454,13 +569,6 @@
             </Setter>
         </Style>
         <Style Selector="^:motion-reduced /template/ Ellipse#PART_Dot">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^:motion-reduced /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
@@ -518,7 +626,6 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
-        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="ClipToBounds" Value="False" />
 
         <Style Selector="^ /template/ Panel#PART_TitleRow">

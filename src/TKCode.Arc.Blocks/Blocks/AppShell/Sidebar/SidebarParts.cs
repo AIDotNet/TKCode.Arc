@@ -9,6 +9,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -17,7 +18,8 @@ namespace TKCode.Arc;
 /// <summary>
 /// Lays its child out at the width it has while the <see cref="Sidebar"/> is open, whatever width it gets now. While the
 /// sidebar springs to the icon rail (and back) the rows, the header and the footer therefore never reflow or re-ellipsize:
-/// their content stays put and the pane's edge clips it, so icons hold still while the labels fade.
+/// their content stays put and the pane's edge clips it, so icons hold still while the labels fade. The measure uses the
+/// sidebar's layout width, the arrange the width the pane shows now (they differ while an overlay pane springs).
 /// </summary>
 internal sealed class SidebarOpenWidthHost : Decorator
 {
@@ -34,11 +36,7 @@ internal sealed class SidebarOpenWidthHost : Decorator
     private readonly RectangleGeometry _clip = new();
     private Sidebar? _owner;
 
-    private double Deficit()
-    {
-        _owner ??= this.FindAncestorOfType<Sidebar>();
-        return _owner?.LayoutDeficit ?? 0;
-    }
+    private Sidebar? Owner => _owner ??= this.FindAncestorOfType<Sidebar>();
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -46,23 +44,26 @@ internal sealed class SidebarOpenWidthHost : Decorator
         {
             return default;
         }
-        var deficit = Deficit();
         // The constraint is the open width at every step of the width spring, so the child is not even re-measured.
-        child.Measure(availableSize.WithWidth(availableSize.Width + deficit));
+        child.Measure(availableSize.WithWidth(availableSize.Width + (Owner?.MeasureDeficit ?? 0)));
         var desired = child.DesiredSize;
         return new Size(Math.Min(desired.Width, availableSize.Width), desired.Height);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var deficit = Deficit();
+        var deficit = Owner?.ArrangeDeficit ?? 0;
         Child?.Arrange(new Rect(0, 0, finalSize.Width + deficit, finalSize.Height));
         if (ClipsWhenNarrow && deficit > 0.5)
         {
             // One geometry, updated in place: the clip moves with the width spring without allocating.
-            _clip.Rect = new Rect(-ClipRoom, -ClipRoom, finalSize.Width + ClipRoom, finalSize.Height + 2 * ClipRoom);
-            Clip = _clip;
-            InvalidateVisual();
+            var rect = new Rect(-ClipRoom, -ClipRoom, finalSize.Width + ClipRoom, finalSize.Height + 2 * ClipRoom);
+            if (rect != _clip.Rect || Clip is null)
+            {
+                _clip.Rect = rect;
+                Clip = _clip;
+                InvalidateVisual();
+            }
         }
         else if (Clip is not null)
         {
@@ -75,6 +76,39 @@ internal sealed class SidebarOpenWidthHost : Decorator
     {
         base.OnDetachedFromVisualTree(e);
         _owner = null;
+    }
+}
+
+/// <summary>
+/// The root of a sidebar's template. Its children (the pane and its edge line) are arranged at the sidebar's
+/// <see cref="Sidebar.PaneWidth"/>: the width the pane shows now, which in <see cref="SidebarResizeMode.Overlay"/> springs
+/// while the sidebar's own layout width has already jumped to its new value. The panel reports whatever the children
+/// measure, so a springing pane never invalidates the layout of what is next to the sidebar.
+/// </summary>
+internal sealed class SidebarPaneHost : Panel
+{
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        var width = 0.0;
+        var height = 0.0;
+        foreach (var child in Children)
+        {
+            child.Measure(availableSize);
+            width = Math.Max(width, child.DesiredSize.Width);
+            height = Math.Max(height, child.DesiredSize.Height);
+        }
+        return new Size(width, height);
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var width = TemplatedParent is Sidebar sidebar ? sidebar.PaneWidth : finalSize.Width;
+        var rect = new Rect(0, 0, double.IsNaN(width) ? finalSize.Width : width, finalSize.Height);
+        foreach (var child in Children)
+        {
+            child.Arrange(rect);
+        }
+        return finalSize;
     }
 }
 
@@ -94,14 +128,31 @@ internal sealed class SidebarHeightSpring : Decorator
     /// <summary>True while the height springs.</summary>
     public bool IsMoving => _height?.IsAnimating == true;
 
+    /// <summary>
+    /// True once the container has closed and settled: it is then taken out of layout and rendering altogether
+    /// (<see cref="Visual.IsVisible"/>), so a tree with many closed parents costs nothing while they are closed.
+    /// </summary>
+    public bool IsSettledClosed => !IsExpanded && !IsMoving && (_height?.Value ?? 0) <= 0.01;
+
     private const double ClipRoom = 8;
     private readonly RectangleGeometry _clip = new();
     private MotionValue<double>? _height;
     private double _target;
+    private bool _hidePosted;
 
     static SidebarHeightSpring()
     {
         AffectsMeasure<SidebarHeightSpring>(IsExpandedProperty);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsExpandedProperty && change.GetNewValue<bool>())
+        {
+            // Opening: back into layout; the height springs up from where it was.
+            SetCurrentValue(IsVisibleProperty, true);
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -142,10 +193,21 @@ internal sealed class SidebarHeightSpring : Decorator
         child.Arrange(new Rect(0, 0, finalSize.Width, child.DesiredSize.Height));
         if (IsMoving || !IsExpanded)
         {
-            // One geometry, updated in place: no allocation per frame. Room on the sides keeps focus rings whole.
-            _clip.Rect = new Rect(-ClipRoom, 0, finalSize.Width + 2 * ClipRoom, finalSize.Height);
-            Clip = _clip;
-            InvalidateVisual();
+            // One geometry, updated in place (and only when it changed): no allocation, no repaint per frame.
+            // Room on the sides keeps focus rings whole.
+            var rect = new Rect(-ClipRoom, 0, finalSize.Width + 2 * ClipRoom, finalSize.Height);
+            if (Clip is null || rect != _clip.Rect)
+            {
+                _clip.Rect = rect;
+                Clip = _clip;
+                InvalidateVisual();
+            }
+            if (IsSettledClosed && !_hidePosted)
+            {
+                // Hide after this layout pass (changing visibility during arrange would invalidate the pass).
+                _hidePosted = true;
+                Dispatcher.UIThread.Post(HideWhenClosed, DispatcherPriority.Render);
+            }
         }
         else if (Clip is not null)
         {
@@ -153,13 +215,22 @@ internal sealed class SidebarHeightSpring : Decorator
         }
         return finalSize;
     }
+
+    private void HideWhenClosed()
+    {
+        _hidePosted = false;
+        if (IsSettledClosed)
+        {
+            SetCurrentValue(IsVisibleProperty, false);
+        }
+    }
 }
 
 /// <summary>
-/// The scrolling content of a <see cref="Sidebar"/>: the selection marker (two <see cref="GlidingIndicator"/>s, the
-/// muted block and the accent bar) under the sections, all in one coordinate space. After every arrange it tells the
-/// sidebar, so the marker follows passive layout changes (a section opening above it, the width spring). It also carries
-/// the token geometry the sidebar needs when it builds the section and child containers in code.
+/// The scrolling content of a <see cref="Sidebar"/>: the selection marker (a <see cref="GlidingIndicator"/>, the muted
+/// block) under the sections, in one coordinate space. After an arrange that moved the marker's row it tells the sidebar,
+/// so the marker follows passive layout changes (a section opening above it) without a spring of its own. It also
+/// carries the token geometry the sidebar needs when it builds the section and child containers in code.
 /// </summary>
 internal sealed class SidebarListPanel : Panel
 {
@@ -175,22 +246,10 @@ internal sealed class SidebarListPanel : Panel
     public static readonly StyledProperty<IBrush?> GuideBrushProperty =
         AvaloniaProperty.Register<SidebarListPanel, IBrush?>(nameof(GuideBrush));
 
-    public static readonly StyledProperty<double> MarkerBarWidthProperty =
-        AvaloniaProperty.Register<SidebarListPanel, double>(nameof(MarkerBarWidth), 3);
-
-    public static readonly StyledProperty<double> MarkerBarHeightProperty =
-        AvaloniaProperty.Register<SidebarListPanel, double>(nameof(MarkerBarHeight), 16);
-
-    public static readonly StyledProperty<double> MarkerBarInsetProperty =
-        AvaloniaProperty.Register<SidebarListPanel, double>(nameof(MarkerBarInset), 4);
-
     public double RowGap { get => GetValue(RowGapProperty); set => SetValue(RowGapProperty, value); }
     public Thickness ChildrenMargin { get => GetValue(ChildrenMarginProperty); set => SetValue(ChildrenMarginProperty, value); }
     public Thickness GuideMargin { get => GetValue(GuideMarginProperty); set => SetValue(GuideMarginProperty, value); }
     public IBrush? GuideBrush { get => GetValue(GuideBrushProperty); set => SetValue(GuideBrushProperty, value); }
-    public double MarkerBarWidth { get => GetValue(MarkerBarWidthProperty); set => SetValue(MarkerBarWidthProperty, value); }
-    public double MarkerBarHeight { get => GetValue(MarkerBarHeightProperty); set => SetValue(MarkerBarHeightProperty, value); }
-    public double MarkerBarInset { get => GetValue(MarkerBarInsetProperty); set => SetValue(MarkerBarInsetProperty, value); }
 
     public Action? Arranged { get; set; }
 
@@ -225,6 +284,50 @@ internal sealed class SidebarListPanel : Panel
 }
 
 /// <summary>
+/// Lays out a row's label and the icon that trails it: the label keeps what room is left, and the icon sits right after
+/// the label's text (not at the end of the row), so "More" and its chevron read as one.
+/// </summary>
+internal sealed class SidebarInlinePanel : Panel
+{
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        if (Children.Count < 2)
+        {
+            return Children.Count == 1 ? Measure1(availableSize) : default;
+        }
+        var label = Children[0];
+        var trailing = Children[1];
+        trailing.Measure(new Size(double.PositiveInfinity, availableSize.Height));
+        var trailingWidth = trailing.IsVisible ? trailing.DesiredSize.Width : 0;
+        label.Measure(new Size(Math.Max(0, availableSize.Width - trailingWidth), availableSize.Height));
+        return new Size(label.DesiredSize.Width + trailingWidth, Math.Max(label.DesiredSize.Height, trailing.DesiredSize.Height));
+    }
+
+    private Size Measure1(Size availableSize)
+    {
+        Children[0].Measure(availableSize);
+        return Children[0].DesiredSize;
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        if (Children.Count == 0)
+        {
+            return finalSize;
+        }
+        var label = Children[0];
+        var x = Math.Min(label.DesiredSize.Width, finalSize.Width);
+        label.Arrange(new Rect(0, 0, x, finalSize.Height));
+        if (Children.Count > 1)
+        {
+            var trailing = Children[1];
+            trailing.Arrange(new Rect(x, 0, trailing.IsVisible ? trailing.DesiredSize.Width : 0, finalSize.Height));
+        }
+        return finalSize;
+    }
+}
+
+/// <summary>
 /// The sidebar's own icon buttons (collapse / expand in the header row, search on the rail): 40 by 34 ghost squares with
 /// the rows' hover wash and radius, so on the rail they line up with the page rows below them.
 /// </summary>
@@ -244,14 +347,16 @@ internal static class SidebarPointer
 }
 
 /// <summary>
-/// One page row of a <see cref="Sidebar"/>: icon, label, count and (for a parent) a chevron. The row's own fill is only
-/// the hover wash; the selection block is the sidebar's gliding marker underneath. On the icon rail the label, count and
-/// chevron fade out (they keep their open-width layout and are clipped by the pane) and the count becomes a dot.
+/// One page row of a <see cref="Sidebar"/>: icon, label, an optional trailing icon, count or unread dot and (for a parent)
+/// a chevron. The row's own fill is only the hover wash; the selection block is the sidebar's gliding marker underneath.
+/// On the icon rail everything after the icon fades out together (one opacity per row; it keeps its open-width layout and
+/// is clipped by the pane) and a count or unread dot becomes a dot on the icon.
 /// </summary>
 [TemplatePart(LabelPart, typeof(TextBlock))]
 [TemplatePart(BadgePart, typeof(TextBlock))]
 [PseudoClasses(SelectedPseudoClass, CurrentPseudoClass, ParentPseudoClass, ExpandedPseudoClass, RailPseudoClass,
-    HasIconPseudoClass, HasBadgePseudoClass, NestedPseudoClass, SidebarPointer.HoveredPseudoClass, SidebarPointer.PressedPseudoClass)]
+    HasIconPseudoClass, HasBadgePseudoClass, HasTrailingPseudoClass, UnreadPseudoClass, ActionPseudoClass, NestedPseudoClass,
+    SidebarPointer.HoveredPseudoClass, SidebarPointer.PressedPseudoClass)]
 internal sealed class SidebarRow : TemplatedControl
 {
     public const string LabelPart = "PART_Label";
@@ -263,6 +368,9 @@ internal sealed class SidebarRow : TemplatedControl
     public const string RailPseudoClass = ":rail";
     public const string HasIconPseudoClass = ":has-icon";
     public const string HasBadgePseudoClass = ":has-badge";
+    public const string HasTrailingPseudoClass = ":has-trailing";
+    public const string UnreadPseudoClass = ":unread";
+    public const string ActionPseudoClass = ":action";
 
     /// <summary>A child page (indented under its parent; never on the rail itself).</summary>
     public const string NestedPseudoClass = ":nested";
@@ -277,6 +385,18 @@ internal sealed class SidebarRow : TemplatedControl
 
     public static readonly StyledProperty<object?> IconContentProperty =
         AvaloniaProperty.Register<SidebarRow, object?>(nameof(IconContent));
+
+    public static readonly StyledProperty<Geometry?> TrailingGlyphProperty =
+        AvaloniaProperty.Register<SidebarRow, Geometry?>(nameof(TrailingGlyph));
+
+    public static readonly StyledProperty<object?> TrailingContentProperty =
+        AvaloniaProperty.Register<SidebarRow, object?>(nameof(TrailingContent));
+
+    public static readonly StyledProperty<bool> IsUnreadProperty =
+        AvaloniaProperty.Register<SidebarRow, bool>(nameof(IsUnread));
+
+    public static readonly StyledProperty<bool> IsActionProperty =
+        AvaloniaProperty.Register<SidebarRow, bool>(nameof(IsAction));
 
     public static readonly StyledProperty<string?> MonogramProperty =
         AvaloniaProperty.Register<SidebarRow, string?>(nameof(Monogram));
@@ -303,6 +423,10 @@ internal sealed class SidebarRow : TemplatedControl
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
     public object? IconContent { get => GetValue(IconContentProperty); set => SetValue(IconContentProperty, value); }
+    public Geometry? TrailingGlyph { get => GetValue(TrailingGlyphProperty); set => SetValue(TrailingGlyphProperty, value); }
+    public object? TrailingContent { get => GetValue(TrailingContentProperty); set => SetValue(TrailingContentProperty, value); }
+    public bool IsUnread { get => GetValue(IsUnreadProperty); set => SetValue(IsUnreadProperty, value); }
+    public bool IsAction { get => GetValue(IsActionProperty); set => SetValue(IsActionProperty, value); }
     public string? Monogram { get => GetValue(MonogramProperty); set => SetValue(MonogramProperty, value); }
     public string? Badge { get => GetValue(BadgeProperty); set => SetValue(BadgeProperty, value); }
     public bool IsParent { get => GetValue(IsParentProperty); set => SetValue(IsParentProperty, value); }
@@ -371,9 +495,21 @@ internal sealed class SidebarRow : TemplatedControl
         {
             PseudoClasses.Set(HasIconPseudoClass, Glyph is not null || IconContent is not null);
         }
+        else if (change.Property == TrailingGlyphProperty || change.Property == TrailingContentProperty)
+        {
+            PseudoClasses.Set(HasTrailingPseudoClass, TrailingGlyph is not null || TrailingContent is not null);
+        }
         else if (change.Property == BadgeProperty)
         {
             PseudoClasses.Set(HasBadgePseudoClass, !string.IsNullOrEmpty(change.GetNewValue<string?>()));
+        }
+        else if (change.Property == IsUnreadProperty)
+        {
+            PseudoClasses.Set(UnreadPseudoClass, change.GetNewValue<bool>());
+        }
+        else if (change.Property == IsActionProperty)
+        {
+            PseudoClasses.Set(ActionPseudoClass, change.GetNewValue<bool>());
         }
     }
 
@@ -661,7 +797,7 @@ internal sealed class SidebarSectionHeader : TemplatedControl
 
 /// <summary>
 /// A node of the sidebar's visible structure: a section heading (<see cref="Item"/> null) or a page row, with the
-/// container of its child rows for a parent. Rebuilt when the sections or their item collections change.
+/// container of its child rows for a parent. Created and removed incrementally when the sections or their item collections change.
 /// </summary>
 internal sealed class SidebarNode
 {
@@ -692,12 +828,23 @@ internal sealed class SidebarNode
 
     public Panel? ChildrenStack { get; set; }
 
+    /// <summary>The stack holding a parent's child rows (inside <see cref="ChildrenStack"/>).</summary>
+    public StackPanel? ChildrenRows { get; set; }
+
     public List<SidebarNode> Children { get; } = new();
 
     /// <summary>The section's page rows (heading nodes only).</summary>
     public SidebarHeightSpring? SectionBody { get; set; }
 
+    public StackPanel? SectionStack { get; set; }
+
     public List<SidebarNode> SectionItems { get; } = new();
+
+    /// <summary>Position of the section in the sidebar (heading nodes only).</summary>
+    public int Index { get; set; }
+
+    /// <summary>The section's heading is in use: it has a title, or another section comes before it.</summary>
+    public bool HasHeader { get; set; }
 
     public Control? SectionRoot { get; set; }
 

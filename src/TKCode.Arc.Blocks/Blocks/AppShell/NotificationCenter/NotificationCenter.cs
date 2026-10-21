@@ -147,6 +147,7 @@ public class NotificationCenter : TemplatedControl
         OutsidePress
     }
 
+    private readonly SourceWatcher _watcher;
     private readonly List<NotificationItem> _all = new();
     private readonly List<NotificationItem> _visible = new();
     private HashSet<NotificationItem> _subscribed = new();
@@ -177,6 +178,7 @@ public class NotificationCenter : TemplatedControl
 
     public NotificationCenter()
     {
+        _watcher = new SourceWatcher(this);
         Items.CollectionChanged += OnCollectionChanged;
     }
 
@@ -217,7 +219,7 @@ public class NotificationCenter : TemplatedControl
 
     private IEnumerable<NotificationItem> Source => ItemsSource ?? Items;
 
-    private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    internal void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (ReferenceEquals(sender, Items) && ItemsSource is not null)
         {
@@ -230,18 +232,18 @@ public class NotificationCenter : TemplatedControl
     {
         if (_observedSource is not null)
         {
-            _observedSource.CollectionChanged -= OnCollectionChanged;
+            _observedSource.CollectionChanged -= _watcher.OnCollectionChanged;
             _observedSource = null;
         }
         if (ItemsSource is INotifyCollectionChanged observable)
         {
             _observedSource = observable;
-            observable.CollectionChanged += OnCollectionChanged;
+            observable.CollectionChanged += _watcher.OnCollectionChanged;
         }
         _hidden.Clear();
     }
 
-    private void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    internal void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
         if (e.Property == NotificationItem.TagProperty)
         {
@@ -272,14 +274,14 @@ public class NotificationCenter : TemplatedControl
         {
             if (!_current.Contains(item))
             {
-                item.PropertyChanged -= OnItemPropertyChanged;
+                item.PropertyChanged -= _watcher.OnItemPropertyChanged;
             }
         }
         foreach (var item in _all)
         {
             if (!_subscribed.Contains(item))
             {
-                item.PropertyChanged += OnItemPropertyChanged;
+                item.PropertyChanged += _watcher.OnItemPropertyChanged;
             }
         }
         (_subscribed, _current) = (_current, _subscribed);
@@ -698,6 +700,41 @@ public class NotificationCenter : TemplatedControl
         if (IsOpen)
         {
             _pendingOpen = true;
+        }
+    }
+
+    /// <summary>
+    /// What the data (the <see cref="ItemsSource"/> and every notification) holds on to: a weak link to the control. A
+    /// source or item that lives on in the app (a view model) therefore never keeps a bell, its panel and its rows alive
+    /// after the bell has left the window; the link drops itself from the source the next time that source reports a
+    /// change to a control that is gone.
+    /// </summary>
+    internal sealed class SourceWatcher(NotificationCenter owner)
+    {
+        private readonly WeakReference<NotificationCenter> _owner = new(owner);
+
+        public void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (_owner.TryGetTarget(out var target))
+            {
+                target.OnCollectionChanged(sender, e);
+            }
+            else if (sender is INotifyCollectionChanged source)
+            {
+                source.CollectionChanged -= OnCollectionChanged;
+            }
+        }
+
+        public void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (_owner.TryGetTarget(out var target))
+            {
+                target.OnItemPropertyChanged(sender, e);
+            }
+            else if (sender is NotificationItem item)
+            {
+                item.PropertyChanged -= OnItemPropertyChanged;
+            }
         }
     }
 
