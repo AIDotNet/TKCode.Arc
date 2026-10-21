@@ -141,7 +141,11 @@ internal static class CodeBlockHighlighter
         }
         Span<char> lower = stackalloc char[span.Length];
         span.ToLowerInvariant(lower);
+#if NET9_0_OR_GREATER
         return s_families.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(lower, out var family) ? family : CodeBlockLanguageFamily.Code;
+#else
+        return s_families.TryGetValue(lower.ToString(), out var family) ? family : CodeBlockLanguageFamily.Code;
+#endif
     }
 
     /// <summary>The Arc role of a Light+ token color in <paramref name="family"/>; 0 (editor foreground) is plain.</summary>

@@ -207,7 +207,7 @@ internal sealed class DataGridView
         {
             yield break;
         }
-        var stack = new Stack<DataGridGroupNode>(Groups.Reverse());
+        var stack = new Stack<DataGridGroupNode>(Enumerable.Reverse(Groups));
         while (stack.Count > 0)
         {
             var node = stack.Pop();

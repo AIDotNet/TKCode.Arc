@@ -177,7 +177,7 @@ internal static class JsonViewerPaths
         if (element.ValueKind is JsonValueKind.Object or JsonValueKind.Array)
         {
             using var stream = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true, IndentSize = 2, Encoder = s_encoder }))
+            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true, Encoder = s_encoder }))
             {
                 element.WriteTo(writer);
             }

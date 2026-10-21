@@ -9,9 +9,15 @@ namespace TKCode.Arc;
 /// </summary>
 public static class DataGridSorting
 {
+#if NET10_0_OR_GREATER
     private const CompareOptions TextOptions = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace |
                                                CompareOptions.IgnoreWidth | CompareOptions.IgnoreKanaType |
                                                CompareOptions.NumericOrdering;
+#else
+    // NumericOrdering arrived in .NET 10; NaturalCompare below supplies the same ordering on net8 and net9.
+    private const CompareOptions TextOptions = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace |
+                                               CompareOptions.IgnoreWidth | CompareOptions.IgnoreKanaType;
+#endif
 
     /// <summary>True for null and empty strings.</summary>
     public static bool IsEmpty(object? value) => value is null || value is string { Length: 0 };
@@ -36,8 +42,56 @@ public static class DataGridSorting
             case bool ba when b is bool bb:
                 return ba.CompareTo(bb);
         }
-        return culture.CompareInfo.Compare(TextOf(a), TextOf(b), TextOptions);
+        return CompareText(culture.CompareInfo, TextOf(a), TextOf(b));
     }
+
+    private static int CompareText(CompareInfo compare, string a, string b)
+    {
+#if NET10_0_OR_GREATER
+        return compare.Compare(a, b, TextOptions);
+#else
+        return NaturalCompare(compare, a, b);
+#endif
+    }
+
+#if !NET10_0_OR_GREATER
+    /// <summary>Alternates digit runs (compared by value) and text runs (compared with <see cref="TextOptions"/>).</summary>
+    private static int NaturalCompare(CompareInfo compare, string a, string b)
+    {
+        var i = 0;
+        var j = 0;
+        while (i < a.Length && j < b.Length)
+        {
+            var digits = char.IsDigit(a[i]) && char.IsDigit(b[j]);
+            var si = i;
+            var sj = j;
+            while (i < a.Length && char.IsDigit(a[i]) == digits)
+            {
+                i++;
+            }
+            while (j < b.Length && char.IsDigit(b[j]) == digits)
+            {
+                j++;
+            }
+            int result;
+            if (digits)
+            {
+                var na = a.AsSpan(si, i - si).TrimStart('0');
+                var nb = b.AsSpan(sj, j - sj).TrimStart('0');
+                result = na.Length != nb.Length ? na.Length.CompareTo(nb.Length) : na.CompareTo(nb, StringComparison.Ordinal);
+            }
+            else
+            {
+                result = compare.Compare(a, si, i - si, b, sj, j - sj, TextOptions);
+            }
+            if (result != 0)
+            {
+                return result;
+            }
+        }
+        return (a.Length - i).CompareTo(b.Length - j);
+    }
+#endif
 
     /// <summary>
     /// Sorts <paramref name="rows"/> by <paramref name="keys"/> (stable). <paramref name="valueOf"/> returns the
@@ -115,7 +169,7 @@ public static class DataGridSorting
                 }
                 else
                 {
-                    result = compare.Compare(TextOf(a), TextOf(b), TextOptions);
+                    result = CompareText(compare, TextOf(a), TextOf(b));
                 }
                 if (result != 0)
                 {
