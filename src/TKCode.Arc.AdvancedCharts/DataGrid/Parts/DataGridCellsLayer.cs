@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.Media.TextFormatting;
 using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 
@@ -219,9 +220,16 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
             RenderPlaceholderCells(context, row, y, rowHeight, layout, firstColumn, lastColumn, shift, palette);
             return;
         }
-        var version = _grid.RowVersionOf(row) * 31 + _grid.ColumnsVersion;
+        var version = _grid.CellVersion(row);
         var padding = _grid.CellInlinePadding;
         var fontSize = _grid.CellFontSize;
+        var styled = _grid.HasStyling;
+        var errors = _grid.HasErrors;
+        var item = styled ? _grid.ItemOfRow(row) : null;
+        if (item is not null && _grid.RowStyleSelector is { } rowSelector && rowSelector(item) is { } rowTone)
+        {
+            context.FillRectangle(palette.Tone(rowTone).Fill, new Rect(cellsLeft, y, cellsRight - cellsLeft, rowHeight - 1));
+        }
         for (var c = firstColumn; c <= lastColumn; c++)
         {
             var left = layout.Lefts[c] + shift;
@@ -235,18 +243,73 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
             var column = _grid.ColumnOf(accessor);
             var numeric = column.IsNumeric;
             var inner = width - padding * 2;
+            DataGridCellStyle? style = null;
+            if (item is not null)
+            {
+                style = _grid.StyleOf(item, key, accessor, _grid.ValueAt(row, accessor));
+                if (style is { } tinted)
+                {
+                    context.FillRectangle(palette.Tone(tinted.Tone).Fill, new Rect(left, y, width - 1, rowHeight - 1));
+                }
+            }
+            if (errors && _grid.ErrorOf(key, accessor) is not null)
+            {
+                context.DrawRectangle(null, palette.ErrorPen, new Rect(left + 1.5, y + 1.5, Math.Max(0, width - 4), Math.Max(0, rowHeight - 4)));
+                context.DrawRectangle(palette.Tone(DataGridTone.Danger).Foreground, null, new Rect(right - 10, y + 4, 6, 6), 3, 3);
+            }
             if (inner < 2)
             {
                 continue;
             }
-            var text = _texts.Get(key, accessor, version, 0, new CellState(_grid, row, accessor), s_cellText, palette.Regular, fontSize,
-                palette.ForegroundBrush, numeric, inner);
+            if (column.EffectiveRenderer is { } renderer)
+            {
+                RenderWithRenderer(context, renderer, row, key, accessor, c, left, width, y, rowHeight, padding, version);
+                continue;
+            }
+            var bold = style is { Bold: true };
+            var text = _texts.Get(key, accessor, version, bold ? 1 : 0, new CellState(_grid, row, accessor), s_cellText, bold ? palette.Medium : palette.Regular,
+                fontSize, style is { } toned ? palette.Tone(toned.Tone).Foreground : palette.ForegroundBrush, numeric, inner);
             if (text is null)
             {
                 continue;
             }
             var x = numeric ? right - padding - Math.Min(text.WidthIncludingTrailingWhitespace, inner) : left + padding;
-            context.DrawText(text, new Point(x, Math.Round(y + (rowHeight - text.Height) / 2)));
+            text.Draw(context, new Point(x, Math.Round(y + (rowHeight - text.Height) / 2)));
+        }
+    }
+
+    /// <summary>Slots of the text layouts a renderer asks for start here (cell text uses the column's accessor index as its slot).</summary>
+    private const int RendererSlotBase = 4096;
+
+    /// <summary>One line of text for a cell renderer, cached like the cell text; a null brush reuses whatever brush the layout has.</summary>
+    internal TextLayout? RendererText(object key, int accessor, int part, int version, string text, double maxWidth, IBrush? brush, bool medium,
+                                      double size)
+    {
+        var palette = _grid.Palette;
+        return _texts.Get(key, accessor + RendererSlotBase * (part + 1), version, medium ? 1 : 0, text, static s => s,
+            medium ? palette.Medium : palette.Regular, size, brush ?? palette.ForegroundBrush, false, maxWidth, anyBrush: brush is null);
+    }
+
+    private void RenderWithRenderer(DrawingContext context, DataGridCellRenderer renderer, int row, object key, int accessor, int column, double left,
+                                    double width, double y, double rowHeight, double padding, int version)
+    {
+        var item = _grid.ItemOfRow(row);
+        if (item is null)
+        {
+            return;
+        }
+        var text = _texts.StringOf(key, accessor, version, new CellState(_grid, row, accessor), s_cellText);
+        Point? pointer = null;
+        if (_viewport.HoverCell == (row, column) && _viewport.TranslatePoint(_viewport.HoverPoint, this) is { } local)
+        {
+            pointer = local;
+        }
+        var bounds = new Rect(left + padding, y, Math.Max(0, width - padding * 2), rowHeight);
+        var render = new DataGridCellRenderContext(_grid, this, context, bounds, _grid.ValueAt(row, accessor), item, key, row, accessor, version, text,
+            _grid.EffectiveCulture, _grid.RenderPalette, _grid.CellFontSize, _grid.SmallFontSize, pointer);
+        using (context.PushClip(new Rect(left, y, width - 1, rowHeight - 1)))
+        {
+            renderer.Render(render);
         }
     }
 
@@ -271,7 +334,7 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
             _grid.SmallFontSize, inRange ? palette.ForegroundBrush : palette.MutedBrush, true, gutter - 4);
         if (text is not null)
         {
-            context.DrawText(text, new Point(Math.Round((gutter - text.WidthIncludingTrailingWhitespace) / 2),
+            text.Draw(context, new Point(Math.Round((gutter - text.WidthIncludingTrailingWhitespace) / 2),
                 Math.Round(y + (rowHeight - text.Height) / 2)));
         }
     }
@@ -318,7 +381,7 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
             var x = column.IsNumeric || column.Type == DataGridColumnType.Date
                 ? cellLeft + width - padding - Math.Min(text.WidthIncludingTrailingWhitespace, inner)
                 : cellLeft + padding;
-            context.DrawText(text, new Point(x, Math.Round(y + (rowHeight - text.Height) / 2)));
+            text.Draw(context, new Point(x, Math.Round(y + (rowHeight - text.Height) / 2)));
         }
     }
 
@@ -340,14 +403,14 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
         var x = textLeft;
         if (label is not null)
         {
-            context.DrawText(label, new Point(x, Math.Round(y + (rowHeight - label.Height) / 2)));
+            label.Draw(context, new Point(x, Math.Round(y + (rowHeight - label.Height) / 2)));
             x += Math.Min(label.WidthIncludingTrailingWhitespace, Math.Max(1, available - countWidth - 8)) + 8;
         }
         if (count is not null && x + countWidth <= left + width)
         {
             var badge = new Rect(x, Math.Round(y + (rowHeight - 18) / 2), countWidth, 18);
             context.DrawRectangle(palette.BadgeBrush, null, badge, 9, 9);
-            context.DrawText(count, new Point(badge.X + 6, Math.Round(badge.Y + (badge.Height - count.Height) / 2)));
+            count.Draw(context, new Point(badge.X + 6, Math.Round(badge.Y + (badge.Height - count.Height) / 2)));
         }
     }
 

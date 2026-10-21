@@ -169,6 +169,8 @@ internal sealed class DataGridToolbar : Border
     private readonly PresenceHost _bulkHost;
     private readonly DataGridSearchBox _search;
     private readonly TextBlock _rowCount;
+    private readonly DataGridToolButton _addRow;
+    private readonly DataGridToolButton _errors;
     private readonly DataGridToolButton _undo;
     private readonly DataGridToolButton _redo;
     private readonly StackPanel _undoGroup;
@@ -198,6 +200,10 @@ internal sealed class DataGridToolbar : Border
         ArcTokens.Bind(_rowCount, TextBlock.FontSizeProperty, ArcDesignTokenKind.TypeXS);
         _rowCount.FontFeatures = DataGridPalette.TabularNumbers;
         AutomationProperties.SetLiveSetting(_rowCount, AutomationLiveSetting.Polite);
+        _addRow = new DataGridToolButton(ArcIcons.Plus) { IsVisible = false };
+        _addRow.Click += (_, _) => Run(g => g.AddRow());
+        _errors = new DataGridToolButton(ArcIcons.TriangleAlert) { IsDanger = true, IsVisible = false };
+        _errors.Click += (_, _) => Run(g => g.NextError());
         _undo = new DataGridToolButton(ArcIcons.Undo2, iconOnly: true);
         _redo = new DataGridToolButton(ArcIcons.Redo2, iconOnly: true);
         _undo.Click += (_, _) => Run(g =>
@@ -222,12 +228,12 @@ internal sealed class DataGridToolbar : Border
         _export = new DataGridToolButton(ArcIcons.Download);
         _export.Click += (_, _) => Run(g => g.OpenExport(_export, checkedOnly: false));
         var normal = new DockPanel { LastChildFill = false };
-        var left = new StackPanel { Orientation = Orientation.Horizontal, Children = { _search, _rowCount } };
+        var left = new StackPanel { Orientation = Orientation.Horizontal, Children = { _search, _rowCount, _errors } };
         var right = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 2,
-            Children = { _undoGroup, _filter, _columns, _density, _groups, _export }
+            Children = { _addRow, _undoGroup, _filter, _columns, _density, _groups, _export }
         };
         DockPanel.SetDock(left, Dock.Left);
         DockPanel.SetDock(right, Dock.Right);
@@ -309,7 +315,7 @@ internal sealed class DataGridToolbar : Border
     public void SetResponsive(bool compact, bool minimal)
     {
         _compact = compact;
-        foreach (var button in new[] { _filter, _columns, _export, _copy, _bulkExport, _delete })
+        foreach (var button in new[] { _addRow, _errors, _filter, _columns, _export, _copy, _bulkExport, _delete })
         {
             button.SetCompact(compact);
         }
@@ -347,6 +353,7 @@ internal sealed class DataGridToolbar : Border
         }
         _search.PlaceholderText = DataGridText.Get(DataGridLangResourceKind.SearchPlaceholder);
         AutomationProperties.SetName(_search, DataGridText.Format(DataGridLangResourceKind.SearchLabel, grid.AccessibleName));
+        _addRow.Label = DataGridText.Get(DataGridLangResourceKind.AddRow);
         _undo.Label = DataGridText.Get(DataGridLangResourceKind.Undo);
         _redo.Label = DataGridText.Get(DataGridLangResourceKind.Redo);
         _filter.Label = DataGridText.Get(DataGridLangResourceKind.Filter);
@@ -428,6 +435,12 @@ internal sealed class DataGridToolbar : Border
         _bulkExport.IsVisible = formats != DataGridExportFormats.None;
         _bulkExport.IsEnabled = grid.CanSaveFiles;
         _delete.IsVisible = grid.CanDeleteRows && !grid.HasDataSource;
+        _addRow.IsVisible = grid.CanCreateRows;
+        _errors.IsVisible = grid.ErrorCount > 0;
+        if (grid.ErrorCount > 0)
+        {
+            _errors.Label = DataGridText.Count(DataGridLangResourceKind.ErrorsOne, DataGridLangResourceKind.ErrorsOther, grid.ErrorCount, grid.EffectiveCulture);
+        }
         SyncSearch(grid);
     }
 

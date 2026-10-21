@@ -41,9 +41,14 @@ public static class DataGridClipboardText
         return builder.ToString();
     }
 
-    /// <summary>Reads tab separated text (quoted cells may hold tabs and line breaks); a final line break is ignored.</summary>
-    public static List<List<string>> ParseTsv(string? text)
+    /// <summary>
+    /// Reads tab separated text (quoted cells may hold tabs and line breaks); a final line break is ignored. Reading stops
+    /// once the result holds <paramref name="maxCells"/> cells, which bounds the memory a hostile clipboard can use. To
+    /// tell a truncated read from an exact fit, ask for one cell more than the limit and compare.
+    /// </summary>
+    public static List<List<string>> ParseTsv(string? text, int maxCells = int.MaxValue)
     {
+        maxCells = Math.Max(1, maxCells);
         var rows = new List<List<string>>();
         var s = (text ?? string.Empty).Replace("\r\n", "\n").Replace('\r', '\n');
         if (s.EndsWith('\n'))
@@ -53,8 +58,9 @@ public static class DataGridClipboardText
         var row = new List<string>();
         var cell = new StringBuilder();
         var quoted = false;
+        var cells = 0;
         var i = 0;
-        while (i < s.Length)
+        while (i < s.Length && cells < maxCells)
         {
             var ch = s[i];
             if (quoted)
@@ -82,10 +88,12 @@ public static class DataGridClipboardText
                     break;
                 case '\t':
                     row.Add(cell.ToString());
+                    cells++;
                     cell.Clear();
                     break;
                 case '\n':
                     row.Add(cell.ToString());
+                    cells++;
                     rows.Add(row);
                     row = new List<string>();
                     cell.Clear();
@@ -96,8 +104,14 @@ public static class DataGridClipboardText
             }
             i++;
         }
-        row.Add(cell.ToString());
-        rows.Add(row);
+        if (cells < maxCells)
+        {
+            row.Add(cell.ToString());
+        }
+        if (row.Count > 0 || rows.Count == 0)
+        {
+            rows.Add(row);
+        }
         return rows;
     }
 
@@ -121,9 +135,10 @@ public static class DataGridClipboardText
     /// <summary>
     /// Reads the first table of an HTML fragment: one list per <c>tr</c>, one string per <c>td</c> / <c>th</c> (with
     /// <c>colspan</c> padding), whitespace collapsed as browsers do, <c>br</c> as a line break, entities decoded.
-    /// Null when there is no table.
+    /// Null when there is no table. Reading stops once the result holds <paramref name="maxCells"/> cells (padding from
+    /// <c>colspan</c> counts), so a table cannot make the result grow beyond that.
     /// </summary>
-    public static List<List<string>>? ParseHtmlTable(string? html)
+    public static List<List<string>>? ParseHtmlTable(string? html, int maxCells = int.MaxValue)
     {
         if (string.IsNullOrEmpty(html))
         {
@@ -134,13 +149,15 @@ public static class DataGridClipboardText
         {
             return null;
         }
+        maxCells = Math.Max(1, maxCells);
         var rows = new List<List<string>>();
         List<string>? row = null;
         StringBuilder? cell = null;
         var colspan = 1;
         var depth = 0;
+        var cells = 0;
         var i = start;
-        while (i < html.Length)
+        while (i < html.Length && cells < maxCells)
         {
             if (html[i] == '<')
             {
@@ -184,7 +201,7 @@ public static class DataGridClipboardText
                         depth += closing ? -1 : 1;
                         if (depth == 0)
                         {
-                            FinishCell(row, ref cell, colspan);
+                            FinishCell(row, ref cell, colspan, ref cells, maxCells);
                             if (row is not null)
                             {
                                 rows.Add(row);
@@ -193,7 +210,7 @@ public static class DataGridClipboardText
                         }
                         break;
                     case "tr" when depth == 1:
-                        FinishCell(row, ref cell, colspan);
+                        FinishCell(row, ref cell, colspan, ref cells, maxCells);
                         if (row is not null)
                         {
                             rows.Add(row);
@@ -201,7 +218,7 @@ public static class DataGridClipboardText
                         row = closing ? null : new List<string>();
                         break;
                     case "td" or "th" when depth == 1:
-                        FinishCell(row, ref cell, colspan);
+                        FinishCell(row, ref cell, colspan, ref cells, maxCells);
                         if (!closing)
                         {
                             row ??= new List<string>();
@@ -229,7 +246,7 @@ public static class DataGridClipboardText
             }
             i = next;
         }
-        FinishCell(row, ref cell, colspan);
+        FinishCell(row, ref cell, colspan, ref cells, maxCells);
         if (row is not null)
         {
             rows.Add(row);
@@ -307,18 +324,23 @@ public static class DataGridClipboardText
         }
     }
 
-    private static void FinishCell(List<string>? row, ref StringBuilder? cell, int colspan)
+    private static void FinishCell(List<string>? row, ref StringBuilder? cell, int colspan, ref int cells, int maxCells)
     {
         if (cell is null || row is null)
         {
             cell = null;
             return;
         }
-        var lines = cell.ToString().Split('\n').Select(l => l.Trim());
-        row.Add(string.Join("\n", lines).Trim('\n'));
-        for (var i = 1; i < colspan; i++)
+        if (cells < maxCells)
+        {
+            var lines = cell.ToString().Split('\n').Select(l => l.Trim());
+            row.Add(string.Join("\n", lines).Trim('\n'));
+            cells++;
+        }
+        for (var i = 1; i < colspan && cells < maxCells; i++)
         {
             row.Add(string.Empty);
+            cells++;
         }
         cell = null;
     }
@@ -327,17 +349,32 @@ public static class DataGridClipboardText
         text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
 }
 
+/// <summary>How <see cref="DataGridCsv"/> writes a file.</summary>
+public sealed class DataGridCsvOptions
+{
+    /// <summary>
+    /// Prefixes text that a spreadsheet would run as a formula (it starts with <c>=</c>, <c>+</c>, <c>-</c>, <c>@</c>, a
+    /// tab or a carriage return) with a single quote, so opening the file in Excel or Sheets cannot execute it (CSV
+    /// injection). The quote stays visible in the cell. Numbers and days are never prefixed. Default true; turn it off only
+    /// when the text must round-trip byte for byte and the file never reaches a spreadsheet.
+    /// </summary>
+    public bool NeutralizeFormulas { get; init; } = true;
+}
+
 /// <summary>RFC 4180 CSV with a byte order mark, so Excel reads UTF-8. Pure functions, usable on any thread.</summary>
 public static class DataGridCsv
 {
     /// <summary>
     /// CSV text: a header line, then one line per row, CRLF line breaks. Numbers are written with an invariant decimal
-    /// point and no grouping, days as ISO (2026-01-31), and text as is (quoted when it holds commas, quotes or line breaks).
+    /// point and no grouping, days as ISO (2026-01-31), and text as is (quoted when it holds commas, quotes or line
+    /// breaks), except that text a spreadsheet would run as a formula is prefixed with a quote
+    /// (<see cref="DataGridCsvOptions.NeutralizeFormulas"/>).
     /// </summary>
-    public static string ToCsv(IReadOnlyList<string> headers, IEnumerable<IReadOnlyList<object?>> rows)
+    public static string ToCsv(IReadOnlyList<string> headers, IEnumerable<IReadOnlyList<object?>> rows, DataGridCsvOptions? options = null)
     {
+        var neutralize = options?.NeutralizeFormulas ?? true;
         var builder = new StringBuilder();
-        builder.AppendJoin(',', headers.Select(Quote));
+        builder.AppendJoin(',', headers.Select(h => Quote(neutralize ? NeutralizeFormula(h) : h)));
         foreach (var row in rows)
         {
             builder.Append("\r\n");
@@ -347,20 +384,28 @@ public static class DataGridCsv
                 {
                     builder.Append(',');
                 }
-                builder.Append(Quote(Raw(row[c])));
+                var value = row[c];
+                builder.Append(Quote(neutralize && value is string text ? NeutralizeFormula(text) : Raw(value)));
             }
         }
         return builder.ToString();
     }
 
     /// <summary>Writes <see cref="ToCsv"/> as UTF-8 with a byte order mark.</summary>
-    public static void Write(Stream stream, IReadOnlyList<string> headers, IEnumerable<IReadOnlyList<object?>> rows)
+    public static void Write(Stream stream, IReadOnlyList<string> headers, IEnumerable<IReadOnlyList<object?>> rows, DataGridCsvOptions? options = null)
     {
         var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true);
         stream.Write(bytes.GetPreamble());
-        var text = bytes.GetBytes(ToCsv(headers, rows));
+        var text = bytes.GetBytes(ToCsv(headers, rows, options));
         stream.Write(text);
     }
+
+    /// <summary>
+    /// The text with a single quote in front when it starts with <c>=</c>, <c>+</c>, <c>-</c>, <c>@</c>, a tab or a
+    /// carriage return, which spreadsheets read as a formula; other text is returned unchanged.
+    /// </summary>
+    public static string NeutralizeFormula(string text) =>
+        text.Length > 0 && text[0] is '=' or '+' or '-' or '@' or '\t' or '\r' ? "'" + text : text;
 
     /// <summary>The raw text of a normalized value (invariant numbers, ISO days).</summary>
     public static string Raw(object? value) => value switch
@@ -369,6 +414,7 @@ public static class DataGridCsv
         string s => s,
         decimal d => d.ToString(CultureInfo.InvariantCulture),
         DateOnly day => day.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        bool flag => flag ? "TRUE" : "FALSE",
         IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
         _ => value.ToString() ?? string.Empty
     };

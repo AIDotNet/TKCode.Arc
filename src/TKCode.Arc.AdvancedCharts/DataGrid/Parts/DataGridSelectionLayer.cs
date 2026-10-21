@@ -25,6 +25,7 @@ internal sealed class DataGridSelectionLayer : Avalonia.Controls.Control
     private Rect _washRect;
     private DataGridCellRange? _previewRange;
     private bool _hasTarget;
+    private double? _dropX;
 
     public DataGridSelectionLayer(DataGrid grid, DataGridViewport viewport)
     {
@@ -32,6 +33,16 @@ internal sealed class DataGridSelectionLayer : Avalonia.Controls.Control
         _viewport = viewport;
         ClipToBounds = true;
         IsHitTestVisible = false;
+    }
+
+    /// <summary>Shows a vertical line at a viewport x while a column is dragged (null hides it).</summary>
+    public void SetColumnDrop(double? x)
+    {
+        if (_dropX != x)
+        {
+            _dropX = x;
+            InvalidateVisual();
+        }
     }
 
     /// <summary>The selected range as drawn now (content coordinates).</summary>
@@ -166,6 +177,10 @@ internal sealed class DataGridSelectionLayer : Avalonia.Controls.Control
 
     public override void Render(DrawingContext context)
     {
+        if (_dropX is { } dropX)
+        {
+            context.DrawLine(_grid.Palette.ActivePen, new Point(dropX, 0), new Point(dropX, Bounds.Height));
+        }
         if (!_hasTarget || !_grid.HasCells || _range is null || _active is null)
         {
             return;

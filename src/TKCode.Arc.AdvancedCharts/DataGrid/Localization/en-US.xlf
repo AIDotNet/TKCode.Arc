@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
   <file id="TKCode.Arc.Localization.DataGridLangResourceKind">
+    <unit id="AddRow">
+      <segment>
+        <source>Add row</source>
+      </segment>
+    </unit>
     <unit id="AggregateAverage">
       <segment>
         <source>Avg</source>
@@ -41,6 +46,11 @@
         <source>{0}, {1}: {2}</source>
       </segment>
     </unit>
+    <unit id="CellReadOnly">
+      <segment>
+        <source>This cell is read only</source>
+      </segment>
+    </unit>
     <unit id="CellSet">
       <segment>
         <source>{0} for {1} set to {2}</source>
@@ -64,6 +74,11 @@
     <unit id="ClearAllFilters">
       <segment>
         <source>Clear all filters</source>
+      </segment>
+    </unit>
+    <unit id="ClearContents">
+      <segment>
+        <source>Clear contents</source>
       </segment>
     </unit>
     <unit id="ClearFilters">
@@ -116,6 +131,11 @@
         <source>Collapsed all groups</source>
       </segment>
     </unit>
+    <unit id="ColumnMoved">
+      <segment>
+        <source>Moved {0} to position {1} of {2}</source>
+      </segment>
+    </unit>
     <unit id="ColumnOptions">
       <segment>
         <source>{0} column options</source>
@@ -166,6 +186,16 @@
         <source>Copy failed. The clipboard is not available</source>
       </segment>
     </unit>
+    <unit id="CopyWithHeaders">
+      <segment>
+        <source>Copy with headers</source>
+      </segment>
+    </unit>
+    <unit id="Cut">
+      <segment>
+        <source>Cut</source>
+      </segment>
+    </unit>
     <unit id="DatePlaceholder">
       <segment>
         <source>YYYY-MM-DD</source>
@@ -174,6 +204,11 @@
     <unit id="Delete">
       <segment>
         <source>Delete</source>
+      </segment>
+    </unit>
+    <unit id="DeleteRowsOfSelection">
+      <segment>
+        <source>Delete rows</source>
       </segment>
     </unit>
     <unit id="DeletedRowsOne">
@@ -231,6 +266,16 @@
         <source>empty</source>
       </segment>
     </unit>
+    <unit id="ErrorsOne">
+      <segment>
+        <source>{0} error</source>
+      </segment>
+    </unit>
+    <unit id="ErrorsOther">
+      <segment>
+        <source>{0} errors</source>
+      </segment>
+    </unit>
     <unit id="Expand">
       <segment>
         <source>Expand</source>
@@ -281,6 +326,11 @@
         <source>Exported {0} rows</source>
       </segment>
     </unit>
+    <unit id="FillDownAction">
+      <segment>
+        <source>Fill down</source>
+      </segment>
+    </unit>
     <unit id="FillDownNeedsRows">
       <segment>
         <source>Select more than one row to fill down</source>
@@ -314,6 +364,11 @@
     <unit id="FilterAll">
       <segment>
         <source>All</source>
+      </segment>
+    </unit>
+    <unit id="FilterByValue">
+      <segment>
+        <source>Filter by this value</source>
       </segment>
     </unit>
     <unit id="FilterContains">
@@ -366,6 +421,11 @@
         <source>Filters cleared</source>
       </segment>
     </unit>
+    <unit id="FitColumnWidth">
+      <segment>
+        <source>Fit column width</source>
+      </segment>
+    </unit>
     <unit id="GridName">
       <segment>
         <source>Data grid</source>
@@ -406,6 +466,16 @@
         <source>Hide column</source>
       </segment>
     </unit>
+    <unit id="InsertRowAbove">
+      <segment>
+        <source>Insert row above</source>
+      </segment>
+    </unit>
+    <unit id="InsertRowBelow">
+      <segment>
+        <source>Insert row below</source>
+      </segment>
+    </unit>
     <unit id="Loading">
       <segment>
         <source>Loading</source>
@@ -424,6 +494,11 @@
     <unit id="NeedsOption">
       <segment>
         <source>Choose one of the {0} options</source>
+      </segment>
+    </unit>
+    <unit id="NoErrors">
+      <segment>
+        <source>No errors</source>
       </segment>
     </unit>
     <unit id="NoMatch">
@@ -466,6 +541,11 @@
         <source>{0} options</source>
       </segment>
     </unit>
+    <unit id="Paste">
+      <segment>
+        <source>Paste</source>
+      </segment>
+    </unit>
     <unit id="PasteOverflow">
       <segment>
         <source>. Some cells fell outside the grid</source>
@@ -479,6 +559,11 @@
     <unit id="PasteSkippedOther">
       <segment>
         <source>, skipped {0} that did not fit</source>
+      </segment>
+    </unit>
+    <unit id="PasteTooLarge">
+      <segment>
+        <source>Nothing was pasted: the clipboard holds more than {0} cells</source>
       </segment>
     </unit>
     <unit id="PastedCellsOne">
@@ -516,6 +601,11 @@
         <source>Alt and arrow keys resize</source>
       </segment>
     </unit>
+    <unit id="RowAdded">
+      <segment>
+        <source>Added a row</source>
+      </segment>
+    </unit>
     <unit id="RowCountFiltered">
       <segment>
         <source>{0} of {1} rows</source>
@@ -539,6 +629,36 @@
     <unit id="RowsLoadFailed">
       <segment>
         <source>Rows could not load</source>
+      </segment>
+    </unit>
+    <unit id="RuleMaxLength">
+      <segment>
+        <source>{0} can hold at most {1} characters</source>
+      </segment>
+    </unit>
+    <unit id="RulePattern">
+      <segment>
+        <source>{0} is not in the expected format</source>
+      </segment>
+    </unit>
+    <unit id="RuleRangeBetween">
+      <segment>
+        <source>{0} must be between {1} and {2}</source>
+      </segment>
+    </unit>
+    <unit id="RuleRangeMax">
+      <segment>
+        <source>{0} must be at most {1}</source>
+      </segment>
+    </unit>
+    <unit id="RuleRangeMin">
+      <segment>
+        <source>{0} must be at least {1}</source>
+      </segment>
+    </unit>
+    <unit id="RuleRequired">
+      <segment>
+        <source>{0} is required</source>
       </segment>
     </unit>
     <unit id="SearchLabel">

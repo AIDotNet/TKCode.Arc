@@ -33,6 +33,8 @@ public static class DataGridSorting
                 return da.CompareTo(db);
             case DateOnly ta when b is DateOnly tb:
                 return ta.CompareTo(tb);
+            case bool ba when b is bool bb:
+                return ba.CompareTo(bb);
         }
         return culture.CompareInfo.Compare(TextOf(a), TextOf(b), TextOptions);
     }
@@ -142,6 +144,7 @@ public static class DataGridSorting
         string s => s,
         decimal d => d.ToString(CultureInfo.InvariantCulture),
         DateOnly day => day.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        bool flag => flag ? "true" : "false",
         IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
         _ => value.ToString() ?? string.Empty
     };

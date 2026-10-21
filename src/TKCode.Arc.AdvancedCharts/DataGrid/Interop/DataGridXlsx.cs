@@ -235,6 +235,8 @@ public static class DataGridXlsx
             case DateOnly day:
                 var serial = day.DayNumber - new DateOnly(1899, 12, 30).DayNumber;
                 return $"<c r=\"{reference}\" s=\"{styles.GetBuiltIn(14, false)}\"><v>{serial.ToString(CultureInfo.InvariantCulture)}</v></c>";
+            case bool flag:
+                return $"<c r=\"{reference}\" t=\"b\"><v>{(flag ? 1 : 0)}</v></c>";
             default:
                 return InlineString(reference, DataGridCsv.Raw(value), 0);
         }

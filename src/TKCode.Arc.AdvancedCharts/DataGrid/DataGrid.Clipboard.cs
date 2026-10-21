@@ -16,7 +16,10 @@ public partial class DataGrid
         OperatingSystem.IsWindows() ? "HTML Format" : OperatingSystem.IsMacOS() || OperatingSystem.IsIOS() ? "public.html" : "text/html");
 
     /// <summary>Copies the selected cells as tab separated text and an HTML table; returns whether the clipboard took them.</summary>
-    public async Task<bool> CopySelectionAsync()
+    public Task<bool> CopySelectionAsync() => CopySelectionAsync(withHeaders: false);
+
+    /// <summary>Copies the current selection, with a header row on top when <paramref name="withHeaders"/> is true; returns whether it was copied.</summary>
+    public async Task<bool> CopySelectionAsync(bool withHeaders)
     {
         EnsureView();
         if (!HasCells)
@@ -24,7 +27,7 @@ public partial class DataGrid
             return false;
         }
         var range = Range;
-        var ok = await WriteClipboardAsync(Matrix(range, header: false, formatted: false), Matrix(range, header: false, formatted: true));
+        var ok = await WriteClipboardAsync(Matrix(range, header: withHeaders, formatted: false), Matrix(range, header: withHeaders, formatted: true));
         if (ok)
         {
             Viewport.Flash(range);
@@ -92,13 +95,31 @@ public partial class DataGrid
     {
         var range = Range;
         var rows = matrix.Count;
+        if (rows == 0)
+        {
+            return;
+        }
+        var cellCount = 0L;
+        foreach (var line in matrix)
+        {
+            cellCount += line.Count;
+        }
+        if (cellCount > MaxPasteCells)
+        {
+            Say(DataGridText.Format(DataGridLangResourceKind.PasteTooLarge, MaxPasteCells.ToString("N0", EffectiveCulture)));
+            return;
+        }
         var columns = matrix.Max(r => r.Count);
-        if (rows == 0 || columns == 0)
+        if (columns == 0)
         {
             return;
         }
         var visible = VisibleAccessors;
         var tile = (range.RowCount > rows || range.ColumnCount > columns) && range.RowCount % rows == 0 && range.ColumnCount % columns == 0;
+        if (!tile && PasteOverflow == DataGridPasteOverflow.AppendRows && range.Row0 + rows > DisplayCount)
+        {
+            AppendRows(range.Row0 + rows - DisplayCount);
+        }
         var height = tile ? range.RowCount : Math.Min(rows, DisplayCount - range.Row0);
         var width = tile ? range.ColumnCount : Math.Min(columns, visible.Length - range.Column0);
         var cells = new List<(int, int, object?)>();
@@ -125,6 +146,7 @@ public partial class DataGrid
         }
         var target = new DataGridCellRange(range.Row0, range.Column0, range.Row0 + height - 1, range.Column0 + width - 1);
         var written = WriteCells(cells, target, DataGridChangeReason.Paste, flash: false);
+        skipped += _refusedWrites;
         Select(new DataGridCellAddress(target.Row0, target.Column0), new DataGridCellAddress(target.Row1, target.Column1), scroll: false);
         Viewport.Flash(target);
         var message = new StringBuilder(DataGridText.Count(DataGridLangResourceKind.PastedCellsOne, DataGridLangResourceKind.PastedCellsOther,
@@ -211,6 +233,7 @@ public partial class DataGrid
         decimal d => d.ToString("0.############################", EffectiveCulture),
         DateOnly day => day.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
         string s => s,
+        bool flag => flag ? "TRUE" : "FALSE",
         _ => DataGridSorting.TextOf(value)
     };
 
@@ -262,16 +285,18 @@ public partial class DataGrid
             {
                 return null;
             }
+            // Read one cell more than the limit, so Paste can tell a table that fits from one that was cut short.
+            var readLimit = (int)Math.Min(int.MaxValue, (long)MaxPasteCells + 1);
             if (data.Contains(HtmlFormat) && await data.TryGetValueAsync(HtmlFormat) is { Length: > 0 } bytes)
             {
                 var html = DataGridClipboardText.UnwrapCfHtml(Encoding.UTF8.GetString(bytes));
-                if (DataGridClipboardText.ParseHtmlTable(html) is { Count: > 0 } table)
+                if (DataGridClipboardText.ParseHtmlTable(html, readLimit) is { Count: > 0 } table)
                 {
                     return table;
                 }
             }
             var text = await data.TryGetTextAsync();
-            return string.IsNullOrEmpty(text) ? null : DataGridClipboardText.ParseTsv(text);
+            return string.IsNullOrEmpty(text) ? null : DataGridClipboardText.ParseTsv(text, readLimit);
         }
         catch (Exception)
         {

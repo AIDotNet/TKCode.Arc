@@ -17,7 +17,7 @@ namespace TKCode.Arc;
 /// <summary>
 /// One column header: a sort button (label, direction arrow and priority), a column menu button and a resize grip on the
 /// right edge. Click sorts (Shift adds a sort key), Alt + arrows resize by 16px, dragging the grip resizes and a double
-/// click on it restores the column's width.
+/// click on it fits the column to its content. Dragging the label (or Alt + Shift + arrows) moves the column.
 /// </summary>
 [TemplatePart(SortPart, typeof(AvaloniaButton))]
 [TemplatePart(MenuPart, typeof(AvaloniaButton))]
@@ -55,6 +55,10 @@ internal sealed class DataGridHeaderCell : TemplatedControl
     private AvaloniaButton? _menu;
     private Border? _resizer;
     private bool _shiftOnPress;
+    private IPointer? _dragPointer;
+    private Point _dragStart;
+    private bool _dragging;
+    private int _dragTarget;
     private double _resizeStart;
     private double _resizeOrigin;
     private IPointer? _resizePointer;
@@ -148,6 +152,7 @@ internal sealed class DataGridHeaderCell : TemplatedControl
         {
             _sort.Click -= OnSortClick;
             _sort.RemoveHandler(PointerPressedEvent, OnSortPointerPressed);
+            _sort.RemoveHandler(PointerMovedEvent, OnSortPointerMoved);
             _sort.KeyDown -= OnSortKeyDown;
         }
         if (_menu is not null)
@@ -169,6 +174,7 @@ internal sealed class DataGridHeaderCell : TemplatedControl
         {
             _sort.Click += OnSortClick;
             _sort.AddHandler(PointerPressedEvent, OnSortPointerPressed, RoutingStrategies.Tunnel);
+            _sort.AddHandler(PointerMovedEvent, OnSortPointerMoved, RoutingStrategies.Tunnel);
             _sort.KeyDown += OnSortKeyDown;
         }
         if (_menu is not null)
@@ -186,8 +192,90 @@ internal sealed class DataGridHeaderCell : TemplatedControl
         Update();
     }
 
-    private void OnSortPointerPressed(object? sender, PointerPressedEventArgs e) =>
+    private void OnSortPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
         _shiftOnPress = (e.KeyModifiers & KeyModifiers.Shift) != 0;
+        _dragPointer = null;
+        if (Column is not null && e.Pointer.Type != PointerType.Touch && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed &&
+            _grid.VisibleAccessors.Length > 1)
+        {
+            _dragPointer = e.Pointer;
+            _dragStart = e.GetPosition(_grid.Viewport);
+            _dragging = false;
+        }
+    }
+
+    private void OnSortPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (_dragPointer is null || !ReferenceEquals(_dragPointer, e.Pointer))
+        {
+            return;
+        }
+        var position = e.GetPosition(_grid.Viewport);
+        if (!_dragging && Math.Abs(position.X - _dragStart.X) > 6)
+        {
+            _dragging = true;
+            Opacity = 0.55;
+            e.Pointer.Capture(this);
+        }
+        if (_dragging)
+        {
+            e.Handled = true;
+            UpdateDrag(position);
+        }
+    }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+        if (_dragging && ReferenceEquals(_dragPointer, e.Pointer))
+        {
+            UpdateDrag(e.GetPosition(_grid.Viewport));
+        }
+    }
+
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        base.OnPointerReleased(e);
+        EndDrag(commit: true);
+    }
+
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+        EndDrag(commit: false);
+    }
+
+    private void UpdateDrag(Point position)
+    {
+        var target = _grid.Viewport.ColumnIndexAtX(position.X);
+        if (target < 0)
+        {
+            return;
+        }
+        _dragTarget = _grid.ClampMoveTarget(VisibleIndex, target);
+        _grid.Viewport.ShowColumnDrop(_dragTarget == VisibleIndex ? null : _grid.Viewport.ColumnEdgeX(_dragTarget, rightEdge: _dragTarget > VisibleIndex));
+    }
+
+    private void EndDrag(bool commit)
+    {
+        if (_dragPointer is null)
+        {
+            return;
+        }
+        var wasDragging = _dragging;
+        _dragPointer = null;
+        _dragging = false;
+        Opacity = 1;
+        _grid.Viewport.ShowColumnDrop(null);
+        if (wasDragging && commit && Column is { } column && _dragTarget != VisibleIndex)
+        {
+            _grid.MoveColumn(column.Key, _dragTarget);
+        }
+    }
+
+    /// <summary>Puts keyboard focus on the sort button, so a moved column can be moved again.</summary>
+    public void FocusSort() => _sort?.Focus(NavigationMethod.Tab);
 
     private void OnSortClick(object? sender, RoutedEventArgs e)
     {
@@ -204,6 +292,19 @@ internal sealed class DataGridHeaderCell : TemplatedControl
     {
         if (Column is not { } column)
         {
+            return;
+        }
+        if ((e.KeyModifiers & (KeyModifiers.Alt | KeyModifiers.Shift)) == (KeyModifiers.Alt | KeyModifiers.Shift) && e.Key is Key.Left or Key.Right)
+        {
+            e.Handled = true;
+            var key = column.Key;
+            var index = VisibleIndex;
+            _grid.MoveColumnBy(key, e.Key == Key.Right ? 1 : -1);
+            var moved = _grid.VisibleIndexOf(key);
+            if (moved >= 0 && moved != index)
+            {
+                _grid.Viewport.Header.FocusColumn(moved);
+            }
             return;
         }
         if ((e.KeyModifiers & KeyModifiers.Alt) != 0 && e.Key is Key.Left or Key.Right)
@@ -276,7 +377,7 @@ internal sealed class DataGridHeaderCell : TemplatedControl
         if (Column is { } column)
         {
             e.Handled = true;
-            _grid.ResizeColumn(column, null);
+            _grid.AutoFitColumn(column.Key);
         }
     }
 
@@ -348,7 +449,7 @@ internal sealed class DataGridFilterCell : TemplatedControl
             return;
         }
         var filter = _grid.FilterOf(column.Key);
-        var isSelect = column.Type == DataGridColumnType.Select;
+        var isSelect = column.Type is DataGridColumnType.Select or DataGridColumnType.Boolean;
         PseudoClasses.Set(SelectPseudoClass, isSelect);
         PseudoClasses.Set(DisabledFilterPseudoClass, !column.IsFilterable);
         PseudoClasses.Set(NumericPseudoClass, column.IsNumeric);
@@ -385,7 +486,7 @@ internal sealed class DataGridFilterCell : TemplatedControl
                 : values.Count == 0
                     ? DataGridText.Get(DataGridLangResourceKind.FilterNone)
                     : values.Count == 1
-                        ? values[0].Length == 0 ? DataGridText.Get(DataGridLangResourceKind.EmptyValue) : values[0]
+                        ? values[0].Length == 0 ? DataGridText.Get(DataGridLangResourceKind.EmptyValue) : _grid.FilterLabelOf(column, values[0])
                         : DataGridText.Format(DataGridLangResourceKind.FilterSomeOf, values.Count, options.Count);
             if (_select is not null)
             {
@@ -396,7 +497,7 @@ internal sealed class DataGridFilterCell : TemplatedControl
 
     public void FocusInput()
     {
-        if (Column?.Type == DataGridColumnType.Select)
+        if (Column?.Type is DataGridColumnType.Select or DataGridColumnType.Boolean)
         {
             _select?.Focus(NavigationMethod.Tab);
         }

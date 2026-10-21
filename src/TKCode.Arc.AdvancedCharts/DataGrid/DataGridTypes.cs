@@ -21,7 +21,10 @@ public enum DataGridColumnType
     Select,
 
     /// <summary>A calendar day (stored as <see cref="DateOnly"/>), edited with a calendar.</summary>
-    Date
+    Date,
+
+    /// <summary>A yes or no value (stored as <see cref="bool"/>), drawn as a checkbox that a click, Space or Enter toggles.</summary>
+    Boolean
 }
 
 /// <summary>Row height of a <see cref="DataGrid"/>.</summary>

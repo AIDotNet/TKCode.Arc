@@ -98,6 +98,13 @@
         <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentSubtleBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="SuccessSubtleBrush" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="WarningSubtleBrush" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="DangerSubtleBrush" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
         <Setter Property="ControlOnBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
         <Setter Property="ControlGlyphBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
         <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />

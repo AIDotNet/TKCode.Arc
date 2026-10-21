@@ -21,6 +21,9 @@ internal sealed class DataGridEditState
 
     public bool Invalid { get; set; }
 
+    /// <summary>The value being edited by a column's <see cref="DataGridColumn.EditTemplate"/>; null for the text editor.</summary>
+    public DataGridEditContext? Context { get; set; }
+
     /// <summary>Set once the edit has been committed or cancelled (the editor's lost-focus commit is then ignored).</summary>
     public bool Done { get; set; }
 }
@@ -86,6 +89,26 @@ public partial class DataGrid
             Say(DataGridText.Format(DataGridLangResourceKind.ColumnReadOnly, column.Header));
             return;
         }
+        if (!CellAllowed(source, accessor))
+        {
+            Say(DataGridText.Get(DataGridLangResourceKind.CellReadOnly));
+            return;
+        }
+        if (column.Type == DataGridColumnType.Boolean)
+        {
+            // No text editor: Space, Enter, F2 and double click flip the value, and a typed yes or no sets it.
+            Select(address);
+            var current = ValueAt(address.Row, accessor) is true;
+            if (text is null || text.Trim().Length == 0)
+            {
+                SetCellValue(address.Row, accessor, !current);
+            }
+            else if (DataGridValueParser.TryParseBoolean(text, out var typed))
+            {
+                SetCellValue(address.Row, accessor, typed);
+            }
+            return;
+        }
         Select(address);
         _edit = new DataGridEditState
         {
@@ -97,10 +120,91 @@ public partial class DataGrid
         };
         IsEditing = true;
         UpdatePseudoClasses();
+        if (column.EditTemplate is { } template)
+        {
+            var current = _store.Value(source, accessor);
+            _edit.Context = new DataGridEditContext(this, _store.ItemAt(source), column, current, FormatValue(current, accessor));
+            Viewport.OpenTemplateEditor(_edit, template, DataGridText.Format(DataGridLangResourceKind.EditorLabel, column.Header, RowName(address.Row)));
+            return;
+        }
         var draft = text ?? EditText(_store.Value(source, accessor));
         var list = openList || text is not null && column.Type is DataGridColumnType.Select or DataGridColumnType.Date;
         Viewport.OpenEditor(_edit, column, draft, list, OptionsOf(accessor),
             DataGridText.Format(DataGridLangResourceKind.EditorLabel, column.Header, RowName(address.Row)));
+    }
+
+    /// <summary>Whether edits to a cell are accepted: not with a data source, and not in a read-only column or cell.</summary>
+    internal bool IsCellEditable(int row, int accessor)
+    {
+        if (HasDataSource || accessor < 0 || accessor >= _store.Accessors.Length || !ColumnOf(accessor).IsEditable)
+        {
+            return false;
+        }
+        var source = SourceOfRow(row);
+        return source >= 0 && _store.CanWrite(source, accessor) && CellAllowed(source, accessor);
+    }
+
+    /// <summary>
+    /// Writes one cell the way a committed edit does: <see cref="CellEditEnding"/> may refuse it, then it is one undo step and
+    /// raises <see cref="CellsChanged"/>. Returns whether the cell changed.
+    /// </summary>
+    internal bool SetCellValue(int row, int accessor, object? value)
+    {
+        if (HasDataSource)
+        {
+            Say(DataGridText.Get(DataGridLangResourceKind.GridReadOnly));
+            return false;
+        }
+        var column = ColumnOf(accessor);
+        var source = SourceOfRow(row);
+        if (source < 0)
+        {
+            return false;
+        }
+        if (!column.IsEditable || !_store.CanWrite(source, accessor))
+        {
+            Say(DataGridText.Format(DataGridLangResourceKind.ColumnReadOnly, column.Header));
+            return false;
+        }
+        if (!CellAllowed(source, accessor))
+        {
+            Say(DataGridText.Get(DataGridLangResourceKind.CellReadOnly));
+            return false;
+        }
+        if (_edit is not null && !CommitEdit(null, null))
+        {
+            return false;
+        }
+        var old = _store.Value(source, accessor);
+        if (SameValue(old, value))
+        {
+            return false;
+        }
+        if (ValidationMode == DataGridValidationMode.Block && Validate(_store.ItemAt(source), _store.KeyAt(source), accessor, value) is { } invalid)
+        {
+            Say(invalid);
+            return false;
+        }
+        var args = new DataGridCellEditEndingEventArgs(CellEditEndingEvent, _store.ItemAt(source), _store.KeyAt(source), column, old, value);
+        RaiseEvent(args);
+        if (args.Cancel)
+        {
+            if (!string.IsNullOrEmpty(args.ErrorMessage))
+            {
+                Say(args.ErrorMessage);
+            }
+            return false;
+        }
+        var visibleColumn = Array.IndexOf(Layout.Accessors, accessor);
+        var range = new DataGridCellRange(row, Math.Max(0, visibleColumn), row, Math.Max(0, visibleColumn));
+        var written = WriteCells([(source, accessor, value)], range, DataGridChangeReason.Edit, flash: false);
+        if (written > 0)
+        {
+            var shown = FormatValue(_store.Value(source, accessor), accessor);
+            Announce(DataGridText.Format(DataGridLangResourceKind.CellSet, column.Header, RowName(row),
+                string.IsNullOrEmpty(shown) ? DataGridText.Get(DataGridLangResourceKind.EmptyWord) : shown));
+        }
+        return written > 0;
     }
 
     /// <summary>The text an editor starts with: numbers without grouping, days as ISO.</summary>
@@ -133,8 +237,18 @@ public partial class DataGrid
             CloseEditor();
             return true;
         }
-        if (!DataGridValueParser.TryParse(text, column.CellFormat, EffectiveCulture, column.Type == DataGridColumnType.Select ? OptionsOf(edit.Accessor) : null,
-                out var value))
+        object? value;
+        if (edit.Context is { } custom)
+        {
+            value = DataGridValueParser.Normalize(custom.Value, column.Type);
+            if (!Fits(column, value))
+            {
+                RefuseEdit(edit, custom.ErrorMessage);
+                return false;
+            }
+        }
+        else if (!DataGridValueParser.TryParse(text, column.CellFormat, EffectiveCulture, column.Type == DataGridColumnType.Select ? OptionsOf(edit.Accessor) : null,
+                out value))
         {
             if (move is null && picked is null && !Viewport.IsEditorFocused)
             {
@@ -153,6 +267,11 @@ public partial class DataGrid
         var old = _store.Value(source, edit.Accessor);
         if (!SameValue(old, value))
         {
+            if (ValidationMode == DataGridValidationMode.Block && Validate(_store.ItemAt(source), edit.RowKey, edit.Accessor, value) is { } invalid)
+            {
+                RefuseEdit(edit, invalid);
+                return false;
+            }
             var args = new DataGridCellEditEndingEventArgs(CellEditEndingEvent, _store.ItemAt(source), edit.RowKey, column, old, value);
             RaiseEvent(args);
             if (args.Cancel)
@@ -229,6 +348,9 @@ public partial class DataGrid
         }
         var step = new DataGridChangeSet { Reason = reason, Range = range };
         var changes = new List<DataGridCellChange>();
+        _refusedWrites = 0;
+        var checkRules = ValidationMode == DataGridValidationMode.Block &&
+                         reason is DataGridChangeReason.Edit or DataGridChangeReason.Paste or DataGridChangeReason.Fill or DataGridChangeReason.FillDown;
         _store.Quietly(() =>
         {
             foreach (var (source, accessor, value) in cells)
@@ -238,7 +360,7 @@ public partial class DataGrid
                     continue;
                 }
                 var column = ColumnOf(accessor);
-                if (!column.IsEditable || !_store.CanWrite(source, accessor) || !Fits(column, value))
+                if (!column.IsEditable || !_store.CanWrite(source, accessor) || !Fits(column, value) || !CellAllowed(source, accessor))
                 {
                     continue;
                 }
@@ -247,7 +369,13 @@ public partial class DataGrid
                 {
                     continue;
                 }
+                if (checkRules && Validate(_store.ItemAt(source), _store.KeyAt(source), accessor, value) is not null)
+                {
+                    _refusedWrites++;
+                    continue;
+                }
                 var stored = _store.Write(source, accessor, value);
+                Revalidate(source, accessor);
                 var key = _store.KeyAt(source);
                 step.Cells.Add(new DataGridCellEdit(key, accessor, old, stored));
                 changes.Add(new DataGridCellChange(_store.ItemAt(source), key, column.Key, old, stored));
@@ -259,6 +387,7 @@ public partial class DataGrid
         }
         _undo.Push(step);
         AfterWrite(range, flash);
+        PublishErrorCount();
         RaiseEvent(new DataGridCellsChangedEventArgs(CellsChangedEvent, changes, reason));
         return changes.Count;
     }
@@ -268,7 +397,8 @@ public partial class DataGrid
         null => true,
         decimal => column.IsNumeric || column.Type is DataGridColumnType.Text or DataGridColumnType.Select,
         DateOnly => column.Type is DataGridColumnType.Date or DataGridColumnType.Text,
-        string => !column.IsNumeric && column.Type != DataGridColumnType.Date,
+        bool => column.Type == DataGridColumnType.Boolean,
+        string => !column.IsNumeric && column.Type is not (DataGridColumnType.Date or DataGridColumnType.Boolean),
         _ => false
     };
 
@@ -453,6 +583,19 @@ public partial class DataGrid
 
     private void Apply(DataGridChangeSet step, bool undo)
     {
+        if (step.Inserted.Count > 0)
+        {
+            if (undo)
+            {
+                RemoveRows(step.Inserted);
+            }
+            else
+            {
+                InsertRows(step.Inserted);
+            }
+            UpdateUndoState();
+            return;
+        }
         if (step.Deleted.Count > 0)
         {
             if (undo)
@@ -480,10 +623,12 @@ public partial class DataGrid
                 var value = undo ? cell.Before : cell.After;
                 var old = _store.Value(source, cell.Accessor);
                 var stored = _store.Write(source, cell.Accessor, value);
+                Revalidate(source, cell.Accessor);
                 changes.Add(new DataGridCellChange(_store.ItemAt(source), cell.RowKey, ColumnOf(cell.Accessor).Key, old, stored));
             }
         });
         AfterWrite(null, flash: false);
+        PublishErrorCount();
         if (step.Range is { } range)
         {
             Select(new DataGridCellAddress(range.Row0, range.Column0), new DataGridCellAddress(range.Row1, range.Column1));
@@ -506,10 +651,16 @@ public partial class DataGrid
         {
             return;
         }
+        DeleteRowsByKeys(_checked.ToHashSet());
+    }
+
+    /// <summary>Deletes the rows with these keys as one undo step.</summary>
+    internal void DeleteRowsByKeys(HashSet<object> keys)
+    {
         var deleted = new List<DataGridDeletedRow>();
         for (var i = 0; i < _store.Count; i++)
         {
-            if (_checked.Contains(_store.KeyAt(i)))
+            if (keys.Contains(_store.KeyAt(i)))
             {
                 deleted.Add(new DataGridDeletedRow(i, _store.ItemAt(i)));
             }
@@ -522,7 +673,7 @@ public partial class DataGrid
         step.Deleted.AddRange(deleted);
         _undo.Push(step);
         RemoveRows(deleted);
-        SetChecked([]);
+        SetChecked(_checked.Where(k => !keys.Contains(k)).ToArray());
         UpdateUndoState();
         Say(DataGridText.Count(DataGridLangResourceKind.DeletedRowsOne, DataGridLangResourceKind.DeletedRowsOther, deleted.Count, EffectiveCulture),
             DataGridText.Get(DataGridLangResourceKind.Undo), () =>

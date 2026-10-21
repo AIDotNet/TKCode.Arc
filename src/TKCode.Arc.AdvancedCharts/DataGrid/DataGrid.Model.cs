@@ -88,6 +88,7 @@ public partial class DataGrid
         {
             _definitionsDirty = false;
             _store.SetColumns(Columns);
+            ClearErrors();
             _options.Clear();
         }
         var columns = Columns;
@@ -95,8 +96,9 @@ public partial class DataGrid
             ? new HashSet<string>(explicitHidden, StringComparer.Ordinal)
             : columns.Where(c => c.IsHidden).Select(c => c.Key).ToHashSet(StringComparer.Ordinal);
         var pinned = PinnedColumnSet();
+        var order = ColumnIndexOrder();
         var visible = new List<int>();
-        for (var i = 0; i < columns.Count; i++)
+        foreach (var i in order)
         {
             if (!hidden.Contains(columns[i].Key) && pinned.Contains(columns[i].Key))
             {
@@ -104,15 +106,17 @@ public partial class DataGrid
             }
         }
         _pinCount = visible.Count;
-        for (var i = 0; i < columns.Count; i++)
+        foreach (var i in order)
         {
             if (!hidden.Contains(columns[i].Key) && !pinned.Contains(columns[i].Key))
             {
                 visible.Add(i);
             }
         }
+        var previous = _visible;
         _visible = visible.ToArray();
         _columnsVersion++;
+        RemapSelection(previous, _visible);
     }
 
     private HashSet<string> PinnedColumnSet()
@@ -211,6 +215,15 @@ public partial class DataGrid
         Viewport.InvalidateMeasure();
         Viewport.InvalidateText();
         Viewport.SnapSelection();
+        _syncingWidths = true;
+        try
+        {
+            SetCurrentValue(ColumnWidthsProperty, new Dictionary<string, double>(_userWidths));
+        }
+        finally
+        {
+            _syncingWidths = false;
+        }
     }
 
     #endregion
@@ -224,10 +237,12 @@ public partial class DataGrid
             return;
         }
         _store.SetSource(ItemsSource, RowKeySelector);
+        ClearErrors();
     }
 
     private void OnStoreReset()
     {
+        PruneErrors();
         InvalidateOptions();
         InvalidateView();
         Viewport.InvalidateText();
@@ -436,6 +451,9 @@ public partial class DataGrid
     }
 
     /// <summary>Changes whenever the values of a row change (text caches compare it).</summary>
+    /// <summary>Cache version of a row's cell text: changes when the row's values or the column definitions change.</summary>
+    internal int CellVersion(int row) => RowVersionOf(row) * 31 + ColumnsVersion;
+
     internal int RowVersionOf(int row)
     {
         if (HasDataSource)
@@ -460,7 +478,13 @@ public partial class DataGrid
     internal bool IsRowLoaded(int row) => !HasDataSource || DataSourceItem(row) is not null;
 
     /// <summary>Display text of a value in a column.</summary>
-    internal string FormatValue(object? value, int accessor) => DataGridValueFormat.Format(value, ColumnOf(accessor).CellFormat, EffectiveCulture);
+    internal string FormatValue(object? value, int accessor)
+    {
+        var column = ColumnOf(accessor);
+        return column.EffectiveRenderer is { } renderer
+            ? renderer.GetText(value, column.CellFormat, EffectiveCulture)
+            : DataGridValueFormat.Format(value, column.CellFormat, EffectiveCulture);
+    }
 
     internal string CellText(int row, int accessor) => FormatValue(ValueAt(row, accessor), accessor);
 
@@ -488,7 +512,11 @@ public partial class DataGrid
         }
         var column = ColumnOf(accessor);
         IReadOnlyList<string> result;
-        if (column.Options is { } options)
+        if (column.Type == DataGridColumnType.Boolean)
+        {
+            result = ["true", "false"];
+        }
+        else if (column.Options is { } options)
         {
             result = options.ToArray();
         }
@@ -511,6 +539,12 @@ public partial class DataGrid
         _options[accessor] = result;
         return result;
     }
+
+    /// <summary>The text a filter checklist shows for an option: the words for a boolean column, the option itself otherwise.</summary>
+    internal string FilterLabelOf(DataGridColumn column, string option) =>
+        column.Type == DataGridColumnType.Boolean && DataGridValueParser.TryParseBoolean(option, out var flag)
+            ? DataGridValueFormat.FormatBoolean(flag, EffectiveCulture)
+            : option;
 
     /// <summary>Options plus the empty value when the column has empty cells (filter checklists).</summary>
     internal IReadOnlyList<string> FilterOptionsOf(int accessor)

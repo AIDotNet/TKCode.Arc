@@ -58,6 +58,10 @@ public partial class DataGrid
         }
         Viewport.OnSelectionChanged();
         UpdateStats();
+        if (_errors.Count > 0 && ActiveCell is { } active && ErrorOf(KeyOfRow(active.Row), VisibleAccessors[active.Column]) is { } flagged)
+        {
+            Say(flagged);
+        }
     }
 
     /// <summary>Selects a range of cells (display rows, visible columns) and scrolls its corner into view.</summary>
@@ -148,6 +152,18 @@ public partial class DataGrid
             FillDown();
             return;
         }
+        if (command && shift && CanCreateRows && e.Key is Key.OemPlus or Key.Add)
+        {
+            e.Handled = true;
+            InsertRow(below: false);
+            return;
+        }
+        if (e.Key == Key.F8 && !command && !alt)
+        {
+            e.Handled = true;
+            NextError();
+            return;
+        }
         if (e.Key == Key.Space && shift && !command && IsRowCheckEnabled)
         {
             e.Handled = true;
@@ -218,6 +234,11 @@ public partial class DataGrid
             case Key.Enter:
             case Key.F2:
                 e.Handled = true;
+                if (e.Key == Key.Enter && HasCells && !IsCellEditable(Anchor.Row, VisibleAccessors[Anchor.Column]) &&
+                    RaiseCellEvent(RowActivatedEvent, Anchor, null, e.KeyModifiers) is { Handled: true })
+                {
+                    return;
+                }
                 BeginEdit(Anchor, null, openList: false);
                 return;
             case Key.Escape:

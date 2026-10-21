@@ -43,12 +43,19 @@ public static class DataGridValueFormat
                     ? FormatDate(date, format.DateFormat, culture)
                     : date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             case bool flag:
-                return flag ? bool.TrueString : bool.FalseString;
+                return format.Type == DataGridColumnType.Boolean ? FormatBoolean(flag, culture) : flag ? bool.TrueString : bool.FalseString;
             case IFormattable formattable:
                 return formattable.ToString(null, culture);
             default:
                 return value.ToString() ?? string.Empty;
         }
+    }
+
+    /// <summary>The words of a boolean value for display: 是 and 否 in Chinese cultures, Yes and No otherwise.</summary>
+    public static string FormatBoolean(bool value, CultureInfo? culture = null)
+    {
+        culture ??= CultureInfo.CurrentCulture;
+        return culture.TwoLetterISOLanguageName == "zh" ? value ? "是" : "否" : value ? "Yes" : "No";
     }
 
     /// <summary>A number with the format's decimals, sign, currency symbol or percent sign.</summary>

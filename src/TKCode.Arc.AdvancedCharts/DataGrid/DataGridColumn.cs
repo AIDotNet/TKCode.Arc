@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Data;
+using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Metadata;
 
@@ -81,12 +82,29 @@ public class DataGridColumn : AvaloniaObject
     public static readonly StyledProperty<bool?> IsGroupableProperty =
         AvaloniaProperty.Register<DataGridColumn, bool?>(nameof(IsGroupable));
 
+    /// <summary>
+    /// Draws the column's cells in place of the plain text: a status badge, a progress bar, a link, an icon, or your own
+    /// <see cref="DataGridCellRenderer"/>. Null draws the formatted value. Sorting, filtering, totals and export still use the value.
+    /// </summary>
+    public static readonly StyledProperty<DataGridCellRenderer?> RendererProperty =
+        AvaloniaProperty.Register<DataGridColumn, DataGridCellRenderer?>(nameof(Renderer));
+
+    /// <summary>
+    /// Replaces the text box that edits the column's cells with your own content (a slider, a rating, a picker). The template
+    /// gets a <see cref="DataGridEditContext"/> as its data context; only the cell being edited is a real control.
+    /// </summary>
+    public static readonly StyledProperty<IDataTemplate?> EditTemplateProperty =
+        AvaloniaProperty.Register<DataGridColumn, IDataTemplate?>(nameof(EditTemplate));
+
+    private readonly AvaloniaList<DataGridRule> _rules = new();
+    private readonly AvaloniaList<DataGridFormatRule> _formatRules = new();
     private BindingBase? _binding;
     private Func<object, object?>? _valueGetter;
     private Action<object, object?>? _valueSetter;
 
     public DataGridColumn()
     {
+        HookRules();
     }
 
     public DataGridColumn(string key, string header, DataGridColumnType type = DataGridColumnType.Text)
@@ -94,6 +112,13 @@ public class DataGridColumn : AvaloniaObject
         Key = key;
         Header = header;
         Type = type;
+        HookRules();
+    }
+
+    private void HookRules()
+    {
+        _rules.CollectionChanged += (_, _) => OnDefinitionChanged();
+        _formatRules.CollectionChanged += (_, _) => OnDefinitionChanged();
     }
 
     /// <summary>
@@ -172,6 +197,21 @@ public class DataGridColumn : AvaloniaObject
     /// <inheritdoc cref="IsGroupableProperty"/>
     public bool? IsGroupable { get => GetValue(IsGroupableProperty); set => SetValue(IsGroupableProperty, value); }
 
+    /// <inheritdoc cref="RendererProperty"/>
+    public DataGridCellRenderer? Renderer { get => GetValue(RendererProperty); set => SetValue(RendererProperty, value); }
+
+    /// <summary>
+    /// Checks for the values of the column (required, a range, a length, a pattern, or your own). They run when a value is typed,
+    /// pasted, filled or set by a renderer; see <see cref="DataGrid.ValidationMode"/> for what a failure does.
+    /// </summary>
+    public AvaloniaList<DataGridRule> Rules => _rules;
+
+    /// <summary>Tints cells whose value passes a test, such as a negative amount or a stage that reads "Lost". The first matching rule decides.</summary>
+    public AvaloniaList<DataGridFormatRule> FormatRules => _formatRules;
+
+    /// <inheritdoc cref="EditTemplateProperty"/>
+    public IDataTemplate? EditTemplate { get => GetValue(EditTemplateProperty); set => SetValue(EditTemplateProperty, value); }
+
     /// <summary>Compiled binding evaluated against each row item for the cell value; edits write back through it.</summary>
     [AssignBinding]
     [InheritDataTypeFromItems(nameof(DataGrid.ItemsSource), AncestorType = typeof(DataGrid))]
@@ -207,6 +247,9 @@ public class DataGridColumn : AvaloniaObject
         }
     }
 
+    /// <summary>The renderer that draws the cells: <see cref="Renderer"/>, or the checkbox of a Boolean column, else null.</summary>
+    internal DataGridCellRenderer? EffectiveRenderer => Renderer ?? (Type == DataGridColumnType.Boolean ? CheckboxRenderer.Instance : null);
+
     /// <summary>True for Number, Currency and Percent columns.</summary>
     public bool IsNumeric => Type is DataGridColumnType.Number or DataGridColumnType.Currency or DataGridColumnType.Percent;
 
@@ -224,6 +267,17 @@ public class DataGridColumn : AvaloniaObject
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == RendererProperty)
+        {
+            if (change.OldValue is DataGridCellRenderer old)
+            {
+                old.Changed -= OnDefinitionChanged;
+            }
+            if (change.NewValue is DataGridCellRenderer renderer)
+            {
+                renderer.Changed += OnDefinitionChanged;
+            }
+        }
         OnDefinitionChanged();
     }
 

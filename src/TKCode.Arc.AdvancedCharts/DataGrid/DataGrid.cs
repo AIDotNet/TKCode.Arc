@@ -145,6 +145,20 @@ public partial class DataGrid : TemplatedControl
     public static readonly StyledProperty<string?> ExportFileNameProperty =
         AvaloniaProperty.Register<DataGrid, string?>(nameof(ExportFileName));
 
+    /// <summary>
+    /// Prefixes exported CSV text that a spreadsheet would run as a formula (it starts with =, +, -, @, a tab or a carriage
+    /// return) with a single quote, which blocks CSV injection (default true). Numbers and days are not touched.
+    /// </summary>
+    public static readonly StyledProperty<bool> NeutralizeCsvFormulasProperty =
+        AvaloniaProperty.Register<DataGrid, bool>(nameof(NeutralizeCsvFormulas), true);
+
+    /// <summary>
+    /// Most cells a paste may hold (default 1,000,000). A bigger clipboard is refused with a message instead of being read,
+    /// so a huge or hostile table cannot exhaust memory.
+    /// </summary>
+    public static readonly StyledProperty<int> MaxPasteCellsProperty =
+        AvaloniaProperty.Register<DataGrid, int>(nameof(MaxPasteCells), 1_000_000, coerce: (_, v) => Math.Max(1, v));
+
     /// <summary>Shows Delete for checked rows; deleting can be undone.</summary>
     public static readonly StyledProperty<bool> CanDeleteRowsProperty =
         AvaloniaProperty.Register<DataGrid, bool>(nameof(CanDeleteRows), true);
@@ -216,6 +230,10 @@ public partial class DataGrid : TemplatedControl
     public static readonly RoutedEvent<DataGridBulkActionEventArgs> BulkActionInvokedEvent =
         RoutedEvent.Register<DataGrid, DataGridBulkActionEventArgs>(nameof(BulkActionInvoked), RoutingStrategies.Bubble);
 
+    /// <summary>Raised when a cell renderer reports a click on something actionable, such as a link.</summary>
+    public static readonly RoutedEvent<DataGridCellInvokedEventArgs> CellInvokedEvent =
+        RoutedEvent.Register<DataGrid, DataGridCellInvokedEventArgs>(nameof(CellInvoked), RoutingStrategies.Bubble);
+
     /// <summary>Raised before the save dialog of an export opens.</summary>
     public static readonly RoutedEvent<DataGridExportingEventArgs> ExportingEvent =
         RoutedEvent.Register<DataGrid, DataGridExportingEventArgs>(nameof(Exporting), RoutingStrategies.Bubble);
@@ -286,6 +304,12 @@ public partial class DataGrid : TemplatedControl
 
     /// <inheritdoc cref="ExportFileNameProperty"/>
     public string? ExportFileName { get => GetValue(ExportFileNameProperty); set => SetValue(ExportFileNameProperty, value); }
+
+    /// <inheritdoc cref="NeutralizeCsvFormulasProperty"/>
+    public bool NeutralizeCsvFormulas { get => GetValue(NeutralizeCsvFormulasProperty); set => SetValue(NeutralizeCsvFormulasProperty, value); }
+
+    /// <inheritdoc cref="MaxPasteCellsProperty"/>
+    public int MaxPasteCells { get => GetValue(MaxPasteCellsProperty); set => SetValue(MaxPasteCellsProperty, value); }
 
     /// <inheritdoc cref="CanDeleteRowsProperty"/>
     public bool CanDeleteRows { get => GetValue(CanDeleteRowsProperty); set => SetValue(CanDeleteRowsProperty, value); }
@@ -365,6 +389,13 @@ public partial class DataGrid : TemplatedControl
         remove => RemoveHandler(BulkActionInvokedEvent, value);
     }
 
+    /// <inheritdoc cref="CellInvokedEvent"/>
+    public event EventHandler<DataGridCellInvokedEventArgs>? CellInvoked
+    {
+        add => AddHandler(CellInvokedEvent, value);
+        remove => RemoveHandler(CellInvokedEvent, value);
+    }
+
     /// <inheritdoc cref="ExportingEvent"/>
     public event EventHandler<DataGridExportingEventArgs>? Exporting
     {
@@ -390,6 +421,20 @@ public partial class DataGrid : TemplatedControl
         AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(MutedForeground));
     internal static readonly StyledProperty<IBrush?> AccentBrushProperty =
         AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(AccentBrush));
+    internal static readonly StyledProperty<IBrush?> AccentSubtleBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(AccentSubtleBrush));
+    internal static readonly StyledProperty<IBrush?> SuccessBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(SuccessBrush));
+    internal static readonly StyledProperty<IBrush?> SuccessSubtleBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(SuccessSubtleBrush));
+    internal static readonly StyledProperty<IBrush?> WarningBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(WarningBrush));
+    internal static readonly StyledProperty<IBrush?> WarningSubtleBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(WarningSubtleBrush));
+    internal static readonly StyledProperty<IBrush?> DangerBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(DangerBrush));
+    internal static readonly StyledProperty<IBrush?> DangerSubtleBrushProperty =
+        AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(DangerSubtleBrush));
     internal static readonly StyledProperty<IBrush?> ControlOnBrushProperty =
         AvaloniaProperty.Register<DataGrid, IBrush?>(nameof(ControlOnBrush));
     internal static readonly StyledProperty<IBrush?> ControlGlyphBrushProperty =
@@ -450,6 +495,13 @@ public partial class DataGrid : TemplatedControl
     internal IBrush? SecondaryForeground { get => GetValue(SecondaryForegroundProperty); set => SetValue(SecondaryForegroundProperty, value); }
     internal IBrush? MutedForeground { get => GetValue(MutedForegroundProperty); set => SetValue(MutedForegroundProperty, value); }
     internal IBrush? AccentBrush { get => GetValue(AccentBrushProperty); set => SetValue(AccentBrushProperty, value); }
+    internal IBrush? AccentSubtleBrush { get => GetValue(AccentSubtleBrushProperty); set => SetValue(AccentSubtleBrushProperty, value); }
+    internal IBrush? SuccessBrush { get => GetValue(SuccessBrushProperty); set => SetValue(SuccessBrushProperty, value); }
+    internal IBrush? SuccessSubtleBrush { get => GetValue(SuccessSubtleBrushProperty); set => SetValue(SuccessSubtleBrushProperty, value); }
+    internal IBrush? WarningBrush { get => GetValue(WarningBrushProperty); set => SetValue(WarningBrushProperty, value); }
+    internal IBrush? WarningSubtleBrush { get => GetValue(WarningSubtleBrushProperty); set => SetValue(WarningSubtleBrushProperty, value); }
+    internal IBrush? DangerBrush { get => GetValue(DangerBrushProperty); set => SetValue(DangerBrushProperty, value); }
+    internal IBrush? DangerSubtleBrush { get => GetValue(DangerSubtleBrushProperty); set => SetValue(DangerSubtleBrushProperty, value); }
     internal IBrush? ControlOnBrush { get => GetValue(ControlOnBrushProperty); set => SetValue(ControlOnBrushProperty, value); }
     internal IBrush? ControlGlyphBrush { get => GetValue(ControlGlyphBrushProperty); set => SetValue(ControlGlyphBrushProperty, value); }
     internal IBrush? FocusRingBrush { get => GetValue(FocusRingBrushProperty); set => SetValue(FocusRingBrushProperty, value); }
@@ -487,6 +539,15 @@ public partial class DataGrid : TemplatedControl
     private ILanguageManager? _languages;
 
     internal DataGridPalette Palette { get; } = new();
+
+    private DataGridRenderPalette? _renderPalette;
+
+    /// <summary>The palette cell renderers draw with (the same instance, so it follows the theme).</summary>
+    internal DataGridRenderPalette RenderPalette => _renderPalette ??= new DataGridRenderPalette(Palette);
+
+    /// <summary>Raises <see cref="CellInvoked"/> for a cell whose renderer reported a click.</summary>
+    internal void RaiseCellInvoked(object row, object? key, DataGridColumn column, object? value, string? part) =>
+        RaiseEvent(new DataGridCellInvokedEventArgs(CellInvokedEvent, row, key, column, value, part));
 
     internal DataGridViewport Viewport { get; }
 
@@ -648,9 +709,13 @@ public partial class DataGrid : TemplatedControl
             UpdatePseudoClasses();
             UpdateToolbarState();
         }
-        else if (property == HiddenColumnsProperty || property == PinnedColumnsProperty)
+        else if (property == HiddenColumnsProperty || property == PinnedColumnsProperty || property == ColumnOrderProperty)
         {
             InvalidateColumns();
+        }
+        else if (property == ColumnWidthsProperty && !_syncingWidths)
+        {
+            ApplyColumnWidths();
         }
         else if (property == CheckedRowKeysProperty)
         {
@@ -678,7 +743,7 @@ public partial class DataGrid : TemplatedControl
             UpdatePseudoClasses();
         }
         else if (property == ShowToolbarProperty || property == ShowSelectionStatsProperty || property == ExportFormatsProperty ||
-                 property == CanDeleteRowsProperty)
+                 property == CanDeleteRowsProperty || property == CanInsertRowsProperty || property == RowFactoryProperty)
         {
             UpdateToolbarState();
             UpdateStatus();
@@ -725,7 +790,10 @@ public partial class DataGrid : TemplatedControl
                  property == SecondaryForegroundProperty || property == MutedForegroundProperty || property == AccentBrushProperty ||
                  property == ControlOnBrushProperty || property == ControlGlyphBrushProperty || property == FocusRingBrushProperty ||
                  property == SmallFontSizeProperty || property == MediumWeightProperty || property == SelectionFillOpacityProperty ||
-                 property == CheckedRowFillOpacityProperty || property == WashOpacityProperty || property == CompactCellFontSizeProperty)
+                 property == CheckedRowFillOpacityProperty || property == WashOpacityProperty || property == CompactCellFontSizeProperty ||
+                 property == AccentSubtleBrushProperty || property == SuccessBrushProperty || property == SuccessSubtleBrushProperty ||
+                 property == WarningBrushProperty || property == WarningSubtleBrushProperty || property == DangerBrushProperty ||
+                 property == DangerSubtleBrushProperty)
         {
             UpdatePalette();
         }
@@ -747,6 +815,8 @@ public partial class DataGrid : TemplatedControl
             ColorOf(StrongBorderBrush), ColorOf(Foreground), ColorOf(SecondaryForeground), ColorOf(MutedForeground), ColorOf(AccentBrush),
             ColorOf(ControlOnBrush), ColorOf(ControlGlyphBrush), FocusRingBrush is ISolidColorBrush ring ? ring.Color : null,
             SelectionFillOpacity, CheckedRowFillOpacity, WashOpacity, IsDark(surface), FontFamily, FontSize, SmallFontSize, MediumWeight);
+        Palette.UpdateTones(ColorOf(AccentBrush), ColorOf(AccentSubtleBrush), ColorOf(SuccessBrush), ColorOf(SuccessSubtleBrush),
+            ColorOf(WarningBrush), ColorOf(WarningSubtleBrush), ColorOf(DangerBrush), ColorOf(DangerSubtleBrush));
         Viewport.InvalidateText();
     }
 

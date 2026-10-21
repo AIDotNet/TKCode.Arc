@@ -88,7 +88,7 @@ public partial class DataGrid
         IReadOnlyList<object?> Values(object item) => visible.Select(a => ValueOfItem(item, a)).ToArray();
         if (format == DataGridExportFormat.Csv)
         {
-            DataGridCsv.Write(stream, headers, rows.Select(Values));
+            DataGridCsv.Write(stream, headers, rows.Select(Values), new DataGridCsvOptions { NeutralizeFormulas = NeutralizeCsvFormulas });
             return;
         }
         var layout = Layout;

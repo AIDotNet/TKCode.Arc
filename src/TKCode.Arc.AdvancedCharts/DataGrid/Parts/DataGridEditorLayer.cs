@@ -3,6 +3,7 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Input;
@@ -10,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
@@ -84,6 +86,7 @@ internal sealed class DataGridEditorLayer : Control
     private readonly DataGrid _grid;
     private readonly DataGridViewport _viewport;
     private DataGridCellEditor? _editor;
+    private ContentPresenter? _host;
     private DataGridEditState? _edit;
     private DataGridColumn? _column;
     private IReadOnlyList<string> _options = [];
@@ -106,7 +109,93 @@ internal sealed class DataGridEditorLayer : Control
 
     public string Text => _editor?.Text ?? string.Empty;
 
-    public bool IsEditorFocused => _editor is { IsFocused: true } || _calendar?.IsKeyboardFocusWithin == true;
+    public bool IsEditorFocused => _editor is { IsFocused: true } || _calendar?.IsKeyboardFocusWithin == true || IsInsideHost(FocusedElement());
+
+    private IInputElement? FocusedElement() => TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement();
+
+    /// <summary>Whether an element is in the template host or in something it opened (a drop-down's popup is a logical child of its control).</summary>
+    private bool IsInsideHost(IInputElement? element)
+    {
+        if (_host is not { IsVisible: true } host)
+        {
+            return false;
+        }
+        for (var logical = element as Avalonia.LogicalTree.ILogical; logical is not null; logical = logical.LogicalParent)
+        {
+            if (ReferenceEquals(logical, host))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ContentPresenter EnsureHost()
+    {
+        if (_host is not null)
+        {
+            return _host;
+        }
+        _host = new ContentPresenter { IsVisible = false };
+        _host.AddHandler(KeyDownEvent, OnHostKeyDown, RoutingStrategies.Bubble);
+        _host.AddHandler(LostFocusEvent, OnHostLostFocus, RoutingStrategies.Bubble);
+        LogicalChildren.Add(_host);
+        VisualChildren.Add(_host);
+        return _host;
+    }
+
+    /// <summary>Opens the column's <see cref="DataGridColumn.EditTemplate"/> over the cell and focuses its first focusable control.</summary>
+    public void OpenTemplate(DataGridEditState edit, Avalonia.Controls.Templates.IDataTemplate template, string label)
+    {
+        var host = EnsureHost();
+        _edit = edit;
+        _column = _grid.ColumnOf(edit.Accessor);
+        host.Background = _grid.Palette.CellBrush;
+        host.ContentTemplate = template;
+        host.Content = edit.Context;
+        AutomationProperties.SetName(host, label);
+        host.IsVisible = true;
+        InvalidateArrange();
+        UpdateLayout();
+        var first = host.GetVisualDescendants().OfType<InputElement>().FirstOrDefault(c => c.Focusable && c.IsEffectivelyVisible && c.IsEffectivelyEnabled);
+        (first ?? host as InputElement)?.Focus(NavigationMethod.Tab);
+    }
+
+    private void OnHostKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Handled || _edit is not { } edit)
+        {
+            return;
+        }
+        var shift = (e.KeyModifiers & KeyModifiers.Shift) != 0;
+        switch (e.Key)
+        {
+            case Key.Enter:
+                e.Handled = true;
+                _grid.CommitEdit((shift ? -1 : 1, 0), null);
+                break;
+            case Key.Tab:
+                e.Handled = true;
+                _grid.CommitEdit((0, shift ? -1 : 1), null);
+                break;
+            case Key.Escape:
+                e.Handled = true;
+                _grid.CancelEditFromEditor();
+                break;
+        }
+    }
+
+    private void OnHostLostFocus(object? sender, RoutedEventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_edit is not { Done: false } || IsEditorFocused)
+            {
+                return;
+            }
+            _grid.CommitEdit(null, null);
+        }, DispatcherPriority.Input);
+    }
 
     private DataGridCellEditor EnsureEditor()
     {
@@ -165,6 +254,11 @@ internal sealed class DataGridEditorLayer : Control
             editor.IsVisible = false;
             editor.SetInvalid(false);
         }
+        if (_host is { } host)
+        {
+            host.IsVisible = false;
+            host.Content = null;
+        }
     }
 
     public void MarkInvalid()
@@ -192,6 +286,7 @@ internal sealed class DataGridEditorLayer : Control
     protected override Size MeasureOverride(Size availableSize)
     {
         _editor?.Measure(availableSize);
+        _host?.Measure(availableSize);
         return default;
     }
 
@@ -204,6 +299,14 @@ internal sealed class DataGridEditorLayer : Control
             editor.Height = Math.Max(1, rect.Height);
             editor.Measure(rect.Size);
             editor.Arrange(rect);
+        }
+        if (_host is { IsVisible: true } host && _edit is { } templated)
+        {
+            var rect = _viewport.CellBodyRect(new DataGridCellAddress(templated.Row, templated.Column));
+            host.Width = Math.Max(1, rect.Width);
+            host.Height = Math.Max(1, rect.Height);
+            host.Measure(rect.Size);
+            host.Arrange(rect);
         }
         return finalSize;
     }

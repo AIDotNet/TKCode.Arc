@@ -34,6 +34,8 @@ internal sealed class DataGridPalette
     public IPen BorderPen { get; private set; } = new ImmutablePen(Brushes.Transparent);
     public IPen SelectionPen { get; private set; } = new ImmutablePen(Brushes.Transparent);
     public IPen ActivePen { get; private set; } = new ImmutablePen(Brushes.Transparent);
+    public IPen LinkLine { get; private set; } = new ImmutablePen(Brushes.Transparent);
+    public IPen ErrorPen { get; private set; } = new ImmutablePen(Brushes.Transparent);
     public IPen PreviewPen { get; private set; } = new ImmutablePen(Brushes.Transparent);
     public IPen HandleOutline { get; private set; } = new ImmutablePen(Brushes.Transparent);
     public IPen ChevronPen { get; private set; } = new ImmutablePen(Brushes.Transparent);
@@ -46,6 +48,34 @@ internal sealed class DataGridPalette
     public Typeface Medium { get; private set; }
     public double FontSize { get; private set; } = 14;
     public double SmallFontSize { get; private set; } = 12;
+
+    private static readonly DataGridToneBrushes s_blankTone =
+        new(Brushes.Transparent, Brushes.Black, new ImmutablePen(Brushes.Transparent), new ImmutablePen(Brushes.Black, 2));
+
+    private readonly DataGridToneBrushes[] _tones = [s_blankTone, s_blankTone, s_blankTone, s_blankTone, s_blankTone];
+
+    /// <summary>The fill, text, outline and icon stroke of a tone (renderers).</summary>
+    public DataGridToneBrushes Tone(DataGridTone tone) => _tones[(int)tone];
+
+    /// <summary>Builds the tone brushes from the semantic tokens; call after <see cref="Update"/>.</summary>
+    public void UpdateTones(Color accent, Color accentSubtle, Color success, Color successSubtle, Color warning, Color warningSubtle,
+                            Color danger, Color dangerSubtle)
+    {
+        static IPen Stroke(IBrush brush) => new ImmutablePen(brush.ToImmutable(), 2, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+        DataGridToneBrushes Make(Color fill, Color strong)
+        {
+            var foreground = new ImmutableSolidColorBrush(strong);
+            return new DataGridToneBrushes(new ImmutableSolidColorBrush(fill), foreground,
+                new ImmutablePen(new ImmutableSolidColorBrush(Oklch.MixOklab(fill, strong, 0.22)), 1), Stroke(foreground));
+        }
+        _tones[(int)DataGridTone.Neutral] = new DataGridToneBrushes(BadgeBrush, SecondaryBrush, GridPen, Stroke(SecondaryBrush));
+        _tones[(int)DataGridTone.Accent] = Make(accentSubtle, accent);
+        _tones[(int)DataGridTone.Success] = Make(successSubtle, success);
+        _tones[(int)DataGridTone.Warning] = Make(warningSubtle, warning);
+        _tones[(int)DataGridTone.Danger] = Make(dangerSubtle, danger);
+        ErrorPen = new ImmutablePen(new ImmutableSolidColorBrush(danger), 1.5);
+        Version++;
+    }
 
     public void Update(Color surface, Color surfaceRaised, Color surfaceMuted, Color border, Color borderSubtle, Color borderStrong,
                        Color foreground, Color textSecondary, Color textMuted, Color accent, Color controlOn, Color controlGlyph,
@@ -75,6 +105,7 @@ internal sealed class DataGridPalette
         BorderPen = new ImmutablePen(new ImmutableSolidColorBrush(border), 1);
         SelectionPen = new ImmutablePen(new ImmutableSolidColorBrush(accent), 1);
         ActivePen = new ImmutablePen(new ImmutableSolidColorBrush(accent), 2);
+        LinkLine = new ImmutablePen(new ImmutableSolidColorBrush(Oklch.WithAlpha(accent, 0.45)), 1);
         PreviewPen = new ImmutablePen(new ImmutableSolidColorBrush(accent), 1.5, new ImmutableDashStyle([3, 2], 0));
         HandleOutline = new ImmutablePen(new ImmutableSolidColorBrush(surface), 2);
         ChevronPen = new ImmutablePen(new ImmutableSolidColorBrush(textSecondary), 1.75, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);

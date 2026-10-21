@@ -32,4 +32,12 @@ internal static class DataGridIcons
     /// <summary>Lucide "file-spreadsheet".</summary>
     public static Geometry FileSpreadsheet => ArcIcons.Parse(
         "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z M14 2v5a1 1 0 0 0 1 1h5 M8 13h2 M14 13h2 M8 17h2 M14 17h2");
+
+    /// <summary>Lucide "scissors" (the context menu's Cut).</summary>
+    public static Geometry Scissors => ArcIcons.Parse(
+        "M3 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0z M8.12 8.12L12 12 M20 4L8.12 15.88 M3 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0z M14.8 14.8L20 20");
+
+    /// <summary>Lucide "clipboard" (the context menu's Paste).</summary>
+    public static Geometry Clipboard => ArcIcons.Parse(
+        "M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1z M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h2");
 }

@@ -124,6 +124,9 @@ internal sealed class DataGridChangeSet
 
     public List<DataGridDeletedRow> Deleted { get; } = new();
 
+    /// <summary>Rows added by this step (index and object), the mirror of <see cref="Deleted"/>.</summary>
+    public List<DataGridDeletedRow> Inserted { get; } = new();
+
     /// <summary>The range to select and flash when the step is undone or redone.</summary>
     public DataGridCellRange? Range { get; init; }
 }

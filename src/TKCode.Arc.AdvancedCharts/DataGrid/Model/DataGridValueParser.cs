@@ -32,7 +32,22 @@ public static class DataGridValueParser
                 {
                     return iso;
                 }
+                if (type == DataGridColumnType.Boolean && TryParseBoolean(text, out var flag))
+                {
+                    return flag;
+                }
                 return text;
+        }
+        if (type == DataGridColumnType.Boolean)
+        {
+            if (raw is bool boolean)
+            {
+                return boolean;
+            }
+            if (TryToDecimal(raw, out var zeroOrOne))
+            {
+                return zeroOrOne != 0;
+            }
         }
         if (type is DataGridColumnType.Number or DataGridColumnType.Currency or DataGridColumnType.Percent)
         {
@@ -138,6 +153,13 @@ public static class DataGridValueParser
                     return true;
                 }
                 return false;
+            case DataGridColumnType.Boolean:
+                if (TryParseBoolean(trimmed, out var flag))
+                {
+                    value = flag;
+                    return true;
+                }
+                return false;
             case DataGridColumnType.Select:
                 if (options is { Count: > 0 })
                 {
@@ -166,6 +188,39 @@ public static class DataGridValueParser
                 value = trimmed;
                 return true;
         }
+    }
+
+    private static readonly string[] s_trueWords = ["true", "yes", "y", "t", "1", "on", "checked", "是", "真", "对", "對", "开", "開", "√", "✓", "✔"];
+    private static readonly string[] s_falseWords = ["false", "no", "n", "f", "0", "off", "unchecked", "否", "假", "错", "錯", "关", "關", "×", "✗", "✘"];
+
+    /// <summary>
+    /// Reads a yes or no: true, yes, y, t, 1, on, checked, 是, 真, 对, 开 or a check mark mean true; false, no, n, f, 0, off,
+    /// unchecked, 否, 假, 错, 关 or a cross mean false (ignoring case and surrounding spaces).
+    /// </summary>
+    public static bool TryParseBoolean(string? text, out bool value)
+    {
+        value = false;
+        var trimmed = (text ?? string.Empty).Trim();
+        if (trimmed.Length == 0)
+        {
+            return false;
+        }
+        foreach (var word in s_trueWords)
+        {
+            if (string.Equals(word, trimmed, StringComparison.OrdinalIgnoreCase))
+            {
+                value = true;
+                return true;
+            }
+        }
+        foreach (var word in s_falseWords)
+        {
+            if (string.Equals(word, trimmed, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>Parses a number the way <see cref="TryParse"/> does for numeric columns.</summary>

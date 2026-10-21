@@ -213,6 +213,17 @@ internal sealed class DataGridHeaderRow : DataGridColumnRow<DataGridHeaderCell>
 
     public void UpdateSelectAll() => _selectAll.Update();
 
+    /// <summary>Focuses the sort button of the header of the column at a visible index (header cells are kept per column, so a moved column keeps its cell).</summary>
+    public void FocusColumn(int visibleIndex)
+    {
+        UpdateLayout();
+        var visible = Grid.VisibleAccessors;
+        if (visibleIndex >= 0 && visibleIndex < visible.Length && Cells.TryGetValue(visible[visibleIndex], out var cell))
+        {
+            cell.FocusSort();
+        }
+    }
+
     /// <summary>Highlights the headers of the selected columns.</summary>
     public void UpdateRangeHighlight()
     {

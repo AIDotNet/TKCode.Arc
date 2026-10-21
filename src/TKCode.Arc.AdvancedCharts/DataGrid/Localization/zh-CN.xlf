@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
   <file id="TKCode.Arc.Localization.DataGridLangResourceKind">
+    <unit id="AddRow">
+      <segment>
+        <source>Add row</source>
+        <target state="translated">添加行</target>
+      </segment>
+    </unit>
     <unit id="AggregateAverage">
       <segment>
         <source>Avg</source>
@@ -49,6 +55,12 @@
         <target state="translated">{1}，{0}：{2}</target>
       </segment>
     </unit>
+    <unit id="CellReadOnly">
+      <segment>
+        <source>This cell is read only</source>
+        <target state="translated">此单元格为只读</target>
+      </segment>
+    </unit>
     <unit id="CellSet">
       <segment>
         <source>{0} for {1} set to {2}</source>
@@ -77,6 +89,12 @@
       <segment>
         <source>Clear all filters</source>
         <target state="translated">清除全部筛选</target>
+      </segment>
+    </unit>
+    <unit id="ClearContents">
+      <segment>
+        <source>Clear contents</source>
+        <target state="translated">清除内容</target>
       </segment>
     </unit>
     <unit id="ClearFilters">
@@ -139,6 +157,12 @@
         <target state="translated">已折叠全部分组</target>
       </segment>
     </unit>
+    <unit id="ColumnMoved">
+      <segment>
+        <source>Moved {0} to position {1} of {2}</source>
+        <target state="translated">已将{0}移到第 {1} 位（共 {2} 列）</target>
+      </segment>
+    </unit>
     <unit id="ColumnOptions">
       <segment>
         <source>{0} column options</source>
@@ -199,6 +223,18 @@
         <target state="translated">复制失败，剪贴板不可用</target>
       </segment>
     </unit>
+    <unit id="CopyWithHeaders">
+      <segment>
+        <source>Copy with headers</source>
+        <target state="translated">复制（含表头）</target>
+      </segment>
+    </unit>
+    <unit id="Cut">
+      <segment>
+        <source>Cut</source>
+        <target state="translated">剪切</target>
+      </segment>
+    </unit>
     <unit id="DatePlaceholder">
       <segment>
         <source>YYYY-MM-DD</source>
@@ -209,6 +245,12 @@
       <segment>
         <source>Delete</source>
         <target state="translated">删除</target>
+      </segment>
+    </unit>
+    <unit id="DeleteRowsOfSelection">
+      <segment>
+        <source>Delete rows</source>
+        <target state="translated">删除行</target>
       </segment>
     </unit>
     <unit id="DeletedRowsOne">
@@ -277,6 +319,18 @@
         <target state="translated">空</target>
       </segment>
     </unit>
+    <unit id="ErrorsOne">
+      <segment>
+        <source>{0} error</source>
+        <target state="translated">{0} 个错误</target>
+      </segment>
+    </unit>
+    <unit id="ErrorsOther">
+      <segment>
+        <source>{0} errors</source>
+        <target state="translated">{0} 个错误</target>
+      </segment>
+    </unit>
     <unit id="Expand">
       <segment>
         <source>Expand</source>
@@ -337,6 +391,12 @@
         <target state="translated">已导出 {0} 行</target>
       </segment>
     </unit>
+    <unit id="FillDownAction">
+      <segment>
+        <source>Fill down</source>
+        <target state="translated">向下填充</target>
+      </segment>
+    </unit>
     <unit id="FillDownNeedsRows">
       <segment>
         <source>Select more than one row to fill down</source>
@@ -377,6 +437,12 @@
       <segment>
         <source>All</source>
         <target state="translated">全部</target>
+      </segment>
+    </unit>
+    <unit id="FilterByValue">
+      <segment>
+        <source>Filter by this value</source>
+        <target state="translated">按此值筛选</target>
       </segment>
     </unit>
     <unit id="FilterContains">
@@ -439,6 +505,12 @@
         <target state="translated">已清除筛选</target>
       </segment>
     </unit>
+    <unit id="FitColumnWidth">
+      <segment>
+        <source>Fit column width</source>
+        <target state="translated">适应内容宽度</target>
+      </segment>
+    </unit>
     <unit id="GridName">
       <segment>
         <source>Data grid</source>
@@ -487,6 +559,18 @@
         <target state="translated">隐藏列</target>
       </segment>
     </unit>
+    <unit id="InsertRowAbove">
+      <segment>
+        <source>Insert row above</source>
+        <target state="translated">在上方插入行</target>
+      </segment>
+    </unit>
+    <unit id="InsertRowBelow">
+      <segment>
+        <source>Insert row below</source>
+        <target state="translated">在下方插入行</target>
+      </segment>
+    </unit>
     <unit id="Loading">
       <segment>
         <source>Loading</source>
@@ -509,6 +593,12 @@
       <segment>
         <source>Choose one of the {0} options</source>
         <target state="translated">请选择{0}的一个选项</target>
+      </segment>
+    </unit>
+    <unit id="NoErrors">
+      <segment>
+        <source>No errors</source>
+        <target state="translated">没有错误</target>
       </segment>
     </unit>
     <unit id="NoMatch">
@@ -559,6 +649,12 @@
         <target state="translated">{0}选项</target>
       </segment>
     </unit>
+    <unit id="Paste">
+      <segment>
+        <source>Paste</source>
+        <target state="translated">粘贴</target>
+      </segment>
+    </unit>
     <unit id="PasteOverflow">
       <segment>
         <source>. Some cells fell outside the grid</source>
@@ -575,6 +671,12 @@
       <segment>
         <source>, skipped {0} that did not fit</source>
         <target state="translated">，跳过 {0} 个无法写入的值</target>
+      </segment>
+    </unit>
+    <unit id="PasteTooLarge">
+      <segment>
+        <source>Nothing was pasted: the clipboard holds more than {0} cells</source>
+        <target state="translated">未粘贴：剪贴板内容超过 {0} 个单元格</target>
       </segment>
     </unit>
     <unit id="PastedCellsOne">
@@ -619,6 +721,12 @@
         <target state="translated">Alt 加方向键调整列宽</target>
       </segment>
     </unit>
+    <unit id="RowAdded">
+      <segment>
+        <source>Added a row</source>
+        <target state="translated">已添加一行</target>
+      </segment>
+    </unit>
     <unit id="RowCountFiltered">
       <segment>
         <source>{0} of {1} rows</source>
@@ -647,6 +755,42 @@
       <segment>
         <source>Rows could not load</source>
         <target state="translated">行加载失败</target>
+      </segment>
+    </unit>
+    <unit id="RuleMaxLength">
+      <segment>
+        <source>{0} can hold at most {1} characters</source>
+        <target state="translated">{0}最多 {1} 个字符</target>
+      </segment>
+    </unit>
+    <unit id="RulePattern">
+      <segment>
+        <source>{0} is not in the expected format</source>
+        <target state="translated">{0}格式不正确</target>
+      </segment>
+    </unit>
+    <unit id="RuleRangeBetween">
+      <segment>
+        <source>{0} must be between {1} and {2}</source>
+        <target state="translated">{0}必须介于 {1} 和 {2} 之间</target>
+      </segment>
+    </unit>
+    <unit id="RuleRangeMax">
+      <segment>
+        <source>{0} must be at most {1}</source>
+        <target state="translated">{0}不能大于 {1}</target>
+      </segment>
+    </unit>
+    <unit id="RuleRangeMin">
+      <segment>
+        <source>{0} must be at least {1}</source>
+        <target state="translated">{0}不能小于 {1}</target>
+      </segment>
+    </unit>
+    <unit id="RuleRequired">
+      <segment>
+        <source>{0} is required</source>
+        <target state="translated">{0}不能为空</target>
       </segment>
     </unit>
     <unit id="SearchLabel">

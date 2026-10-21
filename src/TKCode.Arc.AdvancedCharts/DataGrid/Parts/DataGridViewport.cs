@@ -44,6 +44,11 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
     private PendingTap? _tap;
     private Point _lastPointer;
     private int _hoverRow = -1;
+    private int _hoverCellRow = -1;
+    private int _hoverCellColumn = -1;
+    private Point _hoverPoint;
+    private bool _overInteractive;
+    private static Cursor? s_handCursor;
     private bool _touchMode;
     private double _lastRowHeight;
     private bool _overHandle;
@@ -127,6 +132,12 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
     internal bool TouchMode => _touchMode;
 
     internal int HoverRow => _hoverRow;
+
+    /// <summary>The cell (display row, visible column) under the pointer when its column has a renderer, else (-1, -1).</summary>
+    internal (int Row, int Column) HoverCell => (_hoverCellRow, _hoverCellColumn);
+
+    /// <summary>The pointer position in viewport coordinates, valid while <see cref="HoverCell"/> is set.</summary>
+    internal Point HoverPoint => _hoverPoint;
 
     #region ILogicalScrollable
 
@@ -622,6 +633,12 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         _selection.InvalidateVisual();
     }
 
+    internal void OpenTemplateEditor(DataGridEditState edit, Avalonia.Controls.Templates.IDataTemplate template, string label)
+    {
+        _editorLayer.OpenTemplate(edit, template, label);
+        _selection.InvalidateVisual();
+    }
+
     internal void CloseEditor()
     {
         _editorLayer.Close();
@@ -728,6 +745,11 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
             BeginDrag(e, DragMode.Fill);
             return;
         }
+        if (TryRendererPress(hit, point.Position))
+        {
+            _grid.RaiseCellEvent(DataGrid.CellClickEvent, new DataGridCellAddress(hit.Row, hit.Column), e.Pointer.Type, e.KeyModifiers);
+            return;
+        }
         var cell = new DataGridCellAddress(hit.Row, hit.Column);
         if (shift)
         {
@@ -737,6 +759,7 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         {
             _grid.Select(cell);
         }
+        _grid.RaiseCellEvent(DataGrid.CellClickEvent, cell, e.Pointer.Type, e.KeyModifiers);
         BeginDrag(e, DragMode.Select);
     }
 
@@ -783,12 +806,144 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
             _hoverRow = row;
             _pinnedCells.InvalidateVisual();
         }
-        var overHandle = _selection.IsOverFillHandle(position - new Point(0, BodyTop));
-        if (overHandle != _overHandle)
+        _overHandle = _selection.IsOverFillHandle(position - new Point(0, BodyTop));
+        UpdateCellHover(position);
+        Cursor = _overHandle ? s_crossCursor ??= new Cursor(StandardCursorType.Cross)
+            : _overInteractive ? s_handCursor ??= new Cursor(StandardCursorType.Hand) : null;
+    }
+
+    /// <summary>Tracks the cell under the pointer while its column has a renderer, so the renderer can draw hover and the cursor can change.</summary>
+    private void UpdateCellHover(Point position)
+    {
+        var row = -1;
+        var column = -1;
+        var interactive = false;
+        if (!_touchMode && position.Y >= BodyTop && position.Y < BodyTop + BodyHeight &&
+            HitTest(position, clamp: false) is { Gutter: false, Group: null } hit && _grid.VisibleColumn(hit.Column).EffectiveRenderer is { } renderer &&
+            PointerContext(hit, position) is { } context)
         {
-            _overHandle = overHandle;
-            Cursor = overHandle ? s_crossCursor ??= new Cursor(StandardCursorType.Cross) : null;
+            row = hit.Row;
+            column = hit.Column;
+            interactive = renderer.IsInteractiveAt(context);
         }
+        var moved = row != _hoverCellRow || column != _hoverCellColumn;
+        if (moved && _hoverCellRow >= 0)
+        {
+            LayerOfColumn(_hoverCellColumn).InvalidateVisual();
+        }
+        _hoverCellRow = row;
+        _hoverCellColumn = column;
+        _hoverPoint = position;
+        _overInteractive = interactive;
+        if (row >= 0)
+        {
+            LayerOfColumn(column).InvalidateVisual();
+        }
+    }
+
+    private DataGridCellsLayer LayerOfColumn(int column) => column < _grid.Layout.PinCount ? _pinnedCells : _scrollCells;
+
+    private void ClearCellHover()
+    {
+        if (_hoverCellRow >= 0)
+        {
+            LayerOfColumn(_hoverCellColumn).InvalidateVisual();
+        }
+        _hoverCellRow = -1;
+        _hoverCellColumn = -1;
+        _overInteractive = false;
+    }
+
+    /// <summary>The visible column under a viewport x (clamped to the pinned or the scrolling columns that x is over); −1 without columns.</summary>
+    internal int ColumnIndexAtX(double x)
+    {
+        var layout = _grid.Layout;
+        if (layout.Count == 0)
+        {
+            return -1;
+        }
+        if (x < layout.PinEdge && layout.PinCount > 0)
+        {
+            return Math.Clamp(layout.ColumnAtContent(Math.Max(x, layout.Gutter)), 0, layout.PinCount - 1);
+        }
+        return Math.Clamp(layout.ColumnAtContent(Math.Max(x, layout.PinEdge) + _offset.X), Math.Min(layout.PinCount, layout.Count - 1), layout.Count - 1);
+    }
+
+    /// <summary>The viewport x of a visible column's left or right edge.</summary>
+    internal double ColumnEdgeX(int column, bool rightEdge)
+    {
+        var layout = _grid.Layout;
+        var x = (rightEdge ? layout.Right(column) : layout.Lefts[column]) - (column < layout.PinCount ? 0 : _offset.X);
+        return Math.Round(x);
+    }
+
+    /// <summary>Draws (or clears, with null) the line that shows where a dragged column would land.</summary>
+    internal void ShowColumnDrop(double? x) => _selection.SetColumnDrop(x);
+
+    /// <summary>The cell rectangle of a display line and visible column in viewport coordinates (not clipped).</summary>
+    private Rect CellRectOf(int line, int column)
+    {
+        var layout = _grid.Layout;
+        var rowHeight = _grid.RowHeight;
+        return new Rect(layout.Lefts[column] - (column < layout.PinCount ? 0 : _offset.X), BodyTop + line * rowHeight - _offset.Y,
+            layout.Widths[column], rowHeight);
+    }
+
+    /// <summary>What a renderer needs to hit test or react to a pointer over a hit cell; null for rows still loading.</summary>
+    private DataGridCellPointerContext? PointerContext(DataGridHit hit, Point position)
+    {
+        var key = _grid.KeyOfRow(hit.Row);
+        var item = _grid.ItemOfRow(hit.Row);
+        if (key is null || item is null)
+        {
+            return null;
+        }
+        var accessor = _grid.Layout.Accessors[hit.Column];
+        var rect = CellRectOf(hit.Line, hit.Column);
+        var padding = _grid.CellInlinePadding;
+        return new DataGridCellPointerContext(_grid, LayerOfColumn(hit.Column), new Rect(rect.X + padding, rect.Y, Math.Max(0, rect.Width - padding * 2), rect.Height),
+            position, _grid.ValueAt(hit.Row, accessor), item, key, hit.Row, accessor, _grid.CellVersion(hit.Row), _grid.CellText(hit.Row, accessor),
+            _grid.ColumnOf(accessor), _grid.EffectiveCulture, _grid.CellFontSize, _grid.SmallFontSize);
+    }
+
+    /// <summary>Offers a press to the renderer of the hit cell; true when it consumed it.</summary>
+    private bool TryRendererPress(DataGridHit hit, Point position)
+    {
+        if (hit.Gutter || hit.Group is not null || _grid.VisibleColumn(hit.Column).EffectiveRenderer is not { } renderer ||
+            PointerContext(hit, position) is not { } context)
+        {
+            return false;
+        }
+        return renderer.OnPointerPressed(context);
+    }
+
+    private void OnContextRequestedEvent(object? sender, ContextRequestedEventArgs e)
+    {
+        if (e.Handled || !_grid.HasCells)
+        {
+            return;
+        }
+        DataGridCellAddress cell;
+        Point position;
+        PointerType? pointer = null;
+        if (e.TryGetPosition(this, out var point))
+        {
+            if (point.Y < BodyTop || point.Y >= BodyTop + BodyHeight || HitTest(point, clamp: false) is not { Gutter: false, Group: null } hit)
+            {
+                return;
+            }
+            cell = new DataGridCellAddress(hit.Row, hit.Column);
+            position = point;
+            pointer = PointerType.Mouse;
+        }
+        else
+        {
+            cell = _grid.Anchor;
+            ScrollToCell(cell);
+            var rect = CellRectOf(_grid.LineOfRow(cell.Row), cell.Column);
+            position = new Point(Math.Clamp(rect.X + 12, 0, Math.Max(0, Bounds.Width - 1)), Math.Clamp(rect.Bottom, 0, Math.Max(0, Bounds.Height - 1)));
+        }
+        e.Handled = _grid.RequestContextMenu(cell, position, pointer, KeyModifiers.None);
     }
 
     protected override void OnPointerExited(PointerEventArgs e)
@@ -799,6 +954,8 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
             _hoverRow = -1;
             _pinnedCells.InvalidateVisual();
         }
+        ClearCellHover();
+        Cursor = _overHandle ? s_crossCursor : null;
     }
 
     private void DragTo(Point position)
@@ -923,6 +1080,10 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
             _grid.Select(new DataGridCellAddress(hit.Row, 0), new DataGridCellAddress(hit.Row, _grid.Layout.Count - 1), scroll: false);
             return;
         }
+        if (TryRendererPress(hit, position))
+        {
+            return;
+        }
         var cell = new DataGridCellAddress(hit.Row, hit.Column);
         if (_grid.Anchor == cell && _grid.Range.IsSingleCell && _grid.Edit is null)
         {
@@ -939,7 +1100,25 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
     /// <summary>Double click (or double tap) on a cell edits it; select and date cells open their list.</summary>
     internal void OnDoubleTapped(Point position)
     {
+        if (HitTest(position, clamp: false) is { Gutter: true, Group: null } gutter)
+        {
+            _grid.RaiseCellEvent(DataGrid.RowActivatedEvent, new DataGridCellAddress(gutter.Row, 0), PointerType.Mouse, KeyModifiers.None);
+            return;
+        }
         if (HitTest(position, clamp: false) is not { Gutter: false, Group: null } hit)
+        {
+            return;
+        }
+        if (_grid.RaiseCellEvent(DataGrid.CellDoubleClickEvent, new DataGridCellAddress(hit.Row, hit.Column), PointerType.Mouse, KeyModifiers.None) is { Handled: true })
+        {
+            return;
+        }
+        var doubled = _grid.VisibleColumn(hit.Column);
+        if (doubled.Type == DataGridColumnType.Boolean)
+        {
+            return;
+        }
+        if (doubled.EffectiveRenderer is { } renderer && PointerContext(hit, position) is { } context && renderer.IsInteractiveAt(context))
         {
             return;
         }
@@ -950,12 +1129,14 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
     {
         base.OnAttachedToVisualTree(e);
         DoubleTapped += OnDoubleTappedEvent;
+        ContextRequested += OnContextRequestedEvent;
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
         DoubleTapped -= OnDoubleTappedEvent;
+        ContextRequested -= OnContextRequestedEvent;
         _autoScroll?.Stop();
         _drag = null;
     }

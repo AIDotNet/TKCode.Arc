@@ -108,6 +108,7 @@ public partial class DataGrid
                 ? DataGridText.Get(DataGridLangResourceKind.StopGrouping)
                 : DataGridText.Format(DataGridLangResourceKind.GroupByColumn, column.Header), grouped ? DataGridIcons.Ungroup : DataGridIcons.Group, "group"));
         }
+        entries.Add(Entry(DataGridText.Get(DataGridLangResourceKind.FitColumnWidth), ArcIcons.Maximize2, "fit"));
         var pinned = IsPinnedColumn(column.Key);
         entries.Add(Entry(DataGridText.Get(pinned ? DataGridLangResourceKind.UnpinColumn : DataGridLangResourceKind.PinColumn),
             pinned ? DataGridIcons.PinOff : DataGridIcons.Pin, "pin"));
@@ -132,6 +133,9 @@ public partial class DataGrid
                     break;
                 case "group":
                     ToggleGroupBy(column.Key);
+                    break;
+                case "fit":
+                    AutoFitColumn(column.Key);
                     break;
                 case "pin":
                     TogglePinned(column.Key);
@@ -324,7 +328,7 @@ public partial class DataGrid
             var shown = 0;
             foreach (var option in options)
             {
-                var label = option.Length == 0 ? DataGridText.Get(DataGridLangResourceKind.EmptyValue) : option;
+                var label = option.Length == 0 ? DataGridText.Get(DataGridLangResourceKind.EmptyValue) : FilterLabelOf(column, option);
                 if (query.Length > 0 && !label.Contains(query, StringComparison.CurrentCultureIgnoreCase))
                 {
                     continue;
