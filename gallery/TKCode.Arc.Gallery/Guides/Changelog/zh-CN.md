@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: ce993bc90d50
+source-hash: 0dcda62ef91e
 ---
 
 # 更新日志
@@ -8,6 +8,26 @@ source-hash: ce993bc90d50
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 和 `TKCode.Arc.Icons.Lucide`。`TKCode.Arc.Blocks` 与 `TKCode.Arc.AdvancedCharts` 从仓库构建。
+
+## 0.2.0-preview.1 (2026-10-21)
+
+### 新增
+
+- **目标框架**：库同时面向 `net8.0`，与 `net10.0`、`net11.0` 并列。net8.0 构建需要 StreamMark `0.1.0-alpha.25`，该版本为其包加入了 net8.0。
+- **Markdown**（`TKCode.Arc`）：大纲与查找。提供 `GetOutline`、`ScrollToPoint`、`ScrollToAnchor`、`Find` 和 `GetSelectedText`，并有 `IsDocumentReady`、`MatchCount`、`CurrentMatchIndex`、`HasSelection` 属性，以及 `DocumentReady` 和 `SearchChanged` 事件。宿主可以围绕文档搭建大纲侧栏、查找栏和复制操作。
+- **RichTextEditor**（`TKCode.Arc`）：`TrySetMarkdown` 导入 Markdown，并返回 `RichTextImportReport`，列出编辑器无法保留的内容（`RichTextImportIssueKind`：标题层级、代码围栏的信息字符串、波浪线围栏、表格等）。
+- **DataGrid**（`TKCode.Arc.AdvancedCharts`，仓库内，尚未发布到 NuGet）：单元格渲染器（徽标、进度、链接、图标文字、复选框、操作）、校验规则（必填、范围、最大长度、模式）、条件格式规则、`CellInvoked` 事件、右键菜单事件、CSV 导出选项，以及筛选与布局状态。
+- **Blocks**（`TKCode.Arc.Blocks`，仓库内，尚未发布到 NuGet）：命令面板对话框；带值与日期筛选、详情和操作的搜索结果；侧边栏的折叠与调整大小模式；重做的通知中心。
+
+### 变更
+
+- AtomUI 锁定为 6.2.7；0.1.1-preview.1 基于 6.2.6 构建。AtomUI 依赖随 Arc 版本一同变化。
+- DataGrid 的 CSV 导出默认会处理电子表格公式（`NeutralizeCsvFormulas`），超过 `MaxPasteCells`（默认 1,000,000 个单元格）的粘贴会被拒绝。
+- 在 .NET 8 和 9 上，DataGrid 的自然文本排序使用内置比较器；在 .NET 10 及更高版本上仍使用 `CompareOptions.NumericOrdering`。
+
+### 修复
+
+- `LiveLoop.Start` 在已经在输出帧时提前返回，因此每次指针移动都启动循环的调用方不再每次重新读取门控条件。
 
 ## 0.1.1-preview.1 (2026-10-21)
 

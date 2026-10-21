@@ -11,6 +11,37 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`. `TKCode.Arc.Blocks` and `TKCode.Arc.AdvancedCharts` are built from the repository.
 
+## 0.2.0-preview.1 (2026-10-21)
+
+### Added
+
+- **Targets**: the libraries also build for `net8.0`, next to `net10.0` and `net11.0`. The net8.0 build needs StreamMark
+  `0.1.0-alpha.25`, which adds net8.0 to its packages.
+- **Markdown** (`TKCode.Arc`): an outline and find. `GetOutline`, `ScrollToPoint`, `ScrollToAnchor`, `Find` and
+  `GetSelectedText`, with the `IsDocumentReady`, `MatchCount`, `CurrentMatchIndex` and `HasSelection` properties and the
+  `DocumentReady` and `SearchChanged` events. A host can build an outline sidebar, a find bar and a copy action around the
+  document.
+- **RichTextEditor** (`TKCode.Arc`): `TrySetMarkdown` imports Markdown and returns a `RichTextImportReport` that lists what
+  the editor could not keep (`RichTextImportIssueKind`: heading depth, fence info strings, tilde fences, tables and so on).
+- **DataGrid** (`TKCode.Arc.AdvancedCharts`, in the repository, not on NuGet yet): cell renderers (badge, progress, link,
+  icon text, checkbox, actions), validation rules (required, range, max length, pattern), conditional format rules, a
+  `CellInvoked` event, a context menu event, CSV export options, and filter and layout state.
+- **Blocks** (`TKCode.Arc.Blocks`, in the repository, not on NuGet yet): the command palette dialog; search results with
+  value and date filters, details and actions; sidebar collapse and resize modes; the reworked notification center.
+
+### Changed
+
+- AtomUI is pinned to 6.2.7; 0.1.1-preview.1 was built on 6.2.6. The AtomUI dependency moves with the Arc version.
+- DataGrid CSV export neutralizes spreadsheet formulas by default (`NeutralizeCsvFormulas`), and a paste larger than
+  `MaxPasteCells` (1,000,000 cells by default) is refused.
+- On .NET 8 and 9 the DataGrid's natural text sort uses a built-in comparer; on .NET 10 and later it uses
+  `CompareOptions.NumericOrdering`, as before.
+
+### Fixed
+
+- `LiveLoop.Start` returns early when it is already delivering frames, so a caller that starts the loop on every pointer
+  move no longer re-reads the gates each time.
+
 ## 0.1.1-preview.1 (2026-10-21)
 
 ### Added

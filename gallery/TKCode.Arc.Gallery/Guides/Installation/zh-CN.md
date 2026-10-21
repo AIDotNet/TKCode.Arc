@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 8c08267df159
+source-hash: 433fe65dff9b
 ---
 
 # 安装
@@ -21,9 +21,9 @@ TKCode.Arc 目前处于预览阶段，AtomUI 与 Avalonia 都固定为确切版�
 ## 1. 添加包
 
 ```bash
-dotnet add package TKCode.Arc --version 0.1.1-preview.1
-dotnet add package TKCode.Arc.Fonts --version 0.1.1-preview.1           # 可选：Geist 与 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.1.1-preview.1    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 0.2.0-preview.1
+dotnet add package TKCode.Arc.Fonts --version 0.2.0-preview.1           # 可选：Geist 与 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.2.0-preview.1    # 可选：完整的 Lucide 图标集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可选：正文使用的 Inter
 ```
 
@@ -31,9 +31,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.1.1-preview.1" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.1.1-preview.1" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.1.1-preview.1" />
+    <PackageVersion Include="TKCode.Arc" Version="0.2.0-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.2.0-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.2.0-preview.1" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
