@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
         <ArcVersion>0.2.0-preview.1</ArcVersion>
-        <AtomUIVersion>6.2.7</AtomUIVersion>
+        <AtomUIVersion>6.2.8</AtomUIVersion>
         <AvaloniaVersion>12.1.4</AvaloniaVersion>
     </PropertyGroup>
 </Project>
