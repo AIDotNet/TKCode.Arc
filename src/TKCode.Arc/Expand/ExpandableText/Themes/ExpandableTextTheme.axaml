@@ -29,6 +29,32 @@
         <Setter Property="LineHeight" Value="{arc:ExpandableTextTokenResource TextLineHeight}" />
     </ControlTheme>
 
+    <ControlTheme x:Key="{x:Type arc:ExpandableContent}" TargetType="arc:ExpandableContent">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExpandableContent">
+                <StackPanel Orientation="Vertical" Spacing="{arc:ExpandableTextTokenResource ToggleGap}">
+                    <arc:ExpandableTextViewport Name="PART_Viewport">
+                        <!-- Text in the content takes the Arc body line height unless it sets its own. -->
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          TextBlock.LineHeight="{arc:ExpandableTextTokenResource TextLineHeight}" />
+                    </arc:ExpandableTextViewport>
+                    <arc:ExpandableTextToggle Name="PART_Toggle"
+                                              IsVisible="{TemplateBinding IsOverflowing}"
+                                              IsOpen="{TemplateBinding IsExpanded}"
+                                              MoreText="{TemplateBinding MoreLabel}"
+                                              LessText="{TemplateBinding LessLabel}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+    </ControlTheme>
+
     <ControlTheme x:Key="{x:Type arc:ExpandableTextToggle}" TargetType="arc:ExpandableTextToggle">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />

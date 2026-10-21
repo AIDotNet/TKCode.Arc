@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandableTextSelectableDemo">
+    <arc:ExpandableContent MaxWidth="520" HorizontalAlignment="Left">
+        <SelectableTextBlock TextWrapping="Wrap"
+                             Text="Steps to reproduce: open the billing page, switch the plan to annual, then go back to monthly before saving. The total keeps the annual discount, and the invoice preview shows the lower price. Clearing the browser cache does not help, and it happens in both the desktop app and the web app. Select any part of this message to copy it into the ticket." />
+    </arc:ExpandableContent>
+</UserControl>

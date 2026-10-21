@@ -14,9 +14,23 @@ and `TKCode.Arc.Icons.Lucide`.
   (menus, selects, tooltips, hover cards, popovers) draw in the window's overlay layer, outside the scaled container, so
   they could not follow the zoom; they now lay out at the inherited scale. `ArcPopup.Surface` returns the surface that
   was assigned to `Child` (the popup now hosts it in a scaling element, so `Child` itself is that element).
+- **ExpandableContent**: the ExpandableText clamp, toggle and motion around any content, such as selectable text, a
+  read-only editor or rendered Markdown. The clamp ends on a line of the content's first visible text (`TextBlock`,
+  `SelectableTextBlock`, or a control that implements the new `IExpandableLineSource`); other content clamps at
+  `Lines × LineHeight`. `ExpandableText` and `ExpandableContent` share the new `ExpandableClamp` base class.
+- **ExpandableText**, **ExpandableContent**: `IsFadeEnabled` turns off the fade over the last line.
+
+### Changed
+
+- **ExpandableText**: while collapsed, the text is laid out only to the line after the clamp, and in full when it opens.
+  A 600-line text measured about 1ms collapsed instead of about 135ms. Text with inline controls is still laid out in
+  full, so a link below the clamp can take focus. The clamp now ends on the text's own line boundaries instead of
+  `Lines × LineHeight`.
 
 ### Fixed
 
+- **ExpandableText**: a change of `IsExpanded` that arrives with a new data context, for example in a recycled item
+  template, no longer animates or scrolls the page.
 - TreeView and JsonViewer: a second change to the rows before the next layout pass, while rows from the first change were
   still closing, threw `IndexOutOfRangeException` in `RowTop`. The panel now refreshes its row geometry as soon as the
   rows change.

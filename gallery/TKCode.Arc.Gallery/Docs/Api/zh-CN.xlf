@@ -2896,41 +2896,45 @@
         <source>Whether the details are open. Two-way.</source>
         <target>详情是否展开。双向绑定。</target>
       </trans-unit>
-      <trans-unit id="ExpandableText">
-        <source>Arc expandable text: long text clamped to `Lines` lines with a soft fade over the last one. Read more opens it to its full height with a calm ease out (500–600ms, growing with the distance) and Show less closes it (400–450ms); the height, the fade and the chevron follow one progress value, so they always move in step, and a click mid-flight reverses from the current height. The toggle only appears when the text really overflows, and stays correct as the width or font changes. The whole text is always available to assistive technology.</source>
-        <target>Arc 可展开文本：过长的文本被截断为 `Lines` 行，末行带柔和的渐隐效果。“阅读更多”会以平缓的 ease out 缓动（500–600ms，随距离增加）展开至完整高度，“收起”则以 400–450ms 收拢；高度、渐隐与箭头共用同一进度值，因此始终同步移动，飞行途中点击会从当前高度反向。仅当文本确实溢出时才显示切换按钮，并在宽度或字体变化时保持正确。完整文本始终可供辅助技术使用。</target>
+      <trans-unit id="ExpandableClamp.ExpandedChanged">
+        <source>Raised when the content opens or closes.</source>
+        <target>内容展开或收起后触发。</target>
       </trans-unit>
-      <trans-unit id="ExpandableText.ExpandedChanged">
-        <source>Raised when the text opens or closes.</source>
-        <target>文本展开或收起后触发。</target>
+      <trans-unit id="ExpandableClamp.IsExpanded">
+        <source>Whether the full content shows. Two-way.</source>
+        <target>是否显示完整内容。双向绑定。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableClamp.IsFadeEnabled">
+        <source>Whether the last visible line fades out while collapsed (Arc: on).</source>
+        <target>折叠时最后一行可见内容是否渐隐（Arc 默认开启）。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableClamp.IsOverflowing">
+        <source>True when the content is longer than `Lines` lines (the toggle shows).</source>
+        <target>内容超过 `Lines` 行时为 true（此时显示切换按钮）。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableClamp.LessLabel">
+        <source>Toggle label while open.</source>
+        <target>展开时切换按钮的文字。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableClamp.LineHeight">
+        <source>Line height in px. `ExpandableText` lays its text out at this height (theme: text-sm × leading-body); `ExpandableContent` clamps at `Lines × LineHeight` when it is set, which is how content that is not text (rendered Markdown, a list) is clamped.</source>
+        <target>行高，单位 px。`ExpandableText` 按此行高排版文本（主题：text-sm × leading-body）；`ExpandableContent` 设置了它时按 `Lines × LineHeight` 截断，不是文本的内容（渲染后的 Markdown、列表）就是这样截断的。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableClamp.Lines">
+        <source>How many lines show while collapsed (Arc: 3).</source>
+        <target>折叠时显示的行数（Arc 默认为 3）。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableClamp.MoreLabel">
+        <source>Toggle label while collapsed.</source>
+        <target>折叠时切换按钮的文字。</target>
+      </trans-unit>
+      <trans-unit id="ExpandableText">
+        <source>Arc expandable text: long text clamped to `Lines` lines with a soft fade over the last one. Read more opens it to its full height with a calm ease out (500–600ms, growing with the distance) and Show less closes it (400–450ms); the height, the fade and the chevron follow one progress value, so they always move in step, and a click mid-flight reverses from the current height. The toggle only appears when the text really overflows, and stays correct as the width or font changes. While collapsed the text is laid out only past the clamp, so a very long text costs as much as a short one. The whole text is always available to assistive technology. For selectable or rich content, use `ExpandableContent`.</source>
+        <target>Arc 可展开文本：过长的文本被截断为 `Lines` 行，末行带柔和的渐隐效果。“阅读更多”会以平缓的 ease out 缓动（500–600ms，随距离增加）展开至完整高度，“收起”则以 400–450ms 收拢；高度、渐隐与箭头共用同一进度值，因此始终同步移动，飞行途中点击会从当前高度反向。仅当文本确实溢出时才显示切换按钮，并在宽度或字体变化时保持正确。折叠时文本只排版到截断线之后，因此很长的文本与短文本开销相同。完整文本始终可供辅助技术使用。需要可选择或富内容时，请使用 `ExpandableContent`。</target>
       </trans-unit>
       <trans-unit id="ExpandableText.Inlines">
         <source>Rich text with runs and inline links (`InlineUIContainer`); used instead of `Text` when set.</source>
         <target>富文本，包含多段文字与行内链接（`InlineUIContainer`）；设置后代替 `Text` 使用。</target>
-      </trans-unit>
-      <trans-unit id="ExpandableText.IsExpanded">
-        <source>Whether the full text shows. Two-way.</source>
-        <target>是否显示完整文本。双向绑定。</target>
-      </trans-unit>
-      <trans-unit id="ExpandableText.IsOverflowing">
-        <source>True when the text is longer than `Lines` lines (the toggle shows).</source>
-        <target>文本超过 `Lines` 行时为 true（此时显示切换按钮）。</target>
-      </trans-unit>
-      <trans-unit id="ExpandableText.LessLabel">
-        <source>Toggle label while open.</source>
-        <target>展开时切换按钮的文字。</target>
-      </trans-unit>
-      <trans-unit id="ExpandableText.LineHeight">
-        <source>Line height of the text, in px (theme: text-sm × leading-body).</source>
-        <target>文本行高，单位 px（主题：text-sm × leading-body）。</target>
-      </trans-unit>
-      <trans-unit id="ExpandableText.Lines">
-        <source>How many lines show while collapsed (Arc: 3).</source>
-        <target>折叠时显示的行数（Arc 默认为 3）。</target>
-      </trans-unit>
-      <trans-unit id="ExpandableText.MoreLabel">
-        <source>Toggle label while collapsed.</source>
-        <target>折叠时切换按钮的文字。</target>
       </trans-unit>
       <trans-unit id="ExpandableText.Text">
         <source>The text (paragraphs separated by line breaks).</source>

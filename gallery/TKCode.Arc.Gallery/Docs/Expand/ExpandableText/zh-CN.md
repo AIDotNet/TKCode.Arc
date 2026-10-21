@@ -1,7 +1,7 @@
 ---
 title: 可展开文本
 summary: 长文本截断为几行，底部带柔和渐隐；点击“阅读更多”平滑展开，点击“收起”折回。仅在文本溢出时显示切换按钮。
-source-hash: 6474060cf205
+source-hash: d6123beeacab
 ---
 
 <Demo name="Default" />
@@ -43,7 +43,7 @@ source-hash: 6474060cf205
 ### 结构
 
 1. **文本**（`Text` 或 `Inlines`）：自动换行的文本，次要文本颜色、小号字号，行高 19.6 px（14 px 乘以 1.4）。
-2. **截断**：折叠时，文本高度恰好为 `Lines` 乘以行高，超出的部分被隐藏。宽度或字体变化时会重新计算截断，无需代码即可响应尺寸变化。
+2. **截断**：折叠时，文本停在第 `Lines` 行的底部，也就是 `Lines` 乘以行高。超出的部分被隐藏，并且在展开之前不会排版，因此很长的文本与短文本开销相同。宽度或字体变化时会重新计算截断，无需代码即可响应尺寸变化。
 3. **渐隐**：折叠时，底部 1.6 行上覆盖一层柔和的蒙版。文本展开时蒙版消散，收起时在接近截断处重新出现。
 4. **切换行**：文本下方 8 px 的间距。切换按钮左对齐，最小高度 28 px，水平内边距 2 px，左外边距为负 2 px，使标签与文本边缘对齐。
 5. **切换标签**（`MoreLabel` 或 `LessLabel`）：中等字重，使用前景色。两个标签共用同一单元格，因此标签变化时切换按钮的宽度不变。悬停时标签变为次要文本颜色，按下时变为弱化文本颜色。
@@ -157,6 +157,29 @@ notice.Inlines = new InlineCollection
 
 即使被截断的部分读者看不到，其中的链接仍可通过键盘访问。当此类链接在截断线以下获得焦点时，文本会展开，焦点永远不会停留在隐藏的内容上。只放读者真正需要访问的链接，并把最重要的链接放在文案靠前的位置，使其通常可见。
 
+### 可选择的内容与富内容
+
+`ExpandableText` 用自己的 `TextBlock` 绘制文本，读者无法选择其中的文字。当内容需要可选择，或者根本不是纯文本时，把它放进 `ExpandableContent`。它具有相同的截断、渐隐、切换按钮和动效，以及相同的 `Lines`、`IsExpanded`、`MoreLabel`、`LessLabel` 和 `ExpandedChanged`。
+
+<Demo name="Selectable" />
+
+```xml
+<arc:ExpandableContent Lines="3" MaxWidth="520" HorizontalAlignment="Left">
+    <SelectableTextBlock TextWrapping="Wrap"
+                         Text="{Binding Message}" />
+</arc:ExpandableContent>
+```
+
+截断停在内容中第一段可见文本的某一行上：`TextBlock` 或 `SelectableTextBlock`（会穿过普通的面板、边框和呈现器查找），或者实现了 `IExpandableLineSource` 的控件。自行排版的只读编辑器实现该接口后，截断会停在它的两行之间，而不是从一行中间切开。不是文本的内容（例如渲染后的 Markdown）没有可报告的行：设置 `LineHeight`，截断高度就是 `Lines` 乘以 `LineHeight`。
+
+| 内容 | 截断位置 |
+|---|---|
+| `TextBlock`、`SelectableTextBlock` | 第 `Lines` 行的底部。文本使用 Arc 正文样式与行高，除非它自己另行设置 |
+| 实现了 `IExpandableLineSource` 的控件 | 该控件报告的行底部 |
+| 其他内容，并设置了 `LineHeight` | `Lines` 乘以 `LineHeight` |
+
+折叠时，内容中的 `TextBlock` 只排版到截断线之后的一行，这足以判断它是否溢出。很长的消息（例如粘贴进来的日志）在读者展开之前，开销与短消息相同。把 `IsFadeEnabled` 设为 `False` 可以去掉最后一行上的渐隐，例如内容本身已经以分隔线结尾时。
+
 ### 示例：商品评价
 
 商城商品页上的评价列表。两行截断让评价保持紧凑，切换按钮只出现在较长的评价上，因此简短的评价按原样显示。作者、“已购买”标签与日期位于文本上方的一行小号弱化文字中，读者在展开前即可判断评价的参考价值。列表宽 560，即商品栏的宽度。
@@ -231,6 +254,8 @@ notice.Inlines = new InlineCollection
 
 **为什么切换标签变化时切换按钮宽度保持不变？** 两个标签共用切换按钮中的同一个单元格，因此切换按钮的宽度与较长的那个标签一致。宽度恒定，标签在其中交叉淡化。
 
+**读者能选择文本吗？** `ExpandableText` 不能。请使用 `ExpandableContent`，并在其中放一个 `SelectableTextBlock`；截断、切换按钮和动效保持不变。
+
 **如何知道文本何时展开或收起？** 订阅 `ExpandedChanged`，它会收到一个 `ExpandableTextExpandedChangedEventArgs`，读取其中的 `IsExpanded` 即可。或者将 `IsExpanded` 双向绑定，并监听视图模型属性。
 
 **隐藏部分中的链接能否展开文本？** 可以。当文本中的链接在截断线以下获得键盘焦点时，文本会展开。位于截断线以上、可见的链接不会改变状态；只有切换按钮和隐藏链接上的键盘焦点会改变状态。
@@ -273,6 +298,7 @@ notice.Inlines = new InlineCollection
 - 动画进行中再次点击，会从当前高度反向运动，文本不会跳到任何一端。
 - 两个切换标签以 4 px 位移与 2 px 模糊交叉淡化，时序与展开一致，切换按钮的宽度保持不变。
 - 减弱动效时，文本立即展开或收起。当文本在页面下方收起时，会将文本的开头重新滚入视野。
+- 随新的数据上下文到来的 `IsExpanded` 变化（例如列表复用的项）会立即生效，没有动效，也不会滚动页面。
 
 | 变化 | 完整 | 减弱 | 关闭 |
 |---|---|---|---|

@@ -58,8 +58,9 @@ receives, so the number of visible lines follows the layout.
 
 1. **Text** (`Text` or `Inlines`): wrapped text in the secondary text color at the small type size, with a 19.6 px
    line height (14 px times 1.4).
-2. **Clamp**: while collapsed, the text is exactly `Lines` times the line height tall. Text beyond that is hidden.
-   The clamp is recalculated when the width or the font changes, so no code is needed for a resize.
+2. **Clamp**: while collapsed, the text ends on the bottom of line `Lines`, which is `Lines` times the line height.
+   Text beyond that is hidden, and it is not laid out until the text opens, so a very long text costs as much as a
+   short one. The clamp is recalculated when the width or the font changes, so no code is needed for a resize.
 3. **Fade**: a soft mask over the bottom 1.6 lines while the text is collapsed. It dissolves as the text opens and
    returns near the clamp when it closes.
 4. **Toggle row**: a gap of 8 px below the text. The toggle is left aligned, with a minimum height of 28 px, 2 px of
@@ -196,6 +197,38 @@ A link inside the clamped part is reachable by keyboard even though the reader c
 focus while it sits below the clamp, the text opens so that the focus is never on hidden content. Use links that
 the reader would want to reach, and place the most important link early in the copy so it is usually visible.
 
+### Selectable or rich content
+
+`ExpandableText` draws its text with its own `TextBlock`, so the reader cannot select it. When the content must be
+selectable, or is not plain text at all, put it inside `ExpandableContent`. It has the same clamp, fade, toggle and
+motion, and the same `Lines`, `IsExpanded`, `MoreLabel`, `LessLabel` and `ExpandedChanged`.
+
+<Demo name="Selectable" />
+
+```xml
+<arc:ExpandableContent Lines="3" MaxWidth="520" HorizontalAlignment="Left">
+    <SelectableTextBlock TextWrapping="Wrap"
+                         Text="{Binding Message}" />
+</arc:ExpandableContent>
+```
+
+The clamp ends on a line of the first visible text in the content: a `TextBlock` or `SelectableTextBlock`, found
+through plain panels, borders and presenters, or a control that implements `IExpandableLineSource`. A read-only editor
+that lays out its own lines implements that interface, so the clamp stops between two of its lines instead of cutting
+through one. Content that is not text, such as rendered Markdown, has no lines to report: set `LineHeight`, and the
+clamp is `Lines` times `LineHeight`.
+
+| Content | Where the clamp ends |
+|---|---|
+| `TextBlock`, `SelectableTextBlock` | On the bottom of line `Lines`. The text takes the Arc body style and line height unless it sets its own |
+| A control that implements `IExpandableLineSource` | On the line bottom that the control reports |
+| Other content, with `LineHeight` set | At `Lines` times `LineHeight` |
+
+While collapsed, a `TextBlock` in the content is laid out only to the line after the clamp, which is enough to tell
+that it overflows. A very long message, such as a pasted log, costs as much as a short one until the reader opens it.
+Set `IsFadeEnabled` to `False` to drop the fade over the last line, for example when the content already ends with a
+divider of its own.
+
 ### Example: product reviews
 
 A review list on a product page of a storefront. Two-line clamps keep the reviews compact, and the toggle appears only
@@ -287,6 +320,9 @@ fits in `Lines` lines at the current width, there is nothing to reveal, so the c
 **Why does the toggle keep the same width when the label changes?** Both labels share one cell in the toggle, so the
 toggle is as wide as the longer label. The width is constant, and the labels crossfade inside it.
 
+**Can the reader select the text?** Not in `ExpandableText`. Use `ExpandableContent` with a `SelectableTextBlock`
+inside it; the clamp, the toggle and the motion stay the same.
+
 **How do I know when the text opens or closes?** Subscribe to `ExpandedChanged`, which receives an
 `ExpandableTextExpandedChangedEventArgs`, and read `IsExpanded`. Or bind `IsExpanded` two-way and watch the view model
 property.
@@ -342,6 +378,8 @@ the reader is not left below the text they just collapsed. Under reduced motion 
   not change.
 - Reduced motion opens and closes the text at once. When the text closes far down the page, the start of the text is
   brought back into view.
+- A change of `IsExpanded` that arrives with a new data context, such as an item reused by a list, applies at once,
+  without motion and without scrolling the page.
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
