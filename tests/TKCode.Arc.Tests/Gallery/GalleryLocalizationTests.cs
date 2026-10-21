@@ -128,6 +128,23 @@ public class GalleryLocalizationTests
             .Concat(root.GetVisualDescendants().OfType<Button>().Select(b => b.Content as string ?? string.Empty))
             .Where(t => t.Length > 0).ToList();
 
+    /// <summary>StreamMark parses the docs page on a worker: pumps the page until every text is shown.</summary>
+    private static async Task Shown(Visual root, params string[] texts)
+    {
+        for (var i = 0; i < 300; i++)
+        {
+            root.GetVisualDescendants().OfType<GalleryPageView>().FirstOrDefault()?.Docs?.View?.ApplyLatest();
+            Dispatcher.UIThread.RunJobs();
+            var shown = Texts(root);
+            if (texts.All(shown.Contains))
+            {
+                return;
+            }
+            await Task.Delay(10);
+        }
+        throw new TimeoutException($"Not shown: {string.Join(", ", texts.Where(t => !Texts(root).Contains(t)))}");
+    }
+
     private static GalleryWindow Open()
     {
         var window = new GalleryWindow { Width = 1280, Height = 860 };
@@ -138,7 +155,7 @@ public class GalleryLocalizationTests
     }
 
     [AvaloniaFact]
-    public void Shell_Text_Follows_The_Language()
+    public async Task Shell_Text_Follows_The_Language()
     {
         var window = Open();
         try
@@ -147,6 +164,7 @@ public class GalleryLocalizationTests
             Dispatcher.UIThread.RunJobs();
             var search = window.Sidebar.GetVisualDescendants().OfType<TextBox>().First();
 
+            await Shown(window, "Preview", "Code", "On this page", "A single line field with clear labels and useful states.");
             var english = Texts(window);
             english.ShouldContain("Components");
             english.ShouldContain("Search");
@@ -160,6 +178,7 @@ public class GalleryLocalizationTests
 
             GalleryText.SetLanguage("zh-CN");
             Dispatcher.UIThread.RunJobs();
+            await Shown(window, "预览", "代码", "本页内容", "标签清晰、状态实用的单行输入框。");
             var chinese = Texts(window);
             chinese.ShouldContain("组件");
             chinese.ShouldContain("搜索");
@@ -181,12 +200,14 @@ public class GalleryLocalizationTests
 
             GalleryText.SetLanguage("zh-TW");
             Dispatcher.UIThread.RunJobs();
+            await Shown(window, "文字輸入", "標籤清楚、狀態實用的單行輸入框。");
             Texts(window).ShouldContain("文字輸入");
             Texts(window).ShouldContain("標籤清楚、狀態實用的單行輸入框。");
             search.PlaceholderText.ShouldBe("搜尋元件");
 
             GalleryText.SetLanguage("en-US");
             Dispatcher.UIThread.RunJobs();
+            await Shown(window, "Text fields", "A single line field with clear labels and useful states.");
             Texts(window).ShouldContain("Text fields");
             Texts(window).ShouldContain("A single line field with clear labels and useful states.");
             search.PlaceholderText.ShouldBe("Search components");
