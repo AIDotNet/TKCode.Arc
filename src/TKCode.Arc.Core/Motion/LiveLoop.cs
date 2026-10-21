@@ -125,6 +125,12 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     /// <summary>Asks for the loop; frames start as soon as every gate holds. Idempotent.</summary>
     public void Start()
     {
+        // Already delivering frames: the gates were just checked, and re-reading them (resource lookups) per call adds up
+        // for callers that start the loop on every pointer move.
+        if (_active && _running)
+        {
+            return;
+        }
         _active = true;
         Refresh();
     }

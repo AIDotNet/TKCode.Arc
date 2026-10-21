@@ -195,8 +195,27 @@ public class RichTextEditor : TemplatedControl
     /// <summary>Replaces the content with sanitized HTML (one undo step).</summary>
     public void SetHtml(string? html) => LoadContent(RichTextEditorHtml.ToDocument(html), record: true);
 
-    /// <summary>Replaces the content with Markdown (one undo step).</summary>
+    /// <summary>Replaces the content with Markdown (one undo step). Unsupported constructs are converted as documented by <see cref="RichTextEditorMarkdown.Analyze"/>.</summary>
     public void SetMarkdown(string? markdown) => LoadContent(RichTextEditorMarkdown.ToDocument(markdown), record: true);
+
+    /// <summary>
+    /// Replaces the content with Markdown only when the editor can store all of it. When
+    /// <see cref="RichTextEditorMarkdown.Analyze"/> reports a loss, nothing changes, the current content and the undo
+    /// history stay as they were, and <paramref name="report"/> carries the issues (with line, column and reason) so
+    /// the caller can keep the file, warn or open a source editor. A source that is only normalized (for example `*`
+    /// bullets written back as `-`) is imported as one undo step, like <see cref="SetMarkdown"/>.
+    /// </summary>
+    /// <returns>True when the content was replaced; false when the import was refused.</returns>
+    public bool TrySetMarkdown(string? markdown, out RichTextImportReport report)
+    {
+        report = RichTextEditorMarkdown.Analyze(markdown);
+        if (report.HasLosses)
+        {
+            return false;
+        }
+        SetMarkdown(markdown);
+        return true;
+    }
 
     /// <summary>Empties the editor (one undo step).</summary>
     public void Clear() => LoadContent(ImmutableList.Create(RichTextEditorBlock.EmptyParagraph), record: true);

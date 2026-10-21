@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using StreamMark.Avalonia;
 using StreamMark.Avalonia.Extensions;
 using StreamMark.Avalonia.Rendering;
+using StreamMark.Avalonia.Selection;
 using StreamMark.Core.Parsing;
 using StreamMark.Core.Streaming;
 
@@ -25,6 +26,15 @@ namespace TKCode.Arc;
 /// Colors, fonts and radii follow the ArcDesign tokens (light/dark and accent changes included) through StreamMark's
 /// <c>Md.*</c> resources, set on this control. Add <c>Md.*</c> keys to <see cref="StyledElement.Resources"/> to
 /// override single values.
+/// <para>
+/// A host that builds its own chrome around the document (an outline sidebar, a find bar, a copy action) uses
+/// <see cref="GetOutline"/>, <see cref="ScrollToPoint"/>, <see cref="ScrollToAnchor"/>, <see cref="Find"/> and
+/// <see cref="GetSelectedText"/> instead of walking the template. Parsing happens on a worker thread: the outline is
+/// available as soon as the document has a parsed snapshot, and <see cref="IsDocumentReady"/> turns true when that
+/// snapshot is applied to the view. Before the template is applied there is no view, so the outline is empty, the
+/// scroll methods return <c>false</c>, <see cref="Find"/> returns 0 and the selection is empty; a new template creates
+/// a new view, so a selection does not survive retemplating (the find query is run again when the new view is ready).
+/// </para>
 /// </remarks>
 [TemplatePart(ViewPart, typeof(MarkdownView))]
 [PseudoClasses(StreamingPseudoClass)]
@@ -72,6 +82,26 @@ public class Markdown : TemplatedControl
     public static readonly DirectProperty<Markdown, bool> IsStreamingProperty =
         AvaloniaProperty.RegisterDirect<Markdown, bool>(nameof(IsStreaming), o => o.IsStreaming);
 
+    /// <summary>
+    /// True when the current document has been parsed and the result is applied to the view, so the outline, the search
+    /// matches and the scroll targets are final. A static <see cref="Text"/> becomes ready once; a stream becomes ready
+    /// when it completes. False before the template is applied and while a new source is being parsed.
+    /// </summary>
+    public static readonly DirectProperty<Markdown, bool> IsDocumentReadyProperty =
+        AvaloniaProperty.RegisterDirect<Markdown, bool>(nameof(IsDocumentReady), o => o.IsDocumentReady);
+
+    /// <summary>The number of matches of the last <see cref="Find"/>, 0 when nothing is searched.</summary>
+    public static readonly DirectProperty<Markdown, int> MatchCountProperty =
+        AvaloniaProperty.RegisterDirect<Markdown, int>(nameof(MatchCount), o => o.MatchCount);
+
+    /// <summary>The 0-based index of the current match, or -1 when the search has no match.</summary>
+    public static readonly DirectProperty<Markdown, int> CurrentMatchIndexProperty =
+        AvaloniaProperty.RegisterDirect<Markdown, int>(nameof(CurrentMatchIndex), o => o.CurrentMatchIndex);
+
+    /// <summary>True when the document has a selection, so a copy action can be enabled.</summary>
+    public static readonly DirectProperty<Markdown, bool> HasSelectionProperty =
+        AvaloniaProperty.RegisterDirect<Markdown, bool>(nameof(HasSelection), o => o.HasSelection);
+
     /// <summary>A link was clicked (anchors inside the document scroll by themselves and do not arrive here).</summary>
     public static readonly RoutedEvent<LinkClickedEventArgs> LinkClickedEvent = MarkdownView.LinkClickedEvent;
 
@@ -88,9 +118,25 @@ public class Markdown : TemplatedControl
     internal double Leading { get => GetValue(LeadingProperty); set => SetValue(LeadingProperty, value); }
 
     private bool _isStreaming;
+    private bool _isDocumentReady;
+    private int _matchCount;
+    private int _currentMatchIndex = -1;
+    private bool _hasSelection;
 
     /// <summary>Whether a stream is attached and has not completed yet.</summary>
     public bool IsStreaming { get => _isStreaming; private set => SetAndRaise(IsStreamingProperty, ref _isStreaming, value); }
+
+    /// <inheritdoc cref="IsDocumentReadyProperty"/>
+    public bool IsDocumentReady { get => _isDocumentReady; private set => SetAndRaise(IsDocumentReadyProperty, ref _isDocumentReady, value); }
+
+    /// <inheritdoc cref="MatchCountProperty"/>
+    public int MatchCount { get => _matchCount; private set => SetAndRaise(MatchCountProperty, ref _matchCount, value); }
+
+    /// <inheritdoc cref="CurrentMatchIndexProperty"/>
+    public int CurrentMatchIndex { get => _currentMatchIndex; private set => SetAndRaise(CurrentMatchIndexProperty, ref _currentMatchIndex, value); }
+
+    /// <inheritdoc cref="HasSelectionProperty"/>
+    public bool HasSelection { get => _hasSelection; private set => SetAndRaise(HasSelectionProperty, ref _hasSelection, value); }
 
     /// <summary>A link was clicked. Mark it handled to stop <see cref="OpensLinks"/> from opening it.</summary>
     public event EventHandler<LinkClickedEventArgs>? LinkClicked
@@ -98,6 +144,22 @@ public class Markdown : TemplatedControl
         add => AddHandler(LinkClickedEvent, value);
         remove => RemoveHandler(LinkClickedEvent, value);
     }
+
+    /// <summary>
+    /// The current document is parsed and applied, so <see cref="GetOutline"/> and the scroll methods have their final
+    /// targets. Raised again when a new <see cref="Text"/> or <see cref="Stream"/> becomes ready, and after a new
+    /// template is applied. Runs on the UI thread.
+    /// </summary>
+    public event EventHandler? DocumentReady;
+
+    /// <summary>
+    /// The matches or the current match of <see cref="Find"/> changed (including when the document changes under a
+    /// search and the query is run again). Runs on the UI thread.
+    /// </summary>
+    public event EventHandler? SearchChanged;
+
+    /// <summary>The selection of the document view changed; <see cref="HasSelection"/> and the copy results follow.</summary>
+    public event EventHandler? SelectionChanged;
 
     #endregion
 
@@ -122,6 +184,9 @@ public class Markdown : TemplatedControl
     private StreamingDocument? _document;
     private MarkdownProfile? _documentProfile;
     private StreamingDocument? _watched;
+    private DocumentSnapshot? _readySnapshot;
+    private string _query = string.Empty;
+    private bool _matchCase;
     private int _applyPending;
     private MarkdownStream? _subscribed;
     private MarkdownStream? _ownStream;
@@ -158,12 +223,192 @@ public class Markdown : TemplatedControl
     /// <summary>Ends the current stream; <see cref="IsStreaming"/> turns false once the paced backlog is shown.</summary>
     public void Complete() => Stream?.Complete();
 
+    #region Host integration
+
+    /// <summary>
+    /// The headings of the current document in reading order, from the latest parsed snapshot, so it also works while a
+    /// stream is still growing and before <see cref="IsDocumentReady"/> turns true. Empty before the template is applied
+    /// or while the first parse runs.
+    /// </summary>
+    public IReadOnlyList<OutlineItem> GetOutline()
+        => _watched?.Latest is { } snapshot ? DocumentNavigation.Outline(snapshot, 0) : Array.Empty<OutlineItem>();
+
+    /// <summary>
+    /// Scrolls the document so <paramref name="point"/> (a <see cref="OutlineItem.Target"/> or a selection point) is in
+    /// view; the enclosing <see cref="ScrollViewer"/> does the scrolling. Returns false when the view has not laid the
+    /// target out yet: call it after <see cref="DocumentReady"/>, or wait for it before scrolling from a new source.
+    /// </summary>
+    public bool ScrollToPoint(TextPoint point)
+    {
+        if (_view is null)
+        {
+            return false;
+        }
+        ApplyLatest();
+        return _view.ScrollToPoint(point);
+    }
+
+    /// <summary>Scrolls to the start of the block with <paramref name="blockKey"/> (the <c>BlockKey</c> of a <see cref="TextPoint"/>).</summary>
+    public bool ScrollToBlock(int blockKey) => ScrollToPoint(new TextPoint(0, blockKey, 0, 0));
+
+    /// <summary>
+    /// Scrolls to the heading a link points at, such as <c>#release-notes</c> or <c>release-notes</c>; the anchor matches
+    /// the heading id or its GitHub-style slug. Returns false when the document has no such heading yet.
+    /// </summary>
+    public bool ScrollToAnchor(string? anchor)
+    {
+        if (string.IsNullOrWhiteSpace(anchor) || _watched?.Latest is not { } snapshot)
+        {
+            return false;
+        }
+        var url = anchor[0] == '#' ? anchor : "#" + anchor;
+        return DocumentNavigation.ResolveAnchor(snapshot, 0, url) is { } target && ScrollToPoint(target);
+    }
+
+    /// <summary>
+    /// Finds <paramref name="query"/> in the document, highlights every match and makes the first one current; returns
+    /// the number of matches. The query is kept: when the text or the stream changes, or the template is applied again,
+    /// it runs on the new document. An empty query clears the search. Matching is case-insensitive unless
+    /// <paramref name="matchCase"/> is true.
+    /// </summary>
+    public int Find(string? query, bool matchCase = false)
+    {
+        _query = query ?? string.Empty;
+        _matchCase = matchCase;
+        return RunSearch();
+    }
+
+    /// <summary>Moves to the next match, wrapping around, and scrolls to it.</summary>
+    public void FindNext() => _view?.Search.Next();
+
+    /// <summary>Moves to the previous match, wrapping around, and scrolls to it.</summary>
+    public void FindPrevious() => _view?.Search.Previous();
+
+    /// <summary>Moves to the match at <paramref name="index"/> and scrolls to it; out-of-range indexes are ignored.</summary>
+    public void FindAt(int index) => _view?.Search.MoveTo(index);
+
+    /// <summary>Clears the search and its highlights; <see cref="MatchCount"/> becomes 0 and <see cref="CurrentMatchIndex"/> -1.</summary>
+    public void ClearSearch() => Find(null);
+
+    /// <summary>The selected text, with formulas as <c>$latex$</c> and table cells separated by tabs; empty without a selection.</summary>
+    public string GetSelectedText() => _view?.SelectionController.GetSelectedText() ?? string.Empty;
+
+    /// <summary>The Markdown source of the blocks the selection covers; empty without a selection.</summary>
+    public string GetSelectedMarkdown() => _view?.SelectionController.GetSelectedMarkdown() ?? string.Empty;
+
+    /// <summary>Selects the whole document.</summary>
+    public void SelectAll() => _view?.SelectionController.SelectAll();
+
+    /// <summary>Copies the selection to the clipboard as plain text, or as Markdown when <paramref name="asMarkdown"/> is true.</summary>
+    public Task CopySelectionAsync(bool asMarkdown = false)
+        => _view is { } view ? view.SelectionController.CopyAsync(asMarkdown) : Task.CompletedTask;
+
+    /// <summary>Applies the latest parsed snapshot now instead of waiting for the next frame; a no-op without a view.</summary>
+    private void ApplyLatest()
+    {
+        if (_view is { } view && _watched is { } document && TopLevel.GetTopLevel(view) is not null
+            && !ReferenceEquals(view.Snapshot, document.Latest))
+        {
+            view.ApplyLatest();
+            UpdateReady();
+        }
+    }
+
+    private int RunSearch()
+    {
+        if (_view is null)
+        {
+            MatchCount = 0;
+            CurrentMatchIndex = -1;
+            return 0;
+        }
+        ApplyLatest();
+        var count = _view.Search.Find(_query, _matchCase);
+        OnSearchChanged();
+        return count;
+    }
+
+    private void OnSearchChanged()
+    {
+        MatchCount = _view?.Search.Count ?? 0;
+        CurrentMatchIndex = _view?.Search.CurrentIndex ?? -1;
+        SearchChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnSelectionChanged()
+    {
+        HasSelection = _view is { } view && !view.Selection.IsEmpty;
+        SelectionChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Raises <see cref="DocumentReady"/> once per applied complete snapshot, and drops readiness while a new source
+    /// parses. A search that is still set runs again on the new document.
+    /// </summary>
+    private void UpdateReady()
+    {
+        var latest = _watched?.Latest;
+        var ready = latest is { IsComplete: true } && ReferenceEquals(_view?.Snapshot, latest);
+        if (ready)
+        {
+            if (ReferenceEquals(latest, _readySnapshot))
+            {
+                return;
+            }
+            _readySnapshot = latest;
+            IsDocumentReady = true;
+            if (_query.Length > 0)
+            {
+                RunSearch();
+            }
+            DocumentReady?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+        _readySnapshot = null;
+        IsDocumentReady = false;
+    }
+
+    private void DetachView()
+    {
+        if (_view is { } view)
+        {
+            view.Search.Changed -= OnSearchChanged;
+            view.Selection.Changed -= OnSelectionChanged;
+        }
+        HasSelection = false;
+    }
+
+    private void AttachView()
+    {
+        if (_view is { } view)
+        {
+            view.Search.Changed += OnSearchChanged;
+            view.Selection.Changed += OnSelectionChanged;
+        }
+    }
+
+    #endregion
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        DetachView();
         _view = e.NameScope.Find<MarkdownView>(ViewPart);
+        AttachView();
         UpdateServices();
-        UpdateSource();
+        if (_watched is { } document)
+        {
+            // A new template means a new view: give it the document and let it lay the content out again.
+            AssignToView(document);
+            _readySnapshot = null;
+            IsDocumentReady = false;
+            _view?.ApplyLatest();
+            UpdateReady();
+        }
+        else
+        {
+            UpdateSource();
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -229,16 +474,10 @@ public class Markdown : TemplatedControl
     /// </summary>
     private void UpdateSource()
     {
-        if (_view is null)
-        {
-            return;
-        }
         StreamingDocument document;
         if (Stream is { } stream)
         {
             document = stream.Document;
-            _view.Document = null;
-            _view.Stream = stream;
         }
         else
         {
@@ -250,10 +489,30 @@ public class Markdown : TemplatedControl
             }
             document = _document;
             document.Load(Text ?? string.Empty);
-            _view.Stream = null;
-            _view.Document = document;
         }
+        // The old snapshot's targets belong to the old source: the document is not ready until the new parse lands.
+        _readySnapshot = null;
+        IsDocumentReady = false;
+        AssignToView(document);
         Watch(document);
+    }
+
+    private void AssignToView(StreamingDocument document)
+    {
+        if (_view is not { } view)
+        {
+            return;
+        }
+        if (Stream is { } stream)
+        {
+            view.Document = null;
+            view.Stream = stream;
+        }
+        else
+        {
+            view.Stream = null;
+            view.Document = document;
+        }
     }
 
     private void Watch(StreamingDocument? document)
@@ -295,6 +554,7 @@ public class Markdown : TemplatedControl
         {
             view.ApplyLatest();
         }
+        UpdateReady();
     }
 
     private bool IsAttached => TopLevel.GetTopLevel(this) is not null;
