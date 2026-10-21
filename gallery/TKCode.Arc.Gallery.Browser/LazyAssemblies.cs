@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices.JavaScript;
@@ -19,6 +20,9 @@ internal static partial class LazyAssemblies
 
     public static void Install() => AssemblyLoadContext.Default.Resolving += Resolve;
 
+    // Trimming and loading assemblies from bytes do not go together; this runs only in a publish without trimming, where the project
+    // file left assemblies out of the boot list (Program checks the switch Arc.Gallery.LazyAssemblies, which a trimmed publish leaves unset).
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Used only when the publish is not trimmed.")]
     private static Assembly? Resolve(AssemblyLoadContext context, AssemblyName name)
     {
         // The runtime also asks for "<Name>.resources" per culture and for assemblies that do not exist; ask once, and

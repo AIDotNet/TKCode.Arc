@@ -21,7 +21,7 @@ public class GalleryScreenshotsTests
         {
             foreach (var shot in GalleryDocs.Screenshots(className, GalleryDocs.SourceLanguage))
             {
-                var dark = new Uri(shot.Light.AbsoluteUri.Replace(".png", ".dark.png", StringComparison.Ordinal));
+                var dark = new Uri(shot.Light.AbsoluteUri.Replace(".webp", ".dark.webp", StringComparison.Ordinal));
                 missing.AddRange(new[] { shot.Light, dark }.Where(u => !AssetLoader.Exists(u)).Select(u => $"{className}: {u}"));
             }
         }
@@ -38,11 +38,11 @@ public class GalleryScreenshotsTests
             foreach (var shot in GalleryDocs.Screenshots(className, GalleryDocs.SourceLanguage))
             {
                 shown.Add(shot.Light.AbsolutePath);
-                shown.Add(shot.Light.AbsolutePath.Replace(".png", ".dark.png", StringComparison.Ordinal));
+                shown.Add(shot.Light.AbsolutePath.Replace(".webp", ".dark.webp", StringComparison.Ordinal));
             }
         }
         var captures = AssetLoader.GetAssets(new Uri("avares://TKCode.Arc.Gallery.Shots/Docs/"), null)
-                                  .Where(u => u.AbsolutePath.EndsWith(".png", StringComparison.Ordinal))
+                                  .Where(u => u.AbsolutePath.EndsWith(".webp", StringComparison.Ordinal))
                                   .ToList();
         captures.Count.ShouldBe(shown.Count, "every screenshot has exactly a light and a dark capture");
         captures.Where(u => !shown.Contains(u.AbsolutePath)).ShouldBeEmpty("captures no page shows (DocShots shoot removes them)");
@@ -71,7 +71,7 @@ public class GalleryScreenshotsTests
         doc.CopyMarkdown.ShouldContain("](images/WorkspaceForm.png)");
         var shot = GalleryDocs.Screenshots("Input", "zh-CN").ShouldHaveSingleItem();
         shot.Name.ShouldBe("WorkspaceForm");
-        shot.Light.ShouldBe(new Uri("avares://TKCode.Arc.Gallery.Shots/Docs/TextFields/Input/images/WorkspaceForm.png"));
+        shot.Light.ShouldBe(new Uri("avares://TKCode.Arc.Gallery.Shots/Docs/TextFields/Input/images/WorkspaceForm.webp"));
 
         var view = new GalleryShotView("Docs/TextFields/Input/images/WorkspaceForm", "A workspace settings form");
         var window = TestHelpers.Show(view);

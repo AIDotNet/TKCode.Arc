@@ -1,6 +1,6 @@
 # TKCode.Arc agent guide
 
-TKCode.Arc is an Arc-style (uiarc.dev) component library for Avalonia built on AtomUI 6.2.7.
+TKCode.Arc is an Arc-style (uiarc.dev) component library for Avalonia built on AtomUI 6.2.8.
 Design source of truth: `design/` (start at `design/overview.md`).
 
 ## Layout
@@ -10,7 +10,7 @@ Design source of truth: `design/` (start at `design/overview.md`).
 - `tests/`: `TKCode.Arc.Core.Tests` (pure), `TKCode.Arc.Tests` (headless Avalonia).
 - `gallery/`: gallery shell (home page, routes, top bar) and pages; `TKCode.Arc.Gallery.Shots` holds the docs screenshots as resources (the Browser host serves them as files instead). A component's page is its docs page `Docs/<Category>/<Component>/<lang>.md` with live examples embedded by `<Demo name="Name" />`, each written as `Demos/<Category>/<Component>/<Name>.axaml` (plus `.axaml.cs` only when it needs logic); the demo's Code tab shows those files (sections 4 and 6.7). `TKCode.Arc.Gallery.Generators` turns `<!-- api: Type -->` into API tables from the TKCode.Arc XML docs, collects the demos and checks translations (design/engineering/gallery-app.md section 6). Shell text comes from `Localization/*.xlf` via `GalleryText` (hosts call `UseArcGallery()`; section 5.1). The sidebar's Docs section (Introduction, Installation, Theming, Motion, AI and MCP, Changelog) is `Guides/<Page>/<lang>.md`, read at run time by `GalleryGuides` (section 6.9).
 - `tools/lucide/generate_lucide.py`: regenerates Lucide glyph geometry.
-- `tools/docshots`: checks a docs page without a build (`check`), captures its screenshots (`shoot`: each `![caption](images/Name.png)` line plus the `xml` block under it, light and dark) and renders a gallery page (`page`); see design/engineering/gallery-app.md section 6.8.
+- `tools/docshots`: checks a docs page without a build (`check`), captures its screenshots (`shoot`: each `![caption](images/Name.png)` line plus the `xml` block under it, light and dark, as lossless WebP files `images/Name.webp`; install `cwebp` for small files) and renders a gallery page (`page`); see design/engineering/gallery-app.md section 6.8.
 
 ## Implementation handbook
 

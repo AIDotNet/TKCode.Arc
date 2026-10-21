@@ -97,7 +97,7 @@ public class GalleryGuidesTests
         }
         shown.ShouldNotBeEmpty();
         AssetLoader.GetAssets(new Uri("avares://TKCode.Arc.Gallery.Shots/Guides/"), null)
-                   .Where(u => u.AbsolutePath.EndsWith(".png", StringComparison.Ordinal))
+                   .Where(u => u.AbsolutePath.EndsWith(".webp", StringComparison.Ordinal))
                    .Where(u => !shown.Contains(u.AbsolutePath))
                    .ShouldBeEmpty("captures no Docs page shows");
     }

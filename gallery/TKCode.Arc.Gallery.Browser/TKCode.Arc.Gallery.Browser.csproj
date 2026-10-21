@@ -7,12 +7,14 @@
         <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
         <!-- Skia's WebAssembly code is linked only with WasmBuildNative (needs the wasm-tools-net10 workload). -->
         <WasmBuildNative>true</WasmBuildNative>
-        <!-- AtomUI's browser TypeMap publish needs SDK 10.0.300 (ATOMUIREG006); this repo builds with SDK 11, so publish is untrimmed. -->
-        <PublishTrimmed>false</PublishTrimmed>
-        <!-- Publishing shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
+        <!-- Publishing trims the app with ILLink; builds and dotnet run do not. AtomUI up to 6.2.7 refused a trimmed browser publish unless
+             the SDK was exactly 10.0.300 (ATOMUIREG006); 6.2.8 accepts net10.0-browser with any SDK 10 or later, and this repository
+             builds with SDK 11. -p:PublishTrimmed=false publishes untrimmed; the boot-list pruning below then applies instead. -->
+        <PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_IsPublishing)' == 'true'">true</PublishTrimmed>
+        <!-- Publishing also shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
              everything. -p:ArcWasmPrune=false publishes with everything, -p:ArcWasmPrune=true shrinks a build as well. -->
         <ArcWasmPrune Condition="'$(ArcWasmPrune)' == ''">$(_IsPublishing)</ArcWasmPrune>
-        <!-- LazyAssemblies uses JSImport. -->
+        <!-- LazyAssemblies and the other browser interop use JSImport. -->
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
@@ -27,7 +29,9 @@
         <StaticWebAssetFingerprintPattern Include="JS" Pattern="*.js" Expression="#[.{fingerprint}]!" />
     </ItemGroup>
 
-    <!-- Without trimming, every assembly of the runtime pack and of every package reference goes into the boot list and is
+    <!-- The two lists below are for a publish without trimming (-p:PublishTrimmed=false). A trimmed publish needs neither: ILLink drops what
+         nothing uses, and an assembly loaded on demand would meet a trimmed runtime that no longer has the members it calls.
+         Without trimming, every assembly of the runtime pack and of every package reference goes into the boot list and is
          downloaded at startup. These are never loaded in the browser: AtomUI.Desktop.Controls pulls in Avalonia.Desktop with
          its Windows, X11, Wayland and macOS backends. Avalonia.OpenGL, .Metal and .Vulkan are NOT in this list: Avalonia.Skia
          loads them. Pass -p:ArcWasmPrune=false to publish with everything. -->
@@ -57,7 +61,7 @@
         <ArcWasmUnusedAssembly Include="System.Reflection.DispatchProxy;System.Diagnostics.TextWriterTraceListener;System.Web.HttpUtility;System.ComponentModel.EventBasedAsync;System.Xml.XPath.XDocument" />
     </ItemGroup>
 
-    <!-- Assemblies a session may never touch (SVG, ReactiveUI, the CJK font, Lucide, QR codes). They stay out of the boot list
+    <!-- Assemblies a session may never touch (SVG, ReactiveUI, the Alibaba Sans Latin font, Lucide, QR codes). They stay out of the boot list
          and are published as wwwroot/_lazy/<Name>.dll; the first time the runtime asks for one, LazyAssemblies fetches it
          (main.js, arc-lazy module), so a visitor who never reaches them never downloads them. An assembly with P/Invokes into
          the statically linked native libraries (SkiaSharp, HarfBuzzSharp, Onigwrap) must not be listed here: the P/Invoke
@@ -71,7 +75,12 @@
     <!-- The WebAssembly SDK builds the boot list (build and publish) and the P/Invoke scan from ReferenceCopyLocalPaths, so
          removing the items here keeps them out of both. -->
     <Target Name="ArcPruneWasmAssemblies" AfterTargets="ResolveReferences" Condition="'$(ArcWasmPrune)' == 'true'">
-        <PropertyGroup>
+        <!-- Trimmed: only the screenshots assembly is left out. Nothing refers to it by code, so ILLink would drop it anyway; leaving it
+             out here and setting the switch below makes the site fetch the pictures as files. -->
+        <PropertyGroup Condition="'$(PublishTrimmed)' == 'true'">
+            <_ArcWasmLeftOutNames>;TKCode.Arc.Gallery.Shots;</_ArcWasmLeftOutNames>
+        </PropertyGroup>
+        <PropertyGroup Condition="'$(PublishTrimmed)' != 'true'">
             <_ArcWasmLazyNames>;@(ArcWasmLazyAssembly);</_ArcWasmLazyNames>
             <_ArcWasmLeftOutNames>;@(ArcWasmUnusedAssembly);@(ArcWasmLazyAssembly);</_ArcWasmLeftOutNames>
         </PropertyGroup>
@@ -85,24 +94,17 @@
         <!-- Program reads this switch: with the screenshots assembly gone, HttpShotSource fetches the pictures. -->
         <ItemGroup>
             <RuntimeHostConfigurationOption Include="Arc.Gallery.ShotsOverHttp" Value="true" />
+            <!-- Program installs LazyAssemblies only when some assemblies were left out to be fetched. -->
+            <RuntimeHostConfigurationOption Include="Arc.Gallery.LazyAssemblies" Value="true" Condition="'$(PublishTrimmed)' != 'true'" />
         </ItemGroup>
         <Message Importance="high" Text="Arc: left @(_ArcWasmPrunedFile->Count()) assemblies out of the WebAssembly boot list, @(_ArcWasmLazyFile->Count()) of them to load on demand" />
     </Target>
 
-    <!-- The screenshots of the docs pages, served as files (HttpShotSource): wwwroot/shots/Docs/<Category>/<Component>/images/<Name>.png. -->
+    <!-- The screenshots of the docs pages, served as files (HttpShotSource): wwwroot/shots/Docs/<Category>/<Component>/images/<Name>.webp. -->
     <ItemGroup>
-        <Content Include="../TKCode.Arc.Gallery/Docs/**/images/*.png" Link="wwwroot/shots/Docs/%(RecursiveDir)%(Filename)%(Extension)" />
-        <Content Include="../TKCode.Arc.Gallery/Guides/**/images/*.png" Link="wwwroot/shots/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="../TKCode.Arc.Gallery/Docs/**/images/*.webp" Link="wwwroot/shots/Docs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="../TKCode.Arc.Gallery/Guides/**/images/*.webp" Link="wwwroot/shots/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
-
-    <!-- The screenshots are PNG in the repository (tools/docshots writes them) and lossless WebP on the wire: the same pixels at about a
-         quarter of the size. Without cwebp the publish keeps the PNGs and says so; HttpShotSource falls back to them. -->
-    <Target Name="ArcShotsToWebp" AfterTargets="Publish" Condition="'$(ArcWasmPrune)' == 'true' And '$(WasmBuildingForNestedPublish)' != 'true' And !$([MSBuild]::IsOSPlatform('Windows'))">
-        <Exec Command="sh &quot;$(MSBuildThisFileDirectory)../../tools/wasm/webp-shots.sh&quot; &quot;$(PublishDir)wwwroot/shots&quot;" IgnoreExitCode="true" StandardErrorImportance="low">
-            <Output TaskParameter="ExitCode" PropertyName="_ArcWebpExitCode" />
-        </Exec>
-        <Warning Condition="'$(_ArcWebpExitCode)' != '0'" Text="The published screenshots are still PNG, about four times larger than WebP: install cwebp (brew install webp, apt install webp) and publish again." />
-    </Target>
 
     <Target Name="ArcCopyLazyAssemblies" AfterTargets="Publish" Condition="'$(WasmBuildingForNestedPublish)' != 'true' And '@(_ArcWasmLazyFile)' != ''">
         <Copy SourceFiles="@(_ArcWasmLazyFile)" DestinationFolder="$(PublishDir)wwwroot/_lazy" SkipUnchangedFiles="true" />

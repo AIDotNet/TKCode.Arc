@@ -19,7 +19,8 @@ namespace TKCode.Arc.DocShots;
 /// </code>
 /// A screenshot is a <c>![caption](images/Name.png)</c> line followed by an <c>xml</c> code block: the block is loaded,
 /// laid out at its root's <c>Width</c> (640 when it has none) and captured at twice the size in the light and the dark
-/// theme, as <c>images/Name.png</c> and <c>images/Name.dark.png</c> next to the page.
+/// theme, as the lossless WebP files <c>images/Name.webp</c> and <c>images/Name.dark.webp</c> next to the page (the Markdown line
+/// still writes <c>images/Name.png</c>: it names the capture, not its file).
 /// </summary>
 public static class Program
 {

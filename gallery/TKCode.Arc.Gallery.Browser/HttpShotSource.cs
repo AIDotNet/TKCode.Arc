@@ -16,32 +16,17 @@ namespace TKCode.Arc.Gallery.Browser;
 internal sealed partial class HttpShotSource : IGalleryShotSource
 {
     private readonly Uri _root;
-    private string[] _extensions = [".webp", ".png"];
 
     /// <param name="root">The document's base address, such as <c>https://host/</c>; <c>shots/</c> is relative to it.</param>
     public HttpShotSource(Uri root) => _root = root;
 
     public async ValueTask<Stream?> OpenAsync(Uri uri)
     {
-        // uri is avares://TKCode.Arc.Gallery.Shots/Docs/<Category>/<Component>/images/<Name>.png; the file is <Name>.webp when the
-        // publish converted the screenshots, else <Name>.png.
-        var stem = new Uri(_root, "shots" + uri.AbsolutePath[..^".png".Length]).AbsoluteUri;
-        foreach (var extension in _extensions)
-        {
-            var url = stem + extension;
-            await Load(url);
-            var bytes = Take(url);
-            if (bytes.Length > 0)
-            {
-                // The first answer tells which kind the site has: a site that only has PNG is not asked for WebP again.
-                if (extension == ".png")
-                {
-                    _extensions = [".png"];
-                }
-                return new MemoryStream(bytes);
-            }
-        }
-        return null;
+        // uri is avares://TKCode.Arc.Gallery.Shots/Docs/<Category>/<Component>/images/<Name>.webp
+        var url = new Uri(_root, "shots" + uri.AbsolutePath).AbsoluteUri;
+        await Load(url);
+        var bytes = Take(url);
+        return bytes.Length == 0 ? null : new MemoryStream(bytes);
     }
 
     /// <summary>Starts the request and completes when the picture, or the answer that there is none, has arrived.</summary>

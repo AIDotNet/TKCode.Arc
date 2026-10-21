@@ -128,11 +128,12 @@ public static partial class GalleryDocs
     /// <summary>
     /// The asset of a screenshot: <paramref name="source"/> is its path without the extension, such as
     /// <c>Docs/&lt;Category&gt;/&lt;Component&gt;/images/&lt;Name&gt;</c> or <c>Guides/&lt;Page&gt;/images/&lt;Name&gt;</c>;
-    /// the dark capture is <c>&lt;Name&gt;.dark.png</c> next to the light one. The captures are resources of
+    /// the dark capture is <c>&lt;Name&gt;.dark.webp</c> next to the light one (lossless WebP; the Markdown line still writes
+    /// <c>images/Name.png</c>, which names the capture, not its file). The captures are resources of
     /// <c>TKCode.Arc.Gallery.Shots</c>, not of this assembly, so a host can serve them as files instead.
     /// </summary>
     public static Uri ScreenshotUri(string source, bool dark)
-        => new($"avares://TKCode.Arc.Gallery.Shots/{source}{(dark ? ".dark" : string.Empty)}.png");
+        => new($"avares://TKCode.Arc.Gallery.Shots/{source}{(dark ? ".dark" : string.Empty)}.webp");
 
     /// <summary>
     /// The block StreamMark renders as a screenshot (<c>GalleryShotPlugin</c>), framed and switching with the theme. The
@@ -275,7 +276,7 @@ public static partial class GalleryDocs
     [GeneratedRegex(@"^[ \t]*<Demo[ \t]+name=""([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)""[ \t]*/>[ \t]*$", RegexOptions.Multiline)]
     private static partial Regex DemoTag();
 
-    // A screenshot on a line of its own: ![caption](images/Name.png), with Name.dark.png beside it for the dark theme.
+    // A screenshot on a line of its own: ![caption](images/Name.png), with Name.webp (Name.dark.webp for the dark theme) as its file.
     [GeneratedRegex(@"^[ \t]*!\[([^\]\n]*)\]\(images/([A-Za-z0-9_-]+)\.png\)[ \t]*$", RegexOptions.Multiline)]
     private static partial Regex ScreenshotTag();
 

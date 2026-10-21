@@ -15,7 +15,11 @@ internal sealed partial class Program
 {
     private static Task Main(string[] args)
     {
-        LazyAssemblies.Install();
+        // A publish without trimming leaves assemblies out of the boot list (the project file) and fetches them when the runtime asks.
+        if (AppContext.TryGetSwitch("Arc.Gallery.LazyAssemblies", out var lazyAssemblies) && lazyAssemblies)
+        {
+            LazyAssemblies.Install();
+        }
         // A published site has no screenshots assembly (the project file leaves it out) and serves the pictures as files.
         if (AppContext.TryGetSwitch("Arc.Gallery.ShotsOverHttp", out var shotsOverHttp) && shotsOverHttp && args.Length > 1)
         {
@@ -28,6 +32,7 @@ internal sealed partial class Program
         AppBuilder.Configure<App>()
                   .WithInterFont()
                   .WithArcFonts()
+                  .WithCjkFont()
                   .UseAtomUI(builder =>
                   {
                       builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);

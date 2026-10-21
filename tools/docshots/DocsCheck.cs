@@ -215,7 +215,7 @@ internal static class DocsCheck
             {
                 problems.Add($"line {shot.Scene.Line}: the scene is {width} wide; at most {MaxSceneWidth} fits the docs column");
             }
-            foreach (var variant in new[] { $"{shot.Name}.png", $"{shot.Name}.dark.png" })
+            foreach (var variant in new[] { $"{shot.Name}.webp", $"{shot.Name}.dark.webp" })
             {
                 if (!File.Exists(Path.Combine(page.ImagesFolder, variant)))
                 {

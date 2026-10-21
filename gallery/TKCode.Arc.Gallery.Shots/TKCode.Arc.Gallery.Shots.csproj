@@ -10,10 +10,11 @@
 
     <!-- The screenshots of the docs and guide pages (Shell/GalleryShotView): Docs/<Category>/<Component>/images/ and
          Guides/<Page>/images/ in the gallery project, where tools/docshots writes them. They live in an assembly of
-         their own so a host that serves them as files (the WebAssembly host) can leave the assembly out: PNG does not
-         compress, and 200 captures are the largest part of what a browser would download at startup. -->
+         their own so a host that serves them as files (the WebAssembly host) can leave the assembly out: 200 captures are the largest
+         part of what a browser would download at startup. They are lossless WebP, which tools/docshots writes: the same pixels as a
+         PNG at about a quarter of the size. -->
     <ItemGroup>
-        <AvaloniaResource Include="../TKCode.Arc.Gallery/Docs/**/images/*.png" Link="Docs/%(RecursiveDir)%(Filename)%(Extension)" />
-        <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/images/*.png" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Docs/**/images/*.webp" Link="Docs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/images/*.webp" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 </Project>

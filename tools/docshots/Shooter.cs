@@ -8,9 +8,11 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using SkiaSharp;
 using ArcWindow = AtomUI.Desktop.Controls.Window;
 
 namespace TKCode.Arc.DocShots;
@@ -94,7 +96,7 @@ internal static class Shooter
                         failures++;
                         continue;
                     }
-                    var path = Path.Combine(page.ImagesFolder, $"{shot.Name}{(dark ? ".dark" : string.Empty)}.png");
+                    var path = Path.Combine(page.ImagesFolder, $"{shot.Name}{(dark ? ".dark" : string.Empty)}.webp");
                     try
                     {
                         var size = Capture(shot.Scene.Code, path);
@@ -112,6 +114,11 @@ internal static class Shooter
         foreach (var page in pages)
         {
             RemoveStale(page);
+        }
+        if (s_builtInEncoder > 0)
+        {
+            Console.WriteLine($"WARN {s_builtInEncoder} capture(s) were written with SkiaSharp's WebP encoder, which makes files about as large as a PNG: " +
+                              "install cwebp (brew install webp, apt install webp) and shoot again for files a quarter of the size");
         }
         Console.WriteLine(failures == 0 ? "ALL OK" : $"{failures} problem(s)");
         return failures == 0 ? 0 : 1;
@@ -141,7 +148,7 @@ internal static class Shooter
             Program.Pump(SettleFrames);
             var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("the window rendered no frame");
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            frame.Save(path, new PngBitmapEncoderOptions { CompressionLevel = System.IO.Compression.CompressionLevel.SmallestSize });
+            SaveWebp(frame, path);
             return frame.PixelSize;
         }
         finally
@@ -151,17 +158,93 @@ internal static class Shooter
         }
     }
 
-    /// <summary>Deletes captures in the page's <c>images/</c> that no screenshot line names any more.</summary>
+    /// <summary>
+    /// Writes <paramref name="frame"/> as lossless WebP: the same pixels as a PNG at about a quarter of the size, which is why the
+    /// captures are WebP (a page with many of them downloads about a quarter of the bytes). The compression is cwebp's
+    /// (<c>-lossless -z 9</c>; brew install webp, apt install webp): SkiaSharp's own lossless encoder, which is the fallback when
+    /// cwebp is not installed, makes files about as large as the PNG, so those are counted and reported at the end.
+    /// </summary>
+    private static void SaveWebp(WriteableBitmap frame, string path)
+    {
+        var temp = Path.Combine(Path.GetTempPath(), $"docshots-{Guid.NewGuid():N}.png");
+        try
+        {
+            // Avalonia encodes only PNG and JPEG: the pixels reach cwebp as a PNG, which loses nothing.
+            frame.Save(temp, new PngBitmapEncoderOptions { CompressionLevel = System.IO.Compression.CompressionLevel.Fastest });
+            if (RunCwebp(temp, path))
+            {
+                return;
+            }
+        }
+        finally
+        {
+            File.Delete(temp);
+        }
+        SaveWebpWithSkia(frame, path);
+        s_builtInEncoder++;
+    }
+
+    /// <summary>How many captures were written with SkiaSharp's encoder because cwebp was not found.</summary>
+    private static int s_builtInEncoder;
+
+    private static bool RunCwebp(string input, string output)
+    {
+        try
+        {
+            var start = new System.Diagnostics.ProcessStartInfo("cwebp", ["-quiet", "-lossless", "-z", "9", input, "-o", output])
+            {
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            using var process = System.Diagnostics.Process.Start(start)!;
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                throw new InvalidOperationException($"cwebp failed: {error.Trim()}");
+            }
+            return true;
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            return false;
+        }
+    }
+
+    private static void SaveWebpWithSkia(WriteableBitmap frame, string path)
+    {
+        using var locked = frame.Lock();
+        var color = locked.Format == PixelFormat.Rgba8888 ? SKColorType.Rgba8888 : SKColorType.Bgra8888;
+        var alpha = frame.AlphaFormat == AlphaFormat.Unpremul ? SKAlphaType.Unpremul : SKAlphaType.Premul;
+        var info = new SKImageInfo(locked.Size.Width, locked.Size.Height, color, alpha);
+        using var pixmap = new SKPixmap(info, locked.Address, locked.RowBytes);
+        using var output = File.Create(path);
+        using var stream = new SKManagedWStream(output);
+        if (!pixmap.Encode(stream, new SKWebpEncoderOptions(SKWebpEncoderCompression.Lossless, 100)))
+        {
+            throw new InvalidOperationException("SkiaSharp could not encode the frame as WebP");
+        }
+    }
+
+    /// <summary>
+    /// Deletes captures in the page's <c>images/</c> that no screenshot line names any more, and every PNG: captures used to be
+    /// PNG files, and a page shoots its WebP files again.
+    /// </summary>
     private static void RemoveStale(DocFile page)
     {
         if (!Directory.Exists(page.ImagesFolder))
         {
             return;
         }
-        var wanted = page.Screenshots.SelectMany(s => new[] { $"{s.Name}.png", $"{s.Name}.dark.png" }).ToHashSet(StringComparer.Ordinal);
-        foreach (var file in Directory.GetFiles(page.ImagesFolder, "*.png"))
+        var wanted = page.Screenshots.SelectMany(s => new[] { $"{s.Name}.webp", $"{s.Name}.dark.webp" }).ToHashSet(StringComparer.Ordinal);
+        foreach (var file in Directory.GetFiles(page.ImagesFolder).Where(f => f.EndsWith(".png", StringComparison.Ordinal) || f.EndsWith(".webp", StringComparison.Ordinal)))
         {
-            if (!wanted.Contains(Path.GetFileName(file)))
+            if (file.EndsWith(".png", StringComparison.Ordinal))
+            {
+                File.Delete(file);
+                Console.WriteLine($"del  {Relative(file)} (a PNG capture; captures are WebP now)");
+            }
+            else if (!wanted.Contains(Path.GetFileName(file)))
             {
                 File.Delete(file);
                 Console.WriteLine($"del  {Relative(file)} (no longer shown)");

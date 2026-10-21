@@ -10,26 +10,32 @@ const dotnetRuntime = await dotnet
 
 const config = dotnetRuntime.getConfig();
 
-// Bytes of an assembly the publish left out of the boot list (LazyAssemblies.cs), or null when there is none. Synchronous:
-// the runtime asks while it resolves a type. The response is read as text with one byte per character, the only binary
-// form a synchronous request allows on the main thread. A host that answers a missing file with its index.html is not a
-// PE file, so the "MZ" check turns that into null as well.
-dotnetRuntime.setModuleImports('arc-lazy', {
-    load: name => {
-        const request = new XMLHttpRequest();
-        request.open('GET', `_lazy/${name}.dll`, false);
-        request.overrideMimeType('text/plain; charset=x-user-defined');
-        request.send();
-        const text = request.status === 200 ? request.responseText : '';
-        if (!text.startsWith('MZ')) {
-            return null;
-        }
-        const bytes = new Uint8Array(text.length);
-        for (let i = 0; i < text.length; i++) {
-            bytes[i] = text.charCodeAt(i) & 0xff;
-        }
-        return bytes;
+// Binary text of a file of the site, one byte per character: the only binary form a synchronous request allows on the main
+// thread. Empty when there is no such file; a host that answers a missing file with its index.html returns text that starts with '<'.
+const readFile = path => {
+    const request = new XMLHttpRequest();
+    request.open('GET', path, false);
+    request.overrideMimeType('text/plain; charset=x-user-defined');
+    request.send();
+    const text = request.status === 200 ? request.responseText : '';
+    return text.startsWith('<') ? '' : text;
+};
+const toBytes = text => {
+    const bytes = new Uint8Array(text.length);
+    for (let i = 0; i < text.length; i++) {
+        bytes[i] = text.charCodeAt(i) & 0xff;
     }
+    return bytes;
+};
+dotnetRuntime.setModuleImports('arc-lazy', {
+    // An assembly the publish left out of the boot list (LazyAssemblies.cs), or null when there is none. Synchronous: the runtime
+    // asks while it resolves a type. The "MZ" check rejects anything that is not a PE file.
+    load: name => {
+        const text = readFile(`_lazy/${name}.dll`);
+        return text.startsWith('MZ') ? toBytes(text) : null;
+    },
+    // A file of the site, such as the Chinese font (CjkFont.cs): the layout asks for a glyph in the middle of measuring.
+    file: path => toBytes(readFile(path))
 });
 
 // The open page in the address bar (BrowserRouter.cs). Addresses are relative to the document's base, so the site can sit in a
@@ -60,7 +66,7 @@ dotnetRuntime.setModuleImports('arc-shots', {
     load: async url => {
         try {
             const response = await fetch(url);
-            if (response.ok && /^image\/(png|webp)\b/.test(response.headers.get('content-type') ?? '')) {
+            if (response.ok && /^image\/webp\b/.test(response.headers.get('content-type') ?? '')) {
                 shots.set(url, new Uint8Array(await response.arrayBuffer()));
             }
         } catch {
