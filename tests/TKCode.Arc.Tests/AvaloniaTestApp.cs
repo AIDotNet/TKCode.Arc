@@ -1,6 +1,7 @@
 using AtomUI;
 using TKCode.Arc;
 using TKCode.Arc.Gallery;
+using TKCode.Arc.Gallery.Shell;
 using AtomUI.Desktop.Controls;
 using AtomUI.Localization;
 using Avalonia;
@@ -16,7 +17,14 @@ namespace TKCode.Arc.Tests;
 
 public static class TestAppBuilder
 {
-    public static AppBuilder BuildAvaloniaApp() =>
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        // The top bar's GitHub button asks GitHub for the star count; tests have no network and no use for it.
+        GalleryGitHub.StarsProvider = static () => Task.FromResult<int?>(null);
+        return Build();
+    }
+
+    private static AppBuilder Build() =>
         AppBuilder.Configure<TestApplication>()
                   .UseHeadless(new AvaloniaHeadlessPlatformOptions())
                   .UseAtomUI(builder => builder.UseDesktopControls()

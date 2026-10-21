@@ -21,7 +21,16 @@ internal static class DocSnippets
     /// <summary>A fenced block: its info-string language (lowercase, may be empty), its text and the 1-based line it starts on.</summary>
     internal sealed record Block(string Language, string Code, int Line)
     {
-        public bool IsXaml => Language is "xml" or "xaml" or "axaml";
+        /// <summary>An <c>xml</c> block that is XAML; MSBuild fragments (<c>&lt;ItemGroup&gt;</c>, <c>&lt;PackageReference&gt;</c>, …) are not.</summary>
+        public bool IsXaml => Language is "xml" or "xaml" or "axaml" && !IsMsBuild(Code);
+    }
+
+    private static bool IsMsBuild(string code)
+    {
+        var start = code.TrimStart();
+        return start.StartsWith("<Project", StringComparison.Ordinal) || start.StartsWith("<ItemGroup", StringComparison.Ordinal) ||
+               start.StartsWith("<PropertyGroup", StringComparison.Ordinal) || start.StartsWith("<PackageReference", StringComparison.Ordinal) ||
+               start.StartsWith("<PackageVersion", StringComparison.Ordinal);
     }
 
     public static List<Block> Blocks(string markdown)

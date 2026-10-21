@@ -23,6 +23,8 @@ public class GalleryShellTests
         var window = new GalleryWindow { Width = width, Height = height };
         ArcMotion.SetLevel(window, ArcMotionLevel.Off);
         window.Show();
+        // The gallery opens on its home page (GalleryHomeTests); these tests are about the sidebar and a component page.
+        window.Select(GalleryCatalog.Categories[0].Entries[0]);
         Dispatcher.UIThread.RunJobs();
         return window;
     }
@@ -30,7 +32,7 @@ public class GalleryShellTests
     private static T Find<T>(GalleryWindow window) where T : Visual => window.GetVisualDescendants().OfType<T>().First();
 
     [AvaloniaFact]
-    public void Opens_On_The_First_Component()
+    public void The_First_Component_Opens_With_Its_Page_In_The_Sidebar()
     {
         var window = Open();
         try

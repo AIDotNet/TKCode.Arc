@@ -49,7 +49,7 @@ public class GalleryLocalizationTests
                     // Proper nouns and loanwords may stay the same; everything else must have been translated.
                     if (text == source)
                     {
-                        source.ShouldBeOneOf(["Markdown", "Copy Markdown", "AI"], $"{language}: {kind} was left in English");
+                        source.ShouldBeOneOf(["Markdown", "Copy Markdown", "AI", "Star"], $"{language}: {kind} was left in English");
                     }
                     foreach (var placeholder in new[] { "{0}", "{1}" })
                     {
@@ -150,6 +150,8 @@ public class GalleryLocalizationTests
         var window = new GalleryWindow { Width = 1280, Height = 860 };
         ArcMotion.SetLevel(window, ArcMotionLevel.Off);
         window.Show();
+        // The gallery opens on its home page, which has no sidebar; these checks read the sidebar and a component page.
+        window.Select(TKCode.Arc.Gallery.Catalog.GalleryCatalog.Categories[0].Entries[0]);
         Dispatcher.UIThread.RunJobs();
         return window;
     }

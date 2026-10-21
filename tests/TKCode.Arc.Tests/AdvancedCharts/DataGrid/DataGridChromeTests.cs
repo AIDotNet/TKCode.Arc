@@ -44,7 +44,7 @@ public class DataGridChromeTests
         grid.OpenColumnMenu(anchor, region);
         var menu = OpenMenu(grid);
         menu.Items.OfType<MenuEntry>().Select(e => e.Header).ShouldBe(
-            ["Sort ascending", "Sort descending", "Filter", "Group by Region", "Pin column", "Hide column"]);
+            ["Sort ascending", "Sort descending", "Filter", "Group by Region", "Fit column width", "Pin column", "Hide column"]);
         Invoke(Entry(menu, "Sort descending"));
         grid.SortDescriptions.ShouldBe([DataGridSort.Descending("region")]);
         grid.OpenColumnMenu(anchor, region);

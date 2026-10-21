@@ -11,6 +11,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Blocks;
 
@@ -267,7 +268,8 @@ public class NotificationCenterTests
             var deploy = RowOf(panel, "deploy");
             deploy.Classes.ShouldContain(":success");
             deploy.EventGlyph.ShouldBe(ArcIcons.CircleCheck);
-            TestHelpers.Descendant<Avatar>(deploy, "PART_Avatar").IsVisible.ShouldBeFalse();
+            // A system update never builds an avatar (a heavy template): the tone icon stands in.
+            deploy.GetVisualDescendants().OfType<Avatar>().ShouldBeEmpty();
 
             var usage = RowOf(panel, "usage");
             usage.EventGlyph.ShouldBe(ArcIcons.TriangleAlert);
@@ -811,4 +813,285 @@ public class NotificationCenterTests
             window.Close();
         }
     }
+
+    #region Long lists, subscriptions
+
+    private static List<NotificationItem> Many(int count)
+    {
+        var items = new List<NotificationItem>(count);
+        for (var i = 0; i < count; i++)
+        {
+            items.Add(new NotificationItem
+            {
+                Id = $"n{i}",
+                Title = $"Notification {i}",
+                Description = i % 3 == 0 ? null : $"Details of notification {i}",
+                Time = $"{i % 59 + 1}m",
+                ActorName = i % 2 == 0 ? "Mia Chen" : null,
+                IsRead = i % 4 == 3
+            });
+        }
+        return items;
+    }
+
+    private static ScrollViewer ListScroller(NotificationCenterPanel panel) => TestHelpers.Descendant<ScrollViewer>(panel, NotificationCenterPanel.ScrollPart);
+
+    private static void Layout() => Dispatcher.UIThread.RunJobs();
+
+    [AvaloniaFact]
+    public void A_Long_List_Creates_Rows_Only_Near_The_Viewport()
+    {
+        var center = Create(Many(500));
+        var window = Show(center);
+        try
+        {
+            var panel = OpenPanel(center);
+            Layout();
+            // Every notification has its place in the list, but only the rows near the viewport exist.
+            panel.List!.Children.Count.ShouldBe(500);
+            panel.RealizedRowCount.ShouldBeGreaterThanOrEqualTo(NotificationCenterPanel.MinRealized);
+            panel.RealizedRowCount.ShouldBeLessThan(40);
+            panel.ShownRows.Select(r => r.Item.Id).Take(3).ShouldBe(["n0", "n1", "n2"]);
+            // Assistive technology still learns the size of the whole list and each row's place in it.
+            var first = panel.ShownRows.First();
+            AutomationProperties.GetPositionInSet(first).ShouldBe(1);
+            AutomationProperties.GetSizeOfSet(first).ShouldBe(500);
+            // The place holders carry the height of a row, so the scroll range is the real one.
+            var scroll = ListScroller(panel);
+            var rowHeight = panel.ShownRows.First().Bounds.Height;
+            rowHeight.ShouldBeGreaterThan(40);
+            scroll.Extent.Height.ShouldBeGreaterThan(500 * rowHeight * 0.95);
+            scroll.Extent.Height.ShouldBeLessThan(500 * (rowHeight + 8) * 1.1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Scrolling_Creates_Rows_Ahead_And_Gives_Far_Rows_Back()
+    {
+        var center = Create(Many(500));
+        var window = Show(center);
+        try
+        {
+            var panel = OpenPanel(center);
+            Layout();
+            var scroll = ListScroller(panel);
+            var rowHeight = panel.ShownRows.First().Bounds.Height;
+            scroll.Offset = new Vector(0, rowHeight * 200);
+            Layout();
+            Layout();
+            // The rows around row 200 exist and show their own notification, the first ones went back to the pool.
+            var shown = panel.ShownRows.ToList();
+            shown.Count.ShouldBeLessThan(40);
+            shown.ShouldAllBe(r => r.TitleText == r.Item.Title);
+            // A row taken from the pool shows the avatar only when its notification has a person.
+            shown.ShouldAllBe(r => r.GetVisualDescendants().OfType<Avatar>().Any(a => a.IsVisible) == r.Item.HasActor);
+            shown.ShouldAllBe(r => TestHelpers.Descendant<Border>(r, NotificationCenterRow.EventIconPart).IsVisible != r.Item.HasActor);
+            AutomationProperties.GetPositionInSet(shown.First(r => r.Item.Id == "n200")).ShouldBe(201);
+            shown.Any(r => r.Item.Id == "n200").ShouldBeTrue();
+            shown.Any(r => r.Item.Id == "n0").ShouldBeFalse();
+            panel.RealizedRowCount.ShouldBeLessThan(40);
+
+            scroll.Offset = new Vector(0, 0);
+            Layout();
+            Layout();
+            panel.ShownRows.Any(r => r.Item.Id == "n0").ShouldBeTrue();
+            panel.ShownRows.Any(r => r.Item.Id == "n200").ShouldBeFalse();
+            panel.ShownRows.ShouldAllBe(r => r.TitleText == r.Item.Title);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Focus_Reaches_The_Rows_Next_To_The_Last_Created_One()
+    {
+        var center = Create(Many(100));
+        var window = Show(center);
+        try
+        {
+            var panel = OpenPanel(center);
+            Layout();
+            var last = panel.ShownRows.Last();
+            var index = panel.List!.Children.IndexOf(last.Parent as Control ?? throw new InvalidOperationException());
+            index.ShouldBeGreaterThan(5);
+            ((NotificationCenterReveal)panel.List.Children[index + 1]).Child.ShouldBeNull();
+            last.Toggle!.Focus();
+            Layout();
+            // Tab and Shift+Tab always find a neighbor.
+            for (var offset = 1; offset <= 4; offset++)
+            {
+                ((NotificationCenterReveal)panel.List.Children[index + offset]).Child.ShouldBeOfType<NotificationCenterRow>();
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Bulk_Actions_Work_On_A_Long_List()
+    {
+        var center = Create(Many(500));
+        var window = Show(center);
+        try
+        {
+            var panel = OpenPanel(center);
+            Layout();
+            var unread = center.UnreadCount;
+            var read = center.ReadCount;
+            unread.ShouldBe(375);
+            var marked = 0;
+            center.ReadChanged += (_, _) => marked++;
+            center.MarkAllRead();
+            Layout();
+            marked.ShouldBe(unread);
+            center.UnreadCount.ShouldBe(0);
+            center.ReadCount.ShouldBe(500);
+            panel.ShownRows.ShouldAllBe(r => r.Item.IsRead);
+
+            var dismissed = 0;
+            center.Dismissed += (_, _) => dismissed++;
+            center.ClearRead();
+            Layout();
+            dismissed.ShouldBe(500);
+            center.ItemCount.ShouldBe(0);
+            panel.List!.Children.Count.ShouldBe(0);
+            panel.RealizedRowCount.ShouldBe(0);
+            read.ShouldBe(125);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Place_Holders_That_Leave_Above_The_Viewport_Keep_The_View_Still()
+    {
+        var source = new ObservableCollection<NotificationItem>(Many(200));
+        var center = new NotificationCenter { ItemsSource = source };
+        var window = Show(center);
+        try
+        {
+            var panel = OpenPanel(center);
+            Layout();
+            var scroll = ListScroller(panel);
+            var rowHeight = panel.ShownRows.First().Bounds.Height;
+            scroll.Offset = new Vector(0, rowHeight * 100);
+            Layout();
+            Layout();
+            var before = scroll.Offset.Y;
+            var anchor = panel.ShownRows.First(r => r.Item.Id == "n100");
+            var anchorTop = anchor.TranslatePoint(default, scroll)!.Value.Y;
+            for (var i = 0; i < 20; i++)
+            {
+                source.RemoveAt(0);
+            }
+            Layout();
+            Layout();
+            // Twenty rows above went away; the view moved up with them instead of showing other rows.
+            scroll.Offset.Y.ShouldBeLessThan(before - rowHeight * 15);
+            anchor.TranslatePoint(default, scroll)!.Value.Y.ShouldBe(anchorTop, rowHeight / 2);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Row_That_Is_Open_Or_Has_Focus_Stays_When_It_Scrolls_Far_Away()
+    {
+        var center = Create(Many(300));
+        var window = Show(center);
+        try
+        {
+            var panel = OpenPanel(center);
+            Layout();
+            var open = panel.ShownRows.First(r => r.Item.Id == "n1");
+            Click(open.Toggle!);
+            open.IsExpanded.ShouldBeTrue();
+            var scroll = ListScroller(panel);
+            scroll.Offset = new Vector(0, panel.ShownRows.First().Bounds.Height * 250);
+            Layout();
+            Layout();
+            panel.ShownRows.Any(r => r.Item.Id == "n1").ShouldBeTrue();
+            panel.ShownRows.Any(r => r.Item.Id == "n0").ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Full_Motion_Rises_Only_The_Rows_That_Exist_And_Everything_Settles()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var baseline = MotionScheduler.ActiveCount;
+        var center = Create(Many(500));
+        var window = Show(center, ArcMotionLevel.Full);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(100));
+            center.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(32));
+            var panel = center.Panel!;
+            // The stagger runs for the rows that exist (a dozen), not for five hundred.
+            (MotionScheduler.ActiveCount - baseline).ShouldBeLessThan(80);
+            clock.Advance(TimeSpan.FromMilliseconds(1500));
+            Dispatcher.UIThread.RunJobs();
+            MotionScheduler.ActiveCount.ShouldBe(baseline);
+            panel.ShownRows.ShouldAllBe(r => r.Item.Title == r.TitleText);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Source_That_Outlives_The_Bell_Does_Not_Keep_It_Alive()
+    {
+        var source = new ObservableCollection<NotificationItem>(Many(20));
+        var reference = BellOverSource(source);
+        for (var i = 0; i < 4 && reference.IsAlive; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Dispatcher.UIThread.RunJobs();
+        }
+        reference.IsAlive.ShouldBeFalse();
+        // The source still works (the dead bell's link drops itself).
+        source.Add(new NotificationItem { Id = "late", Title = "Late" });
+        source[0].IsRead = true;
+        GC.KeepAlive(source);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference BellOverSource(ObservableCollection<NotificationItem> source)
+    {
+        var center = new NotificationCenter { ItemsSource = source };
+        var window = Show(center);
+        OpenPanel(center);
+        Layout();
+        center.IsOpen = false;
+        Layout();
+        window.Content = null;
+        window.Close();
+        Layout();
+        return new WeakReference(center);
+    }
+
+    #endregion
 }

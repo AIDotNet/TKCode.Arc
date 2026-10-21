@@ -16,5 +16,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../../gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
+        <!-- The Docs-section pages show Lucide icons in their XAML examples. -->
+        <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
 </Project>

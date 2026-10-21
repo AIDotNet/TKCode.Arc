@@ -802,4 +802,202 @@ public class PageHeaderTests
 
         public void Execute(object? parameter) => run(parameter);
     }
+
+    #region Motion lifetimes and subscriptions
+
+    private static void RunFrames(Motion.ManualFrameClock clock, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            clock.Advance(TimeSpan.FromMilliseconds(16));
+            Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Slide_Removes_The_Old_Content_And_Every_Animation_Ends()
+    {
+        var clock = new Motion.ManualFrameClock();
+        using var installed = clock.Install();
+        var header = Create();
+        var window = Show(header, Motion.ArcMotionLevel.Full);
+        try
+        {
+            RunFrames(clock, 20);
+            var old = (Control)((PageHeaderTab)header.Items[0]!).Content!;
+            var baseline = Motion.MotionScheduler.ActiveCount;
+            old.GetVisualParent().ShouldNotBeNull();
+
+            header.SelectedIndex = 1;
+            Pump();
+            RunFrames(clock, 3);
+            Body(header).ExitingPresenter.ShouldNotBeNull();
+
+            RunFrames(clock, 80);
+            // The leaving panel is gone from the tree (not only hidden), and nothing keeps asking for frames.
+            Body(header).ExitingPresenter.ShouldBeNull();
+            old.GetVisualParent().ShouldBeNull();
+            Motion.MotionScheduler.ActiveCount.ShouldBe(baseline);
+            var requests = clock.RequestCount;
+            RunFrames(clock, 30);
+            clock.RequestCount.ShouldBe(requests);
+
+            // Back to the first tab: the same panel comes back and the other one leaves for good.
+            header.SelectedIndex = 0;
+            Pump();
+            RunFrames(clock, 80);
+            Body(header).ExitingPresenter.ShouldBeNull();
+            old.GetVisualParent().ShouldNotBeNull();
+            ((Control)((PageHeaderTab)header.Items[1]!).Content!).GetVisualParent().ShouldBeNull();
+            Motion.MotionScheduler.ActiveCount.ShouldBe(baseline);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Switching_Tabs_Again_In_Mid_Slide_Leaves_One_Panel()
+    {
+        var clock = new Motion.ManualFrameClock();
+        using var installed = clock.Install();
+        var header = Create();
+        var window = Show(header, Motion.ArcMotionLevel.Full);
+        try
+        {
+            RunFrames(clock, 20);
+            header.SelectedIndex = 1;
+            Pump();
+            RunFrames(clock, 2);
+            header.SelectedIndex = 2;
+            Pump();
+            RunFrames(clock, 1);
+            header.SelectedIndex = 0;
+            Pump();
+            RunFrames(clock, 90);
+            Body(header).ExitingPresenter.ShouldBeNull();
+            BodyText(header).ShouldBe("Overview body");
+            ((Control)((PageHeaderTab)header.Items[1]!).Content!).GetVisualParent().ShouldBeNull();
+            ((Control)((PageHeaderTab)header.Items[2]!).Content!).GetVisualParent().ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Collapsing_And_Opening_Again_Stops_Requesting_Frames_When_It_Settles()
+    {
+        var clock = new Motion.ManualFrameClock();
+        using var installed = clock.Install();
+        var header = WithActions(Create(), out _, out _, out _, out _);
+        var window = Show(header, Motion.ArcMotionLevel.Full);
+        try
+        {
+            RunFrames(clock, 20);
+            var baseline = Motion.MotionScheduler.ActiveCount;
+            ScrollTo(header, 300);
+            RunFrames(clock, 3);
+            Motion.MotionScheduler.ActiveCount.ShouldBeGreaterThan(baseline);
+            RunFrames(clock, 80);
+            header.IsCondensed.ShouldBeTrue();
+            Motion.MotionScheduler.ActiveCount.ShouldBe(baseline);
+            var requests = clock.RequestCount;
+            RunFrames(clock, 30);
+            clock.RequestCount.ShouldBe(requests);
+
+            ScrollTo(header, 0);
+            RunFrames(clock, 80);
+            header.IsCondensed.ShouldBeFalse();
+            Motion.MotionScheduler.ActiveCount.ShouldBe(baseline);
+            // Both ends of the hysteresis leave no blur effect and no half-faded part behind.
+            var row = TestHelpers.Descendant<Control>(header, PageHeader.TitleRowPart);
+            row.Effect.ShouldBeNull();
+            row.Opacity.ShouldBe(1, 0.001);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static Window ShowHosted(Panel host, double width = 1300)
+    {
+        var window = TestHelpers.Show(host);
+        window.Width = width;
+        window.Height = 800;
+        Pump();
+        return window;
+    }
+
+    [AvaloniaFact]
+    public void A_Header_That_Left_The_Window_Follows_Nothing_And_Catches_Up_When_It_Returns()
+    {
+        var crumbs = new System.Collections.ObjectModel.ObservableCollection<string> { "Northline", "Projects", "Checkout redesign" };
+        var header = WithActions(Create(width: 500), out var follow, out _, out _, out _);
+        header.Breadcrumbs = crumbs;
+        var host = new Panel { Children = { header } };
+        var window = ShowHosted(host);
+        try
+        {
+            // Narrow: the root crumb is left out and the list follows the collection.
+            var breadcrumb = TestHelpers.Descendant<Breadcrumb>(header, PageHeader.BreadcrumbPart);
+            breadcrumb.ItemCount.ShouldBe(2);
+            crumbs.Add("Mobile");
+            Pump();
+            breadcrumb.ItemCount.ShouldBe(3);
+
+            host.Children.Remove(header);
+            Pump();
+            crumbs.Add("Cart");
+            follow.Label = "Following";
+            Pump();
+
+            host.Children.Add(header);
+            Pump();
+            TestHelpers.Descendant<Breadcrumb>(header, PageHeader.BreadcrumbPart).ItemCount.ShouldBe(4);
+            Label(SecondaryButtons(header)[0]).ShouldBe("Following");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Collection_And_Actions_That_Outlive_The_Header_Do_Not_Keep_It_Alive()
+    {
+        var crumbs = new System.Collections.ObjectModel.ObservableCollection<string> { "Northline", "Projects", "Checkout redesign" };
+        var action = new PageHeaderAction { Label = "Follow", Icon = ArcIcons.Bell };
+        var reference = HeaderOver(crumbs, action);
+        for (var i = 0; i < 4 && reference.IsAlive; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Pump();
+        }
+        reference.IsAlive.ShouldBeFalse();
+        crumbs.Add("Later");
+        action.Label = "Following";
+        GC.KeepAlive(crumbs);
+        GC.KeepAlive(action);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference HeaderOver(System.Collections.ObjectModel.ObservableCollection<string> crumbs, PageHeaderAction action)
+    {
+        var header = Create(width: 500);
+        header.Breadcrumbs = crumbs;
+        header.Actions.Add(action);
+        var window = Show(header);
+        Pump();
+        window.Content = null;
+        window.Close();
+        Pump();
+        return new WeakReference(header);
+    }
+
+    #endregion
 }

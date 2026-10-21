@@ -90,13 +90,13 @@ public class SidebarTests
             sidebar.IsFilterVisible.ShouldBeFalse();
             sidebar.IsCollapseButtonVisible.ShouldBeTrue();
             sidebar.SelectedItem.ShouldBeNull();
-            sidebar.Bounds.Width.ShouldBe(260);
+            sidebar.Bounds.Width.ShouldBe(240);
             AutomationProperties.GetLandmarkType(sidebar).ShouldBe(AutomationLandmarkType.Navigation);
             AutomationProperties.GetName(sidebar).ShouldBe("Sidebar");
 
             var inbox = Row(sidebar, s.Inbox);
-            inbox.Bounds.Height.ShouldBe(34);
-            inbox.Bounds.Width.ShouldBe(236);
+            inbox.Bounds.Height.ShouldBe(32);
+            inbox.Bounds.Width.ShouldBe(216);
             inbox.Classes.ShouldContain(":has-badge");
             inbox.Classes.ShouldContain(":has-icon");
             AutomationProperties.GetName(inbox).ShouldBe("Inbox, 12");
@@ -141,11 +141,8 @@ public class SidebarTests
             var origin = row.TranslatePoint(default, list)!.Value;
             var block = sidebar.MarkerBlock!.CurrentRect;
             block.ShouldBe(new Rect(origin, row.Bounds.Size));
-            var bar = sidebar.MarkerBar!.CurrentRect;
-            bar.Width.ShouldBe(3);
-            bar.Height.ShouldBe(16);
-            bar.X.ShouldBe(block.X + 4);
-            bar.Y.ShouldBe(block.Y + 9);
+            // A plain muted block: no accent bar any more, and the selected page's icon takes the accent color.
+            TestHelpers.Descendant<SidebarListPanel>(sidebar).GetVisualDescendants().OfType<GlidingIndicator>().Count().ShouldBe(1);
         }
         finally
         {
@@ -446,7 +443,8 @@ public class SidebarTests
             Tooltip.GetTip(inbox).ShouldBe("Inbox");
             Tooltip.GetSide(inbox).ShouldBe(TooltipSide.Right);
             inbox.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Ellipse>().First(e => e.Name == "PART_Dot").Opacity.ShouldBe(1);
-            inbox.GetVisualDescendants().OfType<TextBlock>().First(t => t.Name == "PART_Label").Opacity.ShouldBe(0);
+            // Everything after the icon fades as one group.
+            inbox.GetVisualDescendants().OfType<Grid>().First(g => g.Name == "PART_TextGroup").Opacity.ShouldBe(0);
 
             // Child pages leave the arrow-key order and the marker rests on their parent.
             Navigable(s.Sidebar).ShouldBe(["Home", "Inbox", "My issues", "Projects", "Views", "Q4 roadmap", "Archive", "Design reviews"]);
@@ -609,7 +607,8 @@ public class SidebarTests
             Dispatcher.UIThread.RunJobs();
             Row(s.Sidebar, pinned).IsVisible.ShouldBeTrue();
             Navigable(s.Sidebar).Last().ShouldBe("Pinned page");
-            // Rebuilt rows keep the selection and its marker; the control icon moved to the new row.
+            // Rows of pages that stay are kept (same controls), with the selection and its marker.
+            Row(s.Sidebar, s.Inbox).ShouldBeSameAs(inbox);
             s.Sidebar.MarkerRow.ShouldBe(Row(s.Sidebar, s.Inbox));
             Row(s.Sidebar, s.Inbox).IconContent.ShouldBe(custom);
 
@@ -724,6 +723,612 @@ public class SidebarTests
             // "co" matches Beacon and Cobalt: the parent opens for them and the marker is back on Beacon.
             Navigable(s.Sidebar).ShouldBe(["Projects", "Beacon", "Cobalt"]);
             s.Sidebar.MarkerRow.ShouldBe(Row(s.Sidebar, s.Beacon));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Unread_Marks_The_Row_With_A_Dot_A_Stronger_Label_And_A_Name_Suffix()
+    {
+        var s = new Sample();
+        s.Beacon.IsUnread = true;
+        var window = Show(s.Sidebar);
+        try
+        {
+            s.Projects.IsExpanded = true;
+            Dispatcher.UIThread.RunJobs();
+            var beacon = Row(s.Sidebar, s.Beacon);
+            beacon.Classes.ShouldContain(":unread");
+            AutomationProperties.GetName(beacon).ShouldBe("Beacon, 3, unread");
+            var dot = beacon.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Ellipse>().First(e => e.Name == "PART_UnreadDot");
+            dot.IsVisible.ShouldBeTrue();
+            Row(s.Sidebar, s.Atlas).GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Ellipse>().First(e => e.Name == "PART_UnreadDot").IsVisible.ShouldBeFalse();
+
+            // The wording can be localized.
+            s.Sidebar.UnreadText = "ungelesen";
+            AutomationProperties.GetName(beacon).ShouldBe("Beacon, 3, ungelesen");
+            s.Beacon.IsUnread = false;
+            beacon.Classes.ShouldNotContain(":unread");
+            AutomationProperties.GetName(beacon).ShouldBe("Beacon, 3");
+
+            // On the rail an unread page (like a count) puts a dot on its icon.
+            s.Views.IsUnread = true;
+            s.Sidebar.ToggleCollapsed();
+            Dispatcher.UIThread.RunJobs();
+            Row(s.Sidebar, s.Views).GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Ellipse>().First(e => e.Name == "PART_Dot").Opacity.ShouldBe(1);
+            Row(s.Sidebar, s.Roadmap).GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Ellipse>().First(e => e.Name == "PART_Dot").Opacity.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void An_Action_Row_Acts_Without_Becoming_The_Selected_Page()
+    {
+        var s = new Sample();
+        var command = new RecordingCommand();
+        var more = new SidebarItem { Key = "more", Label = "More", IsAction = true, Command = command, CommandParameter = "p", TrailingIcon = ArcIcons.ChevronRight };
+        s.Main.Items.Add(more);
+        s.Sidebar.SelectedItem = s.Home;
+        var window = Show(s.Sidebar);
+        try
+        {
+            var row = Row(s.Sidebar, more);
+            row.Classes.ShouldContain(":action");
+            row.Classes.ShouldContain(":has-trailing");
+            row.TrailingGlyph.ShouldBe(ArcIcons.ChevronRight);
+            var invoked = new List<SidebarItem>();
+            s.Sidebar.ItemInvoked += (_, e) => invoked.Add(e.Item);
+
+            // The action is part of the arrow-key order and can be chosen, but the selection stays on Home.
+            Navigable(s.Sidebar).ShouldContain("More");
+            var center = row.TranslatePoint(new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(center, MouseButton.Left);
+            window.MouseUp(center, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            invoked.ShouldBe([more]);
+            command.Parameters.ShouldBe(["p"]);
+            s.Sidebar.SelectedItem.ShouldBe(s.Home);
+            row.IsSelected.ShouldBeFalse();
+            s.Sidebar.MarkerRow.ShouldBe(Row(s.Sidebar, s.Home));
+
+            // It cannot be selected from code either, by item or by key.
+            s.Sidebar.SelectedItem = more;
+            s.Sidebar.SelectedItem.ShouldBe(s.Home);
+            // A key that names an action finds no page, like any unknown key.
+            s.Sidebar.SelectedKey = "more";
+            s.Sidebar.SelectedItem.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Trailing_Icon_Can_Be_A_Geometry_Or_A_Control_And_Releases_The_Control()
+    {
+        var s = new Sample();
+        var window = Show(s.Sidebar);
+        try
+        {
+            var views = Row(s.Sidebar, s.Views);
+            views.Classes.ShouldNotContain(":has-trailing");
+            s.Views.TrailingIcon = ArcIcons.ChevronRight;
+            views.Classes.ShouldContain(":has-trailing");
+            views.TrailingGlyph.ShouldBe(ArcIcons.ChevronRight);
+            var badge = new Border { Width = 8, Height = 8 };
+            s.Views.TrailingIcon = badge;
+            views.TrailingGlyph.ShouldBeNull();
+            views.TrailingContent.ShouldBe(badge);
+            Dispatcher.UIThread.RunJobs();
+
+            // The trailing icon sits right after the label's text, not at the end of the row.
+            var label = views.GetVisualDescendants().OfType<TextBlock>().First(t => t.Name == "PART_Label");
+            var labelRight = label.TranslatePoint(new Point(label.Bounds.Width, 0), views)!.Value.X;
+            var iconLeft = badge.TranslatePoint(default, views)!.Value.X;
+            iconLeft.ShouldBeGreaterThanOrEqualTo(labelRight);
+            iconLeft.ShouldBeLessThan(labelRight + 12);
+
+            // A removed page lets go of its control icon, so another row can take it.
+            s.Workspace.Items.Remove(s.Views);
+            Dispatcher.UIThread.RunJobs();
+            badge.GetVisualParent().ShouldBeNull();
+            var other = new SidebarItem { Key = "board", Label = "Board", TrailingIcon = badge };
+            s.Workspace.Items.Add(other);
+            Dispatcher.UIThread.RunJobs();
+            Row(s.Sidebar, other).TrailingContent.ShouldBe(badge);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Control_Icon_Such_As_A_Colored_Dot_Is_Centered_In_The_Icon_Slot()
+    {
+        var s = new Sample();
+        var dot = new Avalonia.Controls.Shapes.Ellipse { Width = 8, Height = 8 };
+        s.Views.Icon = dot;
+        var window = Show(s.Sidebar);
+        try
+        {
+            var views = Row(s.Sidebar, s.Views);
+            views.IconContent.ShouldBe(dot);
+            views.Classes.ShouldContain(":has-icon");
+            var center = dot.TranslatePoint(new Point(4, 4), views)!.Value;
+            // Row padding 12 plus half of the 16px slot; vertically centered in the 32px row.
+            center.X.ShouldBe(20, 0.5);
+            center.Y.ShouldBe(views.Bounds.Height / 2, 0.5);
+            // The rail keeps it where it is.
+            s.Sidebar.ToggleCollapsed();
+            Dispatcher.UIThread.RunJobs();
+            dot.TranslatePoint(new Point(4, 4), views)!.Value.X.ShouldBe(20, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Collapse_Button_Can_Sit_Beside_The_Filter_And_Moves_To_The_Top_On_The_Rail()
+    {
+        var s = new Sample();
+        s.Sidebar.IsFilterVisible = true;
+        s.Sidebar.Header = new TextBlock { Text = "Workspace" };
+        var window = Show(s.Sidebar);
+        try
+        {
+            SidebarIconButton Part(string name) => s.Sidebar.GetVisualDescendants().OfType<SidebarIconButton>().First(b => b.Name == name);
+            var header = Part("PART_CollapseButton");
+            var beside = Part("PART_FilterCollapseButton");
+            s.Sidebar.CollapseButtonPlacement.ShouldBe(SidebarCollapseButtonPlacement.Header);
+            header.IsVisible.ShouldBeTrue();
+            beside.IsVisible.ShouldBeFalse();
+            s.Sidebar.Classes.ShouldNotContain(":filter-toggle");
+
+            s.Sidebar.CollapseButtonPlacement = SidebarCollapseButtonPlacement.Filter;
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.Classes.ShouldContain(":filter-toggle");
+            header.IsVisible.ShouldBeFalse();
+            beside.IsVisible.ShouldBeTrue();
+            beside.Focusable.ShouldBeTrue();
+            AutomationProperties.GetName(beside).ShouldBe("Collapse sidebar");
+            // Beside the filter box, on the same row.
+            var filter = TestHelpers.Descendant<TextBox>(s.Sidebar);
+            var filterTop = filter.TranslatePoint(default, window)!.Value.Y;
+            var buttonCenter = beside.TranslatePoint(new Point(0, beside.Bounds.Height / 2), window)!.Value.Y;
+            buttonCenter.ShouldBeGreaterThan(filterTop);
+            buttonCenter.ShouldBeLessThan(filterTop + 40);
+
+            var center = beside.TranslatePoint(new Point(beside.Bounds.Width / 2, beside.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(center, MouseButton.Left);
+            window.MouseUp(center, MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.IsCollapsed.ShouldBeTrue();
+
+            // On the rail the toggle is the header row's button again; the filter row's goes.
+            header.IsVisible.ShouldBeTrue();
+            AutomationProperties.GetName(header).ShouldBe("Expand sidebar");
+            beside.Focusable.ShouldBeFalse();
+            header.Focusable.ShouldBeTrue();
+
+            // Without the filter the placement falls back to the header row.
+            s.Sidebar.IsCollapsed = false;
+            s.Sidebar.IsFilterVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.Classes.ShouldNotContain(":filter-toggle");
+            header.IsVisible.ShouldBeTrue();
+            beside.IsVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void IsCollapsed_Can_Be_Driven_From_Outside_Through_A_Binding()
+    {
+        var s = new Sample();
+        var toggle = new Avalonia.Controls.Primitives.ToggleButton();
+        toggle.Bind(Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty, new Avalonia.Data.Binding(nameof(Sidebar.IsCollapsed)) { Source = s.Sidebar, Mode = Avalonia.Data.BindingMode.TwoWay });
+        var window = Show(s.Sidebar);
+        try
+        {
+            toggle.IsChecked.ShouldBe(false);
+            toggle.IsChecked = true;
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.IsCollapsed.ShouldBeTrue();
+            s.Sidebar.Bounds.Width.ShouldBe(64);
+            s.Sidebar.ToggleCollapsed();
+            toggle.IsChecked.ShouldBe(false);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Footer_Sits_Under_A_Separator_And_Without_A_Footer_There_Is_None()
+    {
+        var s = new Sample();
+        var window = Show(s.Sidebar);
+        try
+        {
+            Border Separator() => s.Sidebar.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_FooterSeparator");
+            Separator().IsVisible.ShouldBeFalse();
+            s.Sidebar.Footer = new TextBlock { Text = "Maya Chen" };
+            Dispatcher.UIThread.RunJobs();
+            Separator().IsVisible.ShouldBeTrue();
+            Separator().Bounds.Height.ShouldBe(1);
+            Separator().Bounds.Width.ShouldBe(240);
+            var footer = s.Sidebar.GetVisualDescendants().OfType<TextBlock>().First(t => t.Text == "Maya Chen");
+            footer.TranslatePoint(default, s.Sidebar)!.Value.Y.ShouldBeGreaterThan(Separator().TranslatePoint(default, s.Sidebar)!.Value.Y);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Structure_Changes_Keep_The_Rows_Of_Pages_That_Stay()
+    {
+        var s = new Sample();
+        s.Projects.IsExpanded = true;
+        s.Sidebar.SelectedItem = s.Beacon;
+        var window = Show(s.Sidebar);
+        try
+        {
+            var home = Row(s.Sidebar, s.Home);
+            var inbox = Row(s.Sidebar, s.Inbox);
+            var projects = Row(s.Sidebar, s.Projects);
+            var beacon = Row(s.Sidebar, s.Beacon);
+            var views = Row(s.Sidebar, s.Views);
+            var workspaceHeader = s.Sidebar.HeaderOf(s.Workspace);
+
+            // Adding, moving and removing pages touches only those pages.
+            var added = new SidebarItem { Key = "added", Label = "Added" };
+            s.Main.Items.Insert(1, added);
+            s.Projects.Items.Remove(s.Atlas);
+            Dispatcher.UIThread.RunJobs();
+            Navigable(s.Sidebar).Take(4).ShouldBe(["Home", "Added", "Inbox", "My issues"]);
+            Row(s.Sidebar, s.Home).ShouldBeSameAs(home);
+            Row(s.Sidebar, s.Inbox).ShouldBeSameAs(inbox);
+            Row(s.Sidebar, s.Projects).ShouldBeSameAs(projects);
+            Row(s.Sidebar, s.Beacon).ShouldBeSameAs(beacon);
+            s.Sidebar.HeaderOf(s.Workspace).ShouldBeSameAs(workspaceHeader);
+            s.Sidebar.RowOf(s.Atlas).ShouldBeNull();
+            Navigable(s.Sidebar).ShouldContain("Beacon");
+            s.Sidebar.MarkerRow.ShouldBe(beacon);
+
+            // The rows follow the order of the items.
+            s.Main.Items.Move(0, 3);
+            Dispatcher.UIThread.RunJobs();
+            Navigable(s.Sidebar).Take(4).ShouldBe(["Added", "Inbox", "My issues", "Home"]);
+            Row(s.Sidebar, s.Home).ShouldBeSameAs(home);
+            home.TranslatePoint(default, s.Sidebar)!.Value.Y.ShouldBeGreaterThan(Row(s.Sidebar, s.Issues).TranslatePoint(default, s.Sidebar)!.Value.Y);
+
+            // A page moves to another section with a new row (its control icon is let go first).
+            var dot = new Border { Width = 8, Height = 8 };
+            s.Views.Icon = dot;
+            s.Workspace.Items.Remove(s.Views);
+            s.Main.Items.Add(s.Views);
+            Dispatcher.UIThread.RunJobs();
+            Row(s.Sidebar, s.Views).ShouldNotBeSameAs(views);
+            Row(s.Sidebar, s.Views).IconContent.ShouldBe(dot);
+            Navigable(s.Sidebar).Skip(3).Take(3).ShouldBe(["Home", "Views", "Projects"]);
+
+            // A parent that loses all its pages becomes a plain page, and a page that gains pages a parent.
+            s.Projects.Items.Clear();
+            Dispatcher.UIThread.RunJobs();
+            Row(s.Sidebar, s.Projects).Classes.ShouldNotContain(":parent");
+            Row(s.Sidebar, s.Projects).ShouldNotBeSameAs(projects);
+            s.Projects.Items.Add(new SidebarItem { Key = "projects/new", Label = "Newest" });
+            Dispatcher.UIThread.RunJobs();
+            Row(s.Sidebar, s.Projects).Classes.ShouldContain(":parent");
+
+            // A removed section takes its rows and heading with it.
+            s.Sidebar.Sections.Remove(s.Favorites);
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.HeaderOf(s.Favorites).ShouldBeNull();
+            s.Sidebar.RowOf(s.Roadmap).ShouldBeNull();
+            Navigable(s.Sidebar).ShouldNotContain("Q4 roadmap");
+            Row(s.Sidebar, s.Inbox).ShouldBeSameAs(inbox);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Marker_Follows_Its_Row_When_A_Section_Opens_Above_It()
+    {
+        var s = new Sample();
+        s.Favorites.IsExpanded = false;
+        s.Sidebar.SelectedItem = s.Views;
+        var window = Show(s.Sidebar);
+        try
+        {
+            var list = TestHelpers.Descendant<SidebarListPanel>(s.Sidebar);
+            var row = Row(s.Sidebar, s.Views);
+            var before = s.Sidebar.MarkerBlock!.CurrentRect;
+            before.Y.ShouldBe(row.TranslatePoint(default, list)!.Value.Y, 0.5);
+
+            // Favorites sits below Views here; move it above by inserting a section before the workspace.
+            var top = new SidebarSection { Header = "Pinned", Items = { new SidebarItem { Key = "p1", Label = "One" }, new SidebarItem { Key = "p2", Label = "Two" } } };
+            s.Sidebar.Sections.Insert(1, top);
+            Dispatcher.UIThread.RunJobs();
+            var after = s.Sidebar.MarkerBlock!.CurrentRect;
+            after.Y.ShouldBeGreaterThan(before.Y);
+            after.Y.ShouldBe(row.TranslatePoint(default, list)!.Value.Y, 0.5);
+            s.Sidebar.MarkerTarget.Y.ShouldBe(after.Y, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Filtering_An_Action_Row_And_A_Page_Without_An_Icon_Works_With_The_New_Parts()
+    {
+        var s = new Sample();
+        var more = new SidebarItem { Key = "more", Label = "More", IsAction = true };
+        s.Favorites.Items.Add(more);
+        var window = Show(s.Sidebar);
+        try
+        {
+            s.Sidebar.FilterText = "mor";
+            Navigable(s.Sidebar).ShouldBe(["Favorites", "More"]);
+            s.Sidebar.FilterText = string.Empty;
+            Navigable(s.Sidebar).ShouldContain("More");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>Counts how often layout measures it (the page next to a sidebar).</summary>
+    private sealed class CountingPage : Decorator
+    {
+        public int Measures { get; private set; }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            Measures++;
+            return base.MeasureOverride(availableSize);
+        }
+    }
+
+    private static (Window Window, CountingPage Page) ShowBeside(Sidebar sidebar, ArcMotionLevel level)
+    {
+        var page = new CountingPage { Child = new Border() };
+        var dock = new DockPanel();
+        DockPanel.SetDock(sidebar, Dock.Left);
+        dock.Children.Add(sidebar);
+        dock.Children.Add(page);
+        var window = TestHelpers.Show(dock, level);
+        window.Width = 800;
+        window.Height = 600;
+        Dispatcher.UIThread.RunJobs();
+        return (window, page);
+    }
+
+    private static void Settle(int frames = 160)
+    {
+        for (var i = 0; i < frames; i++)
+        {
+            Pump();
+            Thread.Sleep(8);
+        }
+    }
+
+    [AvaloniaFact]
+    public void An_Overlay_Sidebar_Jumps_Its_Layout_Width_And_Springs_Only_The_Pane()
+    {
+        var s = new Sample();
+        s.Sidebar.ResizeMode = SidebarResizeMode.Overlay;
+        var (window, page) = ShowBeside(s.Sidebar, ArcMotionLevel.Full);
+        try
+        {
+            Pump(3);
+            s.Sidebar.Classes.ShouldContain(":overlay-resize");
+            page.Bind(Visual.RenderTransformProperty, new Avalonia.Data.Binding(nameof(Sidebar.PageShift)) { Source = s.Sidebar });
+            s.Sidebar.Bounds.Width.ShouldBe(240);
+            page.Bounds.X.ShouldBe(240);
+            s.Sidebar.PageShift.ShouldBeOfType<Avalonia.Media.TranslateTransform>().X.ShouldBe(0);
+            var pane = s.Sidebar.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_Pane");
+            var measuresBefore = page.Measures;
+
+            s.Sidebar.IsCollapsed = true;
+            Dispatcher.UIThread.RunJobs();
+            // The layout has moved on at once: the sidebar is 64 wide and the page sits next to it ...
+            s.Sidebar.Bounds.Width.ShouldBe(64);
+            page.Bounds.X.ShouldBe(64);
+            // ... while the pane is still wide and the page is shifted back to where the pane's edge is.
+            pane.Bounds.Width.ShouldBeGreaterThan(64);
+            s.Sidebar.PaneWidth.ShouldBeGreaterThan(64);
+            var shift = (Avalonia.Media.TranslateTransform)s.Sidebar.PageShift;
+            shift.X.ShouldBeGreaterThan(0);
+            page.Bounds.X.ShouldBe(64);
+
+            var seen = new List<double>();
+            for (var i = 0; i < 160; i++)
+            {
+                Pump();
+                seen.Add(pane.Bounds.Width);
+                Thread.Sleep(8);
+            }
+            // The pane narrowed step by step to the rail, the shift followed it to 0, and the page was laid out once.
+            seen.Distinct().Count().ShouldBeGreaterThan(4);
+            pane.Bounds.Width.ShouldBe(64, 0.5);
+            shift.X.ShouldBe(0, 0.5);
+            (page.Measures - measuresBefore).ShouldBeLessThanOrEqualTo(3);
+
+            // And back: the page jumps to its new place and slides there with the shift.
+            s.Sidebar.IsCollapsed = false;
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.Bounds.Width.ShouldBe(240);
+            shift.X.ShouldBeLessThan(0);
+            Settle();
+            pane.Bounds.Width.ShouldBe(240, 0.5);
+            shift.X.ShouldBe(0, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Push_Sidebar_Lays_The_Page_Out_On_Every_Frame_Of_The_Width_Spring()
+    {
+        var s = new Sample();
+        var (window, page) = ShowBeside(s.Sidebar, ArcMotionLevel.Full);
+        try
+        {
+            Pump(3);
+            ((Avalonia.Media.TranslateTransform)s.Sidebar.PageShift).X.ShouldBe(0);
+            var before = page.Measures;
+            s.Sidebar.IsCollapsed = true;
+            Settle();
+            s.Sidebar.Bounds.Width.ShouldBe(64, 0.5);
+            // The reference behavior the overlay mode avoids: the page next to the sidebar follows the spring.
+            (page.Measures - before).ShouldBeGreaterThan(8);
+            ((Avalonia.Media.TranslateTransform)s.Sidebar.PageShift).X.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Overlay_Without_Motion_Changes_The_Width_At_Once_And_Switching_Back_To_Push_Resets_It()
+    {
+        var s = new Sample();
+        s.Sidebar.ResizeMode = SidebarResizeMode.Overlay;
+        var (window, page) = ShowBeside(s.Sidebar, ArcMotionLevel.Off);
+        try
+        {
+            s.Sidebar.IsCollapsed = true;
+            Dispatcher.UIThread.RunJobs();
+            Pump(2);
+            s.Sidebar.PaneWidth.ShouldBe(64);
+            ((Avalonia.Media.TranslateTransform)s.Sidebar.PageShift).X.ShouldBe(0);
+            var pane = s.Sidebar.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_Pane");
+            pane.Bounds.Width.ShouldBe(64);
+            s.Sidebar.ResizeMode = SidebarResizeMode.Push;
+            s.Sidebar.Classes.ShouldNotContain(":overlay-resize");
+            s.Sidebar.IsCollapsed = false;
+            Dispatcher.UIThread.RunJobs();
+            Pump(2);
+            pane.Bounds.Width.ShouldBe(240);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Closed_Parents_And_Sections_Leave_Layout_And_Rendering_Until_They_Open()
+    {
+        var s = new Sample();
+        s.Favorites.IsExpanded = false;
+        var window = Show(s.Sidebar);
+        try
+        {
+            Pump(2);
+            Dispatcher.UIThread.RunJobs();
+            // Projects is closed from the start: its pages are not laid out or drawn at all.
+            var atlas = Row(s.Sidebar, s.Atlas);
+            atlas.IsEffectivelyVisible.ShouldBeFalse();
+            Row(s.Sidebar, s.Roadmap).IsEffectivelyVisible.ShouldBeFalse();
+
+            s.Projects.IsExpanded = true;
+            s.Favorites.IsExpanded = true;
+            Dispatcher.UIThread.RunJobs();
+            atlas.IsEffectivelyVisible.ShouldBeTrue();
+            atlas.Bounds.Height.ShouldBe(30);
+            Row(s.Sidebar, s.Roadmap).IsEffectivelyVisible.ShouldBeTrue();
+
+            s.Projects.IsExpanded = false;
+            Dispatcher.UIThread.RunJobs();
+            Pump(2);
+            Dispatcher.UIThread.RunJobs();
+            atlas.IsEffectivelyVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Detached_Sidebar_Releases_Its_Rows_And_Item_Subscriptions_And_Builds_Them_Again_On_Return()
+    {
+        var s = new Sample();
+        s.Sidebar.SelectedItem = s.Inbox;
+        var dock = new DockPanel { Children = { s.Sidebar } };
+        var window = TestHelpers.Show(dock);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var inbox = Row(s.Sidebar, s.Inbox);
+            s.Sidebar.MarkerRow.ShouldBe(inbox);
+
+            dock.Children.Remove(s.Sidebar);
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.RowOf(s.Inbox).ShouldBeNull();
+            s.Sidebar.NavigableNodes.ShouldBeEmpty();
+            // Changes made while it is away cost nothing and are picked up when it returns.
+            s.Inbox.Label = "Messages";
+            s.Main.Items.Add(new SidebarItem { Key = "late", Label = "Late" });
+            Dispatcher.UIThread.RunJobs();
+            s.Sidebar.RowOf(s.Inbox).ShouldBeNull();
+
+            dock.Children.Add(s.Sidebar);
+            Dispatcher.UIThread.RunJobs();
+            Pump(2);
+            var again = Row(s.Sidebar, s.Inbox);
+            again.Label.ShouldBe("Messages");
+            again.IsSelected.ShouldBeTrue();
+            s.Sidebar.MarkerRow.ShouldBe(again);
+            Navigable(s.Sidebar).ShouldContain("Late");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void An_Overlay_Sidebar_Under_Reduced_Motion_Jumps_Too()
+    {
+        var s = new Sample();
+        s.Sidebar.ResizeMode = SidebarResizeMode.Overlay;
+        var (window, _) = ShowBeside(s.Sidebar, ArcMotionLevel.Reduced);
+        try
+        {
+            Pump(3);
+            s.Sidebar.IsCollapsed = true;
+            Dispatcher.UIThread.RunJobs();
+            Pump(2);
+            s.Sidebar.PaneWidth.ShouldBe(64);
+            ((Avalonia.Media.TranslateTransform)s.Sidebar.PageShift).X.ShouldBe(0);
         }
         finally
         {

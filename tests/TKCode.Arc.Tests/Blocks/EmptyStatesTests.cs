@@ -793,4 +793,112 @@ public class EmptyStatesTests
         EmptyStatesArt.Mix(red, Color.FromRgb(0, 0, 255), 1).ShouldBe(Color.FromRgb(0, 0, 255));
         EmptyStatesArt.Mix(red, transparent, 1).A.ShouldBe((byte)0);
     }
+
+    #region Lifetimes
+
+    [AvaloniaFact]
+    public void A_Settled_Block_Requests_No_Frames_And_A_Moving_Pointer_Does_Not_Restart_The_Loop()
+    {
+        var clock = new ManualFrameClock();
+        using var installed = clock.Install();
+        var states = new EmptyStates();
+        var window = Show(states, level: ArcMotionLevel.Full);
+        try
+        {
+            clock.Advance(TimeSpan.FromSeconds(0.5));
+            states.SelectedIndex = 2;
+            Dispatcher.UIThread.RunJobs();
+            states.Art!.IsBusy.ShouldBeTrue();
+            clock.Advance(TimeSpan.FromSeconds(3));
+            states.Art.IsBusy.ShouldBeFalse();
+            var requests = clock.RequestCount;
+            clock.Advance(TimeSpan.FromSeconds(2));
+            clock.RequestCount.ShouldBe(requests);
+
+            // Moving the pointer asks for frames once; further moves while they run add no requests of their own.
+            states.Art.PointAt(0.5, 0.2);
+            states.Art.IsBusy.ShouldBeTrue();
+            var running = clock.RequestCount;
+            for (var i = 0; i < 20; i++)
+            {
+                states.Art.PointAt(0.5 - i * 0.02, 0.2);
+            }
+            clock.RequestCount.ShouldBe(running);
+            clock.Advance(TimeSpan.FromSeconds(3));
+            states.Art.IsBusy.ShouldBeFalse();
+            var settled = clock.RequestCount;
+            clock.Advance(TimeSpan.FromSeconds(1));
+            clock.RequestCount.ShouldBe(settled);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Block_That_Left_The_Window_Catches_Up_With_Item_Edits_When_It_Returns()
+    {
+        var item = new EmptyStatesItem(EmptyStatesScene.Offline) { Header = "Offline", Title = "You are offline" };
+        var states = new EmptyStates();
+        states.Items.Add(item);
+        states.Items.Add(new EmptyStatesItem(EmptyStatesScene.NoResults) { Header = "Results" });
+        var host = new Panel { Children = { states } };
+        var window = TestHelpers.Show(host);
+        window.Width = 800;
+        window.Height = 720;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            Title(states).ShouldBe("You are offline");
+            host.Children.Remove(states);
+            Dispatcher.UIThread.RunJobs();
+            item.Title = "No connection";
+            Dispatcher.UIThread.RunJobs();
+            host.Children.Add(states);
+            Dispatcher.UIThread.RunJobs();
+            Title(states).ShouldBe("No connection");
+            // Edits made while it is back are followed again.
+            item.Title = "Still offline";
+            Dispatcher.UIThread.RunJobs();
+            Title(states).ShouldBe("Still offline");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Items_That_Outlive_The_Block_Do_Not_Keep_It_Alive()
+    {
+        var items = new[] { new EmptyStatesItem(EmptyStatesScene.Offline), new EmptyStatesItem(EmptyStatesScene.CaughtUp) };
+        var reference = BlockOver(items);
+        for (var i = 0; i < 4 && reference.IsAlive; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Dispatcher.UIThread.RunJobs();
+        }
+        reference.IsAlive.ShouldBeFalse();
+        items[0].Title = "Edited after the block is gone";
+        GC.KeepAlive(items);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference BlockOver(EmptyStatesItem[] items)
+    {
+        var states = new EmptyStates();
+        foreach (var item in items)
+        {
+            states.Items.Add(item);
+        }
+        var window = Show(states);
+        window.Content = null;
+        window.Close();
+        Dispatcher.UIThread.RunJobs();
+        return new WeakReference(states);
+    }
+
+    #endregion
 }
