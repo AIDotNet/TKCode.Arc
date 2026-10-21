@@ -577,5 +577,101 @@
         <target state="translated">特殊元件</target>
       </segment>
     </unit>
+    <unit id="GoHome">
+      <segment>
+        <source>Home</source>
+        <target state="translated">首頁</target>
+      </segment>
+    </unit>
+    <unit id="NavChangelog">
+      <segment>
+        <source>Changelog</source>
+        <target state="translated">更新記錄</target>
+      </segment>
+    </unit>
+    <unit id="GitHubStar">
+      <segment>
+        <source>Star</source>
+        <target state="translated">Star</target>
+      </segment>
+    </unit>
+    <unit id="GitHubOpen">
+      <segment>
+        <source>Open TKCode.Arc on GitHub</source>
+        <target state="translated">在 GitHub 上開啟 TKCode.Arc</target>
+      </segment>
+    </unit>
+    <unit id="HomeTitle">
+      <segment>
+        <source>Arc's motion and polish, native to Avalonia</source>
+        <target state="translated">Arc 的動態與質感，原生屬於 Avalonia</target>
+      </segment>
+    </unit>
+    <unit id="HomeSubtitle">
+      <segment>
+        <source>{0} components in {1} groups and {2} page blocks. Spring motion, design tokens, ready for AOT.</source>
+        <target state="translated">{0} 個元件、{1} 個分組，另有 {2} 個頁面區塊。彈簧動態、設計令牌，支援 AOT。</target>
+      </segment>
+    </unit>
+    <unit id="HomeExplore">
+      <segment>
+        <source>Explore components</source>
+        <target state="translated">瀏覽元件</target>
+      </segment>
+    </unit>
+    <unit id="HomeReadDocs">
+      <segment>
+        <source>Read the docs</source>
+        <target state="translated">閱讀文件</target>
+      </segment>
+    </unit>
+    <unit id="HomeLiveTitle">
+      <segment>
+        <source>Every example is live</source>
+        <target state="translated">每個範例都能操作</target>
+      </segment>
+    </unit>
+    <unit id="HomeLiveSubtitle">
+      <segment>
+        <source>Press, drag and type in the cards. Each one opens its full page.</source>
+        <target state="translated">在卡片裡點按、拖曳、輸入。每張卡片都能開啟完整頁面。</target>
+      </segment>
+    </unit>
+    <unit id="HomeBrowseAll">
+      <segment>
+        <source>Browse all {0} components</source>
+        <target state="translated">瀏覽全部 {0} 個元件</target>
+      </segment>
+    </unit>
+    <unit id="HomeOpen">
+      <segment>
+        <source>Open</source>
+        <target state="translated">開啟</target>
+      </segment>
+    </unit>
+    <unit id="HomeStatComponents">
+      <segment>
+        <source>components</source>
+        <target state="translated">元件</target>
+      </segment>
+    </unit>
+    <unit id="HomeStatGroups">
+      <segment>
+        <source>groups</source>
+        <target state="translated">分組</target>
+      </segment>
+    </unit>
+    <unit id="HomeStatBlocks">
+      <segment>
+        <source>page blocks</source>
+        <target state="translated">頁面區塊</target>
+      </segment>
+    </unit>
+    <unit id="HomeStatLanguages">
+      <segment>
+        <source>languages</source>
+        <target state="translated">種語言</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

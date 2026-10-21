@@ -1,15 +1,15 @@
+using TKCode.Arc.Gallery.Docs;
+
 namespace TKCode.Arc.Gallery.Pages;
 
-// The Docs section: each page is its Markdown rendered by DocumentPage (see DocsMarkdown for the text).
+// The Docs section: each page is Guides/<Page>/<language>.md rendered by DocumentPage (see GalleryGuides).
 public static partial class GalleryPages
 {
     static partial void RegisterDocs()
     {
-        Register("DocsIntroduction", () => DocumentPage.Create(DocsMarkdown.Introduction));
-        Register("DocsInstallation", () => DocumentPage.Create(DocsMarkdown.Installation));
-        Register("DocsTheming", () => DocumentPage.Create(DocsMarkdown.Theming));
-        Register("DocsMotion", () => DocumentPage.Create(DocsMarkdown.Motion));
-        Register("DocsAiAndMcp", () => DocumentPage.Create(DocsMarkdown.AiAndMcp));
-        Register("DocsChangelog", () => DocumentPage.Create(DocsMarkdown.Changelog));
+        foreach (var page in GalleryGuides.Pages)
+        {
+            Register($"Docs{page}", () => DocumentPage.Create(page));
+        }
     }
 }

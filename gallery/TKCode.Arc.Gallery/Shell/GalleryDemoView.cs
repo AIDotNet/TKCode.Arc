@@ -21,10 +21,10 @@ public sealed class GalleryDemoPlugin : IMarkdownPlugin
 {
     public const string Tag = "demo";
 
-    /// <summary>Arc's Markdown services (highlighting, code block wording) with live demos.</summary>
+    /// <summary>Arc's Markdown services (highlighting, code block wording) with live demos and screenshots.</summary>
     public static MarkdownServices Services { get; } = new()
     {
-        Plugins = [new MarkdownHighlightPlugin(), new GalleryDemoPlugin()],
+        Plugins = [new MarkdownHighlightPlugin(), new GalleryDemoPlugin(), new GalleryShotPlugin()],
         CodeBlocks = Markdown.DefaultServices.CodeBlocks
     };
 

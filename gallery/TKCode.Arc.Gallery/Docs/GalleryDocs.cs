@@ -9,8 +9,9 @@ namespace TKCode.Arc.Gallery.Docs;
 /// The docs pages' Markdown. A component's page comes in the requested language, or in en-US with a notice when it
 /// has no translation; each <c>&lt;!-- api: Type --&gt;</c> line becomes that type's API reference, built from the
 /// generated <see cref="GalleryDocData"/> (descriptions translated through <c>Docs/Api/&lt;language&gt;.xlf</c>,
-/// defaults read from the Avalonia property metadata), and each <c>&lt;Demo name="..." /&gt;</c> line becomes a live
-/// example (<see cref="GalleryDemos"/>).
+/// defaults read from the Avalonia property metadata), each <c>&lt;Demo name="..." /&gt;</c> line becomes a live
+/// example (<see cref="GalleryDemos"/>), and each <c>![caption](images/Name.png)</c> line a screenshot that follows the
+/// theme (<c>GalleryShotPlugin</c>).
 /// </summary>
 public static partial class GalleryDocs
 {
@@ -87,11 +88,58 @@ public static partial class GalleryDocs
         }
         markdown.Append(Directive().Replace(page.Body, match => ApiReference(match.Groups[1].Value, language).TrimEnd()));
         var body = markdown.ToString();
+        var shown = WithScreenshots(body, $"Docs/{page.Folder}");
         return new GalleryDoc(page.ClassName, page.Language, language, page.Title, page.Summary,
-            DemoTag().Replace(body, match => DemoBlock(className, match, body)),
+            DemoTag().Replace(shown, match => DemoBlock(className, match, shown)),
             DemoTag().Replace(body, match => DemoSource(className, match.Groups[1].Value)),
             page.IsOutdated);
     }
+
+    /// <summary>
+    /// The screenshots <paramref name="className"/>'s page in <paramref name="language"/> shows, in order: each
+    /// <c>![caption](images/Name.png)</c> line, with the asset it loads in the light theme.
+    /// </summary>
+    public static IReadOnlyList<GalleryScreenshot> Screenshots(string className, string language)
+    {
+        if (!s_pages.TryGetValue(className, out var pages))
+        {
+            return [];
+        }
+        var page = Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0];
+        return ScreenshotTag().Matches(page.Body)
+                              .Select(m => new GalleryScreenshot(m.Groups[2].Value, m.Groups[1].Value, ScreenshotUri($"Docs/{page.Folder}/images/{m.Groups[2].Value}", false)))
+                              .ToArray();
+    }
+
+    /// <summary>
+    /// <paramref name="markdown"/> with each <c>![caption](images/Name.png)</c> line turned into a screenshot block whose
+    /// captures are in <c>&lt;folder&gt;/images/</c> (a folder of this assembly, such as <c>Docs/TextFields/Input</c>).
+    /// </summary>
+    internal static string WithScreenshots(string markdown, string folder)
+        => ScreenshotTag().Replace(markdown, match => ScreenshotBlock(folder, match));
+
+    /// <summary>The names and captions of the screenshot lines in <paramref name="markdown"/>, in order.</summary>
+    public static IEnumerable<(string Name, string Caption)> ScreenshotLines(string markdown)
+        => ScreenshotTag().Matches(markdown).Select(m => (m.Groups[2].Value, m.Groups[1].Value));
+
+    /// <summary>The notice above a page shown in en-US because <paramref name="language"/> has no translation.</summary>
+    internal static string UntranslatedNotice(string language) => GalleryDocText.For(language).Untranslated;
+
+    /// <summary>
+    /// The asset of a screenshot: <paramref name="source"/> is its path without the extension, such as
+    /// <c>Docs/&lt;Category&gt;/&lt;Component&gt;/images/&lt;Name&gt;</c> or <c>Guides/&lt;Page&gt;/images/&lt;Name&gt;</c>;
+    /// the dark capture is <c>&lt;Name&gt;.dark.png</c> next to the light one. The captures are resources of
+    /// <c>TKCode.Arc.Gallery.Shots</c>, not of this assembly, so a host can serve them as files instead.
+    /// </summary>
+    public static Uri ScreenshotUri(string source, bool dark)
+        => new($"avares://TKCode.Arc.Gallery.Shots/{source}{(dark ? ".dark" : string.Empty)}.png");
+
+    /// <summary>
+    /// The block StreamMark renders as a screenshot (<c>GalleryShotPlugin</c>), framed and switching with the theme. The
+    /// caption cannot hold a double quote inside the attribute, so it becomes a single one.
+    /// </summary>
+    private static string ScreenshotBlock(string folder, Match match)
+        => $"<shot src=\"{folder}/images/{match.Groups[2].Value}\" alt=\"{match.Groups[1].Value.Replace('"', '\'')}\"></shot>";
 
     /// <summary>
     /// The block StreamMark renders as a live example (<c>GalleryDemoPlugin</c>). Its block parser does not end a
@@ -226,6 +274,10 @@ public static partial class GalleryDocs
     // The same pattern as the generator's DocPage, which checks that every demo exists.
     [GeneratedRegex(@"^[ \t]*<Demo[ \t]+name=""([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)""[ \t]*/>[ \t]*$", RegexOptions.Multiline)]
     private static partial Regex DemoTag();
+
+    // A screenshot on a line of its own: ![caption](images/Name.png), with Name.dark.png beside it for the dark theme.
+    [GeneratedRegex(@"^[ \t]*!\[([^\]\n]*)\]\(images/([A-Za-z0-9_-]+)\.png\)[ \t]*$", RegexOptions.Multiline)]
+    private static partial Regex ScreenshotTag();
 
     /// <summary>The words the generated parts of a page are made of, per language (en-US for the rest).</summary>
     private sealed record GalleryDocText(string Property, string Type, string Default, string Description, string Event,

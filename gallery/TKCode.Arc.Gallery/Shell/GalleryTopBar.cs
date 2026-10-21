@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -11,24 +12,51 @@ using Avalonia.Media.Imaging;
 namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
-/// The top bar of uiarc.dev: brand logo, the section tab, a search shortcut, the Appearance popover and the
-/// light / dark toggle.
+/// The top bar of uiarc.dev: brand logo (back to the home page), the menu of sections, a GitHub button with the star
+/// count, a search shortcut, the Appearance popover and the light / dark toggle.
 /// </summary>
 public sealed class GalleryTopBar : Border
 {
+    private const double NavMinWidth = 880;
+    private const string ChangelogClassName = "DocsChangelog";
+
     private readonly GalleryTheme _theme;
     private readonly Button _themeToggle;
     private readonly Button _appearance;
+    private readonly GalleryTopNav _nav;
+    private readonly GalleryShell _shell;
     private ArcPopup? _popup;
     private DateTime _closedAt;
 
-    public GalleryTopBar(GalleryTheme theme, Control owner, Action focusSearch)
+    public GalleryTopBar(GalleryTheme theme, GalleryShell shell)
     {
         _theme = theme;
+        _shell = shell;
+        Control owner = shell;
 
-        var left = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 28, VerticalAlignment = VerticalAlignment.Stretch };
-        left.Children.Add(BuildBrand());
-        left.Children.Add(BuildTab(GalleryShellLangResourceKind.Components));
+        var brand = new Button
+        {
+            Content = BuildBrand(),
+            Variant = ButtonVariant.Ghost,
+            Size = ControlSize.Small,
+            Padding = new Thickness(6, 4),
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsPressScaleEnabled = false
+        };
+        GalleryText.Bind(brand, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.GoHome);
+        brand.Click += (_, _) => shell.Navigate(GalleryRoute.Home);
+
+        // Components, Blocks, Docs and Changelog; the last two are pages of the Docs section.
+        _nav = new GalleryTopNav(GalleryShellLangResourceKind.Components, GalleryShellLangResourceKind.Category_Blocks,
+                                 GalleryShellLangResourceKind.Category_Docs, GalleryShellLangResourceKind.NavChangelog);
+        _nav.Chosen += index => shell.Navigate(index switch
+        {
+            0 => shell.RouteFor(GalleryRouteKind.Components),
+            1 => shell.RouteFor(GalleryRouteKind.Blocks),
+            2 => shell.RouteFor(GalleryRouteKind.Docs),
+            _ => GalleryRoute.To(GalleryCatalog.Docs.Entries.First(e => e.ClassName == ChangelogClassName))
+        });
 
         _appearance = new Button
         {
@@ -51,15 +79,20 @@ public sealed class GalleryTopBar : Border
         _theme.Changed += SyncThemeToggle;
         SyncThemeToggle();
 
-        var right = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
-        right.Children.Add(BuildSearchButton(focusSearch));
+        var right = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(16, 0, 0, 0) };
+        right.Children.Add(new GalleryGitHubButton());
+        right.Children.Add(BuildSearchButton(shell.FocusSearch));
         right.Children.Add(_appearance);
         right.Children.Add(_themeToggle);
 
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), Margin = new Thickness(24, 0) };
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,*"), Margin = new Thickness(24, 0) };
+        Grid.SetColumn(_nav, 1);
         Grid.SetColumn(right, 2);
-        grid.Children.Add(left);
+        grid.Children.Add(brand);
+        grid.Children.Add(_nav);
         grid.Children.Add(right);
+        // The menu needs the room of the right-hand buttons on a narrow page; the brand still leads home.
+        grid.SizeChanged += (_, e) => _nav.IsVisible = e.NewSize.Width >= NavMinWidth;
 
         Height = 64;
         BorderThickness = new Thickness(0, 0, 0, 1);
@@ -80,23 +113,6 @@ public sealed class GalleryTopBar : Border
         brand.Children.Add(name);
         brand.Children.Add(tag);
         return brand;
-    }
-
-    /// <summary>The current section: label with the 2px underline sitting on the bar's bottom border.</summary>
-    private static Control BuildTab(GalleryShellLangResourceKind label)
-    {
-        var text = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 14, FontWeight.Medium);
-        GalleryText.Bind(text, TextBlock.TextProperty, label);
-        var tab = new Border
-        {
-            BorderThickness = new Thickness(0, 0, 0, 2),
-            Margin = new Thickness(0, 0, 0, -1),
-            VerticalAlignment = VerticalAlignment.Stretch,
-            Child = text
-        };
-        text.VerticalAlignment = VerticalAlignment.Center;
-        ArcTokens.Bind(tab, BorderBrushProperty, ArcDesignTokenKind.Foreground);
-        return tab;
     }
 
     private static Control Labeled(Control glyph, GalleryShellLangResourceKind text)
@@ -133,6 +149,21 @@ public sealed class GalleryTopBar : Border
         button.Click += (_, _) => focusSearch();
         return button;
     }
+
+    /// <summary>Marks the menu item of the open page (none on the home page).</summary>
+    public void SyncRoute(GalleryRoute route)
+    {
+        _nav.Mark(route.Kind switch
+        {
+            GalleryRouteKind.Components => 0,
+            GalleryRouteKind.Blocks => 1,
+            GalleryRouteKind.Docs => route.Entry?.ClassName == ChangelogClassName ? 3 : 2,
+            _ => -1
+        });
+    }
+
+    /// <summary>The item of the menu that is marked, or -1 (see <see cref="GalleryTopNav"/>).</summary>
+    public int MarkedNavIndex => _nav.MarkedIndex;
 
     private void SyncThemeToggle()
     {

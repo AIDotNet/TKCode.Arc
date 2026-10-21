@@ -26,12 +26,14 @@ public sealed class GalleryWindow : AtomWindow
 
     public GalleryTopBar TopBar => _shell.TopBar;
 
+    public GalleryShell Shell => _shell;
+
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
         if (!e.Handled && GalleryShell.IsSearchShortcut(e))
         {
-            _shell.Sidebar.FocusSearch();
+            _shell.FocusSearch();
             e.Handled = true;
         }
     }

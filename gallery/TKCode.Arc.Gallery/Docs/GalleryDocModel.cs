@@ -4,8 +4,9 @@ namespace TKCode.Arc.Gallery.Docs;
 
 /// <summary>One component page in one language, as written in <c>Docs/&lt;Category&gt;/&lt;ClassName&gt;/&lt;Language&gt;.md</c>.</summary>
 /// <param name="IsOutdated">A translation whose en-US page changed after it was translated (its source-hash differs).</param>
+/// <param name="Folder">The page's folder below <c>Docs/</c>, such as <c>TextFields/Input</c>; its screenshots are in <c>images/</c> there.</param>
 /// <param name="Body">The Markdown after the front matter, with its <c>&lt;!-- api: Type --&gt;</c> lines still in place.</param>
-public sealed record GalleryDocPage(string ClassName, string Language, string Title, string Summary, bool IsOutdated, string Body);
+public sealed record GalleryDocPage(string ClassName, string Language, string Folder, string Title, string Summary, bool IsOutdated, string Body);
 
 public enum GalleryApiMemberKind
 {
@@ -25,6 +26,10 @@ public sealed record GalleryApiType(string Name, Type Owner, string? Summary, st
 
 /// <param name="Key"><c>Type</c> or <c>DeclaringType.Member</c>.</param>
 public sealed record GalleryApiTranslation(string Language, string Key, string Text);
+
+/// <summary>A screenshot in a docs page: <c>![Caption](images/Name.png)</c>.</summary>
+/// <param name="Light">The light-theme capture; the dark one is <c>Name.dark.png</c> beside it.</param>
+public sealed record GalleryScreenshot(string Name, string Caption, Uri Light);
 
 /// <summary>A page ready to show: Markdown with its API references and demos filled in, in <see cref="Language"/>.</summary>
 /// <param name="RequestedLanguage">The language asked for; the page falls back to en-US when it has no translation.</param>

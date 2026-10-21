@@ -481,5 +481,85 @@
         <source>Special components</source>
       </segment>
     </unit>
+    <unit id="GoHome">
+      <segment>
+        <source>Home</source>
+      </segment>
+    </unit>
+    <unit id="NavChangelog">
+      <segment>
+        <source>Changelog</source>
+      </segment>
+    </unit>
+    <unit id="GitHubStar">
+      <segment>
+        <source>Star</source>
+      </segment>
+    </unit>
+    <unit id="GitHubOpen">
+      <segment>
+        <source>Open TKCode.Arc on GitHub</source>
+      </segment>
+    </unit>
+    <unit id="HomeTitle">
+      <segment>
+        <source>Arc's motion and polish, native to Avalonia</source>
+      </segment>
+    </unit>
+    <unit id="HomeSubtitle">
+      <segment>
+        <source>{0} components in {1} groups and {2} page blocks. Spring motion, design tokens, ready for AOT.</source>
+      </segment>
+    </unit>
+    <unit id="HomeExplore">
+      <segment>
+        <source>Explore components</source>
+      </segment>
+    </unit>
+    <unit id="HomeReadDocs">
+      <segment>
+        <source>Read the docs</source>
+      </segment>
+    </unit>
+    <unit id="HomeLiveTitle">
+      <segment>
+        <source>Every example is live</source>
+      </segment>
+    </unit>
+    <unit id="HomeLiveSubtitle">
+      <segment>
+        <source>Press, drag and type in the cards. Each one opens its full page.</source>
+      </segment>
+    </unit>
+    <unit id="HomeBrowseAll">
+      <segment>
+        <source>Browse all {0} components</source>
+      </segment>
+    </unit>
+    <unit id="HomeOpen">
+      <segment>
+        <source>Open</source>
+      </segment>
+    </unit>
+    <unit id="HomeStatComponents">
+      <segment>
+        <source>components</source>
+      </segment>
+    </unit>
+    <unit id="HomeStatGroups">
+      <segment>
+        <source>groups</source>
+      </segment>
+    </unit>
+    <unit id="HomeStatBlocks">
+      <segment>
+        <source>page blocks</source>
+      </segment>
+    </unit>
+    <unit id="HomeStatLanguages">
+      <segment>
+        <source>languages</source>
+      </segment>
+    </unit>
   </file>
 </xliff>
