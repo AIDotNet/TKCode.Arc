@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsCommandBoundDemo"
+             x:DataType="demos:SettingsCommandBoundState">
+    <StackPanel Spacing="24" MaxWidth="560">
+        <arc:SettingsCommand ResultsMaxHeight="320">
+            <arc:SettingsCommandChoice Header="Theme" Icon="{x:Static arc:ArcIcons.Palette}"
+                                       Description="Match your system, or always use light or dark."
+                                       Options="Light, Dark, System"
+                                       SelectedOption="{Binding Theme}" />
+            <arc:SettingsCommandToggle Header="Compact mode" Icon="{x:Static arc:ArcIcons.Rows2}"
+                                       Description="Tighter rows and smaller gaps in lists."
+                                       IsChecked="{Binding CompactMode}" />
+            <arc:SettingsCommandToggle Header="Reduce motion" Icon="{x:Static arc:ArcIcons.Sparkles}"
+                                       Description="Fewer animations across the app."
+                                       IsChecked="{Binding ReduceMotion}" />
+            <arc:SettingsCommandChoice Header="Email digests" Icon="{x:Static arc:ArcIcons.Inbox}"
+                                       Description="A summary of activity in your projects."
+                                       Options="Off, Daily, Weekly"
+                                       SelectedOption="{Binding EmailDigests}" />
+        </arc:SettingsCommand>
+        <!-- The same state, bound to ordinary controls: change either side and the other follows. -->
+        <arc:SettingsGroup Header="App state" Description="Bound to the same properties as the palette.">
+            <arc:SettingsRow Header="Theme">
+                <arc:SegmentedControl SelectedValue="{Binding Theme}">
+                    <arc:SegmentedOption Value="Light" Label="Light" />
+                    <arc:SegmentedOption Value="Dark" Label="Dark" />
+                    <arc:SegmentedOption Value="System" Label="System" />
+                </arc:SegmentedControl>
+            </arc:SettingsRow>
+            <arc:SettingsRow Header="Compact mode">
+                <arc:Switch IsChecked="{Binding CompactMode}" />
+            </arc:SettingsRow>
+            <arc:SettingsRow Header="Reduce motion">
+                <arc:Switch IsChecked="{Binding ReduceMotion}" />
+            </arc:SettingsRow>
+            <arc:SettingsRow Header="Email digests">
+                <arc:SegmentedControl SelectedValue="{Binding EmailDigests}">
+                    <arc:SegmentedOption Value="Off" Label="Off" />
+                    <arc:SegmentedOption Value="Daily" Label="Daily" />
+                    <arc:SegmentedOption Value="Weekly" Label="Weekly" />
+                </arc:SegmentedControl>
+            </arc:SettingsRow>
+        </arc:SettingsGroup>
+    </StackPanel>
+</UserControl>

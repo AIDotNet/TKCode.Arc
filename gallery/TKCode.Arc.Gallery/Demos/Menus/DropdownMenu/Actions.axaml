@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DropdownMenuActionsDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:DropdownMenu Label="Actions" ItemClicked="OnItemClicked">
+                <arc:MenuEntry Header="Rename" Icon="{x:Static arc:ArcIcons.Pencil}" />
+                <arc:MenuEntry Header="Duplicate" Icon="{x:Static arc:ArcIcons.Copy}" />
+                <arc:MenuEntry Header="Delete"
+                               Icon="{x:Static arc:ArcIcons.Trash2}"
+                               IsDestructive="True"
+                               HasSeparatorBefore="True" />
+            </arc:DropdownMenu>
+            <arc:DropdownMenu Label="Share" Icon="{x:Static arc:ArcIcons.Share2}">
+                <arc:MenuEntry Header="Copy link" Icon="{x:Static arc:ArcIcons.Link}" />
+                <arc:MenuEntry Header="Email" Icon="{x:Static arc:ArcIcons.Mail}" />
+                <arc:MenuEntry Header="Export PDF" Icon="{x:Static arc:ArcIcons.Download}" IsEnabled="False" />
+                <arc:MenuEntry Header="Embed" Icon="{x:Static arc:ArcIcons.Code}" />
+            </arc:DropdownMenu>
+        </WrapPanel>
+        <TextBlock x:Name="Status"
+                   Text="Pick an action."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

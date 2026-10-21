@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ScrubInputGlyphLabelsDemo">
+    <Border Width="320"
+            HorizontalAlignment="Center"
+            Padding="16,26,16,16"
+            CornerRadius="18"
+            BorderThickness="1"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+        <StackPanel Spacing="8">
+            <arc:ScrubInput AutomationProperties.Name="Font size" Value="16" Minimum="1" Unit="px" ResetValue="16">
+                <arc:ScrubInput.Label>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Type}"
+                                  Size="14"
+                                  Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                  VerticalAlignment="Center" />
+                </arc:ScrubInput.Label>
+            </arc:ScrubInput>
+            <arc:ScrubInput AutomationProperties.Name="Brightness" Value="100" Minimum="0" Maximum="200" Unit="%" ResetValue="100">
+                <arc:ScrubInput.Label>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sun}"
+                                  Size="14"
+                                  Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                  VerticalAlignment="Center" />
+                </arc:ScrubInput.Label>
+            </arc:ScrubInput>
+        </StackPanel>
+    </Border>
+</UserControl>

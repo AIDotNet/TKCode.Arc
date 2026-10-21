@@ -13,6 +13,7 @@ public class UsageSegment : AvaloniaObject
     public static readonly StyledProperty<string?> IdProperty =
         AvaloniaProperty.Register<UsageSegment, string?>(nameof(Id));
 
+    /// <summary>Category name shown for the segment (Arc <c>label</c>).</summary>
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<UsageSegment, string?>(nameof(Label));
 

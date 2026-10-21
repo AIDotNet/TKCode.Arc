@@ -3,6 +3,8 @@ title: Tooltip
 summary: Short supporting text for unfamiliar controls.
 ---
 
+<Demo name="Sides" />
+
 ## When to use
 
 - A one-line label for an icon-only button or a toolbar item.
@@ -46,6 +48,8 @@ A tooltip is an attached property. Set `arc:Tooltip.Tip` on any control; the tex
 
 Change the text in code while the tooltip is open. Strings crossfade and the bubble resizes to fit. Set
 `ShowDelay` to change the wait before the first tooltip opens; the default is 250ms.
+
+<Demo name="LiveText" />
 
 ```csharp
 Tooltip.SetTip(save, "Saved just now");

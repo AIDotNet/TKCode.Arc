@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandableTextDefaultDemo">
+    <arc:ExpandableText Text="We moved our whole design team onto the new workspace in a single afternoon. The import kept every comment and version, and the shared libraries meant nobody had to rebuild components from scratch. Two weeks in, review cycles are noticeably shorter: feedback lands on the exact frame, threads resolve themselves when the change ships, and the weekly digest finally replaced our status meeting. The only thing we miss is offline editing on long flights, which the team says is coming next quarter."
+                        MaxWidth="520"
+                        HorizontalAlignment="Left" />
+</UserControl>

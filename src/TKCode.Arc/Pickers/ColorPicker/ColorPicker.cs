@@ -134,9 +134,11 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     public static readonly StyledProperty<string> InvalidColorTextProperty =
         AvaloniaProperty.Register<ColorPicker, string>(nameof(InvalidColorText), "Enter a hex, RGB, HSL, or OKLCH color");
 
+    /// <summary>Text after the contrast ratio that compares the color with the background (default "against background").</summary>
     public static readonly StyledProperty<string> AgainstBackgroundTextProperty =
         AvaloniaProperty.Register<ColorPicker, string>(nameof(AgainstBackgroundText), "against background");
 
+    /// <summary>Label of the Done button that closes the panel (default "Done").</summary>
     public static readonly StyledProperty<string> DoneTextProperty =
         AvaloniaProperty.Register<ColorPicker, string>(nameof(DoneText), "Done");
 
@@ -179,7 +181,9 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
     public bool IsDropDownOpen { get => GetValue(IsDropDownOpenProperty); set => SetValue(IsDropDownOpenProperty, value); }
 
     public string InvalidColorText { get => GetValue(InvalidColorTextProperty); set => SetValue(InvalidColorTextProperty, value); }
+    /// <inheritdoc cref="AgainstBackgroundTextProperty"/>
     public string AgainstBackgroundText { get => GetValue(AgainstBackgroundTextProperty); set => SetValue(AgainstBackgroundTextProperty, value); }
+    /// <inheritdoc cref="DoneTextProperty"/>
     public string DoneText { get => GetValue(DoneTextProperty); set => SetValue(DoneTextProperty, value); }
 
     /// <summary>Raised when <see cref="Color"/> changes.</summary>

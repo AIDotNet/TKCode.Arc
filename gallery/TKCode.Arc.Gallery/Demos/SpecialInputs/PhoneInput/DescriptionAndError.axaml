@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PhoneInputDescriptionAndErrorDemo">
+    <StackPanel Spacing="16">
+        <arc:PhoneInput Label="Phone number"
+                        Description="We text a sign-in code to this number."
+                        Width="360"
+                        HorizontalAlignment="Left" />
+        <arc:PhoneInput Label="Phone number"
+                        Value="+1201555"
+                        ErrorMessage="Enter the full number to get a code."
+                        Width="360"
+                        HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

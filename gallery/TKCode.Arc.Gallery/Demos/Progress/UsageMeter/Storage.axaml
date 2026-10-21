@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageMeterStorageDemo">
+    <StackPanel Spacing="16">
+        <arc:UsageMeter x:Name="Storage" Label="Workspace storage" Limit="50" Unit="GB">
+            <arc:UsageSegment Id="media" Label="Media" Value="14.2" />
+            <arc:UsageSegment Id="docs" Label="Documents" Value="9.6" />
+            <arc:UsageSegment Id="backups" Label="Backups" Value="6.1" />
+            <arc:UsageSegment Id="other" Label="Other" Value="2.4" />
+        </arc:UsageMeter>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Upload media" Variant="Secondary" Click="OnUploadClick" />
+            <arc:Button Content="Clean up" Variant="Ghost" Click="OnCleanUpClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

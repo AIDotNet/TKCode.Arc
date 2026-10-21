@@ -1,8 +1,10 @@
 ---
 title: 金額輸入框
 summary: 帶有即時分組、寬度穩定、數字滾動與最小單位輸出的貨幣輸入框。
-source-hash: 602f0dd6756f
+source-hash: f28fa88adbe5
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -34,61 +36,31 @@ source-hash: 602f0dd6756f
 
 `Currencies` 設定貨幣選單中的代碼。只有一個代碼時，該代碼以靜態文字顯示。`QuickAddAmounts` 設定以主單位表示的晶片。清單為空時隱藏晶片。
 
-```xml
-<arc:MoneyInput Label="價格" Currency="JPY" Value="12000" />
-<arc:MoneyInput Label="預算" Currency="EUR" Value="2400" />
-```
-
-```csharp
-var price = new MoneyInput
-{
-    Label = "價格",
-    Currency = "JPY",
-    Value = 12000,
-    QuickAddAmounts = [1000, 5000, 10000]
-};
-
-var budget = new MoneyInput
-{
-    Label = "預算",
-    Currency = "EUR",
-    Currencies = ["EUR"],
-    Value = 2400
-};
-
-var tip = new MoneyInput { Label = "小費", Value = 12.5m, QuickAddAmounts = [] };
-```
-
 日圓沒有最小單位，因此該欄位不顯示角分。
+
+<Demo name="SingleCurrency" />
+
+<Demo name="NoQuickAdd" />
+
+<Demo name="NoDecimals" />
 
 ### 地區文化
 
 `Culture` 設定分組方式與符號位置。預設值為 `en-US`。
 
-```csharp
-var betrag = new MoneyInput
-{
-    Label = "金額",
-    Culture = CultureInfo.GetCultureInfo("de-DE"),
-    Currency = "EUR",
-    Value = 1234.56m,
-    Maximum = 10000
-};
-```
+<Demo name="Culture" />
 
 ### 錯誤與說明
 
 `ErrorMessage` 不為空時，欄位標記為無效並取代說明文字。`Description` 提供輔助文字。
 
-```xml
-<arc:MoneyInput Label="發票總額"
-                Description="訂單出貨時扣款。"
-                ErrorMessage="請輸入發票上的金額。" />
-```
+<Demo name="DescriptionAndError" />
 
 ### 繫結與事件
 
 `Value` 為雙向繫結，使用主單位，因此 `12.50` 即為 `12.5`。`ValueChanged` 會回報舊值與新值、貨幣、最小單位、格式化字串以及 `ChangeSource`。
+
+<Demo name="BindingAndEvents" />
 
 ```xml
 <arc:MoneyInput Label="金額" Value="{Binding Amount, Mode=TwoWay}" Currency="{Binding Currency, Mode=TwoWay}" />
@@ -102,6 +74,24 @@ amount.ValueChanged += (_, e) =>
 
 amount.OpenCurrencyMenu();
 ```
+
+### 最小值與最大值
+
+`Minimum` 與 `Maximum` 以主單位設定範圍。輸入超過最大值會被拒絕並推動金額，最小值則在欄位失去焦點時檢查。
+
+<Demo name="Limits" />
+
+### 隱藏標籤
+
+`IsLabelVisible="False"` 會隱藏標籤，但仍保留給螢幕閱讀器。
+
+<Demo name="HiddenLabel" />
+
+### 停用
+
+停用的欄位會保留其金額，並忽略輸入。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

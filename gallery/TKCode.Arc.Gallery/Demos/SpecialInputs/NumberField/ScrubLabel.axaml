@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFieldScrubLabelDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:NumberField Label="Width" IsScrubEnabled="True" Suffix=" px" Maximum="640" Value="320" Step="4" />
+        <arc:NumberField Label="Opacity" IsScrubEnabled="True" Suffix="%" Maximum="100" Value="80" Step="5" />
+    </WrapPanel>
+</UserControl>

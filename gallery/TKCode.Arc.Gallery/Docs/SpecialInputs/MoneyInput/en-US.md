@@ -3,6 +3,8 @@ title: Money input
 summary: A currency field with live grouping, stable width, rolling digits, and minor-unit output.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Hand-typed amounts such as payments, tips, transfers and budgets.
@@ -34,62 +36,32 @@ summary: A currency field with live grouping, stable width, rolling digits, and 
 `Currencies` sets the codes in the currency menu. With one code the code is shown as static text. `QuickAddAmounts`
 sets the chips in major units. An empty list hides them.
 
-```xml
-<arc:MoneyInput Label="Price" Currency="JPY" Value="12000" />
-<arc:MoneyInput Label="Budget" Currency="EUR" Value="2400" />
-```
-
-```csharp
-var price = new MoneyInput
-{
-    Label = "Price",
-    Currency = "JPY",
-    Value = 12000,
-    QuickAddAmounts = [1000, 5000, 10000]
-};
-
-var budget = new MoneyInput
-{
-    Label = "Budget",
-    Currency = "EUR",
-    Currencies = ["EUR"],
-    Value = 2400
-};
-
-var tip = new MoneyInput { Label = "Tip", Value = 12.5m, QuickAddAmounts = [] };
-```
-
 Japanese yen has no minor unit, so the field shows no cents.
+
+<Demo name="SingleCurrency" />
+
+<Demo name="NoQuickAdd" />
+
+<Demo name="NoDecimals" />
 
 ### Culture
 
 `Culture` sets the grouping and the symbol placement. The default is `en-US`.
 
-```csharp
-var betrag = new MoneyInput
-{
-    Label = "Betrag",
-    Culture = CultureInfo.GetCultureInfo("de-DE"),
-    Currency = "EUR",
-    Value = 1234.56m,
-    Maximum = 10000
-};
-```
+<Demo name="Culture" />
 
 ### Error and description
 
 A non-empty `ErrorMessage` marks the field invalid and replaces the description. `Description` gives help text.
 
-```xml
-<arc:MoneyInput Label="Invoice total"
-                Description="Charged when the order ships."
-                ErrorMessage="Enter the amount on the invoice." />
-```
+<Demo name="DescriptionAndError" />
 
 ### Binding and events
 
 `Value` is two-way and uses major units, so `12.50` is `12.5`. `ValueChanged` reports the old and new value, the
 currency, the minor units, the formatted string and the `ChangeSource`.
+
+<Demo name="BindingAndEvents" />
 
 ```xml
 <arc:MoneyInput Label="Amount" Value="{Binding Amount, Mode=TwoWay}" Currency="{Binding Currency, Mode=TwoWay}" />
@@ -103,6 +75,25 @@ amount.ValueChanged += (_, e) =>
 
 amount.OpenCurrencyMenu();
 ```
+
+### Minimum and maximum
+
+`Minimum` and `Maximum` set the range in major units. Typing past the maximum is refused with a kick, and the minimum is
+checked when the field loses focus.
+
+<Demo name="Limits" />
+
+### Hidden label
+
+`IsLabelVisible="False"` hides the label but keeps it for screen readers.
+
+<Demo name="HiddenLabel" />
+
+### Disabled
+
+A disabled field keeps its amount and ignores input.
+
+<Demo name="Disabled" />
 
 ## API reference
 

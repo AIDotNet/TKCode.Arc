@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BrushChartOverviewAndDetailDemo">
+    <StackPanel Spacing="16">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Last 30 days" Variant="Secondary" Size="Small" Click="OnLast30DaysClick" />
+            <arc:Button Content="Last quarter" Variant="Secondary" Size="Small" Click="OnLastQuarterClick" />
+            <arc:Button Content="Last year" Variant="Secondary" Size="Small" Click="OnLastYearClick" />
+            <arc:Button Content="All" Variant="Secondary" Size="Small" Click="OnAllClick" />
+        </WrapPanel>
+        <arc:BrushChart x:Name="Chart"
+                        Label="Daily active users"
+                        Unit="users"
+                        RangeChanged="OnRangeChanged" />
+        <TextBlock x:Name="RangeText"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

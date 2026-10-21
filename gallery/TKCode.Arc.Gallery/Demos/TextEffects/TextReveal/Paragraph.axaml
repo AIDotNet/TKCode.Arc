@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TextRevealParagraphDemo">
+    <StackPanel Spacing="16">
+        <arc:TextReveal x:Name="Body"
+                        Text="A paragraph reveals with a softer blur, word after word, and the whole stagger stays under half a second."
+                        Level="Paragraph" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Replay" Variant="Secondary" Click="OnReplayClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 拖曳數值
 summary: Figma 風格的數字欄位：拖曳標籤即可調整，也可以鍵入數值、單位與算術運算式。
-source-hash: 6ed53abe71b8
+source-hash: 5df7f3b92dba
 ---
+
+<Demo name="Inspector" />
 
 ## 何時使用
 
@@ -65,28 +67,19 @@ var rotation = new ScrubInput
 
 設定多個 `Units` 後，單位會變為一個按鈕，點選即可在各單位之間切換。鍵入單位（例如 `50%`）會切換到該單位。無法辨識的單位會被拒絕。
 
-```csharp
-var width = new ScrubInput
-{
-    Label = "寬度",
-    Value = 240,
-    Minimum = 0,
-    Units = ["px", "%", "em"]
-};
-```
+<Demo name="CyclingUnits" />
 
 ### 尺寸
 
 `Size` 設定高度：`Small` 為 30px，`Medium`（預設）為 36px。
 
-```xml
-<arc:ScrubInput Label="小" Size="Small" Value="12" Unit="px" />
-<arc:ScrubInput Label="中" Value="12" Unit="px" />
-```
+<Demo name="Sizes" />
 
 ### 繫結與事件
 
 `Value` 為雙向繫結。`ValueChanged` 會在每次變化時觸發，`ValueCommitted` 則在欄位中的一次修改穩定後觸發一次。兩者都會回報舊值、新值以及 `ChangeSource`。
+
+<Demo name="Events" />
 
 ```xml
 <arc:ScrubInput Label="不透明度" Value="{Binding Opacity, Mode=TwoWay}" Minimum="0" Maximum="100" Unit="%" />
@@ -98,6 +91,18 @@ amount.ValueCommitted += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue} {e.Unit} ({e.ChangeSource})");
 };
 ```
+
+### 圖示標籤
+
+標籤可以用一個 14px 的圖示代替。請為欄位設定無障礙名稱，連按兩下標籤即可重設數值。
+
+<Demo name="GlyphLabels" />
+
+### 狀態
+
+停用的欄位會變暗至 50% 並忽略輸入。無法辨識的輸入（例如 `abc`）會被拒絕：邊緣變紅 900ms 並短暫抖動，舊值保持不變。
+
+<Demo name="States" />
 
 ## API 參考
 

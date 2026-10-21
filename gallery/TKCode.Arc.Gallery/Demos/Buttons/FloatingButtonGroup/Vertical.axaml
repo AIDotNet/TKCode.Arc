@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FloatingButtonGroupVerticalDemo">
+    <arc:FloatingButtonGroup Label="Tools"
+                             Orientation="Vertical"
+                             IsIconOnly="True"
+                             HorizontalAlignment="Center">
+        <arc:FloatingButtonGroupItem Label="Select" Icon="{x:Static arc:ArcIcons.Move}" Shortcut="V" />
+        <arc:FloatingButtonGroupItem Label="Pen" Icon="{x:Static arc:ArcIcons.Pencil}" Shortcut="P" />
+        <arc:FloatingButtonGroupItem Label="Highlighter" Icon="{x:Static arc:ArcIcons.Highlighter}" />
+        <arc:FloatingButtonGroupSeparator />
+        <arc:FloatingButtonGroupItem Label="Eraser" Icon="{x:Static arc:ArcIcons.Eraser}" Shortcut="E" />
+    </arc:FloatingButtonGroup>
+</UserControl>

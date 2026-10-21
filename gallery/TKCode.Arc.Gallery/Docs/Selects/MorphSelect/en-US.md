@@ -3,6 +3,8 @@ title: Morph select
 summary: A select whose trigger grows into the list, with a gliding highlight and type-ahead.
 ---
 
+<Demo name="GroupedWithSearch" />
+
 ## When to use
 
 - Known lists in forms and property panels, such as time zones, owners or projects.
@@ -55,6 +57,8 @@ zone.SelectionChanged += (_, _) => Console.WriteLine(zone.SelectedValue);
 
 Hide the label with `IsLabelVisible="False"`. The trigger keeps the `Label` as its accessible name, so the pill
 stays compact.
+
+<Demo name="CompactToolbar" />
 
 ```xml
 <arc:MorphSelect Label="Status" IsLabelVisible="False" />

@@ -1,8 +1,10 @@
 ---
 title: 计费切换
 summary: 按月与按年切换，带有节省徽标，价格会滚动至新金额。
-source-hash: 7cbb30d851d5
+source-hash: 42d6a2246ed0
 ---
+
+<Demo name="Pricing" />
 
 ## 何时使用
 
@@ -31,13 +33,7 @@ source-hash: 7cbb30d851d5
 
 可以直接内联编写选项，也可以绑定 `ItemsSource`。`Badge` 显示在选项上。选中该选项时，`ActiveBadge` 会替换 `Badge`，因此说明可以原位变化，而不会挪动周围的内容。
 
-```xml
-<arc:BillingToggle Value="monthly" Size="Large">
-    <arc:BillingToggleOption Value="monthly" Label="按月" />
-    <arc:BillingToggleOption Value="yearly" Label="按年" Badge="省 20%" ActiveBadge="你可省 $48" />
-    <arc:BillingToggleOption Value="lifetime" Label="终身" Badge="最划算" />
-</arc:BillingToggle>
-```
+<Demo name="ThreePeriods" />
 
 ### 价格
 

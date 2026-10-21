@@ -1,8 +1,10 @@
 ---
 title: 变形选择
 summary: 触发器展开为列表的选择器，带有滑动高亮和键入查找。
-source-hash: 7d3f65226c37
+source-hash: 10da2b25f10e
 ---
+
+<Demo name="GroupedWithSearch" />
 
 ## 何时使用
 
@@ -54,6 +56,8 @@ zone.SelectionChanged += (_, _) => Console.WriteLine(zone.SelectedValue);
 ### 紧凑工具栏
 
 使用 `IsLabelVisible="False"` 隐藏标签。触发器仍以 `Label` 作为无障碍名称，因此药丸形状保持紧凑。
+
+<Demo name="CompactToolbar" />
 
 ```xml
 <arc:MorphSelect Label="状态" IsLabelVisible="False" />

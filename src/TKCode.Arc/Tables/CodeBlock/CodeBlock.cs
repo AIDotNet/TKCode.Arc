@@ -71,9 +71,11 @@ public class CodeBlock : TemplatedControl
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<CodeBlock, bool>(nameof(IsExpanded), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Label of the copy button in the header (default "Copy code").</summary>
     public static readonly StyledProperty<string> CopyLabelProperty =
         AvaloniaProperty.Register<CodeBlock, string>(nameof(CopyLabel), "Copy code");
 
+    /// <summary>Header text shown when <c>FileName</c> is empty (default "Source code").</summary>
     public static readonly StyledProperty<string> SourceCodeLabelProperty =
         AvaloniaProperty.Register<CodeBlock, string>(nameof(SourceCodeLabel), "Source code");
 
@@ -81,6 +83,7 @@ public class CodeBlock : TemplatedControl
     public static readonly StyledProperty<string> ShowAllLinesFormatProperty =
         AvaloniaProperty.Register<CodeBlock, string>(nameof(ShowAllLinesFormat), "Show all {0} lines");
 
+    /// <summary>Label of the toggle while a collapsed source is expanded (default "Show fewer lines").</summary>
     public static readonly StyledProperty<string> ShowFewerLinesLabelProperty =
         AvaloniaProperty.Register<CodeBlock, string>(nameof(ShowFewerLinesLabel), "Show fewer lines");
 
@@ -148,9 +151,12 @@ public class CodeBlock : TemplatedControl
     public bool IsCollapsible { get => GetValue(IsCollapsibleProperty); set => SetValue(IsCollapsibleProperty, value); }
     public int MaxLines { get => GetValue(MaxLinesProperty); set => SetValue(MaxLinesProperty, value); }
     public bool IsExpanded { get => GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
+    /// <inheritdoc cref="CopyLabelProperty"/>
     public string CopyLabel { get => GetValue(CopyLabelProperty); set => SetValue(CopyLabelProperty, value); }
+    /// <inheritdoc cref="SourceCodeLabelProperty"/>
     public string SourceCodeLabel { get => GetValue(SourceCodeLabelProperty); set => SetValue(SourceCodeLabelProperty, value); }
     public string ShowAllLinesFormat { get => GetValue(ShowAllLinesFormatProperty); set => SetValue(ShowAllLinesFormatProperty, value); }
+    /// <inheritdoc cref="ShowFewerLinesLabelProperty"/>
     public string ShowFewerLinesLabel { get => GetValue(ShowFewerLinesLabelProperty); set => SetValue(ShowFewerLinesLabelProperty, value); }
 
     /// <summary>Raised after the copy action put the code on the clipboard.</summary>

@@ -1,8 +1,10 @@
 ---
 title: 捲動區域
 summary: 原生捲動容器，配有細長的浮層捲軸與僅在內容溢出時才出現的邊緣漸隱。
-source-hash: 3a151cda56de
+source-hash: 7a71649db8ce
 ---
+
+<Demo name="Vertical" />
 
 ## 何時使用
 
@@ -42,27 +44,13 @@ source-hash: 3a151cda56de
 
 垂直滾輪在橫向區域還能繼續捲動時會使其橫向捲動，捲到盡頭後再把滾輪交還給頁面。設定 `HorizontalSnapPointsType` 可讓各項目吸附對齊。
 
-```xml
-<arc:ScrollArea Orientation="Horizontal"
-                HorizontalSnapPointsType="Mandatory"
-                Label="卡片">
-    <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-    </StackPanel>
-</arc:ScrollArea>
-```
+<Demo name="HorizontalStrip" />
 
 ### 雙向捲動與捲軸可見性
 
 網格需要雙向捲動時使用 `Both`。`OverlayScrollbarMode="Always"` 會在內容溢出時持續顯示捲軸。預設的 `Auto` 僅在捲動或懸停時顯示。
 
-```xml
-<arc:ScrollArea Orientation="Both"
-                OverlayScrollbarMode="Always"
-                Height="240" />
-```
+<Demo name="BothAxes" />
 
 ### 邊緣漸隱與隱藏延遲
 

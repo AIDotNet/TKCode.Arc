@@ -3,6 +3,8 @@ title: Accordion
 summary: Progressively reveal supporting information in place.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - A list of questions and answers, such as an FAQ, where one answer is open at a time.
@@ -40,6 +42,8 @@ Clicking the open row closes it. Opening another row closes the open one.
 Set `ItemsSource`, `ItemTemplate` for the question and `ContentTemplate` for the answer. `ExpandedIndex = -1`
 starts with every row closed.
 
+<Demo name="Large" />
+
 ```xml
 <arc:Accordion Size="Large"
                ExpandedIndex="-1"
@@ -74,9 +78,7 @@ questions and body-size answers, which suits page-level FAQs.
 
 `ExpandMode="Multiple"` lets rows open independently. This is an addition to Arc; the Arc default is `Single`.
 
-```xml
-<arc:Accordion ExpandMode="Multiple" />
-```
+<Demo name="Multiple" />
 
 ### Opening a row from code
 

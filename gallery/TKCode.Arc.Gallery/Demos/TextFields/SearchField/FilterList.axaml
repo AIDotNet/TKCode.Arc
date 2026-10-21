@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SearchFieldFilterListDemo">
+    <StackPanel Spacing="12">
+        <arc:SearchField x:Name="Search"
+                         Label="Search people"
+                         Placeholder="Filter by name"
+                         Width="360"
+                         HorizontalAlignment="Left"
+                         TextChanged="OnTextChanged"
+                         SearchSubmitted="OnSearchSubmitted" />
+        <TextBlock x:Name="Submitted"
+                   Text="Press Enter to submit; Escape clears."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <StackPanel>
+            <ItemsControl x:Name="Results">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="4" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <TextBlock Text="{Binding}"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock x:Name="NoMatches"
+                       IsVisible="False"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

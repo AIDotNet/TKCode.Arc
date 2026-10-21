@@ -3,6 +3,8 @@ title: Date picker
 summary: Choose a date without losing context.
 ---
 
+<Demo name="DateField" />
+
 ## When to use
 
 - A date field in a form, such as a start date or a due date.
@@ -32,40 +34,26 @@ summary: Choose a date without losing context.
 returns `true` for a day to block. The limits apply to the calendar and to typed dates. A typed date that is
 out of range is rejected: the field shakes and returns to the last valid value.
 
-```csharp
-picker.MinDate = today;
-picker.MaxDate = today.AddDays(56);
-picker.DisabledDates = d => d.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
-picker.ShowToday = true;
-```
+<Demo name="LimitsAndDisabledDays" />
 
 ### Sizes
 
 `Size` sets the field height: `Small` is 36, `Medium` is 44 (the Arc look) and `Large` is 50.
 
-```xml
-<arc:DatePicker Label="Small" Size="Small" />
-<arc:DatePicker Label="Large" Size="Large" />
-```
+<Demo name="Sizes" />
 
 ### Culture and format
 
 `Culture` controls the parsing, the month names and the weekday initials. `DisplayFormat` takes a .NET date
 pattern and replaces the culture's default display.
 
-```xml
-<arc:DatePicker Label="Deutsch" Culture="de-DE" FirstDayOfWeek="Monday" />
-<arc:DatePicker Label="ISO format" DisplayFormat="yyyy-MM-dd" />
-```
+<Demo name="CulturesAndFormats" />
 
 ### Error and disabled state
 
 A non-empty `ErrorMessage` marks the field invalid. A disabled field is faded to half opacity.
 
-```xml
-<arc:DatePicker Label="Invoice date" ErrorMessage="Pick a date before the due date." />
-<arc:DatePicker Label="Locked" IsEnabled="False" />
-```
+<Demo name="InvalidAndDisabled" />
 
 ### Reacting to changes
 

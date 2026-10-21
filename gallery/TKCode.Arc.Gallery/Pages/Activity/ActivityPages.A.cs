@@ -4,6 +4,5 @@ public static partial class GalleryPages
 {
     static partial void RegisterActivityA()
     {
-        Register("Timeline", TimelinePage.Create);
     }
 }

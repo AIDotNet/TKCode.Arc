@@ -1,8 +1,10 @@
 ---
 title: 按钮
 summary: 清晰、响应迅速的操作按钮，次要状态保持低调。
-source-hash: 767cb7dd88cb
+source-hash: e419533863ca
 ---
+
+<Demo name="Variants" />
 
 ## 何时使用
 
@@ -41,29 +43,18 @@ source-hash: 767cb7dd88cb
 
 `Size` 决定最小高度：`Small` 为 36，`Medium` 为 44（默认值），`Large` 为 50。尺寸不会随窗口宽度变化。
 
-```xml
-<arc:Button Content="小" Size="Small" Variant="Secondary" />
-<arc:Button Content="大" Size="Large" Variant="Secondary" />
-```
+<Demo name="Sizes" />
 
 ### 加载与文字变形
 
 设置 `IsLoading` 即可显示加载指示。按钮保持键盘焦点，但在任务结束前会忽略点击和按键。修改 `Content` 即可切换文字：新文字向上浮入，宽度以弹簧动画适配。
 
+<Demo name="LoadingMorph" />
+
 ```xml
 <arc:Button Content="{Binding SaveLabel}"
             IsLoading="{Binding IsSaving}"
             Variant="Primary" />
-```
-
-```csharp
-save.Click += async (_, _) =>
-{
-    save.IsLoading = true;
-    await SaveAsync();
-    save.IsLoading = false;
-    save.Content = "已保存";
-};
 ```
 
 ### 仅图标按钮
@@ -81,10 +72,7 @@ save.Click += async (_, _) =>
 
 将 `IsEnabled` 设为 `False`。描边变体保持其形状，因此不可用的操作仍然像按钮。
 
-```xml
-<arc:Button Content="主要" IsEnabled="False" />
-<arc:Button Content="次要" Variant="Secondary" IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API 参考
 

@@ -1,8 +1,10 @@
 ---
 title: 簽名板
 summary: 筆跡平順，速度越快越細；支援復原、重播，並可匯出 PNG 或 SVG。
-source-hash: 339c265ce3b3
+source-hash: 38f92cfe8afa
 ---
+
+<Demo name="Sign" />
 
 ## 何時使用
 
@@ -32,11 +34,7 @@ source-hash: 339c265ce3b3
 
 `InkColor` 與 `InkWidth` 設定新筆畫的預設值。每一筆都保留繪製時所用的顏色與寬度。方向鍵可在工具列的選項之間移動。
 
-```xml
-<arc:SignaturePad InkColor="Blue"
-                  InkWidth="Bold"
-                  Hint="請用藍色簽名" />
-```
+<Demo name="InkAndNib" />
 
 ### 讀取筆畫
 
@@ -52,6 +50,8 @@ pad.StrokesChanged += (_, e) =>
 ### 匯出
 
 `ExportPng` 與 `ExportSvg` 會傳回依邊界裁切後的墨跡。`ExportPng` 可接受選用的 `scale` 參數，預設為 3。`SaveAsync` 會開啟儲存對話方塊，並以 `FileName` 作為預設檔名。當使用者取消或沒有任何筆畫時，它傳回 false。
+
+<Demo name="UseTheSignature" />
 
 ```csharp
 var png = pad.ExportPng();

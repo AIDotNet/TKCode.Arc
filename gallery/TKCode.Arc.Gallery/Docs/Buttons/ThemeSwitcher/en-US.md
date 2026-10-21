@@ -3,6 +3,8 @@ title: Theme switcher
 summary: Four smooth ways to move between light and dark appearance.
 ---
 
+<Demo name="Variants" />
+
 ## When to use
 
 - A single light and dark switch in a header or toolbar.
@@ -52,6 +54,8 @@ accessible name. Without a `Label`, the name says which appearance the next pres
 `ThemeChangeRequested` is raised before the theme changes. Its arguments give the next appearance, the variant, the
 trigger button and the origin of the reveal. Set `Handled` to apply the theme yourself. The switcher then does not apply
 it.
+
+<Demo name="HandledByApp" />
 
 ```csharp
 switcher.ThemeChangeRequested += (_, e) =>

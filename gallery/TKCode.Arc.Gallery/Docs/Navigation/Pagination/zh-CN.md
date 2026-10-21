@@ -1,8 +1,10 @@
 ---
 title: 分页
 summary: 在有明确边界的长集合中翻页。
-source-hash: bc8fce527d6d
+source-hash: bbd3f447c7fd
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -44,20 +46,15 @@ pagination.PageChanged += async (_, e) =>
 
 `ShowBoundaryPages` 让首页和末页保持一次点击即可到达，并在它们与窗口之间显示省略号。
 
-```xml
-<arc:Pagination PageCount="48"
-                CurrentPage="20"
-                ShowBoundaryPages="True" />
-```
+<Demo name="BoundaryPages" />
 
 ### 页数很少或没有页
 
 页数少于五页时全部显示；两端的箭头会被禁用。`PageCount` 为 `0` 时渲染一个空的导航地标。
 
-```xml
-<arc:Pagination PageCount="3" CurrentPage="2" />
-<arc:Pagination PageCount="0" />
-```
+<Demo name="FewPages" />
+
+<Demo name="NoPages" />
 
 ### 标签
 

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFieldStatesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:NumberField Label="Disabled" Value="4" Maximum="10" IsEnabled="False" Suffix=" seats" />
+        <arc:NumberField Label="Quantity" Value="0" Maximum="5" ErrorMessage="Add at least one item." />
+    </WrapPanel>
+</UserControl>

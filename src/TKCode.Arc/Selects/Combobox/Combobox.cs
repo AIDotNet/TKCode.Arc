@@ -64,10 +64,13 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         Select.MaxDropDownHeightProperty.AddOwner<Combobox>(new StyledPropertyMetadata<double>(300));
 
+    /// <summary>Label of a data item (AOT-safe alternative to <c>DisplayMemberBinding</c>).</summary>
     public static readonly StyledProperty<Func<object?, string?>?> TextSelectorProperty = Select.TextSelectorProperty.AddOwner<Combobox>();
 
+    /// <summary>Value of a data item (AOT-safe alternative to <c>SelectedValueBinding</c>).</summary>
     public static readonly StyledProperty<Func<object?, object?>?> ValueSelectorProperty = Select.ValueSelectorProperty.AddOwner<Combobox>();
 
+    /// <summary>Returns true for data items that are shown but cannot be picked.</summary>
     public static readonly StyledProperty<Func<object?, bool>?> DisabledSelectorProperty = Select.DisabledSelectorProperty.AddOwner<Combobox>();
 
     /// <summary>Defines the <see cref="FilterPredicate"/> property.</summary>

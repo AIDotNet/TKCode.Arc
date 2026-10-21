@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ScrollAreaBothAxesDemo">
+    <Border HorizontalAlignment="Left"
+            BorderThickness="1"
+            CornerRadius="18"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:ScrollArea Orientation="Both"
+                        OverlayScrollbarMode="Always"
+                        Height="240"
+                        CornerRadius="18">
+            <ItemsControl x:Name="Cells" Width="900" Height="600">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="12" Columns="18" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <TextBlock Text="{Binding}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="12"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </arc:ScrollArea>
+    </Border>
+</UserControl>

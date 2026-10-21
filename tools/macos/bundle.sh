@@ -7,6 +7,7 @@
 #   APP_NAME          bundle name and display name            (default: TKCode Arc Gallery)
 #   BUNDLE_ID         CFBundleIdentifier                      (default: ai.routin.tkcode.arc.gallery)
 #   EXECUTABLE_NAME   apphost inside <publish-dir>            (default: TKCode.Arc.Gallery.Desktop)
+#   ICON              .icns copied to the bundle              (default: gallery/TKCode.Arc.Gallery.Desktop/Assets/AppIcon.icns)
 #   APP_VERSION       full version, may carry a -suffix       (default: ArcVersion from build/Versions.props)
 #   BUILD_NUMBER      CFBundleVersion                         (default: 1)
 #   MIN_MACOS_VERSION LSMinimumSystemVersion                  (default: 12.0, the .NET 10 runtime's minos)
@@ -22,6 +23,7 @@ out_dir="${2:?usage: bundle.sh <publish-dir> <output-dir>}"
 app_name="${APP_NAME:-TKCode Arc Gallery}"
 bundle_id="${BUNDLE_ID:-ai.routin.tkcode.arc.gallery}"
 executable="${EXECUTABLE_NAME:-TKCode.Arc.Gallery.Desktop}"
+icon="${ICON:-$REPO/gallery/TKCode.Arc.Gallery.Desktop/Assets/AppIcon.icns}"
 build_number="${BUILD_NUMBER:-1}"
 min_macos="${MIN_MACOS_VERSION:-12.0}"
 version="${APP_VERSION:-$(sed -n 's:.*<ArcVersion>\(.*\)</ArcVersion>.*:\1:p' "$REPO/build/Versions.props")}"
@@ -34,6 +36,10 @@ if [[ ! -x "$publish_dir/$executable" ]]; then
 fi
 if [[ -z "$version" ]]; then
     echo "error: could not determine the version; set APP_VERSION" >&2
+    exit 1
+fi
+if [[ ! -f "$icon" ]]; then
+    echo "error: icon $icon not found; build it with tools/branding/build_icons.py or set ICON" >&2
     exit 1
 fi
 
@@ -59,6 +65,7 @@ if [[ -n "$stray" ]]; then
     exit 1
 fi
 
+cp "$icon" "$app/Contents/Resources/AppIcon.icns"
 printf 'APPL????' > "$app/Contents/PkgInfo"
 cat > "$app/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -73,6 +80,8 @@ cat > "$app/Contents/Info.plist" <<EOF
     <string>$bundle_id</string>
     <key>CFBundleExecutable</key>
     <string>$executable</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleInfoDictionaryVersion</key>

@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardWithoutQuickLookDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Card Title="Plain card"
+                  Description="A title and a line of copy, nothing else."
+                  Width="240"
+                  VerticalAlignment="Top" />
+        <arc:Card Title="Design review"
+                  Description="Thursday, 14:00 · Room 3"
+                  Meta="Six people"
+                  Width="260"
+                  VerticalAlignment="Top">
+            <arc:Card.Action>
+                <arc:Button Content="Join" Variant="Secondary" Size="Small" />
+            </arc:Card.Action>
+        </arc:Card>
+        <arc:Card Title="Spring palette"
+                  Width="240"
+                  VerticalAlignment="Top">
+            <arc:Card.Media>
+                <Border>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#B07CE8" Offset="0" />
+                            <GradientStop Color="#F3B6D8" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </arc:Card.Media>
+            <TextBlock Text="Twelve swatches tuned for print and screen."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </arc:Card>
+    </WrapPanel>
+</UserControl>

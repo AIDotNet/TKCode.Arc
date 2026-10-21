@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DialogSizesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Button Content="Small" Variant="Secondary" Click="OnSmallClick" />
+        <arc:Button Content="Medium" Variant="Secondary" Click="OnMediumClick" />
+        <arc:Button Content="Large" Variant="Secondary" Click="OnLargeClick" />
+        <arc:Dialog x:Name="LimitsDialog"
+                    Title="Workspace limits"
+                    Description="Panel widths: Small 360, Medium 440 (Arc), Large 560.">
+            <TextBlock Text="Every size stays within the window minus a 16px gutter and scrolls when taller than the window."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+        </arc:Dialog>
+    </WrapPanel>
+</UserControl>

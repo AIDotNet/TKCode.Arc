@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandableCardDefaultDemo">
+    <arc:ExpandableCard Header="Pro plan"
+                        Description="$24 per month · billed yearly"
+                        CollapsedWidth="420">
+        <StackPanel Spacing="8">
+            <TextBlock Text="Unlimited projects and collaborators."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <TextBlock Text="Version history for a full year."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <TextBlock Text="Priority support with a four-hour response time."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </arc:ExpandableCard>
+</UserControl>

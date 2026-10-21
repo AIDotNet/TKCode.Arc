@@ -1,8 +1,10 @@
 ---
 title: 用户菜单
 summary: 头像背后的账户、设置、主题与退出登录。在手机上以底部面板的形式打开。
-source-hash: b50c9a4ea9f3
+source-hash: 7890184bb2a3
 ---
+
+<Demo name="TopBar" />
 
 ## 何时使用
 
@@ -41,6 +43,8 @@ source-hash: b50c9a4ea9f3
 ### 主题与状态
 
 `ThemePreference` 可为 `Light`、`Dark` 或 `System`。菜单会报告所选的值并保持打开。主题由应用自行应用。`IsThemeSwitchVisible="False"` 可隐藏主题切换。
+
+<Demo name="Presence" />
 
 ```xml
 <arc:UserMenu DisplayName="Grace Hopper"

@@ -3,6 +3,8 @@ title: Expandable text
 summary: Long text clamped to a few lines with a soft fade that glides open with Read more and closes with Show less, shown only when the text overflows.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Comments, reviews or profile bios that would make cards in a list uneven in height.
@@ -35,6 +37,8 @@ the text overflows the clamp.
 `Lines` sets how many lines show while the text is collapsed. Use 2 lines for dense lists such as comments, and
 3 or 4 lines for profiles and product descriptions.
 
+<Demo name="TwoLines" />
+
 ```xml
 <arc:ExpandableText Lines="2"
                     Text="{Binding CommentText}"
@@ -57,19 +61,18 @@ the text overflows the clamp.
 `IsExpanded` is two-way. Bind it to a view model property, or set it from code. `ExpandedChanged` is raised when the
 text opens or closes.
 
+<Demo name="Controlled" />
+
 ```xml
 <arc:ExpandableText Text="{Binding Bio}"
                     IsExpanded="{Binding BioExpanded, Mode=TwoWay}" />
 ```
 
-```csharp
-bio.ExpandedChanged += (_, e) =>
-{
-    state.Text = e.IsExpanded ? "Expanded" : "Collapsed";
-};
+### Text that fits
 
-bio.IsExpanded = true;
-```
+The toggle appears only when the text really overflows, and follows width and font changes.
+
+<Demo name="Fits" />
 
 ## API reference
 

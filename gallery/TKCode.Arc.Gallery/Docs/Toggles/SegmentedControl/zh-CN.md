@@ -1,8 +1,10 @@
 ---
 title: 分段控件
 summary: 在一组相关的视图之间切换。
-source-hash: c75d07f09527
+source-hash: 32fa7950664f
 ---
+
+<Demo name="ViewSwitcher" />
 
 ## 何时使用
 
@@ -49,6 +51,8 @@ var sections = new SegmentedControl
 
 `Accessory` 是显示在标签之后的内容，例如数量。
 
+<Demo name="AccessoryAndIntent" />
+
 ```xml
 <arc:SegmentedControl SelectedValue="all">
     <arc:SegmentedOption Value="all" Label="全部" />
@@ -79,6 +83,12 @@ var sections = new SegmentedControl
 segmented.ItemIntent += (_, e) => hint.Text = $"预览：{e.Value}";
 segmented.SelectionChanged += (_, _) => ShowView(segmented.SelectedValue);
 ```
+
+### 溢出
+
+当选项比控件更宽时，选项行会在控件内部滚动，有更多内容的一侧会显示渐隐的边缘。
+
+<Demo name="Overflow" />
 
 ## API 参考
 

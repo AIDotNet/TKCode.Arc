@@ -3,6 +3,8 @@ title: Card
 summary: A contained group of related content and actions.
 ---
 
+<Demo name="QuickLook" />
+
 ## When to use
 
 - Browsable grid items such as projects, listings or posts that carry media, an owner and a status.
@@ -53,6 +55,8 @@ trailing footer control that stays separately clickable.
 
 `Status` is a short line such as "Updated 2 hours ago". When the text changes, the new words rise in one after another.
 
+<Demo name="StatusUpdates" />
+
 ```xml
 <arc:Card Title="Weekly digest"
           Description="Highlights from every team, every Friday."
@@ -60,13 +64,11 @@ trailing footer control that stays separately clickable.
           Width="300" />
 ```
 
-```csharp
-card.Status = "Published to 4 teams";
-```
-
 ### Quick look
 
 Set `Details` and the title becomes a button; the whole card then grows into a larger view on the same page.
+
+<Demo name="Controlled" />
 
 ```xml
 <arc:Card Title="Quarterly plan"
@@ -91,16 +93,7 @@ card.CloseDetails();
 
 Without `Details` the title is a plain heading and the card only lifts on hover.
 
-```xml
-<arc:Card Title="Design review"
-          Description="Thursday, 14:00 · Room 3"
-          Meta="Six people"
-          Width="260">
-    <arc:Card.Action>
-        <arc:Button Content="Join" Variant="Secondary" Size="Small" />
-    </arc:Card.Action>
-</arc:Card>
-```
+<Demo name="WithoutQuickLook" />
 
 ## API reference
 

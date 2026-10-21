@@ -3,6 +3,8 @@ title: Code block
 summary: Present code with legible hierarchy and copy access.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Source snippets and install commands in documentation or a settings page.
@@ -27,13 +29,7 @@ summary: Present code with legible hierarchy and copy access.
 
 `IsCollapsible` adds a toggle. `MaxLines` sets how many lines show while the block is collapsed.
 
-```xml
-<arc:CodeBlock FileName="greeting.tsx"
-               Language="tsx"
-               IsCollapsible="True"
-               MaxLines="6"
-               Code="{Binding Source}" />
-```
+<Demo name="Collapsible" />
 
 `IsExpanded` is two-way and tells you whether the block is open.
 
@@ -48,6 +44,8 @@ block.IsExpanded = false;
 `Language` sets the highlighting and the label in the header. It accepts common names and aliases such as
 `cs`, `ts`, `py`, `sh` and `axaml`. A language without a grammar shows plain text.
 
+<Demo name="Languages" />
+
 ```xml
 <arc:CodeBlock FileName="stats.py" Language="py" Code="{Binding PythonSource}" />
 <arc:CodeBlock FileName="notes.txt" Language="text" Code="Plain text." />
@@ -57,6 +55,8 @@ block.IsExpanded = false;
 
 The copy button is on the header and copies `Code`. `ShowLineNumbers` adds a line number column that stays in
 place when the code scrolls sideways.
+
+<Demo name="LineNumbers" />
 
 ```xml
 <arc:CodeBlock FileName="deploy.sh"
@@ -79,6 +79,19 @@ The copy label and the collapse text are properties, so you can translate them.
                ShowAllLinesFormat="Show all {0} lines"
                ShowFewerLinesLabel="Show fewer lines" />
 ```
+
+### Switching files
+
+Setting a new `FileName`, `Language` and `Code` swaps the file in place. The file name slot follows the new width, the
+new source rises in and the height follows on a spring.
+
+<Demo name="SwitchingFiles" />
+
+### Narrow
+
+Below 420px the padding and text shrink and the copy action keeps only its icon.
+
+<Demo name="Narrow" />
 
 ## API reference
 

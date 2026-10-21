@@ -100,24 +100,30 @@ public class ConfirmMorph : TemplatedControl
     public static readonly StyledProperty<string?> PromptProperty =
         AvaloniaProperty.Register<ConfirmMorph, string?>(nameof(Prompt));
 
+    /// <summary>Label of the confirm button (default "Delete").</summary>
     public static readonly StyledProperty<string> ConfirmLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(ConfirmLabel), "Delete");
 
+    /// <summary>Label of the cancel button (default "Cancel").</summary>
     public static readonly StyledProperty<string> CancelLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(CancelLabel), "Cancel");
 
     public static readonly StyledProperty<string> PendingLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(PendingLabel), "Deleting");
 
+    /// <summary>Label shown after the action succeeds (default "Deleted").</summary>
     public static readonly StyledProperty<string> DoneLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(DoneLabel), "Deleted");
 
+    /// <summary>Label shown when the action fails (default "Couldn’t finish").</summary>
     public static readonly StyledProperty<string> ErrorLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(ErrorLabel), "Couldn’t finish");
 
+    /// <summary>Label of the retry button shown after a failure (default "Retry").</summary>
     public static readonly StyledProperty<string> RetryLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(RetryLabel), "Retry");
 
+    /// <summary>Label of the undo action (default "Undo").</summary>
     public static readonly StyledProperty<string> UndoLabelProperty =
         AvaloniaProperty.Register<ConfirmMorph, string>(nameof(UndoLabel), "Undo");
 
@@ -130,6 +136,7 @@ public class ConfirmMorph : TemplatedControl
     public static readonly StyledProperty<ConfirmMorphTone> ToneProperty =
         AvaloniaProperty.Register<ConfirmMorph, ConfirmMorphTone>(nameof(Tone));
 
+    /// <summary>How the question is answered: Press (default), Hold or Countdown.</summary>
     public static readonly StyledProperty<ConfirmMorphMode> ConfirmModeProperty =
         AvaloniaProperty.Register<ConfirmMorph, ConfirmMorphMode>(nameof(ConfirmMode));
 
@@ -172,6 +179,7 @@ public class ConfirmMorph : TemplatedControl
     internal static readonly DirectProperty<ConfirmMorph, double> CountdownProgressProperty =
         AvaloniaProperty.RegisterDirect<ConfirmMorph, double>(nameof(CountdownProgress), o => o.CountdownProgress);
 
+    /// <summary>Raised when the state changes; the argument carries the old and new state.</summary>
     public static readonly RoutedEvent<ConfirmMorphStateChangedEventArgs> StateChangedEvent =
         RoutedEvent.Register<ConfirmMorph, ConfirmMorphStateChangedEventArgs>(nameof(StateChanged), RoutingStrategies.Bubble);
 
@@ -187,15 +195,21 @@ public class ConfirmMorph : TemplatedControl
     /// <summary>The question, such as "Delete 3 files?"; null uses the label with a question mark.</summary>
     public string? Prompt { get => GetValue(PromptProperty); set => SetValue(PromptProperty, value); }
 
+    /// <inheritdoc cref="ConfirmLabelProperty"/>
     public string ConfirmLabel { get => GetValue(ConfirmLabelProperty); set => SetValue(ConfirmLabelProperty, value); }
+    /// <inheritdoc cref="CancelLabelProperty"/>
     public string CancelLabel { get => GetValue(CancelLabelProperty); set => SetValue(CancelLabelProperty, value); }
 
     /// <summary>Shown beside the spinner while <see cref="ConfirmAction"/> runs.</summary>
     public string PendingLabel { get => GetValue(PendingLabelProperty); set => SetValue(PendingLabelProperty, value); }
 
+    /// <inheritdoc cref="DoneLabelProperty"/>
     public string DoneLabel { get => GetValue(DoneLabelProperty); set => SetValue(DoneLabelProperty, value); }
+    /// <inheritdoc cref="ErrorLabelProperty"/>
     public string ErrorLabel { get => GetValue(ErrorLabelProperty); set => SetValue(ErrorLabelProperty, value); }
+    /// <inheritdoc cref="RetryLabelProperty"/>
     public string RetryLabel { get => GetValue(RetryLabelProperty); set => SetValue(RetryLabelProperty, value); }
+    /// <inheritdoc cref="UndoLabelProperty"/>
     public string UndoLabel { get => GetValue(UndoLabelProperty); set => SetValue(UndoLabelProperty, value); }
 
     /// <summary>Shown beside the spinner while <see cref="UndoAction"/> runs.</summary>
@@ -207,6 +221,7 @@ public class ConfirmMorph : TemplatedControl
     /// <summary>Danger (default) colors the confirm answer for destructive actions; Neutral uses the accent.</summary>
     public ConfirmMorphTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
 
+    /// <inheritdoc cref="ConfirmModeProperty"/>
     public ConfirmMorphMode ConfirmMode { get => GetValue(ConfirmModeProperty); set => SetValue(ConfirmModeProperty, value); }
 
     /// <summary>How long Confirm must be held in <see cref="ConfirmMorphMode.Hold"/> (default 1s).</summary>
@@ -233,6 +248,7 @@ public class ConfirmMorph : TemplatedControl
     /// <summary>A press outside the control cancels an open question (default true).</summary>
     public bool IsOutsidePressCancelEnabled { get => GetValue(IsOutsidePressCancelEnabledProperty); set => SetValue(IsOutsidePressCancelEnabledProperty, value); }
 
+    /// <summary>Occurs when the state changes; see <see cref="StateChangedEvent"/>.</summary>
     public event EventHandler<ConfirmMorphStateChangedEventArgs>? StateChanged
     {
         add => AddHandler(StateChangedEvent, value);

@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SparklineDenseTableDemo">
+    <StackPanel Spacing="8">
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock Text="api-gateway"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <arc:Sparkline x:Name="Gateway"
+                           Grid.Column="1"
+                           Label="api-gateway"
+                           ShowArea="False"
+                           IsInteractive="False"
+                           Width="160"
+                           DrawingHeight="32" />
+        </Grid>
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock Text="billing"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <arc:Sparkline x:Name="Billing"
+                           Grid.Column="1"
+                           Label="billing"
+                           ShowArea="False"
+                           IsInteractive="False"
+                           Width="160"
+                           DrawingHeight="32" />
+        </Grid>
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock Text="search"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <arc:Sparkline x:Name="Search"
+                           Grid.Column="1"
+                           Label="search"
+                           ShowArea="False"
+                           IsInteractive="False"
+                           Width="160"
+                           DrawingHeight="32" />
+        </Grid>
+    </StackPanel>
+</UserControl>

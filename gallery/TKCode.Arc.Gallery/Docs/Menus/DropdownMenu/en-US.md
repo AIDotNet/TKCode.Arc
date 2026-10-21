@@ -3,6 +3,8 @@ title: Dropdown menu
 summary: A focused list of actions anchored to a trigger.
 ---
 
+<Demo name="Actions" />
+
 ## When to use
 
 - A short group of commands behind a labelled trigger, such as Rename, Duplicate and Delete.
@@ -55,30 +57,14 @@ Set `Label` from code to change the trigger text. Radio rows with the same `Grou
 keep the menu closed when chosen. Check rows (`ToggleType="CheckBox"`) with `StaysOpenOnClick="True"` stay open so
 several options can be flipped in one visit.
 
-```xml
-<arc:DropdownMenu Label="Sort: Newest" Alignment="Start">
-    <arc:MenuEntryLabel Text="Sort by" />
-    <arc:MenuEntry Header="Newest" ToggleType="Radio" GroupName="sort" IsChecked="True" />
-    <arc:MenuEntry Header="Oldest" ToggleType="Radio" GroupName="sort" />
-    <arc:MenuEntry Header="Name" ToggleType="Radio" GroupName="sort" />
-</arc:DropdownMenu>
-
-<arc:DropdownMenu Label="View">
-    <arc:MenuEntry Header="Show sidebar"
-                   ToggleType="CheckBox"
-                   IsChecked="True"
-                   StaysOpenOnClick="True"
-                   InputGestureText="Ctrl+B" />
-    <arc:MenuEntry Header="Wrap lines"
-                   ToggleType="CheckBox"
-                   StaysOpenOnClick="True" />
-</arc:DropdownMenu>
-```
+<Demo name="LabelAndToggles" />
 
 ### Data-driven rows and a custom trigger
 
 `ItemsSource` creates one row per item. `Trigger` replaces the built-in button with any control. The menu anchors to
 that control, and a `Button` opens it on click.
+
+<Demo name="CustomTrigger" />
 
 ```xml
 <arc:DropdownMenu ItemsSource="{Binding FileActions}" Side="Bottom">
@@ -94,6 +80,12 @@ that control, and a `Button` opens it on click.
 menu.Open(focusFirst: true);
 menu.Close();
 ```
+
+### MenuSurface
+
+`MenuSurface` is the reusable surface behind every Arc menu. Open it from code against any anchor.
+
+<Demo name="MenuSurface" />
 
 ## API reference
 

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ComboboxInlineOptionsDemo">
+    <arc:Combobox Label="Framework"
+                  HorizontalAlignment="Center"
+                  Width="280"
+                  SelectedIndex="0">
+        <arc:SelectItem Content="Avalonia" Keywords="xaml dotnet" />
+        <arc:SelectItem Content="AtomUI" Keywords="ant design" />
+        <arc:SelectItem Content="MAUI" Keywords="xamarin" IsEnabled="False" />
+        <arc:SelectItem Content="WinUI" />
+        <arc:SelectItem Content="Uno Platform" />
+    </arc:Combobox>
+</UserControl>

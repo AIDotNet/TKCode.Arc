@@ -1,8 +1,10 @@
 ---
 title: 輕提示堆疊
 summary: 將簡短結果堆疊在邊緣，直到你需要查看時再展開。
-source-hash: 60b234c3a4b4
+source-hash: 5220d94576ed
 ---
+
+<Demo name="Stack" />
 
 ## 何時使用
 
@@ -88,6 +90,8 @@ stack.Show(new ToastOptions
 ### 位置與數量限制
 
 `Position` 將堆疊移到左下、置中或右側邊緣。`VisibleToasts` 設定同時顯示的輕提示數量，`Limit` 則在超過數量時捨棄最舊的輕提示。
+
+<Demo name="Position" />
 
 ```xml
 <arc:ToastStack Position="BottomCenter" VisibleToasts="3" Limit="12" />

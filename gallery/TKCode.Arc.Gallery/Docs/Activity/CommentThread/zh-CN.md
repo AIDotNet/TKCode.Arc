@@ -1,8 +1,10 @@
 ---
 title: 评论线程
 summary: 支持回复、表情反应、提及、原位编辑与解决的嵌套评论。
-source-hash: 273ad1a6facf
+source-hash: 775965f7a0c4
 ---
+
+<Demo name="DesignReview" />
 
 ## 何时使用
 
@@ -53,20 +55,15 @@ var thread = new CommentThread
 
 在编辑框中输入 `@` 即可提示人员。`People` 列出可被提及的人。未设置时，将提供线程中的参与者。
 
-```csharp
-var thread = new CommentThread
-{
-    Title = "页脚链接",
-    CurrentUser = ana,
-    People = [ana, mina, new CommentAuthor("kai", "Kai Moreno")]
-};
-```
+<Demo name="EmptyThread" />
 
 `Reactions` 设置每条评论可用的表情。`MaxDepth` 限制嵌套层级：超出的回复会挂到允许的最深父级之下。
 
 ### 解决与重新打开
 
 解决线程后，它会折叠为一个标签，并保留参与者的信息。`IsResolved` 为双向绑定。
+
+<Demo name="Resolved" />
 
 ```csharp
 thread.ResolvedChanged += (_, e) => Status.Text = e.IsResolved ? "已解决" : "已重新打开";
@@ -88,6 +85,12 @@ thread.CommentsChanged += (_, e) =>
     }
 };
 ```
+
+### 窄宽度
+
+宽度小于 420px 时，输入框不再显示头像，回复缩进 12px。
+
+<Demo name="Narrow" />
 
 ## API 参考
 

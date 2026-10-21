@@ -1,8 +1,10 @@
 ---
 title: 山脊图
 summary: 重叠的分布，每组一条山脊：悬停可抬起山脊并读取其四分位数，切换数据集时每条曲线都会变形。
-source-hash: 99493fcb54f7
+source-hash: bc4375bf40fa
 ---
+
+<Demo name="DistributionsByMonth" />
 
 ## 何时使用
 
@@ -44,18 +46,7 @@ lisbon.Click += (_, _) => chart.ItemsSource = Lisbon;
 
 在代码中创建的分组可通过 `Items` 添加。`ValueFormatter` 用于格式化坐标轴与读数上的数值。
 
-```csharp
-var latency = new Ridgeline
-{
-    Label = "各地区响应时间",
-    ValueFormatter = v => $"{v:0} ms",
-    IsTinted = false,
-    RowHeight = 36,
-    Overlap = 1.8
-};
-latency.Items.Add(new RidgelineSeries("eu", "欧洲", europeValues));
-latency.Items.Add(new RidgelineSeries("us", "美洲", americasValues));
-```
+<Demo name="Untinted" />
 
 ### 重叠与平滑度
 

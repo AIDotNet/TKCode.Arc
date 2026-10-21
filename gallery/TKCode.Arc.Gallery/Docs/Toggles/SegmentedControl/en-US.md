@@ -3,6 +3,8 @@ title: Segmented control
 summary: Switch between a small set of related views.
 ---
 
+<Demo name="ViewSwitcher" />
+
 ## When to use
 
 - Two to five short views of the same content, such as day, week and month.
@@ -49,6 +51,8 @@ var sections = new SegmentedControl
 
 `Accessory` is content shown after the label, such as a count.
 
+<Demo name="AccessoryAndIntent" />
+
 ```xml
 <arc:SegmentedControl SelectedValue="all">
     <arc:SegmentedOption Value="all" Label="All" />
@@ -80,6 +84,12 @@ preview, such as a hint. Do not use it to change the view.
 segmented.ItemIntent += (_, e) => hint.Text = $"Intent: {e.Value}";
 segmented.SelectionChanged += (_, _) => ShowView(segmented.SelectedValue);
 ```
+
+### Overflow
+
+When the options are wider than the control the row scrolls inside itself, with faded edges on the side that has more.
+
+<Demo name="Overflow" />
 
 ## API reference
 

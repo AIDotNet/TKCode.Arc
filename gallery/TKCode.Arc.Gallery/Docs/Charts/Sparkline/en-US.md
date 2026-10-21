@@ -3,6 +3,8 @@ title: Sparkline
 summary: Show a compact trend beside a value.
 ---
 
+<Demo name="KpiCards" />
+
 ## When to use
 
 - A small trend inside a card, a table row or a KPI block, next to its headline value.
@@ -55,6 +57,8 @@ revenue.PointLabels = labels;
 
 When `Value` is not set, the scrubbed value and its point are shown beside the label. New data morphs the line.
 
+<Demo name="WithoutHeadline" />
+
 ```xml
 <arc:Sparkline Label="Visits" Width="300" ItemsSource="{Binding Visits}" />
 ```
@@ -63,6 +67,8 @@ When `Value` is not set, the scrubbed value and its point are shown beside the l
 
 Set `IsInteractive="False"` in a table with many rows. The sparkline then has no tab stop and no pointer handling. Set
 `ShowArea="False"` to keep the line quiet.
+
+<Demo name="DenseTable" />
 
 ```xml
 <arc:Sparkline Label="api-gateway"

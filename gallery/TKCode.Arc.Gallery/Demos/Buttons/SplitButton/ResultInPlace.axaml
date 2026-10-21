@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SplitButtonResultInPlaceDemo">
+    <arc:SplitButton x:Name="Copy"
+                     Label="Copy page"
+                     Icon="{x:Static arc:ArcIcons.Copy}"
+                     HorizontalAlignment="Center"
+                     Click="OnCopyClick">
+        <arc:MenuEntry Header="Copy as Markdown" Icon="{x:Static arc:ArcIcons.FileText}" />
+        <arc:MenuEntry Header="Copy link" Icon="{x:Static arc:ArcIcons.Link}" />
+        <arc:MenuEntry Header="View as plain text" Icon="{x:Static arc:ArcIcons.Eye}" />
+    </arc:SplitButton>
+</UserControl>

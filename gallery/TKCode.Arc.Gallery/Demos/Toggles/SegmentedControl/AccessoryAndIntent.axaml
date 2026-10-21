@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SegmentedControlAccessoryAndIntentDemo">
+    <StackPanel Spacing="10">
+        <arc:SegmentedControl HorizontalAlignment="Center"
+                              SelectedValue="all"
+                              ItemIntent="OnItemIntent">
+            <arc:SegmentedOption Value="all" Label="All" />
+            <arc:SegmentedOption Value="unread" Label="Unread">
+                <arc:SegmentedOption.Accessory>
+                    <Border Padding="6,0"
+                            CornerRadius="999"
+                            VerticalAlignment="Center"
+                            Background="{arc:ArcDesignTokenResource Surface}">
+                        <TextBlock Text="3"
+                                   FontSize="11"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </Border>
+                </arc:SegmentedOption.Accessory>
+            </arc:SegmentedOption>
+            <arc:SegmentedOption Value="archived" Label="Archived" />
+        </arc:SegmentedControl>
+        <TextBlock x:Name="Intent"
+                   Text="Intent: none"
+                   HorizontalAlignment="Center"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

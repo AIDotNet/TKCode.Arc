@@ -32,6 +32,7 @@ public abstract class ModalOverlay : ContentControl, IOverlayResultTarget
     public static readonly StyledProperty<object?> ActionsProperty =
         ModalSurface.ActionsProperty.AddOwner<ModalOverlay>();
 
+    /// <summary>Shows the close button on the dialog (default true).</summary>
     public static readonly StyledProperty<bool> ShowCloseButtonProperty =
         ModalSurface.ShowCloseButtonProperty.AddOwner<ModalOverlay>();
 
@@ -68,6 +69,7 @@ public abstract class ModalOverlay : ContentControl, IOverlayResultTarget
     /// <summary>Footer content, usually buttons; give them <c>arc:Dialog.Result</c> to close with a result.</summary>
     public object? Actions { get => GetValue(ActionsProperty); set => SetValue(ActionsProperty, value); }
 
+    /// <inheritdoc cref="ShowCloseButtonProperty"/>
     public bool ShowCloseButton { get => GetValue(ShowCloseButtonProperty); set => SetValue(ShowCloseButtonProperty, value); }
 
     /// <summary>Accessible name of the close button.</summary>

@@ -3,6 +3,8 @@ title: Chip group
 summary: Filter by a few facets with chips that morph as you pick them.
 ---
 
+<Demo name="FilterChips" />
+
 ## When to use
 
 - Filters with a few facets that people switch often, such as topics or categories.
@@ -57,18 +59,14 @@ topics.SelectionChanged += (_, _) => Console.WriteLine(string.Join(", ", topics.
 
 `IsMultiple="False"` allows one chip at a time. The selected chip can still be clicked again to clear the choice.
 
-```xml
-<arc:ChipGroup Label="Status" IsMultiple="False">
-    <arc:SelectItem Content="Open" Value="open" />
-    <arc:SelectItem Content="In progress" Value="progress" />
-    <arc:SelectItem Content="Closed" Value="closed" />
-</arc:ChipGroup>
-```
+<Demo name="SingleChoice" />
 
 ### Folding long lists
 
 `MaxVisibleItems` shows that many chips, and the rest fold behind a "+N more" chip. A selected chip stays in view
 even when it is past the limit. `IsExpanded` is two-way and shows or hides the folded chips.
+
+<Demo name="Folded" />
 
 ```xml
 <arc:ChipGroup Label="Topics"

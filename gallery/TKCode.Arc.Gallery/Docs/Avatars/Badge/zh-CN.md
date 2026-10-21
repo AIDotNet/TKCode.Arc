@@ -1,8 +1,10 @@
 ---
 title: 徽标
 summary: 用于状态、类别或元数据的小型标签。
-source-hash: 61b7c843d307
+source-hash: c21246ac5464
 ---
+
+<Demo name="Tones" />
 
 ## 何时使用
 
@@ -43,13 +45,13 @@ source-hash: 61b7c843d307
 
 `Size` 设置高度：`Medium`（默认）为 26，`Small` 为 22。在紧凑的表格中使用 `Small`。
 
-```xml
-<arc:Badge Size="Small" Tone="Success" Content="上线" />
-```
+<Demo name="Small" />
 
 ### 图标
 
 `Icon` 接收一个前导图标。它会采用色调颜色，并对辅助技术隐藏。示例使用来自 `ArcIcons` 的 `ArcGlyph`。
+
+<Demo name="Icons" />
 
 ```csharp
 badge.Tone = BadgeTone.Success;
@@ -61,11 +63,7 @@ badge.Icon = new ArcGlyph { Data = ArcIcons.Check, Size = 12 };
 
 保持徽标挂载并修改 `Content`。新的字符串或数字会从柔和的模糊中升起，胶囊宽度会以弹簧方式调整以适应内容。重新创建徽标会失去这一动效。
 
-```csharp
-deploy.Content = "部署中";
-deploy.Tone = BadgeTone.Warning;
-deploy.Icon = new ArcGlyph { Data = ArcIcons.LoaderCircle, Size = 12 };
-```
+<Demo name="ChangingInPlace" />
 
 ## API 参考
 

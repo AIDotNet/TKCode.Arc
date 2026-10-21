@@ -3,6 +3,8 @@ title: Empty state
 summary: A useful next step when there is nothing to show yet.
 ---
 
+<Demo name="FirstUse" />
+
 ## When to use
 
 - An empty list, a folder or a first-use screen where the next step is clear.
@@ -51,18 +53,7 @@ empty.Icon = ArcIcons.Search;
 
 `Action` takes one button, or a panel with several buttons. The row is centered below the description.
 
-```xml
-<arc:EmptyState Title="No results for “quarterly plan”"
-                Description="Check the spelling or try a broader term."
-                Icon="{Binding SearchIcon}">
-    <arc:EmptyState.Action>
-        <StackPanel Orientation="Horizontal" Spacing="12">
-            <arc:Button Content="Clear search" Variant="Secondary" />
-            <arc:Button Content="Browse all" Variant="Ghost" />
-        </StackPanel>
-    </arc:EmptyState.Action>
-</arc:EmptyState>
-```
+<Demo name="ZeroResults" />
 
 ### Changing state
 

@@ -25,22 +25,34 @@ public enum TextMorphMatching
 /// </summary>
 public class TextMorph : Control
 {
+    /// <summary>The label to show; a change morphs the letters from the old text to the new one.</summary>
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<TextMorph, string?>(nameof(Text));
 
+    /// <summary>How letters pair between the old and the new text: Occurrence (default) or PrefixSuffix.</summary>
     public static readonly StyledProperty<TextMorphMatching> MatchingProperty =
         AvaloniaProperty.Register<TextMorph, TextMorphMatching>(nameof(Matching));
 
+    /// <summary>Font family of the text (from TextElement).</summary>
     public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<TextMorph>();
+    /// <summary>Font size of the text in device-independent pixels (from TextElement).</summary>
     public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<TextMorph>();
+    /// <summary>Font weight of the text (from TextElement).</summary>
     public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<TextMorph>();
+    /// <summary>Brush that paints the text (from TextElement).</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<TextMorph>();
 
+    /// <inheritdoc cref="TextProperty"/>
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
+    /// <inheritdoc cref="MatchingProperty"/>
     public TextMorphMatching Matching { get => GetValue(MatchingProperty); set => SetValue(MatchingProperty, value); }
+    /// <inheritdoc cref="FontFamilyProperty"/>
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
+    /// <inheritdoc cref="FontSizeProperty"/>
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
+    /// <inheritdoc cref="FontWeightProperty"/>
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
+    /// <inheritdoc cref="ForegroundProperty"/>
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     private sealed class Glyph

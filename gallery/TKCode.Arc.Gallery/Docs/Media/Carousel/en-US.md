@@ -3,6 +3,8 @@ title: Carousel
 summary: Browse a row of slides by dragging, flicking, or arrowing through them.
 ---
 
+<Demo name="Slides" />
+
 ## When to use
 
 - Browsing a small set of similar items, such as suites, offers or photos.
@@ -57,6 +59,8 @@ carousel.SlideLabelFormatter = (index, count) => $"Archive photo {index + 1} of 
 Set `Interval` to add a play control. `IsAutoPlay` starts rotation, and the control toggles it. Rotation moves
 forward and returns to the first slide after the last one. The indicator drains while a slide is on show.
 
+<Demo name="Rotation" />
+
 ```xml
 <arc:Carousel Label="Seasonal offers" Interval="0:0:4" IsAutoPlay="True">
     <Border Height="200" Background="#2F4858" CornerRadius="12" />
@@ -73,6 +77,18 @@ carousel.Next();
 carousel.Previous();
 carousel.GoTo(3);
 ```
+
+### Long carousels
+
+With 120 slides, only the slides around the current position are realized.
+
+<Demo name="LongCarousels" />
+
+### Photos
+
+Slides can show `AsyncImage` photos over a drawn scene, so they still look complete offline.
+
+<Demo name="Photos" />
 
 ## API reference
 

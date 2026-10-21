@@ -3,6 +3,8 @@ title: Toast
 summary: Brief confirmation for a completed background action.
 ---
 
+<Demo name="LocalToast" />
+
 ## When to use
 
 - Confirming a background action that finished, such as "Changes saved", while the user stays on the page.
@@ -72,9 +74,7 @@ toast.Closed += (_, e) =>
 comes from code that does not own a `Toast` control. `ToastKind` selects the icon and color. `Toast.Show` returns
 an id that `Toast.Update` and `Toast.Dismiss` accept.
 
-```csharp
-Toast.Show(button, "Invite sent", ToastKind.Success, "Maya will get an email shortly.");
-```
+<Demo name="FromAnywhere" />
 
 ## API reference
 

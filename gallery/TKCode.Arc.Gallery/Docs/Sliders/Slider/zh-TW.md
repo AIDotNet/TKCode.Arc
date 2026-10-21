@@ -1,8 +1,10 @@
 ---
 title: 滑桿
 summary: 在軌道上選取一個值或一個範圍，跟隨指標移動。
-source-hash: edb1397c9a48
+source-hash: ff8a369cbea5
 ---
+
+<Demo name="SingleValue" />
 
 ## 何時使用
 
@@ -50,6 +52,8 @@ source-hash: edb1397c9a48
 
 將 `IsRange` 設為 `True` 即可顯示兩個滑桿。透過 `LowerValue` 與 `UpperValue` 讀寫兩端的值，並用 `MinStepsBetweenThumbs` 保持兩個滑桿之間的間距。`ValueFormatter` 用於格式化讀數、氣泡與朗讀的數值。
 
+<Demo name="Range" />
+
 ```xml
 <arc:Slider Label="價格"
             IsRange="True"
@@ -68,21 +72,7 @@ source-hash: edb1397c9a48
 
 `SmallChange` 是數值貼齊的步長。`Marks` 會在軌道上加入刻度。帶標籤的刻度會在軌道下方顯示標籤，點按標籤會將最近的滑桿移到該位置。
 
-```csharp
-var speed = new Slider
-{
-    Label = "播放速度",
-    Minimum = 0.5,
-    Maximum = 2,
-    SmallChange = 0.25,
-    Value = 1,
-    ValueFormatter = v => $"{v:0.##}×"
-};
-speed.Marks.Add(new SliderMark(0.5, "0.5×"));
-speed.Marks.Add(new SliderMark(1, "1×"));
-speed.Marks.Add(new SliderMark(2, "2×"));
-speed.Marks.Add(1.5);
-```
+<Demo name="StepsAndMarks" />
 
 ### 事件
 
@@ -92,6 +82,12 @@ speed.Marks.Add(1.5);
 price.ValueCommitted += (_, e) => SavePriceFilter(e.LowerValue, e.UpperValue);
 price.RangeChanged += (_, e) => committed.Text = $"${e.LowerValue:N0} – ${e.UpperValue:N0}";
 ```
+
+### 停用狀態
+
+停用的滑桿會移出 Tab 順序。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

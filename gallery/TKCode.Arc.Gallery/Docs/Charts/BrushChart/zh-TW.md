@@ -1,8 +1,10 @@
 ---
 title: 刷選圖表
 summary: 帶概覽條的密集時間序列：拖曳視窗即可縮放，透過控點調整大小，並在原處查看事件。
-source-hash: 369c2da5d313
+source-hash: a7849aba3612
 ---
+
+<Demo name="OverviewAndDetail" />
 
 ## 何時使用
 

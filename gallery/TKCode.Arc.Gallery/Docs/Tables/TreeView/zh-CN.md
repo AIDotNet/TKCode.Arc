@@ -1,8 +1,10 @@
 ---
 title: 树视图
 summary: 浏览嵌套的文件夹与结构化内容。
-source-hash: ad5c8d703a6b
+source-hash: e2907dd4fd1e
 ---
+
+<Demo name="FileTree" />
 
 ## 何时使用
 
@@ -43,6 +45,8 @@ source-hash: ad5c8d703a6b
 ### 使用子项选择器绑定数据
 
 绑定 `ItemsSource`，并在代码中设置选择器。`ChildrenSelector` 返回节点的子项，带有子项的节点即为文件夹。
+
+<Demo name="DataWithChildrenSelector" />
 
 ```csharp
 var tree = new TreeView
@@ -90,6 +94,12 @@ tree.FocusItem(fileNode);
 tree.ItemInvoked += (_, e) => OpenFile(e.Item);
 tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 ```
+
+### 数千个节点
+
+这棵树有 40 个文件夹，每个文件夹含 250 个文件。行会被虚拟化并池化，只有视口附近的行会播放动画。
+
+<Demo name="ThousandsOfNodes" />
 
 ## API 参考
 

@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardControlledDemo">
+    <StackPanel Spacing="12">
+        <arc:Card x:Name="Plan"
+                  Title="Quarterly plan"
+                  Description="Goals, owners and dates for the next three months."
+                  Width="280"
+                  HorizontalAlignment="Center"
+                  DetailsOpenChanged="OnDetailsOpenChanged">
+            <arc:Card.Media>
+                <Border>
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#4A5568" Offset="0" />
+                            <GradientStop Color="#A0AEC0" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+            </arc:Card.Media>
+            <arc:Card.Details>
+                <TextBlock Text="Opened from code: IsDetailsOpen is two-way, so a binding or a button can open and close the quick look."
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </arc:Card.Details>
+        </arc:Card>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Open quick look" Variant="Secondary" Size="Small" Click="OnOpenClick" />
+            <TextBlock x:Name="Log"
+                       Text="Closed"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

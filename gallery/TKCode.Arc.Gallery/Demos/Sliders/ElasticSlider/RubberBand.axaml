@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ElasticSliderRubberBandDemo">
+    <arc:ElasticSlider x:Name="Volume"
+                       Label="Volume"
+                       Value="40"
+                       Width="360"
+                       HorizontalAlignment="Center">
+        <arc:ElasticSlider.StartIcon>
+            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}"
+                          Size="16"
+                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                          VerticalAlignment="Center" />
+        </arc:ElasticSlider.StartIcon>
+        <arc:ElasticSlider.EndIcon>
+            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Volume2}"
+                          Size="16"
+                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                          VerticalAlignment="Center" />
+        </arc:ElasticSlider.EndIcon>
+    </arc:ElasticSlider>
+</UserControl>

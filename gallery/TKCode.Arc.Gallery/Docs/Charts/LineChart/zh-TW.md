@@ -1,8 +1,10 @@
 ---
 title: 折線圖
 summary: 多系列折線圖，帶有平滑滑動的十字準線、圖例開關，以及在不同範圍之間變形的路徑。
-source-hash: 38391cf58aac
+source-hash: f501b3e6753f
 ---
+
+<Demo name="Ranges" />
 
 ## 何時使用
 
@@ -49,6 +51,8 @@ void Range(int days)
 
 `ChartPoint` 項目的清單不需要額外的系列。`Unit` 會顯示在提示中，`Curve` 可將預設的平滑曲線切換為直線段。
 
+<Demo name="SingleSeries" />
+
 ```xml
 <arc:LineChart Label="p95 延遲" Unit="ms" Curve="Linear" PlotHeight="180" ItemsSource="{Binding Latency}" />
 ```
@@ -67,6 +71,8 @@ void Range(int days)
 ### 載入與空白狀態
 
 `IsLoading` 會讓線條變暗，並在沒有資料點時顯示骨架畫面。`EmptyLabel` 用於說明空白的範圍。
+
+<Demo name="Empty" />
 
 ```xml
 <arc:LineChart Label="退款" EmptyLabel="此範圍內沒有退款" IsLoading="{Binding IsBusy}" />

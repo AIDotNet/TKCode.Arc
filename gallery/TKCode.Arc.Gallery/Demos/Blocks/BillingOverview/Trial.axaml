@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BillingOverviewTrialDemo">
+    <arc:BillingOverview x:Name="Billing" BillingEmail="noor@larkspur.co" MaxWidth="720">
+        <arc:BillingOverview.Plan>
+            <arc:BillingPlan Name="Studio" Price="90" Seats="6" Interval="Month" Status="Trialing" />
+        </arc:BillingOverview.Plan>
+        <arc:BillingOverview.PaymentMethod>
+            <arc:BillingPaymentMethod Brand="Visa" Last4="0417" />
+        </arc:BillingOverview.PaymentMethod>
+    </arc:BillingOverview>
+</UserControl>

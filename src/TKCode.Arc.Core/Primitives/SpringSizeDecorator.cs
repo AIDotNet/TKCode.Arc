@@ -98,6 +98,7 @@ public class SpringSizeDecorator : Decorator
     private Size? _lastAvailable;
     private Size _lastTarget;
     private readonly RectangleGeometry _clip = new();
+    private double _measuredHeight;
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -143,7 +144,13 @@ public class SpringSizeDecorator : Decorator
             SpringSizeAxis.Height => new Size(target.Width, current.Height),
             _ => current
         };
-        UpdateClip(result);
+        _measuredHeight = result.Height;
+        // A height spring clips to the arranged width (a stretched child is wider than it asked for), so it updates in
+        // ArrangeOverride; the other axes clip to what the child asked for.
+        if (axis != SpringSizeAxis.Height)
+        {
+            UpdateClip(result);
+        }
         return new Size(Math.Min(result.Width, availableSize.Width), Math.Min(result.Height, availableSize.Height));
     }
 
@@ -168,6 +175,10 @@ public class SpringSizeDecorator : Decorator
             _ => new Rect(0, 0, desired.Width, desired.Height)
         };
         child.Arrange(rect);
+        if (Axis == SpringSizeAxis.Height)
+        {
+            UpdateClip(new Size(finalSize.Width, _measuredHeight));
+        }
         return finalSize;
     }
 

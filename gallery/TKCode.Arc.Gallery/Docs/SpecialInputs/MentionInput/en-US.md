@@ -3,6 +3,8 @@ title: Mention input
 summary: A textarea with @people and #channel mentions that act as single tokens, with suggestions at the caret.
 ---
 
+<Demo name="CommentBox" />
+
 ## When to use
 
 - Comment and reply boxes where a mention must notify a person by id.
@@ -61,6 +63,8 @@ var comment = new MentionInput
 `Value` is a `MentionValue`: plain text plus the mentions with their offsets. Editing around a mention moves it, and
 editing inside it removes it.
 
+<Demo name="Prefilled" />
+
 ```csharp
 var text = "Thanks @Maya Chen. Can @Jordan Lee review it in #design?";
 comment.Value = new MentionValue(text,
@@ -76,6 +80,8 @@ comment.Value = new MentionValue(text,
 With `IsSubmitOnEnter`, Enter submits and Shift+Enter adds a line. Enter never submits while an input method is
 composing text.
 
+<Demo name="SubmitOnEnter" />
+
 ```csharp
 message.IsSubmitOnEnter = true;
 message.Submitted += (_, e) =>
@@ -90,9 +96,9 @@ message.Submitted += (_, e) =>
 `MinLines` and `MaxLines` set the height range. `SuggestionPlacement` sets where the list opens: `Auto` picks the side
 with more room, `Top` and `Bottom` force a side.
 
-```xml
-<arc:MentionInput Label="Reply" MinLines="2" MaxLines="4" SuggestionPlacement="Top" />
-```
+<Demo name="Growth" />
+
+<Demo name="Placement" />
 
 ### Commands and events
 
@@ -103,6 +109,18 @@ button.Click += (_, _) => comment.OpenSuggestions(MentionKind.Person);
 
 comment.MentionAdded += (_, e) => Console.WriteLine($"Added {e.Mention.Text}");
 ```
+
+### Disabled
+
+The whole field fades to 55% and takes no input.
+
+<Demo name="Disabled" />
+
+### Serialized output
+
+`MentionSerializer.Serialize` turns the value into storage text: `<@id>` for people and `<#id>` for channels.
+
+<Demo name="Serialized" />
 
 ## API reference
 

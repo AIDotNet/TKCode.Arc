@@ -1,8 +1,10 @@
 ---
 title: 多行文本框
 summary: 用于备注、描述和较长文本的多行输入字段。
-source-hash: 095ae5695edb
+source-hash: dde42eb11370
 ---
+
+<Demo name="LiveCount" />
 
 ## 何时使用
 
@@ -36,6 +38,8 @@ source-hash: 095ae5695edb
 ### 实时计数与校验
 
 文本变化时更新描述。只有变化的数字会滚动。设置 `ErrorMessage` 可将字段标记为无效；值为空时清除错误。
+
+<Demo name="Validation" />
 
 ```csharp
 const int limit = 160;
@@ -77,11 +81,7 @@ notes.FrameHeight = 200;
 
 禁用的字段透明度降至 0.6，且没有手柄。
 
-```xml
-<arc:Textarea Label="备注"
-              Text="暂时只读。"
-              IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API 参考
 

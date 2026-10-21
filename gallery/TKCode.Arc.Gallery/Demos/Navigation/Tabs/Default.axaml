@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TabsDefaultDemo">
+    <arc:Tabs>
+        <arc:TabItem Header="Overview">
+            <TextBlock Text="Revenue is up 12% this quarter. Three new regions went live and churn held steady."
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </arc:TabItem>
+        <arc:TabItem Header="Activity">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Maya merged “Billing v2” · 2h ago"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Leo opened 3 issues · 5h ago"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Ana deployed to production · yesterday"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Kai rotated the API keys · 2 days ago"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </arc:TabItem>
+        <arc:TabItem Header="Settings">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Workspace name, members and billing live here."
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <arc:Switch Content="Email digests" IsChecked="True" />
+            </StackPanel>
+        </arc:TabItem>
+        <arc:TabItem Header="Archived" IsEnabled="False">
+            <TextBlock Text="Nothing archived." FontSize="14" TextWrapping="Wrap" />
+        </arc:TabItem>
+    </arc:Tabs>
+</UserControl>

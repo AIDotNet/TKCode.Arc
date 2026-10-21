@@ -1,8 +1,10 @@
 ---
 title: 文字闪光
 summary: 用平缓的光带扫过文字，表示正在进行的工作。
-source-hash: eb40bb2519c4
+source-hash: 4fc30a945d04
 ---
+
+<Demo name="StatusLine" />
 
 ## 何时使用
 
@@ -32,10 +34,7 @@ source-hash: eb40bb2519c4
 
 新的 `Text` 值会在原位升起，同时该行以弹簧方式调整到新宽度。步骤变化期间请保持 `IsActive` 为开启状态。
 
-```csharp
-summary.IsActive = true;
-summary.Text = "正在起草计划";
-```
+<Demo name="ChangingAndFinishing" />
 
 ### 完成
 
@@ -50,10 +49,7 @@ summary.IsActive = false;
 
 `SweepDuration` 设置光带扫过文字一次所需的时间。默认值为 1.8 秒。
 
-```xml
-<arc:TextShimmer Text="正在为工作区建立索引"
-                 SweepDuration="0:0:3" />
-```
+<Demo name="SlowerSweep" />
 
 ### 尺寸
 

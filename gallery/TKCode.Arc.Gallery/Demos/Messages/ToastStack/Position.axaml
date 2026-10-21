@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToastStackPositionDemo">
+    <StackPanel Spacing="12">
+        <Border Height="200"
+                CornerRadius="26"
+                BorderThickness="1"
+                ClipToBounds="True"
+                Background="{arc:ArcDesignTokenResource Background}"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <arc:ToastStack x:Name="Stack" IsContained="True" />
+        </Border>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Bottom left" Size="Small" Variant="Secondary" Click="OnBottomLeftClick" />
+            <arc:Button Content="Bottom center" Size="Small" Variant="Secondary" Click="OnBottomCenterClick" />
+            <arc:Button Content="Bottom right" Size="Small" Variant="Secondary" Click="OnBottomRightClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

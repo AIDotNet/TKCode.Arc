@@ -3,6 +3,8 @@ title: Action button
 summary: A compact button for frequent toolbar actions.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - A single asynchronous submit, such as Save, Publish or Send invite, where the result belongs on the button.
@@ -43,6 +45,10 @@ var save = new ActionButton
 shows after it completes. `ResetAfter` sets how long the success state stays; the default is 2.4 seconds.
 A zero value keeps the success state until `Reset()` is called.
 
+<Demo name="Labels" />
+
+<Demo name="KeepResult" />
+
 ```xml
 <arc:ActionButton Label="Publish post"
                   PendingLabel="Publishing"
@@ -50,25 +56,12 @@ A zero value keeps the success state until `Reset()` is called.
                   ResetAfter="00:00:03" />
 ```
 
-```csharp
-var settings = new ActionButton
-{
-    Label = "Save settings",
-    SuccessLabel = "Settings saved",
-    ResetAfter = TimeSpan.Zero
-};
-
-reset.Click += (_, _) => settings.Reset();
-```
-
 ### Failure
 
 When `AsyncAction` throws, the button returns to idle and raises `ActionFailed`. The event argument carries the
 `Exception`.
 
-```csharp
-sync.ActionFailed += (_, e) => message.Text = $"Back to idle: {e.Exception.Message}";
-```
+<Demo name="Failure" />
 
 ### Commands and clicks
 
@@ -79,9 +72,7 @@ sync.ActionFailed += (_, e) => message.Text = $"Back to idle: {e.Exception.Messa
 Set `IsEnabled` to `False` to dim the button. While `AsyncAction` is pending, the button keeps keyboard focus and
 ignores repeated activation.
 
-```xml
-<arc:ActionButton Label="Save" IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API reference
 

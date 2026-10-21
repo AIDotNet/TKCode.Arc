@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MorphSelectCompactToolbarDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:MorphSelect Label="Status" IsLabelVisible="False" SelectedIndex="1">
+            <arc:SelectItem Content="Backlog" Icon="{x:Static arc:ArcIcons.Clock}" />
+            <arc:SelectItem Content="In progress" Icon="{x:Static arc:ArcIcons.Activity}" />
+            <arc:SelectItem Content="In review" Icon="{x:Static arc:ArcIcons.Eye}" />
+            <arc:SelectItem Content="Done" Icon="{x:Static arc:ArcIcons.CircleCheck}" />
+            <arc:SelectItem Content="Canceled" Icon="{x:Static arc:ArcIcons.CircleX}" IsEnabled="False" />
+        </arc:MorphSelect>
+        <arc:MorphSelect Label="Priority" PanelAlignment="End" PanelWidth="220">
+            <arc:SelectItem Content="Urgent" />
+            <arc:SelectItem Content="High" />
+            <arc:SelectItem Content="Medium" />
+            <arc:SelectItem Content="Low" />
+            <arc:SelectItem Content="No priority" />
+        </arc:MorphSelect>
+    </WrapPanel>
+</UserControl>

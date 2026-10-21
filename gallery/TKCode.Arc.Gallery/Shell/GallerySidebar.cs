@@ -123,6 +123,8 @@ public sealed class GallerySidebar : Border
         // Arc's groups, then the extras group (not counted among the Arc components in the footer).
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Components, ArcIcons.LayoutGrid, GalleryCatalog.AllCategories.ToArray()));
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true));
+        // The Special components section (uiarc.dev's fourth section). Its groups are not catalogued yet, so it is empty.
+        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Special, ArcIcons.Sparkles, []));
         _empty.Margin = new Thickness(16, 12);
         _empty.IsVisible = false;
         list.Children.Add(_empty);
@@ -562,7 +564,8 @@ public sealed class GallerySidebar : Border
         foreach (var section in _sections)
         {
             section.Count.Text = section.Groups.Sum(g => g.Matches).ToString();
-            section.Visible = section.Groups.Any(g => g.Visible);
+            // A section with no groups yet stays listed while nothing is filtered, like a placeholder group.
+            section.Visible = section.Groups.Count == 0 ? !IsFiltering : section.Groups.Any(g => g.Visible);
             section.Root.IsVisible = section.Visible;
         }
         _empty.IsVisible = !_groups.Any(g => g.Visible);

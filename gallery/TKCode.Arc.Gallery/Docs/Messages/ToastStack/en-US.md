@@ -3,6 +3,8 @@ title: Toast stack
 summary: Stack short results at the edge until you reach for them.
 ---
 
+<Demo name="Stack" />
+
 ## When to use
 
 - Results of asynchronous work from anywhere in the app, such as an upload that failed or an invite that was sent.
@@ -94,6 +96,8 @@ stack.Show(new ToastOptions
 
 `Position` moves the stack to the bottom left, center or right edge. `VisibleToasts` sets how many toasts show at
 once, and `Limit` drops the oldest toasts beyond a count.
+
+<Demo name="Position" />
 
 ```xml
 <arc:ToastStack Position="BottomCenter" VisibleToasts="3" Limit="12" />

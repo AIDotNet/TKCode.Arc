@@ -22,6 +22,24 @@ internal sealed class ApiDirective
 }
 
 /// <summary>
+/// A live example in a page: <c>&lt;Demo name="Method" /&gt;</c> (a demo of the page's own component) or
+/// <c>&lt;Demo name="Component.Method" /&gt;</c> on a line of its own.
+/// </summary>
+internal sealed class DemoReference
+{
+    public DemoReference(string id, Location location)
+    {
+        Id = id;
+        Location = location;
+    }
+
+    /// <summary><c>Component.Method</c>.</summary>
+    public string Id { get; }
+
+    public Location Location { get; }
+}
+
+/// <summary>
 /// One component page in one language: <c>Docs/&lt;Category&gt;/&lt;ClassName&gt;/&lt;language&gt;.md</c> with a front
 /// matter (<c>title</c>, <c>summary</c>, and in translations <c>source-hash</c>) and a Markdown body.
 /// </summary>
@@ -31,6 +49,8 @@ internal sealed class DocPage
 
     // Shared with the gallery's GalleryDocs, which replaces the same lines at runtime.
     private static readonly Regex s_directive = new(@"^[ \t]*<!--[ \t]*api:[ \t]*([A-Za-z_][A-Za-z0-9_]*)[ \t]*-->[ \t]*$", RegexOptions.Multiline);
+    // Shared with the gallery's GalleryDocs as well.
+    private static readonly Regex s_demo = new(@"^[ \t]*<Demo[ \t]+name=""([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)""[ \t]*/>[ \t]*$", RegexOptions.Multiline);
     private static readonly Regex s_language = new(@"^[a-z]{2,3}(-[A-Z][a-z]{3})?(-[A-Z]{2})?$");
 
     private DocPage(string path, string className, string language)
@@ -59,6 +79,8 @@ internal sealed class DocPage
     public string Body { get; private set; } = string.Empty;
 
     public List<ApiDirective> Directives { get; } = new();
+
+    public List<DemoReference> Demos { get; } = new();
 
     public List<Diagnostic> Diagnostics { get; } = new();
 
@@ -101,6 +123,11 @@ internal sealed class DocPage
         {
             var line = LineOf(normalized, match.Index);
             page.Directives.Add(new ApiDirective(match.Groups[1].Value, page.LocationAt(line)));
+        }
+        foreach (Match match in s_demo.Matches(normalized, bodyStart))
+        {
+            var name = match.Groups[1].Value;
+            page.Demos.Add(new DemoReference(name.IndexOf('.') < 0 ? className + "." + name : name, page.LocationAt(LineOf(normalized, match.Index))));
         }
         return page;
     }

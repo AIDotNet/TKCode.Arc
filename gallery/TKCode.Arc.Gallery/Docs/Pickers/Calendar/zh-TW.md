@@ -1,8 +1,10 @@
 ---
 title: 日曆
 summary: 以清楚緊湊的月檢視瀏覽日期。
-source-hash: e3b14dff05ce
+source-hash: 4d61c6be21eb
 ---
+
+<Demo name="SingleDate" />
 
 ## 何時使用
 
@@ -41,12 +43,7 @@ calendar.DateSelected += (_, e) => status.Text = $"已選取 {e.Date:D}";
 
 `MinDate` 和 `MaxDate` 限制導覽與選取的範圍。`DisabledDates` 是一個 `Func<DateOnly, bool>`，對不能選取的日期傳回 `true`。使用方向鍵移動焦點時會略過停用的日期。
 
-```csharp
-calendar.MinDate = today.AddDays(-3);
-calendar.MaxDate = today.AddDays(45);
-calendar.DisabledDates = d => d.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
-calendar.FirstDayOfWeek = DayOfWeek.Monday;
-```
+<Demo name="LimitsAndDisabledDays" />
 
 ### 顯示月份
 

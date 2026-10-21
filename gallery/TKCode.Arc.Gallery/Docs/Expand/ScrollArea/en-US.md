@@ -3,6 +3,8 @@ title: Scroll area
 summary: A native scroll container with thin overlay scrollbars and edge fades that appear only when content overflows.
 ---
 
+<Demo name="Vertical" />
+
 ## When to use
 
 - Content that can overflow a panel, a side bar or a popup, where the page layout must stay fixed.
@@ -42,28 +44,14 @@ Set the axes with `Orientation`. The default is `Vertical`.
 A vertical wheel scrolls a horizontal area sideways while it can, then hands the wheel back to the page. Set
 `HorizontalSnapPointsType` to make the items snap.
 
-```xml
-<arc:ScrollArea Orientation="Horizontal"
-                HorizontalSnapPointsType="Mandatory"
-                Label="Cards">
-    <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-    </StackPanel>
-</arc:ScrollArea>
-```
+<Demo name="HorizontalStrip" />
 
 ### Both axes and scrollbar visibility
 
 Use `Both` for a grid that scrolls in two directions. `OverlayScrollbarMode="Always"` keeps the bars visible while
 the content overflows. The default `Auto` shows them only while scrolling or hovering.
 
-```xml
-<arc:ScrollArea Orientation="Both"
-                OverlayScrollbarMode="Always"
-                Height="240" />
-```
+<Demo name="BothAxes" />
 
 ### Edge fades and hide delay
 

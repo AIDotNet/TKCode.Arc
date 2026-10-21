@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CommandPalettePreviewDemo">
+    <StackPanel Spacing="16" MaxWidth="560" HorizontalAlignment="Center">
+        <arc:CommandPalette x:Name="Palette" ItemSelected="OnItemSelected" />
+        <TextBlock x:Name="LastCommand"
+                   Text="Use the arrow keys and Enter, or click a command."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

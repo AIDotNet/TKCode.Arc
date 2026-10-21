@@ -1,8 +1,10 @@
 ---
 title: 大頭貼群組
 summary: 在較小的空間內展示團隊或一組貢獻者。
-source-hash: 2bb01028d491
+source-hash: 36b0c9528548
 ---
+
+<Demo name="Team" />
 
 ## 何時使用
 
@@ -65,10 +67,18 @@ team.RemoveAt(1);
 
 `Size` 套用於每個大頭貼與溢出標籤：`Small` 為 28，`Medium`（預設）為 36，`Large` 為 48。`XLarge` 會以 `Large` 繪製。
 
+<Demo name="SizesAndLimits" />
+
 ```xml
 <arc:AvatarGroup ItemsSource="{Binding Team}" Size="Small" MaxVisibleCount="3" />
 <arc:AvatarGroup ItemsSource="{Binding Team}" Size="Large" MaxVisibleCount="5" />
 ```
+
+### 內嵌成員
+
+成員可以直接內嵌撰寫，無須繫結清單。
+
+<Demo name="InlineMembers" />
 
 ## API 參考
 

@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeViewFileTreeDemo">
+    <StackPanel Spacing="12">
+        <Grid ColumnDefinitions="280,*" ColumnSpacing="16">
+            <arc:TreeView MinWidth="260" ItemInvoked="OnItemInvoked">
+                <arc:TreeViewItem Header="src" IsExpanded="True">
+                    <arc:TreeViewItem Header="components" IsExpanded="True">
+                        <arc:TreeViewItem Header="button">
+                            <arc:TreeViewItem Header="button.tsx" />
+                            <arc:TreeViewItem Header="button.module.css" />
+                        </arc:TreeViewItem>
+                        <arc:TreeViewItem Header="tree-view">
+                            <arc:TreeViewItem Header="tree-view.tsx" />
+                            <arc:TreeViewItem Header="tree-view.module.css" />
+                        </arc:TreeViewItem>
+                    </arc:TreeViewItem>
+                    <arc:TreeViewItem Header="lib">
+                        <arc:TreeViewItem Header="motion-tokens.ts" />
+                        <arc:TreeViewItem Header="utils.ts" />
+                    </arc:TreeViewItem>
+                </arc:TreeViewItem>
+                <arc:TreeViewItem Header="docs">
+                    <arc:TreeViewItem Header="getting-started.md" />
+                    <arc:TreeViewItem Header="theming.md" />
+                </arc:TreeViewItem>
+                <arc:TreeViewItem Header="package.json" />
+                <arc:TreeViewItem Header="README.md" />
+            </arc:TreeView>
+            <arc:CodeBlock x:Name="Viewer"
+                           Grid.Column="1"
+                           VerticalAlignment="Top"
+                           Code="// Select a file"
+                           FileName="No file selected"
+                           Language="ts" />
+        </Grid>
+        <TextBlock x:Name="Status"
+                   Text="Click or press Enter on a file."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

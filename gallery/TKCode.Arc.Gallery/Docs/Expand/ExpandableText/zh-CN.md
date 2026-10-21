@@ -1,8 +1,10 @@
 ---
 title: 可展开文本
 summary: 长文本截断为几行，底部带柔和渐隐；点击“阅读更多”平滑展开，点击“收起”折回。仅在文本溢出时显示切换按钮。
-source-hash: bc3ff6e10d1b
+source-hash: 5b80f12913ab
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -34,6 +36,8 @@ source-hash: bc3ff6e10d1b
 
 `Lines` 设置文本折叠时显示的行数。评论等高密度列表使用 2 行；个人简介与商品描述使用 3 或 4 行。
 
+<Demo name="TwoLines" />
+
 ```xml
 <arc:ExpandableText Lines="2"
                     Text="{Binding CommentText}"
@@ -55,19 +59,18 @@ source-hash: bc3ff6e10d1b
 
 `IsExpanded` 为双向绑定。可以将其绑定到视图模型属性，也可以在代码中设置。文本展开或收起时会触发 `ExpandedChanged`。
 
+<Demo name="Controlled" />
+
 ```xml
 <arc:ExpandableText Text="{Binding Bio}"
                     IsExpanded="{Binding BioExpanded, Mode=TwoWay}" />
 ```
 
-```csharp
-bio.ExpandedChanged += (_, e) =>
-{
-    state.Text = e.IsExpanded ? "已展开" : "已收起";
-};
+### 文本能完整显示
 
-bio.IsExpanded = true;
-```
+只有当文本确实溢出时，切换按钮才会出现，并且会随宽度和字体的变化而更新。
+
+<Demo name="Fits" />
 
 ## API 参考
 

@@ -3,10 +3,12 @@
 TKCode.Arc ports the design and behavior of the free components of Arc and uses the
 assets and libraries listed below.
 
-## Arc (uiarc.dev) — free components
+## Arc (uiarc.dev) — free components and blocks
 
-TKCode.Arc reimplements the free (MIT) components of Arc for Avalonia. Arc Pro components are
-not used, copied or reconstructed.
+TKCode.Arc reimplements the free (MIT) components of Arc for Avalonia, and `TKCode.Arc.Blocks` ports
+Arc's free (MIT) blocks (Page header, Command palette, Notification center, Empty states). Arc Pro
+components and blocks are not used, copied or reconstructed; blocks whose Arc counterpart is Pro
+(Sidebar, Search results) are original TKCode designs.
 
 ```
 MIT License

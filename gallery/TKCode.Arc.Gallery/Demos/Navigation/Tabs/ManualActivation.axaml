@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TabsManualActivationDemo">
+    <arc:Tabs ActivationMode="Manual">
+        <arc:TabItem Header="Day">
+            <TextBlock Text="Day view" FontSize="14" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </arc:TabItem>
+        <arc:TabItem Header="Week">
+            <TextBlock Text="Week view" FontSize="14" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </arc:TabItem>
+        <arc:TabItem Header="Month">
+            <TextBlock Text="Month view" FontSize="14" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </arc:TabItem>
+        <arc:TabItem Header="Year">
+            <TextBlock Text="Year view" FontSize="14" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </arc:TabItem>
+    </arc:Tabs>
+</UserControl>

@@ -3,6 +3,8 @@ title: Treemap
 summary: A squarified treemap: click to drill and the tiles grow to fill the view, with a breadcrumb back and metrics that morph every tile.
 ---
 
+<Demo name="RevenueByRegion" />
+
 ## When to use
 
 - A hierarchy with many leaves, such as revenue by region, country and plan, where the share of each part matters.
@@ -60,9 +62,7 @@ chart.Root = root;
 
 Without `ColorLabel` every tile is drawn at one depth. Use `Items` for a flat set of top-level leaves:
 
-```xml
-<arc:Treemap Label="Storage by folder" PlotHeight="260" />
-```
+<Demo name="OneLevel" />
 
 ```csharp
 chart.Items.Add(new TreemapNode("video", "Video", 112));

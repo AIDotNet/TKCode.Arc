@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChipGroupFoldedDemo">
+    <arc:ChipGroup Label="Topics"
+                   MaxVisibleItems="5"
+                   MaxWidth="560"
+                   HorizontalAlignment="Left"
+                   SelectedIndex="7">
+        <arc:SelectItem Content="Design" />
+        <arc:SelectItem Content="Engineering" />
+        <arc:SelectItem Content="Research" />
+        <arc:SelectItem Content="Marketing" />
+        <arc:SelectItem Content="Sales" />
+        <arc:SelectItem Content="Support" />
+        <arc:SelectItem Content="Finance" />
+        <arc:SelectItem Content="Legal" />
+        <arc:SelectItem Content="Operations" />
+        <arc:SelectItem Content="People" />
+    </arc:ChipGroup>
+</UserControl>

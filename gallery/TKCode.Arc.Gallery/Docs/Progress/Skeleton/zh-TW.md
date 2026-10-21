@@ -1,8 +1,10 @@
 ---
 title: 骨架螢幕
 summary: 內容仍在載入時預留空間。
-source-hash: 4bb5402f1a7d
+source-hash: d9768e899d18
 ---
+
+<Demo name="Profile" />
 
 ## 何時使用
 
@@ -30,13 +32,13 @@ source-hash: 4bb5402f1a7d
 
 `Lines` 的範圍為 1 到 6。第一行較短、較高，最後一行的寬度為整體的 72%。
 
-```xml
-<arc:Skeleton Lines="4" />
-```
+<Demo name="Lines" />
 
 ### 已載入的內容
 
 將 `Content` 設為實際的檢視，並把 `IsLoading` 繫結到載入狀態。`IsLoading` 變為 false 時，預留位置淡出，內容上移就位，高度平滑變化。
+
+<Demo name="IntoContent" />
 
 ```xml
 <arc:Skeleton IsAvatarVisible="True"

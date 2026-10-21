@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EmptyStatesNarrowDemo">
+    <!-- 360 wide: smaller tabs, tighter padding and the smaller title. Phase starts at Done. -->
+    <arc:EmptyStates Width="360" SelectedIndex="3" Phase="Done" HorizontalAlignment="Center" />
+</UserControl>

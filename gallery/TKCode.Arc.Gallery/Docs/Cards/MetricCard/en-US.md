@@ -3,6 +3,8 @@ title: Metric card
 summary: A compact summary for a number that needs context.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - A single number with a label and the context that explains it, such as uptime, orders or latency.
@@ -36,6 +38,8 @@ summary: A compact summary for a number that needs context.
 
 A `Change` that starts with "+" is shown as an up change, and one that starts with "-" or "−" as a down change. Read
 the direction back from `ChangeDirection`. Set `IsChangeGlyphVisible` to add a trend icon inside the chip.
+
+<Demo name="PlainNumber" />
 
 ```xml
 <arc:MetricCard Label="p95 latency"

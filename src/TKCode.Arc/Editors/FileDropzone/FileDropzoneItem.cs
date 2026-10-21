@@ -93,6 +93,7 @@ public sealed class FileDropzoneItem : INotifyPropertyChanged
     /// <summary>A thumbnail; image files added by the visitor get one automatically.</summary>
     public Bitmap? Preview { get => _preview; set => Set(ref _preview, value); }
 
+    /// <summary>Raised when any property of this row changes.</summary>
     /// <inheritdoc />
     public event PropertyChangedEventHandler? PropertyChanged;
 

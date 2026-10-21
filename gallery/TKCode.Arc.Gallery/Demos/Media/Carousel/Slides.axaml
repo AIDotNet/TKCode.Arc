@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CarouselSlidesDemo">
+    <arc:Carousel Label="From the Harbour suites"
+                  ItemsSource="{x:Static demos:CarouselDemoData.Suites}">
+        <arc:Carousel.ItemTemplate>
+            <DataTemplate x:DataType="demos:CarouselSuite">
+                <Border BorderThickness="1"
+                        ClipToBounds="True"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                    <StackPanel>
+                        <ContentControl Height="200" Content="{Binding Scene, Converter={x:Static demos:CarouselDemoData.Art}}" />
+                        <StackPanel Margin="18,14,18,18" Spacing="4">
+                            <TextBlock Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontWeight="Medium"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{Binding Detail}"
+                                       FontSize="14"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+        </arc:Carousel.ItemTemplate>
+    </arc:Carousel>
+</UserControl>

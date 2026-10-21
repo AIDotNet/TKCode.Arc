@@ -1,8 +1,10 @@
 ---
 title: 懸停卡片
 summary: 懸停或聚焦時預覽人員或連結，無需離開頁面。
-source-hash: bb55746dda47
+source-hash: 9342f8a0604b
 ---
+
+<Demo name="Mention" />
 
 ## 何時使用
 
@@ -43,14 +45,7 @@ source-hash: bb55746dda47
 
 `arc:HoverCard.Attach` 可以為任意控制項加上卡片，例如一般的文字連結。
 
-```xml
-<TextBlock Text="uiarc.dev/components/hover-card">
-    <arc:HoverCard.Attach>
-        <arc:HoverCard Placement="Top"
-                       Content="懸停或聚焦時預覽人員或連結。" />
-    </arc:HoverCard.Attach>
-</TextBlock>
-```
+<Demo name="LinkPreview" />
 
 ### 時間與寬度
 
@@ -69,6 +64,12 @@ card.CardWidth = 320;
 card.Show();
 card.Closed += (_, e) => log.Text = $"關閉方式：{e.Reason}";
 ```
+
+### 密集清單
+
+一張卡片開啟後，移到下一個觸發器時，下一張卡片幾乎立即開啟，且只有淡入效果。
+
+<Demo name="DenseList" />
 
 ## API 參考
 

@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarLiveUpdatesDemo">
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="New message" Variant="Secondary" Size="Small" Click="OnNewMessage" />
+            <arc:Button Content="Mark all read" Variant="Secondary" Size="Small" Click="OnMarkRead" />
+            <arc:Button Content="Pin a page" Variant="Secondary" Size="Small" Click="OnPin" />
+            <arc:Button Content="Unpin" Variant="Ghost" Size="Small" Click="OnUnpin" />
+        </WrapPanel>
+        <Border Height="400"
+                HorizontalAlignment="Center"
+                CornerRadius="16"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:Sidebar x:Name="Nav"
+                         CornerRadius="15"
+                         BorderThickness="0"
+                         IsCollapseButtonVisible="False"
+                         IsFilterVisible="True"
+                         SelectedKey="home">
+                <arc:SidebarSection>
+                    <arc:SidebarItem Key="home" Label="Home" Icon="{x:Static arc:ArcIcons.House}" />
+                    <arc:SidebarItem Key="inbox" Label="Inbox" Icon="{x:Static arc:ArcIcons.Inbox}" Badge="2" />
+                    <arc:SidebarItem Key="drafts" Label="Drafts" Icon="{x:Static arc:ArcIcons.Pencil}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Pinned" IsCollapsible="True">
+                    <arc:SidebarItem Key="pinned/handbook" Label="Team handbook" Icon="{x:Static arc:ArcIcons.FileText}" />
+                </arc:SidebarSection>
+            </arc:Sidebar>
+        </Border>
+    </StackPanel>
+</UserControl>

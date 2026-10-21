@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TimePickerTimeFieldDemo">
+    <StackPanel Spacing="12">
+        <arc:TimePicker Label="Meeting time"
+                        Description="Times every 15 minutes, shown on the clock of your locale."
+                        Culture="en-US"
+                        Width="240"
+                        HorizontalAlignment="Left"
+                        SelectedTimeChanged="OnSelectedTimeChanged" />
+        <TextBlock x:Name="Status"
+                   Text="SelectedTime: 09:00"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

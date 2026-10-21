@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.MentionInputGrowthDemo">
+    <arc:MentionInput Label="Notes"
+                      Placeholder="Write a few lines. Shift+Enter is not needed here: Enter adds a line."
+                      MinLines="2"
+                      MaxLines="4"
+                      People="{x:Static demos:MentionDemoData.People}"
+                      Channels="{x:Static demos:MentionDemoData.Channels}"
+                      Width="440"
+                      HorizontalAlignment="Center" />
+</UserControl>

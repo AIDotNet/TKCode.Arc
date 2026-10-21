@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CancelFlowFlowDemo">
+    <StackPanel Spacing="12" MaxWidth="520">
+        <arc:Button HorizontalAlignment="Right"
+                    Variant="Ghost"
+                    Size="Small"
+                    Click="OnResetClick">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="14" VerticalAlignment="Center" />
+                <TextBlock Text="Reset" VerticalAlignment="Center" />
+            </StackPanel>
+        </arc:Button>
+        <arc:CancelFlow x:Name="Flow"
+                        PlanName="Studio"
+                        KeepPlanRequested="OnKeepPlanRequested">
+            <arc:CancelFlow.Reasons>
+                <arc:CancelFlowReason Title="Too expensive"
+                                      Description="The price is more than it's worth to us right now.">
+                    <arc:CancelFlowReason.Offer>
+                        <arc:CancelFlowOffer Title="Take 40% off for 3 months"
+                                             Description="Keep everything your team uses today for $54 a month instead of $90. The discount applies to your next three invoices."
+                                             AcceptLabel="Claim 40% off"
+                                             Icon="{x:Static arc:ArcIcons.Percent}"
+                                             AcceptedTitle="40% off is on"
+                                             AcceptedDescription="Your next three invoices are $54 instead of $90. Thanks for staying with us." />
+                    </arc:CancelFlowReason.Offer>
+                </arc:CancelFlowReason>
+                <arc:CancelFlowReason Title="Not using it enough"
+                                      Description="We don't open it often enough to keep paying for it.">
+                    <arc:CancelFlowReason.Offer>
+                        <arc:CancelFlowOffer Title="Pause instead"
+                                             Description="Stop billing for up to two months. Projects, members and settings stay exactly as they are, ready when you come back."
+                                             AcceptLabel="Pause for 2 months"
+                                             Icon="{x:Static arc:ArcIcons.Pause}"
+                                             AcceptedTitle="Your plan is paused"
+                                             AcceptedDescription="Billing pauses until Jan 1, 2027, and your projects stay just as they are." />
+                    </arc:CancelFlowReason.Offer>
+                </arc:CancelFlowReason>
+                <arc:CancelFlowReason Title="Missing a feature I need"
+                                      Description="Something we rely on isn't there yet."
+                                      AsksForDetails="True"
+                                      DetailsPrompt="What were you missing?" />
+                <arc:CancelFlowReason Title="Switching to another tool"
+                                      Description="We're moving our work to a different product."
+                                      AsksForDetails="True"
+                                      DetailsPrompt="Which tool are you moving to?" />
+                <arc:CancelFlowReason Title="Something else"
+                                      Description="Our reason isn't listed here."
+                                      AsksForDetails="True"
+                                      DetailsPrompt="What made you decide to cancel?" />
+            </arc:CancelFlow.Reasons>
+            <arc:CancelFlow.DefaultOffer>
+                <arc:CancelFlowOffer Title="Talk to us first"
+                                     Description="Fifteen minutes with our team is often enough to fix what isn't working. If it isn't, canceling stays one step away."
+                                     AcceptLabel="Book a 15-minute call"
+                                     Icon="{x:Static arc:ArcIcons.MessageCircle}"
+                                     AcceptedTitle="We'll be in touch"
+                                     AcceptedDescription="Someone from our team will email noor@larkspur.co within a day to find a time. Your plan stays as it is." />
+            </arc:CancelFlow.DefaultOffer>
+            <arc:CancelFlow.Losses>
+                <x:String>Shared projects become read-only for all 6 members</x:String>
+                <x:String>Version history older than 30 days is deleted</x:String>
+                <x:String>Custom domains and single sign-on stop working</x:String>
+            </arc:CancelFlow.Losses>
+        </arc:CancelFlow>
+    </StackPanel>
+</UserControl>

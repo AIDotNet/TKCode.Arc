@@ -44,9 +44,16 @@ public class TextShimmer : Control
     internal static readonly StyledProperty<double> BaseMixProperty =
         AvaloniaProperty.Register<TextShimmer, double>(nameof(BaseMix), 0.12);
 
+    /// <summary>Font family of the text; inherited from TextElement unless set.</summary>
     public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<TextShimmer>();
+
+    /// <summary>Font size in device-independent pixels; inherited from TextElement unless set.</summary>
     public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<TextShimmer>();
+
+    /// <summary>Font weight of the text; inherited from TextElement unless set.</summary>
     public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<TextShimmer>();
+
+    /// <summary>Text color; the resting base color is derived from it unless BaseForeground is set.</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<TextShimmer>();
 
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
@@ -55,9 +62,13 @@ public class TextShimmer : Control
     public IBrush? BaseForeground { get => GetValue(BaseForegroundProperty); set => SetValue(BaseForegroundProperty, value); }
     internal IBrush? MutedForeground { get => GetValue(MutedForegroundProperty); set => SetValue(MutedForegroundProperty, value); }
     internal double BaseMix { get => GetValue(BaseMixProperty); set => SetValue(BaseMixProperty, value); }
+    /// <inheritdoc cref="FontFamilyProperty"/>
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
+    /// <inheritdoc cref="FontSizeProperty"/>
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
+    /// <inheritdoc cref="FontWeightProperty"/>
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
+    /// <inheritdoc cref="ForegroundProperty"/>
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     /// <summary>Half width of the band in em.</summary>

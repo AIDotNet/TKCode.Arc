@@ -97,6 +97,12 @@
         <target state="translated">图表</target>
       </segment>
     </unit>
+    <unit id="Category_AdvancedCharts">
+      <segment>
+        <source>Advanced charts</source>
+        <target state="translated">高级图表</target>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>
@@ -235,16 +241,22 @@
         <target state="translated">已复制</target>
       </segment>
     </unit>
-    <unit id="CopyMarkdown">
+    <unit id="CopyCode">
       <segment>
-        <source>Copy Markdown</source>
-        <target state="translated">复制 Markdown</target>
+        <source>Copy code</source>
+        <target state="translated">复制代码</target>
       </segment>
     </unit>
-    <unit id="CopyMarkup">
+    <unit id="CopyCommand">
       <segment>
-        <source>Copy markup</source>
-        <target state="translated">复制标记</target>
+        <source>Copy command</source>
+        <target state="translated">复制命令</target>
+      </segment>
+    </unit>
+    <unit id="CopyPage">
+      <segment>
+        <source>Copy page</source>
+        <target state="translated">复制页面</target>
       </segment>
     </unit>
     <unit id="Dark">
@@ -343,12 +355,6 @@
         <target state="translated">没有与“{0}”匹配的组件。</target>
       </segment>
     </unit>
-    <unit id="NoDocsYet">
-      <segment>
-        <source>No docs page for this component yet</source>
-        <target state="translated">此组件还没有文档页</target>
-      </segment>
-    </unit>
     <unit id="NotBuiltYet">
       <segment>
         <source>{0} is not built yet.</source>
@@ -407,6 +413,18 @@
       <segment>
         <source>Search components</source>
         <target state="translated">搜索组件</target>
+      </segment>
+    </unit>
+    <unit id="ShowAllLines">
+      <segment>
+        <source>Show all {0} lines</source>
+        <target state="translated">显示全部 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="ShowFewerLines">
+      <segment>
+        <source>Show fewer lines</source>
+        <target state="translated">收起</target>
       </segment>
     </unit>
     <unit id="ShowImplementedComponents">
@@ -551,6 +569,12 @@
       <segment>
         <source>Docs</source>
         <target state="translated">文档</target>
+      </segment>
+    </unit>
+    <unit id="Category_Special">
+      <segment>
+        <source>Special components</source>
+        <target state="translated">特殊组件</target>
       </segment>
     </unit>
   </file>

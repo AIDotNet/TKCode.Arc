@@ -1,0 +1,643 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Ported from Arc's free notification-center block (MIT, Copyright (c) 2026 Elia Kuratli). -->
+
+    <!-- The bell: color answers hover, press and the open panel; it never scales (the panel is measured against it). -->
+    <ControlTheme x:Key="{x:Type arc:NotificationCenter}" TargetType="arc:NotificationCenter">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="PanelGap" Value="{arc:NotificationCenterTokenResource PanelGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NotificationCenter">
+                <Panel>
+                    <arc:NotificationCenterButton Name="PART_Trigger" Kind="Trigger">
+                        <arc:ArcGlyph Name="PART_Bell"
+                                      Data="{x:Static arc:ArcIcons.Bell}"
+                                      Size="{arc:NotificationCenterTokenResource BellSize}"
+                                      StrokeThickness="1.75"
+                                      RenderTransformOrigin="50%,50%" />
+                    </arc:NotificationCenterButton>
+                    <arc:PresenceHost Name="PART_Badge"
+                                      Mode="Pop"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Top"
+                                      Margin="{arc:NotificationCenterTokenResource BadgeMargin}"
+                                      IsHitTestVisible="False">
+                        <Border Name="PART_BadgeFrame"
+                                MinWidth="{arc:NotificationCenterTokenResource BadgeHeight}"
+                                Height="{arc:NotificationCenterTokenResource BadgeHeight}"
+                                Padding="{arc:NotificationCenterTokenResource BadgePadding}"
+                                BorderThickness="{arc:NotificationCenterTokenResource BadgeRing}"
+                                BorderBrush="{arc:ArcDesignTokenResource Surface}"
+                                Background="{arc:ArcDesignTokenResource Foreground}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                ClipToBounds="True">
+                            <arc:ArcContentSwap Name="PART_BadgeCount"
+                                                Mode="Roll"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource Background}"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                TextElement.FontFeatures="tnum" />
+                        </Border>
+                    </arc:PresenceHost>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Bell">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <!-- The bell tips while the panel is open (not with reduced motion, like Arc). -->
+        <Style Selector="^:open:not(:motion-reduced) /template/ arc|ArcGlyph#PART_Bell">
+            <Setter Property="RenderTransform" Value="rotate(-12deg)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Bell">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Every button of the bell and the panel, one look per Kind (Arc's .trigger, .close, .viewSwitch button, …). -->
+    <ControlTheme x:Key="{x:Type arc:NotificationCenterButton}" TargetType="arc:NotificationCenterButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NotificationCenterButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            RenderTransformOrigin="50%,50%">
+                        <DockPanel Name="PART_Content"
+                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          DockPanel.Dock="Left"
+                                          Data="{TemplateBinding Glyph}"
+                                          Size="{TemplateBinding GlyphSize}"
+                                          StrokeThickness="1.75"
+                                          VerticalAlignment="Center"
+                                          IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              VerticalAlignment="Center"
+                                              IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:NotificationCenterTokenResource RingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:NotificationCenterTokenResource TextRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+        <Style Selector="^[Kind=Trigger]">
+            <Setter Property="Width" Value="{arc:NotificationCenterTokenResource TriggerSize}" />
+            <Setter Property="Height" Value="{arc:NotificationCenterTokenResource TriggerSize}" />
+            <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource TriggerRadius}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource TriggerRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=Trigger]:hover, ^[Kind=Trigger]:pressed, ^[Kind=Trigger][IsOn=True]">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <Style Selector="^[Kind=Close]">
+            <Setter Property="Width" Value="{arc:NotificationCenterTokenResource CloseSize}" />
+            <Setter Property="Height" Value="{arc:NotificationCenterTokenResource CloseSize}" />
+            <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource CloseRadius}" />
+            <Setter Property="GlyphSize" Value="{arc:NotificationCenterTokenResource CloseGlyphSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource CloseRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=Close]:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^[Kind=View]">
+            <Setter Property="Height" Value="{arc:NotificationCenterTokenResource ViewButtonHeight}" />
+            <Setter Property="MinWidth" Value="{arc:NotificationCenterTokenResource ViewButtonMinWidth}" />
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ViewButtonPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ViewButtonRadius}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ViewRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=View]:hover, ^[Kind=View][IsOn=True]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^[Kind=MarkAll]">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource MarkAllPadding}" />
+        </Style>
+        <Style Selector="^[Kind=Footer]">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource FooterButtonPadding}" />
+        </Style>
+        <Style Selector="^[Kind=MarkAll]:hover, ^[Kind=Footer]:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^[Kind=Row]">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource TogglePadding}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^[Kind=Action]">
+            <Setter Property="Height" Value="{arc:NotificationCenterTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ActionPadding}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ActionRadius}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="GlyphSize" Value="{arc:NotificationCenterTokenResource ActionGlyphSize}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+                <Setter Property="Margin" Value="{arc:NotificationCenterTokenResource ActionGlyphMargin}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ActionRingRadius}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=Action]:hover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+
+        <Style Selector="^[Kind=Link]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <!-- Quick press, spring release (Arc: the CSS spring duration and curve). -->
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Style Selector="^[Kind=Close] /template/ Border#PART_Frame">
+                <Setter Property="RenderTransform" Value="scale(0.96)" />
+            </Style>
+            <Style Selector="^[Kind=MarkAll], ^[Kind=Action], ^[Kind=Footer]">
+                <Style Selector="^ /template/ Border#PART_Frame">
+                    <Setter Property="RenderTransform" Value="scale(0.97)" />
+                </Style>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The floating panel: raised surface, 1px border, panel radius; the hosting popup draws the floating shadow. -->
+    <ControlTheme x:Key="{x:Type arc:NotificationCenterPanel}" TargetType="arc:NotificationCenterPanel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="MaxPanelWidth" Value="{arc:NotificationCenterTokenResource PanelWidth}" />
+        <Setter Property="MaxPanelHeight" Value="{arc:NotificationCenterTokenResource PanelMaxHeight}" />
+        <Setter Property="ViewportInset" Value="{arc:NotificationCenterTokenResource ViewportInset}" />
+        <Setter Property="NarrowBreakpoint" Value="{arc:NotificationCenterTokenResource NarrowBreakpoint}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NotificationCenterPanel">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <!-- Declared in tab order: header (close), toolbar, list, footer. -->
+                    <Grid RowDefinitions="Auto,Auto,*,Auto">
+                        <Border Name="PART_Header" Grid.Row="0">
+                            <DockPanel>
+                                <arc:NotificationCenterButton Name="PART_Close"
+                                                              DockPanel.Dock="Right"
+                                                              Kind="Close"
+                                                              Glyph="{x:Static arc:ArcIcons.X}"
+                                                              Margin="12,0,0,0"
+                                                              VerticalAlignment="Top" />
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:NotificationCenterTokenResource HeadingGap}">
+                                        <TextBlock Name="PART_Heading"
+                                                   Text="{TemplateBinding Heading}"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   AutomationProperties.HeadingLevel="2" />
+                                        <Border Name="PART_CountChip"
+                                                VerticalAlignment="Center"
+                                                MinWidth="{arc:NotificationCenterTokenResource CountSize}"
+                                                Height="{arc:NotificationCenterTokenResource CountSize}"
+                                                Padding="{arc:NotificationCenterTokenResource CountPadding}"
+                                                CornerRadius="{arc:NotificationCenterTokenResource CountRadius}"
+                                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                ClipToBounds="True">
+                                            <arc:ArcContentSwap Name="PART_Count"
+                                                                Mode="Roll"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                HorizontalContentAlignment="Center"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                TextElement.FontFeatures="tnum" />
+                                        </Border>
+                                    </StackPanel>
+                                    <arc:ArcContentSwap Name="PART_Summary"
+                                                        Mode="BlurSwap"
+                                                        Margin="{arc:NotificationCenterTokenResource SummaryMargin}"
+                                                        HorizontalAlignment="Left"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextBlock.LineHeight="{arc:NotificationCenterTokenResource BodyLineHeight}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        AutomationProperties.LiveSetting="Polite" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+
+                        <Border Name="PART_Toolbar"
+                                Grid.Row="1"
+                                MinHeight="{arc:NotificationCenterTokenResource ToolbarMinHeight}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <!-- Declared in tab order: the view switch, then "Mark all read" on the right. -->
+                            <DockPanel Name="PART_ToolbarRow" VerticalAlignment="Center">
+                                <Panel Name="PART_ViewSwitch" DockPanel.Dock="Left">
+                                    <arc:GlidingIndicator Name="PART_ViewHighlight"
+                                                          Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                          CornerRadius="{arc:NotificationCenterTokenResource ViewButtonRadius}"
+                                                          Spring="Morph" />
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:NotificationCenterTokenResource ViewButtonGap}">
+                                        <arc:NotificationCenterButton Name="PART_AllView" Kind="View" Content="{TemplateBinding AllText}" />
+                                        <arc:NotificationCenterButton Name="PART_UnreadView" Kind="View" Content="{TemplateBinding UnreadText}" />
+                                    </StackPanel>
+                                </Panel>
+                                <arc:NotificationCenterReveal Name="PART_MarkAllReveal"
+                                                              HorizontalAlignment="Right"
+                                                              CollapsesHeight="False"
+                                                              BlurRadius="2"
+                                                              Margin="12,0,0,0"
+                                                              VerticalAlignment="Center">
+                                    <arc:NotificationCenterButton Name="PART_MarkAll" Kind="MarkAll">
+                                        <StackPanel Orientation="Horizontal" Spacing="{arc:NotificationCenterTokenResource MarkAllGap}">
+                                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CheckCheck}"
+                                                          Size="{arc:NotificationCenterTokenResource MarkAllGlyphSize}"
+                                                          StrokeThickness="1.75"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_MarkAllText" Text="{TemplateBinding MarkAllText}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </arc:NotificationCenterButton>
+                                </arc:NotificationCenterReveal>
+                            </DockPanel>
+                        </Border>
+
+
+
+                        <ScrollViewer Name="PART_Scroll"
+                                      Grid.Row="2"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Hidden">
+                            <Border Name="PART_ListFrame">
+                                <StackPanel>
+                                    <StackPanel Name="PART_List" />
+                                    <arc:NotificationCenterReveal Name="PART_EmptyReveal" ClipToBounds="True">
+                                        <Border Name="PART_Empty"
+                                                MinHeight="{arc:NotificationCenterTokenResource EmptyMinHeight}"
+                                                Padding="{arc:NotificationCenterTokenResource EmptyPadding}">
+                                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleCheck}"
+                                                              Size="{arc:NotificationCenterTokenResource EmptyIconSize}"
+                                                              StrokeThickness="1.5"
+                                                              Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                              HorizontalAlignment="Center"
+                                                              Margin="{arc:NotificationCenterTokenResource EmptyIconMargin}" />
+                                                <arc:ArcContentSwap Name="PART_EmptyTitle"
+                                                                    Mode="BlurSwap"
+                                                                    HorizontalAlignment="Center"
+                                                                    HorizontalContentAlignment="Center"
+                                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                    TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                <arc:ArcContentSwap Name="PART_EmptyDescription"
+                                                                    Mode="BlurSwap"
+                                                                    HorizontalAlignment="Center"
+                                                                    HorizontalContentAlignment="Center"
+                                                                    Margin="{arc:NotificationCenterTokenResource EmptyDescriptionMargin}"
+                                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                                                <arc:NotificationCenterButton Name="PART_ViewAll"
+                                                                              Kind="Link"
+                                                                              HorizontalAlignment="Center"
+                                                                              Margin="{arc:NotificationCenterTokenResource EmptyLinkMargin}"
+                                                                              IsVisible="{TemplateBinding IsViewAllVisible}">
+                                                    <TextBlock Text="{TemplateBinding ViewAllText}" TextDecorations="Underline" />
+                                                </arc:NotificationCenterButton>
+                                            </StackPanel>
+                                        </Border>
+                                    </arc:NotificationCenterReveal>
+                                </StackPanel>
+                            </Border>
+                        </ScrollViewer>
+
+                        <arc:NotificationCenterReveal Name="PART_FooterReveal" Grid.Row="3" ClipToBounds="True">
+                            <Border Name="PART_Footer"
+                                    MinHeight="{arc:NotificationCenterTokenResource FooterMinHeight}"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <DockPanel VerticalAlignment="Center">
+                                    <arc:NotificationCenterButton Name="PART_ClearRead"
+                                                                  DockPanel.Dock="Right"
+                                                                  Kind="Footer"
+                                                                  Margin="12,0,0,0"
+                                                                  Content="{TemplateBinding ClearReadText}" />
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}">
+                                        <TextBlock Text="{TemplateBinding ReadPrefix}" VerticalAlignment="Center" />
+                                        <arc:ArcContentSwap Name="PART_ReadCount"
+                                                            Mode="Roll"
+                                                            VerticalAlignment="Center"
+                                                            TextElement.FontFeatures="tnum" />
+                                        <TextBlock Text="{TemplateBinding ReadSuffix}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                        </arc:NotificationCenterReveal>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Heading">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="LineHeight" Value="{arc:NotificationCenterTokenResource HeadingLineHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Toolbar">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ToolbarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ListFrame">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ListPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource FooterPadding}" />
+        </Style>
+
+        <!-- Narrow windows (≤ 380px): tighter padding, a smaller heading, "Mark all read" as its icon only. -->
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ Border#PART_Header">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource HeaderPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Heading">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+                <Setter Property="LineHeight" Value="{arc:NotificationCenterTokenResource HeadingLineHeightNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Toolbar">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ToolbarPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ DockPanel#PART_ToolbarRow">
+                <Setter Property="VerticalAlignment" Value="Top" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_MarkAllText">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ListFrame">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ListPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource FooterPaddingNarrow}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A notification row (Arc's article.item): hover and expanded rows sit on the muted surface. -->
+    <ControlTheme x:Key="{x:Type arc:NotificationCenterRow}" TargetType="arc:NotificationCenterRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NotificationCenterRow">
+                <Border Name="PART_Article"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:NotificationCenterTokenResource RowRadius}">
+                    <StackPanel>
+                        <DockPanel Name="PART_Main">
+                            <Panel Name="PART_Visual" DockPanel.Dock="Left" VerticalAlignment="Top">
+                                <arc:Avatar Name="PART_Avatar"
+                                            Size="Medium"
+                                            DisplayName="{TemplateBinding ActorName}"
+                                            Source="{TemplateBinding ActorSource}" />
+                                <Border Name="PART_EventIcon"
+                                        Width="{arc:NotificationCenterTokenResource EventIconSize}"
+                                        Height="{arc:NotificationCenterTokenResource EventIconSize}">
+                                    <arc:ArcGlyph Name="PART_EventGlyph"
+                                                  Data="{TemplateBinding EventGlyph}"
+                                                  Size="{arc:NotificationCenterTokenResource EventGlyphSize}"
+                                                  StrokeThickness="{arc:NotificationCenterTokenResource EventGlyphStroke}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                </Border>
+                            </Panel>
+                            <TextBlock Name="PART_Time"
+                                       DockPanel.Dock="Right"
+                                       VerticalAlignment="Top"
+                                       Text="{TemplateBinding TimeText}"
+                                       Margin="{arc:NotificationCenterTokenResource TimeMargin}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:NotificationCenterTokenResource BodyLineHeight}"
+                                       FontFeatures="tnum" />
+                            <arc:NotificationCenterButton Name="PART_Toggle" Kind="Row">
+                                <StackPanel Spacing="{arc:NotificationCenterTokenResource ToggleGap}">
+                                    <arc:NotificationCenterTitleLine Spacing="{arc:NotificationCenterTokenResource TitleGap}"
+                                                                     MinHeight="{arc:NotificationCenterTokenResource TitleMinHeight}">
+                                        <TextBlock Name="PART_Title"
+                                                   Text="{TemplateBinding TitleText}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:NotificationCenterTokenResource TitleLineHeight}" />
+                                        <arc:NotificationCenterDot Name="PART_Dot"
+                                                                   Diameter="{arc:NotificationCenterTokenResource UnreadDotSize}"
+                                                                   Fill="{arc:ArcDesignTokenResource Foreground}" />
+                                    </arc:NotificationCenterTitleLine>
+                                    <TextBlock Name="PART_Preview"
+                                               Text="{TemplateBinding PreviewText}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:NotificationCenterTokenResource BodyLineHeight}" />
+                                </StackPanel>
+                            </arc:NotificationCenterButton>
+                        </DockPanel>
+                        <arc:NotificationCenterReveal Name="PART_Details" ClipToBounds="True">
+                            <StackPanel Name="PART_DetailsBody">
+                                <TextBlock Name="PART_DetailText"
+                                           Text="{TemplateBinding DetailText}"
+                                           TextWrapping="Wrap"
+                                           Margin="{arc:NotificationCenterTokenResource DetailsTextMargin}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:NotificationCenterTokenResource BodyLineHeight}" />
+                                <WrapPanel Name="PART_Actions" Margin="{arc:NotificationCenterTokenResource ActionsMargin}">
+                                    <arc:NotificationCenterButton Name="PART_ReadToggle" Kind="Action">
+                                        <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
+                                            <StackPanel Orientation="Horizontal" Spacing="{arc:NotificationCenterTokenResource ActionGap}">
+                                                <arc:ArcContentSwap Name="PART_ReadGlyph" Mode="Pop" VerticalAlignment="Center" />
+                                                <arc:ArcContentSwap Name="PART_ReadLabel" Mode="BlurSwap" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:SpringSizeDecorator>
+                                    </arc:NotificationCenterButton>
+                                    <arc:NotificationCenterButton Name="PART_Dismiss"
+                                                                  Kind="Action"
+                                                                  Glyph="{x:Static arc:ArcIcons.X}"
+                                                                  Content="{TemplateBinding DismissText}" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </arc:NotificationCenterReveal>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Article">
+            <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource RowPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|NotificationCenterButton#PART_Toggle">
+            <Setter Property="Margin" Value="{arc:NotificationCenterTokenResource RowColumnGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_DetailsBody">
+            <Setter Property="Margin" Value="{arc:NotificationCenterTokenResource DetailsIndent}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_Actions">
+            <Setter Property="ItemSpacing" Value="{arc:NotificationCenterTokenResource ActionsGap}" />
+            <Setter Property="LineSpacing" Value="{arc:NotificationCenterTokenResource ActionsGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:read /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- An update from a person shows their avatar; a system update shows its tone icon. -->
+        <Style Selector="^ /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:actor /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:actor /template/ Border#PART_EventIcon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_EventGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:success /template/ arc|ArcGlyph#PART_EventGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:warning /template/ arc|ArcGlyph#PART_EventGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <Style Selector="^:hover, ^:expanded">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ Border#PART_Article">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource RowPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|NotificationCenterButton#PART_Toggle">
+                <Setter Property="Margin" Value="{arc:NotificationCenterTokenResource RowColumnGapNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_DetailsBody">
+                <Setter Property="Margin" Value="{arc:NotificationCenterTokenResource DetailsIndentNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ WrapPanel#PART_Actions">
+                <Setter Property="ItemSpacing" Value="{arc:NotificationCenterTokenResource ActionsGapNarrow}" />
+                <Setter Property="LineSpacing" Value="{arc:NotificationCenterTokenResource ActionsGapNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|NotificationCenterButton#PART_ReadToggle">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ActionPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|NotificationCenterButton#PART_Dismiss">
+                <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ActionPaddingNarrow}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

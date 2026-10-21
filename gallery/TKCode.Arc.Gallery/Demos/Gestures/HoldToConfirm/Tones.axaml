@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoldToConfirmTonesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:HoldToConfirm Label="Hold to delete"
+                           Tone="Danger"
+                           ConfirmedLabel="Deleted" />
+        <arc:HoldToConfirm Label="Hold to archive"
+                           Tone="Neutral"
+                           Icon="{x:Static arc:ArcIcons.Archive}"
+                           ConfirmedLabel="Archived" />
+        <arc:HoldToConfirm Label="Hold to revoke"
+                           HoldDuration="0:0:2"
+                           Icon="{x:Static arc:ArcIcons.Key}"
+                           ConfirmedLabel="Revoked" />
+    </WrapPanel>
+</UserControl>

@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CardStackShortlistDemo">
+    <StackPanel Spacing="16">
+        <arc:CardStack x:Name="Shortlist"
+                       Label="Destinations"
+                       LeftOutcome="skipped"
+                       RightOutcome="shortlisted"
+                       ItemsSource="{x:Static demos:CardStackDemoData.Destinations}"
+                       Decided="OnDecided"
+                       DecisionUndone="OnDecisionUndone"
+                       StackReset="OnStackReset">
+            <arc:CardStack.ItemTemplate>
+                <DataTemplate x:DataType="demos:CardStackDestination">
+                    <Grid RowDefinitions="*,Auto">
+                        <ContentControl Content="{Binding Scene, Converter={x:Static demos:CardStackDemoData.Art}}" />
+                        <StackPanel Grid.Row="1" Margin="20,16,20,20" Spacing="4">
+                            <TextBlock Text="{Binding Name}"
+                                       FontSize="18"
+                                       FontWeight="Medium"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{Binding Details}"
+                                       FontSize="14"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </arc:CardStack.ItemTemplate>
+        </arc:CardStack>
+        <TextBlock x:Name="Log"
+                   Text="Drag a card, or focus the stack and press ← / →."
+                   FontSize="13"
+                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

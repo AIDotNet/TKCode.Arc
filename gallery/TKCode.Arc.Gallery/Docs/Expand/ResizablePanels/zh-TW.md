@@ -1,8 +1,10 @@
 ---
 title: 可調整大小的面板
 summary: 拖曳窗格之間的分隔線，在各窗格之間調配空間。
-source-hash: e535bd1502d7
+source-hash: aea8560df955
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -55,15 +57,7 @@ source-hash: e535bd1502d7
 
 在可收合的窗格上設定 `IsCollapsed="True"`，即可使其初始時處於隱藏狀態。其分隔線會顯示一個用於還原該窗格的標籤。
 
-```xml
-<arc:ResizablePanel Id="files"
-                    Label="檔案"
-                    DefaultSize="25"
-                    IsCollapsible="True"
-                    IsCollapsed="True">
-    <TextBlock Text="src / components / panels.tsx" />
-</arc:ResizablePanel>
-```
+<Demo name="CollapsedAndPersisted" />
 
 ### 限制
 

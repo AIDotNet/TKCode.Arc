@@ -1,0 +1,288 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Cancel flow: a card with a step bar (back button, segments, "Step n of m") over a stage. The stage slides between
+        step views and sits in a height spring so the card follows the content. The step views are declared in the hidden
+        store below; the control moves them into the stage one at a time, so they are built once and styled here like any
+        template part.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CancelFlow}" TargetType="arc:CancelFlow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CancelFlow">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <arc:PresenceHost Name="PART_HeaderHost" Mode="Fade" Collapse="Height">
+                            <Grid Name="PART_Header"
+                                  ColumnDefinitions="Auto,*,Auto"
+                                  MinHeight="{arc:CancelFlowTokenResource BackDiameter}"
+                                  Margin="{arc:CancelFlowTokenResource HeaderMargin}">
+                                <arc:PresenceHost Name="PART_BackHost" Mode="Fade" Collapse="Width" VerticalAlignment="Center">
+                                    <arc:Button Name="PART_BackButton"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                Width="{arc:CancelFlowTokenResource BackDiameter}"
+                                                MinHeight="{arc:CancelFlowTokenResource BackDiameter}"
+                                                Height="{arc:CancelFlowTokenResource BackDiameter}"
+                                                Padding="0"
+                                                Margin="{arc:CancelFlowTokenResource BackMargin}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowLeft}" Size="16" />
+                                    </arc:Button>
+                                </arc:PresenceHost>
+                                <Grid Name="PART_StepBar"
+                                      Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      ColumnDefinitions="*,*,*"
+                                      ColumnSpacing="{arc:CancelFlowTokenResource SegmentGap}">
+                                    <Border Name="PART_ReasonSegment" Classes="cancelflow-segment" />
+                                    <Border Name="PART_OfferSegment" Grid.Column="1" Classes="cancelflow-segment" />
+                                    <Border Name="PART_ConfirmSegment" Grid.Column="2" Classes="cancelflow-segment" />
+                                </Grid>
+                                <TextBlock Name="PART_StepCounter"
+                                           Grid.Column="2"
+                                           VerticalAlignment="Center"
+                                           Margin="{arc:CancelFlowTokenResource CounterMargin}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Grid>
+                        </arc:PresenceHost>
+
+                        <arc:SpringSizeDecorator Name="PART_StageSize" Axis="Height" CrossClipOverflow="16">
+                            <arc:ArcContentSwap Name="PART_Stage"
+                                                Mode="Slide"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </arc:SpringSizeDecorator>
+
+                        <Panel Name="PART_StepStore" IsVisible="False">
+                            <!-- Reason -->
+                            <StackPanel Name="PART_ReasonStep">
+                                <TextBlock Name="PART_ReasonTitle" Classes="cancelflow-title" />
+                                <TextBlock Name="PART_ReasonDescription" Classes="cancelflow-description" />
+                                <arc:RadioGroup Name="PART_Reasons" Margin="{arc:CancelFlowTokenResource BodyMargin}" />
+                                <arc:SpringSizeDecorator Name="PART_FeedbackHost"
+                                                         Axis="Height"
+                                                         IsExpanded="False"
+                                                         CrossClipOverflow="8">
+                                    <arc:Textarea Name="PART_Feedback"
+                                                  IsResizable="False"
+                                                  Margin="{arc:CancelFlowTokenResource FeedbackMargin}" />
+                                </arc:SpringSizeDecorator>
+                                <DockPanel Classes="cancelflow-actions">
+                                    <arc:Button Name="PART_ContinueButton" Classes="cancelflow-primary" />
+                                    <arc:Button Name="PART_KeepButton" Variant="Ghost" Classes="cancelflow-secondary" />
+                                </DockPanel>
+                            </StackPanel>
+
+                            <!-- Offer -->
+                            <StackPanel Name="PART_OfferStep">
+                                <Border Name="PART_OfferTile"
+                                        HorizontalAlignment="Left"
+                                        Width="{arc:CancelFlowTokenResource OfferTile}"
+                                        Height="{arc:CancelFlowTokenResource OfferTile}"
+                                        CornerRadius="{arc:CancelFlowTokenResource OfferTileRadius}"
+                                        Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                    <arc:ArcGlyph Name="PART_OfferIcon"
+                                                  Size="{arc:CancelFlowTokenResource OfferGlyph}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                </Border>
+                                <TextBlock Name="PART_OfferTitle"
+                                           Classes="cancelflow-title"
+                                           Margin="{arc:CancelFlowTokenResource OfferTitleMargin}" />
+                                <TextBlock Name="PART_OfferDescription" Classes="cancelflow-description" />
+                                <DockPanel Classes="cancelflow-actions">
+                                    <arc:Button Name="PART_AcceptButton" Classes="cancelflow-primary" />
+                                    <arc:Button Name="PART_DeclineButton" Variant="Ghost" Classes="cancelflow-secondary" />
+                                </DockPanel>
+                            </StackPanel>
+
+                            <!-- Confirm -->
+                            <StackPanel Name="PART_ConfirmStep">
+                                <TextBlock Name="PART_ConfirmTitle" Classes="cancelflow-title" />
+                                <TextBlock Name="PART_ConfirmDescription" Classes="cancelflow-description" />
+                                <Border Name="PART_LossesBox"
+                                        Margin="{arc:CancelFlowTokenResource BodyMargin}"
+                                        Padding="{arc:CancelFlowTokenResource LossesInset}"
+                                        CornerRadius="{arc:CancelFlowTokenResource LossesRadius}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                    <ItemsControl Name="PART_Losses">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Spacing="{arc:CancelFlowTokenResource LossesGap}" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Grid ColumnDefinitions="Auto,*"
+                                                      ColumnSpacing="{arc:CancelFlowTokenResource LossMarkGap}">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                                                  Size="14"
+                                                                  StrokeThickness="2"
+                                                                  Margin="0,3,0,0"
+                                                                  VerticalAlignment="Top"
+                                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding}"
+                                                               TextWrapping="Wrap"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                               LineHeight="{arc:CancelFlowTokenResource BodyLineHeight}"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                                <DockPanel Classes="cancelflow-actions">
+                                    <arc:HoldToConfirm Name="PART_HoldButton"
+                                                       Tone="Danger"
+                                                       Icon="{x:Static arc:ArcIcons.CircleX}"
+                                                       Classes="cancelflow-primary" />
+                                    <arc:Button Name="PART_ConfirmKeepButton" Variant="Secondary" Classes="cancelflow-secondary" />
+                                </DockPanel>
+                            </StackPanel>
+
+                            <!-- Canceled and Retained -->
+                            <StackPanel Name="PART_ResultStep" Margin="{arc:CancelFlowTokenResource ResultInset}">
+                                <Border Name="PART_ResultMark"
+                                        HorizontalAlignment="Center"
+                                        Width="{arc:CancelFlowTokenResource ResultMark}"
+                                        Height="{arc:CancelFlowTokenResource ResultMark}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource SuccessSubtle}">
+                                    <arc:StrokeDrawGlyph Name="PART_ResultGlyph"
+                                                         Data="{x:Static arc:ArcIcons.Check}"
+                                                         Size="{arc:CancelFlowTokenResource ResultGlyph}"
+                                                         StrokeThickness="2.25"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         Foreground="{arc:ArcDesignTokenResource Success}" />
+                                </Border>
+                                <TextBlock Name="PART_ResultTitle"
+                                           Classes="cancelflow-title"
+                                           TextAlignment="Center"
+                                           Margin="{arc:CancelFlowTokenResource ResultTitleMargin}" />
+                                <TextBlock Name="PART_ResultDescription"
+                                           Classes="cancelflow-description"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           MaxWidth="{arc:CancelFlowTokenResource ResultTextWidth}" />
+                                <Panel HorizontalAlignment="Center" Margin="{arc:CancelFlowTokenResource ActionsMargin}">
+                                    <arc:Button Name="PART_ReactivateButton" Variant="Secondary" />
+                                    <arc:Button Name="PART_DoneButton" />
+                                </Panel>
+                            </StackPanel>
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:CancelFlowTokenResource FrameInset}" />
+        <Setter Property="MaxWidth" Value="{arc:CancelFlowTokenResource PreferredWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:CancelFlowTokenResource NarrowWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^[Appearance=Card] /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+
+        <!-- Step bar: done segments in the foreground at 30%, the current one in the accent, the rest a hairline. -->
+        <Style Selector="^ /template/ Border.cancelflow-segment">
+            <Setter Property="Height" Value="{arc:CancelFlowTokenResource SegmentHeight}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ Border.cancelflow-segment.done">
+            <Setter Property="Background" Value="{arc:CancelFlowTokenResource SegmentDone}" />
+        </Style>
+        <Style Selector="^ /template/ Border.cancelflow-segment.current">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+
+        <!-- Step text. Titles take focus after a step change (not a tab stop) and are read politely. -->
+        <Style Selector="^ /template/ TextBlock.cancelflow-title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="LineHeight" Value="{arc:CancelFlowTokenResource TitleLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Focusable" Value="True" />
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+            <Setter Property="AutomationProperties.LiveSetting" Value="Polite" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.cancelflow-description">
+            <Setter Property="Margin" Value="{arc:CancelFlowTokenResource DescriptionMargin}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="LineHeight" Value="{arc:CancelFlowTokenResource BodyLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!-- Buttons: the main action on the right with the other beside it; stacked full width when narrow. -->
+        <Style Selector="^ /template/ DockPanel.cancelflow-actions">
+            <Setter Property="LastChildFill" Value="False" />
+            <Setter Property="Margin" Value="{arc:CancelFlowTokenResource ActionsMargin}" />
+        </Style>
+        <Style Selector="^ /template/ :is(Button).cancelflow-primary">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ :is(Button).cancelflow-secondary">
+            <Setter Property="DockPanel.Dock" Value="Right" />
+            <Setter Property="Margin" Value="{arc:CancelFlowTokenResource SecondaryMargin}" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:CancelFlowTokenResource FrameInsetNarrow}" />
+            <Style Selector="^ /template/ :is(Button).cancelflow-primary">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ :is(Button).cancelflow-secondary">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="{arc:CancelFlowTokenResource SecondaryMarginNarrow}" />
+            </Style>
+        </Style>
+
+        <!-- Plain: the frame, shadow, padding and width limit go; the host surface provides them. -->
+        <Style Selector="^[Appearance=Plain]">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MaxWidth" Value="Infinity" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border.cancelflow-segment">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border.cancelflow-segment">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

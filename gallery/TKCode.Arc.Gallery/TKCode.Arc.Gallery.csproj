@@ -9,25 +9,50 @@
         <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../../src/TKCode.Arc/TKCode.Arc.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Generators/TKCode.Arc.Gallery.Generators.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"
                           PrivateAssets="all" />
     </ItemGroup>
 
-    <!-- Code tab docs (design/decisions/0012-gallery-docs.md): pages and API translations go to GalleryDocsGenerator.
+    <!-- The brand logo (Shell/GalleryBrand.cs). -->
+    <ItemGroup>
+        <AvaloniaResource Include="Assets/*.png" />
+    </ItemGroup>
+
+    <!-- Docs pages (design/decisions/0012-gallery-docs.md): pages and API translations go to GalleryDocsGenerator, which
+         also collects the Demos/**/*.axaml views that <Demo name="..." /> lines show (Avalonia passes them in).
          The API translations stay out of Localization/ folders, which AtomUI's language build owns. -->
     <ItemGroup>
         <AdditionalFiles Include="Docs/**/*.md" GalleryDocKind="Page" />
         <AdditionalFiles Include="Docs/Api/*.xlf" GalleryDocKind="ApiTranslation" />
         <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="GalleryDocKind" />
+        <!-- Demos are found under, and shown relative to, this project's folder. -->
+        <CompilerVisibleProperty Include="ProjectDir" />
     </ItemGroup>
 
-    <!-- The compiler does not load the XML documentation of references, so the TKCode.Arc documentation files are
-         passed to the generator as additional files. -->
+    <!-- A demo without a code-behind gets its view class from GalleryDocsGenerator. Avalonia's name generator cannot see
+         that class and would warn (AXN0001) that the x:Class does not exist, so those files are retagged after Avalonia
+         adds them as additional files (_InjectAvaloniaAdditionalFiles, Avalonia 12.1): it reads only SourceItemGroup=AvaloniaXaml.
+         The XAML compiler still compiles them; it reads @(AvaloniaXaml). -->
+    <Target Name="HideGeneratedDemoViewsFromAvaloniaNameGenerator" AfterTargets="_InjectAvaloniaAdditionalFiles">
+        <PropertyGroup>
+            <_GalleryDemosFolder>$([System.String]::Copy('$(MSBuildProjectDirectory)/Demos/').Replace('\', '/'))</_GalleryDemosFolder>
+        </PropertyGroup>
+        <ItemGroup>
+            <AdditionalFiles Condition="'%(AdditionalFiles.SourceItemGroup)' == 'AvaloniaXaml' And $([System.String]::Copy('%(AdditionalFiles.FullPath)').Replace('\', '/').StartsWith('$(_GalleryDemosFolder)')) And !Exists('%(AdditionalFiles.FullPath).cs')">
+                <SourceItemGroup>GalleryDemo</SourceItemGroup>
+            </AdditionalFiles>
+        </ItemGroup>
+    </Target>
+
+    <!-- The compiler does not load the XML documentation of references, so the documentation files of every referenced
+         TKCode.Arc assembly (TKCode.Arc, .Core, .Illustrations, .Blocks, …) are passed to the generator as additional files. -->
     <Target Name="AddArcDocumentationToGalleryDocs" AfterTargets="ResolveAssemblyReferences" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun;CoreCompile">
         <ItemGroup>
-            <_GalleryArcReference Include="@(ReferencePath)" Condition="'%(Filename)' == 'TKCode.Arc' or '%(Filename)' == 'TKCode.Arc.Core'" />
+            <_GalleryArcReference Include="@(ReferencePath)" Condition="$([System.String]::Copy('%(Filename)').StartsWith('TKCode.Arc'))" />
             <_GalleryArcDocumentation Include="@(_GalleryArcReference->'%(RootDir)%(Directory)%(Filename).xml')" />
             <AdditionalFiles Include="@(_GalleryArcDocumentation)" Condition="Exists('%(FullPath)')" GalleryDocKind="XmlDoc" />
         </ItemGroup>

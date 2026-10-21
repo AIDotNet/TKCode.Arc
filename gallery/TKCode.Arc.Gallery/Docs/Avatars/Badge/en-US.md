@@ -3,6 +3,8 @@ title: Badge
 summary: A small label for status, category, or metadata.
 ---
 
+<Demo name="Tones" />
+
 ## When to use
 
 - A short status next to a title or in a table cell, such as Live, Draft or Failed.
@@ -43,14 +45,14 @@ summary: A small label for status, category, or metadata.
 
 `Size` sets the height: `Medium` (the default) is 26 and `Small` is 22. Use `Small` in dense tables.
 
-```xml
-<arc:Badge Size="Small" Tone="Success" Content="Live" />
-```
+<Demo name="Small" />
 
 ### Icon
 
 `Icon` takes a leading icon. It takes the tone color and is hidden from assistive technology. The example uses an
 `ArcGlyph` from `ArcIcons`.
+
+<Demo name="Icons" />
 
 ```csharp
 badge.Tone = BadgeTone.Success;
@@ -63,11 +65,7 @@ badge.Icon = new ArcGlyph { Data = ArcIcons.Check, Size = 12 };
 Keep the badge mounted and change `Content`. A new string or number rises in from a soft blur, and the pill width
 springs to fit. Re-creating the badge loses this motion.
 
-```csharp
-deploy.Content = "Deploying";
-deploy.Tone = BadgeTone.Warning;
-deploy.Icon = new ArcGlyph { Data = ArcIcons.LoaderCircle, Size = 12 };
-```
+<Demo name="ChangingInPlace" />
 
 ## API reference
 

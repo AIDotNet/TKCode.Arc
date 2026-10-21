@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsCommandInlineDemo">
+    <arc:SettingsCommand MaxWidth="560" ItemInvoked="OnItemInvoked">
+        <arc:SettingsCommandChoice Group="Appearance" Header="Theme" Icon="{x:Static arc:ArcIcons.Palette}"
+                                   Description="Match your system, or always use light or dark."
+                                   Keywords="dark light mode color scheme"
+                                   Options="Light, Dark, System" SelectedOption="System" />
+        <arc:SettingsCommandToggle Group="Appearance" Header="Compact mode" Icon="{x:Static arc:ArcIcons.Rows2}"
+                                   Description="Tighter rows and smaller gaps in lists."
+                                   Keywords="density dense spacing" />
+        <arc:SettingsCommandToggle Group="Appearance" Header="Reduce motion" Icon="{x:Static arc:ArcIcons.Sparkles}"
+                                   Description="Fewer animations across the app."
+                                   Keywords="animation accessibility" />
+        <arc:SettingsCommandChoice Group="Appearance" Header="Text size" Icon="{x:Static arc:ArcIcons.Type}"
+                                   Description="The size of text in the app."
+                                   Keywords="font zoom bigger smaller"
+                                   Options="Small, Default, Large" SelectedOption="Default" />
+        <arc:SettingsCommandChoice Group="Notifications" Header="Email digests" Icon="{x:Static arc:ArcIcons.Inbox}"
+                                   Description="A summary of activity in your projects."
+                                   Keywords="email summary newsletter"
+                                   Options="Off, Daily, Weekly" SelectedOption="Weekly" />
+        <arc:SettingsCommandToggle Group="Notifications" Header="Mentions" Icon="{x:Static arc:ArcIcons.AtSign}"
+                                   Description="When someone @mentions you in a comment."
+                                   Keywords="notify alert" IsChecked="True" />
+        <arc:SettingsCommandToggle Group="Notifications" Header="Product updates" Icon="{x:Static arc:ArcIcons.Bell}"
+                                   Description="Occasional news about new features."
+                                   Keywords="email news announcements" />
+        <arc:SettingsCommandToggle Group="Notifications" Header="Notification sound" Icon="{x:Static arc:ArcIcons.Volume2}"
+                                   Description="Play a sound when a message arrives."
+                                   Keywords="audio chime" IsChecked="True" />
+        <arc:SettingsCommandToggle Group="Privacy" Header="Show online status" Icon="{x:Static arc:ArcIcons.CircleDot}"
+                                   Description="Let teammates see when you are active."
+                                   Keywords="presence away visible" IsChecked="True" />
+        <arc:SettingsCommandToggle Group="Privacy" Header="Read receipts" Icon="{x:Static arc:ArcIcons.CheckCheck}"
+                                   Description="Turned off for everyone in Larkspur Studio."
+                                   Keywords="seen messages" IsEnabled="False" />
+        <arc:SettingsCommandAction Group="Account" Header="Change email" Icon="{x:Static arc:ArcIcons.Mail}"
+                                   Description="noor@larkspur.co"
+                                   Keywords="address login" IsNavigation="True" />
+        <arc:SettingsCommandAction Group="Account" Header="Two-step verification" Icon="{x:Static arc:ArcIcons.Shield}"
+                                   Description="On, with an authenticator app."
+                                   Keywords="2fa security password authenticator" IsNavigation="True" />
+        <arc:SettingsCommandAction Group="Account" Header="Download your data" Icon="{x:Static arc:ArcIcons.Download}"
+                                   Description="A copy of your files, comments and settings."
+                                   Keywords="export archive backup" Shortcut="mod+shift+e" />
+        <arc:SettingsCommandAction Group="Account" Header="Sign out everywhere" Icon="{x:Static arc:ArcIcons.LogOut}"
+                                   Description="Every device except this one."
+                                   Keywords="sessions logout devices" Shortcut="mod+shift+q" />
+    </arc:SettingsCommand>
+</UserControl>

@@ -3,6 +3,8 @@ title: Resizable panels
 summary: Trade space between panes by dragging the divider between them.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Editor, mail or dashboard layouts where the user needs to decide how much space each pane gets.
@@ -55,15 +57,7 @@ not need to add up to 100. The group needs a definite height from its parent.
 
 Set `IsCollapsed="True"` on a collapsible pane to start it hidden. Its divider shows a tab that restores the pane.
 
-```xml
-<arc:ResizablePanel Id="files"
-                    Label="Files"
-                    DefaultSize="25"
-                    IsCollapsible="True"
-                    IsCollapsed="True">
-    <TextBlock Text="src / components / panels.tsx" />
-</arc:ResizablePanel>
-```
+<Demo name="CollapsedAndPersisted" />
 
 ### Limits
 

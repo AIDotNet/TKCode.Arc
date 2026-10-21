@@ -1,8 +1,10 @@
 ---
 title: 数字输入框
 summary: 通过清晰的增减控件输入有范围限制的数字。
-source-hash: ff28c2fe4eb2
+source-hash: 7b594fbbd74c
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -34,10 +36,7 @@ source-hash: ff28c2fe4eb2
 
 `Step` 设置增减幅度，其精度决定默认的小数位数。`SuffixFormatter` 可让单位随数值变化，例如单数与复数形式。
 
-```xml
-<arc:NumberField Label="价格" Prefix="¥" Step="0.5" Maximum="999" Value="24.5" />
-<arc:NumberField Label="温度" Minimum="-20" Maximum="40" Value="21" Suffix="°C" />
-```
+<Demo name="Price" />
 
 ```csharp
 var seats = new NumberField
@@ -52,39 +51,27 @@ var seats = new NumberField
 
 最小值小于零时，用户输入时即可接受负号。
 
+<Demo name="NegativeRange" />
+
 ### 尺寸
 
 `Size` 设置宽度与微调按钮的尺寸：`Small` 宽 164px，`Medium`（默认）宽 196px，`Large` 宽 228px。
 
-```xml
-<arc:NumberField Label="小" Size="Small" Value="2" Maximum="99" />
-<arc:NumberField Label="大" Size="Large" Value="48" Maximum="99" />
-```
+<Demo name="Sizes" />
 
 ### 限值提示与错误
 
 `IsLimitHintEnabled` 在达到限值时显示提示。`LimitHintFormatter` 负责生成提示文字。`ErrorMessage` 会将字段标记为无效。
 
-```xml
-<arc:NumberField Label="数量" Value="0" Maximum="5" ErrorMessage="请至少添加一项。" />
-```
+<Demo name="LimitHint" />
 
-```csharp
-var guests = new NumberField
-{
-    Label = "宾客",
-    Minimum = 1,
-    Maximum = 8,
-    Value = 8,
-    LimitHintFormatter = (edge, limit) => edge == NumberFieldLimitEdge.Maximum
-        ? $"容量为 {limit}"
-        : $"至少 {limit}"
-};
-```
+<Demo name="States" />
 
 ### 绑定与事件
 
 `Value` 为双向绑定。`ValueChanged` 会报告旧值、新值以及 `ChangeSource`。
+
+<Demo name="BindingAndEvents" />
 
 ```xml
 <arc:NumberField Label="项目" Minimum="0" Maximum="50" Value="{Binding ItemCount, Mode=TwoWay}" />
@@ -96,6 +83,18 @@ field.ValueChanged += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue} ({e.ChangeSource})");
 };
 ```
+
+### 拖动标签
+
+开启 `IsScrubEnabled` 后，向两侧拖动标签即可更改数值：每 6px 一个步长。超过限值后，数值会带着阻力跟随。
+
+<Demo name="ScrubLabel" />
+
+### 键盘
+
+聚焦字段后即可使用键盘操作，按键列在字段下方。
+
+<Demo name="Keyboard" />
 
 ## API 参考
 

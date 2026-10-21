@@ -1,8 +1,10 @@
 ---
 title: 可排序数据表格
 summary: 通过可排序的列比较结构化记录。
-source-hash: 2f0ca35e75db
+source-hash: a5b5f6c27ca4
 ---
+
+<Demo name="Projects" />
 
 ## 何时使用
 
@@ -69,6 +71,8 @@ table.Columns.Add(new DataTableColumn("状态", p => ((Project)p).Status)
 
 `SortChanged` 和 `SelectionChanged` 报告用户的操作。设置 `IsSortClearable` 后，用户第三次点击表头即可清除排序。
 
+<Demo name="SortedFromCode" />
+
 ```csharp
 table.SortChanged += (_, e) => status.Text = e.Column is null
     ? "已清除排序"
@@ -81,10 +85,24 @@ table.Sort(table.Columns[1], DataTableSortDirection.Ascending);
 
 没有行时显示 `EmptyMessage`。`IsLoading` 会以加载遮罩覆盖各行，`LoadingMessage` 说明正在等待的内容。
 
+<Demo name="EmptyAndLoading" />
+
 ```xml
 <arc:SortableDataTable EmptyMessage="没有符合这些筛选条件的项目"
                        IsLoading="{Binding IsBusy}" />
 ```
+
+### 五千行
+
+各行会被虚拟化，表头保持固定。排序只重排索引，而不是重排容器；`IsSortClearable` 允许用户第三次点击以清除排序。
+
+<Demo name="FiveThousandRows" />
+
+### 窄宽度
+
+宽度低于 620px 时，各行会折叠成两行文字，表头变成一排排序胶囊。
+
+<Demo name="Narrow" />
 
 ## API 参考
 

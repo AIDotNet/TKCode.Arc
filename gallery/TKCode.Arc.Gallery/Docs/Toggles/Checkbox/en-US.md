@@ -3,6 +3,8 @@ title: Checkbox
 summary: A binary choice with a precise, legible state.
 ---
 
+<Demo name="LabelAndDescription" />
+
 ## When to use
 
 - An independent choice that is confirmed with a submit button, such as accepting terms.
@@ -32,6 +34,8 @@ The label is the content of the control. `Description` adds a line of help text 
 `IsRequired` marks the field as required in a form. `IsInvalid` shows the error state, with the box border in the
 danger color while the box is unchecked.
 
+<Demo name="States" />
+
 ```xml
 <arc:Checkbox Content="Accept terms and conditions"
               Description="Check this box to continue."
@@ -44,31 +48,10 @@ danger color while the box is unchecked.
 `CheckedState` is an enum with `Unchecked`, `Checked` and `Indeterminate`. `IsChecked` is the same value as a
 nullable boolean, where `null` means indeterminate. Set the parent to indeterminate while some children are checked.
 
+<Demo name="IndeterminateParent" />
+
 ```xml
 <arc:Checkbox Content="All channels" CheckedState="Indeterminate" />
-```
-
-```csharp
-var all = new Checkbox { Content = "All channels" };
-var children = new[]
-{
-    new Checkbox { Content = "Email", IsChecked = true },
-    new Checkbox { Content = "Push notifications" },
-    new Checkbox { Content = "SMS" }
-};
-
-void UpdateParent()
-{
-    var on = children.Count(c => c.IsChecked == true);
-    all.CheckedState = on == 0 ? CheckboxState.Unchecked
-        : on == children.Length ? CheckboxState.Checked
-        : CheckboxState.Indeterminate;
-}
-
-foreach (var child in children)
-{
-    child.CheckedStateChanged += (_, _) => UpdateParent();
-}
 ```
 
 To make a click on the parent set every child, handle `CheckedStateChanged` on the parent and set each child's
@@ -78,9 +61,7 @@ To make a click on the parent set every child, handle `CheckedStateChanged` on t
 
 `IsThreeState="True"` makes a click cycle through unchecked, checked and indeterminate, as the Avalonia `CheckBox` does.
 
-```xml
-<arc:Checkbox Content="Three-state cycle" IsThreeState="True" />
-```
+<Demo name="TriState" />
 
 ### Events
 

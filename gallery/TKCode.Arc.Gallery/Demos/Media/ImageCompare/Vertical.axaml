@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:pages="using:TKCode.Arc.Gallery.Pages"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageCompareVerticalDemo">
+    <StackPanel Spacing="12">
+        <arc:ImageCompare x:Name="Compare"
+                          Orientation="Vertical"
+                          BeforeLabel="Original"
+                          AfterLabel="Graded">
+            <arc:ImageCompare.Before>
+                <pages:MediaArt Scene="2" Graded="False" />
+            </arc:ImageCompare.Before>
+            <arc:ImageCompare.After>
+                <pages:MediaArt Scene="2" />
+            </arc:ImageCompare.After>
+        </arc:ImageCompare>
+        <arc:Button x:Name="Swing"
+                    Content="Swing to horizontal"
+                    Variant="Secondary"
+                    Size="Small"
+                    HorizontalAlignment="Center"
+                    Click="OnSwingClick" />
+    </StackPanel>
+</UserControl>

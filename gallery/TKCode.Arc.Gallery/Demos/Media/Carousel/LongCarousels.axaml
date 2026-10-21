@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CarouselLongCarouselsDemo">
+    <StackPanel Spacing="12">
+        <arc:Carousel x:Name="Archive"
+                      Label="Archive"
+                      SelectionChanged="OnSelectionChanged">
+            <arc:Carousel.ItemTemplate>
+                <DataTemplate x:DataType="x:Int32">
+                    <Border Height="180"
+                            BorderThickness="1"
+                            ClipToBounds="True"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                        <ContentControl Content="{Binding Converter={x:Static demos:CarouselLongCarouselsDemo.NumberedArt}}" />
+                    </Border>
+                </DataTemplate>
+            </arc:Carousel.ItemTemplate>
+        </arc:Carousel>
+        <TextBlock x:Name="Readout"
+                   Text="Slide 1 of 120"
+                   FontSize="13"
+                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

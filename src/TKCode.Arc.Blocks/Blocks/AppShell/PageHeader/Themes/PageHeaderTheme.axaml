@@ -1,0 +1,372 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Ported from Arc's free page-header block (page-header.module.css; MIT, Copyright (c) 2026 Elia Kuratli). -->
+    <ControlTheme x:Key="{x:Type arc:PageHeader}" TargetType="arc:PageHeader">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="{arc:PageHeaderTokenResource TabGap}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PageHeader">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- The header: its bottom rule is drawn under the tabs so the indicator covers it (Arc: inset box-shadow). -->
+                        <Panel Name="PART_Header">
+                            <Border Name="PART_HeaderRule"
+                                    Height="1"
+                                    VerticalAlignment="Bottom"
+                                    IsHitTestVisible="False"
+                                    Background="{arc:ArcDesignTokenResource Border}" />
+                            <StackPanel Name="PART_HeaderContent" Orientation="Vertical">
+                                <Grid Name="PART_Bar"
+                                      ColumnDefinitions="*,Auto"
+                                      MinHeight="{arc:ArcDesignTokenResource ControlSizeSM}">
+                                    <!-- Breadcrumbs and the compact title share one cell and trade places when the header condenses. -->
+                                    <Panel Name="PART_Lead" VerticalAlignment="Center" ClipToBounds="False">
+                                        <arc:Breadcrumb Name="PART_Breadcrumb"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center">
+                                            <arc:Breadcrumb.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <arc:PageHeaderCrumbPanel Spacing="{arc:PageHeaderTokenResource CrumbGap}" />
+                                                </ItemsPanelTemplate>
+                                            </arc:Breadcrumb.ItemsPanel>
+                                            <arc:Breadcrumb.ItemContainerTheme>
+                                                <!-- Arc's page-header crumbs: muted text buttons followed by a 14px chevron; the current page is secondary text. -->
+                                                <ControlTheme TargetType="arc:BreadcrumbItem">
+                                                    <Setter Property="FocusAdorner" Value="{x:Null}" />
+                                                    <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+                                                    <Setter Property="Template">
+                                                        <ControlTemplate TargetType="arc:BreadcrumbItem">
+                                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:PageHeaderTokenResource CrumbGap}">
+                                                                <Panel>
+                                                                    <Border Name="PART_Frame"
+                                                                            Background="Transparent"
+                                                                            CornerRadius="{arc:PageHeaderTokenResource CrumbRadius}"
+                                                                            Padding="{TemplateBinding Padding}">
+                                                                        <Panel>
+                                                                            <ContentPresenter Name="PART_ContentPresenter"
+                                                                                              VerticalAlignment="Center"
+                                                                                              TextTrimming="CharacterEllipsis"
+                                                                                              Content="{TemplateBinding Content}"
+                                                                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                                                            <!-- The crumbs keep one weight, so nothing needs to reserve a wider label. -->
+                                                                            <ContentPresenter Name="PART_Reserve" IsVisible="False" />
+                                                                        </Panel>
+                                                                    </Border>
+                                                                    <Border Name="PART_FocusRing"
+                                                                            IsVisible="False"
+                                                                            IsHitTestVisible="False"
+                                                                            Margin="{arc:PageHeaderTokenResource FocusRingMargin}"
+                                                                            BorderThickness="2"
+                                                                            CornerRadius="{arc:PageHeaderTokenResource FocusRingRadius}"
+                                                                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                                                                </Panel>
+                                                                <arc:ArcGlyph Name="PART_Separator"
+                                                                              Grid.Column="1"
+                                                                              Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                                                              Size="{arc:PageHeaderTokenResource CrumbChevronSize}"
+                                                                              StrokeThickness="1.75"
+                                                                              Foreground="{arc:ArcDesignTokenResource BorderStrong}"
+                                                                              VerticalAlignment="Center" />
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter>
+                                                    <Setter Property="Padding" Value="{arc:PageHeaderTokenResource CrumbPadding}" />
+                                                    <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Style Selector="^:interactive">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Style>
+                                                    <Style Selector="^:interactive:pointerover">
+                                                        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                                                    </Style>
+                                                    <Style Selector="^:current">
+                                                        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                    </Style>
+                                                    <Style Selector="^:current /template/ arc|ArcGlyph#PART_Separator">
+                                                        <Setter Property="IsVisible" Value="False" />
+                                                    </Style>
+                                                    <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+                                                        <Setter Property="IsVisible" Value="True" />
+                                                    </Style>
+                                                    <Style Selector="^:motion-full">
+                                                        <Setter Property="Transitions">
+                                                            <Transitions>
+                                                                <arc:ArcBrushTransition Property="Foreground" />
+                                                            </Transitions>
+                                                        </Setter>
+                                                    </Style>
+                                                </ControlTheme>
+                                            </arc:Breadcrumb.ItemContainerTheme>
+                                        </arc:Breadcrumb>
+                                        <arc:PageHeaderCompactTitle Name="PART_CompactTitle"
+                                                                    Text="{TemplateBinding Title}"
+                                                                    Status="{TemplateBinding Status}"
+                                                                    StatusTone="{TemplateBinding StatusTone}" />
+                                    </Panel>
+
+                                    <StackPanel Name="PART_Actions"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <arc:PageHeaderFoldSlot Name="PART_SecondarySlot">
+                                            <StackPanel Name="PART_SecondaryPanel" Orientation="Horizontal" />
+                                        </arc:PageHeaderFoldSlot>
+                                        <StackPanel Name="PART_Trailing" Orientation="Horizontal">
+                                            <!-- The overflow button never scales: it anchors the menu. -->
+                                            <arc:Button Name="PART_MoreButton"
+                                                        Classes="page-header-icon"
+                                                        Variant="Secondary"
+                                                        Size="Small"
+                                                        IsPressScaleEnabled="False">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}"
+                                                              Size="{arc:PageHeaderTokenResource OverflowGlyphSize}"
+                                                              StrokeThickness="1.75" />
+                                            </arc:Button>
+                                            <arc:Button Name="PART_PrimaryButton"
+                                                        Variant="Primary"
+                                                        Size="Small"
+                                                        IsVisible="False" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+
+                                <arc:SpringSizeDecorator Name="PART_Intro" Axis="Height" Spring="Smooth">
+                                    <StackPanel Name="PART_IntroInner" Orientation="Vertical">
+                                        <WrapPanel Name="PART_TitleRow" Orientation="Horizontal">
+                                            <TextBlock Name="PART_Title"
+                                                       Text="{TemplateBinding Title}"
+                                                       Focusable="True"
+                                                       FocusAdorner="{x:Null}"
+                                                       TextWrapping="Wrap"
+                                                       VerticalAlignment="Center"
+                                                       AutomationProperties.HeadingLevel="2" />
+                                            <arc:Badge Name="PART_Status"
+                                                       Tone="{TemplateBinding StatusTone}"
+                                                       Content="{TemplateBinding Status}"
+                                                       IsVisible="{TemplateBinding Status, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                                <arc:Badge.Icon>
+                                                    <arc:PageHeaderStatusDot Diameter="{arc:PageHeaderTokenResource StatusDotSize}" />
+                                                </arc:Badge.Icon>
+                                            </arc:Badge>
+                                        </WrapPanel>
+                                        <StackPanel Name="PART_Details" Orientation="Vertical">
+                                            <TextBlock Name="PART_Description"
+                                                       Text="{TemplateBinding Description}"
+                                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                       TextWrapping="Wrap"
+                                                       HorizontalAlignment="Left" />
+                                            <ContentPresenter Name="PART_Meta"
+                                                              Content="{TemplateBinding Meta}"
+                                                              IsVisible="{TemplateBinding Meta, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                              HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </arc:SpringSizeDecorator>
+
+                                <!-- Tabs bleed to the frame edges so the rule under them spans the page; the first label lines up with the title. -->
+                                <ScrollViewer Name="PART_TabsViewport"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Disabled"
+                                              BringIntoViewOnFocusChange="False">
+                                    <arc:PageHeaderTabStrip Name="PART_TabStrip">
+                                        <arc:GlidingIndicator Name="PART_Indicator"
+                                                              Fill="{arc:ArcDesignTokenResource Accent}"
+                                                              CornerRadius="{arc:PageHeaderTokenResource IndicatorRadius}"
+                                                              Spring="Morph" />
+                                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                    </arc:PageHeaderTabStrip>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Panel>
+
+                        <ScrollViewer Name="PART_Scroller"
+                                      Grid.Row="1"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <Border Name="PART_BodyFrame">
+                                <arc:PageHeaderBody Name="PART_Body"
+                                                    VerticalAlignment="Top"
+                                                    FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                    FocusRingRadius="{arc:PageHeaderTokenResource BodyFocusRingRadius}" />
+                            </Border>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:PageHeaderTokenResource FrameRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TextBlock.LineHeight" Value="{arc:PageHeaderTokenResource BodyLineHeight}" />
+        <Setter Property="IndicatorInset" Value="{arc:PageHeaderTokenResource IndicatorInset}" />
+        <Setter Property="IndicatorHeight" Value="{arc:PageHeaderTokenResource IndicatorHeight}" />
+        <Setter Property="TabsFadeWidth" Value="{arc:PageHeaderTokenResource TabsFadeWidth}" />
+        <Setter Property="ActionGlyphSize" Value="{arc:PageHeaderTokenResource ActionGlyphSize}" />
+        <Setter Property="ActionContentGap" Value="{arc:PageHeaderTokenResource ActionContentGap}" />
+
+        <!-- Base part values live in styles (not the template) so the narrow layout can override them. -->
+        <Style Selector="^ /template/ StackPanel#PART_HeaderContent">
+            <Setter Property="Margin" Value="{arc:PageHeaderTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Bar">
+            <Setter Property="ColumnSpacing" Value="{arc:PageHeaderTokenResource BarGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_SecondaryPanel">
+            <Setter Property="Spacing" Value="{arc:PageHeaderTokenResource ActionGap}" />
+            <Setter Property="Margin" Value="{arc:PageHeaderTokenResource SecondaryTrailing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Trailing">
+            <Setter Property="Spacing" Value="{arc:PageHeaderTokenResource ActionGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.page-header-icon">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_PrimaryButton.icon-only">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_IntroInner">
+            <Setter Property="Margin" Value="{arc:PageHeaderTokenResource IntroPadding}" />
+            <Setter Property="Spacing" Value="{arc:PageHeaderTokenResource IntroGap}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_TitleRow">
+            <Setter Property="ItemSpacing" Value="{arc:PageHeaderTokenResource TitleRowItemGap}" />
+            <Setter Property="LineSpacing" Value="{arc:PageHeaderTokenResource TitleRowLineGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:PageHeaderTokenResource TitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:PageHeaderTokenResource TitleLetterSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Details">
+            <Setter Property="Spacing" Value="{arc:PageHeaderTokenResource DetailsGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Description">
+            <Setter Property="MaxWidth" Value="{arc:PageHeaderTokenResource DescriptionMaxWidth}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Meta">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^ /template/ ScrollViewer#PART_TabsViewport">
+            <Setter Property="Margin" Value="{arc:PageHeaderTokenResource TabsMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|PageHeaderTabStrip#PART_TabStrip">
+            <Setter Property="Margin" Value="{arc:PageHeaderTokenResource TabsPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_BodyFrame">
+            <Setter Property="Padding" Value="{arc:PageHeaderTokenResource BodyPadding}" />
+        </Style>
+
+        <!-- Below 560px (the control's own width). -->
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ StackPanel#PART_HeaderContent">
+                <Setter Property="Margin" Value="{arc:PageHeaderTokenResource HeaderPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_IntroInner">
+                <Setter Property="Margin" Value="{arc:PageHeaderTokenResource IntroPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="{arc:PageHeaderTokenResource TitleLineHeightNarrow}" />
+                <Setter Property="LetterSpacing" Value="{arc:PageHeaderTokenResource TitleLetterSpacingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ ScrollViewer#PART_TabsViewport">
+                <Setter Property="Margin" Value="{arc:PageHeaderTokenResource TabsMarginNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PageHeaderTabStrip#PART_TabStrip">
+                <Setter Property="Margin" Value="{arc:PageHeaderTokenResource TabsPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_BodyFrame">
+                <Setter Property="Padding" Value="{arc:PageHeaderTokenResource BodyPaddingNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|PageHeaderCompactTitle#PART_CompactTitle">
+                <Setter Property="IsStatusVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The compact bar title (Arc .compact): text-base 500 with a small status badge, a quiet hover fill. -->
+    <ControlTheme x:Key="{x:Type arc:PageHeaderCompactTitle}" TargetType="arc:PageHeaderCompactTitle">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PageHeaderCompactTitle">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:PageHeaderTokenResource CompactRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <DockPanel>
+                            <arc:Badge Name="PART_Status"
+                                       DockPanel.Dock="Right"
+                                       Size="Small"
+                                       Margin="{arc:PageHeaderTokenResource CompactBadgeMargin}"
+                                       Tone="{TemplateBinding StatusTone}"
+                                       Content="{TemplateBinding Status}"
+                                       IsVisible="{TemplateBinding ShowsStatus}">
+                                <arc:Badge.Icon>
+                                    <arc:PageHeaderStatusDot Diameter="{arc:PageHeaderTokenResource StatusDotSize}" />
+                                </arc:Badge.Icon>
+                            </arc:Badge>
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding Text}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:PageHeaderTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:PageHeaderTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="{arc:PageHeaderTokenResource CompactMargin}" />
+        <Setter Property="Padding" Value="{arc:PageHeaderTokenResource CompactPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:PageHeaderTokenResource CompactHoverFill}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

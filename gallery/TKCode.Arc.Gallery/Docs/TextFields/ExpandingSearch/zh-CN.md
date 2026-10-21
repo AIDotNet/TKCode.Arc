@@ -1,8 +1,10 @@
 ---
 title: 展开式搜索
 summary: 图标展开为搜索框，并在下方显示结果。
-source-hash: 9ba7b7424543
+source-hash: a233178b274e
 ---
+
+<Demo name="HeaderSearch" />
 
 ## 何时使用
 
@@ -64,11 +66,7 @@ header.ItemSelected += (_, e) => Open(e.Item.Id);
 
 `Anchor` 设置按钮所在的边缘。输入框会从该边缘向外展开，最宽至 `ExpandedWidth`。
 
-```xml
-<arc:ExpandingSearch Label="查找仪表板"
-                     Anchor="Start"
-                     ExpandedWidth="300" />
-```
+<Demo name="AnchoredAtStart" />
 
 ### 在代码中打开与关闭
 

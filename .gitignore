@@ -29,3 +29,7 @@ TestResults/
 *.mobileprovision
 *.keychain
 *.keychain-db
+
+# Python bytecode from the tools/ scripts
+__pycache__/
+*.pyc

@@ -3,6 +3,8 @@ title: Split button
 summary: A primary action with a menu of nearby alternatives.
 ---
 
+<Demo name="MergeStrategies" />
+
 ## When to use
 
 - A default action with two to five close alternatives, such as Merge with Squash and merge or Rebase and merge.
@@ -61,26 +63,19 @@ Use `ItemsSource` for rows that come from a view model, and `ItemTemplate` to dr
 `Icon` takes a 24 by 24 Lucide geometry and is set in code. Changing `Label` and `Icon` morphs the main half to the
 new text, so a result can be shown on the button itself.
 
-```csharp
-copy.Click += async (_, _) =>
-{
-    copy.Label = "Copied";
-    copy.Icon = ArcIcons.Check;
-    await Task.Delay(1600);
-    copy.Label = "Copy page";
-    copy.Icon = ArcIcons.Copy;
-};
-```
+<Demo name="ResultInPlace" />
 
 ### Disabled
 
 Set `IsEnabled` to `False` to disable both halves.
 
-```xml
-<arc:SplitButton Label="Deploy" IsEnabled="False">
-    <arc:MenuEntry Header="Deploy to staging" />
-</arc:SplitButton>
-```
+<Demo name="Disabled" />
+
+### Secondary
+
+`Variant="Secondary"` is a compact outlined pill with 12px text and a 142px main half. In this example, picking a format makes it the default.
+
+<Demo name="Secondary" />
 
 ## API reference
 

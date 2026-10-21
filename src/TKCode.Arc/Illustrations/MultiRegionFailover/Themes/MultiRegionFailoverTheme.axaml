@@ -54,7 +54,7 @@
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
-        <Setter Property="Padding" Value="{arc:MultiRegionFailoverTokenResource FramePadding}" />
+        <Setter Property="Padding" Value="20,20,20,14" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -78,8 +78,8 @@
         <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
         <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
         <Setter Property="RestingShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
-        <Setter Property="NodeRadius" Value="{arc:MultiRegionFailoverTokenResource NodeRadius}" />
-        <Setter Property="PacketSize" Value="{arc:MultiRegionFailoverTokenResource PacketSize}" />
+        <Setter Property="NodeRadius" Value="12" />
+        <Setter Property="PacketSize" Value="7" />
         <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
             <Setter Property="IsVisible" Value="True" />
         </Style>

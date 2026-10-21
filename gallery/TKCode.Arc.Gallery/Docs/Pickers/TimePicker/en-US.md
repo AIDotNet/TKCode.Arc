@@ -3,6 +3,8 @@ title: Time picker
 summary: Choose a time with sensible keyboard behavior.
 ---
 
+<Demo name="TimeField" />
+
 ## When to use
 
 - A time of day picked from evenly spaced options, such as a meeting or a reminder.
@@ -32,10 +34,7 @@ summary: Choose a time with sensible keyboard behavior.
 display: `TwelveHour` shows "9:15 AM", `TwentyFourHour` shows "09:15", and `Auto` follows the short time
 pattern of `Culture`. The value is always a `TimeOnly`, whatever the display.
 
-```xml
-<arc:TimePicker Label="Every 5 minutes" MinuteStep="5" />
-<arc:TimePicker Label="24-hour" MinuteStep="30" ClockFormat="TwentyFourHour" />
-```
+<Demo name="StepsAndClocks" />
 
 ### Empty value
 
@@ -58,11 +57,7 @@ picker.SelectedTimeChanged += (_, e) =>
 `Size` sets the field height: `Small` is 36, `Medium` is 44 (the Arc look) and `Large` is 50. A non-empty
 `ErrorMessage` marks the field invalid. `IsEnabled="False"` disables it.
 
-```xml
-<arc:TimePicker Label="Small" Size="Small" />
-<arc:TimePicker Label="Check-in" ErrorMessage="Check-in opens at 3:00 PM." />
-<arc:TimePicker Label="Locked" IsEnabled="False" />
-```
+<Demo name="SizesAndStates" />
 
 ## API reference
 

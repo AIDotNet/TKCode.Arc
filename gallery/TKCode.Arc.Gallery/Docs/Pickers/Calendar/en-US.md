@@ -3,6 +3,8 @@ title: Calendar
 summary: Browse dates in a clear, compact month view.
 ---
 
+<Demo name="SingleDate" />
+
 ## When to use
 
 - A month view that stays on the page, such as a booking or availability screen.
@@ -43,12 +45,7 @@ calendar.DateSelected += (_, e) => status.Text = $"Selected {e.Date:D}";
 that returns `true` for a day that must not be picked. Disabled days are skipped when the arrow keys move
 the focus.
 
-```csharp
-calendar.MinDate = today.AddDays(-3);
-calendar.MaxDate = today.AddDays(45);
-calendar.DisabledDates = d => d.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
-calendar.FirstDayOfWeek = DayOfWeek.Monday;
-```
+<Demo name="LimitsAndDisabledDays" />
 
 ### Displayed month
 

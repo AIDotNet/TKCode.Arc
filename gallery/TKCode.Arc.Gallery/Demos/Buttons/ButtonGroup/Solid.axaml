@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ButtonGroupSolidDemo">
+    <arc:ButtonGroup Label="Message actions" Variant="Solid" HorizontalAlignment="Center">
+        <arc:ButtonGroupItem Label="Reply" Icon="{x:Static arc:ArcIcons.Reply}" />
+        <arc:ButtonGroupItem Label="Reply all"
+                             Icon="M7 17l-5-5 5-5 M12 17l-5-5 5-5 M22 18v-2a4 4 0 0 0-4-4H7" />
+        <arc:ButtonGroupItem Label="Forward"
+                             Icon="M15 17l5-5-5-5 M4 18v-2a4 4 0 0 1 4-4h12" />
+    </arc:ButtonGroup>
+</UserControl>

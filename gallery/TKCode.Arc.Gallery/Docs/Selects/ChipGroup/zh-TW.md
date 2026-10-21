@@ -1,8 +1,10 @@
 ---
 title: 標籤群組
 summary: 以幾組會隨選取而變形的標籤進行篩選。
-source-hash: 3111842585f6
+source-hash: be8b71bea6f8
 ---
+
+<Demo name="FilterChips" />
 
 ## 何時使用
 
@@ -57,17 +59,13 @@ topics.SelectionChanged += (_, _) => Console.WriteLine(string.Join(", ", topics.
 
 `IsMultiple="False"` 一次只允許一個標籤。已選取的標籤仍可再次點擊以清除選擇。
 
-```xml
-<arc:ChipGroup Label="狀態" IsMultiple="False">
-    <arc:SelectItem Content="待處理" Value="open" />
-    <arc:SelectItem Content="處理中" Value="progress" />
-    <arc:SelectItem Content="已關閉" Value="closed" />
-</arc:ChipGroup>
-```
+<Demo name="SingleChoice" />
 
 ### 摺疊長清單
 
 `MaxVisibleItems` 會顯示指定數量的標籤，其餘標籤摺疊在「+N more」標籤之後。已選取的標籤即使超過上限也會保持可見。`IsExpanded` 為雙向繫結，用來顯示或隱藏摺疊的標籤。
+
+<Demo name="Folded" />
 
 ```xml
 <arc:ChipGroup Label="主題"

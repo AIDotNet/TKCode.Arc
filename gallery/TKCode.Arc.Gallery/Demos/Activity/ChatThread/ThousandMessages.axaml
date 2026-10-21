@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.ChatThreadThousandMessagesDemo">
+    <StackPanel Spacing="12">
+        <Border Height="440"
+                MaxWidth="640"
+                CornerRadius="26"
+                BorderThickness="1"
+                ClipToBounds="True"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:ChatThread x:Name="Chat"
+                            Label="Team history"
+                            CurrentUserId="me"
+                            IsComposerVisible="False">
+                <arc:ChatThread.Participants>
+                    <generic:List x:TypeArguments="arc:ChatParticipant">
+                        <arc:ChatParticipant Id="me" Name="Alex Kim" />
+                        <arc:ChatParticipant Id="sam" Name="Sam Rivera" />
+                        <arc:ChatParticipant Id="lee" Name="Lee Chen" />
+                    </generic:List>
+                </arc:ChatThread.Participants>
+            </arc:ChatThread>
+        </Border>
+        <arc:Button Content="New message from Lee" HorizontalAlignment="Center" Click="OnNewMessageClick" />
+    </StackPanel>
+</UserControl>

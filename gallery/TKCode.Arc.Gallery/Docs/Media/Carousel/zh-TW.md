@@ -1,8 +1,10 @@
 ---
 title: 輪播
 summary: 透過拖曳、輕掃或方向鍵瀏覽一排投影片。
-source-hash: 89c16c259bca
+source-hash: aa97f66dd6c8
 ---
+
+<Demo name="Slides" />
 
 ## 何時使用
 
@@ -56,6 +58,8 @@ carousel.SlideLabelFormatter = (index, count) => $"檔案照片 {index + 1}，�
 
 設定 `Interval` 會加入播放控制項。`IsAutoPlay` 開始輪替，控制項可切換其狀態。輪替會向前進行，播放到最後一張後回到第一張。投影片顯示期間，指示器會逐漸耗盡。
 
+<Demo name="Rotation" />
+
 ```xml
 <arc:Carousel Label="季節性優惠" Interval="0:0:4" IsAutoPlay="True">
     <Border Height="200" Background="#2F4858" CornerRadius="12" />
@@ -72,6 +76,18 @@ carousel.Next();
 carousel.Previous();
 carousel.GoTo(3);
 ```
+
+### 長輪播
+
+有 120 張投影片時，只會建立目前位置附近的投影片。
+
+<Demo name="LongCarousels" />
+
+### 照片
+
+投影片可以在繪製的場景之上顯示 `AsyncImage` 照片，因此離線時看起來仍然完整。
+
+<Demo name="Photos" />
 
 ## API 參考
 

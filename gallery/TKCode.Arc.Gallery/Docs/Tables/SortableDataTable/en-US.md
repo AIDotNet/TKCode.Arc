@@ -3,6 +3,8 @@ title: Sortable data table
 summary: Compare structured records with sortable columns.
 ---
 
+<Demo name="Projects" />
+
 ## When to use
 
 - Records with the same fields, such as projects, invoices or users, that people compare by column.
@@ -71,6 +73,8 @@ table.Columns.Add(new DataTableColumn("Status", p => ((Project)p).Status)
 `SortChanged` and `SelectionChanged` report what the user did. Set `IsSortClearable` to let a third click on a
 header clear the sort.
 
+<Demo name="SortedFromCode" />
+
 ```csharp
 table.SortChanged += (_, e) => status.Text = e.Column is null
     ? "Sort cleared"
@@ -84,10 +88,25 @@ table.Sort(table.Columns[1], DataTableSortDirection.Ascending);
 `EmptyMessage` shows when there are no rows. `IsLoading` covers the rows with a loading veil and
 `LoadingMessage` names the wait.
 
+<Demo name="EmptyAndLoading" />
+
 ```xml
 <arc:SortableDataTable EmptyMessage="No projects match these filters"
                        IsLoading="{Binding IsBusy}" />
 ```
+
+### Five thousand rows
+
+Rows are virtualized and the header stays in place. Sorting reorders indices, not containers, and `IsSortClearable`
+lets a third click clear the sort.
+
+<Demo name="FiveThousandRows" />
+
+### Narrow
+
+Below 620px rows fold into two lines and the header becomes a strip of sort pills.
+
+<Demo name="Narrow" />
 
 ## API reference
 

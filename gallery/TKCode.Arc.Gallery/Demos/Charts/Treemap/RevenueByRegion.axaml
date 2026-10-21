@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreemapRevenueByRegionDemo">
+    <StackPanel Spacing="16">
+        <arc:Treemap x:Name="Chart"
+                     Label="Revenue"
+                     ColorLabel="Growth"
+                     FocusedNodeChanged="OnFocusedNodeChanged" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Revenue" Variant="Secondary" Click="OnRevenueClick" />
+            <arc:Button Content="Seats" Variant="Secondary" Click="OnSeatsClick" />
+        </WrapPanel>
+        <TextBlock x:Name="FocusText"
+                   Text="Click a region to zoom in; Escape, Backspace or the breadcrumb zoom out."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

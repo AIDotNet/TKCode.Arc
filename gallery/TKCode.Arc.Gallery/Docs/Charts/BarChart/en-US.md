@@ -3,6 +3,8 @@ title: Bar chart
 summary: Compare one measure across days and scrub any bar for its value.
 ---
 
+<Demo name="WeekAndMonth" />
+
 ## When to use
 
 - One measure compared across days, weeks or months, such as active minutes per day.
@@ -56,6 +58,8 @@ void Week()
 
 `AverageLabel` names the resting headline and `ValueLabel` names the value of a scrubbed bar. Hide the average line
 with `ShowAverage` when a reference is not useful.
+
+<Demo name="WithoutAverage" />
 
 ```xml
 <arc:BarChart Label="Deploys"

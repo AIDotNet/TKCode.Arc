@@ -1,8 +1,10 @@
 ---
 title: 复选框
 summary: 二元选择，状态精确且清晰易读。
-source-hash: a5763119512c
+source-hash: 1d622d74df4b
 ---
+
+<Demo name="LabelAndDescription" />
 
 ## 何时使用
 
@@ -32,6 +34,8 @@ source-hash: a5763119512c
 
 `IsRequired` 会在表单中将该字段标记为必填。`IsInvalid` 显示错误状态，在未勾选时，外框边框呈危险色。
 
+<Demo name="States" />
+
 ```xml
 <arc:Checkbox Content="同意条款和条件"
               Description="勾选此项以继续。"
@@ -43,31 +47,10 @@ source-hash: a5763119512c
 
 `CheckedState` 是一个枚举，包含 `Unchecked`、`Checked` 和 `Indeterminate`。`IsChecked` 是同一状态的可空布尔值，其中 `null` 表示半选。当部分子项被选中时，将父项设为半选。
 
+<Demo name="IndeterminateParent" />
+
 ```xml
 <arc:Checkbox Content="全部渠道" CheckedState="Indeterminate" />
-```
-
-```csharp
-var all = new Checkbox { Content = "全部渠道" };
-var children = new[]
-{
-    new Checkbox { Content = "邮件", IsChecked = true },
-    new Checkbox { Content = "推送通知" },
-    new Checkbox { Content = "短信" }
-};
-
-void UpdateParent()
-{
-    var on = children.Count(c => c.IsChecked == true);
-    all.CheckedState = on == 0 ? CheckboxState.Unchecked
-        : on == children.Length ? CheckboxState.Checked
-        : CheckboxState.Indeterminate;
-}
-
-foreach (var child in children)
-{
-    child.CheckedStateChanged += (_, _) => UpdateParent();
-}
 ```
 
 若要让点击父项时同时设置所有子项，请在父项上处理 `CheckedStateChanged`，并将每个子项的 `IsChecked` 设为新状态。在该处理程序中跳过半选状态。
@@ -76,9 +59,7 @@ foreach (var child in children)
 
 `IsThreeState="True"` 会让点击在未选中、选中和半选之间循环，与 Avalonia 的 `CheckBox` 行为一致。
 
-```xml
-<arc:Checkbox Content="三态循环" IsThreeState="True" />
-```
+<Demo name="TriState" />
 
 ### 事件
 

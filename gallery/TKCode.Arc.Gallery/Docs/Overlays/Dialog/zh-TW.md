@@ -1,8 +1,10 @@
 ---
 title: 對話方塊
 summary: 為需要使用者關注的決定提供專注的浮層面板。
-source-hash: a7de713d0fa6
+source-hash: f0080160700a
 ---
+
+<Demo name="ShortForm" />
 
 ## 何時使用
 
@@ -43,17 +45,15 @@ source-hash: a7de713d0fa6
 
 `Dialog.ConfirmAsync` 會建立對話方塊、等待選擇，並且只有按下確認按鈕時回傳 `true`。按 Escape、點選遮罩或關閉按鈕都回傳 `false`。
 
-```csharp
-var confirmed = await Dialog.ConfirmAsync(deleteButton, "刪除專案？",
-    "此操作將永久刪除 Atlas 改版專案，且無法復原。", "刪除", isDanger: true);
-status.Text = confirmed ? "已刪除" : "已保留";
-```
+<Demo name="Confirmation" />
 
 `Dialog.ShowAsync` 接受自訂內容與一組 `DialogAction`，並回傳被按下之操作的結果。
 
 ### 步驟標題
 
 對話方塊開啟期間可以修改 `Title` 與 `Description`。新文案會在原位淡入替換，因此分步流程不需要第二個對話方塊。
+
+<Demo name="Steps" />
 
 ```csharp
 dialog.Title = "選擇角色";
@@ -63,6 +63,8 @@ dialog.Description = "編輯者可以修改內容；檢視者只能閱讀。";
 ### 尺寸
 
 `Size` 決定面板寬度：`Small` 為 360，`Medium` 為 440（Arc 預設值），`Large` 為 560。面板寬度永遠不會超過視窗寬度減去 16px 的邊距。
+
+<Demo name="Sizes" />
 
 ```xml
 <arc:Dialog Title="工作區限制" Size="Large" IsOpen="{Binding ShowLimits}">

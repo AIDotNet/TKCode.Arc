@@ -1,8 +1,10 @@
 ---
 title: 动画计数器
 summary: 让变化的总数具有清晰的动感。
-source-hash: aaf33cd863f2
+source-hash: 8f7c7ed1994a
 ---
+
+<Demo name="RollingDigits" />
 
 ## 何时使用
 
@@ -49,6 +51,8 @@ rate.Value = Math.Round(rate.Value + random.NextDouble(), 2);
 ### 进入视野时显示
 
 `AnimateOnView` 会在计数器首次有 60% 可见时，让每一位数字从零开始向上滚动。
+
+<Demo name="RevealOnView" />
 
 ```xml
 <arc:AnimatedCounter Label="首次查看时滚动显示" Value="{Binding Visitors}" AnimateOnView="True" />

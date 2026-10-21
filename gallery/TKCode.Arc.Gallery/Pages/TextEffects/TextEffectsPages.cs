@@ -6,7 +6,6 @@ public static partial class GalleryPages
 {
     static partial void RegisterTextEffects()
     {
-        Register("TextMorph", TextMorphPage.Create);
         RegisterTextEffectsA();
         RegisterTextEffectsB();
         RegisterTextEffectsC();

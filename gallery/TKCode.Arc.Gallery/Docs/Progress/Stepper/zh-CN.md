@@ -1,8 +1,10 @@
 ---
 title: 步骤条
 summary: 显示用户在多步骤流程中的位置以及已完成的步骤。
-source-hash: 4431b755866c
+source-hash: 19ca1e8da110
 ---
+
+<Demo name="Checkout" />
 
 ## 何时使用
 
@@ -64,6 +66,8 @@ stepper.StepSelected += (_, e) =>
 
 将 `Orientation` 设为 `Vertical` 即得到时间线。在某个步骤上设置 `Error`，可将其标记变为提醒图标；错误消息会替换该步骤的描述。
 
+<Demo name="VerticalWithError" />
+
 ```xml
 <arc:Stepper ItemsSource="{Binding Steps}"
              CurrentIndex="2"
@@ -71,14 +75,13 @@ stepper.StepSelected += (_, e) =>
              Width="320" />
 ```
 
-```csharp
-steps[2].Error = "银行卡被拒绝，请尝试其他银行卡。";
-steps[2].Error = null; // 清除错误
-```
-
 ### 紧凑与当前详情
 
 `IsCompact` 只显示标记，并在下方标注当前步骤的名称。宽度小于 480 px 的水平步骤条会自动切换到此模式。将 `Details` 设为 `Current` 时，只显示当前步骤的描述。
+
+<Demo name="Compact" />
+
+<Demo name="CurrentDetails" />
 
 ```xml
 <arc:Stepper ItemsSource="{Binding Steps}"

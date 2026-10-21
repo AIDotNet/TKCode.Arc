@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarDataBindingDemo">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="24" HorizontalAlignment="Center">
+        <Border Height="360"
+                CornerRadius="16"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:Sidebar x:Name="Nav"
+                         CornerRadius="15"
+                         BorderThickness="0"
+                         IsCollapseButtonVisible="False"
+                         SelectedKey="inbox">
+                <arc:SidebarSection>
+                    <arc:SidebarItem Key="home" Label="Home" Icon="{x:Static arc:ArcIcons.House}" />
+                    <arc:SidebarItem Key="inbox" Label="Inbox" Icon="{x:Static arc:ArcIcons.Inbox}" Badge="5" />
+                    <arc:SidebarItem Key="reports" Label="Reports" Icon="{x:Static arc:ArcIcons.ChartBar}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Account">
+                    <arc:SidebarItem Key="billing" Label="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}">
+                        <arc:SidebarItem Key="billing/invoices" Label="Invoices" />
+                        <arc:SidebarItem Key="billing/plans" Label="Plans" />
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="settings" Label="Settings" Icon="{x:Static arc:ArcIcons.Settings}" />
+                </arc:SidebarSection>
+            </arc:Sidebar>
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="14" VerticalAlignment="Center" Width="300">
+            <TextBlock Text="SelectedKey"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arc:SegmentedControl HorizontalAlignment="Left"
+                                  SelectedValue="{Binding #Nav.SelectedKey, Mode=TwoWay}">
+                <arc:SegmentedOption Value="home" Label="Home" />
+                <arc:SegmentedOption Value="inbox" Label="Inbox" />
+                <arc:SegmentedOption Value="billing/plans" Label="Plans" />
+                <arc:SegmentedOption Value="settings" Label="Settings" />
+            </arc:SegmentedControl>
+            <TextBlock Text="{Binding #Nav.SelectedKey, StringFormat='Route: /{0}'}"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <TextBlock Text="ItemInvoked"
+                       Margin="0,8,0,0"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <TextBlock x:Name="Log"
+                       Text="Choose a page in the sidebar."
+                       TextWrapping="Wrap"
+                       LineHeight="20"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

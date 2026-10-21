@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ThemeSwitcherVariantsDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <StackPanel Spacing="8">
+            <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+                <arc:ThemeSwitcher Variant="Reveal" />
+                <arc:ThemeSwitcher Variant="Reveal" IsIconOnly="True" />
+            </WrapPanel>
+            <TextBlock Text="Reveal"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+            <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+                <arc:ThemeSwitcher Variant="Eclipse" />
+                <arc:ThemeSwitcher Variant="Eclipse" IsIconOnly="True" />
+            </WrapPanel>
+            <TextBlock Text="Eclipse"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+            <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+                <arc:ThemeSwitcher Variant="Split" />
+                <arc:ThemeSwitcher Variant="Split" IsIconOnly="True" />
+            </WrapPanel>
+            <TextBlock Text="Split"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="8">
+            <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+                <arc:ThemeSwitcher Variant="Rise" />
+                <arc:ThemeSwitcher Variant="Rise" IsIconOnly="True" />
+            </WrapPanel>
+            <TextBlock Text="Rise"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

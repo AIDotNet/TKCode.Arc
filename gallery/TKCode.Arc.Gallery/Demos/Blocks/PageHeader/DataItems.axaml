@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PageHeaderDataItemsDemo">
+    <StackPanel Spacing="16">
+        <arc:PageHeader x:Name="Header"
+                        Title="Northline API"
+                        Status="Healthy"
+                        Height="340"
+                        MaxWidth="800">
+            <arc:PageHeader.ItemTemplate>
+                <DataTemplate x:DataType="demos:PageHeaderDemoSection">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </arc:PageHeader.ItemTemplate>
+            <arc:PageHeader.ContentTemplate>
+                <DataTemplate x:DataType="demos:PageHeaderDemoSection">
+                    <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" />
+                </DataTemplate>
+            </arc:PageHeader.ContentTemplate>
+        </arc:PageHeader>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Previous section" Variant="Secondary" Size="Small" Click="OnPreviousClick" />
+            <arc:Button Content="Next section" Variant="Secondary" Size="Small" Click="OnNextClick" />
+            <arc:Button Content="Log a new error" Variant="Secondary" Size="Small" Click="OnAddErrorClick" />
+        </WrapPanel>
+        <TextBlock HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="{Binding #Header.SelectedIndex, StringFormat='SelectedIndex: {0}'}" />
+    </StackPanel>
+</UserControl>

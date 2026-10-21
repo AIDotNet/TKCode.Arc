@@ -53,6 +53,7 @@ public class ExpandingButtonGroupItem : AvaloniaButton
     public static readonly StyledProperty<string?> DoneLabelProperty =
         AvaloniaProperty.Register<ExpandingButtonGroupItem, string?>(nameof(DoneLabel));
 
+    /// <summary>Color of the expanded action: Neutral (default), or Danger for destructive actions such as Delete.</summary>
     public static readonly StyledProperty<ExpandingButtonGroupTone> ToneProperty =
         AvaloniaProperty.Register<ExpandingButtonGroupItem, ExpandingButtonGroupTone>(nameof(Tone));
 
@@ -90,6 +91,7 @@ public class ExpandingButtonGroupItem : AvaloniaButton
     /// <summary>Past tense word shown in place after the action (such as "Archived"); omit for actions that open something.</summary>
     public string? DoneLabel { get => GetValue(DoneLabelProperty); set => SetValue(DoneLabelProperty, value); }
 
+    /// <inheritdoc cref="ToneProperty"/>
     public ExpandingButtonGroupTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
 
     /// <summary>Dimmed and inert, but still focusable and still reveals its label, so people can learn what it would do.</summary>

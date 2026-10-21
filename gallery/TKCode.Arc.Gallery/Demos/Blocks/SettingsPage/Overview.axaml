@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageOverviewDemo">
+    <arc:SettingsPage x:Name="Page" Height="640" SelectedIndex="3">
+        <arc:SettingsPage.Footer>
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                <arc:Avatar DisplayName="Noor Haddad" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="Noor Haddad" FontWeight="Medium" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="Studio plan · Owner" FontSize="12" TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </Grid>
+        </arc:SettingsPage.Footer>
+
+        <arc:SettingsSection x:Name="Profile" Header="Profile" Icon="{x:Static arc:ArcIcons.User}"
+                             Description="How you appear to people in Larkspur Studio.">
+            <StackPanel Spacing="20">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                    <arc:Avatar DisplayName="Noor Haddad" Size="Large" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <arc:Button Variant="Secondary" Size="Small" Content="Change photo" />
+                        <arc:Button Variant="Ghost" Size="Small" Content="Remove" />
+                    </StackPanel>
+                </Grid>
+                <Grid ColumnDefinitions="*,20,*">
+                    <arc:Input x:Name="FullName" Label="Full name" Text="Noor Haddad" />
+                    <arc:Input x:Name="Email" Grid.Column="2" Label="Email" Text="noor@larkspur.co" />
+                </Grid>
+                <arc:Textarea x:Name="Bio" Label="Bio" Placeholder="A sentence about your work"
+                              Text="Designs calm tools for small studios." />
+            </StackPanel>
+        </arc:SettingsSection>
+
+        <arc:SettingsSection Header="Notifications" Icon="{x:Static arc:ArcIcons.Bell}" Badge="2"
+                             Description="Choose what reaches you, and where.">
+            <StackPanel Spacing="28">
+                <arc:SettingsGroup Header="Email" Appearance="Plain">
+                    <arc:SettingsRow Header="Mentions" Description="When someone mentions you in a comment or a doc.">
+                        <arc:Switch IsChecked="True" />
+                    </arc:SettingsRow>
+                    <arc:SettingsRow Header="Weekly digest" Description="A Monday summary of activity in your projects.">
+                        <arc:Switch />
+                    </arc:SettingsRow>
+                    <arc:SettingsRow Header="Product updates" Description="Occasional news about new features.">
+                        <arc:Switch IsChecked="True" />
+                    </arc:SettingsRow>
+                </arc:SettingsGroup>
+                <arc:SettingsGroup Header="Desktop" Appearance="Plain">
+                    <arc:SettingsRow Header="Direct messages" Description="Show a notification for every new message.">
+                        <arc:Switch IsChecked="True" />
+                    </arc:SettingsRow>
+                    <arc:SettingsRow Header="Notification sound">
+                        <arc:Select Width="160" SelectedIndex="1">
+                            <arc:SelectItem Content="None" Value="none" />
+                            <arc:SelectItem Content="Chime" Value="chime" />
+                            <arc:SelectItem Content="Pop" Value="pop" />
+                        </arc:Select>
+                    </arc:SettingsRow>
+                </arc:SettingsGroup>
+            </StackPanel>
+        </arc:SettingsSection>
+
+        <arc:SettingsSection Header="Security" Icon="{x:Static arc:ArcIcons.Shield}"
+                             Description="Keep your account safe.">
+            <arc:SettingsGroup Appearance="Plain">
+                <arc:SettingsRow Header="Password" Description="Last changed 3 months ago." Icon="{x:Static arc:ArcIcons.Key}">
+                    <arc:Button Variant="Secondary" Size="Small" Content="Change password" />
+                </arc:SettingsRow>
+                <arc:SettingsRow Header="Two-step verification" Description="Ask for a code when you sign in on a new device."
+                                 Icon="{x:Static arc:ArcIcons.Smartphone}">
+                    <arc:Switch IsChecked="True" />
+                </arc:SettingsRow>
+                <arc:SettingsRow Header="Passkeys" Description="2 passkeys" Icon="{x:Static arc:ArcIcons.Fingerprint}">
+                    <arc:Button Variant="Secondary" Size="Small" Content="Manage" />
+                </arc:SettingsRow>
+                <arc:SettingsRow Header="Signed-in devices" Description="4 devices, last active 2 hours ago." Icon="{x:Static arc:ArcIcons.Laptop}">
+                    <arc:Button Variant="Ghost" Size="Small" Content="Review" />
+                </arc:SettingsRow>
+            </arc:SettingsGroup>
+        </arc:SettingsSection>
+
+        <arc:SettingsSection Header="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}"
+                             Description="Your plan, payment method and invoice details.">
+            <StackPanel Spacing="28">
+                <arc:SettingsGroup Appearance="Plain">
+                    <arc:SettingsRow Header="Studio plan" Description="6 seats at $15 each">
+                        <arc:BillingPrice x:Name="Price" Amount="90" Period="per month" />
+                    </arc:SettingsRow>
+                    <arc:SettingsRow x:Name="PeriodRow" Header="Billing period" Description="Save $216 a year with yearly billing.">
+                        <arc:BillingToggle x:Name="Period" Value="monthly" />
+                    </arc:SettingsRow>
+                    <arc:SettingsRow Header="Mastercard ending in 5108" Description="Expires 04/2029 · next invoice on Nov 1">
+                        <arc:Button Variant="Secondary" Size="Small" Content="Update" />
+                    </arc:SettingsRow>
+                </arc:SettingsGroup>
+                <Grid ColumnDefinitions="*,20,*" RowDefinitions="Auto,20,Auto">
+                    <arc:Input Label="Billing email" Text="accounts@larkspur.co" Description="Invoices and receipts are sent here." />
+                    <arc:Input Grid.Column="2" Label="Company name" Text="Larkspur Studio B.V." />
+                    <arc:Field Grid.Row="2" Label="Country">
+                        <arc:Select SelectedIndex="1" HorizontalAlignment="Stretch">
+                            <arc:SelectItem Content="Belgium" Value="BE" />
+                            <arc:SelectItem Content="Netherlands" Value="NL" />
+                            <arc:SelectItem Content="Germany" Value="DE" />
+                        </arc:Select>
+                    </arc:Field>
+                    <arc:Input Grid.Row="2" Grid.Column="2" Label="VAT number" Text="NL854122913B01" />
+                </Grid>
+            </StackPanel>
+        </arc:SettingsSection>
+    </arc:SettingsPage>
+</UserControl>

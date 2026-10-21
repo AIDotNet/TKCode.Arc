@@ -1,8 +1,10 @@
 ---
 title: 輕提示
 summary: 已完成背景操作的簡短確認。
-source-hash: 6adfd1506979
+source-hash: 4abc10dde3e3
 ---
+
+<Demo name="LocalToast" />
 
 ## 何時使用
 
@@ -67,9 +69,7 @@ toast.Closed += (_, e) =>
 
 `Toast.Show` 可從視窗中的任何控制項，將輕提示送到視窗的 `ToastStack`。當訊息來自不持有 `Toast` 控制項的程式碼時使用它。`ToastKind` 選擇圖示與顏色。`Toast.Show` 會傳回一個 id，可交給 `Toast.Update` 與 `Toast.Dismiss` 使用。
 
-```csharp
-Toast.Show(button, "邀請已寄出", ToastKind.Success, "Maya 很快會收到一封電子郵件。");
-```
+<Demo name="FromAnywhere" />
 
 ## API 參考
 

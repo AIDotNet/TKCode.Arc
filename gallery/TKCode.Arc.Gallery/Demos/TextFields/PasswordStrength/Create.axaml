@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PasswordStrengthCreateDemo">
+    <StackPanel Spacing="12">
+        <arc:PasswordStrength Label="New password"
+                              Width="400"
+                              HorizontalAlignment="Left"
+                              StrengthChanged="OnStrengthChanged" />
+        <TextBlock x:Name="Result"
+                   Text="Strength: none yet"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

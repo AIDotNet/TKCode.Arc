@@ -3,6 +3,8 @@ title: Announcement bar
 summary: A top banner that rotates messages, counts down, and collapses smoothly when dismissed.
 ---
 
+<Demo name="RotatingMessages" />
+
 ## When to use
 
 - Site-wide notices at the top of a page, such as a sale, a release or a maintenance window.
@@ -68,6 +70,8 @@ bar.CountdownEnded += (_, e) => bar.Messages.Remove(e.Announcement);
 Set `IsNavigationVisible` to show the previous and next buttons and the pause ring. `IsAutoPlayEnabled` turns the
 rotation off; `Next()` and `Previous()` move through the messages in code.
 
+<Demo name="ControlsAndCountdown" />
+
 ```xml
 <arc:AnnouncementBar IsNavigationVisible="True"
                      Interval="0:0:8"
@@ -79,15 +83,15 @@ rotation off; `Next()` and `Previous()` move through the messages in code.
 `Inverted` uses the foreground color as the fill and the background color as the text. Use it for the most
 important notices only.
 
-```xml
-<arc:AnnouncementBar Tone="Inverted" />
-```
+<Demo name="Inverted" />
 
 ### Remembered dismissal
 
 Set `DismissalKey` to remember a dismissal across runs. The key is saved in `Storage`. Clear the stored value with
 `AnnouncementBar.ClearDismissal` to show the bar again. The dismissal is stored by `Storage`, which defaults to a
 file in the application data folder.
+
+<Demo name="RememberedDismissal" />
 
 ```xml
 <arc:AnnouncementBar DismissalKey="spring-campaign" IsDismissible="True" />

@@ -1,8 +1,10 @@
 ---
 title: 彈性滑桿
 summary: 滑桿越過兩端時如橡皮筋般拉伸，附帶搖擺的數值標籤，以及滑桿會卡入的檔位。
-source-hash: 295f9c37751d
+source-hash: 31279271884c
 ---
+
+<Demo name="RubberBand" />
 
 ## 何時使用
 
@@ -51,21 +53,13 @@ source-hash: 295f9c37751d
 
 將 `SliderMark` 值加入 `Marks`。被拖曳的滑桿會卡入每一個刻度。帶標籤的刻度會在軌道下方顯示標籤，點按標籤會將滑桿移到該位置。
 
-```csharp
-var brightness = new ElasticSlider
-{
-    Label = "亮度",
-    Value = 50,
-    Width = 360
-};
-brightness.Marks.Add(new SliderMark(0, "關閉"));
-brightness.Marks.Add(new SliderMark(50, "50"));
-brightness.Marks.Add(new SliderMark(100, "最大"));
-```
+<Demo name="Detents" />
 
 ### 步長與格式
 
 `SmallChange` 是數值貼齊的步長。`ValueFormatter` 用於格式化數值標籤、讀數與朗讀的數值。`IsValueVisible` 可隱藏標籤旁的讀數。拖曳滑桿或以按鍵變更時，數值標籤仍會顯示。
+
+<Demo name="FineSteps" />
 
 ```xml
 <arc:ElasticSlider Label="縮放"
@@ -84,6 +78,12 @@ brightness.Marks.Add(new SliderMark(100, "最大"));
 ```csharp
 volume.ValueCommitted += (_, e) => SaveVolume(e.Value);
 ```
+
+### 停用狀態
+
+停用的滑桿會移出 Tab 順序。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

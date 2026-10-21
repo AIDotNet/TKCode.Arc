@@ -33,27 +33,35 @@ public class CopyButton : AvaloniaButton
     public const string ErrorPseudoClass = ":error";
     public const string IconOnlyPseudoClass = ":icon-only";
 
+    /// <summary>Text copied to the clipboard when the button is clicked.</summary>
     public static readonly StyledProperty<string?> ValueProperty =
         AvaloniaProperty.Register<CopyButton, string?>(nameof(Value));
 
+    /// <summary>Label of the button in its idle state (default "Copy").</summary>
     public static readonly StyledProperty<string> LabelProperty =
         AvaloniaProperty.Register<CopyButton, string>(nameof(Label), "Copy");
 
+    /// <summary>Label shown after a successful copy (default "Copied").</summary>
     public static readonly StyledProperty<string> CopiedLabelProperty =
         AvaloniaProperty.Register<CopyButton, string>(nameof(CopiedLabel), "Copied");
 
+    /// <summary>Label shown when the copy fails (default "Failed").</summary>
     public static readonly StyledProperty<string> FailedLabelProperty =
         AvaloniaProperty.Register<CopyButton, string>(nameof(FailedLabel), "Failed");
 
+    /// <summary>Shows only the icon, without the label.</summary>
     public static readonly StyledProperty<bool> IsIconOnlyProperty =
         AvaloniaProperty.Register<CopyButton, bool>(nameof(IsIconOnly));
 
+    /// <summary>Visual style: Outline (default) or Plain.</summary>
     public static readonly StyledProperty<CopyButtonVariant> VariantProperty =
         AvaloniaProperty.Register<CopyButton, CopyButtonVariant>(nameof(Variant));
 
+    /// <summary>Time the button keeps the copied or error state before it returns to idle (default 1.9 seconds).</summary>
     public static readonly StyledProperty<TimeSpan> ResetAfterProperty =
         AvaloniaProperty.Register<CopyButton, TimeSpan>(nameof(ResetAfter), TimeSpan.FromMilliseconds(1900));
 
+    /// <summary>Current copy state: Idle, Copied or Error (read-only).</summary>
     public static readonly DirectProperty<CopyButton, CopyState> StateProperty =
         AvaloniaProperty.RegisterDirect<CopyButton, CopyState>(nameof(State), o => o.State);
 
@@ -63,15 +71,23 @@ public class CopyButton : AvaloniaButton
     internal static readonly DirectProperty<CopyButton, Control?> IconProperty =
         AvaloniaProperty.RegisterDirect<CopyButton, Control?>(nameof(Icon), o => o.Icon);
 
+    /// <inheritdoc cref="ValueProperty"/>
     public string? Value { get => GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
+    /// <inheritdoc cref="LabelProperty"/>
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+    /// <inheritdoc cref="CopiedLabelProperty"/>
     public string CopiedLabel { get => GetValue(CopiedLabelProperty); set => SetValue(CopiedLabelProperty, value); }
+    /// <inheritdoc cref="FailedLabelProperty"/>
     public string FailedLabel { get => GetValue(FailedLabelProperty); set => SetValue(FailedLabelProperty, value); }
+    /// <inheritdoc cref="IsIconOnlyProperty"/>
     public bool IsIconOnly { get => GetValue(IsIconOnlyProperty); set => SetValue(IsIconOnlyProperty, value); }
+    /// <inheritdoc cref="VariantProperty"/>
     public CopyButtonVariant Variant { get => GetValue(VariantProperty); set => SetValue(VariantProperty, value); }
+    /// <inheritdoc cref="ResetAfterProperty"/>
     public TimeSpan ResetAfter { get => GetValue(ResetAfterProperty); set => SetValue(ResetAfterProperty, value); }
 
     private CopyState _state;
+    /// <inheritdoc cref="StateProperty"/>
     public CopyState State
     {
         get => _state;
@@ -92,6 +108,7 @@ public class CopyButton : AvaloniaButton
         private set => SetAndRaise(IconProperty, ref _icon, value);
     }
 
+    /// <summary>Occurs after the value is copied to the clipboard.</summary>
     public event EventHandler? Copied;
 
     private PausableTimer? _resetTimer;

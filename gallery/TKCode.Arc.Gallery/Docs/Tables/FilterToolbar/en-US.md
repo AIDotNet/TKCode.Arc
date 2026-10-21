@@ -3,6 +3,8 @@ title: Filter toolbar
 summary: Keep collection filters close and easy to reset.
 ---
 
+<Demo name="Filters" />
+
 ## When to use
 
 - Faceted filters above a table or list, such as status, owner or priority.
@@ -74,6 +76,8 @@ toolbar.FiltersChanged += (_, e) => Refilter(e.ActiveFilters);
 
 `IsSearchVisible` adds a search box to the toolbar. `SearchText` is two-way, so the table can react to it.
 
+<Demo name="SearchAndTable" />
+
 ```xml
 <arc:FilterToolbar IsSearchVisible="True"
                    SearchPlaceholder="Search issues"
@@ -91,6 +95,26 @@ toolbar.FiltersChanged += (_, e) => Refilter(e.ActiveFilters);
     </arc:FilterToolbar.Actions>
 </arc:FilterToolbar>
 ```
+
+### No filters
+
+With no active filters, the empty note sits at the leading edge. Setting `MenuAlignment` to `Start` lines the menu up
+with the start edge of the trigger.
+
+<Demo name="NoFilters" />
+
+### Narrow
+
+Below 520px the toolbar stacks: chips first, then the actions aligned to the end.
+
+<Demo name="Narrow" />
+
+### Filter menu on its own
+
+`FilterMenu` is the Add filter trigger and its two-step panel. Down on the trigger opens it on the first field, Right
+enters a field and Left goes back.
+
+<Demo name="FilterMenu" />
 
 ## API reference
 

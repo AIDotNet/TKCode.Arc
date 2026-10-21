@@ -3,6 +3,8 @@ title: Confirm morph
 summary: A destructive button that morphs into an inline confirmation, a spinner, and a result with undo.
 ---
 
+<Demo name="Press" />
+
 ## When to use
 
 - A destructive action on one object, such as deleting the selected files or removing a member.
@@ -32,6 +34,8 @@ Set `Label` to the resting text. The question is `Prompt`, or the label with a q
 `ConfirmAction` runs when the question is answered. The pill shows pending while the task runs. A task that throws
 shows the error face with Retry. Set `UndoAction` to offer Undo on the result.
 
+<Demo name="ErrorAndRetry" />
+
 ```csharp
 delete.ConfirmAction = () => documentService.DeleteAsync(selected);
 delete.UndoAction = () => documentService.RestoreAsync(selected);
@@ -42,6 +46,10 @@ delete.UndoAction = () => documentService.RestoreAsync(selected);
 `ConfirmMode` sets how the question is answered. `Press` runs on one press. `Hold` requires Confirm to be held for
 `HoldDuration`, which is one second by default. `Countdown` starts a `CountdownSeconds` countdown that Cancel or
 Escape can still stop.
+
+<Demo name="Hold" />
+
+<Demo name="Countdown" />
 
 ```xml
 <arc:ConfirmMorph Label="Remove member"
@@ -61,14 +69,7 @@ The eight text properties (`ConfirmLabel`, `CancelLabel`, `PendingLabel`, `DoneL
 `UndoLabel` and `UndoingLabel`) set the words of each face. `Tone="Neutral"` colors the confirm answer with the accent
 for an important action that can be reversed. The default `Danger` suits destructive actions.
 
-```xml
-<arc:ConfirmMorph Label="Revoke access"
-                  Prompt="Revoke 3 keys?"
-                  ConfirmLabel="Revoke"
-                  PendingLabel="Revoking"
-                  DoneLabel="Revoked"
-                  Tone="Neutral" />
-```
+<Demo name="NeutralTone" />
 
 ### Controlled state and timeouts
 
@@ -82,6 +83,12 @@ confirm.StateChanged += (_, e) => log.Text = $"State: {e.NewState}";
 confirm.Cancelled += (_, _) => log.Text = "Cancelled";
 confirm.State = ConfirmMorphState.Idle;
 ```
+
+### Disabled
+
+The resting pill drops its shadow when `IsEnabled` is `False`.
+
+<Demo name="Disabled" />
 
 ## API reference
 

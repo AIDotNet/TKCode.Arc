@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.DropdownMenuCustomTriggerDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:DropdownMenu>
+            <arc:DropdownMenu.Trigger>
+                <arc:Button Variant="Ghost" Size="Small">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Ellipsis}" />
+                </arc:Button>
+            </arc:DropdownMenu.Trigger>
+            <arc:DropdownMenu.ItemsSource>
+                <generic:List x:TypeArguments="x:String">
+                    <x:String>Move to folder</x:String>
+                    <x:String>Make a copy</x:String>
+                    <x:String>Version history</x:String>
+                </generic:List>
+            </arc:DropdownMenu.ItemsSource>
+        </arc:DropdownMenu>
+    </WrapPanel>
+</UserControl>

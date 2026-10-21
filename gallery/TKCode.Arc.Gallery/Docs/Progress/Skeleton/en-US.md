@@ -3,6 +3,8 @@ title: Skeleton
 summary: Reserve space while content is still loading.
 ---
 
+<Demo name="Profile" />
+
 ## When to use
 
 - A profile, comment or card whose shape is known while its data is still loading.
@@ -30,14 +32,14 @@ A skeleton shows its placeholder while `Content` is null. Set `Lines` for the nu
 
 `Lines` is clamped to 1 to 6. The first line is shorter and taller, and the last line ends at 72% of the width.
 
-```xml
-<arc:Skeleton Lines="4" />
-```
+<Demo name="Lines" />
 
 ### Loaded content
 
 Set `Content` to the real view and bind `IsLoading` to the loading state. When `IsLoading` becomes false, the
 placeholder fades out, the content rises into place and the height changes smoothly.
+
+<Demo name="IntoContent" />
 
 ```xml
 <arc:Skeleton IsAvatarVisible="True"

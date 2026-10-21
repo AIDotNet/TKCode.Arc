@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.AdvancedCharts</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.AdvancedCharts</PackageId>
+        <Description>Advanced charts for TKCode.Arc: DataGrid, a spreadsheet grid with range selection, inline editing, a fill handle, Excel and Sheets clipboard, undo, sorting, filtering, grouping, totals and export.</Description>
+        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
+        <AtomUIThemeControlCatalog>TKCode.Arc.AdvancedCharts</AtomUIThemeControlCatalog>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+    </ItemGroup>
+</Project>

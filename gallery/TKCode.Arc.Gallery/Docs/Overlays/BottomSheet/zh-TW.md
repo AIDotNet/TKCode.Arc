@@ -1,8 +1,10 @@
 ---
 title: 底部面板
 summary: 停駐在預覽高度或完整高度的面板，跟隨手指移動。
-source-hash: f8c37c4558cc
+source-hash: cdd9c3628e9f
 ---
+
+<Demo name="Detents" />
 
 ## 何時使用
 
@@ -36,6 +38,8 @@ source-hash: f8c37c4558cc
 ### 停駐點
 
 `Detents` 以視窗高度的比例列出停駐高度。使用 `BottomSheetDetents.Parse` 從字串設定它們，並用 `InitialDetentIndex` 選擇面板開啟時所在的停駐點。只有一個停駐點時，面板高度固定。
+
+<Demo name="ThreeDetents" />
 
 ```csharp
 share.Detents = BottomSheetDetents.Parse("0.3, 0.6, 0.95");

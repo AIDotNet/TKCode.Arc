@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardStackCustomActionsDemo">
+    <arc:CardStack x:Name="Candidates"
+                   Label="Candidates"
+                   LeftLabel="Not now"
+                   RightLabel="Interview">
+        <arc:CardStack.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+                <StackPanel Spacing="14" VerticalAlignment="Center">
+                    <arc:Avatar DisplayName="{Binding}" Size="XLarge" HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding}"
+                               FontSize="18"
+                               FontWeight="Medium"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="Senior engineer · 9 years · Remote"
+                               FontSize="14"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </DataTemplate>
+        </arc:CardStack.ItemTemplate>
+        <arc:CardStack.EmptyContent>
+            <StackPanel Spacing="12">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                              Size="28"
+                              HorizontalAlignment="Center"
+                              Foreground="{arc:ArcDesignTokenResource Success}" />
+                <TextBlock Text="Every candidate has a decision"
+                           FontSize="16"
+                           FontWeight="Medium"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <arc:Button Content="Review again"
+                            Variant="Secondary"
+                            Size="Small"
+                            HorizontalAlignment="Center"
+                            Command="{Binding #Candidates.ResetCommand}" />
+            </StackPanel>
+        </arc:CardStack.EmptyContent>
+        <x:String>Ada Lovelace</x:String>
+        <x:String>Grace Hopper</x:String>
+        <x:String>Alan Turing</x:String>
+    </arc:CardStack>
+</UserControl>

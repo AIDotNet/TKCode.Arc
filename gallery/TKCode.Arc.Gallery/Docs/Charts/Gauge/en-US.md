@@ -3,6 +3,8 @@ title: Gauge
 summary: Show a value against a known range.
 ---
 
+<Demo name="Thresholds" />
+
 ## When to use
 
 - One value against a known range, such as disk usage out of a quota or a health score.
@@ -59,17 +61,13 @@ disk.Detail = $"{used} of 500 GB";
 
 `Minimum` and `Maximum` map any range onto the ring. The number reads as a percentage of that range.
 
-```xml
-<arc:Gauge Label="Health score" Value="640" Minimum="300" Maximum="850" Detail="640 of 850" />
-```
+<Demo name="CustomRange" />
 
 ### Tone without thresholds
 
 Without thresholds the ring uses `Tone`: `Accent`, `Success`, `Warning` or `Danger`.
 
-```xml
-<arc:Gauge Label="Uptime" Value="91" Tone="Success" />
-```
+<Demo name="Tones" />
 
 ## API reference
 

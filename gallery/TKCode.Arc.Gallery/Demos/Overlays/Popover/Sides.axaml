@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PopoverSidesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Button Content="Top" Variant="Secondary">
+            <arc:Popover.Attach>
+                <arc:Popover Placement="Top" Content="Opens on the top side." />
+            </arc:Popover.Attach>
+        </arc:Button>
+        <arc:Button Content="Bottom" Variant="Secondary">
+            <arc:Popover.Attach>
+                <arc:Popover Placement="Bottom" Content="Opens on the bottom side." />
+            </arc:Popover.Attach>
+        </arc:Button>
+        <arc:Button Content="Left" Variant="Secondary">
+            <arc:Popover.Attach>
+                <arc:Popover Placement="Left" Content="Opens on the left side." />
+            </arc:Popover.Attach>
+        </arc:Button>
+        <arc:Button Content="Right" Variant="Secondary">
+            <arc:Popover.Attach>
+                <arc:Popover Placement="Right" Content="Opens on the right side." />
+            </arc:Popover.Attach>
+        </arc:Button>
+        <arc:Button Content="Center" Variant="Secondary">
+            <arc:Popover.Attach>
+                <arc:Popover Placement="Bottom" Alignment="Center" Content="Opens on the center side." />
+            </arc:Popover.Attach>
+        </arc:Button>
+    </WrapPanel>
+</UserControl>

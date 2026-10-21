@@ -25,15 +25,19 @@ public enum TooltipSide
 /// </summary>
 public class Tooltip : ContentControl
 {
+    /// <summary>Tooltip content: a string, or any object (bind it when the text comes from the view model).</summary>
     public static readonly AttachedProperty<object?> TipProperty =
         AvaloniaProperty.RegisterAttached<Tooltip, Control, object?>("Tip");
 
+    /// <summary>Side of the trigger the bubble opens on: Top (default), Bottom, Left or Right.</summary>
     public static readonly AttachedProperty<TooltipSide> SideProperty =
         AvaloniaProperty.RegisterAttached<Tooltip, Control, TooltipSide>("Side");
 
+    /// <summary>Wait before the first tooltip opens after hover or focus; default 250 ms. Open tooltips skip the wait.</summary>
     public static readonly AttachedProperty<TimeSpan> ShowDelayProperty =
         AvaloniaProperty.RegisterAttached<Tooltip, Control, TimeSpan>("ShowDelay", TimeSpan.FromMilliseconds(250));
 
+    /// <summary>Shows or hides the tooltip on the element at once, without ShowDelay.</summary>
     public static readonly AttachedProperty<bool> IsOpenProperty =
         AvaloniaProperty.RegisterAttached<Tooltip, Control, bool>("IsOpen");
 

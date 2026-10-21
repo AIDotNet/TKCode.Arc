@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TagInputPasteDemo">
+    <StackPanel Spacing="16">
+        <arc:TagInput Label="Colors"
+                      Description="Paste a list separated by commas, new lines or tabs: every piece becomes a tag and the last piece stays in the draft."
+                      Width="420"
+                      HorizontalAlignment="Left" />
+        <arc:Button x:Name="CopySample"
+                    Content="Copy “red, green, blue, teal”"
+                    Variant="Secondary"
+                    Size="Small"
+                    HorizontalAlignment="Left"
+                    Click="OnCopyClick" />
+    </StackPanel>
+</UserControl>

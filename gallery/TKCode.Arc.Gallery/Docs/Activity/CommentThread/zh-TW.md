@@ -1,8 +1,10 @@
 ---
 title: 留言串
 summary: 支援回覆、表情反應、提及、原地編輯與解決的巢狀留言。
-source-hash: 273ad1a6facf
+source-hash: 775965f7a0c4
 ---
+
+<Demo name="DesignReview" />
 
 ## 何時使用
 
@@ -53,20 +55,15 @@ var thread = new CommentThread
 
 在編輯框中輸入 `@` 即可提示人員。`People` 列出可被提及的人。未設定時，會提供留言串中的參與者。
 
-```csharp
-var thread = new CommentThread
-{
-    Title = "頁尾連結",
-    CurrentUser = ana,
-    People = [ana, mina, new CommentAuthor("kai", "Kai Moreno")]
-};
-```
+<Demo name="EmptyThread" />
 
 `Reactions` 設定每則留言可用的表情。`MaxDepth` 限制巢狀層級：超出的回覆會掛到允許的最深父層之下。
 
 ### 解決與重新開啟
 
 解決留言串後，它會收合為一個標籤，並保留參與者的資訊。`IsResolved` 為雙向繫結。
+
+<Demo name="Resolved" />
 
 ```csharp
 thread.ResolvedChanged += (_, e) => Status.Text = e.IsResolved ? "已解決" : "已重新開啟";
@@ -88,6 +85,12 @@ thread.CommentsChanged += (_, e) =>
     }
 };
 ```
+
+### 窄寬度
+
+寬度小於 420px 時，輸入框不再顯示頭像，回覆縮排 12px。
+
+<Demo name="Narrow" />
 
 ## API 參考
 

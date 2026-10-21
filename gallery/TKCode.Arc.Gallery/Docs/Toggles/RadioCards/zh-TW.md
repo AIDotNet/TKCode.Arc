@@ -1,8 +1,10 @@
 ---
 title: 單選卡片
 summary: 可選取的選項卡片，帶有滑動的選取光環、價格與說明插槽，並具有單選按鈕的鍵盤行為。
-source-hash: 39ff78d5f30d
+source-hash: 29b79ac6d2ec
 ---
+
+<Demo name="Grid" />
 
 ## 何時使用
 
@@ -60,13 +62,7 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 
 `Layout="List"` 會將卡片堆疊為全寬的列，中繼資訊位於末端。較長的說明會自動換行。預設的 `Grid` 版面會填滿至少 `MinColumnWidth` 寬的欄（預設為 180）。
 
-```xml
-<arc:RadioCards Layout="List" SelectedValue="standard">
-    <arc:RadioCardOption Value="standard" Label="標準配送" Description="4 至 6 個工作天" Meta="免費" />
-    <arc:RadioCardOption Value="express" Label="快速配送" Description="2 至 3 個工作天" Meta="$9.00" />
-    <arc:RadioCardOption Value="overnight" Label="隔日達" Description="下一個工作天中午前送達" Meta="$24.00" />
-</arc:RadioCards>
-```
+<Demo name="List" />
 
 ### 無法使用的選項
 

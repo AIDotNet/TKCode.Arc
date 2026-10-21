@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BillingOverviewOverviewDemo">
+    <arc:BillingOverview BillingEmail="accounts@larkspur.co" MaxWidth="720">
+        <arc:BillingOverview.Plan>
+            <arc:BillingPlan Name="Studio" Price="90" Seats="6" Interval="Month" Status="Active" RenewsOn="2026-11-01" />
+        </arc:BillingOverview.Plan>
+        <arc:BillingOverview.PaymentMethod>
+            <arc:BillingPaymentMethod Brand="Mastercard" Last4="5108" ExpiryMonth="4" ExpiryYear="2029" />
+        </arc:BillingOverview.PaymentMethod>
+        <arc:BillingOverview.Invoices>
+            <arc:BillingInvoice Number="LS-2026-010" Date="2026-10-01" Amount="90" Status="Paid" />
+            <arc:BillingInvoice Number="LS-2026-009" Date="2026-09-01" Amount="90" Status="Paid" />
+            <arc:BillingInvoice Number="LS-2026-008" Date="2026-08-01" Amount="90" Status="Paid" />
+            <arc:BillingInvoice Number="LS-2026-007" Date="2026-07-01" Amount="75" Status="Refunded" />
+            <arc:BillingInvoice Number="LS-2026-006" Date="2026-06-01" Amount="75" Status="Paid" />
+            <arc:BillingInvoice Number="LS-2026-005" Date="2026-05-01" Amount="75" Status="Paid" />
+        </arc:BillingOverview.Invoices>
+    </arc:BillingOverview>
+</UserControl>

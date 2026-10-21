@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:collections="using:System.Collections.ObjectModel"
+             x:Class="TKCode.Arc.Gallery.Demos.FilterToolbarFiltersDemo">
+    <StackPanel Spacing="14">
+        <arc:FilterToolbar FiltersChanged="OnFiltersChanged">
+            <arc:FilterToolbar.ActiveFilters>
+                <collections:ObservableCollection x:TypeArguments="arc:FilterChip">
+                    <arc:FilterChip Id="status" Label="Status" Value="Open" />
+                    <arc:FilterChip Id="owner" Label="Owner" Value="Mina" />
+                </collections:ObservableCollection>
+            </arc:FilterToolbar.ActiveFilters>
+            <arc:FilterField Id="status" Label="Status" Icon="{x:Static arc:ArcIcons.CircleDot}">
+                <arc:FilterOption Value="Open" Hint="4" />
+                <arc:FilterOption Value="In progress" Hint="2" />
+                <arc:FilterOption Value="Closed" Hint="2" />
+            </arc:FilterField>
+            <arc:FilterField Id="owner" Label="Owner" Icon="{x:Static arc:ArcIcons.User}">
+                <arc:FilterOption Value="Mina" />
+                <arc:FilterOption Value="Theo" />
+                <arc:FilterOption Value="Ana" />
+                <arc:FilterOption Value="Kai" />
+            </arc:FilterField>
+            <arc:FilterField Id="priority" Label="Priority" Icon="{x:Static arc:ArcIcons.Flag}">
+                <arc:FilterOption Value="Urgent" />
+                <arc:FilterOption Value="High" />
+                <arc:FilterOption Value="Medium" />
+                <arc:FilterOption Value="Low" />
+            </arc:FilterField>
+        </arc:FilterToolbar>
+        <TextBlock x:Name="Log"
+                   Text="Remove a chip, clear all, or add a filter: pick a field, then a value."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

@@ -74,6 +74,7 @@ public class HoldToConfirm : AvaloniaButton
     public static readonly StyledProperty<Geometry?> IconProperty =
         AvaloniaProperty.Register<HoldToConfirm, Geometry?>(nameof(Icon), ArcIcons.Trash2);
 
+    /// <summary>Fill color: Accent (default), Danger for irreversible actions, or Neutral.</summary>
     public static readonly StyledProperty<HoldToConfirmTone> ToneProperty =
         AvaloniaProperty.Register<HoldToConfirm, HoldToConfirmTone>(nameof(Tone));
 
@@ -98,6 +99,7 @@ public class HoldToConfirm : AvaloniaButton
     /// <summary>Leading 24×24 glyph (default Lucide trash-2); it becomes a drawn check when done.</summary>
     public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
+    /// <inheritdoc cref="ToneProperty"/>
     public HoldToConfirmTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
 
     /// <summary>The done state. Set it back to false to reset the button (the fill rewinds as the label morphs back).</summary>

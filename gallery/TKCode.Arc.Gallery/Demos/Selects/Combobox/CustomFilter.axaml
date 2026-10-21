@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ComboboxCustomFilterDemo">
+    <arc:Combobox x:Name="Prefix"
+                  Label="Starts with"
+                  HorizontalAlignment="Center"
+                  Description="A custom FilterPredicate matches the start of the label only."
+                  Width="280" />
+</UserControl>

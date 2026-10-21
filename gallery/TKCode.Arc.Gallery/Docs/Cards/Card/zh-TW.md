@@ -1,8 +1,10 @@
 ---
 title: 卡片
 summary: 承載一組相關內容與操作的封閉式容器。
-source-hash: 0ecc8e78ba2b
+source-hash: 0d186e88d311
 ---
+
+<Demo name="QuickLook" />
 
 ## 何時使用
 
@@ -53,6 +55,8 @@ source-hash: 0ecc8e78ba2b
 
 `Status` 是一行簡短文字，例如「2 小時前更新」。文字變化時，新詞會依序升起出現。
 
+<Demo name="StatusUpdates" />
+
 ```xml
 <arc:Card Title="每週摘要"
           Description="每週五彙整各團隊的重點內容。"
@@ -60,13 +64,11 @@ source-hash: 0ecc8e78ba2b
           Width="300" />
 ```
 
-```csharp
-card.Status = "已發布到 4 個團隊";
-```
-
 ### 快速預覽
 
 設定 `Details` 後，標題會變為按鈕；整張卡片隨即在同一頁面中展開為更大的檢視。
+
+<Demo name="Controlled" />
 
 ```xml
 <arc:Card Title="季度計畫"
@@ -91,16 +93,7 @@ card.CloseDetails();
 
 不設定 `Details` 時，標題只是一般標題，卡片僅在懸停時抬起。
 
-```xml
-<arc:Card Title="設計審查"
-          Description="週四 14:00 · 3 號會議室"
-          Meta="六人"
-          Width="260">
-    <arc:Card.Action>
-        <arc:Button Content="加入" Variant="Secondary" Size="Small" />
-    </arc:Card.Action>
-</arc:Card>
-```
+<Demo name="WithoutQuickLook" />
 
 ## API 參考
 

@@ -11,7 +11,7 @@ using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Gallery;
 
-/// <summary>The Code tab: generated docs data, API references, translations and the page's language switching.</summary>
+/// <summary>Docs pages: generated docs data, API references, translations and fallbacks, sections and examples.</summary>
 public class GalleryDocsTests
 {
     private static GalleryEntry Entry(string className) => GalleryCatalog.AllEntries.First(e => e.ClassName == className);
@@ -84,42 +84,7 @@ public class GalleryDocsTests
     }
 
     [AvaloniaFact]
-    public void Code_Tab_Shows_The_Page_And_Follows_The_Language()
-    {
-        var page = (GalleryPageView)GalleryPages.Create(Entry("Input"));
-        var window = TestHelpers.Show(page);
-        window.Width = 1100;
-        window.Height = 800;
-        var languages = Languages();
-        try
-        {
-            page.IsShowingCode.ShouldBeFalse();
-            page.ShowCode(true);
-            Dispatcher.UIThread.RunJobs();
-            page.IsShowingCode.ShouldBeTrue();
-
-            var markdown = page.GetVisualDescendants().OfType<Markdown>().Single();
-            markdown.IsVisible.ShouldBeTrue();
-            markdown.Text.ShouldNotBeNull().ShouldContain("## When to use");
-            page.GetVisualDescendants().OfType<CopyButton>().ShouldContain(c => c.IsVisible && c.Value == markdown.Text);
-
-            languages.ChangeLanguage(LanguageTags.ZhCN);
-            Dispatcher.UIThread.RunJobs();
-            markdown.Text.ShouldNotBeNull().ShouldContain("## 何时使用");
-
-            page.ShowCode(false);
-            Dispatcher.UIThread.RunJobs();
-            markdown.IsVisible.ShouldBeFalse();
-        }
-        finally
-        {
-            languages.ChangeLanguage(LanguageTags.EnUS);
-            window.Close();
-        }
-    }
-
-    [AvaloniaFact]
-    public void Code_Tab_Is_Unavailable_Without_A_Page()
+    public void A_Component_Without_A_Docs_Page_Shows_Its_Body_And_No_Docs()
     {
         // Every real component has a page, so use an entry that is only planned.
         var planned = new GalleryEntry("NotYetBuilt", "Not yet built", "not-yet-built", 3, "A component that does not exist.");
@@ -128,10 +93,9 @@ public class GalleryDocsTests
         var window = TestHelpers.Show(page);
         try
         {
-            page.ShowCode(true);
-            Dispatcher.UIThread.RunJobs();
-            page.IsShowingCode.ShouldBeFalse();
+            page.IsDocsPage.ShouldBeFalse();
             page.GetVisualDescendants().OfType<Markdown>().ShouldBeEmpty();
+            page.GetVisualDescendants().OfType<Tabs>().ShouldBeEmpty();
         }
         finally
         {
@@ -144,7 +108,7 @@ public class GalleryDocsTests
     {
         // The rule for a new component: write Docs/<Category>/<Class>/en-US.md and its translations (design/engineering/gallery-app.md, 6).
         var entries = GalleryCatalog.Categories.SelectMany(c => c.Entries)
-            .Concat(GalleryCatalog.Extras.Where(c => c.Code == "Content").SelectMany(c => c.Entries));
+            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "Illustrations" or "AdvancedCharts").SelectMany(c => c.Entries));
         foreach (var entry in entries)
         {
             GalleryDocs.Has(entry.ClassName).ShouldBeTrue($"{entry.ClassName} has no docs page");

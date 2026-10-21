@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityHeatmapContributionsDemo">
+    <StackPanel Spacing="12">
+        <arc:ActivityHeatmap x:Name="Heatmap"
+                             Label="Contributions in 2025"
+                             Period="2025"
+                             DateSelected="OnDateSelected">
+            <arc:ActivityHeatmap.Actions>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <arc:Button Content="2024" Variant="Ghost" Size="Small" Click="On2024Click" />
+                    <arc:Button Content="2025" Variant="Ghost" Size="Small" Click="On2025Click" />
+                </StackPanel>
+            </arc:ActivityHeatmap.Actions>
+        </arc:ActivityHeatmap>
+        <TextBlock x:Name="Selected"
+                   Text="Click a day or press Enter on it."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

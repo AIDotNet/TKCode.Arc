@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SecuritySettingsSessionsDemo">
+    <StackPanel Spacing="16">
+        <arc:SecuritySettings x:Name="Security"
+                              Sections="Sessions"
+                              SessionSignedOut="OnSessionSignedOut"
+                              OtherSessionsSignedOut="OnOtherSessionsSignedOut" />
+        <DockPanel>
+            <arc:Button DockPanel.Dock="Right"
+                        Variant="Secondary"
+                        Size="Small"
+                        Content="Reset"
+                        Click="OnResetClick" />
+            <TextBlock x:Name="Log"
+                       Text="Sign out one session, or all the others at once."
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap"
+                       Margin="0,0,16,0"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </DockPanel>
+    </StackPanel>
+</UserControl>

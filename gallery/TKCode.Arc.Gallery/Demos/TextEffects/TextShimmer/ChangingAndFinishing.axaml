@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TextShimmerChangingAndFinishingDemo">
+    <StackPanel Spacing="16">
+        <arc:TextShimmer x:Name="Summary" Text="Generating summary" FontSize="22" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Next step" Variant="Secondary" Click="OnNextClick" />
+            <arc:Button Content="Finish" Variant="Secondary" Click="OnFinishClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

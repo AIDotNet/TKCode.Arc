@@ -1,8 +1,10 @@
 ---
 title: 內容選單
 summary: 將次要操作放在所選物件附近。
-source-hash: 8ef17adf0a91
+source-hash: dcc977329161
 ---
+
+<Demo name="FileTile" />
 
 ## 何時使用
 
@@ -69,16 +71,7 @@ image.Items.Add(pinned);
 
 `arc:ContextMenu.Menu` 無需包裹即可為任意控制項提供右鍵選單。
 
-```xml
-<Border Width="220" Height="96" CornerRadius="18" BorderThickness="1">
-    <arc:ContextMenu.Menu>
-        <arc:MenuSurface>
-            <arc:MenuEntry Header="新增資料夾" />
-            <arc:MenuEntry Header="重新整理" />
-        </arc:MenuSurface>
-    </arc:ContextMenu.Menu>
-</Border>
-```
+<Demo name="Attached" />
 
 ### 以程式碼開啟與關閉
 

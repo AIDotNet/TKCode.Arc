@@ -1,8 +1,10 @@
 ---
 title: 圖示變形
 summary: 在不同狀態之間變形的圖示：選單變關閉、播放變暫停、複製變勾選等。
-source-hash: a46fa0c6e43e
+source-hash: e691e73b8fa1
 ---
+
+<Demo name="EightPairs" />
 
 ## 何時使用
 
@@ -58,6 +60,8 @@ button.Click += (_, _) =>
 
 `IconSize` 設定渲染尺寸，單位為像素，預設值為 24。`StrokeThickness` 在 24 單位的網格上設定，並隨 `IconSize` 等比縮放，因此預設線寬 1.75 在任何尺寸下都保持比例。
 
+<Demo name="Sizes" />
+
 ```xml
 <arc:IconMorph Kind="Menu" IconSize="16" />
 <arc:IconMorph Kind="Menu" IconSize="32" StrokeThickness="2" />
@@ -67,10 +71,13 @@ button.Click += (_, _) =>
 
 對於 `Chevron`，`ChevronPointing` 設定靜止時的方向，`ChevronTurn` 設定激活時轉動的角度（單位為度）。值為 180 時由下向上翻轉，值為 90 時由右向下轉動。
 
-```xml
-<arc:IconMorph Kind="Chevron" />
-<arc:IconMorph Kind="Chevron" ChevronPointing="Right" ChevronTurn="90" />
-```
+<Demo name="ChevronAndMoments" />
+
+### MorphGlyph
+
+`MorphGlyph` 是路徑變形基礎元件，可作用於任意路徑資料。從選單到關閉會保留頂點，從關閉到勾號則依弧長重新取樣。
+
+<Demo name="MorphGlyph" />
 
 ## API 參考
 

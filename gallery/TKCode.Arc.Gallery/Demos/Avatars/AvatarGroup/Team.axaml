@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarGroupTeamDemo">
+    <StackPanel Spacing="16">
+        <Border Padding="0,28,0,0">
+            <arc:AvatarGroup x:Name="Group" Label="Editors" />
+        </Border>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Add person" Variant="Secondary" Click="OnAddClick" />
+            <arc:Button Content="Remove person" Variant="Secondary" Click="OnRemoveClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

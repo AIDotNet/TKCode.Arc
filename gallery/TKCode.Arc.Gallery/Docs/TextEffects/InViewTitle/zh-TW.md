@@ -1,8 +1,10 @@
 ---
 title: 可視範圍內標題
 summary: 標題隨捲動進入可視範圍時逐步呈現。
-source-hash: 9d59bccb3240
+source-hash: 65cd1e721b3b
 ---
+
+<Demo name="Variants" />
 
 ## 何時使用
 

@@ -1,8 +1,10 @@
 ---
 title: 河流图
 summary: 在摆动基线上堆叠的流层，可在不同范围之间变形；可单独隔离某一层并逐周读取。
-source-hash: 82df7bb364a1
+source-hash: d237f20ddc0d
 ---
+
+<Demo name="TopicsOverTime" />
 
 ## 何时使用
 

@@ -1,0 +1,155 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PageHeaderPreviewDemo">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.note">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.section-title">
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+        <Style Selector="Border.list-row">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+        <Style Selector="Border.list-row.last">
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="Border.fresh">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Margin" Value="-10,3" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="arc|Button.check">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="-7,0,0,0" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="IsPressScaleEnabled" Value="False" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="arc|Button.check:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="arc|Button.check.closing, arc|Button.check.closing:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="TextBlock.issue-title.closing">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="TextDecorations" Value="Strikethrough" />
+        </Style>
+        <Style Selector="arc|ArcGlyph.done">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="arc|ArcGlyph.active">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="arc|ArcGlyph.planned">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="arc|ArcGlyph.file">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <!-- Below 560px the header goes narrow; like Arc, the lists drop their label and date columns. -->
+        <Style Selector="arc|PageHeader:narrow TextBlock.wide-only">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Ellipse.success">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="Ellipse.warning">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+    </UserControl.Styles>
+
+    <!-- The frame is the page: 640 high, and the toasts sit inside it. -->
+    <Panel Height="640" MaxWidth="800">
+        <arc:PageHeader x:Name="Header"
+                        Title="Checkout redesign"
+                        Status="On track"
+                        Description="Rebuilding mobile checkout around saved payment methods and a single review step, then rolling it out in stages from October 14."
+                        TabsLabel="Project sections">
+            <arc:PageHeader.Meta>
+                <WrapPanel ItemSpacing="18" LineSpacing="8">
+                    <arc:AvatarGroup x:Name="Members"
+                                     Size="Small"
+                                     MaxVisibleCount="4"
+                                     Label="Project members"
+                                     VerticalAlignment="Center" />
+                    <TextBlock VerticalAlignment="Center">
+                        <Run Text="Led by " />
+                        <Run Text="Emma Collins"
+                             FontWeight="Medium"
+                             Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </TextBlock>
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CalendarDays}" Size="14" />
+                        <TextBlock Text="Target Oct 14" />
+                    </StackPanel>
+                </WrapPanel>
+            </arc:PageHeader.Meta>
+
+            <arc:PageHeaderTab Header="Overview">
+                <StackPanel Spacing="36" MinHeight="600">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" MaxWidth="480" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <arc:Progress x:Name="IssueProgress" IsValueVisible="True" />
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Classes="section-title" Text="Milestones" />
+                        <StackPanel x:Name="MilestoneList" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Classes="section-title" Text="Recent activity" />
+                        <StackPanel x:Name="ActivityList" />
+                    </StackPanel>
+                </StackPanel>
+            </arc:PageHeaderTab>
+            <arc:PageHeaderTab x:Name="IssuesTab" Header="Issues">
+                <StackPanel MinHeight="600">
+                    <StackPanel x:Name="IssueList" AutomationProperties.Name="Open issues" />
+                    <arc:PresenceHost x:Name="IssuesEmpty" Mode="Rise" Offset="6" IsPresent="False">
+                        <StackPanel Spacing="4" Margin="16,72" HorizontalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleCheck}"
+                                          Size="24"
+                                          Classes="done"
+                                          Margin="0,0,0,8" />
+                            <TextBlock Text="No open issues"
+                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                       FontWeight="Medium"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Everything in this project is done."
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       HorizontalAlignment="Center" />
+                            <arc:Button Content="Restore sample issues"
+                                        Variant="Secondary"
+                                        Size="Small"
+                                        Margin="0,14,0,0"
+                                        HorizontalAlignment="Center"
+                                        Click="OnRestoreIssuesClick" />
+                        </StackPanel>
+                    </arc:PresenceHost>
+                </StackPanel>
+            </arc:PageHeaderTab>
+            <arc:PageHeaderTab x:Name="UpdatesTab" Header="Updates">
+                <StackPanel x:Name="UpdateList" MinHeight="600" AutomationProperties.Name="Project updates" />
+            </arc:PageHeaderTab>
+            <arc:PageHeaderTab x:Name="FilesTab" Header="Files">
+                <StackPanel x:Name="FileList" MinHeight="600" AutomationProperties.Name="Project files" />
+            </arc:PageHeaderTab>
+        </arc:PageHeader>
+        <arc:ToastStack x:Name="Notices" IsContained="True" Position="BottomCenter" />
+    </Panel>
+</UserControl>

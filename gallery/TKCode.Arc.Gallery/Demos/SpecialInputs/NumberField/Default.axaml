@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFieldDefaultDemo">
+    <arc:NumberField x:Name="Seats"
+                     Label="Seats"
+                     Minimum="1"
+                     Maximum="10"
+                     Value="3"
+                     Description="Up to 10 per team."
+                     HorizontalAlignment="Center" />
+</UserControl>

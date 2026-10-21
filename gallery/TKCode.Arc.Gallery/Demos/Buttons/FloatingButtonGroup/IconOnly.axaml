@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FloatingButtonGroupIconOnlyDemo">
+    <arc:FloatingButtonGroup Label="Text formatting"
+                             Variant="Floating"
+                             IsIconOnly="True"
+                             HorizontalAlignment="Center">
+        <arc:FloatingButtonGroupItem Label="Bold" Icon="{x:Static arc:ArcIcons.Bold}" Shortcut="⌘B" />
+        <arc:FloatingButtonGroupItem Label="Italic" Icon="{x:Static arc:ArcIcons.Italic}" Shortcut="⌘I" />
+        <arc:FloatingButtonGroupItem Label="Underline" Icon="{x:Static arc:ArcIcons.Underline}" Shortcut="⌘U" />
+        <arc:FloatingButtonGroupItem Label="Strikethrough" Icon="{x:Static arc:ArcIcons.Strikethrough}" />
+        <arc:FloatingButtonGroupSeparator />
+        <arc:FloatingButtonGroupItem Label="Link" Icon="{x:Static arc:ArcIcons.Link}" Shortcut="⌘K" />
+        <arc:FloatingButtonGroupItem Label="Quote" Icon="{x:Static arc:ArcIcons.Quote}" IsEnabled="False" />
+    </arc:FloatingButtonGroup>
+</UserControl>

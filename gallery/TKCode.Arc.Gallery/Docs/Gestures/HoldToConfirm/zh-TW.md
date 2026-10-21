@@ -1,8 +1,10 @@
 ---
 title: 長按確認
 summary: 透過長按而不是點按來確認破壞性操作。
-source-hash: 2474b37fba46
+source-hash: c7ae34d51615
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -33,15 +35,7 @@ source-hash: 2474b37fba46
 
 `Tone` 設定填色：`Danger` 用於不可逆的操作，`Accent`（預設）和 `Neutral` 用於其他情況。`HoldDuration` 設定需要按住的時長，預設為 1.2 秒。
 
-```xml
-<arc:HoldToConfirm Label="長按刪除"
-                   Tone="Danger"
-                   ConfirmedLabel="已刪除" />
-<arc:HoldToConfirm Label="長按撤銷"
-                   Tone="Neutral"
-                   HoldDuration="0:0:2"
-                   ConfirmedLabel="已撤銷" />
-```
+<Demo name="Tones" />
 
 ### 圖示
 
@@ -84,6 +78,12 @@ project.HoldingChanged += (_, e) =>
 ```csharp
 reset.Click += (_, _) => project.IsConfirmed = false;
 ```
+
+### 停用
+
+停用的按鈕無法長按。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

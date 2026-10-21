@@ -3,6 +3,8 @@ title: Tree view
 summary: Navigate nested folders and structured content.
 ---
 
+<Demo name="FileTree" />
+
 ## When to use
 
 - Folders, files and other nested categories that people open and select.
@@ -43,6 +45,8 @@ Nodes can be declared inline in XAML. A `TreeViewItem` with child items is a fol
 
 Bind `ItemsSource` and set the selectors from code. `ChildrenSelector` returns the children of a node, and
 a node with children is a folder.
+
+<Demo name="DataWithChildrenSelector" />
 
 ```csharp
 var tree = new TreeView
@@ -92,6 +96,13 @@ report folders that open and close.
 tree.ItemInvoked += (_, e) => OpenFile(e.Item);
 tree.ItemExpanded += (_, e) => log.Text = $"Opened {e.Item}";
 ```
+
+### Thousands of nodes
+
+The tree has 40 folders with 250 files each. Rows are virtualized and pooled, and only the rows near the viewport
+animate.
+
+<Demo name="ThousandsOfNodes" />
 
 ## API reference
 

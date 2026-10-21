@@ -3,6 +3,8 @@ title: Expanding button group
 summary: Icon buttons in a compact group: the one you point at or focus grows to reveal its label while its neighbours slide aside, and an action confirms in place.
 ---
 
+<Demo name="MessageActions" />
+
 ## When to use
 
 - Three to six related actions on a message, file or card, such as Reply, Archive and Delete.
@@ -35,6 +37,8 @@ Each action is an `ExpandingButtonGroupItem`. The group needs a `Label`, which i
 
 Set `Icon` to a 16 by 16 Lucide geometry in code. The group shows one label at rest: the first enabled action by
 default. `DefaultExpandedItem` picks another one.
+
+<Demo name="RestingAction" />
 
 ```csharp
 reply.Icon = ArcIcons.Reply;
@@ -81,13 +85,7 @@ var archive = new ExpandingButtonGroupItem
 `Tone="Danger"` colors an expanded destructive action in the danger color. A disabled item stays focusable and still
 reveals its label, but it does not run.
 
-```xml
-<arc:ExpandingButtonGroup Label="File actions" Size="Small">
-    <arc:ExpandingButtonGroupItem Label="Download" DoneLabel="Downloaded" />
-    <arc:ExpandingButtonGroupItem Label="Lock" IsDisabled="True" />
-    <arc:ExpandingButtonGroupItem Label="Delete" Tone="Danger" DoneLabel="Deleted" />
-</arc:ExpandingButtonGroup>
-```
+<Demo name="Small" />
 
 ### Events
 

@@ -38,6 +38,7 @@ public class RadioCards : SelectingItemsControl
 
     #region 公共属性定义
 
+    /// <summary>Card placement: Grid (responsive columns, the default) or List (full-width rows with the meta at the end).</summary>
     public static readonly StyledProperty<RadioCardsLayout> LayoutProperty =
         AvaloniaProperty.Register<RadioCards, RadioCardsLayout>(nameof(Layout));
 
@@ -49,6 +50,7 @@ public class RadioCards : SelectingItemsControl
     public static readonly StyledProperty<bool> IsRequiredProperty =
         AvaloniaProperty.Register<RadioCards, bool>(nameof(IsRequired));
 
+    /// <inheritdoc cref="LayoutProperty"/>
     public RadioCardsLayout Layout
     {
         get => GetValue(LayoutProperty);

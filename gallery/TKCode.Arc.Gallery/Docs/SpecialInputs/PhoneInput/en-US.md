@@ -3,6 +3,8 @@ title: Phone input
 summary: A phone field with a country picker, formatting as you type, and E.164 output.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Sign-up, checkout and contact forms that collect a phone number.
@@ -32,41 +34,32 @@ summary: A phone field with a country picker, formatting as you type, and E.164 
 `Value` takes an E.164 string. The country is picked from the number, and the field shows the formatted national
 number.
 
-```xml
-<arc:PhoneInput Label="Mobile" Value="+447400123456" />
-```
+<Demo name="PresetValue" />
 
 ### Restricted countries
 
 `Countries` limits the picker. `PreferredCountries` lists the countries that appear in the Suggested group above the
 full list. An empty list shows one list sorted by name.
 
-```csharp
-var phone = new PhoneInput
-{
-    Label = "Phone number",
-    Countries = new[] { "GB", "IE", "FR", "DE", "ES", "IT", "NL", "PT" },
-    PreferredCountries = new[] { "GB", "IE" },
-    Country = "GB"
-};
-```
+<Demo name="RestrictedCountries" />
+
+<Demo name="NoPreferredCountries" />
 
 ### Validation and errors
 
 Validation runs after the field loses focus. `IsValidationEnabled="False"` turns it off. An `ErrorMessage` replaces
 the built-in message.
 
-```xml
-<arc:PhoneInput Label="Phone number"
-                Value="+1201555"
-                ErrorMessage="Enter the full number to get a code." />
-<arc:PhoneInput Label="Phone number" IsValidationEnabled="False" />
-```
+<Demo name="ValidationOff" />
+
+<Demo name="DescriptionAndError" />
 
 ### Binding and events
 
 `Value` and `Country` are two-way. `ValueChanged` reports the E.164 value, the formatted number, the country and the
 status on every edit.
+
+<Demo name="ValueChanged" />
 
 ```xml
 <arc:PhoneInput Label="Phone number"
@@ -82,6 +75,20 @@ phone.ValueChanged += (_, e) =>
 
 phone.OpenPicker();
 ```
+
+### Disabled and hidden label
+
+`IsEnabled="False"` fades the field. `IsLabelVisible="False"` hides the label, which still names the number for
+assistive technology.
+
+<Demo name="States" />
+
+### Keyboard
+
+On the country button, ArrowDown and ArrowUp open the picker, and a letter opens a search for it. Backspace on a
+separator deletes the digit beside it.
+
+<Demo name="Keyboard" />
 
 ## API reference
 

@@ -73,6 +73,7 @@ public class PaymentFlow : Illustration
     public static readonly StyledProperty<int> DeclineEveryProperty =
         AvaloniaProperty.Register<PaymentFlow, int>(nameof(DeclineEvery), 4, coerce: static (_, v) => Math.Max(0, v));
 
+    /// <summary>Node titles, badges and caption text of the diagram; set it to rename or translate the scene.</summary>
     public static readonly StyledProperty<PaymentFlowLabels> LabelsProperty =
         AvaloniaProperty.Register<PaymentFlow, PaymentFlowLabels>(nameof(Labels), new PaymentFlowLabels());
 
@@ -86,6 +87,7 @@ public class PaymentFlow : Illustration
 
     public int DeclineEvery { get => GetValue(DeclineEveryProperty); set => SetValue(DeclineEveryProperty, value); }
 
+    /// <inheritdoc cref="LabelsProperty"/>
     public PaymentFlowLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
     /// <summary>Raised when the issuer decides a payment.</summary>

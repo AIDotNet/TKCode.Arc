@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SwipeActionsRestingOpenDemo">
+    <arc:SwipeActions x:Name="Notifications"
+                      Label="Notifications"
+                      Width="440"
+                      HorizontalAlignment="Left"
+                      ActionInvoked="OnActionInvoked">
+        <arc:SwipeActionsRow x:Name="Export" Label="Your export is ready">
+            <arc:SwipeActionsRow.TrailingActions>
+                <arc:SwipeAction Label="Mute" Icon="{x:Static arc:ArcIcons.BellOff}" KeepsRow="True" />
+                <arc:SwipeAction Label="Dismiss" Icon="{x:Static arc:ArcIcons.X}" Tone="Danger" />
+            </arc:SwipeActionsRow.TrailingActions>
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+                <TextBlock Text="Your export is ready"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="orders-2024.csv · 2.4 MB"
+                           FontSize="13"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </arc:SwipeActionsRow>
+        <arc:SwipeActionsRow Label="New sign-in from Safari">
+            <arc:SwipeActionsRow.TrailingActions>
+                <arc:SwipeAction Label="Dismiss" Icon="{x:Static arc:ArcIcons.X}" Tone="Danger" />
+            </arc:SwipeActionsRow.TrailingActions>
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+                <TextBlock Text="New sign-in from Safari"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Berlin, Germany · just now"
+                           FontSize="13"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </arc:SwipeActionsRow>
+    </arc:SwipeActions>
+</UserControl>

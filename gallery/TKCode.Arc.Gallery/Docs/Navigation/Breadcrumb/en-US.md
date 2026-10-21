@@ -3,6 +3,8 @@ title: Breadcrumb
 summary: Show where a page sits in a hierarchy.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Showing the path from the root of an area to the current page, such as Workspace, Settings, Billing.
@@ -48,17 +50,7 @@ breadcrumb.ItemClick += (_, e) =>
 Set `ItemsSource` to a collection of the path. Use an `ObservableCollection<T>` so that the crumbs
 change as the path grows and shrinks.
 
-```csharp
-var path = new ObservableCollection<string> { "Home", "Projects" };
-breadcrumb.ItemsSource = path;
-breadcrumb.ItemClick += (_, e) =>
-{
-    while (path.Count > e.Index + 1)
-    {
-        path.RemoveAt(path.Count - 1);
-    }
-};
-```
+<Demo name="ClientSidePath" />
 
 Opening a folder adds a crumb with `path.Add(name)`. Choosing a crumb removes the crumbs after it, which
 animates the removed crumbs out.
@@ -82,6 +74,12 @@ navigation landmark on the page.
 ```xml
 <arc:Breadcrumb Label="Folder path" />
 ```
+
+### Collapsed path
+
+`MaxVisibleItems` folds the middle of a long path into an overflow menu (an addition to Arc, which never collapses).
+
+<Demo name="CollapsedPath" />
 
 ## API reference
 

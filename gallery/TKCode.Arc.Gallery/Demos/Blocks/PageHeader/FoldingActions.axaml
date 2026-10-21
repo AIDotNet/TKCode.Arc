@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.PageHeaderFoldingActionsDemo">
+    <StackPanel Spacing="16">
+        <arc:Slider x:Name="WidthSlider"
+                    Label="Header width"
+                    Maximum="800"
+                    Minimum="360"
+                    Value="800"
+                    IsValueVisible="True"
+                    Width="360"
+                    HorizontalAlignment="Center" />
+        <arc:PageHeader x:Name="Header"
+                        Title="Design system"
+                        Status="In review"
+                        StatusTone="Info"
+                        Width="{Binding #WidthSlider.Value}"
+                        Height="300"
+                        HorizontalAlignment="Center">
+            <arc:PageHeader.Breadcrumbs>
+                <generic:List x:TypeArguments="x:String">
+                    <x:String>Northline</x:String>
+                    <x:String>Projects</x:String>
+                    <x:String>Design system</x:String>
+                </generic:List>
+            </arc:PageHeader.Breadcrumbs>
+            <arc:PageHeader.Actions>
+                <arc:PageHeaderAction Label="Follow" Icon="{x:Static arc:ArcIcons.Bell}" />
+                <arc:PageHeaderAction Label="Share" Icon="{x:Static arc:ArcIcons.Share2}" />
+            </arc:PageHeader.Actions>
+            <arc:PageHeader.MoreActions>
+                <arc:PageHeaderAction Label="Copy link" Icon="{x:Static arc:ArcIcons.Link2}" />
+                <arc:PageHeaderAction Label="Delete project" Icon="{x:Static arc:ArcIcons.Trash2}" IsDestructive="True" />
+            </arc:PageHeader.MoreActions>
+            <arc:PageHeader.PrimaryAction>
+                <arc:PageHeaderAction Label="New component" Icon="{x:Static arc:ArcIcons.Plus}" />
+            </arc:PageHeader.PrimaryAction>
+            <arc:PageHeaderTab Header="Components" Count="48">
+                <TextBlock Text="Drag the slider to narrow the header. When the breadcrumbs run out of room, Follow and Share fold into the More actions menu." TextWrapping="Wrap" />
+            </arc:PageHeaderTab>
+            <arc:PageHeaderTab Header="Tokens" Count="212">
+                <TextBlock Text="Colors, radii, spacing and type." TextWrapping="Wrap" />
+            </arc:PageHeaderTab>
+        </arc:PageHeader>
+        <TextBlock HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="{Binding #Header.AreActionsFolded, StringFormat='AreActionsFolded: {0}'}" />
+    </StackPanel>
+</UserControl>

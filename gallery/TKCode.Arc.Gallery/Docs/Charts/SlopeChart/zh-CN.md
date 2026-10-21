@@ -1,8 +1,10 @@
 ---
 title: 斜率图
 summary: 两个坐标轴上的前后对比：线条逐条绘出，每个数值旁显示排名变化，切换数据集时每条线都会滑动到新的斜率。
-source-hash: 469da0f5d974
+source-hash: 60584603575d
 ---
+
+<Demo name="BeforeAndAfter" />
 
 ## 何时使用
 
@@ -74,6 +76,12 @@ chart.ActiveKeyChanged += (_, e) => reading.Text = e.Item is { } item
     ? $"{item.Label}: {item.Start} → {item.End}"
     : "没有聚焦的项";
 ```
+
+### 标签冲突
+
+会彼此重叠的标签会被推开，并以细引导线连回各自的圆点。
+
+<Demo name="LabelCollisions" />
 
 ## API 参考
 

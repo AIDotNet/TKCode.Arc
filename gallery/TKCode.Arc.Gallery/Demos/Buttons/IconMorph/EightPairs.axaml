@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IconMorphEightPairsDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Open menu"
+                        Tag="Close menu"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Menu" />
+            </arc:Button>
+            <TextBlock Text="Menu"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Play"
+                        Tag="Pause"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Play" />
+            </arc:Button>
+            <TextBlock Text="Play"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Add"
+                        Tag="Added"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Plus" />
+            </arc:Button>
+            <TextBlock Text="Plus"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Copy"
+                        Tag="Copied"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Copy" />
+            </arc:Button>
+            <TextBlock Text="Copy"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Dark mode"
+                        Tag="Light mode"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Theme" />
+            </arc:Button>
+            <TextBlock Text="Theme"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Expand"
+                        Tag="Collapse"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Chevron" />
+            </arc:Button>
+            <TextBlock Text="Chevron"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Turn notifications on"
+                        Tag="Turn notifications off"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Bell" />
+            </arc:Button>
+            <TextBlock Text="Bell"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Like"
+                        Tag="Unlike"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Heart" />
+            </arc:Button>
+            <TextBlock Text="Heart"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

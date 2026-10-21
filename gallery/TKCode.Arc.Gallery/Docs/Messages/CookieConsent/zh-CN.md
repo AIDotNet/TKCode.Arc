@@ -1,8 +1,10 @@
 ---
 title: Cookie 同意
 summary: 同意条可展开为偏好设置，并收拢为重新打开按钮。
-source-hash: 086912befeca
+source-hash: 46fd1a9f2206
 ---
+
+<Demo name="ConsentBar" />
 
 ## 何时使用
 

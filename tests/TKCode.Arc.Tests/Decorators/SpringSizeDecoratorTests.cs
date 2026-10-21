@@ -102,4 +102,31 @@ public class SpringSizeDecoratorTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Height_Clip_Spans_The_Arranged_Width_Of_A_Stretched_Child()
+    {
+        // A stretched child is arranged wider than it asked for; clipping to its desired width would cut its right edge
+        // off while the height springs.
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var content = new StackPanel { Children = { new TextBlock { Text = "Short" } } };
+        var frame = new SpringSizeDecorator { Axis = SpringSizeAxis.Height, Spring = ArcSpring.Smooth, Child = content, Width = 300 };
+        var window = TestHelpers.Show(new StackPanel { Children = { frame } }, ArcMotionLevel.Full);
+        try
+        {
+            content.Children.Add(new TextBlock { Text = "Added" });
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(50));
+            window.UpdateLayout();
+            frame.IsMoving.ShouldBeTrue();
+            content.DesiredSize.Width.ShouldBeLessThan(300);
+            frame.Clip.ShouldBeOfType<Avalonia.Media.RectangleGeometry>().Rect.Width.ShouldBe(300, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

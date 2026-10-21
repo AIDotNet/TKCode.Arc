@@ -3,6 +3,8 @@ title: Cookie consent
 summary: A consent bar that morphs into preferences and folds into a reopen button.
 ---
 
+<Demo name="ConsentBar" />
+
 ## When to use
 
 - A marketing site or app that asks visitors to accept or refuse cookies and tracking.

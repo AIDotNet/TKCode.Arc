@@ -102,6 +102,7 @@ public static class GalleryText
             "Avatars" => GalleryShellLangResourceKind.Category_Avatars,
             "Cards" => GalleryShellLangResourceKind.Category_Cards,
             "Charts" => GalleryShellLangResourceKind.Category_Charts,
+            "AdvancedCharts" => GalleryShellLangResourceKind.Category_AdvancedCharts,
             "Tables" => GalleryShellLangResourceKind.Category_Tables,
             "Activity" => GalleryShellLangResourceKind.Category_Activity,
             "Media" => GalleryShellLangResourceKind.Category_Media,

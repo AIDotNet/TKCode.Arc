@@ -1,8 +1,10 @@
 ---
 title: 开关
 summary: 用于即时生效设置的触感式开关。
-source-hash: cf3dc3288cca
+source-hash: feb4fcc5bdcb
 ---
+
+<Demo name="SettingsList" />
 
 ## 何时使用
 
@@ -53,12 +55,7 @@ source-hash: cf3dc3288cca
 
 禁用的开关会保持其状态，且无法更改。
 
-```xml
-<StackPanel Orientation="Horizontal" Spacing="16">
-    <arc:Switch Content="关闭且禁用" IsEnabled="False" />
-    <arc:Switch Content="开启且禁用" IsChecked="True" IsEnabled="False" />
-</StackPanel>
-```
+<Demo name="Disabled" />
 
 ### 变更
 

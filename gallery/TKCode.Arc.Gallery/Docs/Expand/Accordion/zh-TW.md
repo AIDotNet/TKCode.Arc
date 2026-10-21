@@ -1,8 +1,10 @@
 ---
 title: 手風琴
 summary: 在原位逐步展示補充資訊。
-source-hash: 19622f7a78a2
+source-hash: 51581e99173c
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -40,6 +42,8 @@ source-hash: 19622f7a78a2
 
 設定 `ItemsSource`，問題使用 `ItemTemplate`，答案使用 `ContentTemplate`。`ExpandedIndex = -1` 表示初始時所有列都處於收合狀態。
 
+<Demo name="Large" />
+
 ```xml
 <arc:Accordion Size="Large"
                ExpandedIndex="-1"
@@ -73,9 +77,7 @@ source-hash: 19622f7a78a2
 
 `ExpandMode="Multiple"` 允許各列獨立展開。這是 Arc 的附加選項；Arc 預設為 `Single`。
 
-```xml
-<arc:Accordion ExpandMode="Multiple" />
-```
+<Demo name="Multiple" />
 
 ### 透過程式碼展開某一列
 

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AnnouncementBarRotatingMessagesDemo">
+    <Border CornerRadius="18"
+            BorderThickness="1"
+            ClipToBounds="True"
+            Background="{arc:ArcDesignTokenResource Background}"
+            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+        <StackPanel>
+            <arc:AnnouncementBar>
+                <arc:AnnouncementBar.Messages>
+                    <arc:Announcement Id="launch" Message="Arc 2.0 is here, with 40 new components.">
+                        <arc:Announcement.Action>
+                            <arc:AnnouncementAction Label="See what's new" />
+                        </arc:Announcement.Action>
+                    </arc:Announcement>
+                    <arc:Announcement Id="webinar" Message="Live walkthrough on Thursday at 17:00 UTC.">
+                        <arc:Announcement.Action>
+                            <arc:AnnouncementAction Label="Save a seat" />
+                        </arc:Announcement.Action>
+                    </arc:Announcement>
+                    <arc:Announcement Id="status" Message="All systems operational." />
+                </arc:AnnouncementBar.Messages>
+            </arc:AnnouncementBar>
+            <TextBlock Text="Page content" Margin="20,24" Opacity="0.6" />
+        </StackPanel>
+    </Border>
+</UserControl>

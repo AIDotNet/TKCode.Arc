@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.DataGridLangResourceKind">
+    <unit id="AggregateAverage">
+      <segment>
+        <source>Avg</source>
+      </segment>
+    </unit>
+    <unit id="AggregateCount">
+      <segment>
+        <source>Count</source>
+      </segment>
+    </unit>
+    <unit id="AggregateMax">
+      <segment>
+        <source>Max</source>
+      </segment>
+    </unit>
+    <unit id="AggregateMin">
+      <segment>
+        <source>Min</source>
+      </segment>
+    </unit>
+    <unit id="AggregateSum">
+      <segment>
+        <source>Sum</source>
+      </segment>
+    </unit>
+    <unit id="CalendarLabel">
+      <segment>
+        <source>{0} calendar</source>
+      </segment>
+    </unit>
+    <unit id="CellAddress">
+      <segment>
+        <source>Cell {0}</source>
+      </segment>
+    </unit>
+    <unit id="CellAnnouncement">
+      <segment>
+        <source>{0}, {1}: {2}</source>
+      </segment>
+    </unit>
+    <unit id="CellSet">
+      <segment>
+        <source>{0} for {1} set to {2}</source>
+      </segment>
+    </unit>
+    <unit id="CheckedCount">
+      <segment>
+        <source>{0} selected</source>
+      </segment>
+    </unit>
+    <unit id="CheckedRowsOne">
+      <segment>
+        <source>Checked {0} row</source>
+      </segment>
+    </unit>
+    <unit id="CheckedRowsOther">
+      <segment>
+        <source>Checked {0} rows</source>
+      </segment>
+    </unit>
+    <unit id="ClearAllFilters">
+      <segment>
+        <source>Clear all filters</source>
+      </segment>
+    </unit>
+    <unit id="ClearFilters">
+      <segment>
+        <source>Clear filters</source>
+      </segment>
+    </unit>
+    <unit id="ClearRowSelection">
+      <segment>
+        <source>Clear row selection</source>
+      </segment>
+    </unit>
+    <unit id="ClearSearch">
+      <segment>
+        <source>Clear search</source>
+      </segment>
+    </unit>
+    <unit id="ClearSort">
+      <segment>
+        <source>Clear sort</source>
+      </segment>
+    </unit>
+    <unit id="ClearValues">
+      <segment>
+        <source>Clear</source>
+      </segment>
+    </unit>
+    <unit id="ClearedCellsOne">
+      <segment>
+        <source>Cleared {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="ClearedCellsOther">
+      <segment>
+        <source>Cleared {0} cells</source>
+      </segment>
+    </unit>
+    <unit id="Collapse">
+      <segment>
+        <source>Collapse</source>
+      </segment>
+    </unit>
+    <unit id="CollapseAllGroups">
+      <segment>
+        <source>Collapse all groups</source>
+      </segment>
+    </unit>
+    <unit id="CollapsedAllGroups">
+      <segment>
+        <source>Collapsed all groups</source>
+      </segment>
+    </unit>
+    <unit id="ColumnOptions">
+      <segment>
+        <source>{0} column options</source>
+      </segment>
+    </unit>
+    <unit id="ColumnReadOnly">
+      <segment>
+        <source>{0} is read only</source>
+      </segment>
+    </unit>
+    <unit id="ColumnValues">
+      <segment>
+        <source>{0} values</source>
+      </segment>
+    </unit>
+    <unit id="Columns">
+      <segment>
+        <source>Columns</source>
+      </segment>
+    </unit>
+    <unit id="CopiedCellsOne">
+      <segment>
+        <source>Copied {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="CopiedCellsOther">
+      <segment>
+        <source>Copied {0} cells</source>
+      </segment>
+    </unit>
+    <unit id="CopiedRowsOne">
+      <segment>
+        <source>Copied {0} row</source>
+      </segment>
+    </unit>
+    <unit id="CopiedRowsOther">
+      <segment>
+        <source>Copied {0} rows</source>
+      </segment>
+    </unit>
+    <unit id="Copy">
+      <segment>
+        <source>Copy</source>
+      </segment>
+    </unit>
+    <unit id="CopyFailed">
+      <segment>
+        <source>Copy failed. The clipboard is not available</source>
+      </segment>
+    </unit>
+    <unit id="DatePlaceholder">
+      <segment>
+        <source>YYYY-MM-DD</source>
+      </segment>
+    </unit>
+    <unit id="Delete">
+      <segment>
+        <source>Delete</source>
+      </segment>
+    </unit>
+    <unit id="DeletedRowsOne">
+      <segment>
+        <source>Deleted {0} row</source>
+      </segment>
+    </unit>
+    <unit id="DeletedRowsOther">
+      <segment>
+        <source>Deleted {0} rows</source>
+      </segment>
+    </unit>
+    <unit id="DensityComfortable">
+      <segment>
+        <source>Comfortable</source>
+      </segment>
+    </unit>
+    <unit id="DensityCompact">
+      <segment>
+        <source>Compact</source>
+      </segment>
+    </unit>
+    <unit id="DensityLabel">
+      <segment>
+        <source>Row density, {0}</source>
+      </segment>
+    </unit>
+    <unit id="DensityStandard">
+      <segment>
+        <source>Standard</source>
+      </segment>
+    </unit>
+    <unit id="EditorLabel">
+      <segment>
+        <source>{0} for {1}</source>
+      </segment>
+    </unit>
+    <unit id="EmptyNoMatch">
+      <segment>
+        <source>No rows match</source>
+      </segment>
+    </unit>
+    <unit id="EmptyNoRows">
+      <segment>
+        <source>No rows yet</source>
+      </segment>
+    </unit>
+    <unit id="EmptyValue">
+      <segment>
+        <source>Empty</source>
+      </segment>
+    </unit>
+    <unit id="EmptyWord">
+      <segment>
+        <source>empty</source>
+      </segment>
+    </unit>
+    <unit id="Expand">
+      <segment>
+        <source>Expand</source>
+      </segment>
+    </unit>
+    <unit id="ExpandAllGroups">
+      <segment>
+        <source>Expand all groups</source>
+      </segment>
+    </unit>
+    <unit id="ExpandedAllGroups">
+      <segment>
+        <source>Expanded all groups</source>
+      </segment>
+    </unit>
+    <unit id="Export">
+      <segment>
+        <source>Export</source>
+      </segment>
+    </unit>
+    <unit id="ExportCsv">
+      <segment>
+        <source>CSV</source>
+      </segment>
+    </unit>
+    <unit id="ExportFailed">
+      <segment>
+        <source>Export failed</source>
+      </segment>
+    </unit>
+    <unit id="ExportFormatLabel">
+      <segment>
+        <source>Export {0}</source>
+      </segment>
+    </unit>
+    <unit id="ExportXlsx">
+      <segment>
+        <source>Excel workbook</source>
+      </segment>
+    </unit>
+    <unit id="ExportedRowsOne">
+      <segment>
+        <source>Exported {0} row</source>
+      </segment>
+    </unit>
+    <unit id="ExportedRowsOther">
+      <segment>
+        <source>Exported {0} rows</source>
+      </segment>
+    </unit>
+    <unit id="FillDownNeedsRows">
+      <segment>
+        <source>Select more than one row to fill down</source>
+      </segment>
+    </unit>
+    <unit id="FilledCellsOne">
+      <segment>
+        <source>Filled {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="FilledCellsOther">
+      <segment>
+        <source>Filled {0} cells</source>
+      </segment>
+    </unit>
+    <unit id="FilledDownOne">
+      <segment>
+        <source>Filled down {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="FilledDownOther">
+      <segment>
+        <source>Filled down {0} cells</source>
+      </segment>
+    </unit>
+    <unit id="Filter">
+      <segment>
+        <source>Filter</source>
+      </segment>
+    </unit>
+    <unit id="FilterAll">
+      <segment>
+        <source>All</source>
+      </segment>
+    </unit>
+    <unit id="FilterContains">
+      <segment>
+        <source>Contains</source>
+      </segment>
+    </unit>
+    <unit id="FilterDateHint">
+      <segment>
+        <source>Use a day, month or year with &gt; &lt; =, or a range like 2026-01-01..2026-03-31</source>
+      </segment>
+    </unit>
+    <unit id="FilterDatePlaceholder">
+      <segment>
+        <source>&gt; 2026-01-31</source>
+      </segment>
+    </unit>
+    <unit id="FilterLabel">
+      <segment>
+        <source>Filter {0}</source>
+      </segment>
+    </unit>
+    <unit id="FilterNone">
+      <segment>
+        <source>None</source>
+      </segment>
+    </unit>
+    <unit id="FilterNumberHint">
+      <segment>
+        <source>Use &gt; &lt; = or a range like 10..50</source>
+      </segment>
+    </unit>
+    <unit id="FilterNumberPlaceholder">
+      <segment>
+        <source>&gt; 100, 10..50</source>
+      </segment>
+    </unit>
+    <unit id="FilterSelectLabel">
+      <segment>
+        <source>Filter {0}, {1}</source>
+      </segment>
+    </unit>
+    <unit id="FilterSomeOf">
+      <segment>
+        <source>{0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="FiltersCleared">
+      <segment>
+        <source>Filters cleared</source>
+      </segment>
+    </unit>
+    <unit id="GridName">
+      <segment>
+        <source>Data grid</source>
+      </segment>
+    </unit>
+    <unit id="GridReadOnly">
+      <segment>
+        <source>This grid is read only</source>
+      </segment>
+    </unit>
+    <unit id="GroupByColumn">
+      <segment>
+        <source>Group by {0}</source>
+      </segment>
+    </unit>
+    <unit id="GroupFallback">
+      <segment>
+        <source>Group</source>
+      </segment>
+    </unit>
+    <unit id="GroupToggleOne">
+      <segment>
+        <source>{0} {1}, {2} row. {3}</source>
+      </segment>
+    </unit>
+    <unit id="GroupToggleOther">
+      <segment>
+        <source>{0} {1}, {2} rows. {3}</source>
+      </segment>
+    </unit>
+    <unit id="GroupedBy">
+      <segment>
+        <source>Grouped by {0}</source>
+      </segment>
+    </unit>
+    <unit id="HideColumn">
+      <segment>
+        <source>Hide column</source>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading</source>
+      </segment>
+    </unit>
+    <unit id="NeedsDate">
+      <segment>
+        <source>{0} needs a date like 2026-01-31</source>
+      </segment>
+    </unit>
+    <unit id="NeedsNumber">
+      <segment>
+        <source>{0} needs a number</source>
+      </segment>
+    </unit>
+    <unit id="NeedsOption">
+      <segment>
+        <source>Choose one of the {0} options</source>
+      </segment>
+    </unit>
+    <unit id="NoMatch">
+      <segment>
+        <source>No match</source>
+      </segment>
+    </unit>
+    <unit id="NoMatchingValues">
+      <segment>
+        <source>No matching values</source>
+      </segment>
+    </unit>
+    <unit id="NothingToClear">
+      <segment>
+        <source>Nothing to clear</source>
+      </segment>
+    </unit>
+    <unit id="NothingToFill">
+      <segment>
+        <source>Nothing to fill</source>
+      </segment>
+    </unit>
+    <unit id="NothingToPaste">
+      <segment>
+        <source>Nothing to paste</source>
+      </segment>
+    </unit>
+    <unit id="NothingToRedo">
+      <segment>
+        <source>Nothing to redo</source>
+      </segment>
+    </unit>
+    <unit id="NothingToUndo">
+      <segment>
+        <source>Nothing to undo</source>
+      </segment>
+    </unit>
+    <unit id="OptionsLabel">
+      <segment>
+        <source>{0} options</source>
+      </segment>
+    </unit>
+    <unit id="PasteOverflow">
+      <segment>
+        <source>. Some cells fell outside the grid</source>
+      </segment>
+    </unit>
+    <unit id="PasteSkippedOne">
+      <segment>
+        <source>, skipped {0} that did not fit</source>
+      </segment>
+    </unit>
+    <unit id="PasteSkippedOther">
+      <segment>
+        <source>, skipped {0} that did not fit</source>
+      </segment>
+    </unit>
+    <unit id="PastedCellsOne">
+      <segment>
+        <source>Pasted {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="PastedCellsOther">
+      <segment>
+        <source>Pasted {0} cells</source>
+      </segment>
+    </unit>
+    <unit id="PinColumn">
+      <segment>
+        <source>Pin column</source>
+      </segment>
+    </unit>
+    <unit id="Pinned">
+      <segment>
+        <source>Pinned</source>
+      </segment>
+    </unit>
+    <unit id="Redo">
+      <segment>
+        <source>Redo</source>
+      </segment>
+    </unit>
+    <unit id="Redone">
+      <segment>
+        <source>Redone</source>
+      </segment>
+    </unit>
+    <unit id="ResizeHint">
+      <segment>
+        <source>Alt and arrow keys resize</source>
+      </segment>
+    </unit>
+    <unit id="RowCountFiltered">
+      <segment>
+        <source>{0} of {1} rows</source>
+      </segment>
+    </unit>
+    <unit id="RowCountOne">
+      <segment>
+        <source>{0} row</source>
+      </segment>
+    </unit>
+    <unit id="RowCountOther">
+      <segment>
+        <source>{0} rows</source>
+      </segment>
+    </unit>
+    <unit id="RowSelectionCleared">
+      <segment>
+        <source>Cleared row selection</source>
+      </segment>
+    </unit>
+    <unit id="RowsLoadFailed">
+      <segment>
+        <source>Rows could not load</source>
+      </segment>
+    </unit>
+    <unit id="SearchLabel">
+      <segment>
+        <source>Search {0}</source>
+      </segment>
+    </unit>
+    <unit id="SearchPlaceholder">
+      <segment>
+        <source>Search</source>
+      </segment>
+    </unit>
+    <unit id="SearchValues">
+      <segment>
+        <source>Search values</source>
+      </segment>
+    </unit>
+    <unit id="SelectAll">
+      <segment>
+        <source>Select all</source>
+      </segment>
+    </unit>
+    <unit id="SelectAllRows">
+      <segment>
+        <source>Select all rows</source>
+      </segment>
+    </unit>
+    <unit id="SelectedAllCellsOne">
+      <segment>
+        <source>Selected {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="SelectedAllCellsOther">
+      <segment>
+        <source>Selected all {0} cells</source>
+      </segment>
+    </unit>
+    <unit id="SelectionAddress">
+      <segment>
+        <source>Selection {0}</source>
+      </segment>
+    </unit>
+    <unit id="ShowAllColumns">
+      <segment>
+        <source>Show all columns</source>
+      </segment>
+    </unit>
+    <unit id="SortAscending">
+      <segment>
+        <source>Sort ascending</source>
+      </segment>
+    </unit>
+    <unit id="SortCleared">
+      <segment>
+        <source>Original order restored</source>
+      </segment>
+    </unit>
+    <unit id="SortDescending">
+      <segment>
+        <source>Sort descending</source>
+      </segment>
+    </unit>
+    <unit id="SortHint">
+      <segment>
+        <source>Sort, Shift to add a sort key</source>
+      </segment>
+    </unit>
+    <unit id="SortJoin">
+      <segment>
+        <source>, then </source>
+      </segment>
+    </unit>
+    <unit id="SortKeyAscending">
+      <segment>
+        <source>{0} ascending</source>
+      </segment>
+    </unit>
+    <unit id="SortKeyDescending">
+      <segment>
+        <source>{0} descending</source>
+      </segment>
+    </unit>
+    <unit id="SortPriority">
+      <segment>
+        <source>priority {0}</source>
+      </segment>
+    </unit>
+    <unit id="SortedAscending">
+      <segment>
+        <source>sorted ascending</source>
+      </segment>
+    </unit>
+    <unit id="SortedBy">
+      <segment>
+        <source>Sorted by {0}</source>
+      </segment>
+    </unit>
+    <unit id="SortedDescending">
+      <segment>
+        <source>sorted descending</source>
+      </segment>
+    </unit>
+    <unit id="SpokenAverage">
+      <segment>
+        <source>average</source>
+      </segment>
+    </unit>
+    <unit id="SpokenCount">
+      <segment>
+        <source>count</source>
+      </segment>
+    </unit>
+    <unit id="SpokenMax">
+      <segment>
+        <source>maximum</source>
+      </segment>
+    </unit>
+    <unit id="SpokenMin">
+      <segment>
+        <source>minimum</source>
+      </segment>
+    </unit>
+    <unit id="SpokenSum">
+      <segment>
+        <source>sum</source>
+      </segment>
+    </unit>
+    <unit id="StatAverage">
+      <segment>
+        <source>Average</source>
+      </segment>
+    </unit>
+    <unit id="StatCount">
+      <segment>
+        <source>Count</source>
+      </segment>
+    </unit>
+    <unit id="StatSum">
+      <segment>
+        <source>Sum</source>
+      </segment>
+    </unit>
+    <unit id="StopGrouping">
+      <segment>
+        <source>Stop grouping</source>
+      </segment>
+    </unit>
+    <unit id="StoppedGroupingBy">
+      <segment>
+        <source>Stopped grouping by {0}</source>
+      </segment>
+    </unit>
+    <unit id="TotalCellLabel">
+      <segment>
+        <source>{0} {1} {2}</source>
+      </segment>
+    </unit>
+    <unit id="TotalRow">
+      <segment>
+        <source>Total</source>
+      </segment>
+    </unit>
+    <unit id="UncheckedRowsOne">
+      <segment>
+        <source>Unchecked {0} row</source>
+      </segment>
+    </unit>
+    <unit id="UncheckedRowsOther">
+      <segment>
+        <source>Unchecked {0} rows</source>
+      </segment>
+    </unit>
+    <unit id="Undo">
+      <segment>
+        <source>Undo</source>
+      </segment>
+    </unit>
+    <unit id="Undone">
+      <segment>
+        <source>Undone</source>
+      </segment>
+    </unit>
+    <unit id="UnpinColumn">
+      <segment>
+        <source>Unpin column</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -1,0 +1,136 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RichTextEditorOwnToolbarDemo">
+    <Border Padding="24,20"
+            CornerRadius="26"
+            BorderThickness="1"
+            MaxWidth="680"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <StackPanel Spacing="16">
+            <WrapPanel x:Name="Toolbar" ItemSpacing="2" LineSpacing="4">
+                <WrapPanel.Styles>
+                    <Style Selector="arc|Button.tool">
+                        <Setter Property="Variant" Value="Ghost" />
+                        <Setter Property="Size" Value="Small" />
+                        <Setter Property="Width" Value="36" />
+                        <Setter Property="Padding" Value="0" />
+                        <!-- The editor keeps the caret: these buttons never take focus. -->
+                        <Setter Property="Focusable" Value="False" />
+                    </Style>
+                </WrapPanel.Styles>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextMark.Bold}"
+                            arc:Tooltip.Tip="Bold"
+                            AutomationProperties.Name="Bold"
+                            Click="OnMarkClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Bold}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextMark.Italic}"
+                            arc:Tooltip.Tip="Italic"
+                            AutomationProperties.Name="Italic"
+                            Click="OnMarkClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Italic}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextMark.Strikethrough}"
+                            arc:Tooltip.Tip="Strikethrough"
+                            AutomationProperties.Name="Strikethrough"
+                            Click="OnMarkClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Strikethrough}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextMark.Code}"
+                            arc:Tooltip.Tip="Inline code"
+                            AutomationProperties.Name="Inline code"
+                            Click="OnMarkClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Code}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            x:Name="LinkButton"
+                            arc:Tooltip.Tip="Link"
+                            AutomationProperties.Name="Link"
+                            Click="OnLinkClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Link}" />
+                </arc:Button>
+                <Border Width="1"
+                        Height="20"
+                        Margin="6,0"
+                        VerticalAlignment="Center"
+                        Background="{arc:ArcDesignTokenResource Border}" />
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.Heading1}"
+                            arc:Tooltip.Tip="Heading 1"
+                            AutomationProperties.Name="Heading 1"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Heading1}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.Heading2}"
+                            arc:Tooltip.Tip="Heading 2"
+                            AutomationProperties.Name="Heading 2"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Heading2}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.Heading3}"
+                            arc:Tooltip.Tip="Heading 3"
+                            AutomationProperties.Name="Heading 3"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Heading3}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.BulletedList}"
+                            arc:Tooltip.Tip="Bulleted list"
+                            AutomationProperties.Name="Bulleted list"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.List}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.NumberedList}"
+                            arc:Tooltip.Tip="Numbered list"
+                            AutomationProperties.Name="Numbered list"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ListOrdered}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.Quote}"
+                            arc:Tooltip.Tip="Quote"
+                            AutomationProperties.Name="Quote"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Quote}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            Tag="{x:Static arc:RichTextBlockType.CodeBlock}"
+                            arc:Tooltip.Tip="Code block"
+                            AutomationProperties.Name="Code block"
+                            Click="OnBlockClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.SquareCode}" />
+                </arc:Button>
+                <Border Width="1"
+                        Height="20"
+                        Margin="6,0"
+                        VerticalAlignment="Center"
+                        Background="{arc:ArcDesignTokenResource Border}" />
+                <arc:Button Classes="tool"
+                            x:Name="UndoButton"
+                            arc:Tooltip.Tip="Undo"
+                            AutomationProperties.Name="Undo"
+                            Click="OnUndoClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Undo2}" />
+                </arc:Button>
+                <arc:Button Classes="tool"
+                            x:Name="RedoButton"
+                            arc:Tooltip.Tip="Redo"
+                            AutomationProperties.Name="Redo"
+                            Click="OnRedoClick">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Redo2}" />
+                </arc:Button>
+            </WrapPanel>
+            <arc:RichTextEditor x:Name="Editor"
+                                Markdown="Select some text, then use the buttons above. They show what is active at the caret." />
+        </StackPanel>
+    </Border>
+</UserControl>

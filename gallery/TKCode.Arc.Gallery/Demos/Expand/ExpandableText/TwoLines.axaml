@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandableTextTwoLinesDemo">
+    <arc:ExpandableText Lines="2"
+                        Text="Love the new keyboard shortcuts. Cmd+K to jump anywhere is the feature I did not know I needed, and the command bar remembers what I used last, which saves a surprising amount of time every day."
+                        MaxWidth="420"
+                        HorizontalAlignment="Left" />
+</UserControl>

@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContextMenuFileTileDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:ContextMenu Label="Actions for Q3 report.pdf" ItemClicked="OnReportItemClicked">
+                <arc:ContextMenu.Items>
+                    <arc:MenuEntry Header="Copy link" Icon="{x:Static arc:ArcIcons.Copy}" />
+                    <arc:MenuEntry Header="Delete file" Icon="{x:Static arc:ArcIcons.Trash2}" IsDestructive="True" />
+                </arc:ContextMenu.Items>
+                <Border Width="220"
+                        Padding="16"
+                        CornerRadius="18"
+                        BorderThickness="1"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                    <StackPanel Spacing="10">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.FileText}"
+                                      Size="22"
+                                      HorizontalAlignment="Left"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <TextBlock Text="Q3 report.pdf"
+                                   FontSize="14"
+                                   FontWeight="Medium"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="PDF · 2.4 MB"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Border>
+            </arc:ContextMenu>
+            <arc:ContextMenu Label="Actions for Launch.png" ItemClicked="OnLaunchItemClicked">
+                <arc:ContextMenu.Items>
+                    <arc:MenuEntry Header="Open" Icon="{x:Static arc:ArcIcons.ExternalLink}" />
+                    <arc:MenuEntry x:Name="Pinned" Header="Pinned" IsChecked="True" Click="OnPinnedClick" />
+                    <arc:MenuEntry Header="Rename" />
+                    <arc:MenuEntry Header="Share" Icon="{x:Static arc:ArcIcons.Share}" IsEnabled="False" />
+                    <arc:MenuEntry Header="Move to trash"
+                                   Icon="{x:Static arc:ArcIcons.Trash2}"
+                                   IsDestructive="True" />
+                </arc:ContextMenu.Items>
+                <Border Width="220"
+                        Padding="16"
+                        CornerRadius="18"
+                        BorderThickness="1"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                    <StackPanel Spacing="10">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Image}"
+                                      Size="22"
+                                      HorizontalAlignment="Left"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <TextBlock Text="Launch.png"
+                                   FontSize="14"
+                                   FontWeight="Medium"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="Image · 840 KB"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Border>
+            </arc:ContextMenu>
+        </WrapPanel>
+        <TextBlock x:Name="Status"
+                   Text="Right-click a file, or focus it and press Shift+F10."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

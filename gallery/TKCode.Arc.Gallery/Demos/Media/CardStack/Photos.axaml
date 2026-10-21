@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:atom="https://atomui.net"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CardStackPhotosDemo">
+    <arc:CardStack x:Name="Photographed"
+                   Label="Photographed destinations"
+                   ItemsSource="{x:Static demos:CardStackDemoData.Destinations}">
+        <arc:CardStack.ItemTemplate>
+            <DataTemplate x:DataType="demos:CardStackDestination">
+                <Grid RowDefinitions="*,Auto">
+                    <Panel>
+                        <ContentControl Content="{Binding Scene, Converter={x:Static demos:CardStackDemoData.Art}}" />
+                        <atom:AsyncImage Source="{Binding Photo}" Stretch="UniformToFill" />
+                    </Panel>
+                    <StackPanel Grid.Row="1" Margin="20,16,20,20" Spacing="4">
+                        <TextBlock Text="{Binding Name}"
+                                   FontSize="18"
+                                   FontWeight="Medium"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{Binding Details}"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </arc:CardStack.ItemTemplate>
+    </arc:CardStack>
+</UserControl>

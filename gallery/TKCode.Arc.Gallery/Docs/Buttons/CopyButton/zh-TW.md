@@ -1,8 +1,10 @@
 ---
 title: 複製按鈕
 summary: 複製一個值，並立即給出確認回饋。
-source-hash: 2afcc3a81ba6
+source-hash: 15f86ad86384
 ---
+
+<Demo name="Outline" />
 
 ## 何時使用
 
@@ -41,6 +43,8 @@ source-hash: 2afcc3a81ba6
 
 `IsIconOnly` 會隱藏標籤，但標籤仍作為無障礙名稱。`Variant="Plain"` 會移除外框，適合緊湊的列與程式碼區塊。
 
+<Demo name="Plain" />
+
 ```xml
 <arc:CopyButton Value="https://uiarc.dev" IsIconOnly="True" />
 <arc:CopyButton Value="#7C5CFF" Label="複製 HEX 值" Variant="Plain" />
@@ -49,6 +53,8 @@ source-hash: 2afcc3a81ba6
 ### 繫結值
 
 把 `Value` 繫結到應被複製的文字。當值為 `null` 時複製會失敗，按鈕會顯示失敗狀態。
+
+<Demo name="Failure" />
 
 ```xml
 <arc:CopyButton Value="{Binding InstallCommand}" Label="複製指令" />

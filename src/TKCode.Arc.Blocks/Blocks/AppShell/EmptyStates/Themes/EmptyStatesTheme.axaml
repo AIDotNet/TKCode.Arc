@@ -1,0 +1,167 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Ported from Arc's free empty-states block (MIT, Copyright (c) 2026 Elia Kuratli): empty-states.module.css.
+        A 1px Border card (radius 20, Surface) holding the tab row (at most 460 wide) and the panel (at most 480 wide):
+        the illustration (at most 360 wide, 320:216), then the copy and a small primary action. The card padding, the gap
+        and the tab padding follow the block's width in code (Arc's container queries); :narrow and :wide switch sizes.
+    -->
+    <ControlTheme x:Key="{x:Type arc:EmptyStates}" TargetType="arc:EmptyStates">
+        <!-- Shadows, focus rings and the illustration's parallax reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EmptyStates">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding CardPadding}">
+                    <Panel>
+                        <!-- Centered in a card that a host stretches taller than its content. -->
+                        <StackPanel Spacing="{TemplateBinding CardGap}" VerticalAlignment="Center">
+                            <Border Name="PART_TabTrack"
+                                    IsVisible="{TemplateBinding HasTabs}"
+                                    MaxWidth="{arc:EmptyStatesTokenResource TabsMaxWidth}"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="1"
+                                    CornerRadius="{arc:EmptyStatesTokenResource TrackRadius}"
+                                    Padding="{arc:EmptyStatesTokenResource TrackInset}">
+                                <arc:EmptyStatesTabPanel Name="PART_Tabs"
+                                                         Spacing="{arc:EmptyStatesTokenResource TabGap}"
+                                                         AutomationProperties.Name="{TemplateBinding TabListLabel}">
+                                    <!-- The highlight glides under the labels. -->
+                                    <arc:GlidingIndicator Name="PART_Highlight"
+                                                          Spring="Morph"
+                                                          StrokeThickness="1"
+                                                          Stroke="{arc:ArcDesignTokenResource Border}"
+                                                          Fill="{arc:ArcDesignTokenResource Surface}"
+                                                          BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                                          CornerRadius="{arc:EmptyStatesTokenResource HighlightRadius}" />
+                                </arc:EmptyStatesTabPanel>
+                            </Border>
+                            <StackPanel Name="PART_Panel"
+                                        MaxWidth="{arc:EmptyStatesTokenResource PanelMaxWidth}"
+                                        Spacing="{arc:ArcDesignTokenResource Space5}">
+                                <!-- The drawing keeps one aspect ratio, so switching scenes never changes the layout. -->
+                                <arc:EmptyStatesArt Name="PART_Art"
+                                                    HorizontalAlignment="Center"
+                                                    MaxStageWidth="{arc:EmptyStatesTokenResource StageMaxWidth}"
+                                                    StrokeWidth="{arc:EmptyStatesTokenResource ArtStrokeWidth}"
+                                                    SurfaceBrush="{arc:ArcDesignTokenResource Surface}"
+                                                    SurfaceMutedBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                    InkBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                    MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                    StrongLineBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                                    SuccessBrush="{arc:ArcDesignTokenResource Success}"
+                                                    WarningBrush="{arc:ArcDesignTokenResource Warning}" />
+                                <StackPanel Spacing="{arc:ArcDesignTokenResource Space4}">
+                                    <!-- The copy block springs to the height of the incoming text, so the action never jumps. -->
+                                    <arc:EmptyStatesCopyFrame Name="PART_CopyFrame">
+                                        <StackPanel Margin="{arc:EmptyStatesTokenResource CopyInset}"
+                                                    Spacing="{arc:EmptyStatesTokenResource CopyLineGap}">
+                                            <arc:EmptyStatesTextSwap Name="PART_Title"
+                                                                     Text="{TemplateBinding DisplayTitle}"
+                                                                     TextAlignment="Center"
+                                                                     IsBalanced="True"
+                                                                     IsTabular="True"
+                                                                     EnterDelay="0.06"
+                                                                     Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                                                     TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                     TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            <arc:EmptyStatesTextSwap Name="PART_Description"
+                                                                     Text="{TemplateBinding DisplayDescription}"
+                                                                     MaxWidth="{arc:EmptyStatesTokenResource DescriptionMaxWidth}"
+                                                                     TextAlignment="Center"
+                                                                     EnterDelay="0.1"
+                                                                     Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                     TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                    </arc:EmptyStatesCopyFrame>
+                                    <arc:Button Name="PART_Action"
+                                                Size="Small"
+                                                Variant="Primary"
+                                                HorizontalAlignment="Center"
+                                                Content="{TemplateBinding DisplayActionLabel}"
+                                                IsLoading="{TemplateBinding IsActionLoading}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <!-- The polite status line: out of the stack, so it adds no spacing. -->
+                        <arc:EmptyStatesAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:EmptyStatesTokenResource CardRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <!-- Title: text-lg, text-xl from 560 wide. In a style (not on the element) so :wide can override it. -->
+        <Style Selector="^ /template/ arc|EmptyStatesTextSwap#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        </Style>
+        <Style Selector="^:wide /template/ arc|EmptyStatesTextSwap#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A tab: 30 high, radius 9, text-sm 500 in TextMuted; Foreground when selected or under a mouse. Never scales. -->
+    <ControlTheme x:Key="{x:Type arc:EmptyStatesTab}" TargetType="arc:EmptyStatesTab">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EmptyStatesTab">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="Transparent"
+                                      CornerRadius="{arc:EmptyStatesTokenResource TabRadius}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      TextWrapping="NoWrap" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:EmptyStatesTokenResource TabFocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:EmptyStatesTokenResource TabFocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="MinHeight" Value="{arc:EmptyStatesTokenResource TabHeight}" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:selected, ^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

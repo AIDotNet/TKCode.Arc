@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.InViewTitleVariantsDemo">
+    <ScrollViewer Height="360">
+        <StackPanel>
+            <TextBlock Text="Scroll down: each title reveals itself when 45% of it is visible."
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Border Height="380" />
+            <StackPanel Spacing="64">
+                <arc:InViewTitle Text="Blur sharpens word by word" Variant="Blur" />
+                <arc:InViewTitle Text="Words rise out of a clip" Variant="Word" />
+                <arc:InViewTitle Text="Line by line" Variant="Line">
+                    <arc:InViewTitle.Lines>
+                        <generic:List x:TypeArguments="x:String">
+                            <x:String>Lines rise one by one,</x:String>
+                            <x:String>without reflowing</x:String>
+                        </generic:List>
+                    </arc:InViewTitle.Lines>
+                </arc:InViewTitle>
+                <arc:InViewTitle Text="Tracking opens up" Variant="Tracking" />
+                <arc:InViewTitle Text="A soft wipe uncovers the title" Variant="Wipe" />
+                <arc:InViewTitle Text="This one replays on every entry"
+                                 Variant="Blur"
+                                 Level="H3"
+                                 IsReplayEnabled="True" />
+            </StackPanel>
+            <Border Height="320" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

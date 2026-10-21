@@ -1,8 +1,10 @@
 ---
 title: 輸入框
 summary: 標籤清楚、狀態實用的單行輸入框。
-source-hash: 73a65b253fc6
+source-hash: 4ce673cb8f60
 ---
+
+<Demo name="Basic" />
 
 ## 何時使用
 
@@ -30,20 +32,13 @@ source-hash: 73a65b253fc6
 
 文案應由狀態推導，直接修改字串即可：只有變化的詞會移動，數字逐位滾動。不要在幾則獨立的訊息之間來回切換。
 
+<Demo name="HelperAndError" />
+
 ```xml
 <arc:Input Label="使用者名稱"
            Text="{Binding UserName}"
            Description="{Binding UserNameHint}"
            ErrorMessage="{Binding UserNameError}" />
-```
-
-```csharp
-input.TextChanged += (_, _) =>
-{
-    var text = input.Text ?? string.Empty;
-    input.Description = $"3 到 20 個字元，還可輸入 {Math.Max(0, 20 - text.Length)} 個。";
-    input.ErrorMessage = text.Length is > 0 and < 3 ? "至少輸入 3 個字元。" : null;
-};
 ```
 
 `ErrorMessage` 不為空時欄位即為無效狀態；為空時顯示 `Text` 繫結的驗證錯誤。
@@ -52,23 +47,23 @@ input.TextChanged += (_, _) =>
 
 `Size` 決定外框高度：`Small` 為 36，`Medium` 為 44（Arc 的預設外觀），`Large` 為 50。
 
-```xml
-<arc:Input Label="小" Size="Small" />
-<arc:Input Label="大" Size="Large" />
-```
+<Demo name="Sizes" />
 
 ### 前綴與後綴
 
-```xml
-<arc:Input Label="價格" Text="49">
-    <arc:Input.Prefix>
-        <TextBlock Text="NT$" />
-    </arc:Input.Prefix>
-    <arc:Input.Suffix>
-        <TextBlock Text="TWD" />
-    </arc:Input.Suffix>
-</arc:Input>
-```
+<Demo name="PrefixAndSuffix" />
+
+### 狀態
+
+欄位可以處於停用、唯讀或無效狀態。
+
+<Demo name="States" />
+
+### Field 基礎
+
+`Field` 在 `FieldFrame` 外加上標籤與訊息列。選擇器與特殊輸入框會重複使用這兩者。
+
+<Demo name="FieldFoundation" />
 
 ## API 參考
 

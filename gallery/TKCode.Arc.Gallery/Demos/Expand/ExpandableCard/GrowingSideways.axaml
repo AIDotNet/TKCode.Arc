@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandableCardGrowingSidewaysDemo">
+    <StackPanel Spacing="12">
+        <arc:ExpandableCard x:Name="Order"
+                            Header="Order #4821"
+                            Description="Shipped · arrives Thursday"
+                            CollapsedWidth="360"
+                            ExpandedWidth="520">
+            <StackPanel Spacing="8">
+                <TextBlock Text="2 × Linen shirt, 1 × Canvas tote"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Carrier: Northwind Express · tracking NW-22-9183"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Delivery window 9:00–13:00"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </arc:ExpandableCard>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Advance status" Variant="Secondary" Size="Small" Click="OnAdvanceClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

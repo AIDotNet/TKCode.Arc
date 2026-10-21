@@ -1,8 +1,10 @@
 ---
 title: 标签输入
 summary: 将简短文字值转换为可移除的标签。
-source-hash: 9909e3456dd4
+source-hash: 3617ec564045
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -44,27 +46,21 @@ var tags = new TagInput
 
 `MaxTags` 会拒绝超出上限的新增。字段会抖动，并播报已达上限。`ErrorMessage` 会将字段标记为无效，并显示错误行。
 
-```csharp
-var skills = new TagInput
-{
-    Label = "技能",
-    Description = "最多 5 项技能。",
-    MaxTags = 5,
-    Value = ["Figma", "Avalonia", "C#", "Motion"]
-};
-```
+<Demo name="Limit" />
 
-```xml
-<arc:TagInput Label="分类" ErrorMessage="请至少添加一个分类。" />
-```
+<Demo name="Error" />
 
 ### 粘贴列表
 
 粘贴包含逗号、换行或制表符的文本时，会被拆分为多个标签。最后一段会保留在草稿中。
 
+<Demo name="Paste" />
+
 ### 绑定与事件
 
 `Value` 为双向绑定。`ValueChanged` 会报告旧列表与新列表，以及 `Added` 与 `Removed` 标签。
+
+<Demo name="TwoWayValue" />
 
 ```xml
 <arc:TagInput Label="关键词" Value="{Binding Keywords, Mode=TwoWay}" />
@@ -79,6 +75,36 @@ tags.ValueChanged += (_, e) =>
 tags.AddTag("release");
 tags.FocusEditor();
 ```
+
+### 空字段与占位文字
+
+只要字段中没有标签也没有草稿，占位文字就会浮现。
+
+<Demo name="Empty" />
+
+### 说明文字
+
+字段下方的辅助文字，同时也会为屏幕阅读器描述编辑器。
+
+<Demo name="Description" />
+
+### 换行
+
+标签会换到新的一行，外壳高度会随平滑的弹簧动画变化。移除其中一个，即可看到其余标签滑入新位置。
+
+<Demo name="Wrapping" />
+
+### 键盘
+
+在起始位置按 Backspace 会选中最后一个标签，Backspace 或 Delete 会移除选中的标签，ArrowLeft 与 ArrowRight 会移动选择环，Escape 会清除选择。点击标签也会选中它。
+
+<Demo name="Keyboard" />
+
+### 禁用
+
+禁用的字段会在 `SurfaceMuted` 上淡化到 0.5 的不透明度。
+
+<Demo name="Disabled" />
 
 ## API 参考
 

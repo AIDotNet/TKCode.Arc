@@ -6,7 +6,6 @@ public static partial class GalleryPages
 {
     static partial void RegisterPickers()
     {
-        Register("Calendar", CalendarPage.Create);
         RegisterPickersA();
         RegisterPickersB();
         RegisterPickersC();

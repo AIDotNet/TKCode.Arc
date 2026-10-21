@@ -1,8 +1,10 @@
 ---
 title: 轮播
 summary: 通过拖动、轻扫或方向键浏览一排幻灯片。
-source-hash: 89c16c259bca
+source-hash: aa97f66dd6c8
 ---
+
+<Demo name="Slides" />
 
 ## 何时使用
 
@@ -56,6 +58,8 @@ carousel.SlideLabelFormatter = (index, count) => $"档案照片 {index + 1}，�
 
 设置 `Interval` 会添加播放控件。`IsAutoPlay` 开始轮换，控件可切换其状态。轮换向前进行，播放到最后一张后回到第一张。幻灯片显示期间，指示器会逐渐耗尽。
 
+<Demo name="Rotation" />
+
 ```xml
 <arc:Carousel Label="季节性优惠" Interval="0:0:4" IsAutoPlay="True">
     <Border Height="200" Background="#2F4858" CornerRadius="12" />
@@ -72,6 +76,18 @@ carousel.Next();
 carousel.Previous();
 carousel.GoTo(3);
 ```
+
+### 长轮播
+
+有 120 张幻灯片时，只会创建当前位置附近的幻灯片。
+
+<Demo name="LongCarousels" />
+
+### 照片
+
+幻灯片可以在绘制的场景之上显示 `AsyncImage` 照片，因此离线时看起来仍然完整。
+
+<Demo name="Photos" />
 
 ## API 参考
 

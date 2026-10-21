@@ -3,6 +3,8 @@ title: Button
 summary: A clear, responsive action with quiet secondary states.
 ---
 
+<Demo name="Variants" />
+
 ## When to use
 
 - Any single action on a page, form or dialog, such as Save, Continue or Cancel.
@@ -42,30 +44,19 @@ danger outline.
 `Size` sets the minimum height: `Small` is 36, `Medium` is 44 (the default) and `Large` is 50. The size does not
 change with the window width.
 
-```xml
-<arc:Button Content="Small" Size="Small" Variant="Secondary" />
-<arc:Button Content="Large" Size="Large" Variant="Secondary" />
-```
+<Demo name="Sizes" />
 
 ### Loading and label morph
 
 Set `IsLoading` to show a spinner. The button keeps keyboard focus, but clicks and key presses are ignored until
 the work ends. Change `Content` to swap the label; the new text rises in and the width springs to fit.
 
+<Demo name="LoadingMorph" />
+
 ```xml
 <arc:Button Content="{Binding SaveLabel}"
             IsLoading="{Binding IsSaving}"
             Variant="Primary" />
-```
-
-```csharp
-save.Click += async (_, _) =>
-{
-    save.IsLoading = true;
-    await SaveAsync();
-    save.IsLoading = false;
-    save.Content = "Saved";
-};
 ```
 
 ### Icon-only button
@@ -83,10 +74,7 @@ An icon-only button has no visible text, so give it an accessible name.
 
 Set `IsEnabled` to `False`. Outlined variants keep their shape, so an unavailable action still reads as a button.
 
-```xml
-<arc:Button Content="Primary" IsEnabled="False" />
-<arc:Button Content="Secondary" Variant="Secondary" IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API reference
 

@@ -3,6 +3,8 @@ title: Slope chart
 summary: Before and after on two axes: lines draw in, rank moves sit beside each value, and switching datasets slides every line to its new slope.
 ---
 
+<Demo name="BeforeAndAfter" />
+
 ## When to use
 
 - A before and after comparison of two moments, such as conversion in Q1 and Q2 by channel.
@@ -77,6 +79,12 @@ chart.ActiveKeyChanged += (_, e) => reading.Text = e.Item is { } item
     ? $"{item.Label}: {item.Start} → {item.End}"
     : "No item in focus";
 ```
+
+### Label collisions
+
+Labels that would overlap push apart and connect back to their dots with thin leaders.
+
+<Demo name="LabelCollisions" />
 
 ## API reference
 

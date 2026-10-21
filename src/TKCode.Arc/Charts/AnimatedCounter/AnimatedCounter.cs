@@ -17,18 +17,23 @@ public class AnimatedCounter : TemplatedControl
 {
     public const string DigitsPart = "PART_Digits";
 
+    /// <summary>The number to display; changes animate the digits to the new value.</summary>
     public static readonly StyledProperty<double> ValueProperty =
         AvaloniaProperty.Register<AnimatedCounter, double>(nameof(Value));
 
+    /// <summary>Accessible label announced before the value.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<AnimatedCounter, string?>(nameof(Label));
 
+    /// <summary>Text placed before the number, such as a currency sign.</summary>
     public static readonly StyledProperty<string?> PrefixProperty =
         AvaloniaProperty.Register<AnimatedCounter, string?>(nameof(Prefix));
 
+    /// <summary>Text placed after the number, such as a unit or percent sign.</summary>
     public static readonly StyledProperty<string?> SuffixProperty =
         AvaloniaProperty.Register<AnimatedCounter, string?>(nameof(Suffix));
 
+    /// <summary>Digits after the decimal point (default 0); negative values count as 0.</summary>
     public static readonly StyledProperty<int> DecimalsProperty =
         AvaloniaProperty.Register<AnimatedCounter, int>(nameof(Decimals));
 
@@ -43,10 +48,15 @@ public class AnimatedCounter : TemplatedControl
     internal static readonly DirectProperty<AnimatedCounter, bool> IsArmedProperty =
         AvaloniaProperty.RegisterDirect<AnimatedCounter, bool>(nameof(IsArmed), o => o.IsArmed);
 
+    /// <inheritdoc cref="ValueProperty"/>
     public double Value { get => GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
+    /// <inheritdoc cref="LabelProperty"/>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+    /// <inheritdoc cref="PrefixProperty"/>
     public string? Prefix { get => GetValue(PrefixProperty); set => SetValue(PrefixProperty, value); }
+    /// <inheritdoc cref="SuffixProperty"/>
     public string? Suffix { get => GetValue(SuffixProperty); set => SetValue(SuffixProperty, value); }
+    /// <inheritdoc cref="DecimalsProperty"/>
     public int Decimals { get => GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
     public bool AnimateOnView { get => GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
     public string CultureName { get => GetValue(CultureNameProperty); set => SetValue(CultureNameProperty, value); }

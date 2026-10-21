@@ -3,6 +3,8 @@ title: Password strength
 summary: Show how strong a new password is while it is typed.
 ---
 
+<Demo name="Create" />
+
 ## When to use
 
 - Sign-up forms and any screen where the user chooses a new password.
@@ -59,10 +61,7 @@ create.StrengthChanged += (_, e) =>
 Pass a rule list to `Rules`. Build the default rules with a different minimum length, or write your own
 `PasswordRule` with a test and an optional count of what remains.
 
-```csharp
-custom.Rules = PasswordRules.Create(minLength: 16);
-custom.ShortLength = 10;
-```
+<Demo name="CustomRules" />
 
 ```csharp
 var rules = new List<PasswordRule>
@@ -78,9 +77,7 @@ Below `ShortLength` characters, the meter stays at its first step and shows "Too
 
 Set `ErrorMessage` to mark the field invalid. Each new error shakes the field once.
 
-```csharp
-withError.ErrorMessage = withError.Level < 3 ? "Choose a stronger password." : null;
-```
+<Demo name="Errors" />
 
 ## API reference
 

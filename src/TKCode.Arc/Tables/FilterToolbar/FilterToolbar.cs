@@ -52,12 +52,15 @@ public class FilterToolbar : TemplatedControl
     public static readonly StyledProperty<string> LabelProperty =
         AvaloniaProperty.Register<FilterToolbar, string>(nameof(Label), "Active filters");
 
+    /// <summary>Text shown in the toolbar when no filter is applied (default No filters applied).</summary>
     public static readonly StyledProperty<string> EmptyTextProperty =
         AvaloniaProperty.Register<FilterToolbar, string>(nameof(EmptyText), "No filters applied");
 
+    /// <summary>Label of the button that removes every applied filter (default Clear all).</summary>
     public static readonly StyledProperty<string> ClearAllLabelProperty =
         AvaloniaProperty.Register<FilterToolbar, string>(nameof(ClearAllLabel), "Clear all");
 
+    /// <summary>Label of the Add filter button (default Add filter).</summary>
     public static readonly StyledProperty<string> AddFilterLabelProperty =
         AvaloniaProperty.Register<FilterToolbar, string>(nameof(AddFilterLabel), "Add filter");
 
@@ -73,6 +76,7 @@ public class FilterToolbar : TemplatedControl
     public static readonly StyledProperty<string?> SearchTextProperty =
         AvaloniaProperty.Register<FilterToolbar, string?>(nameof(SearchText), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Placeholder text of the search field (default Search).</summary>
     public static readonly StyledProperty<string> SearchPlaceholderProperty =
         AvaloniaProperty.Register<FilterToolbar, string>(nameof(SearchPlaceholder), "Search");
 
@@ -95,10 +99,13 @@ public class FilterToolbar : TemplatedControl
     /// <summary>Accessible name of the toolbar group.</summary>
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
+    /// <inheritdoc cref="EmptyTextProperty"/>
     public string EmptyText { get => GetValue(EmptyTextProperty); set => SetValue(EmptyTextProperty, value); }
 
+    /// <inheritdoc cref="ClearAllLabelProperty"/>
     public string ClearAllLabel { get => GetValue(ClearAllLabelProperty); set => SetValue(ClearAllLabelProperty, value); }
 
+    /// <inheritdoc cref="AddFilterLabelProperty"/>
     public string AddFilterLabel { get => GetValue(AddFilterLabelProperty); set => SetValue(AddFilterLabelProperty, value); }
 
     /// <summary>The trigger edge the Add filter panel lines up with.</summary>
@@ -113,6 +120,7 @@ public class FilterToolbar : TemplatedControl
     /// <summary>Text of the search field (two-way). Escape in the field clears it.</summary>
     public string? SearchText { get => GetValue(SearchTextProperty); set => SetValue(SearchTextProperty, value); }
 
+    /// <inheritdoc cref="SearchPlaceholderProperty"/>
     public string SearchPlaceholder { get => GetValue(SearchPlaceholderProperty); set => SetValue(SearchPlaceholderProperty, value); }
 
     /// <summary>Raised after a filter is added, changed, removed or all are cleared from the toolbar.</summary>

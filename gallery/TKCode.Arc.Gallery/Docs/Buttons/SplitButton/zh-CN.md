@@ -1,8 +1,10 @@
 ---
 title: 分割按钮
 summary: 一个主操作，加上一组相近备选项的菜单。
-source-hash: 47c862821190
+source-hash: cda29029c923
 ---
+
+<Demo name="MergeStrategies" />
 
 ## 何时使用
 
@@ -59,26 +61,19 @@ merge.ItemClicked += (_, e) => log.Text = $"菜单：{e.Header}";
 
 `Icon` 接收 24 乘 24 的 Lucide 几何图形，在代码中设置。更改 `Label` 与 `Icon` 时，主区域会变形为新的文字，因此可以直接在按钮上显示结果。
 
-```csharp
-copy.Click += async (_, _) =>
-{
-    copy.Label = "已复制";
-    copy.Icon = ArcIcons.Check;
-    await Task.Delay(1600);
-    copy.Label = "复制页面";
-    copy.Icon = ArcIcons.Copy;
-};
-```
+<Demo name="ResultInPlace" />
 
 ### 禁用
 
 将 `IsEnabled` 设为 `False` 可同时禁用两个区域。
 
-```xml
-<arc:SplitButton Label="部署" IsEnabled="False">
-    <arc:MenuEntry Header="部署到预发布环境" />
-</arc:SplitButton>
-```
+<Demo name="Disabled" />
+
+### 次要样式
+
+`Variant="Secondary"` 是紧凑的描边药丸，文字为 12px，主区域宽 142px。在此示例中，选择一种格式会使其成为默认操作。
+
+<Demo name="Secondary" />
 
 ## API 参考
 

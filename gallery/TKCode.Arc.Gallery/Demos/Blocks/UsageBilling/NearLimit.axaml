@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageBillingNearLimitDemo">
+    <StackPanel Spacing="20">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="near"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="near" Label="Near the limit" />
+            <arc:SegmentedOption Value="over" Label="Over the limit" />
+        </arc:SegmentedControl>
+        <!-- No DailySpend: the daily spend card stays hidden. -->
+        <arc:UsageBilling x:Name="Billing"
+                          BaseFee="90"
+                          SpendLimit="120"
+                          IsSpendLimitEnabled="True">
+            <arc:UsageBillingMeter Name="API calls"
+                                   Unit="calls"
+                                   Used="1240000"
+                                   Included="1000000"
+                                   UnitPrice="0.40"
+                                   PriceUnit="10000"
+                                   Icon="{x:Static arc:ArcIcons.Activity}" />
+            <arc:UsageBillingMeter Name="Storage"
+                                   Unit="GB"
+                                   Used="182"
+                                   Included="250"
+                                   UnitPrice="0.10"
+                                   Icon="{x:Static arc:ArcIcons.Database}" />
+            <arc:UsageBillingMeter Name="Build minutes"
+                                   Unit="min"
+                                   Used="3420"
+                                   Included="3000"
+                                   UnitPrice="0.008"
+                                   Icon="{x:Static arc:ArcIcons.Timer}" />
+        </arc:UsageBilling>
+    </StackPanel>
+</UserControl>

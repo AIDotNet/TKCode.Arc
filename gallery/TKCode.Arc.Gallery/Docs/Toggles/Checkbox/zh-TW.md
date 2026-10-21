@@ -1,8 +1,10 @@
 ---
 title: 核取方塊
 summary: 二元選擇，狀態精確且清楚易讀。
-source-hash: a5763119512c
+source-hash: 1d622d74df4b
 ---
+
+<Demo name="LabelAndDescription" />
 
 ## 何時使用
 
@@ -32,6 +34,8 @@ source-hash: a5763119512c
 
 `IsRequired` 會在表單中將該欄位標示為必填。`IsInvalid` 會顯示錯誤狀態，在未勾選時，方框邊框呈危險色。
 
+<Demo name="States" />
+
 ```xml
 <arc:Checkbox Content="同意條款及條件"
               Description="勾選此項以繼續。"
@@ -43,31 +47,10 @@ source-hash: a5763119512c
 
 `CheckedState` 是包含 `Unchecked`、`Checked` 與 `Indeterminate` 的列舉。`IsChecked` 是同一狀態的可為 null 布林值，其中 `null` 表示部分選取。當部分子項被勾選時，將父項設為部分選取。
 
+<Demo name="IndeterminateParent" />
+
 ```xml
 <arc:Checkbox Content="全部管道" CheckedState="Indeterminate" />
-```
-
-```csharp
-var all = new Checkbox { Content = "全部管道" };
-var children = new[]
-{
-    new Checkbox { Content = "電子郵件", IsChecked = true },
-    new Checkbox { Content = "推播通知" },
-    new Checkbox { Content = "簡訊" }
-};
-
-void UpdateParent()
-{
-    var on = children.Count(c => c.IsChecked == true);
-    all.CheckedState = on == 0 ? CheckboxState.Unchecked
-        : on == children.Length ? CheckboxState.Checked
-        : CheckboxState.Indeterminate;
-}
-
-foreach (var child in children)
-{
-    child.CheckedStateChanged += (_, _) => UpdateParent();
-}
 ```
 
 若要讓點選父項時同時設定所有子項，請在父項上處理 `CheckedStateChanged`，並將每個子項的 `IsChecked` 設為新狀態。在該處理常式中略過部分選取狀態。
@@ -76,9 +59,7 @@ foreach (var child in children)
 
 `IsThreeState="True"` 會讓點選在未勾選、勾選與部分選取之間循環，與 Avalonia 的 `CheckBox` 行為一致。
 
-```xml
-<arc:Checkbox Content="三態循環" IsThreeState="True" />
-```
+<Demo name="TriState" />
 
 ### 事件
 

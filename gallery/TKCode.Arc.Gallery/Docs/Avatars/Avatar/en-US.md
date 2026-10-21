@@ -3,6 +3,8 @@ title: Avatar
 summary: A compact identity marker for people and accounts.
 ---
 
+<Demo name="Initials" />
+
 ## When to use
 
 - A single person next to a name, a comment or a record, when a photo or initials identify them.
@@ -28,11 +30,7 @@ summary: A compact identity marker for people and accounts.
 
 `Source` loads a photo. While it loads, the initials show; if it fails, the initials stay.
 
-```xml
-<arc:Avatar DisplayName="Mia Chen"
-            Size="Large"
-            Source="https://i.pravatar.cc/160?img=47" />
-```
+<Demo name="Photos" />
 
 ### Sizes
 
@@ -49,18 +47,7 @@ summary: A compact identity marker for people and accounts.
 
 `Status` shows an online or offline dot at the lower right. `AvatarStatus.None` hides it.
 
-```xml
-<arc:Avatar DisplayName="Leah Fox" Size="Large" Status="Online" />
-```
-
-```csharp
-avatar.Status = avatar.Status switch
-{
-    AvatarStatus.Online => AvatarStatus.Offline,
-    AvatarStatus.Offline => AvatarStatus.None,
-    _ => AvatarStatus.Online
-};
-```
+<Demo name="Status" />
 
 ### Initials
 

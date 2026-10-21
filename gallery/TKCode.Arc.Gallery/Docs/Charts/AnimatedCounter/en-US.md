@@ -3,6 +3,8 @@ title: Animated counter
 summary: Give changing totals a clear sense of movement.
 ---
 
+<Demo name="RollingDigits" />
+
 ## When to use
 
 - A number on its own that changes, such as a total, a price or a live count.
@@ -49,6 +51,8 @@ rate.Value = Math.Round(rate.Value + random.NextDouble(), 2);
 ### Reveal on view
 
 `AnimateOnView` rolls every digit up from zero the first time 60% of the counter is visible.
+
+<Demo name="RevealOnView" />
 
 ```xml
 <arc:AnimatedCounter Label="Rolled up on first view" Value="{Binding Visitors}" AnimateOnView="True" />

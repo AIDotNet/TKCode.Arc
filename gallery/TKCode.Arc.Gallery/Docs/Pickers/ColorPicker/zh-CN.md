@@ -1,8 +1,10 @@
 ---
 title: 颜色选择器
 summary: 色块展开为选择器，支持格式切换、吸管、已保存色块和对比度读数。
-source-hash: d1062b7bf35e
+source-hash: 252305cc861e
 ---
+
+<Demo name="ColorField" />
 
 ## 何时使用
 
@@ -44,26 +46,13 @@ picker.ColorChanged += (_, e) => status.Text = $"颜色：{e.Hex}";
 
 `Swatches` 是一组 `ColorSwatch` 记录。色块从面板中保存，每次变更都会生成新的列表，因此请绑定集合或处理 `SwatchesChanged`。`MaxSwatches` 默认为 7；列表已满时，最早的色块会被移除。
 
-```csharp
-picker.Swatches =
-[
-    ColorSwatch.Create(Color.Parse("#E5484D")),
-    ColorSwatch.Create(Color.Parse("#30A46C")),
-    ColorSwatch.Create(Color.Parse("#0090FF")),
-];
-picker.MaxSwatches = 7;
-```
+<Demo name="FormatsAndSavedSwatches" />
 
 ### 对比度读数
 
 `ContrastBackground` 是 WCAG 读数用来与当前值比较的颜色。面板会显示对比度比值与等级。
 
-```xml
-<arc:ColorPicker Label="深色背景上的文字"
-                 Color="#A1A1AA"
-                 ContrastBackground="#111113"
-                 Description="对比度读数基于 #111113 进行比较。" />
-```
+<Demo name="Contrast" />
 
 ### 错误与禁用状态
 

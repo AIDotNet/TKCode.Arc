@@ -1,8 +1,10 @@
 ---
 title: 头像
 summary: 用于人员与账号的紧凑身份标识。
-source-hash: 3e5c344918ce
+source-hash: c09244e66188
 ---
+
+<Demo name="Initials" />
 
 ## 何时使用
 
@@ -29,11 +31,7 @@ source-hash: 3e5c344918ce
 
 `Source` 用于加载照片。加载期间显示首字母；若加载失败，则保留首字母。
 
-```xml
-<arc:Avatar DisplayName="Mia Chen"
-            Size="Large"
-            Source="https://i.pravatar.cc/160?img=47" />
-```
+<Demo name="Photos" />
 
 ### 尺寸
 
@@ -50,18 +48,7 @@ source-hash: 3e5c344918ce
 
 `Status` 会在右下角显示在线或离线圆点。`AvatarStatus.None` 则隐藏该圆点。
 
-```xml
-<arc:Avatar DisplayName="Leah Fox" Size="Large" Status="Online" />
-```
-
-```csharp
-avatar.Status = avatar.Status switch
-{
-    AvatarStatus.Online => AvatarStatus.Offline,
-    AvatarStatus.Offline => AvatarStatus.None,
-    _ => AvatarStatus.Online
-};
-```
+<Demo name="Status" />
 
 ### 首字母
 

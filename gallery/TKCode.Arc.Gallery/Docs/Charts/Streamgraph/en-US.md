@@ -3,6 +3,8 @@ title: Streamgraph
 summary: Layered streams on a wiggle baseline that morph between ranges, with a layer you can isolate and read week by week.
 ---
 
+<Demo name="TopicsOverTime" />
+
 ## When to use
 
 - The makeup of a total over time, such as support tickets per topic each week.

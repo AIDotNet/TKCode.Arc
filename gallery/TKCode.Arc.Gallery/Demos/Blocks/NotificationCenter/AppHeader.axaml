@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NotificationCenterAppHeaderDemo">
+    <Border CornerRadius="20"
+            Padding="16,12"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="12">
+                <arc:NotificationCenter Label="Activity">
+                    <arc:NotificationItem Id="assigned"
+                                          Title="You were assigned “Fix checkout totals”"
+                                          Time="9m"
+                                          ActorName="Priya Shah"
+                                          ActorSource="https://i.pravatar.cc/160?img=5" />
+                    <arc:NotificationItem Id="incident"
+                                          Title="Incident resolved"
+                                          Description="Payments API latency is back to normal."
+                                          Time="40m"
+                                          Tone="Success" />
+                    <arc:NotificationItem Id="sso"
+                                          Title="SSO certificate expires in 7 days"
+                                          Description="Upload a new certificate in Security settings."
+                                          Time="2h"
+                                          Tone="Warning"
+                                          IsRead="True" />
+                </arc:NotificationCenter>
+                <arc:Avatar DisplayName="Jordan Lee" Source="https://i.pravatar.cc/160?img=68" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Text="Northline"
+                       VerticalAlignment="Center"
+                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+        </DockPanel>
+    </Border>
+</UserControl>

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InputSizesDemo">
+    <StackPanel Spacing="16">
+        <arc:Input Label="Small"
+                   Size="Small"
+                   Placeholder="36px tall"
+                   Width="360"
+                   HorizontalAlignment="Left" />
+        <arc:Input Label="Medium"
+                   Placeholder="44px tall (default)"
+                   Width="360"
+                   HorizontalAlignment="Left" />
+        <arc:Input Label="Large"
+                   Size="Large"
+                   Placeholder="50px tall"
+                   Width="360"
+                   HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

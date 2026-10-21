@@ -3,6 +3,8 @@ title: Timeline
 summary: Follow what happened, newest first, grouped by day.
 ---
 
+<Demo name="LiveStream" />
+
 ## When to use
 
 - A project history, an audit log or a deployment stream where the order and recency of events matter.
@@ -65,6 +67,10 @@ timeline.DetachedFromVisualTree += (_, _) => clock.Stop();
 A row with a `Detail` expands when it is activated. Rows without a detail are plain text. `Tone` colors a system event,
 so its title must also state the outcome.
 
+<Demo name="ExpandableDetails" />
+
+<Demo name="TonesAndPortraits" />
+
 ```xml
 <arc:Timeline Label="Pipeline" Now="2026-10-20T12:00:00+00:00">
     <arc:TimelineEvent Id="t1"
@@ -92,6 +98,10 @@ A person's event shows `Avatar`. A system event shows an `Icon`, such as `ArcIco
 
 Set `MaxHeight` to scroll inside the feed. The current day label stays pinned while its rows scroll, and the list is
 virtualized, so long histories stay smooth.
+
+<Demo name="ScrollingFeed" />
+
+<Demo name="ThousandUpdates" />
 
 ```xml
 <arc:Timeline Label="Audit log"

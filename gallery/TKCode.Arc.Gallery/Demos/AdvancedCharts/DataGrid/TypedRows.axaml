@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DataGridTypedRowsDemo">
+    <StackPanel Spacing="12">
+        <arc:DataGrid x:Name="ProductsGrid"
+                      Label="Products"
+                      MaxViewportHeight="300"
+                      ShowTotals="False">
+            <arc:DataGridColumn Key="name" Header="Product" Width="180" x:DataType="demos:Product" Binding="{Binding Name}" />
+            <arc:DataGridColumn Key="category" Header="Category" Type="Select" x:DataType="demos:Product" Binding="{Binding Category}" />
+            <arc:DataGridColumn Key="price" Header="Price" Type="Currency" Decimals="2" x:DataType="demos:Product" Binding="{Binding Price}" />
+            <arc:DataGridColumn Key="stock" Header="In stock" Type="Number" x:DataType="demos:Product" Binding="{Binding Stock}" />
+        </arc:DataGrid>
+        <TextBlock x:Name="Log" Text="Edit a cell; the change lands in the Product object." Opacity="0.7" />
+    </StackPanel>
+</UserControl>

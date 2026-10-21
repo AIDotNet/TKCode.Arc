@@ -3,6 +3,8 @@ title: Floating button group
 summary: Separate soft buttons in a quiet tray, with one shared highlight that morphs from button to button as you move, and a pressed state that settles in place.
 ---
 
+<Demo name="MutedTray" />
+
 ## When to use
 
 - Actions on a floating editor or canvas, such as Undo, Redo, Share and Present.
@@ -38,16 +40,7 @@ Set `Icon` to a 24 by 24 Lucide geometry in code. `IsIconOnly` on an item hides 
 tray to make every item icon only. An item's own setting wins over the tray's. Icon-only buttons and buttons with a
 `Shortcut` show their label in a tooltip.
 
-```xml
-<arc:FloatingButtonGroup Label="Text formatting"
-                         Variant="Floating"
-                         IsIconOnly="True">
-    <arc:FloatingButtonGroupItem Label="Bold" Shortcut="⌘B" />
-    <arc:FloatingButtonGroupItem Label="Italic" Shortcut="⌘I" />
-    <arc:FloatingButtonGroupSeparator />
-    <arc:FloatingButtonGroupItem Label="Link" Shortcut="⌘K" />
-</arc:FloatingButtonGroup>
-```
+<Demo name="IconOnly" />
 
 ```csharp
 bold.Icon = ArcIcons.Bold;
@@ -75,6 +68,10 @@ share.Click += async (_, _) =>
 
 `ItemsSource` turns plain data into buttons. `Orientation="Vertical"` stacks the buttons in a column, and the
 tooltips then open to the right by default. Set `TooltipPlacement` to change the side.
+
+<Demo name="FromItemsSource" />
+
+<Demo name="Vertical" />
 
 ```xml
 <arc:FloatingButtonGroup Label="Zoom" Size="Small" ItemsSource="{Binding ZoomLevels}" />

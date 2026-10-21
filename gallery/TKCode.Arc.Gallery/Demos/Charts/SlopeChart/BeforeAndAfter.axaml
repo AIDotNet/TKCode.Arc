@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SlopeChartBeforeAndAfterDemo">
+    <StackPanel Spacing="16">
+        <arc:SlopeChart x:Name="Chart"
+                        Label="Conversion rate by channel"
+                        StartLabel="Q1"
+                        EndLabel="Q2"
+                        HighlightKey="search"
+                        ActiveKeyChanged="OnActiveKeyChanged" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Conversion" Variant="Secondary" Click="OnConversionClick" />
+            <arc:Button Content="Retention" Variant="Secondary" Click="OnRetentionClick" />
+        </WrapPanel>
+        <TextBlock x:Name="Reading"
+                   Text="Hover a line or focus the chart and use the arrow keys."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

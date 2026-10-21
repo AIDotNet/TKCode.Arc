@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DatePickerCulturesAndFormatsDemo">
+    <StackPanel x:Name="Fields" Spacing="16">
+        <arc:DatePicker Label="Deutsch"
+                        Culture="de-DE"
+                        FirstDayOfWeek="Monday"
+                        Width="260"
+                        HorizontalAlignment="Left" />
+        <arc:DatePicker Label="中文"
+                        Culture="zh-CN"
+                        FirstDayOfWeek="Monday"
+                        Width="260"
+                        HorizontalAlignment="Left" />
+        <arc:DatePicker Label="ISO format"
+                        DisplayFormat="yyyy-MM-dd"
+                        Width="260"
+                        HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

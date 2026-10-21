@@ -3,6 +3,8 @@ title: Brush chart
 summary: A dense time series with an overview strip: drag a window to zoom, resize it by its handles, and read events in place.
 ---
 
+<Demo name="OverviewAndDetail" />
+
 ## When to use
 
 - A daily series that covers a year or more, where the reader needs to zoom into a period.

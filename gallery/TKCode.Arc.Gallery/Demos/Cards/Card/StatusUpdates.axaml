@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardStatusUpdatesDemo">
+    <StackPanel Spacing="12">
+        <arc:Card x:Name="Digest"
+                  Title="Weekly digest"
+                  Description="Highlights from every team, every Friday."
+                  Meta="Lin Park"
+                  Status="Updated 2 hours ago"
+                  Width="300"
+                  HorizontalAlignment="Center">
+            <arc:Card.Avatar>
+                <arc:Avatar DisplayName="Lin Park" Size="Small" />
+            </arc:Card.Avatar>
+        </arc:Card>
+        <arc:Button Content="Change status"
+                    Variant="Secondary"
+                    Size="Small"
+                    HorizontalAlignment="Center"
+                    Click="OnChangeStatusClick" />
+    </StackPanel>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 视口内标题
 summary: 标题随滚动进入视口时逐步呈现。
-source-hash: 9d59bccb3240
+source-hash: 65cd1e721b3b
 ---
+
+<Demo name="Variants" />
 
 ## 何时使用
 

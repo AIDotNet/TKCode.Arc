@@ -1,8 +1,10 @@
 ---
 title: 密码框
 summary: 带有可见显示切换控件的敏感文本输入。
-source-hash: e883e07b8a43
+source-hash: b537e5c24c0d
 ---
+
+<Demo name="SignIn" />
 
 ## 何时使用
 
@@ -55,14 +57,7 @@ signIn.PropertyChanged += (_, e) =>
 
 当两个值不一致时，从第二个字段设置 `ErrorMessage`。将其设为 `null` 即可清除。
 
-```csharp
-void Check() => confirm.ErrorMessage = !string.IsNullOrEmpty(confirm.Text) && confirm.Text != first.Text
-    ? "两次输入的密码还不一致。"
-    : null;
-
-first.TextChanged += (_, _) => Check();
-confirm.TextChanged += (_, _) => Check();
-```
+<Demo name="Confirm" />
 
 ### 切换按钮名称
 
@@ -78,10 +73,7 @@ confirm.TextChanged += (_, _) => Check();
 
 `Size` 决定外框高度：`Small` 为 36，`Medium`（默认值）为 44。
 
-```xml
-<arc:PasswordField Label="小" Size="Small" Text="secret" />
-<arc:PasswordField Label="禁用" Text="secret" IsEnabled="False" />
-```
+<Demo name="SizesAndStates" />
 
 ## API 参考
 

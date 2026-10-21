@@ -1,8 +1,10 @@
 ---
 title: 电话输入框
 summary: 带国家/地区选择器、输入时即时格式化并输出 E.164 格式的电话字段。
-source-hash: e9d0b3bbb198
+source-hash: c869790b76d3
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -32,38 +34,29 @@ source-hash: e9d0b3bbb198
 
 `Value` 接受 E.164 字符串。国家/地区会根据号码自动选定，字段显示格式化后的本地号码。
 
-```xml
-<arc:PhoneInput Label="手机" Value="+447400123456" />
-```
+<Demo name="PresetValue" />
 
 ### 限定国家/地区
 
 `Countries` 限制选择器中的选项。`PreferredCountries` 列出在完整列表上方"推荐"分组中显示的国家/地区。列表为空时，显示按名称排序的单一列表。
 
-```csharp
-var phone = new PhoneInput
-{
-    Label = "电话号码",
-    Countries = new[] { "GB", "IE", "FR", "DE", "ES", "IT", "NL", "PT" },
-    PreferredCountries = new[] { "GB", "IE" },
-    Country = "GB"
-};
-```
+<Demo name="RestrictedCountries" />
+
+<Demo name="NoPreferredCountries" />
 
 ### 校验与错误
 
 字段失去焦点后执行校验。`IsValidationEnabled="False"` 可将其关闭。`ErrorMessage` 会替换内置的提示信息。
 
-```xml
-<arc:PhoneInput Label="电话号码"
-                Value="+1201555"
-                ErrorMessage="请输入完整号码以获取验证码。" />
-<arc:PhoneInput Label="电话号码" IsValidationEnabled="False" />
-```
+<Demo name="ValidationOff" />
+
+<Demo name="DescriptionAndError" />
 
 ### 绑定与事件
 
 `Value` 与 `Country` 为双向绑定。`ValueChanged` 会在每次编辑时报告 E.164 值、格式化后的号码、国家/地区以及状态。
+
+<Demo name="ValueChanged" />
 
 ```xml
 <arc:PhoneInput Label="电话号码"
@@ -79,6 +72,18 @@ phone.ValueChanged += (_, e) =>
 
 phone.OpenPicker();
 ```
+
+### 禁用与隐藏标签
+
+`IsEnabled="False"` 会让字段变淡。`IsLabelVisible="False"` 会隐藏标签，但标签仍为辅助技术提供号码的名称。
+
+<Demo name="States" />
+
+### 键盘
+
+在国家/地区按钮上，ArrowDown 与 ArrowUp 会打开选择器，输入字母则打开搜索。在分隔符上按 Backspace 会删除其旁边的数字。
+
+<Demo name="Keyboard" />
 
 ## API 参考
 

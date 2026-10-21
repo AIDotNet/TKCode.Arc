@@ -1,8 +1,10 @@
 ---
 title: 警告提示
 summary: 持续显示的消息，帮助用户恢复或继续操作。
-source-hash: 1e6aba0fce9e
+source-hash: cee3fcbbef41
 ---
+
+<Demo name="Tones" />
 
 ## 何时使用
 
@@ -48,33 +50,13 @@ source-hash: 1e6aba0fce9e
 
 状态变化时保留同一个实例，只修改其属性。图标会切换，新文字向上浮现，高度随弹簧动画变化。若改为替换控件，则会跳过这些过渡效果。
 
-```csharp
-var status = new Alert { Title = "可以同步了", Content = "更改已保存在此设备上。" };
-
-async void OnSave(object? sender, RoutedEventArgs e)
-{
-    status.Tone = AlertTone.Info;
-    status.Title = "正在保存更改";
-    status.Content = "正在将 3 个文件上传到工作区。";
-
-    await UploadAsync();
-
-    status.Tone = AlertTone.Success;
-    status.Title = "所有更改已保存";
-    status.Content = "工作区中的所有人现在都能看到最新版本。";
-}
-```
+<Demo name="MorphInPlace" />
 
 ### 关闭
 
 设置 `IsDismissible` 即可显示关闭按钮。按下后警告收起，然后触发 `Dismissed`。将 `IsOpen` 重新设为 `True` 可再次显示警告。
 
-```xml
-<arc:Alert Tone="Warning"
-           Title="周日计划维护"
-           Content="02:00 至 03:00（UTC）期间仪表盘为只读。"
-           IsDismissible="True" />
-```
+<Demo name="Dismiss" />
 
 ```csharp
 var notice = new Alert { Tone = AlertTone.Warning, IsDismissible = true, Title = "周日计划维护" };
@@ -88,13 +70,7 @@ notice.IsOpen = true;
 
 非文本的 `Content` 会显示在标题下方。文本内容会应用详情样式；其他内容按原样显示。
 
-```xml
-<arc:Alert Title="有新版本可用">
-    <arc:Alert.Content>
-        <arc:Button Content="重新加载" Size="Small" Variant="Secondary" />
-    </arc:Alert.Content>
-</arc:Alert>
-```
+<Demo name="CustomContent" />
 
 ## API 参考
 

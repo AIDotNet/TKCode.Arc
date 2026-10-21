@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SparklineKpiCardsDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Sparkline x:Name="RevenueCard"
+                       Label="Revenue"
+                       Value="$48.2K"
+                       Change="+4.1%"
+                       Tone="Success"
+                       Width="220" />
+        <arc:Sparkline x:Name="ChurnCard"
+                       Label="Churn"
+                       Value="2.4%"
+                       Change="+0.3 pts"
+                       Tone="Danger"
+                       Width="220" />
+        <arc:Sparkline x:Name="LatencyCard"
+                       Label="Latency"
+                       Value="182 ms"
+                       Change="−6 ms"
+                       Tone="Accent"
+                       Width="220" />
+        <arc:Sparkline x:Name="QueueCard"
+                       Label="Queue depth"
+                       Value="1,204"
+                       Change="Rising"
+                       Tone="Warning"
+                       Width="220" />
+    </WrapPanel>
+</UserControl>

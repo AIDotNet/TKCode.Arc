@@ -24,8 +24,8 @@ internal static class GalleryDocsDiagnostics
     public static readonly DiagnosticDescriptor MissingSummary = new(
         "GDOC004", "API member without a summary",
         "{0} has no XML <summary>; its API reference row has no description",
-        // Informational: undocumented members are shown with an empty description, so this lists work to do, not a defect.
-        Category, DiagnosticSeverity.Info, isEnabledByDefault: true);
+        // A member of an API table without a summary has an empty description cell: write the XML <summary>.
+        Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor OutdatedApiTranslation = new(
         "GDOC005", "API translation is outdated",
@@ -50,5 +50,20 @@ internal static class GalleryDocsDiagnostics
     public static readonly DiagnosticDescriptor MalformedFile = new(
         "GDOC009", "Malformed docs file",
         "{0}",
+        Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor UnknownDemo = new(
+        "GDOC010", "Unknown demo",
+        "'<Demo name=\"{0}\" />' names no demo; add Demos/<Category>/{1}/{2}.axaml",
+        Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor InvalidDemo = new(
+        "GDOC011", "Invalid demo",
+        "{0} cannot be a demo: {1}",
+        Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor UnusedDemo = new(
+        "GDOC012", "Demo not shown",
+        "The demo {0} is not shown by the en-US page of {1}; add '<Demo name=\"{2}\" />' to it or remove the file",
         Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 }

@@ -1,8 +1,10 @@
 ---
 title: 環圈圖
 summary: 一個環圈圖，扇形在資料集之間平滑變形，目前數值滾動顯示在中心。
-source-hash: 29c9433344a7
+source-hash: 958aaf8ea471
 ---
+
+<Demo name="ToggleSegments" />
 
 ## 何時使用
 
@@ -57,6 +59,8 @@ quarter.Click += (_, _) => chart.ItemsSource = s_quarter;
 
 預設情況下，圖例可以隱藏與顯示扇形。若只需要環圈本身，請設定 `ShowLegend="False"`。`HiddenKeys` 列出被隱藏的鍵，且為雙向繫結，檢視模型可以保存此狀態。
 
+<Demo name="RingOnly" />
+
 ```xml
 <arc:DonutChart Label="依來源統計造訪量"
                 HiddenKeys="{Binding HiddenKeys}"
@@ -68,18 +72,14 @@ quarter.Click += (_, _) => chart.ItemsSource = s_quarter;
 
 設定 `LegendAction="Select"` 後，點選會固定扇形而不是隱藏它。`ActiveKey` 保存被固定的鍵，同樣為雙向繫結。
 
+<Demo name="Select" />
+
 ```xml
 <arc:DonutChart Label="依類別統計支出"
                 LegendAction="Select"
                 ValueFormat="$#,##0"
                 ActiveKey="{Binding PinnedCategory}"
                 ItemsSource="{Binding Spend}" />
-```
-
-```csharp
-select.ActiveKeyChanged += (_, _) => selected.Text = select.ActiveKey is { } key
-    ? $"已固定：{key}"
-    : "點選一列或一個扇形即可固定。";
 ```
 
 ## API 參考

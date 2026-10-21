@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandableTextControlledDemo">
+    <StackPanel Spacing="12">
+        <arc:ExpandableText x:Name="Bio"
+                            Lines="4"
+                            Text="Maya leads platform design at Acme, where she shaped the component library used by forty product teams. Before Acme she built accessibility tooling at a public broadcaster and taught interaction design at the city college. She writes about motion that explains rather than decorates, and she still sketches every interface on paper first. Outside work she restores old film cameras and runs a small darkroom for the neighborhood."
+                            MaxWidth="520"
+                            HorizontalAlignment="Left"
+                            ExpandedChanged="OnExpandedChanged" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Toggle from outside" Variant="Secondary" Size="Small" Click="OnToggleClick" />
+            <TextBlock x:Name="State"
+                       Text="Collapsed"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

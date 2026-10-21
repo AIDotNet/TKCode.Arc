@@ -1,8 +1,10 @@
 ---
 title: 組合方塊
 summary: 無需離開欄位即可搜尋並從清單中選取。
-source-hash: 504a8dda5393
+source-hash: 7880a8c53e61
 ---
+
+<Demo name="Searchable" />
 
 ## 何時使用
 
@@ -60,15 +62,7 @@ zone.SelectionChanged += (_, _) => Console.WriteLine(zone.SelectedValue);
 
 預設情況下，標籤、中繼資訊與關鍵字會以不區分大小寫的子字串進行比對。設定 `FilterPredicate` 可以變更比對方式。它會接收項目與去除前後空白的查詢字詞。
 
-```csharp
-var prefix = new Combobox
-{
-    Label = "開頭符合",
-    ItemsSource = cities,
-    FilterPredicate = (item, query) => item is string s
-        && s.StartsWith(query, StringComparison.CurrentCultureIgnoreCase)
-};
-```
+<Demo name="CustomFilter" />
 
 ### 預留位置文字與空白文字
 
@@ -88,6 +82,18 @@ var prefix = new Combobox
 zone.Clear();
 zone.FocusInput();
 ```
+
+### 內嵌選項
+
+停用的選項會顯示，但無法選取。選取某項後，清除按鈕會彈出。
+
+<Demo name="InlineOptions" />
+
+### 停用
+
+停用的 `Combobox` 會保留其值，並忽略輸入。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

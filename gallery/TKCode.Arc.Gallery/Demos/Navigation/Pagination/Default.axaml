@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PaginationDefaultDemo">
+    <StackPanel Spacing="12">
+        <arc:Pagination x:Name="Pager"
+                        PageCount="12"
+                        CurrentPage="1"
+                        PageChanged="OnPageChanged" />
+        <TextBlock x:Name="Status"
+                   Text="Page 1 of 12"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

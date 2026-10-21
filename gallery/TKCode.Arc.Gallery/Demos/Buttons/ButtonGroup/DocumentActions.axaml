@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ButtonGroupDocumentActionsDemo">
+    <StackPanel Spacing="12">
+        <arc:ButtonGroup Label="Document actions"
+                         HorizontalAlignment="Center"
+                         ActionInvoked="OnActionInvoked"
+                         MenuItemClicked="OnMenuItemClicked">
+            <arc:ButtonGroupItem x:Name="Share"
+                                 Label="Share"
+                                 Icon="{x:Static arc:ArcIcons.Share2}"
+                                 Click="OnShareClick" />
+            <arc:ButtonGroupItem Label="Duplicate" Icon="{x:Static arc:ArcIcons.Copy}" />
+            <arc:ButtonGroupItem Label="Archive" Icon="{x:Static arc:ArcIcons.Archive}" />
+            <arc:ButtonGroup.Menu>
+                <arc:MenuSurface>
+                    <arc:MenuEntry Header="Pin" Icon="{x:Static arc:ArcIcons.Bookmark}" />
+                    <arc:MenuEntry Header="Move to…" Icon="{x:Static arc:ArcIcons.Folder}" />
+                    <arc:MenuEntry Header="Delete"
+                                   Icon="{x:Static arc:ArcIcons.Trash2}"
+                                   IsDestructive="True"
+                                   HasSeparatorBefore="True" />
+                </arc:MenuSurface>
+            </arc:ButtonGroup.Menu>
+        </arc:ButtonGroup>
+        <TextBlock x:Name="Log"
+                   Text="Point at the group, or Tab into it and use the arrow keys."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

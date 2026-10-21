@@ -57,7 +57,9 @@ public class BrushChart : ChartBase
     public static readonly StyledProperty<Func<DateTimeOffset, string>?> DateFormatterProperty =
         AvaloniaProperty.Register<BrushChart, Func<DateTimeOffset, string>?>(nameof(DateFormatter));
 
+    /// <summary>Formats value-axis ticks. Defaults to a compact number, such as 1.2K.</summary>
     public static new readonly StyledProperty<Func<double, string>?> TickFormatterProperty = ChartBase.TickFormatterProperty.AddOwner<BrushChart>();
+    /// <summary>Draws the gridlines behind the plot (default true).</summary>
     public static new readonly StyledProperty<bool> ShowGridProperty = ChartBase.ShowGridProperty.AddOwner<BrushChart>();
 
     /// <summary>Raised while the window is dragged, resized, stepped or reset.</summary>

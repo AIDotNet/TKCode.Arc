@@ -1,8 +1,10 @@
 ---
 title: 快捷键录入
 summary: 将按键组合录入为键帽，支持冲突警告、Kbd 与可搜索的速查表。
-source-hash: c8b8d9279103
+source-hash: 71acd8b4e49f
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -32,6 +34,8 @@ source-hash: c8b8d9279103
 
 `Value` 保存录入的 `KeyGesture`，没有快捷键时为 `null`。`ResetValue` 是重置按钮恢复的值。示例中它被设为默认快捷键。
 
+<Demo name="Empty" />
+
 ```csharp
 var palette = new ShortcutRecorder
 {
@@ -47,26 +51,25 @@ var palette = new ShortcutRecorder
 
 `Bindings` 列出已在使用的快捷键。录入其中一个时，会出现冲突提示，并带有「仍然使用」和「取消」按钮。「仍然使用」会替换原有绑定，并在事件中报告。
 
-```csharp
-var quickSearch = new ShortcutRecorder { Label = "快速搜索" };
-quickSearch.Bindings.Add(new ShortcutBinding(ShortcutFormatter.Parse("mod+s", ShortcutPlatform.Other), "保存"));
-quickSearch.Bindings.Add(new ShortcutBinding(ShortcutFormatter.Parse("mod+f", ShortcutPlatform.Other), "查找"));
-```
+<Demo name="Conflicts" />
 
 关闭标签页或复制等保留组合同样会给出警告。将 `IsReservedWarningEnabled` 设为 `False` 即可关闭该警告。
+
+<Demo name="Reserved" />
 
 ### 修饰键与平台
 
 `IsModifierRequired="False"` 允许单个按键。功能键始终可用。`Platform` 设置键帽样式为 `Mac` 或 `Other`。默认情况下，录入器使用当前运行的平台。
 
-```xml
-<arc:ShortcutRecorder Label="下一个会话" IsModifierRequired="False" />
-<arc:ShortcutRecorder Label="Mac" Platform="Mac" />
-```
+<Demo name="NoModifier" />
+
+<Demo name="Platforms" />
 
 ### 事件
 
 `ValueChanged` 会报告旧手势与新手势。点击「仍然使用」之后，`Replaced` 保存被替换的绑定。
+
+<Demo name="Events" />
 
 ```csharp
 recorder.ValueChanged += (_, e) =>
@@ -75,6 +78,30 @@ recorder.ValueChanged += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue}{replaced}");
 };
 ```
+
+### 隐藏标签
+
+`IsLabelVisible="False"` 会让标签仅供屏幕阅读器使用。
+
+<Demo name="HiddenLabel" />
+
+### 说明文字
+
+`Description` 是字段下方的辅助文字。录入提示、修饰键提醒与冲突提示在出现时会取代它。
+
+<Demo name="Description" />
+
+### 禁用
+
+禁用的录入器会变淡，显示在柔和的背景上，并且不在 Tab 顺序中。
+
+<Demo name="Disabled" />
+
+### 键盘
+
+- Enter 或 Space 开始录入。Escape 取消。Backspace 或 Delete 清除快捷键，未在录入时同样有效。
+- Tab 会停止录入并移动焦点，且不录入 Tab。离开字段也会停止录入。
+- 按键读取自物理按键，因此 Alt+K 录入的是 K，而不是键入的符号。系统保留的组合键，例如 ⌘Tab、Alt+Tab 和 Win 键组合，永远不会到达应用。
 
 ## API 参考
 

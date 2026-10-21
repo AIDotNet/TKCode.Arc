@@ -3,6 +3,8 @@ title: Drawer
 summary: A temporary side surface for focused work.
 ---
 
+<Demo name="Sides" />
+
 ## When to use
 
 - Filters, settings or record details that should keep the page in context.
@@ -38,6 +40,8 @@ A `Drawer` is a modal panel that slides in from one edge. Declare it anywhere an
 ### Long content
 
 The body scrolls while the header stays in place. Put the full content in the drawer; there is no need to size it.
+
+<Demo name="LongContent" />
 
 ```xml
 <arc:Drawer Title="INV-2041" Description="Paid on 12 March by Ada Lovelace." IsOpen="{Binding ShowRecord}">

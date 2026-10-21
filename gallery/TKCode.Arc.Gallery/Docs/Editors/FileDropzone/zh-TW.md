@@ -1,8 +1,10 @@
 ---
 title: 檔案拖放區
 summary: 面向拖放一個或多個檔案的大面積投放區域。
-source-hash: a6b61cd5ce4d
+source-hash: 441ebd900a6c
 ---
+
+<Demo name="Upload" />
 
 ## 何時使用
 
@@ -34,23 +36,13 @@ source-hash: a6b61cd5ce4d
 
 `Accept` 接受副檔名與 MIME 模式。被拒絕的類型或過多的檔案會使投放區晃動並顯示錯誤。超過 `MaxFileSize` 的檔案會失敗，且不會上傳。`MaxFileSize` 的單位為位元組。
 
-```xml
-<arc:FileDropzone Label="新增圖片"
-                  Description="PNG、JPG 或 WebP，每個最大 2 MB"
-                  Accept="image/*"
-                  MaxFileSize="2097152"
-                  MaxFiles="3" />
-```
+<Demo name="Images" />
 
 ### 單一檔案
 
 將 `AllowMultiple` 設為 `False` 後，新檔案會取代目前的檔案。
 
-```xml
-<arc:FileDropzone Label="新增合約"
-                  Accept=".pdf"
-                  AllowMultiple="False" />
-```
+<Demo name="SingleFile" />
 
 ### 上傳處理常式
 
@@ -72,6 +64,8 @@ zone.FilesChanged += (_, e) =>
 
 未設定上傳處理常式時，由應用程式驅動每一列。呼叫 `ReportProgress`、`CompleteUpload` 與 `FailUpload`，或直接設定項目的 `Status` 與 `Progress`。`Retry` 與 `Remove` 作用於某一列。
 
+<Demo name="AppDriven" />
+
 ```csharp
 zone.ReportProgress(item, 40);
 zone.CompleteUpload(item);
@@ -82,10 +76,7 @@ zone.FailUpload(item, "伺服器已中斷連線", retryable: true);
 
 `ListPlacement="Inside"` 會將清單顯示在投放區的邊緣之內。設定 `CompactAt` 後，當列出的列數達到該值時，提示會收合為一條細列。
 
-```xml
-<arc:FileDropzone ListPlacement="Inside"
-                  CompactAt="2" />
-```
+<Demo name="ListInside" />
 
 ## API 參考
 

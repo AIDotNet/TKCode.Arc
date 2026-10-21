@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.DataGridLangResourceKind">
+    <unit id="AggregateAverage">
+      <segment>
+        <source>Avg</source>
+        <target state="translated">平均</target>
+      </segment>
+    </unit>
+    <unit id="AggregateCount">
+      <segment>
+        <source>Count</source>
+        <target state="translated">计数</target>
+      </segment>
+    </unit>
+    <unit id="AggregateMax">
+      <segment>
+        <source>Max</source>
+        <target state="translated">最大</target>
+      </segment>
+    </unit>
+    <unit id="AggregateMin">
+      <segment>
+        <source>Min</source>
+        <target state="translated">最小</target>
+      </segment>
+    </unit>
+    <unit id="AggregateSum">
+      <segment>
+        <source>Sum</source>
+        <target state="translated">求和</target>
+      </segment>
+    </unit>
+    <unit id="CalendarLabel">
+      <segment>
+        <source>{0} calendar</source>
+        <target state="translated">{0}日历</target>
+      </segment>
+    </unit>
+    <unit id="CellAddress">
+      <segment>
+        <source>Cell {0}</source>
+        <target state="translated">单元格 {0}</target>
+      </segment>
+    </unit>
+    <unit id="CellAnnouncement">
+      <segment>
+        <source>{0}, {1}: {2}</source>
+        <target state="translated">{1}，{0}：{2}</target>
+      </segment>
+    </unit>
+    <unit id="CellSet">
+      <segment>
+        <source>{0} for {1} set to {2}</source>
+        <target state="translated">{1}的{0}已设为 {2}</target>
+      </segment>
+    </unit>
+    <unit id="CheckedCount">
+      <segment>
+        <source>{0} selected</source>
+        <target state="translated">已选 {0} 项</target>
+      </segment>
+    </unit>
+    <unit id="CheckedRowsOne">
+      <segment>
+        <source>Checked {0} row</source>
+        <target state="translated">已勾选 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="CheckedRowsOther">
+      <segment>
+        <source>Checked {0} rows</source>
+        <target state="translated">已勾选 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="ClearAllFilters">
+      <segment>
+        <source>Clear all filters</source>
+        <target state="translated">清除全部筛选</target>
+      </segment>
+    </unit>
+    <unit id="ClearFilters">
+      <segment>
+        <source>Clear filters</source>
+        <target state="translated">清除筛选</target>
+      </segment>
+    </unit>
+    <unit id="ClearRowSelection">
+      <segment>
+        <source>Clear row selection</source>
+        <target state="translated">清除勾选</target>
+      </segment>
+    </unit>
+    <unit id="ClearSearch">
+      <segment>
+        <source>Clear search</source>
+        <target state="translated">清除搜索</target>
+      </segment>
+    </unit>
+    <unit id="ClearSort">
+      <segment>
+        <source>Clear sort</source>
+        <target state="translated">清除排序</target>
+      </segment>
+    </unit>
+    <unit id="ClearValues">
+      <segment>
+        <source>Clear</source>
+        <target state="translated">清除</target>
+      </segment>
+    </unit>
+    <unit id="ClearedCellsOne">
+      <segment>
+        <source>Cleared {0} cell</source>
+        <target state="translated">已清空 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="ClearedCellsOther">
+      <segment>
+        <source>Cleared {0} cells</source>
+        <target state="translated">已清空 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="Collapse">
+      <segment>
+        <source>Collapse</source>
+        <target state="translated">折叠</target>
+      </segment>
+    </unit>
+    <unit id="CollapseAllGroups">
+      <segment>
+        <source>Collapse all groups</source>
+        <target state="translated">折叠全部分组</target>
+      </segment>
+    </unit>
+    <unit id="CollapsedAllGroups">
+      <segment>
+        <source>Collapsed all groups</source>
+        <target state="translated">已折叠全部分组</target>
+      </segment>
+    </unit>
+    <unit id="ColumnOptions">
+      <segment>
+        <source>{0} column options</source>
+        <target state="translated">{0}列选项</target>
+      </segment>
+    </unit>
+    <unit id="ColumnReadOnly">
+      <segment>
+        <source>{0} is read only</source>
+        <target state="translated">{0}为只读</target>
+      </segment>
+    </unit>
+    <unit id="ColumnValues">
+      <segment>
+        <source>{0} values</source>
+        <target state="translated">{0}的值</target>
+      </segment>
+    </unit>
+    <unit id="Columns">
+      <segment>
+        <source>Columns</source>
+        <target state="translated">列</target>
+      </segment>
+    </unit>
+    <unit id="CopiedCellsOne">
+      <segment>
+        <source>Copied {0} cell</source>
+        <target state="translated">已复制 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="CopiedCellsOther">
+      <segment>
+        <source>Copied {0} cells</source>
+        <target state="translated">已复制 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="CopiedRowsOne">
+      <segment>
+        <source>Copied {0} row</source>
+        <target state="translated">已复制 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="CopiedRowsOther">
+      <segment>
+        <source>Copied {0} rows</source>
+        <target state="translated">已复制 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="Copy">
+      <segment>
+        <source>Copy</source>
+        <target state="translated">复制</target>
+      </segment>
+    </unit>
+    <unit id="CopyFailed">
+      <segment>
+        <source>Copy failed. The clipboard is not available</source>
+        <target state="translated">复制失败，剪贴板不可用</target>
+      </segment>
+    </unit>
+    <unit id="DatePlaceholder">
+      <segment>
+        <source>YYYY-MM-DD</source>
+        <target state="translated">YYYY-MM-DD</target>
+      </segment>
+    </unit>
+    <unit id="Delete">
+      <segment>
+        <source>Delete</source>
+        <target state="translated">删除</target>
+      </segment>
+    </unit>
+    <unit id="DeletedRowsOne">
+      <segment>
+        <source>Deleted {0} row</source>
+        <target state="translated">已删除 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="DeletedRowsOther">
+      <segment>
+        <source>Deleted {0} rows</source>
+        <target state="translated">已删除 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="DensityComfortable">
+      <segment>
+        <source>Comfortable</source>
+        <target state="translated">宽松</target>
+      </segment>
+    </unit>
+    <unit id="DensityCompact">
+      <segment>
+        <source>Compact</source>
+        <target state="translated">紧凑</target>
+      </segment>
+    </unit>
+    <unit id="DensityLabel">
+      <segment>
+        <source>Row density, {0}</source>
+        <target state="translated">行密度：{0}</target>
+      </segment>
+    </unit>
+    <unit id="DensityStandard">
+      <segment>
+        <source>Standard</source>
+        <target state="translated">标准</target>
+      </segment>
+    </unit>
+    <unit id="EditorLabel">
+      <segment>
+        <source>{0} for {1}</source>
+        <target state="translated">{1}的{0}</target>
+      </segment>
+    </unit>
+    <unit id="EmptyNoMatch">
+      <segment>
+        <source>No rows match</source>
+        <target state="translated">没有匹配的行</target>
+      </segment>
+    </unit>
+    <unit id="EmptyNoRows">
+      <segment>
+        <source>No rows yet</source>
+        <target state="translated">暂无数据</target>
+      </segment>
+    </unit>
+    <unit id="EmptyValue">
+      <segment>
+        <source>Empty</source>
+        <target state="translated">（空）</target>
+      </segment>
+    </unit>
+    <unit id="EmptyWord">
+      <segment>
+        <source>empty</source>
+        <target state="translated">空</target>
+      </segment>
+    </unit>
+    <unit id="Expand">
+      <segment>
+        <source>Expand</source>
+        <target state="translated">展开</target>
+      </segment>
+    </unit>
+    <unit id="ExpandAllGroups">
+      <segment>
+        <source>Expand all groups</source>
+        <target state="translated">展开全部分组</target>
+      </segment>
+    </unit>
+    <unit id="ExpandedAllGroups">
+      <segment>
+        <source>Expanded all groups</source>
+        <target state="translated">已展开全部分组</target>
+      </segment>
+    </unit>
+    <unit id="Export">
+      <segment>
+        <source>Export</source>
+        <target state="translated">导出</target>
+      </segment>
+    </unit>
+    <unit id="ExportCsv">
+      <segment>
+        <source>CSV</source>
+        <target state="translated">CSV</target>
+      </segment>
+    </unit>
+    <unit id="ExportFailed">
+      <segment>
+        <source>Export failed</source>
+        <target state="translated">导出失败</target>
+      </segment>
+    </unit>
+    <unit id="ExportFormatLabel">
+      <segment>
+        <source>Export {0}</source>
+        <target state="translated">导出 {0}</target>
+      </segment>
+    </unit>
+    <unit id="ExportXlsx">
+      <segment>
+        <source>Excel workbook</source>
+        <target state="translated">Excel 工作簿</target>
+      </segment>
+    </unit>
+    <unit id="ExportedRowsOne">
+      <segment>
+        <source>Exported {0} row</source>
+        <target state="translated">已导出 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="ExportedRowsOther">
+      <segment>
+        <source>Exported {0} rows</source>
+        <target state="translated">已导出 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="FillDownNeedsRows">
+      <segment>
+        <source>Select more than one row to fill down</source>
+        <target state="translated">请选择多行后再向下填充</target>
+      </segment>
+    </unit>
+    <unit id="FilledCellsOne">
+      <segment>
+        <source>Filled {0} cell</source>
+        <target state="translated">已填充 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="FilledCellsOther">
+      <segment>
+        <source>Filled {0} cells</source>
+        <target state="translated">已填充 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="FilledDownOne">
+      <segment>
+        <source>Filled down {0} cell</source>
+        <target state="translated">已向下填充 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="FilledDownOther">
+      <segment>
+        <source>Filled down {0} cells</source>
+        <target state="translated">已向下填充 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="Filter">
+      <segment>
+        <source>Filter</source>
+        <target state="translated">筛选</target>
+      </segment>
+    </unit>
+    <unit id="FilterAll">
+      <segment>
+        <source>All</source>
+        <target state="translated">全部</target>
+      </segment>
+    </unit>
+    <unit id="FilterContains">
+      <segment>
+        <source>Contains</source>
+        <target state="translated">包含</target>
+      </segment>
+    </unit>
+    <unit id="FilterDateHint">
+      <segment>
+        <source>Use a day, month or year with &gt; &lt; =, or a range like 2026-01-01..2026-03-31</source>
+        <target state="translated">可用日、月或年配合 &gt; &lt; =，或区间，如 2026-01-01..2026-03-31</target>
+      </segment>
+    </unit>
+    <unit id="FilterDatePlaceholder">
+      <segment>
+        <source>&gt; 2026-01-31</source>
+        <target state="translated">&gt; 2026-01-31</target>
+      </segment>
+    </unit>
+    <unit id="FilterLabel">
+      <segment>
+        <source>Filter {0}</source>
+        <target state="translated">筛选{0}</target>
+      </segment>
+    </unit>
+    <unit id="FilterNone">
+      <segment>
+        <source>None</source>
+        <target state="translated">无</target>
+      </segment>
+    </unit>
+    <unit id="FilterNumberHint">
+      <segment>
+        <source>Use &gt; &lt; = or a range like 10..50</source>
+        <target state="translated">可用 &gt; &lt; = 或区间，如 10..50</target>
+      </segment>
+    </unit>
+    <unit id="FilterNumberPlaceholder">
+      <segment>
+        <source>&gt; 100, 10..50</source>
+        <target state="translated">&gt; 100, 10..50</target>
+      </segment>
+    </unit>
+    <unit id="FilterSelectLabel">
+      <segment>
+        <source>Filter {0}, {1}</source>
+        <target state="translated">筛选{0}：{1}</target>
+      </segment>
+    </unit>
+    <unit id="FilterSomeOf">
+      <segment>
+        <source>{0} of {1}</source>
+        <target state="translated">{0}/{1}</target>
+      </segment>
+    </unit>
+    <unit id="FiltersCleared">
+      <segment>
+        <source>Filters cleared</source>
+        <target state="translated">已清除筛选</target>
+      </segment>
+    </unit>
+    <unit id="GridName">
+      <segment>
+        <source>Data grid</source>
+        <target state="translated">数据表格</target>
+      </segment>
+    </unit>
+    <unit id="GridReadOnly">
+      <segment>
+        <source>This grid is read only</source>
+        <target state="translated">此表格为只读</target>
+      </segment>
+    </unit>
+    <unit id="GroupByColumn">
+      <segment>
+        <source>Group by {0}</source>
+        <target state="translated">按{0}分组</target>
+      </segment>
+    </unit>
+    <unit id="GroupFallback">
+      <segment>
+        <source>Group</source>
+        <target state="translated">分组</target>
+      </segment>
+    </unit>
+    <unit id="GroupToggleOne">
+      <segment>
+        <source>{0} {1}, {2} row. {3}</source>
+        <target state="translated">{0} {1}，{2} 行。{3}</target>
+      </segment>
+    </unit>
+    <unit id="GroupToggleOther">
+      <segment>
+        <source>{0} {1}, {2} rows. {3}</source>
+        <target state="translated">{0} {1}，{2} 行。{3}</target>
+      </segment>
+    </unit>
+    <unit id="GroupedBy">
+      <segment>
+        <source>Grouped by {0}</source>
+        <target state="translated">已按{0}分组</target>
+      </segment>
+    </unit>
+    <unit id="HideColumn">
+      <segment>
+        <source>Hide column</source>
+        <target state="translated">隐藏列</target>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading</source>
+        <target state="translated">正在加载</target>
+      </segment>
+    </unit>
+    <unit id="NeedsDate">
+      <segment>
+        <source>{0} needs a date like 2026-01-31</source>
+        <target state="translated">{0}需要日期，例如 2026-01-31</target>
+      </segment>
+    </unit>
+    <unit id="NeedsNumber">
+      <segment>
+        <source>{0} needs a number</source>
+        <target state="translated">{0}需要数字</target>
+      </segment>
+    </unit>
+    <unit id="NeedsOption">
+      <segment>
+        <source>Choose one of the {0} options</source>
+        <target state="translated">请选择{0}的一个选项</target>
+      </segment>
+    </unit>
+    <unit id="NoMatch">
+      <segment>
+        <source>No match</source>
+        <target state="translated">无匹配</target>
+      </segment>
+    </unit>
+    <unit id="NoMatchingValues">
+      <segment>
+        <source>No matching values</source>
+        <target state="translated">没有匹配的值</target>
+      </segment>
+    </unit>
+    <unit id="NothingToClear">
+      <segment>
+        <source>Nothing to clear</source>
+        <target state="translated">没有可清空的内容</target>
+      </segment>
+    </unit>
+    <unit id="NothingToFill">
+      <segment>
+        <source>Nothing to fill</source>
+        <target state="translated">没有可填充的内容</target>
+      </segment>
+    </unit>
+    <unit id="NothingToPaste">
+      <segment>
+        <source>Nothing to paste</source>
+        <target state="translated">没有可粘贴的内容</target>
+      </segment>
+    </unit>
+    <unit id="NothingToRedo">
+      <segment>
+        <source>Nothing to redo</source>
+        <target state="translated">没有可重做的操作</target>
+      </segment>
+    </unit>
+    <unit id="NothingToUndo">
+      <segment>
+        <source>Nothing to undo</source>
+        <target state="translated">没有可撤销的操作</target>
+      </segment>
+    </unit>
+    <unit id="OptionsLabel">
+      <segment>
+        <source>{0} options</source>
+        <target state="translated">{0}选项</target>
+      </segment>
+    </unit>
+    <unit id="PasteOverflow">
+      <segment>
+        <source>. Some cells fell outside the grid</source>
+        <target state="translated">。部分内容超出表格范围</target>
+      </segment>
+    </unit>
+    <unit id="PasteSkippedOne">
+      <segment>
+        <source>, skipped {0} that did not fit</source>
+        <target state="translated">，跳过 {0} 个无法写入的值</target>
+      </segment>
+    </unit>
+    <unit id="PasteSkippedOther">
+      <segment>
+        <source>, skipped {0} that did not fit</source>
+        <target state="translated">，跳过 {0} 个无法写入的值</target>
+      </segment>
+    </unit>
+    <unit id="PastedCellsOne">
+      <segment>
+        <source>Pasted {0} cell</source>
+        <target state="translated">已粘贴 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="PastedCellsOther">
+      <segment>
+        <source>Pasted {0} cells</source>
+        <target state="translated">已粘贴 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="PinColumn">
+      <segment>
+        <source>Pin column</source>
+        <target state="translated">固定列</target>
+      </segment>
+    </unit>
+    <unit id="Pinned">
+      <segment>
+        <source>Pinned</source>
+        <target state="translated">已固定</target>
+      </segment>
+    </unit>
+    <unit id="Redo">
+      <segment>
+        <source>Redo</source>
+        <target state="translated">重做</target>
+      </segment>
+    </unit>
+    <unit id="Redone">
+      <segment>
+        <source>Redone</source>
+        <target state="translated">已重做</target>
+      </segment>
+    </unit>
+    <unit id="ResizeHint">
+      <segment>
+        <source>Alt and arrow keys resize</source>
+        <target state="translated">Alt 加方向键调整列宽</target>
+      </segment>
+    </unit>
+    <unit id="RowCountFiltered">
+      <segment>
+        <source>{0} of {1} rows</source>
+        <target state="translated">{1} 行中的 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="RowCountOne">
+      <segment>
+        <source>{0} row</source>
+        <target state="translated">{0} 行</target>
+      </segment>
+    </unit>
+    <unit id="RowCountOther">
+      <segment>
+        <source>{0} rows</source>
+        <target state="translated">{0} 行</target>
+      </segment>
+    </unit>
+    <unit id="RowSelectionCleared">
+      <segment>
+        <source>Cleared row selection</source>
+        <target state="translated">已清除勾选</target>
+      </segment>
+    </unit>
+    <unit id="RowsLoadFailed">
+      <segment>
+        <source>Rows could not load</source>
+        <target state="translated">行加载失败</target>
+      </segment>
+    </unit>
+    <unit id="SearchLabel">
+      <segment>
+        <source>Search {0}</source>
+        <target state="translated">搜索{0}</target>
+      </segment>
+    </unit>
+    <unit id="SearchPlaceholder">
+      <segment>
+        <source>Search</source>
+        <target state="translated">搜索</target>
+      </segment>
+    </unit>
+    <unit id="SearchValues">
+      <segment>
+        <source>Search values</source>
+        <target state="translated">搜索值</target>
+      </segment>
+    </unit>
+    <unit id="SelectAll">
+      <segment>
+        <source>Select all</source>
+        <target state="translated">全选</target>
+      </segment>
+    </unit>
+    <unit id="SelectAllRows">
+      <segment>
+        <source>Select all rows</source>
+        <target state="translated">全选行</target>
+      </segment>
+    </unit>
+    <unit id="SelectedAllCellsOne">
+      <segment>
+        <source>Selected {0} cell</source>
+        <target state="translated">已选中全部 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="SelectedAllCellsOther">
+      <segment>
+        <source>Selected all {0} cells</source>
+        <target state="translated">已选中全部 {0} 个单元格</target>
+      </segment>
+    </unit>
+    <unit id="SelectionAddress">
+      <segment>
+        <source>Selection {0}</source>
+        <target state="translated">选区 {0}</target>
+      </segment>
+    </unit>
+    <unit id="ShowAllColumns">
+      <segment>
+        <source>Show all columns</source>
+        <target state="translated">显示全部列</target>
+      </segment>
+    </unit>
+    <unit id="SortAscending">
+      <segment>
+        <source>Sort ascending</source>
+        <target state="translated">升序排列</target>
+      </segment>
+    </unit>
+    <unit id="SortCleared">
+      <segment>
+        <source>Original order restored</source>
+        <target state="translated">已恢复原始顺序</target>
+      </segment>
+    </unit>
+    <unit id="SortDescending">
+      <segment>
+        <source>Sort descending</source>
+        <target state="translated">降序排列</target>
+      </segment>
+    </unit>
+    <unit id="SortHint">
+      <segment>
+        <source>Sort, Shift to add a sort key</source>
+        <target state="translated">排序，按住 Shift 追加排序键</target>
+      </segment>
+    </unit>
+    <unit id="SortJoin">
+      <segment>
+        <source>, then </source>
+        <target state="translated">，然后按</target>
+      </segment>
+    </unit>
+    <unit id="SortKeyAscending">
+      <segment>
+        <source>{0} ascending</source>
+        <target state="translated">{0}升序</target>
+      </segment>
+    </unit>
+    <unit id="SortKeyDescending">
+      <segment>
+        <source>{0} descending</source>
+        <target state="translated">{0}降序</target>
+      </segment>
+    </unit>
+    <unit id="SortPriority">
+      <segment>
+        <source>priority {0}</source>
+        <target state="translated">优先级 {0}</target>
+      </segment>
+    </unit>
+    <unit id="SortedAscending">
+      <segment>
+        <source>sorted ascending</source>
+        <target state="translated">升序</target>
+      </segment>
+    </unit>
+    <unit id="SortedBy">
+      <segment>
+        <source>Sorted by {0}</source>
+        <target state="translated">已按{0}排序</target>
+      </segment>
+    </unit>
+    <unit id="SortedDescending">
+      <segment>
+        <source>sorted descending</source>
+        <target state="translated">降序</target>
+      </segment>
+    </unit>
+    <unit id="SpokenAverage">
+      <segment>
+        <source>average</source>
+        <target state="translated">平均值</target>
+      </segment>
+    </unit>
+    <unit id="SpokenCount">
+      <segment>
+        <source>count</source>
+        <target state="translated">计数</target>
+      </segment>
+    </unit>
+    <unit id="SpokenMax">
+      <segment>
+        <source>maximum</source>
+        <target state="translated">最大值</target>
+      </segment>
+    </unit>
+    <unit id="SpokenMin">
+      <segment>
+        <source>minimum</source>
+        <target state="translated">最小值</target>
+      </segment>
+    </unit>
+    <unit id="SpokenSum">
+      <segment>
+        <source>sum</source>
+        <target state="translated">求和</target>
+      </segment>
+    </unit>
+    <unit id="StatAverage">
+      <segment>
+        <source>Average</source>
+        <target state="translated">平均值</target>
+      </segment>
+    </unit>
+    <unit id="StatCount">
+      <segment>
+        <source>Count</source>
+        <target state="translated">计数</target>
+      </segment>
+    </unit>
+    <unit id="StatSum">
+      <segment>
+        <source>Sum</source>
+        <target state="translated">求和</target>
+      </segment>
+    </unit>
+    <unit id="StopGrouping">
+      <segment>
+        <source>Stop grouping</source>
+        <target state="translated">取消分组</target>
+      </segment>
+    </unit>
+    <unit id="StoppedGroupingBy">
+      <segment>
+        <source>Stopped grouping by {0}</source>
+        <target state="translated">已取消按{0}分组</target>
+      </segment>
+    </unit>
+    <unit id="TotalCellLabel">
+      <segment>
+        <source>{0} {1} {2}</source>
+        <target state="translated">{0}{1} {2}</target>
+      </segment>
+    </unit>
+    <unit id="TotalRow">
+      <segment>
+        <source>Total</source>
+        <target state="translated">总计</target>
+      </segment>
+    </unit>
+    <unit id="UncheckedRowsOne">
+      <segment>
+        <source>Unchecked {0} row</source>
+        <target state="translated">已取消勾选 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="UncheckedRowsOther">
+      <segment>
+        <source>Unchecked {0} rows</source>
+        <target state="translated">已取消勾选 {0} 行</target>
+      </segment>
+    </unit>
+    <unit id="Undo">
+      <segment>
+        <source>Undo</source>
+        <target state="translated">撤销</target>
+      </segment>
+    </unit>
+    <unit id="Undone">
+      <segment>
+        <source>Undone</source>
+        <target state="translated">已撤销</target>
+      </segment>
+    </unit>
+    <unit id="UnpinColumn">
+      <segment>
+        <source>Unpin column</source>
+        <target state="translated">取消固定</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

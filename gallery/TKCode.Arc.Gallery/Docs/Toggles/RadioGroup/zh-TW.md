@@ -1,8 +1,10 @@
 ---
 title: 單選群組
 summary: 從可見的一組選項中選取一項。
-source-hash: 0b530d9c4659
+source-hash: 545fc82438a2
 ---
+
+<Demo name="Plans" />
 
 ## 何時使用
 
@@ -60,13 +62,7 @@ plans.SelectionChanged += (_, _) => status.Text = $"已選取：{plans.SelectedV
 
 `IsDisabled` 讓選項保持可見但無法使用。方向鍵會跳過停用的選項。
 
-```xml
-<arc:RadioGroup Header="密度" Width="420" SelectedValue="comfortable">
-    <arc:RadioOption Value="comfortable" Label="舒適" />
-    <arc:RadioOption Value="compact" Label="緊湊" />
-    <arc:RadioOption Value="spacious" Label="寬鬆" IsDisabled="True" />
-</arc:RadioGroup>
-```
+<Demo name="InlineOptions" />
 
 ### 選取事件
 

@@ -3,6 +3,8 @@ title: Search field
 summary: A recognizable search entry point with clear affordances.
 ---
 
+<Demo name="FilterList" />
+
 ## When to use
 
 - Filtering a list, table or toolbar that is already on the page.
@@ -74,10 +76,7 @@ search.Clear();
 
 `Size` sets the frame height: `Small` is 36, `Medium` (the default) is 44 and `Large` is 50.
 
-```xml
-<arc:SearchField Label="Small" Size="Small" Placeholder="Search" />
-<arc:SearchField Label="Large" Size="Large" Text="Roadmap" />
-```
+<Demo name="Sizes" />
 
 ## API reference
 

@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CodeBlockLanguagesDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <WrapPanel.Styles>
+                <Style Selector="arc|Button.language">
+                    <Setter Property="Variant" Value="Secondary" />
+                    <Setter Property="Size" Value="Small" />
+                </Style>
+            </WrapPanel.Styles>
+            <arc:Button Classes="language" Content="cs" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="tsx" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="py" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="rust" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="go" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="bash" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="yaml" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="sql" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="json" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="axaml" Click="OnLanguageClick" />
+            <arc:Button Classes="language" Content="text" Click="OnLanguageClick" />
+        </WrapPanel>
+        <arc:CodeBlock x:Name="Viewer" FileName="CartView.cs" Language="cs" />
+    </StackPanel>
+</UserControl>

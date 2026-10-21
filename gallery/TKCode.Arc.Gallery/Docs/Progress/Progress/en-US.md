@@ -3,6 +3,8 @@ title: Progress
 summary: Show how much of a known task is complete.
 ---
 
+<Demo name="CountedValue" />
+
 ## When to use
 
 - Uploads, imports and other long tasks where the total amount of work is known.
@@ -32,24 +34,19 @@ Set `Value` and, when the total is not 100, `Maximum`. The bar is read-only and 
 
 Without a label or a value the bar stands alone. Its accessible name is "Progress".
 
-```xml
-<arc:Progress Value="62" />
-```
+<Demo name="BarOnly" />
 
 ### Custom maximum
 
 `Percentage` is `round(Value / Maximum × 100)`, so 1,392 of 2,400 reads as 58%.
 
-```xml
-<arc:Progress Label="Importing contacts"
-              IsValueVisible="True"
-              Maximum="2400"
-              Value="1392" />
-```
+<Demo name="CustomMaximum" />
 
 ### Changing label
 
 Changing `Label` rises the new text in from a soft blur while the old text lifts away.
+
+<Demo name="ChangingLabel" />
 
 ```xml
 <arc:Progress Label="{Binding PhaseName}"

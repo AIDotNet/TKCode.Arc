@@ -49,9 +49,13 @@ public class TextReveal : Control
     public static readonly StyledProperty<double> BlurRadiusProperty =
         AvaloniaProperty.Register<TextReveal, double>(nameof(BlurRadius), 8);
 
+    /// <summary>Font family of the text (from TextElement).</summary>
     public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<TextReveal>();
+    /// <summary>Font size of the text in device-independent pixels (from TextElement).</summary>
     public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<TextReveal>();
+    /// <summary>Font weight of the text (from TextElement).</summary>
     public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<TextReveal>();
+    /// <summary>Brush that paints the text (from TextElement).</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<TextReveal>();
 
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
@@ -61,9 +65,13 @@ public class TextReveal : Control
     public double Tracking { get => GetValue(TrackingProperty); set => SetValue(TrackingProperty, value); }
     public double Leading { get => GetValue(LeadingProperty); set => SetValue(LeadingProperty, value); }
     public double BlurRadius { get => GetValue(BlurRadiusProperty); set => SetValue(BlurRadiusProperty, value); }
+    /// <inheritdoc cref="FontFamilyProperty"/>
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
+    /// <inheritdoc cref="FontSizeProperty"/>
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
+    /// <inheritdoc cref="FontWeightProperty"/>
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
+    /// <inheritdoc cref="ForegroundProperty"/>
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     internal const double RiseSeconds = 0.76;

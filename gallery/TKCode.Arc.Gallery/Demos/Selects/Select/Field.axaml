@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SelectFieldDemo">
+    <StackPanel Spacing="12">
+        <arc:Select x:Name="Region"
+                    Label="Region"
+                    HorizontalAlignment="Left"
+                    Description="Where your workspace data is stored."
+                    Width="280">
+            <arc:SelectItem Content="North America" Value="na" />
+            <arc:SelectItem Content="Europe" Value="eu" />
+            <arc:SelectItem Content="Asia Pacific" Value="apac" />
+            <arc:SelectItem Content="South America (soon)" Value="sa" IsEnabled="False" />
+            <arc:SelectItem Content="Africa" Value="af" />
+        </arc:Select>
+        <TextBlock FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="{Binding #Region.SelectedValue, StringFormat='Value: {0}', TargetNullValue='Value: none'}" />
+    </StackPanel>
+</UserControl>

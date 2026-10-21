@@ -1,8 +1,10 @@
 ---
 title: 浮動按鈕群組
 summary: 將柔和按鈕分隔放置在安靜的托盤中，一個共用的反白區塊隨游標在按鈕之間變形移動，按下狀態則原地回落。
-source-hash: 4ca39453b0d8
+source-hash: 17bd9cf8be73
 ---
+
+<Demo name="MutedTray" />
 
 ## 何時使用
 
@@ -37,16 +39,7 @@ source-hash: 4ca39453b0d8
 
 在程式碼中將 `Icon` 設為 24 x 24 的 Lucide 圖形。項目上的 `IsIconOnly` 會隱藏其標籤。在托盤上設定 `IsIconOnly`，可讓每個按鈕都只顯示圖示。項目自身的設定優先於托盤的設定。僅圖示的按鈕以及帶有 `Shortcut` 的按鈕，會在工具提示中顯示其標籤。
 
-```xml
-<arc:FloatingButtonGroup Label="文字格式"
-                         Variant="Floating"
-                         IsIconOnly="True">
-    <arc:FloatingButtonGroupItem Label="粗體" Shortcut="⌘B" />
-    <arc:FloatingButtonGroupItem Label="斜體" Shortcut="⌘I" />
-    <arc:FloatingButtonGroupSeparator />
-    <arc:FloatingButtonGroupItem Label="連結" Shortcut="⌘K" />
-</arc:FloatingButtonGroup>
-```
+<Demo name="IconOnly" />
 
 ```csharp
 bold.Icon = ArcIcons.Bold;
@@ -72,6 +65,10 @@ share.Click += async (_, _) =>
 ### 來自資料的項目與垂直配置
 
 `ItemsSource` 可將一般資料轉為按鈕。`Orientation="Vertical"` 會將按鈕垂直堆疊成一欄，此時工具提示預設向右展開。設定 `TooltipPlacement` 可更改展開的方向。
+
+<Demo name="FromItemsSource" />
+
+<Demo name="Vertical" />
 
 ```xml
 <arc:FloatingButtonGroup Label="縮放" Size="Small" ItemsSource="{Binding ZoomLevels}" />

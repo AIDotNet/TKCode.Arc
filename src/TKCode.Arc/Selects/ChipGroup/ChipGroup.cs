@@ -58,8 +58,10 @@ public class ChipGroup : SelectingItemsControl
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<ChipGroup, bool>(nameof(IsExpanded), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
+    /// <summary>Label of a data item (AOT-safe alternative to <c>DisplayMemberBinding</c>).</summary>
     public static readonly StyledProperty<Func<object?, string?>?> TextSelectorProperty = Select.TextSelectorProperty.AddOwner<ChipGroup>();
 
+    /// <summary>Value of a data item (AOT-safe alternative to <c>SelectedValueBinding</c>).</summary>
     public static readonly StyledProperty<Func<object?, object?>?> ValueSelectorProperty = Select.ValueSelectorProperty.AddOwner<ChipGroup>();
 
     /// <summary>Defines the <see cref="SelectedItems"/> property.</summary>

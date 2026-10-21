@@ -3,6 +3,8 @@ title: Number field
 summary: Enter a bounded number with clear increment controls.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Exact numbers with a range, such as seats, quantities or prices.
@@ -34,10 +36,7 @@ summary: Enter a bounded number with clear increment controls.
 `Step` sets the increment, and its precision sets the default fraction digits. `SuffixFormatter` lets the unit
 follow the value, such as singular and plural.
 
-```xml
-<arc:NumberField Label="Price" Prefix="$" Step="0.5" Maximum="999" Value="24.5" />
-<arc:NumberField Label="Temperature" Minimum="-20" Maximum="40" Value="21" Suffix="°C" />
-```
+<Demo name="Price" />
 
 ```csharp
 var seats = new NumberField
@@ -52,40 +51,28 @@ var seats = new NumberField
 
 A minimum below zero accepts the minus sign while the user types.
 
+<Demo name="NegativeRange" />
+
 ### Sizes
 
 `Size` sets the width and the stepper size: `Small` is 164px wide, `Medium` (the default) is 196px and `Large` is 228px.
 
-```xml
-<arc:NumberField Label="Small" Size="Small" Value="2" Maximum="99" />
-<arc:NumberField Label="Large" Size="Large" Value="48" Maximum="99" />
-```
+<Demo name="Sizes" />
 
 ### Limit hint and errors
 
 `IsLimitHintEnabled` shows a note when a limit is reached. `LimitHintFormatter` writes the note. An
 `ErrorMessage` marks the field invalid.
 
-```xml
-<arc:NumberField Label="Quantity" Value="0" Maximum="5" ErrorMessage="Add at least one item." />
-```
+<Demo name="LimitHint" />
 
-```csharp
-var guests = new NumberField
-{
-    Label = "Guests",
-    Minimum = 1,
-    Maximum = 8,
-    Value = 8,
-    LimitHintFormatter = (edge, limit) => edge == NumberFieldLimitEdge.Maximum
-        ? $"Room holds {limit}"
-        : $"At least {limit}"
-};
-```
+<Demo name="States" />
 
 ### Binding and events
 
 `Value` is two-way. `ValueChanged` reports the old value, the new value and the `ChangeSource`.
+
+<Demo name="BindingAndEvents" />
 
 ```xml
 <arc:NumberField Label="Items" Minimum="0" Maximum="50" Value="{Binding ItemCount, Mode=TwoWay}" />
@@ -97,6 +84,19 @@ field.ValueChanged += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue} ({e.ChangeSource})");
 };
 ```
+
+### Scrub label
+
+With `IsScrubEnabled` on, drag the label sideways to change the value: one step every 6px. Past a limit the value
+follows with resistance.
+
+<Demo name="ScrubLabel" />
+
+### Keyboard
+
+Focus the field to use the keyboard. The keys are listed below the field.
+
+<Demo name="Keyboard" />
 
 ## API reference
 

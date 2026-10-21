@@ -1,0 +1,75 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SwipeActionsInboxDemo">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.unread">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Spacing="12">
+        <arc:SwipeActions x:Name="Inbox"
+                          Label="Inbox"
+                          Width="440"
+                          HorizontalAlignment="Left"
+                          ActionInvoked="OnActionInvoked">
+            <arc:SwipeActions.LeadingActions>
+                <arc:SwipeAction Label="Unread"
+                                 Icon="{x:Static arc:ArcIcons.Mail}"
+                                 Tone="Accent"
+                                 KeepsRow="True" />
+            </arc:SwipeActions.LeadingActions>
+            <arc:SwipeActions.TrailingActions>
+                <arc:SwipeAction Label="Archive" Icon="{x:Static arc:ArcIcons.Archive}" />
+                <arc:SwipeAction Label="Delete" Icon="{x:Static arc:ArcIcons.Trash2}" Tone="Danger" />
+            </arc:SwipeActions.TrailingActions>
+            <arc:SwipeActions.ItemTemplate>
+                <DataTemplate x:DataType="demos:SwipeActionsInboxDemo+Message">
+                    <StackPanel Spacing="2">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{Binding Sender}"
+                                       Classes.unread="{Binding IsUnread}"
+                                       FontSize="14"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Time}"
+                                       HorizontalAlignment="Right"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Grid>
+                        <TextBlock Text="{Binding Subject}"
+                                   FontSize="13"
+                                   TextWrapping="Wrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{Binding Preview}"
+                                   FontSize="13"
+                                   TextWrapping="Wrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </DataTemplate>
+            </arc:SwipeActions.ItemTemplate>
+        </arc:SwipeActions>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button x:Name="Undo"
+                        Content="Undo"
+                        Variant="Ghost"
+                        Size="Small"
+                        IsVisible="False"
+                        Click="OnUndoClick" />
+            <arc:Button Content="Reset inbox"
+                        Variant="Secondary"
+                        Size="Small"
+                        Click="OnResetClick" />
+        </WrapPanel>
+        <TextBlock x:Name="Status"
+                   Text="Swipe a row left or right, or open its More actions menu."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

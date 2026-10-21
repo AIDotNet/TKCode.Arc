@@ -69,9 +69,11 @@ public class IconMorph : Control
     public static readonly StyledProperty<double> ChevronTurnProperty =
         AvaloniaProperty.Register<IconMorph, double>(nameof(ChevronTurn), 180);
 
+    /// <summary>Rest direction of a Chevron: Down (default) or Right.</summary>
     public static readonly StyledProperty<IconMorphChevronPointing> ChevronPointingProperty =
         AvaloniaProperty.Register<IconMorph, IconMorphChevronPointing>(nameof(ChevronPointing));
 
+    /// <summary>Brush that paints the glyph, inherited from the parent like text foreground.</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         TextElement.ForegroundProperty.AddOwner<IconMorph>();
 
@@ -94,8 +96,10 @@ public class IconMorph : Control
     /// <summary>Degrees the chevron turns when active: 180 flips down to up, 90 turns right to down.</summary>
     public double ChevronTurn { get => GetValue(ChevronTurnProperty); set => SetValue(ChevronTurnProperty, value); }
 
+    /// <inheritdoc cref="ChevronPointingProperty"/>
     public IconMorphChevronPointing ChevronPointing { get => GetValue(ChevronPointingProperty); set => SetValue(ChevronPointingProperty, value); }
 
+    /// <inheritdoc cref="ForegroundProperty"/>
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     public IBrush? LikeBrush { get => GetValue(LikeBrushProperty); set => SetValue(LikeBrushProperty, value); }

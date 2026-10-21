@@ -1,8 +1,10 @@
 ---
 title: 滑块
 summary: 在轨道上选取一个值或一个范围，跟随指针移动。
-source-hash: edb1397c9a48
+source-hash: ff8a369cbea5
 ---
+
+<Demo name="SingleValue" />
 
 ## 何时使用
 
@@ -50,6 +52,8 @@ source-hash: edb1397c9a48
 
 将 `IsRange` 设为 `True` 即可显示两个滑块。通过 `LowerValue` 和 `UpperValue` 读写两端的值，并用 `MinStepsBetweenThumbs` 保持两个滑块之间的间距。`ValueFormatter` 用于格式化读数、气泡和朗读的数值。
 
+<Demo name="Range" />
+
 ```xml
 <arc:Slider Label="价格"
             IsRange="True"
@@ -68,21 +72,7 @@ source-hash: edb1397c9a48
 
 `SmallChange` 是数值吸附的步长。`Marks` 会在轨道上添加刻度。带标签的刻度会在轨道下方显示标签，点击标签会将最近的滑块移动到该位置。
 
-```csharp
-var speed = new Slider
-{
-    Label = "播放速度",
-    Minimum = 0.5,
-    Maximum = 2,
-    SmallChange = 0.25,
-    Value = 1,
-    ValueFormatter = v => $"{v:0.##}×"
-};
-speed.Marks.Add(new SliderMark(0.5, "0.5×"));
-speed.Marks.Add(new SliderMark(1, "1×"));
-speed.Marks.Add(new SliderMark(2, "2×"));
-speed.Marks.Add(1.5);
-```
+<Demo name="StepsAndMarks" />
 
 ### 事件
 
@@ -92,6 +82,12 @@ speed.Marks.Add(1.5);
 price.ValueCommitted += (_, e) => SavePriceFilter(e.LowerValue, e.UpperValue);
 price.RangeChanged += (_, e) => committed.Text = $"${e.LowerValue:N0} – ${e.UpperValue:N0}";
 ```
+
+### 禁用状态
+
+禁用的滑块会移出 Tab 顺序。
+
+<Demo name="Disabled" />
 
 ## API 参考
 

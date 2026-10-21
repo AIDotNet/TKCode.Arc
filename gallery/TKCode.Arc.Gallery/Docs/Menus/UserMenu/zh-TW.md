@@ -1,8 +1,10 @@
 ---
 title: 使用者選單
 summary: 頭像背後的帳號、設定、主題與登出。在手機上以底部面板的形式開啟。
-source-hash: b50c9a4ea9f3
+source-hash: 7890184bb2a3
 ---
+
+<Demo name="TopBar" />
 
 ## 何時使用
 
@@ -41,6 +43,8 @@ source-hash: b50c9a4ea9f3
 ### 主題與狀態
 
 `ThemePreference` 可為 `Light`、`Dark` 或 `System`。選單會回報所選的值並保持開啟。主題由應用程式自行套用。`IsThemeSwitchVisible="False"` 可隱藏主題切換。
+
+<Demo name="Presence" />
 
 ```xml
 <arc:UserMenu DisplayName="Grace Hopper"

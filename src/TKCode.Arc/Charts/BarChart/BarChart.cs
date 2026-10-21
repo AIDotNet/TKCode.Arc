@@ -58,9 +58,13 @@ public class BarChart : ChartBase
     internal static readonly StyledProperty<double> MaxBarWidthProperty =
         AvaloniaProperty.Register<BarChart, double>(nameof(MaxBarWidth), 28);
 
+    /// <summary>Draws the gridlines behind the plot (default true).</summary>
     public static new readonly StyledProperty<bool> ShowGridProperty = ChartBase.ShowGridProperty.AddOwner<BarChart>();
+    /// <summary>Shows the category (time) axis labels under the plot (default true).</summary>
     public static new readonly StyledProperty<bool> ShowXAxisProperty = ChartBase.ShowXAxisProperty.AddOwner<BarChart>();
+    /// <summary>Shows the value axis labels in the right-hand gutter (default true).</summary>
     public static new readonly StyledProperty<bool> ShowYAxisProperty = ChartBase.ShowYAxisProperty.AddOwner<BarChart>();
+    /// <summary>Fixes the top of the value axis; by default it is the next nice tick above the data.</summary>
     public static new readonly StyledProperty<double?> YMaximumProperty = ChartBase.YMaximumProperty.AddOwner<BarChart>();
     public static new readonly StyledProperty<Func<double, string>?> TickFormatterProperty = ChartBase.TickFormatterProperty.AddOwner<BarChart>();
 

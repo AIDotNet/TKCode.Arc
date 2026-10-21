@@ -3,6 +3,8 @@ title: Usage meter
 summary: Show what fills an allowance and how close it is to the limit.
 ---
 
+<Demo name="Storage" />
+
 ## When to use
 
 - Storage, seats or API calls measured against a fixed allowance.
@@ -53,6 +55,10 @@ media.Value = 17.4; // the bar, total and badge update
 
 The badge shows the free amount. At 90% of the limit it changes to "Almost full" with a warning icon, and past the
 limit it shows the overage. `WarnThreshold` changes the share that triggers the warning.
+
+<Demo name="AlmostFull" />
+
+<Demo name="OverTheLimit" />
 
 ```xml
 <arc:UsageMeter Label="API calls this month"

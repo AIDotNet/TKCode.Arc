@@ -6,7 +6,6 @@ public static partial class GalleryPages
 {
     static partial void RegisterCharts()
     {
-        Register("AnimatedCounter", AnimatedCounterPage.Create);
         RegisterChartsA();
         RegisterChartsB();
         RegisterChartsC();

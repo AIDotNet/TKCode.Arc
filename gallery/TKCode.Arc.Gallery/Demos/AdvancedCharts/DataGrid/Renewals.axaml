@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DataGridRenewalsDemo">
+    <StackPanel Spacing="12">
+        <DockPanel>
+            <arc:Button x:Name="ResetButton"
+                        DockPanel.Dock="Right"
+                        Content="Reset"
+                        Variant="Ghost"
+                        Size="Small"
+                        IsEnabled="False" />
+            <TextBlock Text="Renewals"
+                       VerticalAlignment="Center"
+                       FontSize="16"
+                       FontWeight="SemiBold" />
+        </DockPanel>
+        <arc:DataGrid x:Name="RenewalsGrid"
+                      Label="Renewals"
+                      MaxViewportHeight="440"
+                      ExportFormats="All"
+                      ExportFileName="renewals">
+            <arc:DataGridColumn Key="account" Header="Account" Width="188" MinWidth="112" IsPinned="True" />
+            <arc:DataGridColumn Key="owner" Header="Owner" Width="148" />
+            <arc:DataGridColumn Key="region" Header="Region" Type="Select" Width="144" />
+            <arc:DataGridColumn Key="stage" Header="Stage" Type="Select" Width="132" />
+            <arc:DataGridColumn Key="seats" Header="Seats" Type="Number" Width="96" />
+            <arc:DataGridColumn Key="arr" Header="ARR" Type="Currency" Width="128" />
+            <arc:DataGridColumn Key="health" Header="Health" Type="Percent" Width="104" MinWidth="84" />
+            <arc:DataGridColumn Key="renewal" Header="Renews" Type="Date" Width="132" />
+        </arc:DataGrid>
+    </StackPanel>
+</UserControl>

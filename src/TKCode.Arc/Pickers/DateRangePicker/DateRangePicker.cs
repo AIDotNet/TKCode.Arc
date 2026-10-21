@@ -89,15 +89,19 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
     public static readonly StyledProperty<Control?> BoundaryProperty =
         AvaloniaProperty.Register<DateRangePicker, Control?>(nameof(Boundary));
 
+    /// <summary>Label of the button that applies the picked range (default Apply).</summary>
     public static readonly StyledProperty<string> ApplyTextProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(ApplyText), "Apply");
 
+    /// <summary>Label of the cancel button in the panel (default Cancel).</summary>
     public static readonly StyledProperty<string> CancelTextProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(CancelText), "Cancel");
 
+    /// <summary>Trigger text when no range is selected (default No dates).</summary>
     public static readonly StyledProperty<string> NoDatesTextProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(NoDatesText), "No dates");
 
+    /// <summary>Readout while the hovered date is the start date and the end is still to be picked (default Pick an end date).</summary>
     public static readonly StyledProperty<string> PickEndTextProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(PickEndText), "Pick an end date");
 
@@ -105,12 +109,15 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
     public static readonly StyledProperty<string> DayCountFormatProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(DayCountFormat), "{0} day");
 
+    /// <summary>Day count for two or more days; {0} is the number (default "{0} days").</summary>
     public static readonly StyledProperty<string> DaysCountFormatProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(DaysCountFormat), "{0} days");
 
+    /// <summary>Accessible name of the previous-month button (default Previous month).</summary>
     public static readonly StyledProperty<string> PreviousMonthLabelProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(PreviousMonthLabel), "Previous month");
 
+    /// <summary>Accessible name of the next-month button (default Next month).</summary>
     public static readonly StyledProperty<string> NextMonthLabelProperty =
         AvaloniaProperty.Register<DateRangePicker, string>(nameof(NextMonthLabel), "Next month");
 
@@ -159,13 +166,20 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
     /// <summary>The element the panel stays inside.</summary>
     public Control? Boundary { get => GetValue(BoundaryProperty); set => SetValue(BoundaryProperty, value); }
 
+    /// <inheritdoc cref="ApplyTextProperty"/>
     public string ApplyText { get => GetValue(ApplyTextProperty); set => SetValue(ApplyTextProperty, value); }
+    /// <inheritdoc cref="CancelTextProperty"/>
     public string CancelText { get => GetValue(CancelTextProperty); set => SetValue(CancelTextProperty, value); }
+    /// <inheritdoc cref="NoDatesTextProperty"/>
     public string NoDatesText { get => GetValue(NoDatesTextProperty); set => SetValue(NoDatesTextProperty, value); }
+    /// <inheritdoc cref="PickEndTextProperty"/>
     public string PickEndText { get => GetValue(PickEndTextProperty); set => SetValue(PickEndTextProperty, value); }
     public string DayCountFormat { get => GetValue(DayCountFormatProperty); set => SetValue(DayCountFormatProperty, value); }
+    /// <inheritdoc cref="DaysCountFormatProperty"/>
     public string DaysCountFormat { get => GetValue(DaysCountFormatProperty); set => SetValue(DaysCountFormatProperty, value); }
+    /// <inheritdoc cref="PreviousMonthLabelProperty"/>
     public string PreviousMonthLabel { get => GetValue(PreviousMonthLabelProperty); set => SetValue(PreviousMonthLabelProperty, value); }
+    /// <inheritdoc cref="NextMonthLabelProperty"/>
     public string NextMonthLabel { get => GetValue(NextMonthLabelProperty); set => SetValue(NextMonthLabelProperty, value); }
 
     /// <summary>Raised when a range is applied.</summary>

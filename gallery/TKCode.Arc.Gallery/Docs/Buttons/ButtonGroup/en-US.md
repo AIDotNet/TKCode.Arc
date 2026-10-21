@@ -3,6 +3,8 @@ title: Button group
 summary: Related actions joined into one surface with hairline dividers: a hover highlight glides between segments, the pressed one answers in place, and an attached menu can close the row.
 ---
 
+<Demo name="DocumentActions" />
+
 ## When to use
 
 - Two to five related actions on the same object, such as Share, Duplicate and Archive on a document.
@@ -47,6 +49,8 @@ the accessible name.
 `Value` shows content in place of the label, such as a zoom level. `Label` stays the accessible name. A label can
 also change after a press; list the other labels in `ReserveLabels` so the segment keeps the widest width.
 
+<Demo name="LiveValue" />
+
 ```csharp
 var zoomValue = new ButtonGroupItem { Label = "Reset zoom", Value = "100%" };
 zoomValue.Click += (_, _) => zoomValue.Value = "100%";
@@ -83,22 +87,25 @@ edge, and `MenuItemClicked` reports the chosen row.
 `Variant="Solid"` uses the primary fill; use it at most once per screen. `Orientation="Vertical"` stacks the
 segments, and the menu then aligns to the start. `ActionInvoked` runs after a segment's own click handler.
 
-```xml
-<arc:ButtonGroup Label="Message actions" Variant="Solid">
-    <arc:ButtonGroupItem Label="Reply" />
-    <arc:ButtonGroupItem Label="Reply all" />
-    <arc:ButtonGroupItem Label="Forward" />
-</arc:ButtonGroup>
+<Demo name="Solid" />
 
-<arc:ButtonGroup Label="Insert" Orientation="Vertical">
-    <arc:ButtonGroupItem Label="Image" />
-    <arc:ButtonGroupItem Label="Table" />
-</arc:ButtonGroup>
-```
+<Demo name="Vertical" />
 
 ```csharp
 document.ActionInvoked += (_, e) => log.Text = $"Action: {e.Item.Label}";
 ```
+
+### Collapsing labels
+
+When the row does not fit, segments drop their labels and keep the icon; they come back once there is room for the full row.
+
+<Demo name="CollapsingLabels" />
+
+### Disabled
+
+A segment with `IsDisabled` stays focusable and reports unavailable; a group with `IsEnabled` set to `False` dims as a whole.
+
+<Demo name="Disabled" />
 
 ## API reference
 

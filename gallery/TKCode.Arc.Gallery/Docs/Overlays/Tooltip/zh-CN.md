@@ -1,8 +1,10 @@
 ---
 title: 提示
 summary: 为不熟悉的控件提供简短的辅助文字。
-source-hash: b4816ee075e6
+source-hash: 9321fab1844c
 ---
+
+<Demo name="Sides" />
 
 ## 何时使用
 
@@ -46,6 +48,8 @@ source-hash: b4816ee075e6
 ### 修改文字与延迟
 
 提示打开期间可以在代码中修改文字。文字会交叉淡化，气泡随之调整大小以适应内容。设置 `ShowDelay` 可以修改首个提示打开前的等待时间，默认为 250ms。
+
+<Demo name="LiveText" />
 
 ```csharp
 Tooltip.SetTip(save, "刚刚已保存");

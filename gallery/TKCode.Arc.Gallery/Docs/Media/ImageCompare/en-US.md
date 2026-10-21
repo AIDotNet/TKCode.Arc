@@ -3,6 +3,8 @@ title: Image compare
 summary: Drag a divider across two images to see what changed.
 ---
 
+<Demo name="BeforeAndAfter" />
+
 ## When to use
 
 - Showing a before and after of the same picture, such as a retouch, a redesign or a cleanup.
@@ -35,6 +37,8 @@ Both sides should use the same crop and size, so the reveal lines up.
 `BeforeLabel` and `AfterLabel` caption the two sides. Each caption fades as the divider reaches it. `ShowLabels`
 hides both captions. `AspectRatio` sets the frame width divided by its height, and the default is 1.5 (3 / 2).
 
+<Demo name="WideFrame" />
+
 ```xml
 <arc:ImageCompare AspectRatio="1.7777" ShowLabels="False" Position="30" Label="Cleanup preview">
     <arc:ImageCompare.Before>
@@ -47,6 +51,8 @@ hides both captions. `AspectRatio` sets the frame width divided by its height, a
 ```
 
 ### Vertical comparison
+
+<Demo name="Vertical" />
 
 ```xml
 <arc:ImageCompare Orientation="Vertical" BeforeLabel="Original" AfterLabel="Graded">
@@ -65,6 +71,8 @@ Changing `Orientation` at run time swings the divider a quarter turn while the r
 
 `BeforeSource` and `AfterSource` draw a picture over the content of each side. The picture loads in the
 background and fades in from a soft blur. If it fails, the content underneath shows instead.
+
+<Demo name="Photos" />
 
 ```csharp
 var compare = new ImageCompare

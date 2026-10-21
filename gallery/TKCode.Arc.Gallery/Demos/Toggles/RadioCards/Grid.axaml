@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RadioCardsGridDemo">
+    <arc:RadioCards AutomationProperties.Name="Plan" SelectedValue="pro">
+        <arc:RadioCardOption Value="starter"
+                             Label="Starter"
+                             Description="For individuals getting started."
+                             Meta="$0"
+                             Icon="{x:Static arc:ArcIcons.User}" />
+        <arc:RadioCardOption Value="pro"
+                             Label="Pro"
+                             Description="Unlimited projects and priority support."
+                             Meta="$12"
+                             Icon="{x:Static arc:ArcIcons.Zap}" />
+        <arc:RadioCardOption Value="team"
+                             Label="Team"
+                             Description="Shared workspaces and roles for small teams."
+                             Meta="$32"
+                             Icon="{x:Static arc:ArcIcons.Users}" />
+        <arc:RadioCardOption Value="enterprise"
+                             Label="Enterprise"
+                             Description="SSO, audit logs and a dedicated contact."
+                             Meta="Custom"
+                             Icon="{x:Static arc:ArcIcons.Shield}"
+                             IsDisabled="True"
+                             DisabledReason="Talk to sales to enable Enterprise." />
+    </arc:RadioCards>
+</UserControl>

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarGroupInlineMembersDemo">
+    <arc:AvatarGroup>
+        <arc:AvatarGroupMember DisplayName="Ada Lovelace" />
+        <arc:AvatarGroupMember DisplayName="Grace Hopper" />
+        <arc:AvatarGroupMember DisplayName="Alan Turing" />
+    </arc:AvatarGroup>
+</UserControl>

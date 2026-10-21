@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TimePickerSizesAndStatesDemo">
+    <StackPanel Spacing="16">
+        <arc:TimePicker Label="Small"
+                        Size="Small"
+                        Width="240"
+                        HorizontalAlignment="Left" />
+        <arc:TimePicker Label="Check-in"
+                        ErrorMessage="Check-in opens at 3:00 PM."
+                        SelectedTime="11:00"
+                        Width="240"
+                        HorizontalAlignment="Left" />
+        <arc:TimePicker Label="Locked"
+                        IsEnabled="False"
+                        Width="240"
+                        HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

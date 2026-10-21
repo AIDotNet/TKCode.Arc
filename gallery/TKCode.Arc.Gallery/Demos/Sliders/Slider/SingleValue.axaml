@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SliderSingleValueDemo">
+    <arc:Slider Label="Volume"
+                Value="64"
+                Width="360"
+                HorizontalAlignment="Center">
+        <arc:Slider.StartContent>
+            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}"
+                          Size="16"
+                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                          VerticalAlignment="Center" />
+        </arc:Slider.StartContent>
+        <arc:Slider.EndContent>
+            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                          Size="16"
+                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                          VerticalAlignment="Center" />
+        </arc:Slider.EndContent>
+    </arc:Slider>
+</UserControl>

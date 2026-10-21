@@ -117,6 +117,7 @@ public class JsonViewer : TemplatedControl
         AvaloniaProperty.RegisterDirect<JsonViewer, IReadOnlyList<string>>(nameof(ExpandedPaths), o => o.ExpandedPaths,
             (o, v) => o.ExpandedPaths = v, defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Shows the search box that filters the tree by keys and values (default true).</summary>
     public static readonly StyledProperty<bool> IsSearchableProperty =
         AvaloniaProperty.Register<JsonViewer, bool>(nameof(IsSearchable), true);
 
@@ -124,6 +125,7 @@ public class JsonViewer : TemplatedControl
     public static readonly StyledProperty<string?> QueryProperty =
         AvaloniaProperty.Register<JsonViewer, string?>(nameof(Query), string.Empty, defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Placeholder text of the search box (default: Search keys and values).</summary>
     public static readonly StyledProperty<string> SearchPlaceholderProperty =
         AvaloniaProperty.Register<JsonViewer, string>(nameof(SearchPlaceholder), "Search keys and values");
 
@@ -152,6 +154,7 @@ public class JsonViewer : TemplatedControl
     public static readonly DirectProperty<JsonViewer, string?> ParseErrorProperty =
         AvaloniaProperty.RegisterDirect<JsonViewer, string?>(nameof(ParseError), o => o.ParseError);
 
+    /// <summary>Routed event behind Copied; the argument carries the copy kind, the node path and the copied text.</summary>
     public static readonly RoutedEvent<JsonViewerCopiedEventArgs> CopiedEvent =
         RoutedEvent.Register<JsonViewer, JsonViewerCopiedEventArgs>(nameof(Copied), RoutingStrategies.Bubble);
 
@@ -213,8 +216,10 @@ public class JsonViewer : TemplatedControl
     public JsonElement? Element { get => GetValue(ElementProperty); set => SetValue(ElementProperty, value); }
     public string RootName { get => GetValue(RootNameProperty); set => SetValue(RootNameProperty, value); }
     public int ExpandDepth { get => GetValue(ExpandDepthProperty); set => SetValue(ExpandDepthProperty, value); }
+    /// <inheritdoc cref="IsSearchableProperty"/>
     public bool IsSearchable { get => GetValue(IsSearchableProperty); set => SetValue(IsSearchableProperty, value); }
     public string? Query { get => GetValue(QueryProperty); set => SetValue(QueryProperty, value); }
+    /// <inheritdoc cref="SearchPlaceholderProperty"/>
     public string SearchPlaceholder { get => GetValue(SearchPlaceholderProperty); set => SetValue(SearchPlaceholderProperty, value); }
     public int PageSize { get => GetValue(PageSizeProperty); set => SetValue(PageSizeProperty, value); }
     public bool IsCopyable { get => GetValue(IsCopyableProperty); set => SetValue(IsCopyableProperty, value); }
@@ -258,6 +263,7 @@ public class JsonViewer : TemplatedControl
     /// <summary>Why <see cref="Json"/> could not be parsed, or null.</summary>
     public string? ParseError { get => _parseError; private set => SetAndRaise(ParseErrorProperty, ref _parseError, value); }
 
+    /// <summary>Raised after a value or path is copied; the argument carries the copy kind, path and text.</summary>
     public event EventHandler<JsonViewerCopiedEventArgs>? Copied
     {
         add => AddHandler(CopiedEvent, value);

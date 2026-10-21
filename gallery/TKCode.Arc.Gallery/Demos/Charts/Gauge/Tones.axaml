@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GaugeTonesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Gauge Label="Build cache" Value="38" />
+        <arc:Gauge Label="Uptime" Value="91" Tone="Success" />
+        <arc:Gauge Label="Memory" Value="64" Tone="Warning" />
+        <arc:Gauge Label="Error budget used" Value="97" Tone="Danger" />
+    </WrapPanel>
+</UserControl>

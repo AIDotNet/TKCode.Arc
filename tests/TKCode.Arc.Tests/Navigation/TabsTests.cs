@@ -222,6 +222,29 @@ public class TabsTests
     }
 
     [AvaloniaFact]
+    public void Selecting_A_Tab_Does_Not_Scroll_The_Page_Around_The_Tabs()
+    {
+        // The tabs sit below the fold of a 300px window: the stock scroll-into-view of the selected item would bring
+        // them into view when they are first selected, and again on every selection.
+        var tabs = Inline("One", "Two");
+        var page = new ScrollViewer { Content = new StackPanel { Children = { new Border { Height = 900 }, tabs } } };
+        var window = TestHelpers.Show(page);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            page.Offset.Y.ShouldBe(0);
+
+            tabs.SelectedIndex = 1;
+            Dispatcher.UIThread.RunJobs();
+            page.Offset.Y.ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Switching_Back_Mid_Flight_Reuses_The_Leaving_Panel()
     {
         var clock = new Motion.ManualFrameClock();

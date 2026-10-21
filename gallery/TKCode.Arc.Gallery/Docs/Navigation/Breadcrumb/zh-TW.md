@@ -1,8 +1,10 @@
 ---
 title: 麵包屑
 summary: 顯示頁面在階層結構中的位置。
-source-hash: 68204e5bf393
+source-hash: bfbfa7bfa0a2
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -46,17 +48,7 @@ breadcrumb.ItemClick += (_, e) =>
 
 將 `ItemsSource` 設為路徑的集合。使用 `ObservableCollection<T>`，讓路徑變長或變短時層級隨之變化。
 
-```csharp
-var path = new ObservableCollection<string> { "首頁", "專案" };
-breadcrumb.ItemsSource = path;
-breadcrumb.ItemClick += (_, e) =>
-{
-    while (path.Count > e.Index + 1)
-    {
-        path.RemoveAt(path.Count - 1);
-    }
-};
-```
+<Demo name="ClientSidePath" />
 
 開啟資料夾時，用 `path.Add(name)` 新增一層。選擇某一層時，其後的所有層級會被移除，被移除的層級會以動畫退出。
 
@@ -77,6 +69,12 @@ breadcrumb.ItemClick += (_, e) =>
 ```xml
 <arc:Breadcrumb Label="資料夾路徑" />
 ```
+
+### 折疊路徑
+
+`MaxVisibleItems` 會將較長路徑的中間部分折疊進溢出選單（這是 Arc 的附加選項，Arc 本身從不折疊）。
+
+<Demo name="CollapsedPath" />
 
 ## API 參考
 

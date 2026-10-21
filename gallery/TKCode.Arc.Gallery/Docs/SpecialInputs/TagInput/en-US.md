@@ -3,6 +3,8 @@ title: Tag input
 summary: Turn short text values into removable tags.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Free short values such as keywords, labels, topics or email addresses.
@@ -44,27 +46,21 @@ var tags = new TagInput
 `MaxTags` refuses adds past the limit. The field shakes and the limit is announced. An `ErrorMessage` marks the
 field invalid and shows the error row.
 
-```csharp
-var skills = new TagInput
-{
-    Label = "Skills",
-    Description = "Up to 5 skills.",
-    MaxTags = 5,
-    Value = ["Figma", "Avalonia", "C#", "Motion"]
-};
-```
+<Demo name="Limit" />
 
-```xml
-<arc:TagInput Label="Labels" ErrorMessage="Add at least one label." />
-```
+<Demo name="Error" />
 
 ### Pasted lists
 
 Pasting text that contains commas, new lines or tabs splits it into tags. The last piece stays in the draft.
 
+<Demo name="Paste" />
+
 ### Binding and events
 
 `Value` is two-way. `ValueChanged` reports the old and new lists, plus the `Added` and `Removed` tags.
+
+<Demo name="TwoWayValue" />
 
 ```xml
 <arc:TagInput Label="Keywords" Value="{Binding Keywords, Mode=TwoWay}" />
@@ -79,6 +75,37 @@ tags.ValueChanged += (_, e) =>
 tags.AddTag("release");
 tags.FocusEditor();
 ```
+
+### Empty with placeholder
+
+The placeholder rises in whenever the field has no tags and no draft.
+
+<Demo name="Empty" />
+
+### Description
+
+Helper copy under the field also describes the editor for screen readers.
+
+<Demo name="Description" />
+
+### Wrapping rows
+
+Tags wrap onto new rows and the shell height follows on the smooth spring. Remove one to watch the rest glide in.
+
+<Demo name="Wrapping" />
+
+### Keyboard
+
+Backspace at the start picks the last tag, Backspace or Delete removes the pick, ArrowLeft and ArrowRight move the
+ring, and Escape clears it. Clicking a tag picks it too.
+
+<Demo name="Keyboard" />
+
+### Disabled
+
+Disabled fields fade to 0.5 opacity on `SurfaceMuted`.
+
+<Demo name="Disabled" />
 
 ## API reference
 

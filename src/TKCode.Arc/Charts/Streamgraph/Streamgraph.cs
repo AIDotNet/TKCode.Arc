@@ -53,7 +53,9 @@ public class Streamgraph : ChartBase
         AvaloniaProperty.Register<Streamgraph, bool>(nameof(ShowDirectLabels), true);
 
     public static new readonly StyledProperty<bool?> ShowLegendProperty = ChartBase.ShowLegendProperty.AddOwner<Streamgraph>();
+    /// <summary>Shows the category (time) axis labels under the plot.</summary>
     public static new readonly StyledProperty<bool> ShowXAxisProperty = ChartBase.ShowXAxisProperty.AddOwner<Streamgraph>();
+    /// <summary>Keys of the series hidden from the plot; the legend toggles them (two-way).</summary>
     public static new readonly StyledProperty<IReadOnlyList<string>?> HiddenSeriesProperty = ChartBase.HiddenSeriesProperty.AddOwner<Streamgraph>();
 
     /// <inheritdoc cref="OffsetProperty"/>
@@ -71,6 +73,7 @@ public class Streamgraph : ChartBase
     /// <inheritdoc cref="ChartBase.HiddenSeriesProperty"/>
     public IReadOnlyList<string>? HiddenSeries { get => GetValue(HiddenSeriesProperty); set => SetValue(HiddenSeriesProperty, value); }
 
+    /// <summary>Raised when the legend shows or hides a series.</summary>
     /// <inheritdoc cref="ChartBase.HiddenSeriesChangedEvent"/>
     public event EventHandler<ChartHiddenSeriesChangedEventArgs>? HiddenSeriesChanged
     {

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BreadcrumbClientSidePathDemo">
+    <StackPanel Spacing="12">
+        <arc:Breadcrumb x:Name="Files" ItemClick="OnItemClick" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Open next folder" Variant="Secondary" Size="Small" Click="OnOpenClick" />
+            <arc:Button Content="Up one level" Variant="Ghost" Size="Small" Click="OnUpClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

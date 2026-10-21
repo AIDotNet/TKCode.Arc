@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FloatingButtonGroupMutedTrayDemo">
+    <StackPanel Spacing="12">
+        <arc:FloatingButtonGroup Label="Board actions"
+                                 HorizontalAlignment="Center"
+                                 ActionInvoked="OnActionInvoked">
+            <arc:FloatingButtonGroupItem Label="Undo"
+                                         Icon="{x:Static arc:ArcIcons.Undo2}"
+                                         IsIconOnly="True"
+                                         Shortcut="⌘Z" />
+            <arc:FloatingButtonGroupItem Label="Redo"
+                                         Icon="{x:Static arc:ArcIcons.Redo2}"
+                                         IsIconOnly="True"
+                                         Shortcut="⇧⌘Z" />
+            <arc:FloatingButtonGroupSeparator />
+            <arc:FloatingButtonGroupItem x:Name="Share"
+                                         Label="Share"
+                                         Icon="{x:Static arc:ArcIcons.Share2}"
+                                         Click="OnShareClick" />
+            <arc:FloatingButtonGroupItem x:Name="Present"
+                                         Label="Present"
+                                         Icon="{x:Static arc:ArcIcons.Monitor}"
+                                         IsChecked="False"
+                                         Click="OnPresentClick" />
+        </arc:FloatingButtonGroup>
+        <TextBlock x:Name="Log"
+                   Text="Point at the tray, or Tab into it and use the arrow keys."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

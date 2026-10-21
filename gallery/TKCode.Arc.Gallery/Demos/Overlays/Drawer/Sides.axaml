@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:atom="https://atomui.net"
+             x:Class="TKCode.Arc.Gallery.Demos.DrawerSidesDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Right" Variant="Secondary" Click="OnRightClick" />
+            <arc:Button Content="Left" Variant="Secondary" Click="OnLeftClick" />
+            <arc:Button Content="Top" Variant="Secondary" Click="OnTopClick" />
+            <arc:Button Content="Bottom" Variant="Secondary" Click="OnBottomClick" />
+            <arc:Drawer x:Name="FiltersDrawer"
+                        Title="Filters"
+                        Description="Narrow the list without leaving it."
+                        Closed="OnClosed">
+                <StackPanel Spacing="16">
+                    <DockPanel>
+                        <arc:Switch DockPanel.Dock="Right" IsChecked="True" />
+                        <TextBlock Text="Only open invoices"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </DockPanel>
+                    <DockPanel>
+                        <arc:Switch DockPanel.Dock="Right" />
+                        <TextBlock Text="Include drafts"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </DockPanel>
+                    <DockPanel>
+                        <arc:Switch DockPanel.Dock="Right" />
+                        <TextBlock Text="Show archived"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </DockPanel>
+                    <TextBlock Text="Owner"
+                               FontSize="14"
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <atom:TextBox PlaceholderText="Anyone" />
+                </StackPanel>
+                <arc:Drawer.Actions>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <arc:Button Content="Reset" Variant="Secondary" arc:Dialog.Result="{x:False}" />
+                        <arc:Button Content="Apply" arc:Dialog.Result="{x:True}" />
+                    </StackPanel>
+                </arc:Drawer.Actions>
+            </arc:Drawer>
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   Text="Closed"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

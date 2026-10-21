@@ -1,8 +1,10 @@
 ---
 title: 時間選擇器
 summary: 以合宜的鍵盤行為選取時間。
-source-hash: aa3abfbf3231
+source-hash: f2edf711f5e7
 ---
+
+<Demo name="TimeField" />
 
 ## 何時使用
 
@@ -31,10 +33,7 @@ source-hash: aa3abfbf3231
 
 `MinuteStep` 設定選項之間的間隔，預設為 15 分鐘。`ClockFormat` 選擇顯示格式：`TwelveHour` 顯示 "9:15 AM"，`TwentyFourHour` 顯示 "09:15"，`Auto` 跟隨 `Culture` 的短時間格式。無論顯示格式為何，值一律是 `TimeOnly`。
 
-```xml
-<arc:TimePicker Label="每 5 分鐘" MinuteStep="5" />
-<arc:TimePicker Label="24 小時制" MinuteStep="30" ClockFormat="TwentyFourHour" />
-```
+<Demo name="StepsAndClocks" />
 
 ### 空值
 
@@ -56,11 +55,7 @@ picker.SelectedTimeChanged += (_, e) =>
 
 `Size` 設定欄位高度：`Small` 為 36，`Medium` 為 44（Arc 的預設外觀），`Large` 為 50。非空的 `ErrorMessage` 會將欄位標記為無效。`IsEnabled="False"` 會停用它。
 
-```xml
-<arc:TimePicker Label="小" Size="Small" />
-<arc:TimePicker Label="入住" ErrorMessage="入住時間從下午 3:00 開始。" />
-<arc:TimePicker Label="已鎖定" IsEnabled="False" />
-```
+<Demo name="SizesAndStates" />
 
 ## API 參考
 

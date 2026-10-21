@@ -1,8 +1,10 @@
 ---
 title: 展開式按鈕群組
 summary: 緊湊排列的圖示按鈕群組：指向或聚焦的按鈕會展開顯示文字，相鄰按鈕讓位，動作會在原地確認。
-source-hash: e8d67520ebca
+source-hash: 9ac5b9d9d522
 ---
+
+<Demo name="MessageActions" />
 
 ## 何時使用
 
@@ -35,6 +37,8 @@ source-hash: e8d67520ebca
 ### 圖示與靜止時的動作
 
 在程式碼中把 `Icon` 設為 16 × 16 的 Lucide 圖形。靜止時群組只顯示一個文字標籤，預設是第一個可用的動作。`DefaultExpandedItem` 可以指定另一個動作。
+
+<Demo name="RestingAction" />
 
 ```csharp
 reply.Icon = ArcIcons.Reply;
@@ -78,13 +82,7 @@ var archive = new ExpandingButtonGroupItem
 
 `Tone="Danger"` 會以危險色顯示展開的破壞性動作。停用的項目仍可取得焦點並顯示文字，但不會執行。
 
-```xml
-<arc:ExpandingButtonGroup Label="檔案動作" Size="Small">
-    <arc:ExpandingButtonGroupItem Label="下載" DoneLabel="已下載" />
-    <arc:ExpandingButtonGroupItem Label="鎖定" IsDisabled="True" />
-    <arc:ExpandingButtonGroupItem Label="刪除" Tone="Danger" DoneLabel="已刪除" />
-</arc:ExpandingButtonGroup>
-```
+<Demo name="Small" />
 
 ### 事件
 

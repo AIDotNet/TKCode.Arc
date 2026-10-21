@@ -1,0 +1,112 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        A settings group. Card: Surface, 1px Border, RadiusPanel (like arc:Card), header, rows, and a tinted footer strip
+        clipped to the card's corners. Plain: the same pieces without frame or padding.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SettingsGroup}" TargetType="arc:SettingsGroup">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsGroup">
+                <!-- The outline is drawn over the content: the tinted footer would otherwise cover it along the corners. -->
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <Border Name="PART_Footer"
+                                    DockPanel.Dock="Bottom"
+                                    IsVisible="{TemplateBinding Footer, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <ContentPresenter Name="PART_FooterPresenter"
+                                                  Content="{TemplateBinding Footer}"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Border>
+                            <StackPanel>
+                                <Grid Name="PART_Header"
+                                      IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      ColumnDefinitions="*,Auto">
+                                    <StackPanel VerticalAlignment="Center" Spacing="{arc:SettingsGroupTokenResource HeaderGap}">
+                                        <ContentPresenter Name="PART_HeaderPresenter"
+                                                          Content="{TemplateBinding Header}"
+                                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                          FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                          FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                          Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_Description"
+                                                   Text="{TemplateBinding Description}"
+                                                   IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   LineHeight="{arc:SettingsGroupTokenResource BodyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <ContentPresenter Name="PART_HeaderActions"
+                                                      Grid.Column="1"
+                                                      VerticalAlignment="Center"
+                                                      Margin="{arc:SettingsGroupTokenResource HeaderActionsMargin}"
+                                                      IsVisible="{TemplateBinding HeaderActions, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                      Content="{TemplateBinding HeaderActions}" />
+                                </Grid>
+                                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_Outline"
+                            IsHitTestVisible="False"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Token values that :plain overrides are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:SettingsGroupTokenResource HeaderInset}" />
+        </Style>
+        <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter">
+            <Setter Property="Margin" Value="{arc:SettingsGroupTokenResource RowsInset}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:SettingsGroupTokenResource FooterInset}" />
+            <Setter Property="Background" Value="{arc:SettingsGroupTokenResource FooterBackground}" />
+        </Style>
+
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="ClipToBounds" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_Header">
+                <Setter Property="Margin" Value="{arc:SettingsGroupTokenResource PlainHeaderInset}" />
+            </Style>
+            <Style Selector="^ /template/ ItemsPresenter#PART_ItemsPresenter">
+                <Setter Property="Margin" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="Padding" Value="{arc:SettingsGroupTokenResource PlainFooterInset}" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -3,6 +3,8 @@ title: Billing toggle
 summary: A monthly and yearly switch with a savings badge and prices that roll to the new amount.
 ---
 
+<Demo name="Pricing" />
+
 ## When to use
 
 - The billing period switch at the top of a pricing page.
@@ -31,13 +33,7 @@ The default options are Monthly and Yearly, and Yearly carries the badge "Save 2
 Write the options inline or bind `ItemsSource`. `Badge` is shown on the option. `ActiveBadge` replaces it while the
 option is selected, so a note can change in place without moving the content around it.
 
-```xml
-<arc:BillingToggle Value="monthly" Size="Large">
-    <arc:BillingToggleOption Value="monthly" Label="Monthly" />
-    <arc:BillingToggleOption Value="yearly" Label="Yearly" Badge="Save 20%" ActiveBadge="You save $48" />
-    <arc:BillingToggleOption Value="lifetime" Label="Lifetime" Badge="Best value" />
-</arc:BillingToggle>
-```
+<Demo name="ThreePeriods" />
 
 ### Prices
 

@@ -1,8 +1,10 @@
 ---
 title: 圖片比較
 summary: 拖曳分隔線橫跨兩張圖片，查看變化之處。
-source-hash: bc837e17cbef
+source-hash: 7339ee162d6e
 ---
+
+<Demo name="BeforeAndAfter" />
 
 ## 何時使用
 
@@ -35,6 +37,8 @@ source-hash: bc837e17cbef
 
 `BeforeLabel` 與 `AfterLabel` 為兩側加上說明文字。分隔線經過某個說明時，該說明會淡出。`ShowLabels` 可隱藏兩個說明文字。`AspectRatio` 設定外框的寬高比（寬度除以高度），預設值為 1.5（3 / 2）。
 
+<Demo name="WideFrame" />
+
 ```xml
 <arc:ImageCompare AspectRatio="1.7777" ShowLabels="False" Position="30" Label="修圖預覽">
     <arc:ImageCompare.Before>
@@ -47,6 +51,8 @@ source-hash: bc837e17cbef
 ```
 
 ### 上下比較
+
+<Demo name="Vertical" />
 
 ```xml
 <arc:ImageCompare Orientation="Vertical" BeforeLabel="原圖" AfterLabel="調色後">
@@ -64,6 +70,8 @@ source-hash: bc837e17cbef
 ### 圖片
 
 `BeforeSource` 與 `AfterSource` 會在每一側的內容之上繪製圖片。圖片在背景載入，並從輕微模糊中淡入。若載入失敗，則顯示下方的內容。
+
+<Demo name="Photos" />
 
 ```csharp
 var compare = new ImageCompare

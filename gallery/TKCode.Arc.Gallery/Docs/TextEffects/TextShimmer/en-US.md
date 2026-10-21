@@ -3,6 +3,8 @@ title: Text shimmer
 summary: Show ongoing work with a calm light across the words.
 ---
 
+<Demo name="StatusLine" />
+
 ## When to use
 
 - A status label while the app is busy, such as "Thinking" or "Generating summary".
@@ -32,10 +34,7 @@ text then settles to a solid color.
 
 A new `Text` value rises in place while the line springs to its new width. Keep `IsActive` on while the steps change.
 
-```csharp
-summary.IsActive = true;
-summary.Text = "Drafting a plan";
-```
+<Demo name="ChangingAndFinishing" />
 
 ### Finishing
 
@@ -51,10 +50,7 @@ summary.IsActive = false;
 
 `SweepDuration` sets the time of one pass across the text. The default is 1.8 seconds.
 
-```xml
-<arc:TextShimmer Text="Indexing the workspace"
-                 SweepDuration="0:0:3" />
-```
+<Demo name="SlowerSweep" />
 
 ### Size
 

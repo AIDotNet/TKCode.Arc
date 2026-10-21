@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFieldNegativeRangeDemo">
+    <arc:NumberField Label="Temperature"
+                     Minimum="-20"
+                     Maximum="40"
+                     Value="21"
+                     Suffix="°C"
+                     Description="Type a minus sign for values below zero."
+                     HorizontalAlignment="Center" />
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 公告栏
 summary: 顶部横幅，轮播消息、倒计时，关闭时平滑收起。
-source-hash: 0603b1c8c592
+source-hash: 234440d08e86
 ---
+
+<Demo name="RotatingMessages" />
 
 ## 何时使用
 
@@ -66,6 +68,8 @@ bar.CountdownEnded += (_, e) => bar.Messages.Remove(e.Announcement);
 
 设置 `IsNavigationVisible` 即可显示上一条、下一条按钮以及暂停环。`IsAutoPlayEnabled` 可关闭轮播；`Next()` 与 `Previous()` 则可在代码中切换消息。
 
+<Demo name="ControlsAndCountdown" />
+
 ```xml
 <arc:AnnouncementBar IsNavigationVisible="True"
                      Interval="0:0:8"
@@ -76,13 +80,13 @@ bar.CountdownEnded += (_, e) => bar.Messages.Remove(e.Announcement);
 
 `Inverted` 将前景色用作填充，背景色用作文字。仅用于最重要的通知。
 
-```xml
-<arc:AnnouncementBar Tone="Inverted" />
-```
+<Demo name="Inverted" />
 
 ### 记住关闭状态
 
 设置 `DismissalKey` 可在多次运行之间记住关闭状态。该键保存在 `Storage` 中。调用 `AnnouncementBar.ClearDismissal` 清除已保存的值，即可再次显示公告栏。关闭状态由 `Storage` 保存，默认为应用数据文件夹中的一个文件。
+
+<Demo name="RememberedDismissal" />
 
 ```xml
 <arc:AnnouncementBar DismissalKey="spring-campaign" IsDismissible="True" />

@@ -3,6 +3,8 @@ title: In-view title
 summary: Bring a section title in as it scrolls into view.
 ---
 
+<Demo name="Variants" />
+
 ## When to use
 
 - Section titles along a long feature page that should share one entrance.

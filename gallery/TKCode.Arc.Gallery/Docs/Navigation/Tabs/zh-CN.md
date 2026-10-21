@@ -1,8 +1,10 @@
 ---
 title: 标签页
 summary: 在同一语境中切换相关内容。
-source-hash: ebbf2d24231f
+source-hash: cb17c9687110
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -42,6 +44,8 @@ source-hash: ebbf2d24231f
 
 设置 `ItemsSource`。`ItemTemplate` 渲染触发器，`ContentTemplate` 渲染所选项的面板。通过 `SelectedItem` 或 `SelectionChanged` 读取选中状态。
 
+<Demo name="Overflow" />
+
 ```xml
 <arc:Tabs ItemsSource="{Binding Folders}"
           SelectedItem="{Binding CurrentFolder}"
@@ -64,13 +68,7 @@ source-hash: ebbf2d24231f
 
 `ActivationMode` 决定方向键的行为。`Automatic`（默认）会选中获得焦点的标签。`Manual` 只移动焦点；按 Enter 或空格键才会选中标签。
 
-```xml
-<arc:Tabs ActivationMode="Manual">
-    <arc:TabItem Header="日" />
-    <arc:TabItem Header="周" />
-    <arc:TabItem Header="月" />
-</arc:Tabs>
-```
+<Demo name="ManualActivation" />
 
 ### 在代码中选择
 

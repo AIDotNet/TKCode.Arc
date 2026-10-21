@@ -1,0 +1,247 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Usage billing: four cards built from the shared SettingsGroup. The summary (spend so far, projection and the limit
+        progress side by side; stacked under :narrow), the daily spend chart, the meters (rows added in code, each followed
+        by its bar) and the spending limit setting with its editor that expands in height.
+        Values that a state changes (grid placement, the limit's colors and visibility) are set by styles, not in the
+        template: template values are local and a state style could not override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:UsageBilling}" TargetType="arc:UsageBilling">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsageBilling">
+                <StackPanel Spacing="{arc:UsageBillingTokenResource GroupGap}">
+                    <arc:SettingsGroup Name="PART_SummaryGroup">
+                        <arc:SettingsGroup.HeaderActions>
+                            <arc:PresenceHost Name="PART_Status" Mode="Pop" Collapse="Width" IsPresent="False">
+                                <arc:Badge Name="PART_StatusBadge"
+                                           Size="Small"
+                                           AutomationProperties.LiveSetting="Polite" />
+                            </arc:PresenceHost>
+                        </arc:SettingsGroup.HeaderActions>
+                        <Grid Name="PART_Summary"
+                              ColumnDefinitions="*,Auto,*"
+                              RowDefinitions="Auto,Auto"
+                              Margin="{arc:UsageBillingTokenResource SummaryInset}">
+                            <StackPanel Name="PART_SpentColumn" VerticalAlignment="Bottom">
+                                <arc:AnimatedCounter Name="PART_Spent"
+                                                     FontSize="{arc:ArcDesignTokenResource Type3XL}" />
+                                <TextBlock Name="PART_Projected"
+                                           Margin="0,4,0,0"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="{arc:UsageBillingTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <Border Name="PART_ColumnGap"
+                                    Grid.Column="1"
+                                    Width="{arc:UsageBillingTokenResource SummaryColumnGap}" />
+                            <StackPanel Name="PART_LimitColumn"
+                                        VerticalAlignment="Bottom"
+                                        Spacing="{arc:UsageBillingTokenResource LimitLineGap}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Name="PART_LimitLabel"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_LimitPercent"
+                                               Grid.Column="1"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </Grid>
+                                <arc:UsageBillingBar Name="PART_LimitBar" />
+                                <TextBlock Name="PART_LimitCaption"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="{arc:UsageBillingTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:Button Name="PART_SetLimit"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            HorizontalAlignment="Left" />
+                            </StackPanel>
+                        </Grid>
+                    </arc:SettingsGroup>
+
+                    <arc:SettingsGroup Name="PART_DailyGroup" IsVisible="False">
+                        <!-- Unclipped: the average's label may run past the value gutter into the card's padding. -->
+                        <arc:BarChart Name="PART_Chart"
+                                      ClipToBounds="False"
+                                      Margin="{arc:UsageBillingTokenResource ChartInset}"
+                                      PlotHeight="{arc:UsageBillingTokenResource ChartPlotHeight}" />
+                    </arc:SettingsGroup>
+
+                    <arc:SettingsGroup Name="PART_UsageGroup">
+                        <arc:SettingsGroup.Footer>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Name="PART_UsageTotalLabel" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                <TextBlock Name="PART_UsageTotal"
+                                           Grid.Column="1"
+                                           Margin="16,0,0,0"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Grid>
+                        </arc:SettingsGroup.Footer>
+                    </arc:SettingsGroup>
+
+                    <arc:SettingsGroup Name="PART_LimitGroup">
+                        <arc:SettingsRow Name="PART_LimitRow">
+                            <arc:Switch Name="PART_LimitSwitch"
+                                        IsChecked="{TemplateBinding IsSpendLimitEnabled, Mode=TwoWay}" />
+                        </arc:SettingsRow>
+                        <arc:SpringSizeDecorator Name="PART_LimitEditor"
+                                                 Axis="Height"
+                                                 CrossClipOverflow="12"
+                                                 IsExpanded="{TemplateBinding IsSpendLimitEnabled}">
+                            <arc:UsageBillingEditorPanel Margin="{arc:UsageBillingTokenResource EditorInset}"
+                                                         MaxChildWidth="{arc:UsageBillingTokenResource EditorMaxWidth}">
+                                <arc:MoneyInput Name="PART_LimitInput"
+                                                Size="Small"
+                                                Value="{TemplateBinding SpendLimit, Mode=TwoWay}" />
+                            </arc:UsageBillingEditorPanel>
+                        </arc:SpringSizeDecorator>
+                    </arc:SettingsGroup>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="NarrowWidth" Value="{arc:UsageBillingTokenResource NarrowThreshold}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Summary layout: spend | gap | limit; :narrow stacks the limit under the spend. -->
+        <Style Selector="^ /template/ StackPanel#PART_SpentColumn">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_LimitColumn">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ StackPanel#PART_SpentColumn">
+                <Setter Property="Grid.ColumnSpan" Value="3" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ColumnGap">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_LimitColumn">
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.ColumnSpan" Value="3" />
+                <Setter Property="Margin" Value="{arc:UsageBillingTokenResource StackedLimitMargin}" />
+            </Style>
+        </Style>
+
+        <!-- The limit progress: accent below the alert threshold, warning past it, danger at the limit. -->
+        <Style Selector="^ /template/ arc|UsageBillingBar#PART_LimitBar">
+            <Setter Property="Height" Value="{arc:UsageBillingTokenResource LimitBarHeight}" />
+            <Setter Property="TrackThickness" Value="{arc:UsageBillingTokenResource LimitTrackThickness}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_LimitPercent">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_SetLimit">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:limit-near">
+            <Style Selector="^ /template/ arc|UsageBillingBar#PART_LimitBar">
+                <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_LimitPercent">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+        </Style>
+        <Style Selector="^:limit-reached">
+            <Style Selector="^ /template/ arc|UsageBillingBar#PART_LimitBar">
+                <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_LimitPercent">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+        <Style Selector="^:no-limit">
+            <Style Selector="^ /template/ arc|UsageBillingBar#PART_LimitBar">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_LimitPercent">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_SetLimit">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A self-drawn bar: the limit progress (with the alert tick) and each meter's included part and overage. -->
+    <ControlTheme x:Key="{x:Type arc:UsageBillingBar}" TargetType="arc:UsageBillingBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:UsageBillingTokenResource MeterTrackThickness}" />
+        <Setter Property="TrackThickness" Value="{arc:UsageBillingTokenResource MeterTrackThickness}" />
+        <Setter Property="Gap" Value="{arc:UsageBillingTokenResource BarGap}" />
+        <Setter Property="TrackBrush" Value="{arc:UsageBillingTokenResource TrackColor}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="OverBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="MarkerBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="GapBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Style Selector="^.meter">
+            <Setter Property="Margin" Value="{arc:UsageBillingTokenResource MeterBarMargin}" />
+        </Style>
+        <Style Selector="^.meter.indented">
+            <Setter Property="Margin" Value="{arc:UsageBillingTokenResource MeterBarIndentedMargin}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="FillEnd" Spring="Smooth" />
+                    <arc:SpringDoubleTransition Property="Split" Spring="Smooth" />
+                    <arc:ArcBrushTransition Property="FillBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="FillBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A meter's charge: the amount (or "Included") over the rate, right aligned. -->
+    <ControlTheme x:Key="{x:Type arc:UsageBillingMeterCharge}" TargetType="arc:UsageBillingMeterCharge">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsageBillingMeterCharge">
+                <StackPanel Spacing="{arc:UsageBillingTokenResource ChargeLineGap}">
+                    <TextBlock Name="PART_Amount"
+                               Text="{TemplateBinding Amount}"
+                               HorizontalAlignment="Right"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                    <TextBlock Name="PART_Rate"
+                               Text="{TemplateBinding Rate}"
+                               IsVisible="{TemplateBinding Rate, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               HorizontalAlignment="Right"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Style Selector="^ /template/ TextBlock#PART_Amount">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:included /template/ TextBlock#PART_Amount">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

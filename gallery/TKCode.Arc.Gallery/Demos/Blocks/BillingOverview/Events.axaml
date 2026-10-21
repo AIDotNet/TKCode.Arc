@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BillingOverviewEventsDemo">
+    <StackPanel Spacing="16" MaxWidth="720">
+        <arc:BillingOverview x:Name="Billing" BillingEmail="accounts@larkspur.co" VisibleInvoiceCount="3">
+            <arc:BillingOverview.Plan>
+                <arc:BillingPlan Name="Studio" Price="90" Seats="6" Interval="Month" Status="Active" RenewsOn="2026-11-01" />
+            </arc:BillingOverview.Plan>
+            <arc:BillingOverview.PaymentMethod>
+                <arc:BillingPaymentMethod Brand="Mastercard" Last4="5108" ExpiryMonth="4" ExpiryYear="2029" />
+            </arc:BillingOverview.PaymentMethod>
+            <arc:BillingOverview.Invoices>
+                <arc:BillingInvoice Number="LS-2026-010" Date="2026-10-01" Amount="90" Status="Paid" />
+                <arc:BillingInvoice Number="LS-2026-009" Date="2026-09-01" Amount="90" Status="Paid" />
+                <arc:BillingInvoice Number="LS-2026-008" Date="2026-08-01" Amount="90" Status="Paid" />
+                <arc:BillingInvoice Number="LS-2026-007" Date="2026-07-01" Amount="75" Status="Refunded" />
+            </arc:BillingOverview.Invoices>
+        </arc:BillingOverview>
+        <Border Padding="24,16"
+                TextElement.FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Event log"
+                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <TextBlock x:Name="Log"
+                           Text="Press any button above."
+                           TextWrapping="Wrap"
+                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

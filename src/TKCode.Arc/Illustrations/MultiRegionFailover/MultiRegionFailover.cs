@@ -53,6 +53,7 @@ public class MultiRegionFailover : Illustration
     public static readonly StyledProperty<bool> IsAutomaticProperty =
         AvaloniaProperty.Register<MultiRegionFailover, bool>(nameof(IsAutomatic), true);
 
+    /// <summary>Node titles, badges and caption text of the diagram; set it to rename or translate the scene.</summary>
     public static readonly StyledProperty<MultiRegionFailoverLabels> LabelsProperty =
         AvaloniaProperty.Register<MultiRegionFailover, MultiRegionFailoverLabels>(nameof(Labels), new MultiRegionFailoverLabels());
 
@@ -60,6 +61,7 @@ public class MultiRegionFailover : Illustration
 
     public bool IsAutomatic { get => GetValue(IsAutomaticProperty); set => SetValue(IsAutomaticProperty, value); }
 
+    /// <inheritdoc cref="LabelsProperty"/>
     public MultiRegionFailoverLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
     /// <summary>The regions shown when <see cref="Regions"/> is not set.</summary>

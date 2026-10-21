@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NotificationCenterReadStateDemo">
+    <StackPanel Spacing="20" HorizontalAlignment="Center" Width="360">
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center" Margin="0,6,0,0">
+            <arc:NotificationCenter x:Name="Center"
+                                    ReadChanged="OnReadChanged"
+                                    Dismissed="OnDismissed" />
+            <arc:Button Content="New update" Variant="Secondary" Click="OnNewClick" />
+            <arc:Button Content="Reset" Variant="Ghost" Click="OnResetClick" />
+        </StackPanel>
+        <Border CornerRadius="18"
+                Padding="16,12"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                Background="{arc:ArcDesignTokenResource Surface}">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Store"
+                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <TextBlock x:Name="Summary"
+                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <ItemsControl x:Name="Log">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <TextBlock Text="{Binding}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

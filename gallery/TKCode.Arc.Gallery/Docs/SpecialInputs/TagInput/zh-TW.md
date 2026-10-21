@@ -1,8 +1,10 @@
 ---
 title: 標籤輸入
 summary: 將簡短文字值轉換為可移除的標籤。
-source-hash: 9909e3456dd4
+source-hash: 3617ec564045
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -44,27 +46,21 @@ var tags = new TagInput
 
 `MaxTags` 會拒絕超出上限的新增。欄位會晃動，並播報已達上限。`ErrorMessage` 會將欄位標記為無效，並顯示錯誤列。
 
-```csharp
-var skills = new TagInput
-{
-    Label = "技能",
-    Description = "最多 5 項技能。",
-    MaxTags = 5,
-    Value = ["Figma", "Avalonia", "C#", "Motion"]
-};
-```
+<Demo name="Limit" />
 
-```xml
-<arc:TagInput Label="分類" ErrorMessage="請至少新增一個分類。" />
-```
+<Demo name="Error" />
 
 ### 貼上清單
 
 貼上包含逗號、換行或定位字元的文字時，會被拆分為多個標籤。最後一段會保留在草稿中。
 
+<Demo name="Paste" />
+
 ### 繫結與事件
 
 `Value` 為雙向繫結。`ValueChanged` 會回報舊清單與新清單，以及 `Added` 與 `Removed` 標籤。
+
+<Demo name="TwoWayValue" />
 
 ```xml
 <arc:TagInput Label="關鍵字" Value="{Binding Keywords, Mode=TwoWay}" />
@@ -79,6 +75,36 @@ tags.ValueChanged += (_, e) =>
 tags.AddTag("release");
 tags.FocusEditor();
 ```
+
+### 空欄位與預留位置文字
+
+只要欄位中沒有標籤也沒有草稿，預留位置文字就會浮現。
+
+<Demo name="Empty" />
+
+### 說明文字
+
+欄位下方的輔助文字，同時也會為螢幕閱讀器描述編輯器。
+
+<Demo name="Description" />
+
+### 換行
+
+標籤會換到新的一列，外殼高度會隨平滑的彈簧動畫變化。移除其中一個，即可看到其餘標籤滑入新位置。
+
+<Demo name="Wrapping" />
+
+### 鍵盤
+
+在起始位置按 Backspace 會選取最後一個標籤，Backspace 或 Delete 會移除所選的標籤，ArrowLeft 與 ArrowRight 會移動選取環，Escape 會清除選取。點擊標籤也會選取它。
+
+<Demo name="Keyboard" />
+
+### 停用
+
+停用的欄位會在 `SurfaceMuted` 上淡化到 0.5 的不透明度。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

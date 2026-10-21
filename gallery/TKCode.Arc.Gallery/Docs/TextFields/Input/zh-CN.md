@@ -1,8 +1,10 @@
 ---
 title: 输入框
 summary: 标签清晰、状态实用的单行输入框。
-source-hash: 73a65b253fc6
+source-hash: 4ce673cb8f60
 ---
+
+<Demo name="Basic" />
 
 ## 何时使用
 
@@ -30,20 +32,13 @@ source-hash: 73a65b253fc6
 
 文案应由状态推导，直接修改字符串即可：只有变化的词会移动，数字逐位滚动。不要在几条独立的消息之间来回切换。
 
+<Demo name="HelperAndError" />
+
 ```xml
 <arc:Input Label="用户名"
            Text="{Binding UserName}"
            Description="{Binding UserNameHint}"
            ErrorMessage="{Binding UserNameError}" />
-```
-
-```csharp
-input.TextChanged += (_, _) =>
-{
-    var text = input.Text ?? string.Empty;
-    input.Description = $"3 到 20 个字符，还可输入 {Math.Max(0, 20 - text.Length)} 个。";
-    input.ErrorMessage = text.Length is > 0 and < 3 ? "至少输入 3 个字符。" : null;
-};
 ```
 
 `ErrorMessage` 非空时字段即为无效态；为空时显示 `Text` 绑定的校验错误。
@@ -52,23 +47,23 @@ input.TextChanged += (_, _) =>
 
 `Size` 决定外框高度：`Small` 为 36，`Medium` 为 44（Arc 的默认外观），`Large` 为 50。
 
-```xml
-<arc:Input Label="小" Size="Small" />
-<arc:Input Label="大" Size="Large" />
-```
+<Demo name="Sizes" />
 
 ### 前缀与后缀
 
-```xml
-<arc:Input Label="价格" Text="49">
-    <arc:Input.Prefix>
-        <TextBlock Text="¥" />
-    </arc:Input.Prefix>
-    <arc:Input.Suffix>
-        <TextBlock Text="CNY" />
-    </arc:Input.Suffix>
-</arc:Input>
-```
+<Demo name="PrefixAndSuffix" />
+
+### 状态
+
+字段可以处于禁用、只读或无效状态。
+
+<Demo name="States" />
+
+### Field 基础
+
+`Field` 在 `FieldFrame` 外加上标签与消息行。选择器与特殊输入框会复用这两者。
+
+<Demo name="FieldFoundation" />
 
 ## API 参考
 

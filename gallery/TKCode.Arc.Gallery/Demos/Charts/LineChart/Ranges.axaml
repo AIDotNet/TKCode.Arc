@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LineChartRangesDemo">
+    <StackPanel Spacing="16">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="7 days" Variant="Secondary" Size="Small" Click="On7DaysClick" />
+            <arc:Button Content="30 days" Variant="Secondary" Size="Small" Click="On30DaysClick" />
+            <arc:Button Content="90 days" Variant="Secondary" Size="Small" Click="On90DaysClick" />
+            <arc:Button Content="Toggle loading" Variant="Secondary" Size="Small" Click="OnToggleLoadingClick" />
+        </WrapPanel>
+        <arc:LineChart x:Name="Chart"
+                       Label="Signups"
+                       CategoryLabel="Date"
+                       ActiveIndexChanged="OnActiveIndexChanged">
+            <arc:LineChart.Series>
+                <arc:ChartSeries Key="current" Name="This period" />
+                <arc:ChartSeries Key="previous" Name="Previous period" IsDashed="True" />
+            </arc:LineChart.Series>
+        </arc:LineChart>
+        <TextBlock x:Name="Readout"
+                   Text="Hover or use the arrow keys to read values."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

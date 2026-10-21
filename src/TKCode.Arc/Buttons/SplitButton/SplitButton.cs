@@ -66,6 +66,7 @@ public class SplitButton : TemplatedControl
     public static readonly StyledProperty<Geometry?> IconProperty =
         AvaloniaProperty.Register<SplitButton, Geometry?>(nameof(Icon));
 
+    /// <summary>Visual weight: Primary (default, a filled button) or Secondary (a compact outlined pill).</summary>
     public static readonly StyledProperty<SplitButtonVariant> VariantProperty =
         AvaloniaProperty.Register<SplitButton, SplitButtonVariant>(nameof(Variant));
 
@@ -73,6 +74,7 @@ public class SplitButton : TemplatedControl
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<SplitButton, ICommand?>(nameof(Command));
 
+    /// <summary>Parameter passed to Command when the main action runs.</summary>
     public static readonly StyledProperty<object?> CommandParameterProperty =
         AvaloniaProperty.Register<SplitButton, object?>(nameof(CommandParameter));
 
@@ -87,6 +89,7 @@ public class SplitButton : TemplatedControl
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<SplitButton, IEnumerable?>(nameof(ItemsSource));
 
+    /// <summary>Template that draws each row taken from ItemsSource.</summary>
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<SplitButton, IDataTemplate?>(nameof(ItemTemplate));
 
@@ -110,6 +113,7 @@ public class SplitButton : TemplatedControl
         set => SetValue(IconProperty, value);
     }
 
+    /// <inheritdoc cref="VariantProperty"/>
     public SplitButtonVariant Variant
     {
         get => GetValue(VariantProperty);
@@ -122,6 +126,7 @@ public class SplitButton : TemplatedControl
         set => SetValue(CommandProperty, value);
     }
 
+    /// <inheritdoc cref="CommandParameterProperty"/>
     public object? CommandParameter
     {
         get => GetValue(CommandParameterProperty);
@@ -147,6 +152,7 @@ public class SplitButton : TemplatedControl
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    /// <inheritdoc cref="ItemTemplateProperty"/>
     public IDataTemplate? ItemTemplate
     {
         get => GetValue(ItemTemplateProperty);

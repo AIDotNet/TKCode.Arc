@@ -61,6 +61,7 @@ public class BillingToggle : SelectingItemsControl
     public static readonly StyledProperty<string?> ValueProperty =
         AvaloniaProperty.Register<BillingToggle, string?>(nameof(Value), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Option size: Medium (34px, default) or Large (42px).</summary>
     public static readonly StyledProperty<BillingToggleSize> SizeProperty =
         AvaloniaProperty.Register<BillingToggle, BillingToggleSize>(nameof(Size));
 
@@ -78,6 +79,7 @@ public class BillingToggle : SelectingItemsControl
         set => SetValue(ValueProperty, value);
     }
 
+    /// <inheritdoc cref="SizeProperty"/>
     public BillingToggleSize Size
     {
         get => GetValue(SizeProperty);

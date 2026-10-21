@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BreadcrumbCollapsedPathDemo">
+    <arc:Breadcrumb MaxVisibleItems="4">
+        <arc:BreadcrumbItem Content="Acme" />
+        <arc:BreadcrumbItem Content="Engineering" />
+        <arc:BreadcrumbItem Content="Platform" />
+        <arc:BreadcrumbItem Content="Services" />
+        <arc:BreadcrumbItem Content="Billing" />
+        <arc:BreadcrumbItem Content="Invoices" />
+        <arc:BreadcrumbItem Content="2026" />
+    </arc:Breadcrumb>
+</UserControl>

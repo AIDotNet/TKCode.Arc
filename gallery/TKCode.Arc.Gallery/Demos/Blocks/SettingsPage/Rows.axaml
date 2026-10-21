@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageRowsDemo">
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:SettingsGroup Header="Notifications" Description="Choose what reaches you and where.">
+            <arc:SettingsRow Header="Mentions" Description="When someone @mentions you in a comment or a doc." Icon="{x:Static arc:ArcIcons.AtSign}">
+                <arc:Switch IsChecked="True" />
+            </arc:SettingsRow>
+            <arc:SettingsRow Header="Weekly digest" Description="A Monday summary of activity in your projects." Icon="{x:Static arc:ArcIcons.Mail}">
+                <arc:Switch />
+            </arc:SettingsRow>
+            <arc:SettingsRow Header="Product updates" Description="Occasional news about new features." Icon="{x:Static arc:ArcIcons.Sparkles}">
+                <arc:Switch IsChecked="True" />
+            </arc:SettingsRow>
+            <arc:SettingsGroup.Footer>
+                <TextBlock Text="Security alerts are always sent." VerticalAlignment="Center" />
+            </arc:SettingsGroup.Footer>
+        </arc:SettingsGroup>
+        <arc:SettingsGroup Header="Workspace" Description="Shown to everyone in Larkspur Studio." Appearance="Plain">
+            <arc:SettingsRow Header="Workspace name" Description="Larkspur Studio">
+                <arc:Button Variant="Secondary" Size="Small" Content="Rename" />
+            </arc:SettingsRow>
+            <arc:SettingsRow Header="Default language" Description="Used for new members and emails.">
+                <arc:Select Width="180" SelectedIndex="0">
+                    <arc:SelectItem Content="English" Value="en" />
+                    <arc:SelectItem Content="Nederlands" Value="nl" />
+                </arc:Select>
+            </arc:SettingsRow>
+        </arc:SettingsGroup>
+    </StackPanel>
+</UserControl>

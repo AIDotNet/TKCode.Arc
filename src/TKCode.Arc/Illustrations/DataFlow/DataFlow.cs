@@ -47,6 +47,7 @@ public class DataFlow : Illustration
     public static readonly StyledProperty<IReadOnlyList<DataFlowSource>?> SourcesProperty =
         AvaloniaProperty.Register<DataFlow, IReadOnlyList<DataFlowSource>?>(nameof(Sources));
 
+    /// <summary>Node titles, details and caption text of the diagram; set it to rename or translate the scene.</summary>
     public static readonly StyledProperty<DataFlowLabels> LabelsProperty =
         AvaloniaProperty.Register<DataFlow, DataFlowLabels>(nameof(Labels), new DataFlowLabels());
 
@@ -56,6 +57,7 @@ public class DataFlow : Illustration
 
     public IReadOnlyList<DataFlowSource>? Sources { get => GetValue(SourcesProperty); set => SetValue(SourcesProperty, value); }
 
+    /// <inheritdoc cref="LabelsProperty"/>
     public DataFlowLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
     /// <summary>The sources shown when <see cref="Sources"/> is not set.</summary>

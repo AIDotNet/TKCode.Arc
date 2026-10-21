@@ -3,6 +3,8 @@ title: Radio group
 summary: Choose one option from a visible set.
 ---
 
+<Demo name="Plans" />
+
 ## When to use
 
 - Two to six mutually exclusive options that need a description each, such as plans.
@@ -60,13 +62,7 @@ plans.SelectionChanged += (_, _) => status.Text = $"Selected: {plans.SelectedVal
 
 `IsDisabled` keeps an option visible but unavailable. Arrow keys skip disabled options.
 
-```xml
-<arc:RadioGroup Header="Density" Width="420" SelectedValue="comfortable">
-    <arc:RadioOption Value="comfortable" Label="Comfortable" />
-    <arc:RadioOption Value="compact" Label="Compact" />
-    <arc:RadioOption Value="spacious" Label="Spacious" IsDisabled="True" />
-</arc:RadioGroup>
-```
+<Demo name="InlineOptions" />
 
 ### Selection events
 

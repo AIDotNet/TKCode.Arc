@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ScrubInputStatesDemo">
+    <Border Width="320"
+            HorizontalAlignment="Center"
+            Padding="16,26,16,16"
+            CornerRadius="18"
+            BorderThickness="1"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+        <StackPanel Spacing="8">
+            <arc:ScrubInput Label="Locked" Value="64" Unit="px" IsEnabled="False" />
+            <arc:ScrubInput x:Name="SizeInput" Label="Size" Value="24" Minimum="0" Maximum="100" Unit="%" />
+            <TextBlock x:Name="Hint"
+                       Text="Try: abc, 12px (unknown unit), 4/0"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </Border>
+</UserControl>

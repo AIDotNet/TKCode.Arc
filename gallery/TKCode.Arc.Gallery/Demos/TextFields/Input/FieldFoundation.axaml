@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InputFieldFoundationDemo">
+    <arc:Field Label="Due date"
+               Description="Pickers and special inputs reuse Field and FieldFrame."
+               Width="360"
+               HorizontalAlignment="Left">
+        <arc:FieldFrame>
+            <arc:FieldFrame.Prefix>
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Calendar}" Size="18" />
+            </arc:FieldFrame.Prefix>
+            <TextBlock Text="Pick a date"
+                       FontSize="14"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </arc:FieldFrame>
+    </arc:Field>
+</UserControl>

@@ -3,6 +3,8 @@ title: Combobox
 summary: Search and select from a list without leaving the field.
 ---
 
+<Demo name="Searchable" />
+
 ## When to use
 
 - Long lists that people search by name, such as time zones or countries.
@@ -61,15 +63,7 @@ zone.SelectionChanged += (_, _) => Console.WriteLine(zone.SelectedValue);
 By default the label, meta and keywords are matched as case-insensitive substrings. Set `FilterPredicate` to change
 the match. It receives the item and the trimmed query.
 
-```csharp
-var prefix = new Combobox
-{
-    Label = "Starts with",
-    ItemsSource = cities,
-    FilterPredicate = (item, query) => item is string s
-        && s.StartsWith(query, StringComparison.CurrentCultureIgnoreCase)
-};
-```
+<Demo name="CustomFilter" />
 
 ### Placeholder and empty text
 
@@ -90,6 +84,18 @@ var prefix = new Combobox
 zone.Clear();
 zone.FocusInput();
 ```
+
+### Inline options
+
+Disabled options show but cannot be picked. The clear button pops in while something is selected.
+
+<Demo name="InlineOptions" />
+
+### Disabled
+
+A disabled `Combobox` keeps its value and ignores input.
+
+<Demo name="Disabled" />
 
 ## API reference
 

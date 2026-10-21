@@ -23,14 +23,16 @@ public class GallerySmokeTests
         GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.All(e => e.IsArc && e.ArcUrl != null));
         // Extras (TKCode components with no Arc original) are listed separately and not counted.
         GalleryCatalog.Extras.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
-        GalleryCatalog.AllEntries.Count().ShouldBe(110 + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length);
+        // Blocks are listed under their own section and not counted either.
+        GalleryCatalog.AllEntries.Count().ShouldBe(110 + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length
+            + GalleryCatalog.Blocks.AllEntries.Count());
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
     }
 
     [AvaloniaFact]
-    public void Breadcrumb_Page_Opens_Folders_After_The_Path_Is_Cut_Back_To_Its_Root()
+    public void Breadcrumb_Demo_Opens_Folders_After_The_Path_Is_Cut_Back_To_Its_Root()
     {
-        var window = TestHelpers.Show(BreadcrumbPage.Create());
+        var window = TestHelpers.Show(new TKCode.Arc.Gallery.Demos.BreadcrumbClientSidePathDemo());
         try
         {
             var buttons = window.GetVisualDescendants().OfType<Button>().ToList();

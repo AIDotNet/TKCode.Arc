@@ -1,8 +1,10 @@
 ---
 title: 工具提示
 summary: 為不熟悉的控制項提供簡短的輔助文字。
-source-hash: b4816ee075e6
+source-hash: 9321fab1844c
 ---
+
+<Demo name="Sides" />
 
 ## 何時使用
 
@@ -46,6 +48,8 @@ source-hash: b4816ee075e6
 ### 修改文字與延遲
 
 工具提示開啟期間可以在程式碼中修改文字。文字會交叉淡化，氣泡隨之調整大小以符合內容。設定 `ShowDelay` 可以修改第一個工具提示開啟前的等待時間，預設為 250ms。
+
+<Demo name="LiveText" />
 
 ```csharp
 Tooltip.SetTip(save, "剛剛已儲存");

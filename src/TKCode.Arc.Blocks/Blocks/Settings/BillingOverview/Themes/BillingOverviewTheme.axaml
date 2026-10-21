@@ -1,0 +1,426 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Billing overview: three cards 16 apart. The plan card has a label, the plan name with a status badge, a line of
+        seats and renewal, the price on the right (under the name when narrow) and a footer with the next charge and the
+        plan actions. The payment card has the card row (text brand mark) and the billing email row. The invoice card has
+        a column header, rows with hairlines, the folded older rows (SpringSizeDecorator) and a "Show all" footer.
+    -->
+    <ControlTheme x:Key="{x:Type arc:BillingOverview}" TargetType="arc:BillingOverview">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BillingOverview">
+                <StackPanel Name="PART_Stack" Spacing="{arc:BillingOverviewTokenResource GroupGap}">
+                    <!-- 1. Current plan -->
+                    <arc:SettingsGroup Name="PART_PlanGroup">
+                        <!--
+                            Footer content is presented by SettingsGroup, outside this template's styling scope (it has no
+                            templated parent), so it takes token values directly and carries its own state styles.
+                        -->
+                        <arc:SettingsGroup.Footer>
+                            <arc:BillingOverviewSplitPanel Name="PART_PlanFooter"
+                                                           ColumnGap="{arc:BillingOverviewTokenResource SplitGap}"
+                                                           StackedGap="{arc:BillingOverviewTokenResource StackedGap}">
+                                <arc:BillingOverviewSplitPanel.Styles>
+                                    <Style Selector="arc|BillingOverview:narrow arc|BillingOverviewSplitPanel#PART_PlanFooter">
+                                        <Setter Property="IsStackForced" Value="True" />
+                                    </Style>
+                                    <!-- Stacked under the text, the ghost button's label lines up with the text's left edge. -->
+                                    <Style Selector="arc|BillingOverview:narrow arc|Button#PART_CancelPlan">
+                                        <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource GhostAlignMargin}" />
+                                    </Style>
+                                </arc:BillingOverviewSplitPanel.Styles>
+                                <TextBlock Name="PART_NextInvoice"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           LineHeight="{arc:BillingOverviewTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <StackPanel Name="PART_PlanActions"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:BillingOverviewTokenResource ActionGap}">
+                                    <arc:Button Name="PART_CancelPlan" Variant="Ghost" Size="Small" />
+                                    <arc:Button Name="PART_ChangePlan" Variant="Secondary" Size="Small" />
+                                </StackPanel>
+                            </arc:BillingOverviewSplitPanel>
+                        </arc:SettingsGroup.Footer>
+                        <arc:BillingOverviewSplitPanel Name="PART_PlanLayout">
+                            <StackPanel Name="PART_PlanText">
+                                <TextBlock Name="PART_PlanEyebrow" />
+                                <WrapPanel Name="PART_PlanTitle" Orientation="Horizontal">
+                                    <TextBlock Name="PART_PlanName" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                    <arc:Badge Name="PART_PlanStatus" Size="Small" VerticalAlignment="Center" />
+                                </WrapPanel>
+                                <TextBlock Name="PART_PlanDetail" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Price" VerticalAlignment="Center" />
+                        </arc:BillingOverviewSplitPanel>
+                    </arc:SettingsGroup>
+
+                    <!-- 2. Payment: the card row, then the billing email (a SettingsRow, with a hairline above it). -->
+                    <arc:SettingsGroup Name="PART_PaymentGroup">
+                        <arc:BillingOverviewSplitPanel Name="PART_CardRow">
+                            <Border Name="PART_CardMark">
+                                <Panel>
+                                    <TextBlock Name="PART_CardBrand"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                    <arc:ArcGlyph Name="PART_CardGlyph"
+                                                  IsVisible="False"
+                                                  Data="{x:Static arc:ArcIcons.CreditCard}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                </Panel>
+                            </Border>
+                            <StackPanel Name="PART_CardText">
+                                <TextBlock Name="PART_CardTitle" TextWrapping="Wrap" />
+                                <DockPanel>
+                                    <arc:ArcGlyph Name="PART_CardAlert"
+                                                  DockPanel.Dock="Left"
+                                                  VerticalAlignment="Center"
+                                                  Data="{x:Static arc:ArcIcons.TriangleAlert}" />
+                                    <TextBlock Name="PART_CardExpiry" TextWrapping="Wrap" />
+                                </DockPanel>
+                            </StackPanel>
+                            <arc:Button Name="PART_UpdateCard" Variant="Secondary" Size="Small" />
+                        </arc:BillingOverviewSplitPanel>
+                        <arc:SettingsRow Name="PART_EmailRow">
+                            <arc:Button Name="PART_EditEmail" Variant="Ghost" Size="Small" />
+                        </arc:SettingsRow>
+                    </arc:SettingsGroup>
+
+                    <!-- 3. Invoices -->
+                    <arc:SettingsGroup Name="PART_InvoicesGroup">
+                        <arc:SettingsGroup.Footer>
+                            <Panel Name="PART_InvoicesFooter">
+                                <Panel.Styles>
+                                    <Style Selector="arc|BillingOverview:invoices-expanded arc|ArcGlyph#PART_ShowAllChevron">
+                                        <Setter Property="RenderTransform" Value="rotate(180deg)" />
+                                    </Style>
+                                    <Style Selector="arc|BillingOverview:motion-full arc|ArcGlyph#PART_ShowAllChevron">
+                                        <Setter Property="Transitions">
+                                            <Transitions>
+                                                <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                                            </Transitions>
+                                        </Setter>
+                                    </Style>
+                                </Panel.Styles>
+                                <arc:Button Name="PART_ShowAll"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            HorizontalAlignment="Left"
+                                            Margin="{arc:BillingOverviewTokenResource GhostAlignMargin}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:BillingOverviewTokenResource ShowAllGap}">
+                                        <arc:ArcContentSwap Name="PART_ShowAllText"
+                                                            Mode="BlurSwap"
+                                                            VerticalAlignment="Center" />
+                                        <arc:ArcGlyph Name="PART_ShowAllChevron"
+                                                      VerticalAlignment="Center"
+                                                      RenderTransformOrigin="50%,50%"
+                                                      Size="{arc:BillingOverviewTokenResource GlyphSize}"
+                                                      Data="{x:Static arc:ArcIcons.ChevronDown}" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </Panel>
+                        </arc:SettingsGroup.Footer>
+                        <StackPanel Name="PART_InvoiceTable">
+                            <arc:BillingOverviewInvoiceRow Name="PART_InvoiceHeader" IsHeader="True" />
+                            <StackPanel Name="PART_InvoiceRows" />
+                            <arc:SpringSizeDecorator Name="PART_MoreInvoices" Axis="Height" Spring="Smooth">
+                                <StackPanel Name="PART_MoreRows" />
+                            </arc:SpringSizeDecorator>
+                        </StackPanel>
+                        <StackPanel Name="PART_InvoicesEmpty" IsVisible="False" HorizontalAlignment="Center">
+                            <Border Name="PART_EmptyTile" HorizontalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_EmptyGlyph"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Data="{x:Static arc:BillingOverviewGlyphs.ReceiptText}" />
+                            </Border>
+                            <TextBlock Name="PART_EmptyTitle" HorizontalAlignment="Center" TextAlignment="Center" />
+                            <TextBlock Name="PART_EmptyHint" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </arc:SettingsGroup>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="NarrowWidth" Value="{arc:BillingOverviewTokenResource NarrowThreshold}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Plan card -->
+        <Style Selector="^ /template/ arc|BillingOverviewSplitPanel#PART_PlanLayout">
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource PlanInset}" />
+            <Setter Property="ColumnGap" Value="{arc:BillingOverviewTokenResource SplitGap}" />
+            <Setter Property="StackedGap" Value="{arc:BillingOverviewTokenResource StackedGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_PlanText">
+            <Setter Property="Spacing" Value="{arc:BillingOverviewTokenResource PlanLineGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_PlanEyebrow">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_PlanTitle">
+            <Setter Property="ItemSpacing" Value="{arc:BillingOverviewTokenResource PlanTitleGap}" />
+            <Setter Property="LineSpacing" Value="{arc:BillingOverviewTokenResource PlanLineGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_PlanName">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_PlanDetail">
+            <Setter Property="LineHeight" Value="{arc:BillingOverviewTokenResource BodyLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ arc|BillingOverviewSplitPanel#PART_PlanLayout">
+                <Setter Property="IsStackForced" Value="True" />
+            </Style>
+        </Style>
+
+        <!-- Payment card -->
+        <Style Selector="^ /template/ arc|BillingOverviewSplitPanel#PART_CardRow">
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource CardRowInset}" />
+            <Setter Property="StackWidth" Value="{arc:BillingOverviewTokenResource RowStackThreshold}" />
+            <Setter Property="ColumnGap" Value="{arc:BillingOverviewTokenResource SplitGap}" />
+            <Setter Property="StackedGap" Value="{arc:BillingOverviewTokenResource StackedGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_CardMark">
+            <Setter Property="MinWidth" Value="{arc:BillingOverviewTokenResource CardMarkWidth}" />
+            <Setter Property="Height" Value="{arc:BillingOverviewTokenResource CardMarkHeight}" />
+            <Setter Property="Padding" Value="{arc:BillingOverviewTokenResource CardMarkInset}" />
+            <Setter Property="CornerRadius" Value="{arc:BillingOverviewTokenResource CardMarkRadius}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_CardBrand">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_CardGlyph">
+            <Setter Property="Size" Value="{arc:BillingOverviewTokenResource GlyphSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_CardText">
+            <Setter Property="Spacing" Value="{arc:BillingOverviewTokenResource CardTextGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_CardTitle">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:BillingOverviewTokenResource BodyLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_CardExpiry">
+            <Setter Property="LineHeight" Value="{arc:BillingOverviewTokenResource BodyLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_CardAlert">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Size" Value="{arc:BillingOverviewTokenResource ExpiryGlyphSize}" />
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource ExpiryGlyphMargin}" />
+        </Style>
+        <Style Selector="^:card-expiring">
+            <Style Selector="^ /template/ TextBlock#PART_CardExpiry">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_CardAlert">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+        </Style>
+        <Style Selector="^:card-expired">
+            <Style Selector="^ /template/ TextBlock#PART_CardExpiry">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_CardAlert">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+
+        <!-- Under the email text (the row is stacked), the ghost button's label lines up with the text's left edge. -->
+        <Style Selector="^ /template/ arc|Button#PART_EditEmail.stacked">
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource GhostAlignMargin}" />
+        </Style>
+
+        <!-- Invoice card -->
+        <Style Selector="^ /template/ StackPanel#PART_InvoiceTable">
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource TableInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_InvoicesEmpty">
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource EmptyInset}" />
+            <Setter Property="Spacing" Value="{arc:BillingOverviewTokenResource EmptyGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_EmptyTile">
+            <Setter Property="Width" Value="{arc:BillingOverviewTokenResource EmptyTile}" />
+            <Setter Property="Height" Value="{arc:BillingOverviewTokenResource EmptyTile}" />
+            <Setter Property="CornerRadius" Value="{arc:BillingOverviewTokenResource EmptyTileRadius}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource EmptyTileMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_EmptyGlyph">
+            <Setter Property="Size" Value="{arc:BillingOverviewTokenResource EmptyGlyphSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_EmptyTitle">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_EmptyHint">
+            <Setter Property="LineHeight" Value="{arc:BillingOverviewTokenResource BodyLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ TextBlock#PART_CardExpiry">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ TextBlock#PART_CardExpiry">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- One invoice line, or the column header (:header). Column widths come from styles so :narrow can change them. -->
+    <ControlTheme x:Key="{x:Type arc:BillingOverviewInvoiceRow}" TargetType="arc:BillingOverviewInvoiceRow">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:BillingOverviewInvoiceRow">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Divider"
+                            Height="1"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <Grid Name="PART_Layout" ColumnDefinitions="Auto,*,Auto,Auto,Auto" VerticalAlignment="Center">
+                        <TextBlock Name="PART_Date"
+                                   Text="{TemplateBinding DateText}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Name="PART_Number"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding NumberText}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Name="PART_Amount"
+                                   Grid.Column="2"
+                                   Text="{TemplateBinding AmountText}"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Right" />
+                        <Panel Name="PART_StatusCell" Grid.Column="3" VerticalAlignment="Center">
+                            <arc:Badge Name="PART_Status"
+                                       Size="Small"
+                                       Content="{TemplateBinding StatusText}"
+                                       Tone="{TemplateBinding StatusTone}" />
+                            <TextBlock Name="PART_StatusHeader"
+                                       IsVisible="False"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding StatusText}" />
+                        </Panel>
+                        <Panel Name="PART_ActionCell" Grid.Column="4" VerticalAlignment="Center">
+                            <arc:Button Name="PART_Download"
+                                        Variant="Ghost"
+                                        Size="Small">
+                                <arc:ArcGlyph Name="PART_DownloadGlyph" Data="{x:Static arc:ArcIcons.Download}" />
+                            </arc:Button>
+                        </Panel>
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="MinHeight" Value="{arc:BillingOverviewTokenResource InvoiceRowHeight}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <Style Selector="^ /template/ TextBlock#PART_Date">
+            <Setter Property="Width" Value="{arc:BillingOverviewTokenResource DateColumnWidth}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Number">
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource NumberColumnMargin}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Amount">
+            <Setter Property="Width" Value="{arc:BillingOverviewTokenResource AmountColumnWidth}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_StatusCell">
+            <Setter Property="Width" Value="{arc:BillingOverviewTokenResource StatusColumnWidth}" />
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource StatusColumnMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_ActionCell">
+            <Setter Property="Width" Value="{arc:BillingOverviewTokenResource ActionColumnWidth}" />
+            <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource ActionColumnMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Download">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="{arc:BillingOverviewTokenResource ActionColumnWidth}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_DownloadGlyph">
+            <Setter Property="Size" Value="{arc:BillingOverviewTokenResource GlyphSize}" />
+        </Style>
+
+        <Style Selector="^:muted">
+            <Style Selector="^ /template/ arc|Badge#PART_Status">
+                <Setter Property="Opacity" Value="{arc:BillingOverviewTokenResource MutedOpacity}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Amount">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ TextBlock#PART_Date">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Number">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Amount">
+                <Setter Property="Width" Value="{arc:BillingOverviewTokenResource AmountColumnWidthNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_StatusCell">
+                <Setter Property="Margin" Value="{arc:BillingOverviewTokenResource StatusColumnMarginNarrow}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:header">
+            <Setter Property="MinHeight" Value="{arc:BillingOverviewTokenResource InvoiceHeaderHeight}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Number">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            </Style>
+            <Style Selector="^ /template/ arc|Badge#PART_Status">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_StatusHeader">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Download">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

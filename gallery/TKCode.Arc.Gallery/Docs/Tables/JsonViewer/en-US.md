@@ -3,6 +3,8 @@ title: JSON viewer
 summary: A collapsible JSON tree with search, paging for long arrays, and copy value or path.
 ---
 
+<Demo name="WebhookPayload" />
+
 ## When to use
 
 - Inspecting an API response, a webhook payload, a log entry or a configuration file.
@@ -61,6 +63,8 @@ viewer.Collapse("root.data.customer");
 `IsSearchable` is on by default. `Query` filters the keys and values, opens the branches that hold a match and
 reports the number of matches in `MatchCount`.
 
+<Demo name="Search" />
+
 ```xml
 <arc:JsonViewer Json="{Binding Payload}"
                 Query="{Binding SearchText, Mode=TwoWay}"
@@ -75,6 +79,8 @@ viewer.PreviousMatch();
 ### Long arrays
 
 `PageSize` sets how many children a branch shows at once. A "Show more" row loads the next page.
+
+<Demo name="LongArrays" />
 
 ```xml
 <arc:JsonViewer Json="{Binding LargeCatalog}" PageSize="50" />
@@ -91,6 +97,12 @@ viewer.RootName = "payload";
 viewer.Copied += (_, e) => status.Text = $"Copied {e.Kind} of {e.Path}";
 viewer.CurrentRowChanged += (_, e) => current.Text = $"{e.Path} ({e.ValueType})";
 ```
+
+### Narrow
+
+At 420px and below, indentation tightens and the path bar drops the type.
+
+<Demo name="Narrow" />
 
 ## API reference
 

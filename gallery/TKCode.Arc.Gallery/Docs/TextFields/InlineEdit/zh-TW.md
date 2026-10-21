@@ -1,8 +1,10 @@
 ---
 title: 原地編輯
 summary: 原地重新命名：文字變為欄位，位置不移動。
-source-hash: e6c72a8e61b1
+source-hash: 645c78156d49
 ---
+
+<Demo name="Rename" />
 
 ## 何時使用
 
@@ -54,6 +56,8 @@ title.SaveFailed += (_, e) => log.Text = $"儲存失敗：{e.Error.Message}";
 
 `Variant` 設定視覺層級。`Title` 是名稱與標題的預設值，`Body` 適合說明文字。設定 `IsMultiline` 後，文字會自動換行，欄位高度隨之增加。Enter 仍然是儲存，Shift+Enter 則插入換行。
 
+<Demo name="Multiline" />
+
 ```xml
 <arc:InlineEdit Label="說明"
                 Variant="Body"
@@ -71,6 +75,12 @@ title.SaveFailed += (_, e) => log.Text = $"儲存失敗：{e.Error.Message}";
                 Value="{Binding ProjectName}"
                 HeadingLevel="2" />
 ```
+
+### 空值
+
+在有值之前，預留位置文字會保留這一行。
+
+<Demo name="Empty" />
 
 ## API 參考
 

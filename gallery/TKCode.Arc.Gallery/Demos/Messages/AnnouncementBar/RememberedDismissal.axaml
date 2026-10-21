@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AnnouncementBarRememberedDismissalDemo">
+    <StackPanel Spacing="12">
+        <Border CornerRadius="18"
+                BorderThickness="1"
+                ClipToBounds="True"
+                Background="{arc:ArcDesignTokenResource Background}"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <StackPanel>
+                <arc:AnnouncementBar x:Name="Campaign"
+                                     DismissalKey="demo-campaign"
+                                     Closed="OnClosed">
+                    <arc:AnnouncementBar.Storage>
+                        <arc:InMemoryMessageStorage />
+                    </arc:AnnouncementBar.Storage>
+                    <arc:AnnouncementBar.Messages>
+                        <arc:Announcement Id="campaign" Message="Dismiss me: the choice is remembered under a key." />
+                    </arc:AnnouncementBar.Messages>
+                </arc:AnnouncementBar>
+                <TextBlock Text="Page content" Margin="20,24" Opacity="0.6" />
+            </StackPanel>
+        </Border>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Forget dismissal" Size="Small" Variant="Secondary" Click="OnForgetClick" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   Text="Events appear here."
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

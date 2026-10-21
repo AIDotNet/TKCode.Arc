@@ -6,10 +6,11 @@ using Avalonia;
 namespace TKCode.Arc.Gallery.Docs;
 
 /// <summary>
-/// The Code tab's Markdown. A component's page comes in the requested language, or in en-US with a notice when it
+/// The docs pages' Markdown. A component's page comes in the requested language, or in en-US with a notice when it
 /// has no translation; each <c>&lt;!-- api: Type --&gt;</c> line becomes that type's API reference, built from the
 /// generated <see cref="GalleryDocData"/> (descriptions translated through <c>Docs/Api/&lt;language&gt;.xlf</c>,
-/// defaults read from the Avalonia property metadata).
+/// defaults read from the Avalonia property metadata), and each <c>&lt;Demo name="..." /&gt;</c> line becomes a live
+/// example (<see cref="GalleryDemos"/>).
 /// </summary>
 public static partial class GalleryDocs
 {
@@ -30,8 +31,30 @@ public static partial class GalleryDocs
     /// <summary>Whether <paramref name="className"/> has a page (in any language).</summary>
     public static bool Has(string className) => s_pages.ContainsKey(className);
 
+    /// <summary>Whether <paramref name="className"/>'s en-US page shows live examples, so it is the component's whole page.</summary>
+    public static bool HasDemos(string className)
+        => s_pages.TryGetValue(className, out var pages) && Find(pages, SourceLanguage) is { } page && DemoTag().IsMatch(page.Body);
+
+    /// <summary>The demos <paramref name="className"/>'s page in <paramref name="language"/> shows, in order (<c>Component.Name</c>).</summary>
+    public static IReadOnlyList<string> DemoIds(string className, string language)
+    {
+        if (!s_pages.TryGetValue(className, out var pages))
+        {
+            return [];
+        }
+        var page = Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0];
+        return DemoTag().Matches(page.Body).Select(m => DemoId(className, m.Groups[1].Value)).ToArray();
+    }
+
     /// <summary>Every component with a page.</summary>
     public static IEnumerable<string> ClassNames => s_pages.Keys;
+
+    /// <summary>
+    /// The NuGet package <paramref name="className"/> ships in (its assembly, such as <c>TKCode.Arc</c> or
+    /// <c>TKCode.Arc.Illustrations</c>), from the type its page documents; null when the page documents no such type.
+    /// </summary>
+    public static string? PackageOf(string className)
+        => s_types.TryGetValue(className, out var type) ? type.Owner.Assembly.GetName().Name : null;
 
     /// <summary>The languages <paramref name="className"/>'s page is written in, en-US first.</summary>
     public static IReadOnlyList<string> Languages(string className)
@@ -63,8 +86,31 @@ public static partial class GalleryDocs
             markdown.Append("> ").Append(text.Outdated).Append("\n\n");
         }
         markdown.Append(Directive().Replace(page.Body, match => ApiReference(match.Groups[1].Value, language).TrimEnd()));
-        return new GalleryDoc(page.ClassName, page.Language, language, page.Title, page.Summary, markdown.ToString(), page.IsOutdated);
+        var body = markdown.ToString();
+        return new GalleryDoc(page.ClassName, page.Language, language, page.Title, page.Summary,
+            DemoTag().Replace(body, match => DemoBlock(className, match, body)),
+            DemoTag().Replace(body, match => DemoSource(className, match.Groups[1].Value)),
+            page.IsOutdated);
     }
+
+    /// <summary>
+    /// The block StreamMark renders as a live example (<c>GalleryDemoPlugin</c>). Its block parser does not end a
+    /// component at a self-closing tag, so the tag is closed on the same line. A demo above the first section is the
+    /// page's preview.
+    /// </summary>
+    private static string DemoBlock(string className, Match match, string markdown)
+    {
+        var hero = !markdown.AsSpan(0, match.Index).Contains("\n## ", StringComparison.Ordinal) && !markdown.StartsWith("## ", StringComparison.Ordinal);
+        return $"<demo name=\"{DemoId(className, match.Groups[1].Value)}\"{(hero ? " hero=\"true\"" : string.Empty)}></demo>";
+    }
+
+    /// <summary>A demo in copied Markdown: its files as code blocks (AXAML, then the code-behind).</summary>
+    private static string DemoSource(string className, string name)
+        => GalleryDemos.Get(DemoId(className, name)) is { } demo
+            ? string.Join("\n\n", demo.Files.Select(f => $"```{(f.Language == "axaml" ? "xml" : f.Language)}\n{f.Source}\n```"))
+            : string.Empty;
+
+    private static string DemoId(string className, string name) => name.Contains('.', StringComparison.Ordinal) ? name : $"{className}.{name}";
 
     /// <summary>The API reference of <paramref name="typeName"/> as Markdown: a property table, an event table, its
     /// pseudo-classes and the base class it inherits the rest from.</summary>
@@ -176,6 +222,10 @@ public static partial class GalleryDocs
 
     [GeneratedRegex(@"^[ \t]*<!--[ \t]*api:[ \t]*([A-Za-z_][A-Za-z0-9_]*)[ \t]*-->[ \t]*$", RegexOptions.Multiline)]
     private static partial Regex Directive();
+
+    // The same pattern as the generator's DocPage, which checks that every demo exists.
+    [GeneratedRegex(@"^[ \t]*<Demo[ \t]+name=""([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)""[ \t]*/>[ \t]*$", RegexOptions.Multiline)]
+    private static partial Regex DemoTag();
 
     /// <summary>The words the generated parts of a page are made of, per language (en-US for the rest).</summary>
     private sealed record GalleryDocText(string Property, string Type, string Default, string Description, string Event,

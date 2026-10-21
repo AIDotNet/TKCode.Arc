@@ -3,6 +3,8 @@ title: Multi-select
 summary: Select several values while keeping the field readable.
 ---
 
+<Demo name="Chips" />
+
 ## When to use
 
 - Compact multi-value choices such as labels or owners, picked from a fixed list.
@@ -57,6 +59,8 @@ labels.SelectionChanged += (_, _) => Console.WriteLine(string.Join(", ", labels.
 Picked values appear as chips in the field. `MaxVisibleChips` sets how many show before the rest fold into a `+N`
 chip. The default is 2.
 
+<Demo name="OneVisibleChip" />
+
 ```xml
 <arc:MultiSelect Label="Owners"
                  MaxVisibleChips="1"
@@ -68,6 +72,8 @@ chip. The default is 2.
 
 `IsSearchable` adds a search field at the top of the menu. `SearchPlaceholder` sets its hint. This is an addition
 to Arc, whose menu has no search field.
+
+<Demo name="Searchable" />
 
 ```xml
 <arc:MultiSelect Label="Cities"
@@ -92,6 +98,8 @@ labels.UnselectAll();
 ### Placeholder and disabled state
 
 `Placeholder` is shown while nothing is selected. A disabled field ignores input and hides the clear button.
+
+<Demo name="Disabled" />
 
 ```xml
 <arc:MultiSelect Label="Reviewers" Placeholder="Select options" IsEnabled="False" />

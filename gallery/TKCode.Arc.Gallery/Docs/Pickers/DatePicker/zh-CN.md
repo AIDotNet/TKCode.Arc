@@ -1,8 +1,10 @@
 ---
 title: 日期选择器
 summary: 选择日期，同时不丢失上下文。
-source-hash: 786fcc258ea9
+source-hash: b37e3fd23cd1
 ---
+
+<Demo name="DateField" />
 
 ## 何时使用
 
@@ -31,39 +33,25 @@ source-hash: 786fcc258ea9
 
 `MinDate` 和 `MaxDate` 限定可以选择的日期范围。`DisabledDates` 是一个 `Func<DateOnly, bool>`，对需要禁止选择的日期返回 `true`。这些限制同时作用于日历和手动输入的日期。输入的日期超出范围时会被拒绝：字段会抖动，并恢复为上一个有效值。
 
-```csharp
-picker.MinDate = today;
-picker.MaxDate = today.AddDays(56);
-picker.DisabledDates = d => d.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
-picker.ShowToday = true;
-```
+<Demo name="LimitsAndDisabledDays" />
 
 ### 尺寸
 
 `Size` 决定字段高度：`Small` 为 36，`Medium` 为 44（Arc 的默认外观），`Large` 为 50。
 
-```xml
-<arc:DatePicker Label="小" Size="Small" />
-<arc:DatePicker Label="大" Size="Large" />
-```
+<Demo name="Sizes" />
 
 ### 文化与格式
 
 `Culture` 控制解析方式、月份名称和星期缩写。`DisplayFormat` 接受 .NET 日期格式字符串，会替换该文化的默认显示格式。
 
-```xml
-<arc:DatePicker Label="德语" Culture="de-DE" FirstDayOfWeek="Monday" />
-<arc:DatePicker Label="ISO 格式" DisplayFormat="yyyy-MM-dd" />
-```
+<Demo name="CulturesAndFormats" />
 
 ### 错误与禁用状态
 
 `ErrorMessage` 非空时字段即为无效态。禁用的字段会淡化为一半透明度。
 
-```xml
-<arc:DatePicker Label="发票日期" ErrorMessage="请选择早于截止日期的日期。" />
-<arc:DatePicker Label="已锁定" IsEnabled="False" />
-```
+<Demo name="InvalidAndDisabled" />
 
 ### 响应变化
 

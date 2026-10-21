@@ -3,6 +3,8 @@ title: Shortcut recorder
 summary: Record key combinations into key caps, with conflict warnings, Kbd, and a searchable cheatsheet.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Keyboard shortcut settings where users remap actions.
@@ -32,6 +34,8 @@ Click the field or press Enter, then press the combination. The recorder stores 
 `Value` holds the recorded `KeyGesture`, or `null` when there is no shortcut. `ResetValue` is the value that the reset
 button returns to. In the sample it is set to the default shortcut.
 
+<Demo name="Empty" />
+
 ```csharp
 var palette = new ShortcutRecorder
 {
@@ -49,27 +53,26 @@ create a gesture from that text.
 `Bindings` lists the shortcuts that are already in use. Recording one of them shows a conflict with the buttons
 Use anyway and Cancel. Use anyway replaces the binding and reports it in the event.
 
-```csharp
-var quickSearch = new ShortcutRecorder { Label = "Quick search" };
-quickSearch.Bindings.Add(new ShortcutBinding(ShortcutFormatter.Parse("mod+s", ShortcutPlatform.Other), "Save"));
-quickSearch.Bindings.Add(new ShortcutBinding(ShortcutFormatter.Parse("mod+f", ShortcutPlatform.Other), "Find"));
-```
+<Demo name="Conflicts" />
 
 Reserved combinations such as close tab or copy warn too. Set `IsReservedWarningEnabled` to `False` to turn that off.
+
+<Demo name="Reserved" />
 
 ### Modifiers and platform
 
 `IsModifierRequired="False"` accepts single keys. Function keys are always allowed. `Platform` sets the cap style
 for `Mac` or `Other`. By default the recorder uses the running platform.
 
-```xml
-<arc:ShortcutRecorder Label="Next conversation" IsModifierRequired="False" />
-<arc:ShortcutRecorder Label="Mac" Platform="Mac" />
-```
+<Demo name="NoModifier" />
+
+<Demo name="Platforms" />
 
 ### Events
 
 `ValueChanged` reports the old and new gesture. After Use anyway, `Replaced` holds the binding that was taken.
+
+<Demo name="Events" />
 
 ```csharp
 recorder.ValueChanged += (_, e) =>
@@ -78,6 +81,32 @@ recorder.ValueChanged += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue}{replaced}");
 };
 ```
+
+### Hidden label
+
+`IsLabelVisible="False"` keeps the label for screen readers only.
+
+<Demo name="HiddenLabel" />
+
+### Description
+
+`Description` is helper copy under the field. The recording hint, the modifier nudge and conflicts take its place while
+they apply.
+
+<Demo name="Description" />
+
+### Disabled
+
+A disabled recorder is faded, on the muted surface, and out of the tab order.
+
+<Demo name="Disabled" />
+
+### Keyboard
+
+- Enter or Space starts recording. Escape cancels. Backspace or Delete clears the shortcut, also when not recording.
+- Tab stops recording and moves focus without recording Tab. Leaving the field stops recording.
+- Keys are read from the physical key, so Alt+K records K, not a typed symbol. Chords that the system keeps, such as
+  ⌘Tab, Alt+Tab and Win key combinations, never reach the app.
 
 ## API reference
 

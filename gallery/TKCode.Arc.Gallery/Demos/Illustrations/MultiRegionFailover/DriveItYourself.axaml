@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiRegionFailoverDriveItYourselfDemo">
+    <StackPanel Spacing="12">
+        <arc:MultiRegionFailover x:Name="Failover"
+                                 IsAutomatic="False"
+                                 PrimaryRegionChanged="OnPrimaryRegionChanged" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Fail us-east-1" Variant="Danger" Size="Small" Click="OnFailEastClick" />
+            <arc:Button Content="Recover us-east-1" Variant="Secondary" Size="Small" Click="OnRecoverEastClick" />
+            <arc:Button Content="Fail eu-west-1" Variant="Danger" Size="Small" Click="OnFailWestClick" />
+            <arc:Button Content="Recover eu-west-1" Variant="Secondary" Size="Small" Click="OnRecoverWestClick" />
+            <TextBlock x:Name="Primary"
+                       Text="Primary: us-east-1"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

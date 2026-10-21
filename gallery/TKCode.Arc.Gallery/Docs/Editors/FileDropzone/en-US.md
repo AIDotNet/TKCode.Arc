@@ -3,6 +3,8 @@ title: File dropzone
 summary: A generous target for dropping one or more files.
 ---
 
+<Demo name="Upload" />
+
 ## When to use
 
 - Attachments and uploads where the user should see each file, its progress and any failure.
@@ -35,23 +37,13 @@ types, and `MaxFiles` and `MaxFileSize` limit the count and the size per file.
 `Accept` takes extensions and MIME patterns. A refused type, or too many files, shakes the target and shows the error.
 A file over `MaxFileSize` fails and is not uploaded. `MaxFileSize` is in bytes.
 
-```xml
-<arc:FileDropzone Label="Add images"
-                  Description="PNG, JPG or WebP, up to 2 MB each"
-                  Accept="image/*"
-                  MaxFileSize="2097152"
-                  MaxFiles="3" />
-```
+<Demo name="Images" />
 
 ### Single file
 
 With `AllowMultiple` set to `False`, a new file replaces the current one.
 
-```xml
-<arc:FileDropzone Label="Add a contract"
-                  Accept=".pdf"
-                  AllowMultiple="False" />
-```
+<Demo name="SingleFile" />
 
 ### Upload handler
 
@@ -75,6 +67,8 @@ zone.FilesChanged += (_, e) =>
 Without an upload handler, the app drives each row. Call `ReportProgress`, `CompleteUpload` and `FailUpload`, or set
 the item's `Status` and `Progress` directly. `Retry` and `Remove` act on a row.
 
+<Demo name="AppDriven" />
+
 ```csharp
 zone.ReportProgress(item, 40);
 zone.CompleteUpload(item);
@@ -86,10 +80,7 @@ zone.FailUpload(item, "The server closed the connection", retryable: true);
 `ListPlacement="Inside"` shows the rows within the target's edge. With `CompactAt`, the prompt folds to a slim bar
 once that many rows are listed.
 
-```xml
-<arc:FileDropzone ListPlacement="Inside"
-                  CompactAt="2" />
-```
+<Demo name="ListInside" />
 
 ## API reference
 

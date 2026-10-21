@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IconMorphSizesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <StackPanel Spacing="6">
+            <arc:Button Width="36"
+                        Height="36"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Open menu"
+                        Tag="Close menu"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Menu" IconSize="16" />
+            </arc:Button>
+            <TextBlock Text="Menu"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="44"
+                        Height="44"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Open menu"
+                        Tag="Close menu"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Menu" />
+            </arc:Button>
+            <TextBlock Text="Menu"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="52"
+                        Height="52"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Open menu"
+                        Tag="Close menu"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Menu" IconSize="32" />
+            </arc:Button>
+            <TextBlock Text="Menu"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="36"
+                        Height="36"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Play"
+                        Tag="Pause"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Play" IconSize="16" />
+            </arc:Button>
+            <TextBlock Text="Play"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:Button Width="52"
+                        Height="52"
+                        Padding="0"
+                        Variant="Ghost"
+                        AutomationProperties.Name="Play"
+                        Tag="Pause"
+                        Click="OnToggleClick">
+                <arc:IconMorph Kind="Play" IconSize="32" />
+            </arc:Button>
+            <TextBlock Text="Play"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

@@ -102,9 +102,11 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public static readonly StyledProperty<bool> IsRangeProperty =
         AvaloniaProperty.Register<Slider, bool>(nameof(IsRange));
 
+    /// <summary>Lower end of the range when IsRange is true (two-way, default 0).</summary>
     public static readonly StyledProperty<double> LowerValueProperty =
         AvaloniaProperty.Register<Slider, double>(nameof(LowerValue), 0, defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Upper end of the range when IsRange is true (two-way, default 100).</summary>
     public static readonly StyledProperty<double> UpperValueProperty =
         AvaloniaProperty.Register<Slider, double>(nameof(UpperValue), 100, defaultBindingMode: BindingMode.TwoWay);
 
@@ -120,9 +122,11 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public static readonly StyledProperty<bool> IsValueVisibleProperty =
         AvaloniaProperty.Register<Slider, bool>(nameof(IsValueVisible), true);
 
+    /// <summary>Accessible name of the lower range thumb; when null it is the Label with ", minimum" appended.</summary>
     public static readonly StyledProperty<string?> LowerThumbNameProperty =
         AvaloniaProperty.Register<Slider, string?>(nameof(LowerThumbName));
 
+    /// <summary>Accessible name of the upper range thumb; when null it is the Label with ", maximum" appended.</summary>
     public static readonly StyledProperty<string?> UpperThumbNameProperty =
         AvaloniaProperty.Register<Slider, string?>(nameof(UpperThumbName));
 
@@ -130,6 +134,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public static readonly StyledProperty<object?> StartContentProperty =
         AvaloniaProperty.Register<Slider, object?>(nameof(StartContent));
 
+    /// <summary>Content after the track, such as an icon or a button.</summary>
     public static readonly StyledProperty<object?> EndContentProperty =
         AvaloniaProperty.Register<Slider, object?>(nameof(EndContent));
 
@@ -144,14 +149,19 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public bool IsRange { get => GetValue(IsRangeProperty); set => SetValue(IsRangeProperty, value); }
+    /// <inheritdoc cref="LowerValueProperty"/>
     public double LowerValue { get => GetValue(LowerValueProperty); set => SetValue(LowerValueProperty, value); }
+    /// <inheritdoc cref="UpperValueProperty"/>
     public double UpperValue { get => GetValue(UpperValueProperty); set => SetValue(UpperValueProperty, value); }
     public int MinStepsBetweenThumbs { get => GetValue(MinStepsBetweenThumbsProperty); set => SetValue(MinStepsBetweenThumbsProperty, value); }
     public Func<double, string>? ValueFormatter { get => GetValue(ValueFormatterProperty); set => SetValue(ValueFormatterProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
+    /// <inheritdoc cref="LowerThumbNameProperty"/>
     public string? LowerThumbName { get => GetValue(LowerThumbNameProperty); set => SetValue(LowerThumbNameProperty, value); }
+    /// <inheritdoc cref="UpperThumbNameProperty"/>
     public string? UpperThumbName { get => GetValue(UpperThumbNameProperty); set => SetValue(UpperThumbNameProperty, value); }
     public object? StartContent { get => GetValue(StartContentProperty); set => SetValue(StartContentProperty, value); }
+    /// <inheritdoc cref="EndContentProperty"/>
     public object? EndContent { get => GetValue(EndContentProperty); set => SetValue(EndContentProperty, value); }
 
     private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
@@ -278,7 +288,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     private double Settle(int index, double input)
     {
-        var snapped = Snap(Math.Clamp(input, Minimum, Maximum));
+        var snapped = Snap(ClampToRange(input));
         var low = LowOf(index);
         var high = HighOf(index);
         return high < low ? low : Math.Clamp(snapped, low, high);
@@ -286,18 +296,22 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     internal string FormatValue(double value) => ValueFormatter?.Invoke(value) ?? SliderMath.Format(value, Decimals);
 
+    // Minimum can briefly exceed Maximum while XAML sets them one by one (Minimum="360" before Maximum="900"): RangeBase
+    // coerces Maximum only after Minimum's change is reported, and Math.Clamp throws when min > max.
+    private double ClampToRange(double value) => Math.Clamp(value, Minimum, Math.Max(Minimum, Maximum));
+
     private void ReadValues()
     {
         if (IsRange)
         {
-            var low = Math.Clamp(LowerValue, Minimum, Maximum);
-            var high = Math.Clamp(UpperValue, Minimum, Maximum);
+            var low = ClampToRange(LowerValue);
+            var high = ClampToRange(UpperValue);
             _values[0] = Math.Min(low, high);
             _values[1] = Math.Max(low, high);
         }
         else
         {
-            _values[0] = Math.Clamp(Value, Minimum, Maximum);
+            _values[0] = ClampToRange(Value);
             _values[1] = _values[0];
         }
     }

@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ScrollAreaHorizontalStripDemo">
+    <Border HorizontalAlignment="Left"
+            BorderThickness="1"
+            CornerRadius="18"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:ScrollArea Orientation="Horizontal"
+                        HorizontalSnapPointsType="Mandatory"
+                        CornerRadius="18"
+                        Label="Cards">
+            <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                <StackPanel.Styles>
+                    <Style Selector="Border.tile">
+                        <Setter Property="Width" Value="160" />
+                        <Setter Property="Height" Value="100" />
+                        <Setter Property="Padding" Value="14" />
+                        <Setter Property="CornerRadius" Value="18" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+                    </Style>
+                    <Style Selector="Border.tile > TextBlock">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="FontWeight" Value="Medium" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                    </Style>
+                </StackPanel.Styles>
+                <Border Classes="tile"><TextBlock Text="Card 1" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 2" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 3" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 4" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 5" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 6" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 7" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 8" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 9" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 10" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 11" /></Border>
+                <Border Classes="tile"><TextBlock Text="Card 12" /></Border>
+            </StackPanel>
+        </arc:ScrollArea>
+    </Border>
+</UserControl>

@@ -26,6 +26,30 @@ public class ElasticSliderTests
     }
 
     [AvaloniaFact]
+    public void A_Minimum_Above_The_Current_Maximum_Can_Be_Set_First()
+    {
+        // The XAML loader sets attributes in order inside BeginInit / EndInit, where RangeBase does not coerce yet.
+        var slider = new ElasticSlider { Label = "Width" };
+        Should.NotThrow(() =>
+        {
+            slider.BeginInit();
+            slider.Minimum = 360;
+            slider.Maximum = 900;
+            slider.Value = 600;
+            slider.EndInit();
+        });
+        var (_, window) = Show(slider);
+        try
+        {
+            slider.Value.ShouldBe(600);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Dragging_Past_The_End_Stretches_And_Release_Springs_Back()
     {
         var (slider, window) = Show(new ElasticSlider { Label = "Volume", Value = 50 }, ArcMotionLevel.Full);

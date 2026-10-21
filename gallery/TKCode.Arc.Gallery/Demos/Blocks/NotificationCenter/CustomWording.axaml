@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NotificationCenterCustomWordingDemo">
+    <!-- The margin keeps the badge, which overhangs the bell by 5px, inside the demo. -->
+    <arc:NotificationCenter HorizontalAlignment="Center" Margin="0,6,0,0" Label="Inbox">
+        <arc:NotificationCenter.Labels>
+            <arc:NotificationCenterLabels All="Everything"
+                                          Unread="New"
+                                          MarkAllRead="Mark everything read"
+                                          ReadCount="{}{0} seen"
+                                          ClearRead="Remove seen"
+                                          EmptyTitle="Inbox zero"
+                                          EmptyDescription="Nothing needs you right now." />
+        </arc:NotificationCenter.Labels>
+        <arc:NotificationItem Id="mention"
+                              Title="Omar Haddad mentioned you"
+                              Description="“Can you take the onboarding copy?”"
+                              Time="3m"
+                              ActorName="Omar Haddad"
+                              ActorSource="https://i.pravatar.cc/160?img=59" />
+        <arc:NotificationItem Id="export"
+                              Title="Your export is ready to download"
+                              Time="1h"
+                              IsRead="True" />
+    </arc:NotificationCenter>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 密码强度
 summary: 在输入新密码时显示其强度。
-source-hash: 9d357e09500b
+source-hash: e5826be75116
 ---
+
+<Demo name="Create" />
 
 ## 何时使用
 
@@ -57,10 +59,7 @@ create.StrengthChanged += (_, e) =>
 
 将规则列表传给 `Rules`。可以用不同的最小长度构建默认规则，也可以编写自己的 `PasswordRule`，包含判定条件以及可选的剩余数量。
 
-```csharp
-custom.Rules = PasswordRules.Create(minLength: 16);
-custom.ShortLength = 10;
-```
+<Demo name="CustomRules" />
 
 ```csharp
 var rules = new List<PasswordRule>
@@ -76,9 +75,7 @@ var rules = new List<PasswordRule>
 
 设置 `ErrorMessage` 可将字段标记为无效。每出现一个新错误，字段会抖动一次。
 
-```csharp
-withError.ErrorMessage = withError.Level < 3 ? "请设置更强的密码。" : null;
-```
+<Demo name="Errors" />
 
 ## API 参考
 

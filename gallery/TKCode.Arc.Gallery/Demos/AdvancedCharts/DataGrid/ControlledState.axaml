@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DataGridControlledStateDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button x:Name="SortButton" Content="Sort by ARR" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="FilterButton" Content="Europe only" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="DensityButton" Content="Compact rows" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="GroupButton" Content="Group by stage" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="ResetButton" Content="Reset view" Variant="Ghost" Size="Small" />
+        </WrapPanel>
+        <arc:DataGrid x:Name="AccountsGrid" Label="Accounts" MaxViewportHeight="320">
+            <arc:DataGridColumn Key="account" Header="Account" Width="170" />
+            <arc:DataGridColumn Key="region" Header="Region" Type="Select" Width="140" />
+            <arc:DataGridColumn Key="stage" Header="Stage" Type="Select" Width="130" />
+            <arc:DataGridColumn Key="arr" Header="ARR" Type="Currency" Width="120" />
+        </arc:DataGrid>
+        <TextBlock x:Name="State" FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}" FontSize="12" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CancelFlowInDialogDemo">
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:Button HorizontalAlignment="Center"
+                    Variant="Secondary"
+                    Content="Cancel subscription"
+                    Command="{Binding #CancelDialog.OpenCommand}" />
+        <TextBlock x:Name="Status"
+                   HorizontalAlignment="Center"
+                   Text="Studio plan · renews on Nov 1, 2026"
+                   FontSize="14"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:Dialog x:Name="CancelDialog"
+                    Title="Cancel subscription"
+                    Description="Larkspur Studio · Studio plan, 6 seats"
+                    Size="Large"
+                    Opened="OnOpened">
+            <arc:CancelFlow x:Name="Flow"
+                            Appearance="Plain"
+                            PlanName="Studio"
+                            KeepPlanRequested="OnKeepPlanRequested"
+                            OfferAccepted="OnOfferAccepted"
+                            CancellationConfirmed="OnCancellationConfirmed"
+                            ReactivateRequested="OnReactivateRequested">
+                <arc:CancelFlow.DefaultOffer>
+                    <arc:CancelFlowOffer Title="Have a month on us"
+                                         Description="Stay on Studio for another month at no charge, then decide. Nothing changes for your team in the meantime."
+                                         AcceptLabel="Claim a free month"
+                                         AcceptedTitle="Your free month is on"
+                                         AcceptedDescription="November is on us. Your next invoice is on Dec 1, 2026." />
+                </arc:CancelFlow.DefaultOffer>
+                <arc:CancelFlow.Losses>
+                    <x:String>Shared projects become read-only for all 6 members</x:String>
+                    <x:String>Custom domains and single sign-on stop working</x:String>
+                </arc:CancelFlow.Losses>
+            </arc:CancelFlow>
+        </arc:Dialog>
+    </StackPanel>
+</UserControl>

@@ -3,6 +3,8 @@ title: Text morph
 summary: Morph a label into its next state, letter by letter.
 ---
 
+<Demo name="Status" />
+
 ## When to use
 
 - A short status word that changes, such as "Follow" and "Following" or "Save" and "Saved".
@@ -51,9 +53,7 @@ next.Click += (_, _) => status.Text = words[index = (index + 1) % words.Length];
 - `PrefixSuffix` keeps the shared start and end in place and replaces only the middle. Use it for prices and
   counters.
 
-```xml
-<arc:TextMorph Text="$12 / month" FontSize="20" Matching="PrefixSuffix" />
-```
+<Demo name="PrefixAndSuffix" />
 
 ### Font
 

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="clr-namespace:System.Collections.Generic;assembly=System.Collections"
+             x:Class="TKCode.Arc.Gallery.Demos.MoneyInputDescriptionAndErrorDemo">
+    <StackPanel Spacing="20">
+        <arc:MoneyInput Label="Deposit"
+                        Description="Held until the booking is confirmed."
+                        Maximum="500"
+                        Width="380"
+                        HorizontalAlignment="Left">
+            <arc:MoneyInput.QuickAddAmounts>
+                <generic:List x:TypeArguments="x:Decimal">
+                    <x:Decimal>100</x:Decimal>
+                    <x:Decimal>250</x:Decimal>
+                </generic:List>
+            </arc:MoneyInput.QuickAddAmounts>
+        </arc:MoneyInput>
+        <arc:MoneyInput Label="Invoice total"
+                        Description="Charged when the order ships."
+                        ErrorMessage="Enter the amount on the invoice."
+                        Width="380"
+                        HorizontalAlignment="Left">
+            <arc:MoneyInput.QuickAddAmounts>
+                <generic:List x:TypeArguments="x:Decimal" />
+            </arc:MoneyInput.QuickAddAmounts>
+        </arc:MoneyInput>
+    </StackPanel>
+</UserControl>

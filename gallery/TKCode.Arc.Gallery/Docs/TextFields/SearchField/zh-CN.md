@@ -1,8 +1,10 @@
 ---
 title: 搜索框
 summary: 易于识别的搜索入口，并带有清晰的操作提示。
-source-hash: 88552bbca4f4
+source-hash: dffe9e4a01f2
 ---
+
+<Demo name="FilterList" />
 
 ## 何时使用
 
@@ -74,10 +76,7 @@ search.Clear();
 
 `Size` 设置外框高度：`Small` 为 36，`Medium`（默认）为 44，`Large` 为 50。
 
-```xml
-<arc:SearchField Label="小" Size="Small" Placeholder="搜索" />
-<arc:SearchField Label="大" Size="Large" Text="路线图" />
-```
+<Demo name="Sizes" />
 
 ## API 参考
 

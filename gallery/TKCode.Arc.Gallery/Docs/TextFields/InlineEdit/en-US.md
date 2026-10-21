@@ -3,6 +3,8 @@ title: Inline edit
 summary: Rename in place: the text becomes a field without moving.
 ---
 
+<Demo name="Rename" />
+
 ## When to use
 
 - A name, title or description that is read often and changed rarely, such as a project name.
@@ -58,6 +60,8 @@ title.SaveFailed += (_, e) => log.Text = $"Save failed: {e.Error.Message}";
 With `IsMultiline` set, the text wraps and the field grows in height. Enter still saves, and Shift+Enter adds a
 line break.
 
+<Demo name="Multiline" />
+
 ```xml
 <arc:InlineEdit Label="Description"
                 Variant="Body"
@@ -75,6 +79,12 @@ line break.
                 Value="{Binding ProjectName}"
                 HeadingLevel="2" />
 ```
+
+### Empty
+
+A placeholder keeps the line until there is a value.
+
+<Demo name="Empty" />
 
 ## API reference
 

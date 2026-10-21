@@ -35,6 +35,7 @@ public class ContextMenu : ContentControl
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<ContextMenu, string?>(nameof(Label), "Context menu");
 
+    /// <summary>Whether the menu is open; binds two-way by default.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<ContextMenu, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
 
@@ -42,18 +43,23 @@ public class ContextMenu : ContentControl
     public static readonly StyledProperty<bool> OpensOnClickProperty =
         AvaloniaProperty.Register<ContextMenu, bool>(nameof(OpensOnClick), true);
 
+    /// <summary>Data items generated as menu rows; <see cref="ItemTemplate"/> defines how each row looks.</summary>
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<ContextMenu, IEnumerable?>(nameof(ItemsSource));
 
+    /// <summary>Template that builds each menu row from an <see cref="ItemsSource"/> item.</summary>
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<ContextMenu, IDataTemplate?>(nameof(ItemTemplate));
 
+    /// <summary>Raised when a menu row is clicked; the argument carries the clicked entry and item.</summary>
     public static readonly RoutedEvent<MenuEntryClickedEventArgs> ItemClickedEvent =
         RoutedEvent.Register<ContextMenu, MenuEntryClickedEventArgs>(nameof(ItemClicked), RoutingStrategies.Bubble);
 
+    /// <summary>Raised when the menu opens.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> OpenedEvent =
         RoutedEvent.Register<ContextMenu, RoutedEventArgs>(nameof(Opened), RoutingStrategies.Direct);
 
+    /// <summary>Raised when the menu closes.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> ClosedEvent =
         RoutedEvent.Register<ContextMenu, RoutedEventArgs>(nameof(Closed), RoutingStrategies.Direct);
 
@@ -67,6 +73,7 @@ public class ContextMenu : ContentControl
         set => SetValue(LabelProperty, value);
     }
 
+    /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
     {
         get => GetValue(IsOpenProperty);
@@ -79,12 +86,14 @@ public class ContextMenu : ContentControl
         set => SetValue(OpensOnClickProperty, value);
     }
 
+    /// <inheritdoc cref="ItemsSourceProperty"/>
     public IEnumerable? ItemsSource
     {
         get => GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    /// <inheritdoc cref="ItemTemplateProperty"/>
     public IDataTemplate? ItemTemplate
     {
         get => GetValue(ItemTemplateProperty);
@@ -97,18 +106,21 @@ public class ContextMenu : ContentControl
     /// <summary>The menu surface.</summary>
     public MenuSurface Menu { get; }
 
+    /// <summary>Occurs when a menu row is clicked.</summary>
     public event EventHandler<MenuEntryClickedEventArgs>? ItemClicked
     {
         add => AddHandler(ItemClickedEvent, value);
         remove => RemoveHandler(ItemClickedEvent, value);
     }
 
+    /// <summary>Occurs when the menu opens.</summary>
     public event EventHandler<RoutedEventArgs>? Opened
     {
         add => AddHandler(OpenedEvent, value);
         remove => RemoveHandler(OpenedEvent, value);
     }
 
+    /// <summary>Occurs when the menu closes.</summary>
     public event EventHandler<RoutedEventArgs>? Closed
     {
         add => AddHandler(ClosedEvent, value);

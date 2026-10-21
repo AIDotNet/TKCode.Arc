@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:pages="using:TKCode.Arc.Gallery.Pages"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageCompareBeforeAndAfterDemo">
+    <StackPanel Spacing="12">
+        <arc:ImageCompare PositionChanged="OnPositionChanged">
+            <arc:ImageCompare.Before>
+                <pages:MediaArt Scene="0" Graded="False" />
+            </arc:ImageCompare.Before>
+            <arc:ImageCompare.After>
+                <pages:MediaArt Scene="0" />
+            </arc:ImageCompare.After>
+        </arc:ImageCompare>
+        <TextBlock x:Name="Readout"
+                   Text="Position 50%"
+                   FontSize="13"
+                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

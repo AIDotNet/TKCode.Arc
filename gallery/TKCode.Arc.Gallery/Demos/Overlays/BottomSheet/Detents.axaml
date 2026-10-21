@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BottomSheetDetentsDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Trip details"
+                        Variant="Secondary"
+                        Command="{Binding #TripSheet.OpenCommand}" />
+            <arc:BottomSheet x:Name="TripSheet"
+                             Title="Trip to Lisbon"
+                             Description="3 nights · 12–15 June"
+                             Opened="OnOpened"
+                             DetentChanged="OnDetentChanged"
+                             Closed="OnClosed">
+                <StackPanel Spacing="12">
+                    <StackPanel.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="FontSize" Value="14" />
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                        </Style>
+                        <Style Selector="TextBlock.muted">
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Style>
+                    </StackPanel.Styles>
+                    <TextBlock Text="Fri · Arrive 14:05 at LIS, taxi to Alfama" />
+                    <TextBlock Text="Fri · Dinner at Taberna da Rua das Flores" />
+                    <TextBlock Text="Sat · Tram 28 and the castle" />
+                    <TextBlock Text="Sat · Sunset at Miradouro da Senhora do Monte" />
+                    <TextBlock Text="Sun · Belém: tower, monastery, pastéis" />
+                    <TextBlock Text="Sun · LX Factory" />
+                    <TextBlock Text="Mon · Check out 11:00" />
+                    <TextBlock Text="Mon · Depart 16:40" />
+                    <TextBlock Classes="muted" Text="Note 1: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 2: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 3: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 4: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 5: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 6: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 7: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 8: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 9: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 10: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 11: bring the museum pass." />
+                    <TextBlock Classes="muted" Text="Note 12: bring the museum pass." />
+                </StackPanel>
+            </arc:BottomSheet>
+        </WrapPanel>
+        <TextBlock x:Name="Detent"
+                   Text="Closed"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

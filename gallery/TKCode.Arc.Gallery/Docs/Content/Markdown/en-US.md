@@ -3,6 +3,8 @@ title: Markdown
 summary: Render Markdown documents and streamed replies in Arc's style, with fenced code highlighted in Arc's syntax palette.
 ---
 
+<Demo name="Document" />
+
 ## When to use
 
 - Release notes, help text and documents that are stored as Markdown.
@@ -39,6 +41,8 @@ Bind `Text` to a view model property. Setting it replaces any reply that is stil
 Call `Append` for each chunk as it arrives, and `Complete` when the reply ends. The text is paced and new words fade in.
 `IsStreaming` is `true` until the paced backlog has been shown.
 
+<Demo name="StreamedReply" />
+
 ```csharp
 markdown.Append(chunk);   // as tokens arrive, on the UI thread
 markdown.Complete();      // when the reply ends
@@ -52,10 +56,7 @@ one that a worker thread feeds with `MarkdownStream.Push`.
 Use a smaller `FontSize` for message bubbles. `LineHeight` defaults to the font size times 1.65, and code follows the
 font size.
 
-```xml
-<arc:Markdown FontSize="14"
-              Text="Deployed **web-42** to `staging`.&#10;&#10;```sh&#10;kubectl rollout status deploy/web&#10;```" />
-```
+<Demo name="ChatSize" />
 
 ### Links
 

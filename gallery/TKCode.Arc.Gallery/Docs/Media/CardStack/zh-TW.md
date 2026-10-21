@@ -1,8 +1,10 @@
 ---
 title: 卡片堆疊
 summary: 逐張審閱卡片，支援划走與復原。
-source-hash: 12416cbb0e8f
+source-hash: cb859fa03a17
 ---
+
+<Demo name="Shortlist" />
 
 ## 何時使用
 
@@ -48,9 +50,7 @@ stack.LabelSelector = item => ((Destination)item!).Name;
 
 `LeftLabel` 與 `RightLabel` 為按鈕，以及拖曳卡片時出現的標記命名。`LeftOutcome` 與 `RightOutcome` 是播報中使用的過去式詞語，例如「已跳過」。
 
-```xml
-<arc:CardStack Label="候選人" LeftLabel="暫不" RightLabel="面試" />
-```
+<Demo name="CustomActions" />
 
 ### 在程式碼中做決定與復原
 
@@ -77,6 +77,12 @@ stack.Reset();
     </arc:CardStack.EmptyContent>
 </arc:CardStack>
 ```
+
+### 照片
+
+卡片正面可以在繪製的場景之上顯示 `AsyncImage` 照片，因此離線時看起來仍然完整。
+
+<Demo name="Photos" />
 
 ## API 參考
 

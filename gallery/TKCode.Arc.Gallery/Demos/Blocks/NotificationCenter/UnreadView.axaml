@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NotificationCenterUnreadViewDemo">
+    <!-- The margin keeps the badge, which overhangs the bell by 5px, inside the demo. -->
+    <arc:NotificationCenter HorizontalAlignment="Center" Margin="0,6,0,0" View="Unread">
+        <arc:NotificationItem Id="release"
+                              Title="Release notes for 2.4 are published"
+                              Time="1h"
+                              IsRead="True" />
+        <arc:NotificationItem Id="review"
+                              Title="Sara Ito reviewed your pull request"
+                              Description="Approved with two small suggestions."
+                              Time="4h"
+                              ActorName="Sara Ito"
+                              ActorSource="https://i.pravatar.cc/160?img=44"
+                              IsRead="True" />
+        <arc:NotificationItem Id="backup"
+                              Title="Nightly backup completed"
+                              Time="Yesterday"
+                              Tone="Success"
+                              IsRead="True" />
+    </arc:NotificationCenter>
+</UserControl>

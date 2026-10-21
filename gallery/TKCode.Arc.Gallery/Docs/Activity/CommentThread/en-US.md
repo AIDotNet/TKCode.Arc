@@ -3,6 +3,8 @@ title: Comment thread
 summary: Threaded comments with replies, reactions, mentions, inline edit, and resolve.
 ---
 
+<Demo name="DesignReview" />
+
 ## When to use
 
 - A review discussion on a document, a design, a ticket or a pull request.
@@ -54,14 +56,7 @@ var thread = new CommentThread
 Type `@` in the composer to suggest people. `People` lists who can be mentioned. Without it, the people in the thread
 are offered.
 
-```csharp
-var thread = new CommentThread
-{
-    Title = "Footer links",
-    CurrentUser = ana,
-    People = [ana, mina, new CommentAuthor("kai", "Kai Moreno")]
-};
-```
+<Demo name="EmptyThread" />
 
 `Reactions` sets the emoji offered on each comment. `MaxDepth` limits nesting: a deeper reply attaches to the deepest
 allowed parent.
@@ -69,6 +64,8 @@ allowed parent.
 ### Resolve and reopen
 
 Resolving folds the thread into one chip that keeps the people who took part. `IsResolved` is two-way.
+
+<Demo name="Resolved" />
 
 ```csharp
 thread.ResolvedChanged += (_, e) => Status.Text = e.IsResolved ? "Resolved" : "Reopened";
@@ -92,6 +89,12 @@ thread.CommentsChanged += (_, e) =>
     }
 };
 ```
+
+### Narrow
+
+Under 420px the composer drops its avatar and replies indent 12px.
+
+<Demo name="Narrow" />
 
 ## API reference
 

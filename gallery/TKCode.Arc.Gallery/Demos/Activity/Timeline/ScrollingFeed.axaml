@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TimelineScrollingFeedDemo">
+    <Border MaxWidth="640"
+            Padding="16,12,16,4"
+            CornerRadius="26"
+            BorderThickness="1"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:Timeline x:Name="Feed" Label="Audit log" MaxHeight="380" />
+    </Border>
+</UserControl>

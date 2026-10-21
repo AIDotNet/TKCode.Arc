@@ -26,10 +26,12 @@ public sealed record GalleryApiType(string Name, Type Owner, string? Summary, st
 /// <param name="Key"><c>Type</c> or <c>DeclaringType.Member</c>.</param>
 public sealed record GalleryApiTranslation(string Language, string Key, string Text);
 
-/// <summary>A page ready to show: Markdown with its API references filled in, in <see cref="Language"/>.</summary>
+/// <summary>A page ready to show: Markdown with its API references and demos filled in, in <see cref="Language"/>.</summary>
 /// <param name="RequestedLanguage">The language asked for; the page falls back to en-US when it has no translation.</param>
+/// <param name="Markdown">What the page shows: each demo is a <c>&lt;demo&gt;</c> block that renders live.</param>
+/// <param name="CopyMarkdown">What "Copy page" copies: each demo is its files (AXAML, then code-behind) in code blocks.</param>
 public sealed record GalleryDoc(string ClassName, string Language, string RequestedLanguage, string Title, string Summary,
-                                string Markdown, bool IsOutdated)
+                                string Markdown, string CopyMarkdown, bool IsOutdated)
 {
     public bool IsFallback => !string.Equals(Language, RequestedLanguage, StringComparison.OrdinalIgnoreCase);
 }

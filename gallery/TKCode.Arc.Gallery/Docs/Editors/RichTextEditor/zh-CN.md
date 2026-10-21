@@ -1,8 +1,10 @@
 ---
 title: 富文本编辑器
 summary: 轻量编辑器，支持 Markdown 快捷输入、浮动工具栏、斜杠菜单，并可输出 HTML 与 Markdown。
-source-hash: 26be0d955878
+source-hash: 413255cd7252
 ---
+
+<Demo name="Shortcuts" />
 
 ## 何时使用
 
@@ -32,23 +34,19 @@ source-hash: 26be0d955878
 
 `Placeholder` 在空编辑器中显示。`BlockHint` 显示在放置插入符的空行上。
 
-```xml
-<arc:RichTextEditor Placeholder="写下评论"
-                    BlockHint="输入 / 插入块" />
-```
+<Demo name="Placeholder" />
 
 ### 只读
 
 设置 `IsReadOnly` 后，编辑、工具栏和快捷键都会关闭。文字仍可选中并复制。
 
-```xml
-<arc:RichTextEditor IsReadOnly="True"
-                    Markdown="## 发布检查清单&#10;&#10;1. 冻结分支&#10;2. 运行 **完整** 测试套件" />
-```
+<Demo name="ReadOnly" />
 
 ### 读取内容
 
 每次编辑后都会执行 `ContentChanged`。其 `Value` 包含 `Html`、`Markdown`、`Text` 与 `IsEmpty`。方法 `GetHtml()`、`GetMarkdown()` 和 `GetText()` 可随时读取内容。
+
+<Demo name="MarkdownAndHtml" />
 
 ```csharp
 editor.ContentChanged += (_, e) =>
@@ -64,20 +62,9 @@ var html = editor.GetHtml();
 
 `Formats` 报告插入符处的标记与块类型，`CanUndo` 与 `CanRedo` 报告历史状态。可用它们设置自己按钮的状态。`ToggleMark`、`SetBlockType`、`SetLink` 与 `EditLink` 用于驱动编辑器。
 
-```csharp
-editor.PropertyChanged += (_, e) =>
-{
-    if (e.Property == RichTextEditor.FormatsProperty)
-    {
-        boldButton.Variant = editor.Formats.IsBold ? ButtonVariant.Secondary : ButtonVariant.Ghost;
-    }
-};
-
-boldButton.Click += (_, _) => editor.ToggleMark(RichTextMark.Bold);
-headingButton.Click += (_, _) => editor.SetBlockType(RichTextBlockType.Heading2);
-```
-
 将 `UndoCommand` 与 `RedoCommand` 绑定到按钮，或直接调用 `Undo()` 与 `Redo()`。
+
+<Demo name="OwnToolbar" />
 
 ## API 参考
 

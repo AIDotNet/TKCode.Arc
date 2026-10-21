@@ -3,6 +3,8 @@ title: Pagination
 summary: Move through a long collection with clear bounds.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Paging through server results or a long table, where the page number is kept in state or in the address.
@@ -45,21 +47,16 @@ pagination.PageChanged += async (_, e) =>
 `ShowBoundaryPages` keeps the first and last page one click away, with an ellipsis between them and the
 window.
 
-```xml
-<arc:Pagination PageCount="48"
-                CurrentPage="20"
-                ShowBoundaryPages="True" />
-```
+<Demo name="BoundaryPages" />
 
 ### Few pages and no pages
 
 With fewer than five pages, all of them are shown; the arrows disable at the ends. A `PageCount` of `0`
 renders an empty navigation landmark.
 
-```xml
-<arc:Pagination PageCount="3" CurrentPage="2" />
-<arc:Pagination PageCount="0" />
-```
+<Demo name="FewPages" />
+
+<Demo name="NoPages" />
 
 ### Labels
 

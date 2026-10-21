@@ -1,4 +1,5 @@
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
 using TKCode.Arc.DesignTokens;
@@ -22,11 +23,24 @@ public static partial class GalleryPages
 
     public static void Register(string className, Func<Control> factory) => s_factories[className] = factory;
 
-    public static bool IsImplemented(string className) => s_factories.ContainsKey(className);
+    /// <summary>Whether <paramref name="className"/> has a page: registered examples, or live demos in its docs page.</summary>
+    public static bool IsImplemented(string className) => s_factories.ContainsKey(className) || GalleryDocs.HasDemos(className);
 
-    /// <summary>Builds the full page for <paramref name="entry"/>: header, tabs and its examples (or a placeholder).</summary>
+    /// <summary>
+    /// Builds the full page for <paramref name="entry"/>: its docs page with live demos when it has one, else the header,
+    /// tabs and its examples (or a placeholder).
+    /// </summary>
     public static Control Create(GalleryEntry entry)
     {
+        // Docs pages are plain Markdown: no page chrome, no Preview or Code tabs.
+        if (GalleryCatalog.Docs.Entries.Contains(entry))
+        {
+            return s_factories.TryGetValue(entry.ClassName, out var document) ? document() : Placeholder(entry);
+        }
+        if (GalleryDocs.HasDemos(entry.ClassName))
+        {
+            return new GalleryPageView(entry);
+        }
         var implemented = s_factories.TryGetValue(entry.ClassName, out var factory);
         var body = implemented ? factory!() : Placeholder(entry);
         return new GalleryPageView(entry, body, implemented);

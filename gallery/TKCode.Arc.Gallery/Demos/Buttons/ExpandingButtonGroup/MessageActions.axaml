@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandingButtonGroupMessageActionsDemo">
+    <StackPanel Spacing="12">
+        <arc:ExpandingButtonGroup Label="Message actions"
+                                  HorizontalAlignment="Center"
+                                  ActionInvoked="OnActionInvoked">
+            <arc:ExpandingButtonGroupItem Label="Reply" Icon="{x:Static arc:ArcIcons.Reply}" />
+            <arc:ExpandingButtonGroupItem Label="Send"
+                                          Icon="{x:Static arc:ArcIcons.Send}"
+                                          DoneLabel="Sent" />
+            <arc:ExpandingButtonGroupItem x:Name="Archive"
+                                          Label="Archive"
+                                          Icon="{x:Static arc:ArcIcons.Archive}"
+                                          DoneLabel="Archived" />
+            <arc:ExpandingButtonGroupItem Label="Save"
+                                          Icon="{x:Static arc:ArcIcons.Bookmark}"
+                                          DoneLabel="Saved" />
+            <arc:ExpandingButtonGroupItem Label="Delete"
+                                          Icon="{x:Static arc:ArcIcons.Trash2}"
+                                          DoneLabel="Deleted"
+                                          Tone="Danger" />
+        </arc:ExpandingButtonGroup>
+        <TextBlock x:Name="Log"
+                   Text="Point at an action, or Tab in and use the arrow keys."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

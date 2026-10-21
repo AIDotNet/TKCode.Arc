@@ -3,6 +3,8 @@ title: Textarea
 summary: A multiline field for notes, descriptions, and longer text.
 ---
 
+<Demo name="LiveCount" />
+
 ## When to use
 
 - Free text over several lines, such as a bio, a comment or feedback.
@@ -36,6 +38,8 @@ Enter adds a line. The field fills its column and is at least 110 px tall.
 
 Update the description as the text changes. Only the digits that change roll. Set `ErrorMessage` to mark the
 field invalid; an empty value clears the error.
+
+<Demo name="Validation" />
 
 ```csharp
 const int limit = 160;
@@ -79,11 +83,7 @@ notes.FrameHeight = 200;
 
 A disabled field is faded to 0.6 and has no grip.
 
-```xml
-<arc:Textarea Label="Notes"
-              Text="Read only for now."
-              IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API reference
 

@@ -1,0 +1,108 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CardQuickLookDemo">
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="Harbour" StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#5B8DEF" Offset="0" />
+            <GradientStop Color="#9CC2FF" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="Atlas" StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#2FA88B" Offset="0" />
+            <GradientStop Color="#8EE0C6" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="NightMarket" StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#E0814A" Offset="0" />
+            <GradientStop Color="#F7C59F" Offset="1" />
+        </LinearGradientBrush>
+    </UserControl.Resources>
+    <UniformGrid Columns="3" ColumnSpacing="16" RowSpacing="16">
+        <arc:Card Title="Harbour redesign"
+                  Description="New booking flow and room pages."
+                  Meta="Maya Chen"
+                  Status="Updated 2 hours ago"
+                  VerticalAlignment="Top">
+            <arc:Card.Media>
+                <Border Height="132" Background="{StaticResource Harbour}">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.House}"
+                                  Size="36"
+                                  StrokeThickness="1.5"
+                                  Foreground="White"
+                                  Opacity="0.9"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </arc:Card.Media>
+            <arc:Card.Avatar>
+                <arc:Avatar DisplayName="Maya Chen" Size="Small" />
+            </arc:Card.Avatar>
+            <arc:Card.Action>
+                <arc:Button Content="Share" Variant="Ghost" Size="Small" />
+            </arc:Card.Action>
+            <arc:Card.Details>
+                <TextBlock Text="Scope: a calmer booking flow with fewer steps, room pages rebuilt around photos, and an availability calendar. Open questions: deposits, and how far ahead people can book."
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </arc:Card.Details>
+        </arc:Card>
+        <arc:Card Title="Atlas"
+                  Description="A field guide to every API the platform exposes."
+                  Meta="Jonas Berg"
+                  Status="Updated yesterday"
+                  VerticalAlignment="Top">
+            <arc:Card.Media>
+                <Border Height="132" Background="{StaticResource Atlas}">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Globe}"
+                                  Size="36"
+                                  StrokeThickness="1.5"
+                                  Foreground="White"
+                                  Opacity="0.9"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </arc:Card.Media>
+            <arc:Card.Avatar>
+                <arc:Avatar DisplayName="Jonas Berg" Size="Small" />
+            </arc:Card.Avatar>
+            <arc:Card.Action>
+                <arc:Button Content="Share" Variant="Ghost" Size="Small" />
+            </arc:Card.Action>
+            <arc:Card.Details>
+                <TextBlock Text="Milestones: endpoint inventory (done), examples for every resource (in review), versioned changelog (next). Owners rotate weekly."
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </arc:Card.Details>
+        </arc:Card>
+        <arc:Card Title="Night market"
+                  Description="Pop-up stalls, lights and a map for the autumn fair."
+                  Meta="Ada Okafor"
+                  Status="Updated 3 days ago"
+                  VerticalAlignment="Top">
+            <arc:Card.Media>
+                <Border Height="132" Background="{StaticResource NightMarket}">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                  Size="36"
+                                  StrokeThickness="1.5"
+                                  Foreground="White"
+                                  Opacity="0.9"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </arc:Card.Media>
+            <arc:Card.Avatar>
+                <arc:Avatar DisplayName="Ada Okafor" Size="Small" />
+            </arc:Card.Avatar>
+            <arc:Card.Action>
+                <arc:Button Content="Share" Variant="Ghost" Size="Small" />
+            </arc:Card.Action>
+            <arc:Card.Details>
+                <TextBlock Text="Forty stalls across two streets. Lights go up Friday morning; the printed map ships to stall holders a week before."
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </arc:Card.Details>
+        </arc:Card>
+    </UniformGrid>
+</UserControl>

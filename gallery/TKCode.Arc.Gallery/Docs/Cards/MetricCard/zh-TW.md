@@ -1,8 +1,10 @@
 ---
 title: 指標卡
 summary: 為需要上下文說明的數字提供精簡的摘要。
-source-hash: 10afd81f27bc
+source-hash: eb77bb563595
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -36,6 +38,8 @@ source-hash: 10afd81f27bc
 ### 變化標籤
 
 以「+」開頭的 `Change` 顯示為上升，以「-」或「−」開頭的顯示為下降。可透過 `ChangeDirection` 讀回方向。設定 `IsChangeGlyphVisible` 可在標籤內加入趨勢圖示。
+
+<Demo name="PlainNumber" />
 
 ```xml
 <arc:MetricCard Label="p95 延遲"

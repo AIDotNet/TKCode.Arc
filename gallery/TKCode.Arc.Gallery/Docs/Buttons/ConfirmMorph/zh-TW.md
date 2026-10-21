@@ -1,8 +1,10 @@
 ---
 title: 確認變形
 summary: 一個破壞性按鈕，可變形為就地確認、載入指示與帶復原的結果。
-source-hash: d3b5eeb1aa3e
+source-hash: d51545d5f9eb
 ---
+
+<Demo name="Press" />
 
 ## 何時使用
 
@@ -32,6 +34,8 @@ source-hash: d3b5eeb1aa3e
 
 問題被回答時會執行 `ConfirmAction`。任務執行期間，膠囊形按鈕顯示等待狀態。若任務擲出例外，則顯示錯誤狀態並提供重試。設定 `UndoAction` 可在結果中提供復原。
 
+<Demo name="ErrorAndRetry" />
+
 ```csharp
 delete.ConfirmAction = () => documentService.DeleteAsync(selected);
 delete.UndoAction = () => documentService.RestoreAsync(selected);
@@ -40,6 +44,10 @@ delete.UndoAction = () => documentService.RestoreAsync(selected);
 ### 確認模式
 
 `ConfirmMode` 決定如何回答問題。`Press` 按一次即執行。`Hold` 要求按住確認按鈕達到 `HoldDuration`，預設為一秒。`Countdown` 會啟動 `CountdownSeconds` 倒數，期間仍可透過取消或 Escape 停止。
+
+<Demo name="Hold" />
+
+<Demo name="Countdown" />
 
 ```xml
 <arc:ConfirmMorph Label="移除成員"
@@ -57,14 +65,7 @@ delete.UndoAction = () => documentService.RestoreAsync(selected);
 
 八個文字屬性（`ConfirmLabel`、`CancelLabel`、`PendingLabel`、`DoneLabel`、`ErrorLabel`、`RetryLabel`、`UndoLabel` 與 `UndoingLabel`）分別設定每種狀態的用字。`Tone="Neutral"` 會以強調色顯示確認回答，適用於可以復原的重要操作。預設的 `Danger` 適用於破壞性操作。
 
-```xml
-<arc:ConfirmMorph Label="撤銷存取權"
-                  Prompt="撤銷 3 組金鑰？"
-                  ConfirmLabel="撤銷"
-                  PendingLabel="撤銷中"
-                  DoneLabel="已撤銷"
-                  Tone="Neutral" />
-```
+<Demo name="NeutralTone" />
 
 ### 受控狀態與逾時
 
@@ -75,6 +76,12 @@ confirm.StateChanged += (_, e) => log.Text = $"狀態：{e.NewState}";
 confirm.Cancelled += (_, _) => log.Text = "已取消";
 confirm.State = ConfirmMorphState.Idle;
 ```
+
+### 停用
+
+`IsEnabled` 為 `False` 時，靜止的膠囊不再顯示陰影。
+
+<Demo name="Disabled" />
 
 ## API 參考
 

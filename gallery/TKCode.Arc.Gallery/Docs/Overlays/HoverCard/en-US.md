@@ -3,6 +3,8 @@ title: Hover card
 summary: Preview a person or link on hover or focus without leaving the page.
 ---
 
+<Demo name="Mention" />
+
 ## When to use
 
 - A mention, avatar or author name that opens a short profile.
@@ -43,14 +45,7 @@ A `HoverCard` opens after a short hover or keyboard focus on its `Trigger`. Its 
 
 `arc:HoverCard.Attach` adds a card to any control, such as a plain text link.
 
-```xml
-<TextBlock Text="uiarc.dev/components/hover-card">
-    <arc:HoverCard.Attach>
-        <arc:HoverCard Placement="Top"
-                       Content="Preview a person or link on hover or focus." />
-    </arc:HoverCard.Attach>
-</TextBlock>
-```
+<Demo name="LinkPreview" />
 
 ### Timing and width
 
@@ -70,6 +65,12 @@ card.CardWidth = 320;
 card.Show();
 card.Closed += (_, e) => log.Text = $"Closed by {e.Reason}";
 ```
+
+### Dense list
+
+Once a card is open, moving to the next trigger opens it almost at once with a fade only.
+
+<Demo name="DenseList" />
 
 ## API reference
 

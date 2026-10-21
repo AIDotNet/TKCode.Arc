@@ -83,9 +83,11 @@ public class TreeView : TemplatedControl
     public static readonly StyledProperty<bool> ShowIndentGuidesProperty =
         AvaloniaProperty.Register<TreeView, bool>(nameof(ShowIndentGuides), true);
 
+    /// <summary>Shows each row's icon (16px slot before the label); when false the label starts at the indent.</summary>
     public static readonly StyledProperty<bool> ShowIconsProperty =
         AvaloniaProperty.Register<TreeView, bool>(nameof(ShowIcons), true);
 
+    /// <summary>Raised when the selected item changes; the argument carries the old and new item.</summary>
     public static readonly RoutedEvent<TreeViewSelectionChangedEventArgs> SelectionChangedEvent =
         RoutedEvent.Register<TreeView, TreeViewSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
@@ -93,9 +95,11 @@ public class TreeView : TemplatedControl
     public static readonly RoutedEvent<TreeViewItemEventArgs> ItemInvokedEvent =
         RoutedEvent.Register<TreeView, TreeViewItemEventArgs>(nameof(ItemInvoked), RoutingStrategies.Bubble);
 
+    /// <summary>Raised when a branch item expands.</summary>
     public static readonly RoutedEvent<TreeViewItemEventArgs> ItemExpandedEvent =
         RoutedEvent.Register<TreeView, TreeViewItemEventArgs>(nameof(ItemExpanded), RoutingStrategies.Bubble);
 
+    /// <summary>Raised when a branch item collapses.</summary>
     public static readonly RoutedEvent<TreeViewItemEventArgs> ItemCollapsedEvent =
         RoutedEvent.Register<TreeView, TreeViewItemEventArgs>(nameof(ItemCollapsed), RoutingStrategies.Bubble);
 
@@ -144,12 +148,14 @@ public class TreeView : TemplatedControl
     public object? SelectedItem { get => GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
 
     public bool ShowIndentGuides { get => GetValue(ShowIndentGuidesProperty); set => SetValue(ShowIndentGuidesProperty, value); }
+    /// <inheritdoc cref="ShowIconsProperty"/>
     public bool ShowIcons { get => GetValue(ShowIconsProperty); set => SetValue(ShowIconsProperty, value); }
 
     /// <summary>Inline nodes (the XAML content).</summary>
     [Content]
     public AvaloniaList<TreeViewItem> Items { get; } = new();
 
+    /// <summary>Raised when the selected item changes; the argument carries the old and new item.</summary>
     public event EventHandler<TreeViewSelectionChangedEventArgs>? SelectionChanged
     {
         add => AddHandler(SelectionChangedEvent, value);
@@ -162,12 +168,14 @@ public class TreeView : TemplatedControl
         remove => RemoveHandler(ItemInvokedEvent, value);
     }
 
+    /// <summary>Raised when a branch item expands.</summary>
     public event EventHandler<TreeViewItemEventArgs>? ItemExpanded
     {
         add => AddHandler(ItemExpandedEvent, value);
         remove => RemoveHandler(ItemExpandedEvent, value);
     }
 
+    /// <summary>Raised when a branch item collapses.</summary>
     public event EventHandler<TreeViewItemEventArgs>? ItemCollapsed
     {
         add => AddHandler(ItemCollapsedEvent, value);

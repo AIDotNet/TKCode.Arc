@@ -1,8 +1,10 @@
 ---
 title: 柱状图
 summary: 跨日、周或月比较同一指标，并可逐根查看任一柱子的数值。
-source-hash: 7232de4d9e70
+source-hash: 6081740b5a03
 ---
+
+<Demo name="WeekAndMonth" />
 
 ## 何时使用
 
@@ -54,6 +56,8 @@ void Week()
 ### 标题标签
 
 `AverageLabel` 为静止时标题区的名称，`ValueLabel` 为逐根查看时柱子数值的名称。若参考线没有用处，可使用 `ShowAverage` 隐藏平均线。
+
+<Demo name="WithoutAverage" />
 
 ```xml
 <arc:BarChart Label="部署次数"

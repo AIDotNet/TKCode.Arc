@@ -1,8 +1,10 @@
 ---
 title: 筛选工具栏
 summary: 让集合筛选条件保持在近处，并便于重置。
-source-hash: f50ac881ac43
+source-hash: 2797b67dcec3
 ---
+
+<Demo name="Filters" />
 
 ## 何时使用
 
@@ -72,6 +74,8 @@ toolbar.FiltersChanged += (_, e) => Refilter(e.ActiveFilters);
 
 `IsSearchVisible` 会在工具栏中添加搜索框。`SearchText` 为双向绑定，因此表格可以对其作出响应。
 
+<Demo name="SearchAndTable" />
+
 ```xml
 <arc:FilterToolbar IsSearchVisible="True"
                    SearchPlaceholder="搜索问题"
@@ -89,6 +93,24 @@ toolbar.FiltersChanged += (_, e) => Refilter(e.ActiveFilters);
     </arc:FilterToolbar.Actions>
 </arc:FilterToolbar>
 ```
+
+### 没有筛选
+
+没有生效的筛选时，空状态提示靠起始侧显示。将 `MenuAlignment` 设为 `Start` 后，菜单会与触发器的起始侧对齐。
+
+<Demo name="NoFilters" />
+
+### 窄宽度
+
+宽度低于 520px 时，工具栏会堆叠显示：先是条件，然后是靠末端对齐的操作。
+
+<Demo name="Narrow" />
+
+### 单独使用筛选菜单
+
+`FilterMenu` 就是「添加筛选」触发器及其两步面板。在触发器上按 Down 会打开并停在第一个字段，Right 进入字段，Left 返回。
+
+<Demo name="FilterMenu" />
 
 ## API 参考
 

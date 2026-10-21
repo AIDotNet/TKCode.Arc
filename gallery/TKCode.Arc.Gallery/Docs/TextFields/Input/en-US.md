@@ -3,6 +3,8 @@ title: Input
 summary: A single line field with clear labels and useful states.
 ---
 
+<Demo name="Basic" />
+
 ## When to use
 
 - Single-line values such as a name, an email address or a URL.
@@ -30,20 +32,13 @@ summary: A single line field with clear labels and useful states.
 Derive the copy from state and change the string. Only the words that change move, and numbers roll digit by
 digit, so do not swap between separate messages.
 
+<Demo name="HelperAndError" />
+
 ```xml
 <arc:Input Label="Username"
            Text="{Binding UserName}"
            Description="{Binding UserNameHint}"
            ErrorMessage="{Binding UserNameError}" />
-```
-
-```csharp
-input.TextChanged += (_, _) =>
-{
-    var text = input.Text ?? string.Empty;
-    input.Description = $"3 to 20 characters. {Math.Max(0, 20 - text.Length)} left.";
-    input.ErrorMessage = text.Length is > 0 and < 3 ? "Use at least 3 characters." : null;
-};
 ```
 
 A non-empty `ErrorMessage` makes the field invalid. While it is empty, a validation error from the `Text`
@@ -53,23 +48,23 @@ binding shows instead.
 
 `Size` sets the frame height: `Small` is 36, `Medium` is 44 (the Arc look) and `Large` is 50.
 
-```xml
-<arc:Input Label="Small" Size="Small" />
-<arc:Input Label="Large" Size="Large" />
-```
+<Demo name="Sizes" />
 
 ### Prefix and suffix
 
-```xml
-<arc:Input Label="Price" Text="49">
-    <arc:Input.Prefix>
-        <TextBlock Text="$" />
-    </arc:Input.Prefix>
-    <arc:Input.Suffix>
-        <TextBlock Text="USD" />
-    </arc:Input.Suffix>
-</arc:Input>
-```
+<Demo name="PrefixAndSuffix" />
+
+### States
+
+A field can be disabled, read-only or invalid.
+
+<Demo name="States" />
+
+### Field foundation
+
+`Field` adds a label and message rows around a `FieldFrame`. Pickers and special inputs reuse both.
+
+<Demo name="FieldFoundation" />
 
 ## API reference
 

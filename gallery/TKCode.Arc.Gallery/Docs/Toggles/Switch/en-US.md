@@ -3,6 +3,8 @@ title: Switch
 summary: A tactile toggle for settings that take effect immediately.
 ---
 
+<Demo name="SettingsList" />
+
 ## When to use
 
 - Settings that take effect as soon as they are changed, such as notifications.
@@ -52,12 +54,7 @@ Bind `IsChecked` to a view model property. Bind `IsEnabled` to lock the switch.
 
 A disabled switch keeps its state and cannot be changed.
 
-```xml
-<StackPanel Orientation="Horizontal" Spacing="16">
-    <arc:Switch Content="Off and disabled" IsEnabled="False" />
-    <arc:Switch Content="On and disabled" IsChecked="True" IsEnabled="False" />
-</StackPanel>
-```
+<Demo name="Disabled" />
 
 ### Changes
 

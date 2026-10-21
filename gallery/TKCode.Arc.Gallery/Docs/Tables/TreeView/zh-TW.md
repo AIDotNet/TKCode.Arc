@@ -1,8 +1,10 @@
 ---
 title: 樹狀檢視
 summary: 瀏覽巢狀的資料夾與結構化內容。
-source-hash: ad5c8d703a6b
+source-hash: e2907dd4fd1e
 ---
+
+<Demo name="FileTree" />
 
 ## 何時使用
 
@@ -43,6 +45,8 @@ source-hash: ad5c8d703a6b
 ### 使用子項目選擇器繫結資料
 
 繫結 `ItemsSource`，並在程式碼中設定選擇器。`ChildrenSelector` 會傳回節點的子項目，帶有子項目的節點即為資料夾。
+
+<Demo name="DataWithChildrenSelector" />
 
 ```csharp
 var tree = new TreeView
@@ -90,6 +94,12 @@ tree.FocusItem(fileNode);
 tree.ItemInvoked += (_, e) => OpenFile(e.Item);
 tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 ```
+
+### 數千個節點
+
+這棵樹有 40 個資料夾，每個資料夾含 250 個檔案。列會被虛擬化並池化，只有可視範圍附近的列會播放動畫。
+
+<Demo name="ThousandsOfNodes" />
 
 ## API 參考
 

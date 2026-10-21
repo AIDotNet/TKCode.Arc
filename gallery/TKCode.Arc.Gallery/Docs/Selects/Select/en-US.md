@@ -3,6 +3,8 @@ title: Select
 summary: A compact choice field with a keyboard friendly menu.
 ---
 
+<Demo name="Field" />
+
 ## When to use
 
 - A short, fixed list such as a region, a sort order or a plan, where users pick one value and do not need to type.
@@ -64,17 +66,7 @@ sort.SelectionChanged += (_, _) => Console.WriteLine(sort.SelectedValue);
 For data items that are not `SelectOption`, set `TextSelector` and `ValueSelector`. They are AOT safe, unlike
 `DisplayMemberBinding`.
 
-```csharp
-var zones = new Select
-{
-    Label = "Time zone",
-    Placeholder = "Choose a time zone",
-    Width = 300,
-    ItemsSource = cities,
-    TextSelector = item => item is City c ? $"{c.Name} ({c.Offset})" : null,
-    ValueSelector = item => item is City c ? c.Id : null
-};
-```
+<Demo name="Selectors" />
 
 ### Placeholder and description
 
@@ -89,6 +81,10 @@ accessible help text.
 
 The menu is capped at `MaxDropDownHeight` (320 by default) and scrolls. Only the visible rows are drawn, so a list
 of thousands of items stays responsive. A disabled `Select` ignores input.
+
+<Demo name="LongLists" />
+
+<Demo name="Disabled" />
 
 ```xml
 <arc:Select Label="Build number" ItemsSource="{Binding Builds}" MaxDropDownHeight="240" />

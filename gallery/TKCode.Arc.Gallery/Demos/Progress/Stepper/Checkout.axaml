@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StepperCheckoutDemo">
+    <StackPanel Spacing="16">
+        <arc:Stepper x:Name="Checkout"
+                     CurrentIndex="1"
+                     IsNavigable="True"
+                     StepSelected="OnStepSelected">
+            <arc:StepperStep Id="account" Label="Account" Description="Create your login" />
+            <arc:StepperStep Id="shipping" Label="Shipping" Description="Where should we send it" />
+            <arc:StepperStep Id="payment" Label="Payment" Description="Card or invoice" />
+            <arc:StepperStep Id="review" Label="Review" Description="Check and confirm" />
+        </arc:Stepper>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Back" Variant="Ghost" Click="OnBackClick" />
+            <arc:Button Content="Continue" Variant="Secondary" Click="OnContinueClick" />
+            <arc:Button Content="Finish all" Variant="Secondary" Click="OnFinishClick" />
+        </WrapPanel>
+        <TextBlock x:Name="Selected"
+                   Text="Choose a completed step to go back."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

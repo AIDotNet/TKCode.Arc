@@ -39,15 +39,19 @@ public class Avatar : TemplatedControl
     public static readonly StyledProperty<string?> DisplayNameProperty =
         AvaloniaProperty.Register<Avatar, string?>(nameof(DisplayName));
 
+    /// <summary>Photo to show. A photo that fails to load falls back to initials.</summary>
     public static readonly StyledProperty<ImageSource?> SourceProperty =
         AvaloniaProperty.Register<Avatar, ImageSource?>(nameof(Source));
 
+    /// <summary>Avatar size: Small, Medium (default), Large or XLarge.</summary>
     public static readonly StyledProperty<AvatarSize> SizeProperty =
         AvaloniaProperty.Register<Avatar, AvatarSize>(nameof(Size), AvatarSize.Medium);
 
+    /// <summary>Presence dot: None (default, no dot), Online or Offline.</summary>
     public static readonly StyledProperty<AvatarStatus> StatusProperty =
         AvaloniaProperty.Register<Avatar, AvatarStatus>(nameof(Status));
 
+    /// <summary>Initials computed from DisplayName: the first letters of its first two words.</summary>
     public static readonly DirectProperty<Avatar, string> InitialsProperty =
         AvaloniaProperty.RegisterDirect<Avatar, string>(nameof(Initials), o => o.Initials);
 
@@ -55,11 +59,15 @@ public class Avatar : TemplatedControl
         AvaloniaProperty.RegisterDirect<Avatar, bool>(nameof(HasStatus), o => o.HasStatus);
 
     public string? DisplayName { get => GetValue(DisplayNameProperty); set => SetValue(DisplayNameProperty, value); }
+    /// <inheritdoc cref="SourceProperty"/>
     public ImageSource? Source { get => GetValue(SourceProperty); set => SetValue(SourceProperty, value); }
+    /// <inheritdoc cref="SizeProperty"/>
     public AvatarSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
+    /// <inheritdoc cref="StatusProperty"/>
     public AvatarStatus Status { get => GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
     private string _initials = string.Empty;
+    /// <inheritdoc cref="InitialsProperty"/>
     public string Initials
     {
         get => _initials;

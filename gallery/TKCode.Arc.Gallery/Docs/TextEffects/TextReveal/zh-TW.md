@@ -1,8 +1,10 @@
 ---
 title: 文字呈現
 summary: 以克制的動態效果呈現一小段內容。
-source-hash: 925fb0e5d554
+source-hash: 7ffb6c8f9d25
 ---
+
+<Demo name="Hero" />
 
 ## 何時使用
 
@@ -32,14 +34,9 @@ source-hash: 925fb0e5d554
 
 `Level` 設定標題層級（`H1`、`H2`、`H3`）或 `Paragraph`。標題使用展示字級與更緊湊的行距；段落使用內文字級與更柔和的模糊。對於標題，`Level` 也會設定 `AutomationProperties.HeadingLevel`。
 
-```xml
-<arc:TextReveal Text="悄悄打磨細節。&#10;讓動態效果保持真實。"
-                Level="H2"
-                Delay="0:0:0.2" />
+<Demo name="ForcedLinesAndDelay" />
 
-<arc:TextReveal Text="段落以更柔和的模糊逐字呈現。"
-                Level="Paragraph" />
-```
+<Demo name="Paragraph" />
 
 `Delay` 會在第一個字詞升起前等待。之後的錯落間隔維持在半秒以內，因此長文字不會拉長進場時間。
 

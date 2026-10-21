@@ -1,8 +1,10 @@
 ---
 title: 时间线
 summary: 按日期分组、最新在前，跟进事件的发生经过。
-source-hash: 069b42d0a5f7
+source-hash: e6dcd3991034
 ---
+
+<Demo name="LiveStream" />
 
 ## 何时使用
 
@@ -63,6 +65,10 @@ timeline.DetachedFromVisualTree += (_, _) => clock.Stop();
 
 带有 `Detail` 的行在被激活时会展开。没有详情的行只是普通文字。`Tone` 会为系统事件着色，因此其标题必须同时说明结果。
 
+<Demo name="ExpandableDetails" />
+
+<Demo name="TonesAndPortraits" />
+
 ```xml
 <arc:Timeline Label="流水线" Now="2026-10-20T12:00:00+00:00">
     <arc:TimelineEvent Id="t1"
@@ -89,6 +95,10 @@ timeline.Expand("t2");
 ### 长历史记录
 
 设置 `MaxHeight` 后，动态流会在内部滚动。当前日期标签会在其行滚动时保持固定，并且列表是虚拟化的，因此长历史记录依然流畅。
+
+<Demo name="ScrollingFeed" />
+
+<Demo name="ThousandUpdates" />
 
 ```xml
 <arc:Timeline Label="审计日志"

@@ -1,8 +1,10 @@
 ---
 title: 展开式按钮组
 summary: 紧凑排列的图标按钮组：指向或聚焦的按钮会展开显示文字，相邻按钮让位，操作会在原位确认。
-source-hash: e8d67520ebca
+source-hash: 9ac5b9d9d522
 ---
+
+<Demo name="MessageActions" />
 
 ## 何时使用
 
@@ -35,6 +37,8 @@ source-hash: e8d67520ebca
 ### 图标与静止时的操作
 
 在代码中把 `Icon` 设为 16 × 16 的 Lucide 图形。静止时组只显示一个文字标签，默认是第一个可用的操作。`DefaultExpandedItem` 可以指定另一个操作。
+
+<Demo name="RestingAction" />
 
 ```csharp
 reply.Icon = ArcIcons.Reply;
@@ -78,13 +82,7 @@ var archive = new ExpandingButtonGroupItem
 
 `Tone="Danger"` 会以危险色显示展开的破坏性操作。禁用的项仍可获得焦点并显示文字，但不会执行。
 
-```xml
-<arc:ExpandingButtonGroup Label="文件操作" Size="Small">
-    <arc:ExpandingButtonGroupItem Label="下载" DoneLabel="已下载" />
-    <arc:ExpandingButtonGroupItem Label="锁定" IsDisabled="True" />
-    <arc:ExpandingButtonGroupItem Label="删除" Tone="Danger" DoneLabel="已删除" />
-</arc:ExpandingButtonGroup>
-```
+<Demo name="Small" />
 
 ### 事件
 

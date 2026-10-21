@@ -63,6 +63,7 @@ public class ActionButton : AvaloniaButton
     public static readonly StyledProperty<Func<Task>?> AsyncActionProperty =
         AvaloniaProperty.Register<ActionButton, Func<Task>?>(nameof(AsyncAction));
 
+    /// <summary>Current phase: Idle, Pending while AsyncAction runs, or Success after it completes. Read-only.</summary>
     public static readonly DirectProperty<ActionButton, ActionButtonState> StateProperty =
         AvaloniaProperty.RegisterDirect<ActionButton, ActionButtonState>(nameof(State), o => o.State);
 
@@ -100,6 +101,7 @@ public class ActionButton : AvaloniaButton
 
     private ActionButtonState _state;
 
+    /// <inheritdoc cref="StateProperty"/>
     public ActionButtonState State
     {
         get => _state;

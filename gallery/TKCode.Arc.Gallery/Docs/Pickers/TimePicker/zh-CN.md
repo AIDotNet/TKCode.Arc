@@ -1,8 +1,10 @@
 ---
 title: 时间选择器
 summary: 以合理的键盘行为选择时间。
-source-hash: aa3abfbf3231
+source-hash: f2edf711f5e7
 ---
+
+<Demo name="TimeField" />
 
 ## 何时使用
 
@@ -31,10 +33,7 @@ source-hash: aa3abfbf3231
 
 `MinuteStep` 设置选项之间的间隔，默认为 15 分钟。`ClockFormat` 选择显示格式：`TwelveHour` 显示 "9:15 AM"，`TwentyFourHour` 显示 "09:15"，`Auto` 跟随 `Culture` 的短时间格式。无论显示格式如何，值始终是 `TimeOnly`。
 
-```xml
-<arc:TimePicker Label="每 5 分钟" MinuteStep="5" />
-<arc:TimePicker Label="24 小时制" MinuteStep="30" ClockFormat="TwentyFourHour" />
-```
+<Demo name="StepsAndClocks" />
 
 ### 空值
 
@@ -56,11 +55,7 @@ picker.SelectedTimeChanged += (_, e) =>
 
 `Size` 设置字段高度：`Small` 为 36，`Medium` 为 44（Arc 的默认外观），`Large` 为 50。非空的 `ErrorMessage` 会将字段标记为无效。`IsEnabled="False"` 会禁用它。
 
-```xml
-<arc:TimePicker Label="小" Size="Small" />
-<arc:TimePicker Label="入住" ErrorMessage="入住时间从下午 3:00 开始。" />
-<arc:TimePicker Label="已锁定" IsEnabled="False" />
-```
+<Demo name="SizesAndStates" />
 
 ## API 参考
 

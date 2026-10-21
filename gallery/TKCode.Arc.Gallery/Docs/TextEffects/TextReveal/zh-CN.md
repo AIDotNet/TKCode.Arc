@@ -1,8 +1,10 @@
 ---
 title: 文字呈现
 summary: 以克制的动效呈现一小段内容。
-source-hash: 925fb0e5d554
+source-hash: 7ffb6c8f9d25
 ---
+
+<Demo name="Hero" />
 
 ## 何时使用
 
@@ -32,14 +34,9 @@ source-hash: 925fb0e5d554
 
 `Level` 设置标题级别（`H1`、`H2`、`H3`）或 `Paragraph`。标题使用展示字号与更紧凑的行距；段落使用正文字号与更柔和的模糊。对于标题，`Level` 还会设置 `AutomationProperties.HeadingLevel`。
 
-```xml
-<arc:TextReveal Text="悄悄打磨细节。&#10;让动效保持真实。"
-                Level="H2"
-                Delay="0:0:0.2" />
+<Demo name="ForcedLinesAndDelay" />
 
-<arc:TextReveal Text="段落以更柔和的模糊逐词呈现。"
-                Level="Paragraph" />
-```
+<Demo name="Paragraph" />
 
 `Delay` 会在第一个词升起前等待。之后的错落间隔保持在半秒以内，因此长文本不会拉长入场时间。
 

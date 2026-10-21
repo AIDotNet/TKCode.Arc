@@ -1,8 +1,10 @@
 ---
 title: 弹性滑块
 summary: 滑块越过两端时如橡皮筋般拉伸，附带摇摆的数值标签，以及滑块会卡入的档位。
-source-hash: 295f9c37751d
+source-hash: 31279271884c
 ---
+
+<Demo name="RubberBand" />
 
 ## 何时使用
 
@@ -51,21 +53,13 @@ source-hash: 295f9c37751d
 
 将 `SliderMark` 值添加到 `Marks` 中。被拖动的滑块会卡入每一个刻度。带标签的刻度会在轨道下方显示标签，点击标签会将滑块移到该位置。
 
-```csharp
-var brightness = new ElasticSlider
-{
-    Label = "亮度",
-    Value = 50,
-    Width = 360
-};
-brightness.Marks.Add(new SliderMark(0, "关闭"));
-brightness.Marks.Add(new SliderMark(50, "50"));
-brightness.Marks.Add(new SliderMark(100, "最大"));
-```
+<Demo name="Detents" />
 
 ### 步长与格式
 
 `SmallChange` 是数值吸附的步长。`ValueFormatter` 用于格式化数值标签、读数和朗读的数值。`IsValueVisible` 可隐藏标签旁的读数。拖动滑块或通过按键修改时，数值标签仍会显示。
+
+<Demo name="FineSteps" />
 
 ```xml
 <arc:ElasticSlider Label="缩放"
@@ -84,6 +78,12 @@ brightness.Marks.Add(new SliderMark(100, "最大"));
 ```csharp
 volume.ValueCommitted += (_, e) => SaveVolume(e.Value);
 ```
+
+### 禁用状态
+
+禁用的滑块会移出 Tab 顺序。
+
+<Demo name="Disabled" />
 
 ## API 参考
 

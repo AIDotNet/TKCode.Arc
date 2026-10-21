@@ -1,8 +1,10 @@
 ---
 title: 上下文菜单
 summary: 将次要操作放在所选对象附近。
-source-hash: 8ef17adf0a91
+source-hash: dcc977329161
 ---
+
+<Demo name="FileTile" />
 
 ## 何时使用
 
@@ -69,16 +71,7 @@ image.Items.Add(pinned);
 
 `arc:ContextMenu.Menu` 无需包裹即可为任意控件提供右键菜单。
 
-```xml
-<Border Width="220" Height="96" CornerRadius="18" BorderThickness="1">
-    <arc:ContextMenu.Menu>
-        <arc:MenuSurface>
-            <arc:MenuEntry Header="新建文件夹" />
-            <arc:MenuEntry Header="刷新" />
-        </arc:MenuSurface>
-    </arc:ContextMenu.Menu>
-</Border>
-```
+<Demo name="Attached" />
 
 ### 通过代码打开和关闭
 

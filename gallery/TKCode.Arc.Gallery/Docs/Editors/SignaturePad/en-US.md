@@ -3,6 +3,8 @@ title: Signature pad
 summary: Smooth ink that thins with speed, with undo, replay, and PNG or SVG export.
 ---
 
+<Demo name="Sign" />
+
 ## When to use
 
 - Contracts, delivery confirmations and consent forms that need a hand-drawn signature.
@@ -33,11 +35,7 @@ the baseline and `Hint` shows until the first stroke.
 `InkColor` and `InkWidth` set the defaults for new strokes. Each stroke keeps the color and width it was drawn with.
 The arrow keys move between the options in the toolbar.
 
-```xml
-<arc:SignaturePad InkColor="Blue"
-                  InkWidth="Bold"
-                  Hint="Sign in blue" />
-```
+<Demo name="InkAndNib" />
 
 ### Reading the strokes
 
@@ -56,6 +54,8 @@ pad.StrokesChanged += (_, e) =>
 `ExportPng` and `ExportSvg` return the ink cropped to its bounds. `ExportPng` takes an optional `scale`, which
 defaults to 3. `SaveAsync` opens the save dialog with `FileName` as the default name. It returns false when the user
 cancels or when there are no strokes.
+
+<Demo name="UseTheSignature" />
 
 ```csharp
 var png = pad.ExportPng();

@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarPreviewDemo">
+    <UserControl.Styles>
+        <!-- On the icon rail the header and footer keep only their leading 40px (logo, avatar); fade the rest. -->
+        <Style Selector="arc|Sidebar :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="arc|Sidebar:collapsed :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="arc|Sidebar:motion-full :is(Control).rail-fade">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    <Border Width="780"
+            Height="560"
+            HorizontalAlignment="Center"
+            CornerRadius="16"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}">
+        <DockPanel>
+            <arc:Sidebar x:Name="Nav"
+                         DockPanel.Dock="Left"
+                         CornerRadius="15,0,0,15"
+                         IsFilterVisible="True"
+                         SelectedKey="inbox">
+                <arc:Sidebar.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,0">
+                        <Border Width="28"
+                                Height="28"
+                                CornerRadius="8"
+                                Background="{arc:ArcDesignTokenResource Accent}">
+                            <TextBlock Text="H"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                        </Border>
+                        <TextBlock Classes="rail-fade"
+                                   Text="Harbor"
+                                   FontWeight="Medium"
+                                   VerticalAlignment="Center"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:ArcGlyph Classes="rail-fade"
+                                      Data="{x:Static arc:ArcIcons.ChevronsUpDown}"
+                                      Size="14"
+                                      VerticalAlignment="Center"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </arc:Sidebar.Header>
+
+                <arc:SidebarSection>
+                    <arc:SidebarItem Key="home" Label="Home" Icon="{x:Static arc:ArcIcons.House}" />
+                    <arc:SidebarItem Key="inbox" Label="Inbox" Icon="{x:Static arc:ArcIcons.Inbox}" Badge="12" />
+                    <arc:SidebarItem Key="my-issues" Label="My issues" Icon="{x:Static arc:ArcIcons.CircleDot}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Workspace">
+                    <arc:SidebarItem Key="projects" Label="Projects" Icon="{x:Static arc:ArcIcons.Folder}" IsExpanded="True">
+                        <arc:SidebarItem Key="projects/atlas" Label="Atlas" />
+                        <arc:SidebarItem Key="projects/beacon" Label="Beacon" Badge="3" />
+                        <arc:SidebarItem Key="projects/cobalt" Label="Cobalt" />
+                    </arc:SidebarItem>
+                    <arc:SidebarItem Key="views" Label="Views" Icon="{x:Static arc:ArcIcons.Layers}" />
+                </arc:SidebarSection>
+                <arc:SidebarSection Header="Favorites" IsCollapsible="True" IsExpanded="False">
+                    <arc:SidebarItem Key="favorites/roadmap" Label="Q4 roadmap" Icon="{x:Static arc:ArcIcons.Star}" />
+                    <arc:SidebarItem Key="favorites/reviews" Label="Design reviews" Icon="{x:Static arc:ArcIcons.Bookmark}" />
+                    <arc:SidebarItem Key="favorites/launch" Label="Launch checklist" Icon="{x:Static arc:ArcIcons.ListChecks}" />
+                </arc:SidebarSection>
+
+                <arc:Sidebar.Footer>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,0,0,0">
+                        <arc:Avatar DisplayName="Maya Chen" Size="Small" />
+                        <StackPanel Classes="rail-fade" VerticalAlignment="Center">
+                            <TextBlock Text="Maya Chen"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="maya@harbor.app"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </StackPanel>
+                </arc:Sidebar.Footer>
+            </arc:Sidebar>
+
+            <StackPanel Margin="36,32" Spacing="10">
+                <TextBlock Text="{Binding #Nav.SelectedItem.Label}"
+                           FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Choose a page in the sidebar. The collapse button folds it to icons; with focus in the sidebar, Ctrl+B (⌘B on macOS) does the same."
+                           TextWrapping="Wrap"
+                           MaxWidth="380"
+                           HorizontalAlignment="Left"
+                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <Border Height="132"
+                        Margin="0,14,0,0"
+                        CornerRadius="14"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border Height="88" CornerRadius="14" Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                    <Border Grid.Column="1" Height="88" CornerRadius="14" Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                </Grid>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</UserControl>

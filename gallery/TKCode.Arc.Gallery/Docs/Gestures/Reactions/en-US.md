@@ -3,6 +3,8 @@ title: Reactions
 summary: Acknowledge a post in one tap, with counts that roll.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Acknowledging a post, comment or release note with one tap, like a chat reaction.
@@ -48,16 +50,7 @@ A `ReactionOption` takes a 24 by 24 Lucide geometry in `Icon`.
 `Value` is two-way. A pill with a count of 0 leaves the bar. `Reacted` marks the viewer's own reaction, and
 `ReactedBy` lists the names shown in the tip.
 
-```csharp
-var people = new Reactions
-{
-    Value =
-    [
-        new Reaction("love", 4, true) { ReactedBy = ["Ada Okafor", "Jonas Berg", "Lin Park"] },
-        new Reaction("celebrate", 2) { ReactedBy = ["Maya Chen", "Sam Ortiz"] }
-    ]
-};
-```
+<Demo name="WhoReacted" />
 
 `ValueChanged` runs after a change. `Next` is the new value and `Change` names the option and whether the viewer
 reacted.
@@ -87,9 +80,13 @@ the pointer must rest on a pill before its tip appears.
 
 The bar wraps when the pills do not fit. Give it a `Width` to see the wrap.
 
-```xml
-<arc:Reactions Width="220" HorizontalAlignment="Left" />
-```
+<Demo name="Wrapping" />
+
+### Live counts
+
+Counts that change elsewhere roll only the digits that changed, up when they grow and down when they shrink.
+
+<Demo name="LiveCounts" />
 
 ## API reference
 

@@ -48,6 +48,7 @@ public class Calendar : TemplatedControl
 
     #region Properties
 
+    /// <summary>The selected date, or null when nothing is selected. Two-way.</summary>
     public static readonly StyledProperty<DateOnly?> SelectedDateProperty =
         AvaloniaProperty.Register<Calendar, DateOnly?>(nameof(SelectedDate), defaultBindingMode: BindingMode.TwoWay);
 
@@ -55,9 +56,11 @@ public class Calendar : TemplatedControl
     public static readonly StyledProperty<DateOnly?> DisplayMonthProperty =
         AvaloniaProperty.Register<Calendar, DateOnly?>(nameof(DisplayMonth), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Earliest selectable date; earlier days are disabled. Null means no lower limit.</summary>
     public static readonly StyledProperty<DateOnly?> MinDateProperty =
         AvaloniaProperty.Register<Calendar, DateOnly?>(nameof(MinDate));
 
+    /// <summary>Latest selectable date; later days are disabled. Null means no upper limit.</summary>
     public static readonly StyledProperty<DateOnly?> MaxDateProperty =
         AvaloniaProperty.Register<Calendar, DateOnly?>(nameof(MaxDate));
 
@@ -69,6 +72,7 @@ public class Calendar : TemplatedControl
     public static readonly StyledProperty<bool> ShowTodayProperty =
         AvaloniaProperty.Register<Calendar, bool>(nameof(ShowToday));
 
+    /// <summary>The first day of each week row (default Sunday).</summary>
     public static readonly StyledProperty<DayOfWeek> FirstDayOfWeekProperty =
         AvaloniaProperty.Register<Calendar, DayOfWeek>(nameof(FirstDayOfWeek), DayOfWeek.Sunday);
 
@@ -76,12 +80,15 @@ public class Calendar : TemplatedControl
     public static readonly StyledProperty<CultureInfo?> CultureProperty =
         AvaloniaProperty.Register<Calendar, CultureInfo?>(nameof(Culture));
 
+    /// <summary>Text of the Today button (default "Today").</summary>
     public static readonly StyledProperty<string> TodayLabelProperty =
         AvaloniaProperty.Register<Calendar, string>(nameof(TodayLabel), "Today");
 
+    /// <summary>Label of the previous-month button (default "Previous month").</summary>
     public static readonly StyledProperty<string> PreviousMonthLabelProperty =
         AvaloniaProperty.Register<Calendar, string>(nameof(PreviousMonthLabel), "Previous month");
 
+    /// <summary>Label of the next-month button (default "Next month").</summary>
     public static readonly StyledProperty<string> NextMonthLabelProperty =
         AvaloniaProperty.Register<Calendar, string>(nameof(NextMonthLabel), "Next month");
 
@@ -112,16 +119,23 @@ public class Calendar : TemplatedControl
     internal static readonly DirectProperty<Calendar, int> TitleDirectionProperty =
         AvaloniaProperty.RegisterDirect<Calendar, int>(nameof(TitleDirection), o => o.TitleDirection);
 
+    /// <inheritdoc cref="SelectedDateProperty"/>
     public DateOnly? SelectedDate { get => GetValue(SelectedDateProperty); set => SetValue(SelectedDateProperty, value); }
     public DateOnly? DisplayMonth { get => GetValue(DisplayMonthProperty); set => SetValue(DisplayMonthProperty, value); }
+    /// <inheritdoc cref="MinDateProperty"/>
     public DateOnly? MinDate { get => GetValue(MinDateProperty); set => SetValue(MinDateProperty, value); }
+    /// <inheritdoc cref="MaxDateProperty"/>
     public DateOnly? MaxDate { get => GetValue(MaxDateProperty); set => SetValue(MaxDateProperty, value); }
     public Func<DateOnly, bool>? DisabledDates { get => GetValue(DisabledDatesProperty); set => SetValue(DisabledDatesProperty, value); }
     public bool ShowToday { get => GetValue(ShowTodayProperty); set => SetValue(ShowTodayProperty, value); }
+    /// <inheritdoc cref="FirstDayOfWeekProperty"/>
     public DayOfWeek FirstDayOfWeek { get => GetValue(FirstDayOfWeekProperty); set => SetValue(FirstDayOfWeekProperty, value); }
     public CultureInfo? Culture { get => GetValue(CultureProperty); set => SetValue(CultureProperty, value); }
+    /// <inheritdoc cref="TodayLabelProperty"/>
     public string TodayLabel { get => GetValue(TodayLabelProperty); set => SetValue(TodayLabelProperty, value); }
+    /// <inheritdoc cref="PreviousMonthLabelProperty"/>
     public string PreviousMonthLabel { get => GetValue(PreviousMonthLabelProperty); set => SetValue(PreviousMonthLabelProperty, value); }
+    /// <inheritdoc cref="NextMonthLabelProperty"/>
     public string NextMonthLabel { get => GetValue(NextMonthLabelProperty); set => SetValue(NextMonthLabelProperty, value); }
 
     /// <summary>Raised when the user picks a day (click, Enter / Space, or Today).</summary>

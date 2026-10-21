@@ -1,8 +1,10 @@
 ---
 title: 警告提示
 summary: 持續顯示的訊息，協助使用者復原或繼續操作。
-source-hash: 1e6aba0fce9e
+source-hash: cee3fcbbef41
 ---
+
+<Demo name="Tones" />
 
 ## 何時使用
 
@@ -48,33 +50,13 @@ source-hash: 1e6aba0fce9e
 
 狀態改變時，保留同一個執行個體並改變它的屬性。圖示會替換，新文字會升起出現，高度則以彈簧跟隨變化。若改為替換控制項，就會略過這些轉場。
 
-```csharp
-var status = new Alert { Title = "Ready to sync", Content = "Changes are saved on this device." };
-
-async void OnSave(object? sender, RoutedEventArgs e)
-{
-    status.Tone = AlertTone.Info;
-    status.Title = "Saving changes";
-    status.Content = "Uploading 3 files to the workspace.";
-
-    await UploadAsync();
-
-    status.Tone = AlertTone.Success;
-    status.Title = "All changes saved";
-    status.Content = "Everyone in the workspace now sees the latest version.";
-}
-```
+<Demo name="MorphInPlace" />
 
 ### 關閉
 
 設定 `IsDismissible` 即可顯示關閉按鈕。按下後警示會先收合，然後引發 `Dismissed`。將 `IsOpen` 設回 `True` 會再次顯示警示。
 
-```xml
-<arc:Alert Tone="Warning"
-           Title="Scheduled maintenance on Sunday"
-           Content="The dashboard is read-only from 02:00 to 03:00 UTC."
-           IsDismissible="True" />
-```
+<Demo name="Dismiss" />
 
 ```csharp
 var notice = new Alert { Tone = AlertTone.Warning, IsDismissible = true, Title = "Scheduled maintenance on Sunday" };
@@ -88,13 +70,7 @@ notice.IsOpen = true;
 
 任何非文字的 `Content` 都會顯示在標題下方。文字內容會套用詳細說明的樣式；其他內容則維持原樣顯示。
 
-```xml
-<arc:Alert Title="A new version is available">
-    <arc:Alert.Content>
-        <arc:Button Content="Reload" Size="Small" Variant="Secondary" />
-    </arc:Alert.Content>
-</arc:Alert>
-```
+<Demo name="CustomContent" />
 
 ## API 參考
 

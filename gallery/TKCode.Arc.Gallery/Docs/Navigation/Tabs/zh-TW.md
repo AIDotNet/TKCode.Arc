@@ -1,8 +1,10 @@
 ---
 title: 標籤頁
 summary: 在同一脈絡中切換相關內容。
-source-hash: ebbf2d24231f
+source-hash: cb17c9687110
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -42,6 +44,8 @@ source-hash: ebbf2d24231f
 
 設定 `ItemsSource`。`ItemTemplate` 負責呈現觸發器，`ContentTemplate` 負責呈現所選項目的面板。透過 `SelectedItem` 或 `SelectionChanged` 讀取選取狀態。
 
+<Demo name="Overflow" />
+
 ```xml
 <arc:Tabs ItemsSource="{Binding Folders}"
           SelectedItem="{Binding CurrentFolder}"
@@ -64,13 +68,7 @@ source-hash: ebbf2d24231f
 
 `ActivationMode` 決定方向鍵的行為。`Automatic`（預設）會選取獲得焦點的標籤。`Manual` 只移動焦點；按 Enter 或空白鍵才會選取標籤。
 
-```xml
-<arc:Tabs ActivationMode="Manual">
-    <arc:TabItem Header="日" />
-    <arc:TabItem Header="週" />
-    <arc:TabItem Header="月" />
-</arc:Tabs>
-```
+<Demo name="ManualActivation" />
 
 ### 在程式碼中選取
 

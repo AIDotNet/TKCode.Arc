@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ButtonDisabledDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Button Content="Primary" IsEnabled="False" />
+        <arc:Button Content="Secondary" Variant="Secondary" IsEnabled="False" />
+        <arc:Button Content="Ghost" Variant="Ghost" IsEnabled="False" />
+        <arc:Button Content="Danger" Variant="Danger" IsEnabled="False" />
+    </WrapPanel>
+</UserControl>

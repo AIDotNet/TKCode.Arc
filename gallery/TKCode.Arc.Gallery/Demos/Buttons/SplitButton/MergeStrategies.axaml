@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SplitButtonMergeStrategiesDemo">
+    <StackPanel Spacing="12">
+        <arc:SplitButton Label="Merge pull request"
+                         Icon="M18 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6z M6 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z M6 21V9a9 9 0 0 0 9 9"
+                         HorizontalAlignment="Center"
+                         Click="OnMergeClick"
+                         ItemClicked="OnItemClicked">
+            <arc:MenuEntry Header="Squash and merge" />
+            <arc:MenuEntry Header="Rebase and merge" />
+            <arc:MenuEntry Header="Close pull request"
+                           Icon="{x:Static arc:ArcIcons.CircleX}"
+                           IsDestructive="True"
+                           HasSeparatorBefore="True" />
+        </arc:SplitButton>
+        <TextBlock x:Name="Log"
+                   Text="Run the main action, or open the chevron for the alternatives."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

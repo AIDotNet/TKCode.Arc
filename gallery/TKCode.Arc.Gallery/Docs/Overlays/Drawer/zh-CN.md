@@ -1,8 +1,10 @@
 ---
 title: 抽屉
 summary: 用于专注工作的临时侧边面板。
-source-hash: 5e5816252177
+source-hash: 55d20e5dba67
 ---
+
+<Demo name="Sides" />
 
 ## 何时使用
 
@@ -39,6 +41,8 @@ source-hash: 5e5816252177
 ### 长内容
 
 标题保持固定，主体区域可滚动。将完整内容放入抽屉即可，无需设置尺寸。
+
+<Demo name="LongContent" />
 
 ```xml
 <arc:Drawer Title="INV-2041" Description="由 Ada Lovelace 于 3 月 12 日支付。" IsOpen="{Binding ShowRecord}">

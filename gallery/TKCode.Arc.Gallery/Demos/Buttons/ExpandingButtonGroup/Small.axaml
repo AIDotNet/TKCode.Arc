@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExpandingButtonGroupSmallDemo">
+    <arc:ExpandingButtonGroup Label="File actions" Size="Small" HorizontalAlignment="Center">
+        <arc:ExpandingButtonGroupItem Label="Download"
+                                      Icon="{x:Static arc:ArcIcons.Download}"
+                                      DoneLabel="Downloaded" />
+        <arc:ExpandingButtonGroupItem Label="Share"
+                                      Icon="{x:Static arc:ArcIcons.Share2}"
+                                      DoneLabel="Link copied" />
+        <arc:ExpandingButtonGroupItem Label="Lock"
+                                      Icon="{x:Static arc:ArcIcons.Lock}"
+                                      IsDisabled="True" />
+        <arc:ExpandingButtonGroupItem Label="Delete"
+                                      Icon="{x:Static arc:ArcIcons.Trash2}"
+                                      Tone="Danger"
+                                      DoneLabel="Deleted" />
+    </arc:ExpandingButtonGroup>
+</UserControl>

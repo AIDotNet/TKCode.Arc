@@ -1,8 +1,10 @@
 ---
 title: 顏色選擇器
 summary: 色塊展開為選擇器，支援格式切換、滴管、已儲存色塊與對比度讀數。
-source-hash: d1062b7bf35e
+source-hash: 252305cc861e
 ---
+
+<Demo name="ColorField" />
 
 ## 何時使用
 
@@ -44,26 +46,13 @@ picker.ColorChanged += (_, e) => status.Text = $"顏色：{e.Hex}";
 
 `Swatches` 是一組 `ColorSwatch` 記錄。色塊從面板中儲存，每次變更都會建立新的清單，因此請繫結集合或處理 `SwatchesChanged`。`MaxSwatches` 預設為 7；清單已滿時，最早的色塊會被移除。
 
-```csharp
-picker.Swatches =
-[
-    ColorSwatch.Create(Color.Parse("#E5484D")),
-    ColorSwatch.Create(Color.Parse("#30A46C")),
-    ColorSwatch.Create(Color.Parse("#0090FF")),
-];
-picker.MaxSwatches = 7;
-```
+<Demo name="FormatsAndSavedSwatches" />
 
 ### 對比度讀數
 
 `ContrastBackground` 是 WCAG 讀數用來與目前值比較的顏色。面板會顯示對比度比值與等級。
 
-```xml
-<arc:ColorPicker Label="深色背景上的文字"
-                 Color="#A1A1AA"
-                 ContrastBackground="#111113"
-                 Description="對比度讀數以 #111113 進行比較。" />
-```
+<Demo name="Contrast" />
 
 ### 錯誤與停用狀態
 

@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EmptyStatesCustomItemsDemo">
+    <!-- Two scenes with their own copy. Text left out falls back to Arc's copy for the scene. -->
+    <arc:EmptyStates x:Name="States" Label="Invoices" ActionInvoked="OnActionInvoked">
+        <arc:EmptyStatesItem Scene="NoResults"
+                             Header="Search"
+                             Title="No invoices match “March”"
+                             Description="The status filter hides paid invoices."
+                             ActionLabel="Show paid invoices"
+                             DoneTitle="8 invoices from March"
+                             DoneDescription="Showing paid and unpaid invoices."
+                             DoneActionLabel="Hide paid invoices" />
+        <arc:EmptyStatesItem Scene="CaughtUp"
+                             Header="Requests"
+                             Title="No open requests"
+                             Description="Every request has an owner. New ones show up here first."
+                             ActionLabel="Refresh"
+                             LoadingDescription="Looking for new requests…"
+                             DoneTitle="Still no open requests"
+                             DoneDescription="Checked a moment ago."
+                             DoneActionLabel="Refresh again" />
+    </arc:EmptyStates>
+</UserControl>

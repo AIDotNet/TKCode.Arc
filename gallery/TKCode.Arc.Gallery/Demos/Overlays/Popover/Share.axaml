@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PopoverShareDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Popover AutomationProperties.Name="Share link">
+            <arc:Popover.Trigger>
+                <arc:Button Content="Share" Variant="Secondary" />
+            </arc:Popover.Trigger>
+            <StackPanel Spacing="12">
+                <TextBlock Text="Share link"
+                           FontSize="14"
+                           FontWeight="Medium"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Anyone with the link can view."
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <arc:CopyButton Value="https://uiarc.dev/p/atlas" />
+            </StackPanel>
+        </arc:Popover>
+    </WrapPanel>
+</UserControl>

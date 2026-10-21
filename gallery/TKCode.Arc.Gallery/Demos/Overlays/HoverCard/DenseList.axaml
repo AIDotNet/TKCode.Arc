@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoverCardDenseListDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:HoverCard>
+            <arc:HoverCard.Trigger>
+                <arc:Button Content="@ari" Variant="Ghost" />
+            </arc:HoverCard.Trigger>
+            <arc:HoverCardProfile DisplayName="Ari Okafor"
+                                  Role="Staff engineer, Platform"
+                                  Bio="Owns the build pipeline and the design token compiler."
+                                  Meta="Lagos · 13:20 local time">
+                <arc:HoverCardProfile.Stats>
+                    <arc:HoverCardStat Label="Projects" Value="31" />
+                    <arc:HoverCardStat Label="Reviews" Value="210" />
+                </arc:HoverCardProfile.Stats>
+            </arc:HoverCardProfile>
+        </arc:HoverCard>
+        <arc:HoverCard>
+            <arc:HoverCard.Trigger>
+                <arc:Button Content="@lena" Variant="Ghost" />
+            </arc:HoverCard.Trigger>
+            <arc:HoverCardProfile DisplayName="Lena Novak"
+                                  Role="Research lead"
+                                  Bio="Runs the quarterly usability studies."
+                                  Meta="Prague · 14:20 local time">
+                <arc:HoverCardProfile.Stats>
+                    <arc:HoverCardStat Label="Projects" Value="7" />
+                    <arc:HoverCardStat Label="Reviews" Value="19" />
+                </arc:HoverCardProfile.Stats>
+            </arc:HoverCardProfile>
+        </arc:HoverCard>
+    </WrapPanel>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 串流圖
 summary: 在擺動基線上堆疊的串流層，可在不同範圍之間變形；可單獨隔離某一層並逐週讀取。
-source-hash: 82df7bb364a1
+source-hash: d237f20ddc0d
 ---
+
+<Demo name="TopicsOverTime" />
 
 ## 何時使用
 

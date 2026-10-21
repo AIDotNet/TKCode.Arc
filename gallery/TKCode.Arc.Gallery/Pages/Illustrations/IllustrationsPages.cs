@@ -5,9 +5,5 @@ public static partial class GalleryPages
 {
     static partial void RegisterIllustrations()
     {
-        Register("DataFlow", DataFlowPage.Create);
-        Register("PaymentFlow", PaymentFlowPage.Create);
-        Register("MultiRegionFailover", MultiRegionFailoverPage.Create);
-        Register("VectorSearch", VectorSearchPage.Create);
     }
 }

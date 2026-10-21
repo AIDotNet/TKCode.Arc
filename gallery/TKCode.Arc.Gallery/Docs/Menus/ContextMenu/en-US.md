@@ -3,6 +3,8 @@ title: Context menu
 summary: Secondary actions kept close to the selected object.
 ---
 
+<Demo name="FileTile" />
+
 ## When to use
 
 - Secondary actions on a file, card or row, such as Copy link or Delete file, next to the object they act on.
@@ -69,16 +71,7 @@ image.Items.Add(pinned);
 
 `arc:ContextMenu.Menu` gives any control a right-click menu without wrapping it.
 
-```xml
-<Border Width="220" Height="96" CornerRadius="18" BorderThickness="1">
-    <arc:ContextMenu.Menu>
-        <arc:MenuSurface>
-            <arc:MenuEntry Header="New folder" />
-            <arc:MenuEntry Header="Refresh" />
-        </arc:MenuSurface>
-    </arc:ContextMenu.Menu>
-</Border>
-```
+<Demo name="Attached" />
 
 ### Opening and closing from code
 

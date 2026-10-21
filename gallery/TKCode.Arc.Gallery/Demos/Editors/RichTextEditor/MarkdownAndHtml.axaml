@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RichTextEditorMarkdownAndHtmlDemo">
+    <StackPanel Spacing="16">
+        <Border Padding="24,20"
+                CornerRadius="26"
+                BorderThickness="1"
+                MaxWidth="680"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:RichTextEditor x:Name="Editor" ContentChanged="OnContentChanged" />
+        </Border>
+        <TextBlock Text="Markdown"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <TextBlock x:Name="MarkdownText"
+                   FontSize="13"
+                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   TextWrapping="Wrap" />
+        <TextBlock Text="HTML"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <TextBlock x:Name="HtmlText"
+                   FontSize="13"
+                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

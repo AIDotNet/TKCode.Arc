@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ButtonGroupDisabledDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:ButtonGroup Label="Publishing">
+            <arc:ButtonGroupItem Label="Preview" Icon="{x:Static arc:ArcIcons.Eye}" />
+            <arc:ButtonGroupItem Label="Publish" Icon="{x:Static arc:ArcIcons.Upload}" IsDisabled="True" />
+            <arc:ButtonGroupItem Label="Schedule" Icon="{x:Static arc:ArcIcons.Clock}" />
+        </arc:ButtonGroup>
+        <arc:ButtonGroup Label="Formatting" IsEnabled="False">
+            <arc:ButtonGroupItem Label="Bold" Icon="{x:Static arc:ArcIcons.Bold}" IsIconOnly="True" />
+            <arc:ButtonGroupItem Label="Italic" Icon="{x:Static arc:ArcIcons.Italic}" IsIconOnly="True" />
+            <arc:ButtonGroupItem Label="Underline" Icon="{x:Static arc:ArcIcons.Underline}" IsIconOnly="True" />
+        </arc:ButtonGroup>
+    </WrapPanel>
+</UserControl>

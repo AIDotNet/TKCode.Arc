@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ResizablePanelsCollapsedAndPersistedDemo">
+    <StackPanel Spacing="12">
+        <Border Height="320"
+                Padding="1"
+                BorderThickness="1"
+                CornerRadius="26"
+                ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:ResizablePanels x:Name="Editor" Label="Editor layout">
+                <arc:ResizablePanel Id="files"
+                                    Label="Files"
+                                    DefaultSize="25"
+                                    MinSize="160"
+                                    IsCollapsible="True"
+                                    IsCollapsed="True">
+                    <Border Padding="16" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Files"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="src / components / panels.tsx"
+                                       FontSize="13"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </Border>
+                </arc:ResizablePanel>
+                <arc:ResizablePanel Id="code"
+                                    Label="Code"
+                                    DefaultSize="50"
+                                    MinSize="240">
+                    <Border Padding="16" Background="{arc:ArcDesignTokenResource Surface}">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="panels.tsx"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="export function ResizablePanels() { … }"
+                                       FontSize="13"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </Border>
+                </arc:ResizablePanel>
+                <arc:ResizablePanel Id="preview"
+                                    Label="Preview"
+                                    DefaultSize="25"
+                                    MinSize="160"
+                                    IsCollapsible="True">
+                    <Border Padding="16" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Preview"
+                                       FontSize="14"
+                                       FontWeight="Medium"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="Live preview of the component"
+                                       FontSize="13"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </Border>
+                </arc:ResizablePanel>
+            </arc:ResizablePanels>
+        </Border>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Save layout" Variant="Secondary" Size="Small" Click="OnSaveClick" />
+            <arc:Button Content="Restore saved" Variant="Ghost" Size="Small" Click="OnRestoreClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

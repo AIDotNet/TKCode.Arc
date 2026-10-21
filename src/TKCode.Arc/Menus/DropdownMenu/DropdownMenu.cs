@@ -64,9 +64,11 @@ public class DropdownMenu : TemplatedControl
     public static readonly StyledProperty<object?> TriggerProperty =
         AvaloniaProperty.Register<DropdownMenu, object?>(nameof(Trigger));
 
+    /// <summary>Whether the menu is open (two-way).</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<DropdownMenu, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Edge of the trigger the menu opens from: Bottom (default), Top, Left or Right.</summary>
     public static readonly StyledProperty<MenuSide> SideProperty =
         AvaloniaProperty.Register<DropdownMenu, MenuSide>(nameof(Side), MenuSide.Bottom);
 
@@ -74,18 +76,22 @@ public class DropdownMenu : TemplatedControl
     public static readonly StyledProperty<MenuAlignment> AlignmentProperty =
         AvaloniaProperty.Register<DropdownMenu, MenuAlignment>(nameof(Alignment), MenuAlignment.End);
 
+    /// <summary>Data items shown as one row each; ItemTemplate renders them when set.</summary>
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<DropdownMenu, IEnumerable?>(nameof(ItemsSource));
 
+    /// <summary>Template that renders each ItemsSource item as a row.</summary>
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<DropdownMenu, IDataTemplate?>(nameof(ItemTemplate));
 
     public static readonly RoutedEvent<MenuEntryClickedEventArgs> ItemClickedEvent =
         RoutedEvent.Register<DropdownMenu, MenuEntryClickedEventArgs>(nameof(ItemClicked), RoutingStrategies.Bubble);
 
+    /// <summary>Raised when the menu opens.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> OpenedEvent =
         RoutedEvent.Register<DropdownMenu, RoutedEventArgs>(nameof(Opened), RoutingStrategies.Direct);
 
+    /// <summary>Raised when the menu closes.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> ClosedEvent =
         RoutedEvent.Register<DropdownMenu, RoutedEventArgs>(nameof(Closed), RoutingStrategies.Direct);
 
@@ -107,12 +113,14 @@ public class DropdownMenu : TemplatedControl
         set => SetValue(TriggerProperty, value);
     }
 
+    /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
     {
         get => GetValue(IsOpenProperty);
         set => SetValue(IsOpenProperty, value);
     }
 
+    /// <inheritdoc cref="SideProperty"/>
     public MenuSide Side
     {
         get => GetValue(SideProperty);
@@ -125,12 +133,14 @@ public class DropdownMenu : TemplatedControl
         set => SetValue(AlignmentProperty, value);
     }
 
+    /// <inheritdoc cref="ItemsSourceProperty"/>
     public IEnumerable? ItemsSource
     {
         get => GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    /// <inheritdoc cref="ItemTemplateProperty"/>
     public IDataTemplate? ItemTemplate
     {
         get => GetValue(ItemTemplateProperty);
@@ -151,12 +161,14 @@ public class DropdownMenu : TemplatedControl
         remove => RemoveHandler(ItemClickedEvent, value);
     }
 
+    /// <summary>Raised when the menu opens.</summary>
     public event EventHandler<RoutedEventArgs>? Opened
     {
         add => AddHandler(OpenedEvent, value);
         remove => RemoveHandler(OpenedEvent, value);
     }
 
+    /// <summary>Raised when the menu closes.</summary>
     public event EventHandler<RoutedEventArgs>? Closed
     {
         add => AddHandler(ClosedEvent, value);

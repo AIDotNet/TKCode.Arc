@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.TagInputLimitDemo">
+    <arc:TagInput Label="Skills"
+                  Description="Up to 5 skills. A sixth is refused with a shake and an announcement."
+                  MaxTags="5"
+                  Width="420"
+                  HorizontalAlignment="Left">
+        <arc:TagInput.Value>
+            <generic:List x:TypeArguments="x:String">
+                <x:String>Figma</x:String>
+                <x:String>Avalonia</x:String>
+                <x:String>C#</x:String>
+                <x:String>Motion</x:String>
+            </generic:List>
+        </arc:TagInput.Value>
+    </arc:TagInput>
+</UserControl>

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SegmentedControlOverflowDemo">
+    <arc:SegmentedControl HorizontalAlignment="Center" MaxWidth="300" SelectedIndex="0">
+        <x:String>Overview</x:String>
+        <x:String>Activity</x:String>
+        <x:String>Deployments</x:String>
+        <x:String>Analytics</x:String>
+        <x:String>Logs</x:String>
+        <x:String>Settings</x:String>
+    </arc:SegmentedControl>
+</UserControl>

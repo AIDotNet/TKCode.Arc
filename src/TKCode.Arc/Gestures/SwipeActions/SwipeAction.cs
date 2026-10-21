@@ -73,6 +73,7 @@ public class SwipeAction : AvaloniaObject
     public static readonly StyledProperty<Geometry?> IconProperty =
         AvaloniaProperty.Register<SwipeAction, Geometry?>(nameof(Icon));
 
+    /// <summary>Fill of the revealed action: Neutral (default), Accent or Danger.</summary>
     public static readonly StyledProperty<SwipeActionTone> ToneProperty =
         AvaloniaProperty.Register<SwipeAction, SwipeActionTone>(nameof(Tone));
 
@@ -82,6 +83,7 @@ public class SwipeAction : AvaloniaObject
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<SwipeAction, ICommand?>(nameof(Command));
 
+    /// <summary>Parameter passed to Command; when null the row's data item is used.</summary>
     public static readonly StyledProperty<object?> CommandParameterProperty =
         AvaloniaProperty.Register<SwipeAction, object?>(nameof(CommandParameter));
 
@@ -91,6 +93,7 @@ public class SwipeAction : AvaloniaObject
     /// <summary>24×24 Lucide geometry drawn at 20px (Arc: required), for example <c>ArcIcons.Archive</c>.</summary>
     public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
+    /// <inheritdoc cref="ToneProperty"/>
     public SwipeActionTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
 
     /// <summary>The row springs home after the action instead of sliding away and collapsing.</summary>
@@ -99,6 +102,7 @@ public class SwipeAction : AvaloniaObject
     /// <summary>Runs after <see cref="Invoked"/>; its parameter defaults to the row's data item.</summary>
     public ICommand? Command { get => GetValue(CommandProperty); set => SetValue(CommandProperty, value); }
 
+    /// <inheritdoc cref="CommandParameterProperty"/>
     public object? CommandParameter { get => GetValue(CommandParameterProperty); set => SetValue(CommandParameterProperty, value); }
 
     /// <summary>Raised when the action runs (full swipe, tap on the revealed action, or the menu).</summary>

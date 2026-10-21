@@ -1,8 +1,10 @@
 ---
 title: 日期範圍選擇器
 summary: 從觸發元件展開為兩個月份面板，附帶預設選項與可延伸的範圍高亮。
-source-hash: 9a9365b4fde3
+source-hash: e9ac32a5a133
 ---
+
+<Demo name="Report" />
 
 ## 何時使用
 
@@ -44,26 +46,21 @@ picker.Presets =
 
 ### 範圍限制與每週起始日
 
-`MinDate` 與 `MaxDate` 會停用範圍之外的日期，以及超出範圍的月份按鈕。`FirstDayOfWeek` 設定格線的第一欄。`Culture` 設定月份標題、星期標題與範圍標籤。
+`MinDate` 與 `MaxDate` 會停用範圍之外的日期，以及超出範圍的月份按鈕。`FirstDayOfWeek` 設定格線的第一欄。
 
-```xml
-<arc:DateRangePicker Label="住宿"
-                     FirstDayOfWeek="Monday"
-                     Culture="en-US" />
-```
-
-```csharp
-picker.MinDate = today;
-picker.MaxDate = today.AddMonths(6);
-```
+<Demo name="Booking" />
 
 ### 單月或雙月
 
 `MonthCount` 選擇面板版面。`Auto` 在視窗夠寬時顯示兩個月與預設選項欄，否則顯示一個月與可捲動的預設選項列。`One` 一律使用緊湊面板。
 
-```xml
-<arc:DateRangePicker Label="緊湊" MonthCount="One" />
-```
+<Demo name="OneMonth" />
+
+### 文化特性
+
+`Culture` 設定月份標題、星期標題與範圍標籤。
+
+<Demo name="Culture" />
 
 ### 回應「套用」
 

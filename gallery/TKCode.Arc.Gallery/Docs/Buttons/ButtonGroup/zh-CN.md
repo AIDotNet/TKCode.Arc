@@ -1,8 +1,10 @@
 ---
 title: 按钮组
 summary: 将相关操作合并到一个带细分隔线的整体中：悬停高亮在各段之间滑动，按下的段就地响应，附加菜单还可以收起整排按钮。
-source-hash: ef3f1c0641b5
+source-hash: 4fde0cd5fbbf
 ---
+
+<Demo name="DocumentActions" />
 
 ## 何时使用
 
@@ -46,6 +48,8 @@ source-hash: ef3f1c0641b5
 
 `Value` 会在文字位置显示内容，例如缩放比例。`Label` 仍是无障碍名称。文字也可以在按下后变化；将其他文字列在 `ReserveLabels` 中，这一段就会保留最宽的宽度。
 
+<Demo name="LiveValue" />
+
 ```csharp
 var zoomValue = new ButtonGroupItem { Label = "重置缩放", Value = "100%" };
 zoomValue.Click += (_, _) => zoomValue.Value = "100%";
@@ -80,22 +84,25 @@ share.Click += async (_, _) =>
 
 `Variant="Solid"` 使用主填充色，每个屏幕最多使用一次。`Orientation="Vertical"` 会将各段纵向堆叠，此时菜单对齐到起始边。`ActionInvoked` 在某一段自身的点击处理程序之后执行。
 
-```xml
-<arc:ButtonGroup Label="消息操作" Variant="Solid">
-    <arc:ButtonGroupItem Label="回复" />
-    <arc:ButtonGroupItem Label="全部回复" />
-    <arc:ButtonGroupItem Label="转发" />
-</arc:ButtonGroup>
+<Demo name="Solid" />
 
-<arc:ButtonGroup Label="插入" Orientation="Vertical">
-    <arc:ButtonGroupItem Label="图片" />
-    <arc:ButtonGroupItem Label="表格" />
-</arc:ButtonGroup>
-```
+<Demo name="Vertical" />
 
 ```csharp
 document.ActionInvoked += (_, e) => log.Text = $"操作：{e.Item.Label}";
 ```
+
+### 收起文字
+
+当整行放不下时，各段会隐藏文字并保留图标；一旦有足够空间容纳完整的一行，文字就会恢复。
+
+<Demo name="CollapsingLabels" />
+
+### 禁用
+
+设置了 `IsDisabled` 的段仍可获得焦点，并报告为不可用；`IsEnabled` 为 `False` 的组则整体变暗。
+
+<Demo name="Disabled" />
 
 ## API 参考
 

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PageHeaderMinimalDemo">
+    <arc:PageHeader Title="Billing"
+                    Description="Plans, invoices and payment methods for the Northline workspace."
+                    Height="380"
+                    MaxWidth="800">
+        <arc:PageHeaderTab Header="Plan">
+            <TextBlock Text="You are on the Team plan, billed yearly. The next renewal is on March 3." TextWrapping="Wrap" />
+        </arc:PageHeaderTab>
+        <arc:PageHeaderTab Header="Invoices" Count="12">
+            <TextBlock Text="Twelve invoices. The latest one is from October 1." TextWrapping="Wrap" />
+        </arc:PageHeaderTab>
+        <arc:PageHeaderTab Header="Payment methods" Count="2">
+            <TextBlock Text="Visa ending in 4242 is the default card." TextWrapping="Wrap" />
+        </arc:PageHeaderTab>
+    </arc:PageHeader>
+</UserControl>

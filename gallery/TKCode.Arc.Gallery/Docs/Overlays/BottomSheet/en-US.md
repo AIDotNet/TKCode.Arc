@@ -3,6 +3,8 @@ title: Bottom sheet
 summary: A sheet that rests at a peek or full height and follows your finger.
 ---
 
+<Demo name="Detents" />
+
 ## When to use
 
 - Secondary, mobile-first tasks such as trip details, filters or share options.
@@ -37,6 +39,8 @@ A `BottomSheet` rises from the bottom edge and rests at one or more heights, cal
 
 `Detents` lists the resting heights as fractions of the window height. Use `BottomSheetDetents.Parse` to set them
 from a string, and `InitialDetentIndex` to choose the detent the sheet opens at. A single detent is a fixed height.
+
+<Demo name="ThreeDetents" />
 
 ```csharp
 share.Detents = BottomSheetDetents.Parse("0.3, 0.6, 0.95");

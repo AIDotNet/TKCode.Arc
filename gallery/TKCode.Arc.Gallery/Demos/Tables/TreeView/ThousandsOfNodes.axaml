@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeViewThousandsOfNodesDemo">
+    <StackPanel Spacing="12">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Open all 10,000 files" Variant="Secondary" Size="Small" Click="OnExpandAllClick" />
+            <arc:Button Content="Collapse all" Variant="Secondary" Size="Small" Click="OnCollapseAllClick" />
+        </WrapPanel>
+        <arc:TreeView x:Name="Tree"
+                      MaxHeight="380"
+                      HorizontalAlignment="Left"
+                      Width="340" />
+    </StackPanel>
+</UserControl>

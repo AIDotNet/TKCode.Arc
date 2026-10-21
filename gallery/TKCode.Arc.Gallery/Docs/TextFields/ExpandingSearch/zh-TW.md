@@ -1,8 +1,10 @@
 ---
 title: 展開式搜尋
 summary: 圖示展開為搜尋欄位，並在下方顯示結果。
-source-hash: 9ba7b7424543
+source-hash: a233178b274e
 ---
+
+<Demo name="HeaderSearch" />
 
 ## 何時使用
 
@@ -64,11 +66,7 @@ header.ItemSelected += (_, e) => Open(e.Item.Id);
 
 `Anchor` 設定按鈕所在的邊緣。欄位會從該邊緣向外展開，最寬至 `ExpandedWidth`。
 
-```xml
-<arc:ExpandingSearch Label="尋找儀表板"
-                     Anchor="Start"
-                     ExpandedWidth="300" />
-```
+<Demo name="AnchoredAtStart" />
 
 ### 在程式碼中開啟與關閉
 

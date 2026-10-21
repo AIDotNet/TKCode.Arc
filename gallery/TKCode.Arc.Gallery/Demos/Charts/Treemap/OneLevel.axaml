@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreemapOneLevelDemo">
+    <arc:Treemap Label="Storage by folder" PlotHeight="260">
+        <arc:Treemap.Items>
+            <arc:TreemapNode Id="photos" Label="Photos" Value="48" />
+            <arc:TreemapNode Id="video" Label="Video" Value="112" />
+            <arc:TreemapNode Id="docs" Label="Documents" Value="12" />
+            <arc:TreemapNode Id="music" Label="Music" Value="26" />
+            <arc:TreemapNode Id="apps" Label="Applications" Value="64" />
+            <arc:TreemapNode Id="other" Label="Other" Value="9" />
+        </arc:Treemap.Items>
+    </arc:Treemap>
+</UserControl>

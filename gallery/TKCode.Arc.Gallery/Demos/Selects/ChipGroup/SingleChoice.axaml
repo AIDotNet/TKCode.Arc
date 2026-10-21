@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChipGroupSingleChoiceDemo">
+    <arc:ChipGroup Label="Status" IsMultiple="False">
+        <arc:SelectItem Content="Open" Value="open" />
+        <arc:SelectItem Content="In progress" Value="progress" />
+        <arc:SelectItem Content="Closed" Value="closed" />
+    </arc:ChipGroup>
+</UserControl>

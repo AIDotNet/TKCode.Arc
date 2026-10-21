@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CountdownCompactDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Countdown x:Name="Deadline" Variant="Compact" />
+        <arc:Countdown x:Name="Hours" Units="Hours, Minutes" Variant="Compact" />
+        <arc:Countdown x:Name="Keynote" Variant="Compact" Label="Keynote starts in" />
+    </WrapPanel>
+</UserControl>

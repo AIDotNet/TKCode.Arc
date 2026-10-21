@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DropdownMenuLabelAndTogglesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:DropdownMenu x:Name="Sort"
+                          Label="Sort: Newest"
+                          Icon="{x:Static arc:ArcIcons.ArrowUpDown}"
+                          Alignment="Start"
+                          ItemClicked="OnSortClicked">
+            <arc:MenuEntryLabel Text="Sort by" />
+            <arc:MenuEntry Header="Newest" ToggleType="Radio" GroupName="sort" IsChecked="True" />
+            <arc:MenuEntry Header="Oldest" ToggleType="Radio" GroupName="sort" />
+            <arc:MenuEntry Header="Name" ToggleType="Radio" GroupName="sort" />
+            <arc:MenuEntry Header="Size" ToggleType="Radio" GroupName="sort" />
+        </arc:DropdownMenu>
+        <arc:DropdownMenu Label="View" Icon="{x:Static arc:ArcIcons.LayoutGrid}">
+            <arc:MenuEntry Header="Show sidebar"
+                           ToggleType="CheckBox"
+                           IsChecked="True"
+                           StaysOpenOnClick="True"
+                           InputGesture="Ctrl+B" />
+            <arc:MenuEntry Header="Show minimap"
+                           ToggleType="CheckBox"
+                           StaysOpenOnClick="True"
+                           InputGesture="Ctrl+M" />
+            <arc:MenuEntry Header="Wrap lines"
+                           ToggleType="CheckBox"
+                           IsChecked="True"
+                           StaysOpenOnClick="True" />
+            <arc:MenuEntrySeparator />
+            <arc:MenuEntryLabel Text="Density" />
+            <arc:MenuEntry Header="Comfortable" ToggleType="Radio" GroupName="density" IsChecked="True" />
+            <arc:MenuEntry Header="Compact" ToggleType="Radio" GroupName="density" />
+        </arc:DropdownMenu>
+    </WrapPanel>
+</UserControl>

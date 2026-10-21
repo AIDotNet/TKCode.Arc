@@ -1,8 +1,10 @@
 ---
 title: JSON 檢視器
 summary: 可摺疊的 JSON 樹狀結構，支援搜尋、長陣列分頁，以及複製值或路徑。
-source-hash: 338978f83433
+source-hash: 5fc22f22ccd6
 ---
+
+<Demo name="WebhookPayload" />
 
 ## 何時使用
 
@@ -58,6 +60,8 @@ viewer.Collapse("root.data.customer");
 
 `IsSearchable` 預設開啟。`Query` 會篩選鍵與值，展開包含相符項目的分支，並在 `MatchCount` 中回報相符數量。
 
+<Demo name="Search" />
+
 ```xml
 <arc:JsonViewer Json="{Binding Payload}"
                 Query="{Binding SearchText, Mode=TwoWay}"
@@ -73,6 +77,8 @@ viewer.PreviousMatch();
 
 `PageSize` 設定分支一次顯示的子項目數量。「顯示更多」列會載入下一頁。
 
+<Demo name="LongArrays" />
+
 ```xml
 <arc:JsonViewer Json="{Binding LargeCatalog}" PageSize="50" />
 ```
@@ -86,6 +92,12 @@ viewer.RootName = "payload";
 viewer.Copied += (_, e) => status.Text = $"已複製 {e.Kind}，位於 {e.Path}";
 viewer.CurrentRowChanged += (_, e) => current.Text = $"{e.Path} ({e.ValueType})";
 ```
+
+### 窄寬度
+
+寬度為 420px 及以下時，縮排會收緊，路徑列不再顯示類型。
+
+<Demo name="Narrow" />
 
 ## API 參考
 

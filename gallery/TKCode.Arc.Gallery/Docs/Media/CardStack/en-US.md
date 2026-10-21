@@ -3,6 +3,8 @@ title: Card stack
 summary: Review a deck one card at a time, with a throw and an undo.
 ---
 
+<Demo name="Shortlist" />
+
 ## When to use
 
 - Sorting a queue of items one at a time, such as a shortlist, a review queue or a set of preferences.
@@ -49,9 +51,7 @@ stack.LabelSelector = item => ((Destination)item!).Name;
 `LeftLabel` and `RightLabel` name the buttons and the stamps that appear while a card is dragged. `LeftOutcome` and
 `RightOutcome` are the past-tense words used in announcements, such as "skipped".
 
-```xml
-<arc:CardStack Label="Candidates" LeftLabel="Not now" RightLabel="Interview" />
-```
+<Demo name="CustomActions" />
 
 ### Deciding and undoing in code
 
@@ -80,6 +80,12 @@ stack.Reset();
     </arc:CardStack.EmptyContent>
 </arc:CardStack>
 ```
+
+### Photos
+
+Card faces can show `AsyncImage` photos over a drawn scene, so they still look complete offline.
+
+<Demo name="Photos" />
 
 ## API reference
 

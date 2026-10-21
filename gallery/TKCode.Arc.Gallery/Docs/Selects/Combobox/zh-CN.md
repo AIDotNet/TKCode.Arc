@@ -1,8 +1,10 @@
 ---
 title: 组合框
 summary: 无需离开字段即可搜索并从列表中选择。
-source-hash: 504a8dda5393
+source-hash: 7880a8c53e61
 ---
+
+<Demo name="Searchable" />
 
 ## 何时使用
 
@@ -60,15 +62,7 @@ zone.SelectionChanged += (_, _) => Console.WriteLine(zone.SelectedValue);
 
 默认情况下，标签、元信息和关键词按不区分大小写的子字符串进行匹配。设置 `FilterPredicate` 可以更改匹配方式。它接收项目和去除首尾空白后的查询词。
 
-```csharp
-var prefix = new Combobox
-{
-    Label = "开头匹配",
-    ItemsSource = cities,
-    FilterPredicate = (item, query) => item is string s
-        && s.StartsWith(query, StringComparison.CurrentCultureIgnoreCase)
-};
-```
+<Demo name="CustomFilter" />
 
 ### 占位文字与空状态文字
 
@@ -88,6 +82,18 @@ var prefix = new Combobox
 zone.Clear();
 zone.FocusInput();
 ```
+
+### 内联选项
+
+禁用的选项会显示，但无法选取。选中某项后，清除按钮会弹出。
+
+<Demo name="InlineOptions" />
+
+### 禁用
+
+禁用的 `Combobox` 会保留其值，并忽略输入。
+
+<Demo name="Disabled" />
 
 ## API 参考
 

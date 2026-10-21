@@ -1,8 +1,10 @@
 ---
 title: 表情回应
 summary: 一键回应一条内容，计数会滚动变化。
-source-hash: daf4737245bc
+source-hash: 10dc2dbaae0e
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -47,16 +49,7 @@ reactions.Options.Add(new ReactionOption("celebrate", "庆祝", ArcIcons.Smile))
 
 `Value` 为双向绑定。计数为 0 的胶囊会从栏中移除。`Reacted` 标记查看者自己的回应，`ReactedBy` 列出提示框中显示的名称。
 
-```csharp
-var people = new Reactions
-{
-    Value =
-    [
-        new Reaction("love", 4, true) { ReactedBy = ["Ada Okafor", "Jonas Berg", "Lin Park"] },
-        new Reaction("celebrate", 2) { ReactedBy = ["Maya Chen", "Sam Ortiz"] }
-    ]
-};
-```
+<Demo name="WhoReacted" />
 
 `ValueChanged` 在值变化后触发。`Next` 为新值，`Change` 说明变更的选项以及查看者是否做出了回应。
 
@@ -84,9 +77,13 @@ reactions.ValueChanged += (_, e) =>
 
 胶囊放不下时，整个栏会换行。设置 `Width` 即可看到换行效果。
 
-```xml
-<arc:Reactions Width="220" HorizontalAlignment="Left" />
-```
+<Demo name="Wrapping" />
+
+### 实时计数
+
+在别处变化的计数只会滚动发生变化的数位：增加时向上滚动，减少时向下滚动。
+
+<Demo name="LiveCounts" />
 
 ## API 参考
 

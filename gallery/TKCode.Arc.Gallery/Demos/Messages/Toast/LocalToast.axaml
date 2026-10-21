@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToastLocalToastDemo">
+    <StackPanel Spacing="12">
+        <Border Height="200"
+                Padding="20"
+                CornerRadius="18"
+                BorderThickness="1"
+                ClipToBounds="True"
+                Background="{arc:ArcDesignTokenResource Background}"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <arc:Toast x:Name="Saved"
+                       Title="Changes saved"
+                       Description="Synced to all your devices."
+                       VerticalAlignment="Bottom"
+                       Closed="OnClosed" />
+        </Border>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Save changes" Variant="Primary" Click="OnSaveClick" />
+            <arc:Button Content="Change text" Variant="Secondary" Click="OnChangeTextClick" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   Text="Swipe the toast left or right, or wait 4.5s."
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

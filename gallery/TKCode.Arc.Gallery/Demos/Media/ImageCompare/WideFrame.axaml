@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:pages="using:TKCode.Arc.Gallery.Pages"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageCompareWideFrameDemo">
+    <arc:ImageCompare AspectRatio="1.7777"
+                      ShowLabels="False"
+                      Position="30"
+                      Label="Cleanup preview">
+        <arc:ImageCompare.Before>
+            <pages:MediaArt Scene="3" Graded="False" />
+        </arc:ImageCompare.Before>
+        <arc:ImageCompare.After>
+            <pages:MediaArt Scene="3" />
+        </arc:ImageCompare.After>
+    </arc:ImageCompare>
+</UserControl>

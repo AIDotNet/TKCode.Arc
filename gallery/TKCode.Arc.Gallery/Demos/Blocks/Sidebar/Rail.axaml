@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SidebarRailDemo">
+    <UserControl.Styles>
+        <Style Selector="arc|Sidebar:collapsed :is(Control).rail-fade">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Spacing="14" HorizontalAlignment="Center">
+        <arc:Switch Content="Collapsed"
+                    HorizontalAlignment="Center"
+                    IsChecked="{Binding #Nav.IsCollapsed, Mode=TwoWay}" />
+        <Border Width="560"
+                Height="400"
+                CornerRadius="16"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                Background="{arc:ArcDesignTokenResource Background}">
+            <DockPanel>
+                <arc:Sidebar x:Name="Nav"
+                             DockPanel.Dock="Left"
+                             CornerRadius="15,0,0,15"
+                             IsCollapsed="True"
+                             IsCollapseButtonVisible="False"
+                             SelectedKey="reports/weekly">
+                    <arc:Sidebar.Header>
+                        <StackPanel Orientation="Horizontal" Spacing="10" Margin="6,3,0,3">
+                            <Border Width="28"
+                                    Height="28"
+                                    CornerRadius="8"
+                                    Background="{arc:ArcDesignTokenResource Accent}">
+                                <TextBlock Text="N"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                            </Border>
+                            <TextBlock Classes="rail-fade"
+                                       Text="Northwind"
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </StackPanel>
+                    </arc:Sidebar.Header>
+                    <arc:SidebarSection>
+                        <arc:SidebarItem Key="dashboard" Label="Dashboard" Icon="{x:Static arc:ArcIcons.LayoutGrid}" />
+                        <arc:SidebarItem Key="inbox" Label="Inbox" Icon="{x:Static arc:ArcIcons.Inbox}" Badge="3" />
+                        <arc:SidebarItem Key="calendar" Label="Calendar" Icon="{x:Static arc:ArcIcons.Calendar}" />
+                    </arc:SidebarSection>
+                    <arc:SidebarSection Header="Insights">
+                        <arc:SidebarItem Key="reports" Label="Reports" Icon="{x:Static arc:ArcIcons.ChartBar}">
+                            <arc:SidebarItem Key="reports/weekly" Label="Weekly summary" />
+                            <arc:SidebarItem Key="reports/revenue" Label="Revenue" />
+                            <arc:SidebarItem Key="reports/retention" Label="Retention" />
+                        </arc:SidebarItem>
+                        <arc:SidebarItem Key="customers" Label="Customers" Icon="{x:Static arc:ArcIcons.Users}" />
+                    </arc:SidebarSection>
+                    <arc:SidebarSection>
+                        <arc:SidebarItem Key="settings" Label="Settings" Icon="{x:Static arc:ArcIcons.Settings}" />
+                    </arc:SidebarSection>
+                </arc:Sidebar>
+                <StackPanel Margin="28,24" Spacing="8">
+                    <TextBlock Text="{Binding #Nav.SelectedItem.Label}"
+                               FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="Hover an icon for its name. Reports opens its pages in a menu; the dot on Inbox stands for its count."
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

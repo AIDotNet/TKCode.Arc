@@ -1,8 +1,10 @@
 ---
 title: 變形選擇
 summary: 觸發器展開為清單的選取器，帶有滑動反白與鍵入搜尋。
-source-hash: 7d3f65226c37
+source-hash: 10da2b25f10e
 ---
+
+<Demo name="GroupedWithSearch" />
 
 ## 何時使用
 
@@ -54,6 +56,8 @@ zone.SelectionChanged += (_, _) => Console.WriteLine(zone.SelectedValue);
 ### 精簡工具列
 
 使用 `IsLabelVisible="False"` 隱藏標籤。觸發器仍以 `Label` 作為無障礙名稱，因此膠囊形狀保持精簡。
+
+<Demo name="CompactToolbar" />
 
 ```xml
 <arc:MorphSelect Label="狀態" IsLabelVisible="False" />

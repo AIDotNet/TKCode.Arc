@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TooltipSidesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Button Content="Top" Variant="Secondary" arc:Tooltip.Tip="Copy link" />
+        <arc:Button Content="Bottom" Variant="Secondary"
+                    arc:Tooltip.Tip="Share with your team"
+                    arc:Tooltip.Side="Bottom" />
+        <arc:Button Content="Left" Variant="Secondary"
+                    arc:Tooltip.Tip="Archive"
+                    arc:Tooltip.Side="Left" />
+        <arc:Button Content="Right" Variant="Secondary"
+                    arc:Tooltip.Tip="Delete forever"
+                    arc:Tooltip.Side="Right" />
+    </WrapPanel>
+</UserControl>

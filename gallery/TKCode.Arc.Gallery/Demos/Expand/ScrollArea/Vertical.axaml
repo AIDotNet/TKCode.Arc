@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ScrollAreaVerticalDemo">
+    <StackPanel Spacing="12">
+        <Border HorizontalAlignment="Left"
+                BorderThickness="1"
+                CornerRadius="18"
+                ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:ScrollArea Width="360"
+                            Height="260"
+                            CornerRadius="18"
+                            Label="Release notes"
+                            EdgesChanged="OnEdgesChanged">
+                <ItemsControl>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Padding="16,12"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <TextBlock Text="{Binding}"
+                                           FontSize="14"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <x:String>v2.4 · Overlay scrollbars</x:String>
+                    <x:String>v2.3 · Faster cold starts</x:String>
+                    <x:String>v2.2 · Keyboard shortcuts</x:String>
+                    <x:String>v2.1 · Shared workspaces</x:String>
+                    <x:String>v2.0 · New editor</x:String>
+                    <x:String>v1.9 · Offline mode</x:String>
+                    <x:String>v1.8 · Audit log</x:String>
+                    <x:String>v1.7 · Webhooks</x:String>
+                    <x:String>v1.6 · SSO</x:String>
+                    <x:String>v1.5 · Dark mode</x:String>
+                    <x:String>v1.4 · Billing portal</x:String>
+                    <x:String>v1.3 · Import from CSV</x:String>
+                    <x:String>v1.2 · Comments</x:String>
+                    <x:String>v1.1 · Mentions</x:String>
+                    <x:String>v1.0 · Launch</x:String>
+                </ItemsControl>
+            </arc:ScrollArea>
+        </Border>
+        <TextBlock x:Name="Edges"
+                   Text="Edges: bottom"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 提及輸入框
 summary: 支援 @人員 與 #頻道 提及的多行文字方塊，提及作為整體權杖處理，並在插入點處顯示建議。
-source-hash: 3b29f78ad648
+source-hash: 353fdfba5bf8
 ---
+
+<Demo name="CommentBox" />
 
 ## 何時使用
 
@@ -60,6 +62,8 @@ var comment = new MentionInput
 
 `Value` 是一個 `MentionValue`：純文字加上各提及及其位移量。在提及周圍編輯會移動它，在提及內部編輯則會將其移除。
 
+<Demo name="Prefilled" />
+
 ```csharp
 var text = "Thanks @Maya Chen. Can @Jordan Lee review it in #design?";
 comment.Value = new MentionValue(text,
@@ -74,6 +78,8 @@ comment.Value = new MentionValue(text,
 
 啟用 `IsSubmitOnEnter` 後，Enter 送出，Shift+Enter 換行。輸入法正在組字時，Enter 永遠不會送出。
 
+<Demo name="SubmitOnEnter" />
+
 ```csharp
 message.IsSubmitOnEnter = true;
 message.Submitted += (_, e) =>
@@ -87,9 +93,9 @@ message.Submitted += (_, e) =>
 
 `MinLines` 與 `MaxLines` 設定高度範圍。`SuggestionPlacement` 設定清單的展開位置：`Auto` 選擇空間較大的一側，`Top` 與 `Bottom` 則強制指定一側。
 
-```xml
-<arc:MentionInput Label="回覆" MinLines="2" MaxLines="4" SuggestionPlacement="Top" />
-```
+<Demo name="Growth" />
+
+<Demo name="Placement" />
 
 ### 命令與事件
 
@@ -100,6 +106,18 @@ button.Click += (_, _) => comment.OpenSuggestions(MentionKind.Person);
 
 comment.MentionAdded += (_, e) => Console.WriteLine($"Added {e.Mention.Text}");
 ```
+
+### 停用
+
+整個欄位會淡化到 55%，且不接受任何輸入。
+
+<Demo name="Disabled" />
+
+### 序列化輸出
+
+`MentionSerializer.Serialize` 會將值轉換為儲存文字：人員為 `<@id>`，頻道為 `<#id>`。
+
+<Demo name="Serialized" />
 
 ## API 參考
 

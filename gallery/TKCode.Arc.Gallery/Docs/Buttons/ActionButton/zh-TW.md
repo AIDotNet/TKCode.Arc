@@ -1,8 +1,10 @@
 ---
 title: 操作按鈕
 summary: 用於高頻工具列操作的精簡按鈕。
-source-hash: f0f196c4f1de
+source-hash: b3c11d0f2177
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -42,6 +44,10 @@ var save = new ActionButton
 
 `Label` 是閒置狀態的文字，同時也是無障礙名稱。`AsyncAction` 執行期間顯示 `PendingLabel`，完成後顯示 `SuccessLabel`。`ResetAfter` 設定成功狀態保留的時間，預設為 2.4 秒。設為零時，成功狀態會一直保留，直到呼叫 `Reset()`。
 
+<Demo name="Labels" />
+
+<Demo name="KeepResult" />
+
 ```xml
 <arc:ActionButton Label="發布貼文"
                   PendingLabel="發布中"
@@ -49,24 +55,11 @@ var save = new ActionButton
                   ResetAfter="00:00:03" />
 ```
 
-```csharp
-var settings = new ActionButton
-{
-    Label = "儲存設定",
-    SuccessLabel = "設定已儲存",
-    ResetAfter = TimeSpan.Zero
-};
-
-reset.Click += (_, _) => settings.Reset();
-```
-
 ### 失敗
 
 `AsyncAction` 擲出例外時，按鈕回到閒置狀態，並引發 `ActionFailed`。事件引數攜帶 `Exception`。
 
-```csharp
-sync.ActionFailed += (_, e) => message.Text = $"已回到閒置狀態：{e.Exception.Message}";
-```
+<Demo name="Failure" />
 
 ### 命令與點按
 
@@ -76,9 +69,7 @@ sync.ActionFailed += (_, e) => message.Text = $"已回到閒置狀態：{e.Excep
 
 將 `IsEnabled` 設為 `False` 即可使按鈕變暗。`AsyncAction` 等待期間，按鈕保持鍵盤焦點，並忽略重複啟動。
 
-```xml
-<arc:ActionButton Label="儲存" IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API 參考
 

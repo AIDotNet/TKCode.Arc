@@ -3,6 +3,8 @@ title: Scrub input
 summary: A Figma-style number field: drag the label to scrub, or type values, units, and arithmetic.
 ---
 
+<Demo name="Inspector" />
+
 ## When to use
 
 - Property inspectors with position, size, rotation and opacity values.
@@ -68,29 +70,20 @@ limits are finite.
 With several `Units` the unit becomes a button that cycles through them. Typing a unit, such as `50%`, switches to it.
 An unknown unit is rejected.
 
-```csharp
-var width = new ScrubInput
-{
-    Label = "Width",
-    Value = 240,
-    Minimum = 0,
-    Units = ["px", "%", "em"]
-};
-```
+<Demo name="CyclingUnits" />
 
 ### Sizes
 
 `Size` sets the height: `Small` is 30px and `Medium` (the default) is 36px.
 
-```xml
-<arc:ScrubInput Label="Small" Size="Small" Value="12" Unit="px" />
-<arc:ScrubInput Label="Medium" Value="12" Unit="px" />
-```
+<Demo name="Sizes" />
 
 ### Binding and events
 
 `Value` is two-way. `ValueChanged` fires for every change, and `ValueCommitted` fires once a change made in the field
 settles. Both report the old value, the new value and the `ChangeSource`.
+
+<Demo name="Events" />
 
 ```xml
 <arc:ScrubInput Label="Opacity" Value="{Binding Opacity, Mode=TwoWay}" Minimum="0" Maximum="100" Unit="%" />
@@ -102,6 +95,20 @@ amount.ValueCommitted += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue} {e.Unit} ({e.ChangeSource})");
 };
 ```
+
+### Glyph labels
+
+A 14px glyph can stand in for the label. Give the field an accessible name, and double click the label to reset the
+value.
+
+<Demo name="GlyphLabels" />
+
+### States
+
+A disabled field dims to 50% and ignores input. An entry that cannot be read, such as `abc`, is rejected: the edge turns
+red for 900ms with a short shake, and the old value stays.
+
+<Demo name="States" />
 
 ## API reference
 

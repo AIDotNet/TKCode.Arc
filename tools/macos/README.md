@@ -6,7 +6,7 @@ The scripts here do the work, so the same flow runs locally.
 
 | File | Purpose |
 |---|---|
-| `bundle.sh` | `dotnet publish` output (single file) to an unsigned `.app` with `Info.plist`. |
+| `bundle.sh` | `dotnet publish` output (single file) to an unsigned `.app` with `Info.plist` and the app icon (`gallery/TKCode.Arc.Gallery.Desktop/Assets/AppIcon.icns`). |
 | `sign-notarize.sh` | Signs every Mach-O file and the bundle (hardened runtime), builds and signs the `.dmg`, notarizes and staples it. |
 | `Entitlements.plist` | Hardened runtime exceptions a self-contained .NET app needs (JIT, executable memory). |
 

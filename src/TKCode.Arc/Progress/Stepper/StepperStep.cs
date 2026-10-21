@@ -28,6 +28,7 @@ public class StepperStep : AvaloniaObject
     public static readonly StyledProperty<string?> IdProperty =
         AvaloniaProperty.Register<StepperStep, string?>(nameof(Id));
 
+    /// <summary>Step name, shown beside its marker.</summary>
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<StepperStep, string?>(nameof(Label));
 
@@ -50,6 +51,7 @@ public class StepperStep : AvaloniaObject
     /// <summary>Stable key, so each step keeps its own motion when the list changes.</summary>
     public string? Id { get => GetValue(IdProperty); set => SetValue(IdProperty, value); }
 
+    /// <inheritdoc cref="LabelProperty"/>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
     /// <summary>A short hint under the label.</summary>

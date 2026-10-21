@@ -16,7 +16,9 @@ namespace TKCode.Arc.Gallery.Generators;
 /// TKCode.Arc assemblies and their XML documentation (<c>GalleryDocKind=XmlDoc</c>);</item>
 /// <item>the API description translations (<c>Docs/Api/&lt;language&gt;.xlf</c>, <c>GalleryDocKind=ApiTranslation</c>).</item>
 /// </list>
-/// Outdated or missing translations, unknown types and undocumented members are reported as GDOC diagnostics.
+/// It also builds <c>GalleryDemoData</c>: every demo (<c>Demos/&lt;Category&gt;/&lt;Component&gt;/&lt;Name&gt;.axaml</c> and its
+/// code-behind), with the files the demo's Code tab shows.
+/// Outdated or missing translations, unknown types or demos and undocumented members are reported as GDOC diagnostics.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
 public sealed class GalleryDocsGenerator : IIncrementalGenerator
@@ -46,6 +48,121 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
                          .Combine(context.CompilationProvider);
         context.RegisterSourceOutput(input, static (spc, data) =>
             Emit(spc, data.Left.Left.Left, data.Left.Left.Right, XmlDocs.Merge(data.Left.Right), data.Right));
+
+        var projectDirectory = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.ProjectDir", out var directory) ? directory : null);
+        // Avalonia passes every AvaloniaXaml item to generators as an additional file; the demos are the ones under Demos/.
+        var demos = context.AdditionalTextsProvider
+            .Where(static file => file.Path.EndsWith(".axaml", System.StringComparison.OrdinalIgnoreCase))
+            .Combine(projectDirectory)
+            .Select(static (pair, ct) => DemoFile.Parse(pair.Left.Path, pair.Left.GetText(ct)?.ToString(), pair.Right))
+            .Where(static demo => demo is not null)
+            .Select(static (demo, _) => demo!);
+        context.RegisterSourceOutput(demos.Collect().Combine(pages.Collect()).Combine(context.CompilationProvider),
+            static (spc, data) => EmitDemos(spc, data.Left.Left, data.Left.Right, data.Right));
+    }
+
+    /// <summary>
+    /// The demo registry, a view class for each demo without a code-behind, and the checks between the demos and the
+    /// pages that show them.
+    /// </summary>
+    private static void EmitDemos(SourceProductionContext context, ImmutableArray<DemoFile> demos, ImmutableArray<DocPage> pages,
+                                  Compilation compilation)
+    {
+        var valid = new List<(DemoFile Demo, SyntaxTree? CodeBehind)>();
+        var views = new StringBuilder();
+        foreach (var demo in demos.OrderBy(d => d.Id, System.StringComparer.Ordinal))
+        {
+            var codeBehind = demo.Problem is null ? demo.FindCodeBehind(compilation) : null;
+            var declared = demo.ClassName is { } name && compilation.GetTypeByMetadataName(name) is not null;
+            var problem = demo.Problem;
+            if (problem is null && !declared && !demo.IsUserControl)
+            {
+                problem = "a demo without a code-behind needs a UserControl root element";
+            }
+            if (problem is not null)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(GalleryDocsDiagnostics.InvalidDemo, demo.Location, demo.RelativePath, problem));
+                continue;
+            }
+            valid.Add((demo, codeBehind));
+            if (!declared)
+            {
+                // No code-behind: the view class is generated. Avalonia's XAML compiler replaces AvaloniaXamlLoader.Load(this)
+                // with the compiled XAML, as it does in a hand-written InitializeComponent.
+                var dot = demo.ClassName!.LastIndexOf('.');
+                var type = demo.ClassName.Substring(dot + 1);
+                if (dot > 0)
+                {
+                    views.Append("namespace ").Append(demo.ClassName.Substring(0, dot)).AppendLine();
+                    views.AppendLine("{");
+                }
+                views.Append("    partial class ").Append(type).AppendLine(" : global::Avalonia.Controls.UserControl");
+                views.AppendLine("    {");
+                views.Append("        public ").Append(type).AppendLine("() => global::Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);");
+                views.AppendLine("    }");
+                if (dot > 0)
+                {
+                    views.AppendLine("}");
+                }
+                views.AppendLine();
+            }
+        }
+
+        var ids = new HashSet<string>(valid.Select(d => d.Demo.Id), System.StringComparer.Ordinal);
+        var shown = new HashSet<string>(System.StringComparer.Ordinal);
+        foreach (var page in pages)
+        {
+            foreach (var reference in page.Demos)
+            {
+                if (!ids.Contains(reference.Id))
+                {
+                    var dot = reference.Id.LastIndexOf('.');
+                    context.ReportDiagnostic(Diagnostic.Create(GalleryDocsDiagnostics.UnknownDemo, reference.Location,
+                        reference.Id, reference.Id.Substring(0, dot), reference.Id.Substring(dot + 1)));
+                }
+                else if (page.IsSource)
+                {
+                    shown.Add(reference.Id);
+                }
+            }
+        }
+        foreach (var (demo, _) in valid.Where(d => !shown.Contains(d.Demo.Id)))
+        {
+            context.ReportDiagnostic(Diagnostic.Create(GalleryDocsDiagnostics.UnusedDemo, demo.Location, demo.Id, demo.Component, demo.Name));
+        }
+
+        var code = new StringBuilder();
+        code.AppendLine("// <auto-generated />");
+        code.AppendLine("// Generated by TKCode.Arc.Gallery.Generators from the gallery's Demos/**/*.axaml files.");
+        code.AppendLine("#nullable enable");
+        code.AppendLine();
+        code.AppendLine("namespace TKCode.Arc.Gallery.Docs;");
+        code.AppendLine();
+        code.AppendLine("internal static class GalleryDemoData");
+        code.AppendLine("{");
+        code.AppendLine("    public static readonly GalleryDemo[] Demos =");
+        code.AppendLine("    [");
+        foreach (var (demo, codeBehind) in valid)
+        {
+            code.Append("        new(").Append(Literal(demo.Component)).Append(", ").Append(Literal(demo.Name))
+                .Append(", static () => new global::").Append(demo.ClassName).AppendLine("(),");
+            code.Append("            [new(").Append(Literal(demo.RelativePath)).Append(", \"axaml\", ").Append(Literal(demo.Source)).Append(')');
+            if (codeBehind is not null)
+            {
+                code.AppendLine(",");
+                code.Append("             new(").Append(Literal(demo.RelativePath + ".cs")).Append(", \"cs\", ")
+                    .Append(Literal(DemoFile.TextOf(codeBehind))).Append(')');
+            }
+            code.AppendLine("]),");
+        }
+        code.AppendLine("    ];");
+        code.AppendLine("}");
+        context.AddSource("GalleryDemoData.g.cs", SourceText.From(code.ToString(), Encoding.UTF8));
+        if (views.Length > 0)
+        {
+            context.AddSource("GalleryDemoViews.g.cs", SourceText.From("// <auto-generated />\n" + views, Encoding.UTF8));
+        }
     }
 
     private static void Emit(SourceProductionContext context, ImmutableArray<DocPage> pages,

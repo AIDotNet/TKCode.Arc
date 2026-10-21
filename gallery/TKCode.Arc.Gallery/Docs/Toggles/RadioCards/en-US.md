@@ -3,6 +3,8 @@ title: Radio cards
 summary: Selectable option cards with a sliding selection ring, price and description slots, and radio keyboard behavior.
 ---
 
+<Demo name="Grid" />
+
 ## When to use
 
 - Options that need a description, a price or an estimate before the user can decide, such as plans, shipping speeds or regions.
@@ -61,13 +63,7 @@ plans.SelectionChanged += (_, _) => Console.WriteLine(plans.SelectedValue);
 `Layout="List"` stacks the cards as full-width rows with the meta at the end. Long descriptions wrap. The default
 `Grid` layout fills columns that are at least `MinColumnWidth` wide (180 by default).
 
-```xml
-<arc:RadioCards Layout="List" SelectedValue="standard">
-    <arc:RadioCardOption Value="standard" Label="Standard" Description="4 to 6 business days" Meta="Free" />
-    <arc:RadioCardOption Value="express" Label="Express" Description="2 to 3 business days" Meta="$9.00" />
-    <arc:RadioCardOption Value="overnight" Label="Overnight" Description="Next business day before noon" Meta="$24.00" />
-</arc:RadioCards>
-```
+<Demo name="List" />
 
 ### Unavailable options
 

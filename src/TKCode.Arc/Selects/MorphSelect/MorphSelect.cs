@@ -61,6 +61,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     #region 公共属性定义
 
+    /// <summary>Visible label of the trigger; also its accessible name.</summary>
     public static readonly StyledProperty<string?> LabelProperty = Select.LabelProperty.AddOwner<MorphSelect>();
 
     /// <summary>Defines the <see cref="IsLabelVisible"/> property.</summary>
@@ -70,6 +71,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly StyledProperty<string?> PlaceholderProperty =
         Select.PlaceholderProperty.AddOwner<MorphSelect>(new StyledPropertyMetadata<string?>("Select"));
 
+    /// <summary>Whether the option list is open. Two-way.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty = Select.IsOpenProperty.AddOwner<MorphSelect>();
 
     /// <summary>Defines the <see cref="SearchMode"/> property.</summary>
@@ -92,12 +94,16 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly StyledProperty<MorphSelectAlignment> PanelAlignmentProperty =
         AvaloniaProperty.Register<MorphSelect, MorphSelectAlignment>(nameof(PanelAlignment));
 
+    /// <summary>Returns the display text for an option.</summary>
     public static readonly StyledProperty<Func<object?, string?>?> TextSelectorProperty = Select.TextSelectorProperty.AddOwner<MorphSelect>();
 
+    /// <summary>Returns the value of an option, used to match the selection.</summary>
     public static readonly StyledProperty<Func<object?, object?>?> ValueSelectorProperty = Select.ValueSelectorProperty.AddOwner<MorphSelect>();
 
+    /// <summary>Returns true for an option that cannot be chosen.</summary>
     public static readonly StyledProperty<Func<object?, bool>?> DisabledSelectorProperty = Select.DisabledSelectorProperty.AddOwner<MorphSelect>();
 
+    /// <summary>Returns true when an option matches the search text; filters the list while searching.</summary>
     public static readonly StyledProperty<Func<object?, string, bool>?> FilterPredicateProperty =
         Combobox.FilterPredicateProperty.AddOwner<MorphSelect>();
 
@@ -113,6 +119,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     /// <summary>Shown while nothing is selected (Arc: "Select").</summary>
     public string? Placeholder { get => GetValue(PlaceholderProperty); set => SetValue(PlaceholderProperty, value); }
 
+    /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
 
     /// <summary>Shows a search field in place of the trigger when open; Auto turns it on above eight options.</summary>

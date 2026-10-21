@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.TagInputDefaultDemo">
+    <arc:TagInput Label="Tags" Width="420" HorizontalAlignment="Left">
+        <arc:TagInput.Value>
+            <generic:List x:TypeArguments="x:String">
+                <x:String>design</x:String>
+                <x:String>motion</x:String>
+                <x:String>react</x:String>
+            </generic:List>
+        </arc:TagInput.Value>
+    </arc:TagInput>
+</UserControl>

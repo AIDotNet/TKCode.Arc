@@ -1,8 +1,10 @@
 ---
 title: 头像组
 summary: 在较小的空间内展示团队或一组贡献者。
-source-hash: 2bb01028d491
+source-hash: 36b0c9528548
 ---
+
+<Demo name="Team" />
 
 ## 何时使用
 
@@ -65,10 +67,18 @@ team.RemoveAt(1);
 
 `Size` 作用于每个头像和溢出标签：`Small` 为 28，`Medium`（默认）为 36，`Large` 为 48。`XLarge` 按 `Large` 绘制。
 
+<Demo name="SizesAndLimits" />
+
 ```xml
 <arc:AvatarGroup ItemsSource="{Binding Team}" Size="Small" MaxVisibleCount="3" />
 <arc:AvatarGroup ItemsSource="{Binding Team}" Size="Large" MaxVisibleCount="5" />
 ```
+
+### 内联成员
+
+成员可以直接内联书写，无需绑定列表。
+
+<Demo name="InlineMembers" />
 
 ## API 参考
 

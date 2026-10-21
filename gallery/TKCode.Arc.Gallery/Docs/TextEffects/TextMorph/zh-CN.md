@@ -1,8 +1,10 @@
 ---
 title: 文字变形
 summary: 逐字母将标签变形为下一个状态。
-source-hash: a984607c41a0
+source-hash: 17fdb96109eb
 ---
+
+<Demo name="Status" />
 
 ## 何时使用
 
@@ -49,9 +51,7 @@ next.Click += (_, _) => status.Text = words[index = (index + 1) % words.Length];
 - `Occurrence`（默认）将每个字符与新文字中相同次序的字符配对。第二个 "i" 与新文字中第二个 "i" 配对。
 - `PrefixSuffix` 保持共有的开头与结尾不动，只替换中间部分。适用于价格和计数。
 
-```xml
-<arc:TextMorph Text="¥12 / 月" FontSize="20" Matching="PrefixSuffix" />
-```
+<Demo name="PrefixAndSuffix" />
 
 ### 字体
 

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConfirmMorphHoldDemo">
+    <arc:ConfirmMorph x:Name="Remove"
+                      Label="Remove member"
+                      ConfirmLabel="Remove"
+                      PendingLabel="Removing"
+                      DoneLabel="Removed"
+                      ConfirmMode="Hold"
+                      HorizontalAlignment="Center" />
+</UserControl>

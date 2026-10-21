@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AlertTonesDemo">
+    <StackPanel Spacing="12">
+        <arc:Alert Title="Your card expires next month"
+                   Content="Update your payment method to keep your plan active." />
+        <arc:Alert Tone="Success"
+                   Title="Domain verified"
+                   Content="Emails from acme.dev will now be delivered." />
+        <arc:Alert Tone="Warning"
+                   Title="You're close to your storage limit"
+                   Content="Free up space or upgrade before uploads pause." />
+        <arc:Alert Tone="Danger"
+                   Title="Payment failed"
+                   Content="We couldn't charge the card ending in 4242." />
+    </StackPanel>
+</UserControl>

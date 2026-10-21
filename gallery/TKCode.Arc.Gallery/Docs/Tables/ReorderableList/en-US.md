@@ -3,6 +3,8 @@ title: Reorderable list
 summary: Organize items with direct drag and drop.
 ---
 
+<Demo name="Priorities" />
+
 ## When to use
 
 - A short list whose order the user decides, such as priorities or a playlist.
@@ -55,6 +57,8 @@ list.MoveItem(0, 2);   // move the first row to the third place
 `ItemTemplate` replaces the default title and detail. `ItemTitleSelector` gives the title used in the
 accessible name and in announcements.
 
+<Demo name="CustomItemTemplate" />
+
 ```csharp
 var colors = new ReorderableList
 {
@@ -68,6 +72,8 @@ var colors = new ReorderableList
 
 Put the list in a `ScrollViewer` when it is taller than the space you give it. Dragging a row to the edge of
 the scrolling area scrolls it.
+
+<Demo name="AutoScroll" />
 
 ```xml
 <ScrollViewer Height="340">

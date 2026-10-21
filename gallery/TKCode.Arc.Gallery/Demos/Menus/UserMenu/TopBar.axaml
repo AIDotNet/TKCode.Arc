@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UserMenuTopBarDemo">
+    <StackPanel Spacing="12">
+        <Border Padding="16,8"
+                CornerRadius="18"
+                BorderThickness="1"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <DockPanel>
+                <arc:UserMenu x:Name="Account"
+                              DockPanel.Dock="Right"
+                              DisplayName="Ada Lovelace"
+                              Email="ada@analytical.dev"
+                              Plan="Pro"
+                              IsNameVisible="True"
+                              SignOutGestureText="⇧⌘Q"
+                              ThemePreferenceChanged="OnThemePreferenceChanged"
+                              ItemClicked="OnItemClicked"
+                              SignOutRequested="OnSignOutRequested">
+                    <arc:MenuEntry Header="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+                    <arc:MenuEntry Header="Settings"
+                                   Icon="{x:Static arc:ArcIcons.Settings}"
+                                   InputGestureText="⌘ ," />
+                    <arc:MenuEntry Header="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}" />
+                </arc:UserMenu>
+                <TextBlock Text="Northwind"
+                           FontSize="15"
+                           FontWeight="Medium"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            </DockPanel>
+        </Border>
+        <TextBlock x:Name="Status"
+                   Text="Theme: System"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

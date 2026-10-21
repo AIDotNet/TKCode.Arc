@@ -1,8 +1,10 @@
 ---
 title: 华夫图
 summary: 十乘十的单位图表，每个方格代表百分之一；数据变化时，方格会飞到各自的新分组。
-source-hash: cec4f2f81214
+source-hash: cabaff3f8172
 ---
+
+<Demo name="EnergyMix" />
 
 ## 何时使用
 
@@ -50,22 +52,13 @@ energy.ItemsSource = Mix2015;
 
 当数据源不是 `WaffleCategory` 时，设置 `KeySelector` 与 `ValueSelector`。`LabelSelector` 读取每个项的标签，`Decimals` 设置占比显示的小数位数。
 
-```csharp
-var survey = new WaffleChart
-{
-    Label = "问卷回答",
-    ItemsSource = answers,
-    KeySelector = item => ((Source)item).Name,
-    ValueSelector = item => ((Source)item).Weight,
-    Decimals = 1,
-    MaxWidth = 300,
-    IsLegendVisible = false
-};
-```
+<Demo name="Selectors" />
 
 ### 网格与强调色
 
 `Rows` 与 `Columns` 设置网格，默认为十乘十。`AccentKey` 指定使用第一个系列颜色的类别；其他类别依次使用次要颜色，然后是中性色调。将 `AccentKey` 设为 `NoAccent`，则只使用中性色调。
+
+<Demo name="Neutral" />
 
 ```xml
 <arc:WaffleChart Label="配额使用情况" Rows="5" Columns="20" AccentKey="used" ItemsSource="{Binding Quota}" />
@@ -78,6 +71,12 @@ var survey = new WaffleChart
 ```csharp
 energy.ActiveKeyChanged += (_, e) => pinned.Text = $"已固定：{e.Category?.Label ?? "无"}";
 ```
+
+### 空状态
+
+没有类别，或总数为零时，网格会以 `EmptyLabel` 取代方格。
+
+<Demo name="Empty" />
 
 ## API 参考
 

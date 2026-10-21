@@ -1,8 +1,10 @@
 ---
 title: 彈出框
 summary: 用於提供情境資訊的小型定位浮層。
-source-hash: 0ffe426f9b64
+source-hash: 05cbf1a4a141
 ---
+
+<Demo name="Share" />
 
 ## 何時使用
 
@@ -55,6 +57,8 @@ source-hash: 0ffe426f9b64
 
 `Placement` 為偏好的一側：`Top`、`Bottom`、`Left` 或 `Right`。空間不足時面板會翻轉。`Alignment` 決定沿觸發器邊緣的位置：`Start`、`Center` 或 `End`。`Offset` 為與觸發器之間的間距，單位為像素，預設值為 6。
 
+<Demo name="Sides" />
+
 ```xml
 <arc:Popover Placement="Bottom" Alignment="Center" Offset="8">
     <arc:Popover.Trigger>
@@ -68,14 +72,7 @@ source-hash: 0ffe426f9b64
 
 `ShowAt` 將彈出框錨定到任意控制項。`IsOpen` 是雙向的，`Opened` 與 `Closed` 會回報狀態變化。
 
-```csharp
-var popover = new Popover
-{
-    Content = "透過 ShowAt(anchor) 從程式碼開啟。",
-    Alignment = PopoverAlignment.Center
-};
-popover.ShowAt(anchor);
-```
+<Demo name="FromCode" />
 
 ### 模態彈出框
 
@@ -86,6 +83,12 @@ popover.ShowAt(anchor);
     <TextBlock Text="請先選擇一個選項。" />
 </arc:Popover>
 ```
+
+### 小型表單
+
+彈出框可以放置小型表單，例如篩選條件。開啟時頁面仍可操作。
+
+<Demo name="SmallForm" />
 
 ## API 參考
 

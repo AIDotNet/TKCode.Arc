@@ -1,8 +1,10 @@
 ---
 title: 下拉菜单
 summary: 锚定在触发器上的聚焦操作列表。
-source-hash: d19fcb102c8a
+source-hash: 7192f95491ae
 ---
+
+<Demo name="Actions" />
 
 ## 何时使用
 
@@ -53,29 +55,13 @@ menu.ItemClicked += (_, e) => status.Text = $"已选择：{e.Header}";
 
 通过代码设置 `Label` 可更改触发器文字。具有相同 `GroupName` 的单选行互斥，选中后菜单会关闭。设置了 `StaysOpenOnClick="True"` 的复选行（`ToggleType="CheckBox"`）会保持菜单打开，便于一次访问中切换多个选项。
 
-```xml
-<arc:DropdownMenu Label="排序：最新" Alignment="Start">
-    <arc:MenuEntryLabel Text="排序方式" />
-    <arc:MenuEntry Header="最新" ToggleType="Radio" GroupName="sort" IsChecked="True" />
-    <arc:MenuEntry Header="最早" ToggleType="Radio" GroupName="sort" />
-    <arc:MenuEntry Header="名称" ToggleType="Radio" GroupName="sort" />
-</arc:DropdownMenu>
-
-<arc:DropdownMenu Label="视图">
-    <arc:MenuEntry Header="显示侧边栏"
-                   ToggleType="CheckBox"
-                   IsChecked="True"
-                   StaysOpenOnClick="True"
-                   InputGestureText="Ctrl+B" />
-    <arc:MenuEntry Header="自动换行"
-                   ToggleType="CheckBox"
-                   StaysOpenOnClick="True" />
-</arc:DropdownMenu>
-```
+<Demo name="LabelAndToggles" />
 
 ### 数据驱动的行与自定义触发器
 
 `ItemsSource` 会为每个条目创建一行。`Trigger` 可用任意控件替换内置按钮。菜单会锚定到该控件，点击 `Button` 即可打开。
+
+<Demo name="CustomTrigger" />
 
 ```xml
 <arc:DropdownMenu ItemsSource="{Binding FileActions}" Side="Bottom">
@@ -91,6 +77,12 @@ menu.ItemClicked += (_, e) => status.Text = $"已选择：{e.Header}";
 menu.Open(focusFirst: true);
 menu.Close();
 ```
+
+### MenuSurface
+
+`MenuSurface` 是每个 Arc 菜单所依据的可复用菜单弹层。可在代码中针对任意锚点将其打开。
+
+<Demo name="MenuSurface" />
 
 ## API 参考
 

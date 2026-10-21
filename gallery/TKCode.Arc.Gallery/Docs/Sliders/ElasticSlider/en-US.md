@@ -3,6 +3,8 @@ title: Elastic slider
 summary: A slider that stretches like rubber past its ends, with a swaying value tag and detents the thumb clicks into.
 ---
 
+<Demo name="RubberBand" />
+
 ## When to use
 
 - A single setting that the user adjusts by feel, such as volume, brightness or opacity.
@@ -52,23 +54,15 @@ moves outward with it.
 Add `SliderMark` values to `Marks`. A dragged thumb clicks into each mark. A mark with a label also prints the label
 under the track, and clicking the label moves the thumb there.
 
-```csharp
-var brightness = new ElasticSlider
-{
-    Label = "Brightness",
-    Value = 50,
-    Width = 360
-};
-brightness.Marks.Add(new SliderMark(0, "Off"));
-brightness.Marks.Add(new SliderMark(50, "50"));
-brightness.Marks.Add(new SliderMark(100, "Max"));
-```
+<Demo name="Detents" />
 
 ### Steps and format
 
 `SmallChange` is the step the value snaps to. `ValueFormatter` formats the value tag, the readout and the spoken
 value. `IsValueVisible` hides the readout beside the label. The tag still appears while the thumb is dragged or changed
 by keys.
+
+<Demo name="FineSteps" />
 
 ```xml
 <arc:ElasticSlider Label="Zoom"
@@ -88,6 +82,12 @@ work, such as a network request, on this event.
 ```csharp
 volume.ValueCommitted += (_, e) => SaveVolume(e.Value);
 ```
+
+### Disabled
+
+A disabled slider leaves the tab order.
+
+<Demo name="Disabled" />
 
 ## API reference
 

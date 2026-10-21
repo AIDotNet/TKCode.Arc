@@ -81,6 +81,11 @@
         <source>Charts</source>
       </segment>
     </unit>
+    <unit id="Category_AdvancedCharts">
+      <segment>
+        <source>Advanced charts</source>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>
@@ -196,14 +201,19 @@
         <source>Copied</source>
       </segment>
     </unit>
-    <unit id="CopyMarkdown">
+    <unit id="CopyCode">
       <segment>
-        <source>Copy Markdown</source>
+        <source>Copy code</source>
       </segment>
     </unit>
-    <unit id="CopyMarkup">
+    <unit id="CopyCommand">
       <segment>
-        <source>Copy markup</source>
+        <source>Copy command</source>
+      </segment>
+    </unit>
+    <unit id="CopyPage">
+      <segment>
+        <source>Copy page</source>
       </segment>
     </unit>
     <unit id="Dark">
@@ -286,11 +296,6 @@
         <source>No components match “{0}”.</source>
       </segment>
     </unit>
-    <unit id="NoDocsYet">
-      <segment>
-        <source>No docs page for this component yet</source>
-      </segment>
-    </unit>
     <unit id="NotBuiltYet">
       <segment>
         <source>{0} is not built yet.</source>
@@ -339,6 +344,16 @@
     <unit id="SearchComponents">
       <segment>
         <source>Search components</source>
+      </segment>
+    </unit>
+    <unit id="ShowAllLines">
+      <segment>
+        <source>Show all {0} lines</source>
+      </segment>
+    </unit>
+    <unit id="ShowFewerLines">
+      <segment>
+        <source>Show fewer lines</source>
       </segment>
     </unit>
     <unit id="ShowImplementedComponents">
@@ -459,6 +474,11 @@
     <unit id="Category_Docs">
       <segment>
         <source>Docs</source>
+      </segment>
+    </unit>
+    <unit id="Category_Special">
+      <segment>
+        <source>Special components</source>
       </segment>
     </unit>
   </file>

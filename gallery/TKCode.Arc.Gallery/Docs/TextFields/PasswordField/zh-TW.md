@@ -1,8 +1,10 @@
 ---
 title: 密碼欄位
 summary: 附有可見顯示切換控制項的敏感文字輸入。
-source-hash: e883e07b8a43
+source-hash: b537e5c24c0d
 ---
+
+<Demo name="SignIn" />
 
 ## 何時使用
 
@@ -55,14 +57,7 @@ signIn.PropertyChanged += (_, e) =>
 
 當兩個值不一致時，從第二個欄位設定 `ErrorMessage`。將其設為 `null` 即可清除。
 
-```csharp
-void Check() => confirm.ErrorMessage = !string.IsNullOrEmpty(confirm.Text) && confirm.Text != first.Text
-    ? "兩次輸入的密碼還不一致。"
-    : null;
-
-first.TextChanged += (_, _) => Check();
-confirm.TextChanged += (_, _) => Check();
-```
+<Demo name="Confirm" />
 
 ### 切換按鈕名稱
 
@@ -78,10 +73,7 @@ confirm.TextChanged += (_, _) => Check();
 
 `Size` 決定外框高度：`Small` 為 36，`Medium`（預設值）為 44。
 
-```xml
-<arc:PasswordField Label="小" Size="Small" Text="secret" />
-<arc:PasswordField Label="停用" Text="secret" IsEnabled="False" />
-```
+<Demo name="SizesAndStates" />
 
 ## API 參考
 

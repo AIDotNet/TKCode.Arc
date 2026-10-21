@@ -1,8 +1,10 @@
 ---
 title: 仪表盘
 summary: 在已知范围内展示一个数值。
-source-hash: 5a9fa20aa21b
+source-hash: 9936da3b7dd8
 ---
+
+<Demo name="Thresholds" />
 
 ## 何时使用
 
@@ -58,17 +60,13 @@ disk.Detail = $"已用 {used} / 500 GB";
 
 `Minimum` 与 `Maximum` 可将任意范围映射到圆环上。数字按该范围的百分比显示。
 
-```xml
-<arc:Gauge Label="健康评分" Value="640" Minimum="300" Maximum="850" Detail="640 / 850" />
-```
+<Demo name="CustomRange" />
 
 ### 没有阈值时的色调
 
 没有阈值时，圆环使用 `Tone`：`Accent`、`Success`、`Warning` 或 `Danger`。
 
-```xml
-<arc:Gauge Label="可用率" Value="91" Tone="Success" />
-```
+<Demo name="Tones" />
 
 ## API 参考
 

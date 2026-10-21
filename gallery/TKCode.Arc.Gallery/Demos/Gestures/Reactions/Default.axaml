@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReactionsDefaultDemo">
+    <UserControl.Resources>
+        <!-- Lucide party-popper, which is not in the Arc glyph subset. -->
+        <StreamGeometry x:Key="PartyPopper">
+            M5.8 11.3 2 22l10.7-3.79 M4 3h.01 M22 8h.01 M15 2h.01 M22 20h.01
+            M22 2l-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10
+            M22 13l-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17
+            M11 2l.33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7
+            M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z
+        </StreamGeometry>
+    </UserControl.Resources>
+    <StackPanel Spacing="12">
+        <arc:Reactions x:Name="Bar" HorizontalAlignment="Left">
+            <arc:ReactionOption Id="like" Label="Like" Icon="{x:Static arc:ArcIcons.ThumbsUp}" />
+            <arc:ReactionOption Id="love" Label="Love" Icon="{x:Static arc:ArcIcons.Heart}" />
+            <arc:ReactionOption Id="celebrate" Label="Celebrate" Icon="{StaticResource PartyPopper}" />
+        </arc:Reactions>
+        <TextBlock x:Name="Announcement"
+                   Text="Tap a pill or add a reaction."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

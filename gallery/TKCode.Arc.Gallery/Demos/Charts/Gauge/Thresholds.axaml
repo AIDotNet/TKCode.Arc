@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GaugeThresholdsDemo">
+    <StackPanel Spacing="16">
+        <arc:Gauge x:Name="Disk" Value="72" Label="Disk usage" Detail="360 of 500 GB">
+            <arc:Gauge.Thresholds>
+                <arc:GaugeThreshold From="0" Tone="Success" Label="Healthy" />
+                <arc:GaugeThreshold From="60" Tone="Warning" Label="Filling up" />
+                <arc:GaugeThreshold From="85" Tone="Danger" Label="Critical" />
+            </arc:Gauge.Thresholds>
+        </arc:Gauge>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="New reading" Variant="Secondary" Click="OnNewReadingClick" />
+            <arc:Button Content="Almost full" Variant="Ghost" Click="OnAlmostFullClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

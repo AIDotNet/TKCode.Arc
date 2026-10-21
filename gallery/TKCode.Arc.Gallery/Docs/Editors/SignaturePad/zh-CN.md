@@ -1,8 +1,10 @@
 ---
 title: 签名板
 summary: 笔迹平滑，速度越快越细；支持撤销、回放，并可导出 PNG 或 SVG。
-source-hash: 339c265ce3b3
+source-hash: 38f92cfe8afa
 ---
+
+<Demo name="Sign" />
 
 ## 何时使用
 
@@ -32,11 +34,7 @@ source-hash: 339c265ce3b3
 
 `InkColor` 与 `InkWidth` 设置新笔画的默认值。每一笔都保留绘制时所用的颜色与宽度。方向键可在工具栏的选项之间移动。
 
-```xml
-<arc:SignaturePad InkColor="Blue"
-                  InkWidth="Bold"
-                  Hint="请用蓝色签名" />
-```
+<Demo name="InkAndNib" />
 
 ### 读取笔画
 
@@ -52,6 +50,8 @@ pad.StrokesChanged += (_, e) =>
 ### 导出
 
 `ExportPng` 与 `ExportSvg` 返回按边界裁剪后的墨迹。`ExportPng` 可接受可选的 `scale` 参数，默认为 3。`SaveAsync` 会打开保存对话框，并以 `FileName` 作为默认文件名。当用户取消或没有任何笔画时，它返回 false。
+
+<Demo name="UseTheSignature" />
 
 ```csharp
 var png = pad.ExportPng();

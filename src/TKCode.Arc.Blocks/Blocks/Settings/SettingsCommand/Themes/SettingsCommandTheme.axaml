@@ -1,0 +1,544 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The settings command palette: a search row (glyph, bare field, Esc cap), a hairline, the result list (group
+        titles and rows over a gliding highlight; a centered message when nothing matches) and a footer of key hints with
+        a change notice on the right.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommand}" TargetType="arc:SettingsCommand">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsCommand">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                        <Grid Name="PART_SearchRow"
+                              ColumnDefinitions="Auto,*,Auto"
+                              Height="{arc:SettingsCommandTokenResource SearchRowHeight}"
+                              Margin="{arc:SettingsCommandTokenResource SearchRowInset}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Search}"
+                                          Size="{arc:SettingsCommandTokenResource SearchGlyph}"
+                                          Margin="{arc:SettingsCommandTokenResource SearchGlyphMargin}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center" />
+                            <arc:SettingsCommandSearchBox Name="PART_SearchBox"
+                                                          Grid.Column="1"
+                                                          VerticalAlignment="Center"
+                                                          Text="{TemplateBinding Query, Mode=TwoWay}" />
+                            <arc:SettingsCommandKeyCap Name="PART_EscapeCap"
+                                                       Grid.Column="2"
+                                                       VerticalAlignment="Center"
+                                                       Margin="{arc:SettingsCommandTokenResource EscapeCapMargin}" />
+                        </Grid>
+                        <Border Name="PART_SearchDivider"
+                                Grid.Row="1"
+                                Height="1"
+                                Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        <Panel Grid.Row="2">
+                            <arc:ScrollArea Name="PART_Scroll"
+                                            Focusable="False"
+                                            FadeLength="{arc:SettingsCommandTokenResource ResultsFadeLength}"
+                                            MaxHeight="{TemplateBinding ResultsMaxHeight}">
+                                <arc:SettingsCommandResults Name="PART_Results"
+                                                            Background="Transparent"
+                                                            Margin="{arc:SettingsCommandTokenResource ResultsInset}">
+                                    <arc:GlidingIndicator Name="PART_Highlight"
+                                                          Spring="Snappy"
+                                                          Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                          CornerRadius="{arc:SettingsCommandTokenResource RowRadius}" />
+                                </arc:SettingsCommandResults>
+                            </arc:ScrollArea>
+                            <StackPanel Name="PART_Empty"
+                                        IsVisible="False"
+                                        Margin="{arc:SettingsCommandTokenResource EmptyInset}"
+                                        HorizontalAlignment="Center"
+                                        Spacing="4">
+                                <TextBlock Name="PART_EmptyTitle"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:SettingsCommandTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_EmptyHint"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="{arc:SettingsCommandTokenResource BodyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </Panel>
+                        <Border Name="PART_Footer"
+                                Grid.Row="3"
+                                Height="{arc:SettingsCommandTokenResource FooterHeight}"
+                                Padding="{arc:SettingsCommandTokenResource FooterInset}"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <arc:SettingsCommandHintsPanel Name="PART_Hints"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Left"
+                                                               Gap="{arc:SettingsCommandTokenResource HintGap}">
+                                    <StackPanel Name="PART_NavigateHint"
+                                                Orientation="Horizontal"
+                                                arc:SettingsCommandHintsPanel.Priority="1"
+                                                Spacing="{arc:SettingsCommandTokenResource HintLabelGap}">
+                                        <StackPanel Orientation="Horizontal" Spacing="{arc:SettingsCommandTokenResource KeyCapGap}">
+                                            <arc:SettingsCommandKeyCap Glyph="{x:Static arc:ArcIcons.ArrowUp}" />
+                                            <arc:SettingsCommandKeyCap Glyph="{x:Static arc:ArcIcons.ArrowDown}" />
+                                        </StackPanel>
+                                        <TextBlock Name="PART_NavigateText" Classes="hint" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_EnterHint"
+                                                Orientation="Horizontal"
+                                                arc:SettingsCommandHintsPanel.Priority="2"
+                                                Spacing="{arc:SettingsCommandTokenResource HintLabelGap}">
+                                        <arc:SettingsCommandKeyCap Glyph="{x:Static arc:ArcIcons.CornerDownLeft}" />
+                                        <!-- All three labels share one cell, so the hints after it never shift. -->
+                                        <Panel>
+                                            <TextBlock Name="PART_ToggleText" Classes="hint" />
+                                            <TextBlock Name="PART_ChangeText" Classes="hint" />
+                                            <TextBlock Name="PART_OpenText" Classes="hint" />
+                                        </Panel>
+                                    </StackPanel>
+                                    <StackPanel Name="PART_CloseHint"
+                                                Orientation="Horizontal"
+                                                arc:SettingsCommandHintsPanel.Priority="0"
+                                                Spacing="{arc:SettingsCommandTokenResource HintLabelGap}">
+                                        <arc:SettingsCommandKeyCap Name="PART_CloseCap" />
+                                        <TextBlock Name="PART_CloseText" Classes="hint" />
+                                    </StackPanel>
+                                </arc:SettingsCommandHintsPanel>
+                                <arc:ArcContentSwap Name="PART_Notice"
+                                                    Grid.Column="1"
+                                                    Mode="BlurSwap"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right"
+                                                    Margin="{arc:SettingsCommandTokenResource NoticeMargin}"
+                                                    MaxWidth="{arc:SettingsCommandTokenResource NoticeMaxWidth}"
+                                                    AutomationProperties.LiveSetting="Polite"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                    <arc:ArcContentSwap.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <DockPanel>
+                                                <arc:ArcGlyph DockPanel.Dock="Left"
+                                                              Data="{x:Static arc:ArcIcons.Check}"
+                                                              Size="{arc:SettingsCommandTokenResource NoticeGlyph}"
+                                                              Margin="{arc:SettingsCommandTokenResource NoticeGlyphMargin}"
+                                                              VerticalAlignment="Center"
+                                                              Foreground="{arc:ArcDesignTokenResource Success}" />
+                                                <TextBlock Text="{Binding}"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           LineHeight="{arc:SettingsCommandTokenResource SmallLineHeight}" />
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </arc:ArcContentSwap.ContentTemplate>
+                                </arc:ArcContentSwap>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="MinWidth" Value="{arc:SettingsCommandTokenResource PanelMinWidth}" />
+        <Setter Property="ResultsMaxHeight" Value="{arc:SettingsCommandTokenResource ResultsMaxHeight}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+        <Style Selector="^[IsFramed=False]">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ /template/ TextBlock.hint">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SettingsCommandTokenResource SmallLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- The Enter hint names what Enter does to the active row; without one it hides. -->
+        <Style Selector="^ /template/ StackPanel#PART_EnterHint">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_ToggleText">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_ChangeText">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_OpenText">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:toggle-active">
+            <Style Selector="^ /template/ StackPanel#PART_EnterHint">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_ToggleText">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:choice-active">
+            <Style Selector="^ /template/ StackPanel#PART_EnterHint">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_ChangeText">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:action-active">
+            <Style Selector="^ /template/ StackPanel#PART_EnterHint">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_OpenText">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+
+        <!-- Nothing on show: the list collapses; with a query the message takes its place. -->
+        <Style Selector="^:empty /template/ arc|ScrollArea#PART_Scroll">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ StackPanel#PART_NavigateHint">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty:not(:no-results) /template/ Border#PART_SearchDivider">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-results /template/ StackPanel#PART_Empty">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ TextBlock#PART_ToggleText">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_ChangeText">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_OpenText">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The search field: no frame, text-base, muted placeholder. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommandSearchBox}" TargetType="arc:SettingsCommandSearchBox">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsCommandSearchBox">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <Panel VerticalAlignment="Center">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       TextTrimming="CharacterEllipsis">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <!-- A key cap: 20px tall, 1px edge with a 2px bottom. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommandKeyCap}" TargetType="arc:SettingsCommandKeyCap">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsCommandKeyCap">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        MinWidth="{arc:SettingsCommandTokenResource KeyCapMinWidth}"
+                        Height="{arc:SettingsCommandTokenResource KeyCapHeight}">
+                    <Panel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Size="{arc:SettingsCommandTokenResource KeyCapGlyph}"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:SettingsCommandTokenResource KeyCapEdge}" />
+        <Setter Property="CornerRadius" Value="{arc:SettingsCommandTokenResource KeyCapRadius}" />
+        <Setter Property="Padding" Value="{arc:SettingsCommandTokenResource KeyCapInset}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </ControlTheme>
+
+    <!-- A group title. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommandGroupHeader}" TargetType="arc:SettingsCommandGroupHeader">
+        <Setter Property="Padding" Value="{arc:SettingsCommandTokenResource GroupHeaderInset}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="LineHeight" Value="{arc:SettingsCommandTokenResource SmallLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </ControlTheme>
+
+    <!-- A result row: tile, header and description, and the setting's control. The highlight is drawn by the list. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommandRow}" TargetType="arc:SettingsCommandRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsCommandRow">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Border Name="PART_Tile"
+                                VerticalAlignment="Center"
+                                BorderThickness="1"
+                                Width="{arc:SettingsCommandTokenResource TileSide}"
+                                Height="{arc:SettingsCommandTokenResource TileSide}"
+                                CornerRadius="{arc:SettingsCommandTokenResource TileRadius}"
+                                Margin="{arc:SettingsCommandTokenResource TileMargin}">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          Data="{TemplateBinding Icon}"
+                                          Size="{arc:SettingsCommandTokenResource TileGlyph}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:SettingsCommandTokenResource TextGap}">
+                            <TextBlock Name="PART_Header"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:SettingsCommandTokenResource BodyLineHeight}" />
+                            <TextBlock Name="PART_Description"
+                                       Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:SettingsCommandTokenResource SmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <ContentPresenter Name="PART_Accessory"
+                                          Grid.Column="2"
+                                          VerticalAlignment="Center"
+                                          Margin="{arc:SettingsCommandTokenResource AccessoryMargin}"
+                                          Content="{TemplateBinding Accessory}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:SettingsCommandTokenResource RowHeight}" />
+        <Setter Property="Padding" Value="{arc:SettingsCommandTokenResource RowInset}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="DimForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+
+        <Style Selector="^ /template/ Border#PART_Tile">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^:icon /template/ Border#PART_Tile">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <!-- On the highlight (SurfaceMuted) the tile lifts to the surface so it stays visible. -->
+        <Style Selector="^:active">
+            <Style Selector="^ /template/ Border#PART_Tile">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Tile">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The "‹ value ›" pill of a choice row. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommandChoicePill}" TargetType="arc:SettingsCommandChoicePill">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsCommandChoicePill">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{arc:SettingsCommandTokenResource PillInset}"
+                        Height="{arc:SettingsCommandTokenResource PillHeight}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <arc:SettingsCommandStepButton Name="PART_Previous"
+                                                       Glyph="{x:Static arc:ArcIcons.ChevronLeft}"
+                                                       AutomationProperties.Name="{TemplateBinding PreviousName}" />
+                        <Panel Grid.Column="1"
+                               ClipToBounds="True"
+                               VerticalAlignment="Stretch"
+                               Margin="{arc:SettingsCommandTokenResource PillValueMargin}">
+                            <Panel Name="PART_Sizer"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   VerticalAlignment="Center" />
+                            <arc:ArcContentSwap Name="PART_Value"
+                                                Mode="Roll"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Center"
+                                                Direction="{TemplateBinding Direction}"
+                                                Content="{TemplateBinding Value}" />
+                        </Panel>
+                        <arc:SettingsCommandStepButton Name="PART_Next"
+                                                       Grid.Column="2"
+                                                       Glyph="{x:Static arc:ArcIcons.ChevronRight}"
+                                                       AutomationProperties.Name="{TemplateBinding NextName}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Style Selector="^:first /template/ arc|SettingsCommandStepButton#PART_Previous">
+            <Setter Property="Opacity" Value="0.35" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:last /template/ arc|SettingsCommandStepButton#PART_Next">
+            <Setter Property="Opacity" Value="0.35" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The round arrows inside the choice pill. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsCommandStepButton}" TargetType="arc:SettingsCommandStepButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsCommandStepButton">
+                <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Size="{arc:SettingsCommandTokenResource PillStepGlyph}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:SettingsCommandTokenResource PillStepSide}" />
+        <Setter Property="Height" Value="{arc:SettingsCommandTokenResource PillStepSide}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

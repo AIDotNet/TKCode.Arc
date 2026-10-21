@@ -1,8 +1,10 @@
 ---
 title: 面包屑
 summary: 显示页面在层级结构中的位置。
-source-hash: 68204e5bf393
+source-hash: bfbfa7bfa0a2
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -46,17 +48,7 @@ breadcrumb.ItemClick += (_, e) =>
 
 将 `ItemsSource` 设为路径的集合。使用 `ObservableCollection<T>`，使路径变长或变短时层级随之变化。
 
-```csharp
-var path = new ObservableCollection<string> { "首页", "项目" };
-breadcrumb.ItemsSource = path;
-breadcrumb.ItemClick += (_, e) =>
-{
-    while (path.Count > e.Index + 1)
-    {
-        path.RemoveAt(path.Count - 1);
-    }
-};
-```
+<Demo name="ClientSidePath" />
 
 打开文件夹时，用 `path.Add(name)` 添加一级。选择某一级时，其后的所有层级被移除，被移除的层级会以动画退出。
 
@@ -77,6 +69,12 @@ breadcrumb.ItemClick += (_, e) =>
 ```xml
 <arc:Breadcrumb Label="文件夹路径" />
 ```
+
+### 折叠路径
+
+`MaxVisibleItems` 会将较长路径的中间部分折叠进溢出菜单（这是 Arc 的附加选项，Arc 本身从不折叠）。
+
+<Demo name="CollapsedPath" />
 
 ## API 参考
 

@@ -3,6 +3,8 @@ title: Expanding search
 summary: An icon that morphs into a search field with results beneath it.
 ---
 
+<Demo name="HeaderSearch" />
+
 ## When to use
 
 - A header or toolbar where a full search field would take too much room.
@@ -66,11 +68,7 @@ header.ItemSelected += (_, e) => Open(e.Item.Id);
 
 `Anchor` sets the edge the button sits on. The field grows away from that edge up to `ExpandedWidth`.
 
-```xml
-<arc:ExpandingSearch Label="Find a dashboard"
-                     Anchor="Start"
-                     ExpandedWidth="300" />
-```
+<Demo name="AnchoredAtStart" />
 
 ### Open and close from code
 

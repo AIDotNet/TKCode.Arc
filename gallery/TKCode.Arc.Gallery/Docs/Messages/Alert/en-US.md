@@ -3,6 +3,8 @@ title: Alert
 summary: A persistent message that helps people recover or continue.
 ---
 
+<Demo name="Tones" />
+
 ## When to use
 
 - Inline notices on a page or in a form, such as an expiring card or a missing domain verification.
@@ -48,34 +50,14 @@ Basic usage sets a `Title` and `Content`. The default `Tone` is `Info`.
 Keep one instance and change its properties when the state changes. The icon swaps, the new text rises in and the
 height follows with a spring. Replacing the control instead skips these transitions.
 
-```csharp
-var status = new Alert { Title = "Ready to sync", Content = "Changes are saved on this device." };
-
-async void OnSave(object? sender, RoutedEventArgs e)
-{
-    status.Tone = AlertTone.Info;
-    status.Title = "Saving changes";
-    status.Content = "Uploading 3 files to the workspace.";
-
-    await UploadAsync();
-
-    status.Tone = AlertTone.Success;
-    status.Title = "All changes saved";
-    status.Content = "Everyone in the workspace now sees the latest version.";
-}
-```
+<Demo name="MorphInPlace" />
 
 ### Dismiss
 
 Set `IsDismissible` to show the close button. Pressing it collapses the alert, then raises `Dismissed`. Setting
 `IsOpen` back to `True` shows the alert again.
 
-```xml
-<arc:Alert Tone="Warning"
-           Title="Scheduled maintenance on Sunday"
-           Content="The dashboard is read-only from 02:00 to 03:00 UTC."
-           IsDismissible="True" />
-```
+<Demo name="Dismiss" />
 
 ```csharp
 var notice = new Alert { Tone = AlertTone.Warning, IsDismissible = true, Title = "Scheduled maintenance on Sunday" };
@@ -90,13 +72,7 @@ notice.IsOpen = true;
 Any non-text `Content` is shown below the title. Text content gets the detail styling; other content is shown as
 it is.
 
-```xml
-<arc:Alert Title="A new version is available">
-    <arc:Alert.Content>
-        <arc:Button Content="Reload" Size="Small" Variant="Secondary" />
-    </arc:Alert.Content>
-</arc:Alert>
-```
+<Demo name="CustomContent" />
 
 ## API reference
 

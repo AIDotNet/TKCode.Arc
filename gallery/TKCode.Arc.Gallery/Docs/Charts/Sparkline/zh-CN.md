@@ -1,8 +1,10 @@
 ---
 title: 迷你趋势图
 summary: 在数值旁展示紧凑的趋势。
-source-hash: 293d5d8d0378
+source-hash: cd53535b6fd3
 ---
+
+<Demo name="KpiCards" />
 
 ## 何时使用
 
@@ -54,6 +56,8 @@ revenue.PointLabels = labels;
 
 未设置 `Value` 时，拖动所得的数值及其数据点会显示在标签旁。新数据会使线条变形过渡。
 
+<Demo name="WithoutHeadline" />
+
 ```xml
 <arc:Sparkline Label="访问量" Width="300" ItemsSource="{Binding Visits}" />
 ```
@@ -61,6 +65,8 @@ revenue.PointLabels = labels;
 ### 高密度表格
 
 在行数很多的表格中设置 `IsInteractive="False"`。此时迷你趋势图没有 Tab 停留点，也不处理指针事件。设置 `ShowArea="False"` 可让线条保持简洁。
+
+<Demo name="DenseTable" />
 
 ```xml
 <arc:Sparkline Label="api-gateway"

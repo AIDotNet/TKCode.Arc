@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TKCode.Arc.Gallery.Demos.PaymentFlowAmountAndMerchantDemo">
+    <arc:PaymentFlow Amount="129.90"
+                     Currency="EUR"
+                     MerchantName="Atelier"
+                     CardLast4="0119"
+                     DeclineEvery="0" />
+</UserControl>

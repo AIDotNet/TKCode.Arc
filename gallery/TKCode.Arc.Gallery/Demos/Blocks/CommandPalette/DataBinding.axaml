@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:local="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.CommandPaletteDataBindingDemo"
+             x:DataType="local:CommandPaletteDataBindingViewModel"
+             x:CompileBindings="True">
+    <StackPanel Spacing="12" MaxWidth="560" HorizontalAlignment="Center">
+        <arc:CommandPalette ItemsSource="{Binding Commands}"
+                            SelectCommand="{Binding RunCommand}"
+                            PlaceholderText="Search files and commands"
+                            IsShortcutEnabled="False" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Add a recent file"
+                        Variant="Secondary"
+                        Size="Small"
+                        Command="{Binding AddRecentCommand}" />
+            <arc:Button Content="Clear recent files"
+                        Variant="Ghost"
+                        Size="Small"
+                        Command="{Binding ClearRecentCommand}" />
+        </WrapPanel>
+        <TextBlock Text="{Binding LastRun}"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

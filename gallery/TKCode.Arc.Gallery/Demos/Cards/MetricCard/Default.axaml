@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricCardDefaultDemo">
+    <StackPanel Spacing="16">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:MetricCard x:Name="Uptime"
+                            Label="Uptime"
+                            Value="99.98"
+                            Decimals="2"
+                            Suffix="%"
+                            Context="Last 30 days"
+                            Change="+0.02%"
+                            Width="280"
+                            VerticalAlignment="Top" />
+            <arc:MetricCard x:Name="Orders"
+                            Label="Orders"
+                            Value="1204"
+                            Context="vs last week"
+                            Change="+12%"
+                            Width="280"
+                            VerticalAlignment="Top">
+                <arc:MetricCard.Sparkline>
+                    <generic:List x:TypeArguments="x:Double">
+                        <x:Double>820</x:Double>
+                        <x:Double>910</x:Double>
+                        <x:Double>870</x:Double>
+                        <x:Double>990</x:Double>
+                        <x:Double>1040</x:Double>
+                        <x:Double>1010</x:Double>
+                        <x:Double>1204</x:Double>
+                    </generic:List>
+                </arc:MetricCard.Sparkline>
+            </arc:MetricCard>
+            <arc:MetricCard x:Name="Latency"
+                            Label="p95 latency"
+                            Value="182"
+                            Suffix=" ms"
+                            Context="vs yesterday"
+                            Change="−8%"
+                            IsChangeGlyphVisible="True"
+                            Width="280"
+                            VerticalAlignment="Top" />
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="New data" Variant="Secondary" Click="OnNewDataClick" />
+            <arc:Button Content="Toggle chip" Variant="Ghost" Click="OnToggleChipClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

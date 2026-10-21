@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarStatusDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Avatar x:Name="Presence" DisplayName="Leah Fox" Size="Large" Status="Online" />
+        <arc:Button Content="Toggle status" Variant="Secondary" Click="OnToggleClick" />
+    </WrapPanel>
+</UserControl>

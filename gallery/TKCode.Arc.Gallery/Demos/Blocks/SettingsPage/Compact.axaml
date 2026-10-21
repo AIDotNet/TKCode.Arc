@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageCompactDemo">
+    <arc:SettingsPage Width="400" Height="560" HorizontalAlignment="Center">
+        <arc:SettingsSection Header="Profile" Icon="{x:Static arc:ArcIcons.User}" Description="How you appear to others.">
+            <StackPanel Spacing="16">
+                <arc:Input Label="Full name" Text="Noor Haddad" />
+                <arc:Input Label="Email" Text="noor@larkspur.co" />
+            </StackPanel>
+        </arc:SettingsSection>
+        <arc:SettingsSection Header="Notifications" Icon="{x:Static arc:ArcIcons.Bell}" Badge="2">
+            <arc:SettingsGroup Appearance="Plain">
+                <arc:SettingsRow Header="Mentions" Description="When someone mentions you.">
+                    <arc:Switch IsChecked="True" />
+                </arc:SettingsRow>
+                <arc:SettingsRow Header="Weekly digest" Description="A Monday summary of your projects.">
+                    <arc:Switch />
+                </arc:SettingsRow>
+            </arc:SettingsGroup>
+        </arc:SettingsSection>
+        <arc:SettingsSection Header="Security" Icon="{x:Static arc:ArcIcons.Shield}">
+            <arc:SettingsGroup Appearance="Plain">
+                <arc:SettingsRow Header="Two-step verification" Description="Ask for a code on new devices.">
+                    <arc:Switch IsChecked="True" />
+                </arc:SettingsRow>
+            </arc:SettingsGroup>
+        </arc:SettingsSection>
+        <arc:SettingsSection Header="Billing" Icon="{x:Static arc:ArcIcons.CreditCard}">
+            <arc:SettingsGroup Appearance="Plain">
+                <arc:SettingsRow Header="Studio plan" Description="6 seats at $15 each, renews Nov 1.">
+                    <arc:Button Variant="Secondary" Size="Small" Content="Change plan" />
+                </arc:SettingsRow>
+            </arc:SettingsGroup>
+        </arc:SettingsSection>
+    </arc:SettingsPage>
+</UserControl>

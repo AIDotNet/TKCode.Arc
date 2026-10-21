@@ -3,6 +3,8 @@ title: Rich text editor
 summary: A lightweight editor with markdown shortcuts, a floating toolbar, a slash menu, and HTML and markdown output.
 ---
 
+<Demo name="Shortcuts" />
+
 ## When to use
 
 - Comments, notes, posts and short or medium documents that need bold, italic, lists, quotes and code blocks.
@@ -32,24 +34,20 @@ editor, and both follow every edit.
 
 `Placeholder` shows in an empty editor. `BlockHint` shows on the empty line that holds the caret.
 
-```xml
-<arc:RichTextEditor Placeholder="Leave a comment"
-                    BlockHint="Type / for blocks" />
-```
+<Demo name="Placeholder" />
 
 ### Read only
 
 With `IsReadOnly` set, editing, the toolbar and the shortcuts are off. Text can still be selected and copied.
 
-```xml
-<arc:RichTextEditor IsReadOnly="True"
-                    Markdown="## Release checklist&#10;&#10;1. Freeze the branch&#10;2. Run the **full** test suite" />
-```
+<Demo name="ReadOnly" />
 
 ### Reading the content
 
 `ContentChanged` runs after every edit. Its `Value` holds `Html`, `Markdown`, `Text` and `IsEmpty`. The methods
 `GetHtml()`, `GetMarkdown()` and `GetText()` read the content at any time.
+
+<Demo name="MarkdownAndHtml" />
 
 ```csharp
 editor.ContentChanged += (_, e) =>
@@ -66,20 +64,9 @@ var html = editor.GetHtml();
 `Formats` reports the marks and block type at the caret, and `CanUndo` and `CanRedo` report the history. Use them
 to set the state of your own buttons. `ToggleMark`, `SetBlockType`, `SetLink` and `EditLink` drive the editor.
 
-```csharp
-editor.PropertyChanged += (_, e) =>
-{
-    if (e.Property == RichTextEditor.FormatsProperty)
-    {
-        boldButton.Variant = editor.Formats.IsBold ? ButtonVariant.Secondary : ButtonVariant.Ghost;
-    }
-};
-
-boldButton.Click += (_, _) => editor.ToggleMark(RichTextMark.Bold);
-headingButton.Click += (_, _) => editor.SetBlockType(RichTextBlockType.Heading2);
-```
-
 Bind `UndoCommand` and `RedoCommand` to buttons, or call `Undo()` and `Redo()` directly.
+
+<Demo name="OwnToolbar" />
 
 ## API reference
 

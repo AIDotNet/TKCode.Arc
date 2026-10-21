@@ -161,6 +161,9 @@ public class Tabs : SelectingItemsControl
     {
         SelectionModeProperty.OverrideDefaultValue<Tabs>(SelectionMode.AlwaysSelected);
         FocusableProperty.OverrideDefaultValue<Tabs>(false);
+        // The list reveals the selected tab itself (RevealIndex, on the smooth spring). The stock scroll-into-view of the
+        // selected item would also jump the list and, because the request bubbles, scroll any page the tabs sit in.
+        AutoScrollToSelectedItemProperty.OverrideDefaultValue<Tabs>(false);
     }
 
     /// <summary>Selects the tab at <paramref name="index"/> when it exists and is enabled.</summary>

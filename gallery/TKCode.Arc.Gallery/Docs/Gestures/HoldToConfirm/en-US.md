@@ -3,6 +3,8 @@ title: Hold to confirm
 summary: Confirm a destructive action by holding, not tapping.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - A destructive or hard to undo action whose consequence is already visible on the screen, such as deleting a project.
@@ -33,15 +35,7 @@ The `Command` runs once, after the hold completes. A normal click or an automati
 `Tone` sets the fill color: `Danger` for irreversible actions, `Accent` (the default) and `Neutral` for the rest.
 `HoldDuration` sets how long the button must be held; the default is 1.2 seconds.
 
-```xml
-<arc:HoldToConfirm Label="Hold to delete"
-                   Tone="Danger"
-                   ConfirmedLabel="Deleted" />
-<arc:HoldToConfirm Label="Hold to revoke"
-                   Tone="Neutral"
-                   HoldDuration="0:0:2"
-                   ConfirmedLabel="Revoked" />
-```
+<Demo name="Tones" />
 
 ### Icon
 
@@ -86,6 +80,12 @@ the fill rewinds as the label morphs back.
 ```csharp
 reset.Click += (_, _) => project.IsConfirmed = false;
 ```
+
+### Disabled
+
+A disabled button cannot be held.
+
+<Demo name="Disabled" />
 
 ## API reference
 

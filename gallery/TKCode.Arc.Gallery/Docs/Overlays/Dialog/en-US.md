@@ -3,6 +3,8 @@ title: Dialog
 summary: A focused surface for decisions that need attention.
 ---
 
+<Demo name="ShortForm" />
+
 ## When to use
 
 - Confirmations that must be answered before the user continues, such as deleting a project.
@@ -44,11 +46,7 @@ that value.
 `Dialog.ConfirmAsync` builds the dialog, waits for a choice and returns `true` only for the confirm button. Escape,
 the scrim and the close button return `false`.
 
-```csharp
-var confirmed = await Dialog.ConfirmAsync(deleteButton, "Delete project?",
-    "This permanently deletes Atlas redesign. This cannot be undone.", "Delete", isDanger: true);
-status.Text = confirmed ? "Deleted" : "Kept";
-```
+<Demo name="Confirmation" />
 
 `Dialog.ShowAsync` takes custom content and a list of `DialogAction` values, and returns the result of the
 clicked action.
@@ -57,6 +55,8 @@ clicked action.
 
 Change `Title` and `Description` while the dialog is open. The new copy crossfades in place, so a step flow needs
 no second dialog.
+
+<Demo name="Steps" />
 
 ```csharp
 dialog.Title = "Choose a role";
@@ -67,6 +67,8 @@ dialog.Description = "Editors can change content; viewers only read.";
 
 `Size` sets the panel width: `Small` is 360, `Medium` is 440 (the Arc default) and `Large` is 560. A panel never
 exceeds the window minus a 16px gutter.
+
+<Demo name="Sizes" />
 
 ```xml
 <arc:Dialog Title="Workspace limits" Size="Large" IsOpen="{Binding ShowLimits}">

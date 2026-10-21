@@ -167,21 +167,25 @@ public class GalleryShellTests
     }
 
     [AvaloniaFact]
-    public void On_This_Page_Lists_The_Examples_And_Hides_When_Narrow()
+    public async Task On_This_Page_Lists_The_Sections_And_Hides_When_Narrow()
     {
-        // The page needs 960px for the table of contents. On Linux the headless AtomUI window draws its own frame and title
-        // bar inside the window, so 1280 leaves the page at 928px; 1440 keeps it above the threshold on every platform.
-        var wide = Open(1440);
+        var wide = Open(1600);
         try
         {
-            wide.Select(Entry("Button"));
+            wide.Select(Entry("ActionButton"));
             Dispatcher.UIThread.RunJobs();
-            var toc = Find<GalleryToc>(wide);
             var page = Find<GalleryPageView>(wide);
-            toc.IsVisible.ShouldBeTrue($"window {wide.Bounds.Width}x{wide.Bounds.Height}, page {page.Bounds.Width}x{page.Bounds.Height}");
-            var rows = toc.GetVisualDescendants().OfType<GalleryNavRow>().Count();
-            // One row per example plus the two links under the list.
-            rows.ShouldBeGreaterThanOrEqualTo(4 + 2);
+            // StreamMark parses the docs page on a worker; the list appears once the document is laid out.
+            for (var i = 0; i < 300 && page.SectionTitles.Count == 0; i++)
+            {
+                page.Docs!.View?.ApplyLatest();
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+            var toc = Find<GalleryToc>(wide);
+            toc.IsVisible.ShouldBeTrue();
+            // "Preview" and the seven sections, plus the two links under the list.
+            toc.GetVisualDescendants().OfType<GalleryNavRow>().Count().ShouldBe(1 + 7 + 2);
         }
         finally
         {
@@ -191,9 +195,16 @@ public class GalleryShellTests
         var narrow = Open(900);
         try
         {
-            narrow.Select(Entry("Button"));
+            narrow.Select(Entry("ActionButton"));
             Dispatcher.UIThread.RunJobs();
-            Find<GalleryToc>(narrow).IsVisible.ShouldBeFalse();
+            var page = Find<GalleryPageView>(narrow);
+            for (var i = 0; i < 300 && page.SectionTitles.Count == 0; i++)
+            {
+                page.Docs!.View?.ApplyLatest();
+                Dispatcher.UIThread.RunJobs();
+                await Task.Delay(10);
+            }
+            page.GetVisualDescendants().OfType<GalleryToc>().ShouldAllBe(t => !t.IsVisible);
         }
         finally
         {

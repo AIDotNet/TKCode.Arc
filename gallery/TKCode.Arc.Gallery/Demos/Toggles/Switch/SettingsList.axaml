@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SwitchSettingsListDemo">
+    <StackPanel Spacing="4">
+        <arc:Switch Content="Email notifications" IsChecked="True" />
+        <arc:Switch Content="Weekly digest" />
+        <arc:Switch Content="Product updates" />
+    </StackPanel>
+</UserControl>

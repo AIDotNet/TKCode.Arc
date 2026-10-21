@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MoneyInputLimitsDemo">
+    <arc:MoneyInput Label="Transfer"
+                    Minimum="5"
+                    Maximum="1000"
+                    Description="Arrow keys step by $1, Shift by $10, PageUp and PageDown by ten steps."
+                    Width="380"
+                    HorizontalAlignment="Left" />
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: Markdown
 summary: 以 Arc 的風格渲染 Markdown 文件與串流回覆，程式碼區塊使用 Arc 的語法配色高亮。
-source-hash: 25cd452aaa53
+source-hash: 451de652ac65
 ---
+
+<Demo name="Document" />
 
 ## 何時使用
 
@@ -39,6 +41,8 @@ source-hash: 25cd452aaa53
 
 每個資料區塊抵達時呼叫 `Append`，回覆結束時呼叫 `Complete`。文字會依節奏逐步顯示，新詞以淡入方式出現。`IsStreaming` 在節奏化的待顯示內容全部呈現之前保持為 `true`。
 
+<Demo name="StreamedReply" />
+
 ```csharp
 markdown.Append(chunk);   // 權杖抵達時呼叫，在 UI 執行緒上執行
 markdown.Complete();      // 回覆結束時呼叫
@@ -50,10 +54,7 @@ markdown.Complete();      // 回覆結束時呼叫
 
 訊息氣泡可使用較小的 `FontSize`。`LineHeight` 預設為字級的 1.65 倍，程式碼字級隨之變化。
 
-```xml
-<arc:Markdown FontSize="14"
-              Text="已將 **web-42** 部署到 `staging`。&#10;&#10;```sh&#10;kubectl rollout status deploy/web&#10;```" />
-```
+<Demo name="ChatSize" />
 
 ### 連結
 

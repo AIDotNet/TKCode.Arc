@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RadioCardsListDemo">
+    <arc:RadioCards Layout="List" AutomationProperties.Name="Shipping speed" SelectedValue="standard">
+        <arc:RadioCardOption Value="standard"
+                             Label="Standard"
+                             Description="4 to 6 business days"
+                             Meta="Free"
+                             Icon="{x:Static arc:ArcIcons.CalendarDays}" />
+        <arc:RadioCardOption Value="express"
+                             Label="Express"
+                             Description="2 to 3 business days"
+                             Meta="$9.00"
+                             Icon="{x:Static arc:ArcIcons.Clock}" />
+        <arc:RadioCardOption Value="overnight"
+                             Label="Overnight"
+                             Description="Next business day before noon"
+                             Meta="$24.00"
+                             Icon="{x:Static arc:ArcIcons.Zap}" />
+    </arc:RadioCards>
+</UserControl>

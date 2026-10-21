@@ -3,6 +3,8 @@ title: Chat thread
 summary: A chat thread with grouped messages, reactions, read receipts, typing, and a composer with attachments.
 ---
 
+<Demo name="SupportConversation" />
+
 ## When to use
 
 - A support widget, a direct message or a team chat between people who are online together.
@@ -83,6 +85,8 @@ thread.RetryRequested += (_, e) => e.Message.Status = ChatMessageStatus.Sent;
 `ReactionToggled` reports the reaction that the reader picked. Use `AppendToMessage` and `CompleteMessage` to stream a
 reply: the Markdown body receives only the new text.
 
+<Demo name="StreamingMarkdownReply" />
+
 ```csharp
 thread.ReactionToggled += (_, e) => ToggleReaction(e.Message, e.Emoji);
 
@@ -91,6 +95,18 @@ thread.AppendToMessage("r1", "Here is a small helper that retries a request.");
 thread.CompleteMessage("r1");
 thread.ScrollToBottom();
 ```
+
+### A thousand messages
+
+Rows are virtualized and recycled: only the messages in view (plus a little margin) exist. Scroll up and new messages from others raise the pill.
+
+<Demo name="ThousandMessages" />
+
+### Composer on its own
+
+`ChatComposer` grows to six lines, takes files from the button, paste or drop, and sends with Enter (Shift + Enter for a new line).
+
+<Demo name="ComposerOnItsOwn" />
 
 ## API reference
 

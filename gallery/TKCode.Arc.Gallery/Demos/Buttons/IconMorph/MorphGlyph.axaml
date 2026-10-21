@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IconMorphMorphGlyphDemo">
+    <arc:Button Width="52"
+                Height="52"
+                Padding="0"
+                Variant="Ghost"
+                HorizontalAlignment="Center"
+                AutomationProperties.Name="Morph to the next shape"
+                Click="OnMorphClick">
+        <arc:MorphGlyph x:Name="Morph" Data="M4 6h16 M4 12h16 M4 18h16" Size="32" />
+    </arc:Button>
+</UserControl>

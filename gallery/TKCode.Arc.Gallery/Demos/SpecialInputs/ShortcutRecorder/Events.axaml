@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ShortcutRecorderEventsDemo">
+    <UserControl.Styles>
+        <Style Selector="TextBlock.log">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </UserControl.Styles>
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:ShortcutRecorder x:Name="Recorder"
+                              Label="Command palette"
+                              Width="320"
+                              HorizontalAlignment="Left" />
+        <StackPanel x:Name="Log" Spacing="4">
+            <TextBlock x:Name="Hint"
+                       Text="Record a shortcut to see ValueChanged."
+                       FontSize="13"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CommandPaletteInlineItemsDemo">
+    <arc:CommandPalette Width="400"
+                        HorizontalAlignment="Center"
+                        PlaceholderText="Jump to a page"
+                        DefaultGroup="Pages"
+                        IsShortcutEnabled="False">
+        <arc:CommandPaletteItem Id="home" Label="Home" Icon="{x:Static arc:ArcIcons.House}" />
+        <arc:CommandPaletteItem Id="inbox" Label="Inbox" Description="3 unread" Icon="{x:Static arc:ArcIcons.Inbox}" />
+        <arc:CommandPaletteItem Id="calendar" Label="Calendar" Icon="{x:Static arc:ArcIcons.Calendar}" />
+        <arc:CommandPaletteItem Id="reports"
+                                Label="Reports"
+                                Description="Needs the Analytics plan"
+                                Icon="{x:Static arc:ArcIcons.ChartBar}"
+                                IsEnabled="False" />
+        <arc:CommandPaletteItem Id="settings" Label="Settings" Group="Account" Icon="{x:Static arc:ArcIcons.Settings}" Shortcut="⌘ ," />
+        <arc:CommandPaletteItem Id="sign-out" Label="Sign out" Group="Account" Icon="{x:Static arc:ArcIcons.LogOut}" />
+    </arc:CommandPalette>
+</UserControl>

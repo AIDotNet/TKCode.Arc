@@ -6,7 +6,6 @@ public static partial class GalleryPages
 {
     static partial void RegisterAvatars()
     {
-        Register("Avatar", AvatarPage.Create);
         RegisterAvatarsA();
         RegisterAvatarsB();
         RegisterAvatarsC();

@@ -1,8 +1,10 @@
 ---
 title: 悬停卡片
 summary: 悬停或聚焦时预览人员或链接，无需离开页面。
-source-hash: bb55746dda47
+source-hash: 9342f8a0604b
 ---
+
+<Demo name="Mention" />
 
 ## 何时使用
 
@@ -43,14 +45,7 @@ source-hash: bb55746dda47
 
 `arc:HoverCard.Attach` 可以为任意控件添加卡片，例如普通的文本链接。
 
-```xml
-<TextBlock Text="uiarc.dev/components/hover-card">
-    <arc:HoverCard.Attach>
-        <arc:HoverCard Placement="Top"
-                       Content="悬停或聚焦时预览人员或链接。" />
-    </arc:HoverCard.Attach>
-</TextBlock>
-```
+<Demo name="LinkPreview" />
 
 ### 时间与宽度
 
@@ -69,6 +64,12 @@ card.CardWidth = 320;
 card.Show();
 card.Closed += (_, e) => log.Text = $"关闭方式：{e.Reason}";
 ```
+
+### 密集列表
+
+一张卡片打开后，移到下一个触发器时，下一张卡片几乎立即打开，且只有淡入效果。
+
+<Demo name="DenseList" />
 
 ## API 参考
 

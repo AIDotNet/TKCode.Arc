@@ -1,8 +1,10 @@
 ---
 title: 多選
 summary: 選取多個值，同時保持欄位清晰易讀。
-source-hash: 46f2d403bf6d
+source-hash: 4bd44541bd8a
 ---
+
+<Demo name="Chips" />
 
 ## 何時使用
 
@@ -56,6 +58,8 @@ labels.SelectionChanged += (_, _) => Console.WriteLine(string.Join(", ", labels.
 
 已選的值會以標籤片的形式顯示在欄位中。`MaxVisibleChips` 設定直接顯示的數量，其餘項目會摺疊為一個 `+N` 標籤片。預設值為 2。
 
+<Demo name="OneVisibleChip" />
+
 ```xml
 <arc:MultiSelect Label="負責人"
                  MaxVisibleChips="1"
@@ -66,6 +70,8 @@ labels.SelectionChanged += (_, _) => Console.WriteLine(string.Join(", ", labels.
 ### 可搜尋的選單
 
 `IsSearchable` 會在選單頂端加入搜尋欄位。`SearchPlaceholder` 設定其提示文字。這是 Arc 的額外功能，Arc 原本的選單沒有搜尋欄位。
+
+<Demo name="Searchable" />
 
 ```xml
 <arc:MultiSelect Label="城市"
@@ -89,6 +95,8 @@ labels.UnselectAll();
 ### 預留位置文字與停用狀態
 
 尚未選取任何項目時會顯示 `Placeholder`。停用的欄位會忽略輸入，並隱藏清除按鈕。
+
+<Demo name="Disabled" />
 
 ```xml
 <arc:MultiSelect Label="審閱者" Placeholder="選擇選項" IsEnabled="False" />

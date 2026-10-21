@@ -29,6 +29,31 @@ public class SliderTests
     private static SliderThumb Thumb(Slider slider, int index) => slider.Rail!.Thumbs[index];
 
     [AvaloniaFact]
+    public void A_Minimum_Above_The_Current_Maximum_Can_Be_Set_First()
+    {
+        // The XAML loader sets attributes in order inside BeginInit / EndInit, where RangeBase does not coerce yet:
+        // Minimum="360" arrives while Maximum is still the default 100.
+        var slider = new Slider();
+        Should.NotThrow(() =>
+        {
+            slider.BeginInit();
+            slider.Minimum = 360;
+            slider.Maximum = 900;
+            slider.Value = 600;
+            slider.EndInit();
+        });
+        var (_, window) = Show(slider);
+        try
+        {
+            slider.Value.ShouldBe(600);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Arrows_Page_And_Home_End_Step_The_Value()
     {
         var (slider, window) = Show(new Slider { Label = "Volume", Value = 50 });

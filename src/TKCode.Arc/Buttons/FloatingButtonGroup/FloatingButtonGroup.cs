@@ -60,12 +60,14 @@ public class FloatingButtonGroup : ItemsControl
     public static readonly StyledProperty<string> LabelProperty =
         AvaloniaProperty.Register<FloatingButtonGroup, string>(nameof(Label), "Actions");
 
+    /// <summary>Surface of the tray: Muted (default), or Floating for a raised shadow and hairline edge.</summary>
     public static readonly StyledProperty<FloatingButtonGroupVariant> VariantProperty =
         AvaloniaProperty.Register<FloatingButtonGroup, FloatingButtonGroupVariant>(nameof(Variant));
 
     public static readonly StyledProperty<ControlSize> SizeProperty =
         AvaloniaProperty.Register<FloatingButtonGroup, ControlSize>(nameof(Size), ControlSize.Medium);
 
+    /// <summary>Lays the buttons out in a row (Horizontal, default) or a column (Vertical).</summary>
     public static readonly StyledProperty<Orientation> OrientationProperty =
         AvaloniaProperty.Register<FloatingButtonGroup, Orientation>(nameof(Orientation), Orientation.Horizontal);
 
@@ -81,11 +83,13 @@ public class FloatingButtonGroup : ItemsControl
     /// <summary>Accessible name of the toolbar, such as "Board actions".</summary>
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
+    /// <inheritdoc cref="VariantProperty"/>
     public FloatingButtonGroupVariant Variant { get => GetValue(VariantProperty); set => SetValue(VariantProperty, value); }
 
     /// <summary>Small (30px buttons) or Medium (36px, default). Large is treated as Medium.</summary>
     public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
+    /// <inheritdoc cref="OrientationProperty"/>
     public Orientation Orientation { get => GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
 
     /// <summary>Shows every item as an icon with its label in a tooltip; items with their own setting win.</summary>

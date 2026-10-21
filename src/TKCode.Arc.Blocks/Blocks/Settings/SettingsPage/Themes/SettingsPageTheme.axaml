@@ -1,0 +1,306 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Settings page: a Surface panel (1px Border, RadiusPanel, like a card). Left: a tinted navigation column with the title,
+        the section items under a raised pill (SurfaceRaised, BorderSubtle, ShadowResting) that glides on the snappy
+        spring, and a footer under a hairline. Right: the chosen section, and a save bar that rises at the bottom while
+        it has unsaved changes. Compact: one column, the items become a scrolling row of pills, the footer hides.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SettingsPage}" TargetType="arc:SettingsPage">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsPage">
+                <!-- The outline is drawn over the content: the tinted navigation would otherwise cover it along the corners. -->
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <Border Name="PART_NavPane" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <DockPanel>
+                                    <TextBlock Name="PART_Title"
+                                               DockPanel.Dock="Top"
+                                               Text="{TemplateBinding Title}"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <Border Name="PART_FooterSlot"
+                                            DockPanel.Dock="Bottom"
+                                            IsVisible="False"
+                                            BorderThickness="0,1,0,0"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            Padding="{arc:SettingsPageTokenResource FooterInset}">
+                                        <ContentPresenter Name="PART_FooterPresenter" Content="{TemplateBinding Footer}" />
+                                    </Border>
+                                    <arc:ScrollArea Name="PART_NavScroll" Orientation="Vertical">
+                                        <arc:SettingsPageNavHost Name="PART_NavHost">
+                                            <arc:GlidingIndicator Name="PART_SelectionPill"
+                                                                  Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                                  Stroke="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                                  StrokeThickness="1"
+                                                                  BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                                                  CornerRadius="{arc:SettingsPageTokenResource NavPillRadius}" />
+                                            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                        </arc:SettingsPageNavHost>
+                                    </arc:ScrollArea>
+                                </DockPanel>
+                            </Border>
+                            <Panel Name="PART_ContentPane">
+                                <arc:ScrollArea Name="PART_ContentScroll" Orientation="Vertical">
+                                    <StackPanel Name="PART_ContentStack">
+                                        <arc:SettingsPageContentHost Name="PART_ContentHost" />
+                                        <Panel Name="PART_SaveBarRoom" />
+                                    </StackPanel>
+                                </arc:ScrollArea>
+                                <arc:PresenceHost Name="PART_SaveBar"
+                                                  IsPresent="False"
+                                                  Mode="Rise"
+                                                  Offset="8"
+                                                  VerticalAlignment="Bottom"
+                                                  HorizontalAlignment="Center"
+                                                  Margin="{arc:SettingsPageTokenResource SaveBarMargin}">
+                                    <Border Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            BorderThickness="1"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                                            Padding="{arc:SettingsPageTokenResource SaveBarInset}">
+                                        <StackPanel Orientation="Horizontal" Spacing="{arc:SettingsPageTokenResource SaveBarGap}">
+                                            <TextBlock Name="PART_SaveNote"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,10,0"
+                                                       AutomationProperties.LiveSetting="Polite"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <arc:Button Name="PART_DiscardButton" Variant="Ghost" Size="Small" />
+                                            <arc:Button Name="PART_SaveButton" Variant="Primary" Size="Small" />
+                                        </StackPanel>
+                                    </Border>
+                                </arc:PresenceHost>
+                            </Panel>
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_Outline"
+                            IsHitTestVisible="False"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="{arc:SettingsPageTokenResource NavItemGap}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- Token values that :compact and :dirty override are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Border#PART_NavPane">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="Width" Value="{arc:SettingsPageTokenResource NavWidth}" />
+            <Setter Property="Background" Value="{arc:SettingsPageTokenResource NavBackground}" />
+            <Setter Property="BorderThickness" Value="0,0,1,0" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="Margin" Value="{arc:SettingsPageTokenResource TitleInset}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SettingsPageNavHost#PART_NavHost">
+            <Setter Property="Margin" Value="{arc:SettingsPageTokenResource NavListInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_ContentStack">
+            <Setter Property="Margin" Value="{arc:SettingsPageTokenResource ContentInset}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_SaveBarRoom">
+            <Setter Property="Height" Value="0" />
+        </Style>
+        <Style Selector="^:dirty /template/ Panel#PART_SaveBarRoom">
+            <Setter Property="Height" Value="{arc:SettingsPageTokenResource SaveBarRoom}" />
+        </Style>
+
+        <Style Selector="^:compact">
+            <Setter Property="ItemsPanel">
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:SettingsPageTokenResource NavItemGap}" />
+                </ItemsPanelTemplate>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_NavPane">
+                <Setter Property="DockPanel.Dock" Value="Top" />
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="Margin" Value="{arc:SettingsPageTokenResource CompactTitleInset}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ScrollArea#PART_NavScroll">
+                <Setter Property="Orientation" Value="Horizontal" />
+            </Style>
+            <Style Selector="^ /template/ arc|SettingsPageNavHost#PART_NavHost">
+                <Setter Property="Margin" Value="{arc:SettingsPageTokenResource CompactNavListInset}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_ContentStack">
+                <Setter Property="Margin" Value="{arc:SettingsPageTokenResource CompactContentInset}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A navigation item: icon, header, badge, unsaved dot; the page's pill marks the selected one. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsPageNavItem}" TargetType="arc:SettingsPageNavItem">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsPageNavItem">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:SettingsPageNavItemTokenResource ItemRadius}" />
+                    <Grid Name="PART_Layout"
+                          Margin="{TemplateBinding Padding}"
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="{arc:SettingsPageNavItemTokenResource GlyphSize}"
+                                      Margin="{arc:SettingsPageNavItemTokenResource IconMargin}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Header"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding Header}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <arc:Badge Name="PART_Badge"
+                                   Grid.Column="2"
+                                   Size="Small"
+                                   Content="{TemplateBinding Badge}"
+                                   Margin="{arc:SettingsPageNavItemTokenResource TrailingMargin}"
+                                   VerticalAlignment="Center" />
+                        <Ellipse Name="PART_DirtyDot"
+                                 Grid.Column="3"
+                                 Width="{arc:SettingsPageNavItemTokenResource DirtyDotSize}"
+                                 Height="{arc:SettingsPageNavItemTokenResource DirtyDotSize}"
+                                 Margin="{arc:SettingsPageNavItemTokenResource TrailingMargin}"
+                                 Fill="{arc:ArcDesignTokenResource Accent}"
+                                 VerticalAlignment="Center" />
+                    </Grid>
+                    <Border Name="PART_FocusRing"
+                            IsHitTestVisible="False"
+                            Margin="{arc:SettingsPageNavItemTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:SettingsPageNavItemTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:SettingsPageNavItemTokenResource ItemHeight}" />
+        <Setter Property="Padding" Value="{arc:SettingsPageNavItemTokenResource ItemInset}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Cursor" Value="Hand" />
+
+        <!-- Visibility that pseudo-classes switch on is set here, not in the template (a template value is local). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Badge#PART_Badge">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#PART_DirtyDot">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:icon /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:badge /template/ arc|Badge#PART_Badge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:dirty /template/ Ellipse#PART_DirtyDot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:not(:selected):pointerover">
+            <Setter Property="Background" Value="{arc:SettingsPageNavItemTokenResource HoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:not(:selected):pressed">
+            <Setter Property="Background" Value="{arc:SettingsPageNavItemTokenResource PressedBackground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Cursor" Value="Arrow" />
+            <Style Selector="^ /template/ TextBlock#PART_Header">
+                <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A section as the page shows it: title, description, content. -->
+    <ControlTheme x:Key="{x:Type arc:SettingsSection}" TargetType="arc:SettingsSection">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SettingsSection">
+                <StackPanel>
+                    <ContentPresenter Name="PART_HeaderPresenter"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               Margin="{arc:SettingsSectionTokenResource DescriptionMargin}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="{arc:SettingsSectionTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Margin="{arc:SettingsSectionTokenResource ContentMargin}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="Stretch" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+</ResourceDictionary>

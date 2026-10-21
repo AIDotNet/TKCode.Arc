@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MarkdownDocumentDemo">
+    <StackPanel Spacing="12">
+        <arc:Markdown x:Name="Document" LinkClicked="OnLinkClicked" />
+        <TextBlock x:Name="Status"
+                   Text="Links open in the browser; LinkClicked reports them first."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

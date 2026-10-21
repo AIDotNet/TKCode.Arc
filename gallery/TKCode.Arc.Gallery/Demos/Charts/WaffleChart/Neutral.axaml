@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WaffleChartNeutralDemo">
+    <arc:WaffleChart Label="Browser share" AccentKey="{x:Static arc:WaffleChart.NoAccent}">
+        <arc:WaffleChart.Items>
+            <arc:WaffleCategory Key="chrome" Label="Chrome" Value="65.4" />
+            <arc:WaffleCategory Key="safari" Label="Safari" Value="18.6" />
+            <arc:WaffleCategory Key="edge" Label="Edge" Value="5.2" />
+            <arc:WaffleCategory Key="firefox" Label="Firefox" Value="2.8" />
+            <arc:WaffleCategory Key="samsung" Label="Samsung Internet" Value="2.6" />
+            <arc:WaffleCategory Key="other" Label="Other" Value="5.4" />
+        </arc:WaffleChart.Items>
+    </arc:WaffleChart>
+</UserControl>

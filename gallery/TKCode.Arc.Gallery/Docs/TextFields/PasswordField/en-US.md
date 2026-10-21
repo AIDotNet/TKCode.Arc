@@ -3,6 +3,8 @@ title: Password field
 summary: Capture sensitive text with a visible reveal control.
 ---
 
+<Demo name="SignIn" />
+
 ## When to use
 
 - Sign-in forms and other places where the user types an existing secret.
@@ -54,14 +56,7 @@ signIn.PropertyChanged += (_, e) =>
 
 Set `ErrorMessage` from the second field while the two values differ. Clear it by setting it to `null`.
 
-```csharp
-void Check() => confirm.ErrorMessage = !string.IsNullOrEmpty(confirm.Text) && confirm.Text != first.Text
-    ? "The passwords do not match yet."
-    : null;
-
-first.TextChanged += (_, _) => Check();
-confirm.TextChanged += (_, _) => Check();
-```
+<Demo name="Confirm" />
 
 ### Toggle names
 
@@ -77,10 +72,7 @@ The toggle names come from `ShowPasswordText` and `HidePasswordText`. Set them t
 
 `Size` sets the frame height: `Small` is 36 and `Medium` (the default) is 44.
 
-```xml
-<arc:PasswordField Label="Small" Size="Small" Text="secret" />
-<arc:PasswordField Label="Disabled" Text="secret" IsEnabled="False" />
-```
+<Demo name="SizesAndStates" />
 
 ## API reference
 

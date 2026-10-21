@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TKCode.Arc.Gallery.Demos.DataFlowOwnSourcesDemo">
+    <arc:DataFlow x:Name="Flow" EventsPerSecond="8" FilterRatio="0.3">
+        <arc:DataFlow.Labels>
+            <arc:DataFlowLabels Warehouse="Lakehouse"
+                                WarehouseDetail="parquet"
+                                Realtime="Alerts"
+                                RealtimeDetail="on-call" />
+        </arc:DataFlow.Labels>
+    </arc:DataFlow>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 浮动按钮组
 summary: 将柔和按钮分隔放置在安静的托盘中，一个共享高亮随指针在按钮之间变形移动，按下状态则原地回落。
-source-hash: 4ca39453b0d8
+source-hash: 17bd9cf8be73
 ---
+
+<Demo name="MutedTray" />
 
 ## 何时使用
 
@@ -37,16 +39,7 @@ source-hash: 4ca39453b0d8
 
 在代码中将 `Icon` 设为 24 x 24 的 Lucide 图形。按钮上的 `IsIconOnly` 会隐藏其标签。在托盘上设置 `IsIconOnly`，可使每个按钮都只显示图标。按钮自身的设置优先于托盘的设置。仅图标的按钮以及带有 `Shortcut` 的按钮，会在工具提示中显示其标签。
 
-```xml
-<arc:FloatingButtonGroup Label="文字格式"
-                         Variant="Floating"
-                         IsIconOnly="True">
-    <arc:FloatingButtonGroupItem Label="粗体" Shortcut="⌘B" />
-    <arc:FloatingButtonGroupItem Label="斜体" Shortcut="⌘I" />
-    <arc:FloatingButtonGroupSeparator />
-    <arc:FloatingButtonGroupItem Label="链接" Shortcut="⌘K" />
-</arc:FloatingButtonGroup>
-```
+<Demo name="IconOnly" />
 
 ```csharp
 bold.Icon = ArcIcons.Bold;
@@ -72,6 +65,10 @@ share.Click += async (_, _) =>
 ### 来自数据的项与纵向布局
 
 `ItemsSource` 可将普通数据转换为按钮。`Orientation="Vertical"` 会将按钮纵向堆叠成一列，此时工具提示默认向右展开。设置 `TooltipPlacement` 可更改展开的方向。
+
+<Demo name="FromItemsSource" />
+
+<Demo name="Vertical" />
 
 ```xml
 <arc:FloatingButtonGroup Label="缩放" Size="Small" ItemsSource="{Binding ZoomLevels}" />

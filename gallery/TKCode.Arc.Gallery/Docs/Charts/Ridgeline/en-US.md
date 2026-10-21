@@ -3,6 +3,8 @@ title: Ridgeline
 summary: Overlapping distributions, one ridge per group: hover to lift a ridge and read its quartiles, switch datasets and every curve morphs.
 ---
 
+<Demo name="DistributionsByMonth" />
+
 ## When to use
 
 - The shape of several distributions side by side, such as daily highs per month or latency per region.
@@ -46,18 +48,7 @@ lisbon.Click += (_, _) => chart.ItemsSource = Lisbon;
 Add groups through `Items` when they are created in code. `ValueFormatter` formats the values on the axis and in the
 readout.
 
-```csharp
-var latency = new Ridgeline
-{
-    Label = "Response time by region",
-    ValueFormatter = v => $"{v:0} ms",
-    IsTinted = false,
-    RowHeight = 36,
-    Overlap = 1.8
-};
-latency.Items.Add(new RidgelineSeries("eu", "Europe", europeValues));
-latency.Items.Add(new RidgelineSeries("us", "Americas", americasValues));
-```
+<Demo name="Untinted" />
 
 ### Overlap and smoothness
 

@@ -127,6 +127,7 @@ public class CardStack : ItemsControl
     public static readonly StyledProperty<object?> EmptyContentProperty =
         AvaloniaProperty.Register<CardStack, object?>(nameof(EmptyContent));
 
+    /// <summary>Data template that builds the empty-state content; used when <see cref="EmptyContent"/> is not set.</summary>
     public static readonly StyledProperty<IDataTemplate?> EmptyContentTemplateProperty =
         AvaloniaProperty.Register<CardStack, IDataTemplate?>(nameof(EmptyContentTemplate));
 
@@ -165,6 +166,7 @@ public class CardStack : ItemsControl
 
     public object? EmptyContent { get => GetValue(EmptyContentProperty); set => SetValue(EmptyContentProperty, value); }
 
+    /// <inheritdoc cref="EmptyContentTemplateProperty"/>
     public IDataTemplate? EmptyContentTemplate
     {
         get => GetValue(EmptyContentTemplateProperty);

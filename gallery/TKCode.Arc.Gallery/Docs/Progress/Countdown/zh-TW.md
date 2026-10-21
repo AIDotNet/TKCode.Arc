@@ -1,8 +1,10 @@
 ---
 title: 倒數計時
 summary: 發布倒數計時，數字逐位滾動，歸零時轉為即時狀態。
-source-hash: 7805982abd2e
+source-hash: b1a6d3eda661
 ---
+
+<Demo name="Launch" />
 
 ## 何時使用
 
@@ -34,6 +36,8 @@ launch.Target = new DateTimeOffset(2030, 1, 1, 9, 0, 0, TimeSpan.Zero);
 
 將 `Variant` 設為 `Compact`，會顯示一個依字型大小調整的膠囊。適用於空間緊湊的位置。
 
+<Demo name="Compact" />
+
 ```xml
 <arc:Countdown Variant="Compact"
                Units="Hours, Minutes"
@@ -60,6 +64,8 @@ countdown.Target = Countdown.ResolveTarget("2030-01-01T09:00:00", timeZone);
 ### 暫停、繼續與重新開始
 
 時長倒數計時在暫停期間會保留剩餘時間。目標倒數計時仍會倒數到同一時刻，因此暫停只會凍結顯示。
+
+<Demo name="DurationWithPause" />
 
 ```xml
 <arc:Countdown Duration="00:00:12"

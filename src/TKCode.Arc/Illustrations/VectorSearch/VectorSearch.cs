@@ -37,6 +37,7 @@ public class VectorSearch : Illustration
     public static readonly StyledProperty<int> TopKProperty =
         AvaloniaProperty.Register<VectorSearch, int>(nameof(TopK), 3, coerce: static (_, v) => Math.Clamp(v, 1, 5));
 
+    /// <summary>Step titles, badges and caption text of the diagram; set it to rename or translate the scene.</summary>
     public static readonly StyledProperty<VectorSearchLabels> LabelsProperty =
         AvaloniaProperty.Register<VectorSearch, VectorSearchLabels>(nameof(Labels), new VectorSearchLabels());
 
@@ -46,6 +47,7 @@ public class VectorSearch : Illustration
 
     public int TopK { get => GetValue(TopKProperty); set => SetValue(TopKProperty, value); }
 
+    /// <inheritdoc cref="LabelsProperty"/>
     public VectorSearchLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
     /// <summary>The question being shown.</summary>
@@ -405,10 +407,11 @@ public class VectorSearch : Illustration
 
     #region Drawing
 
+    // Static layer: the plot with every document as a grey point, topic names, the query box with what has been typed,
+    // the vector strip's midline and the results header. It redraws only when a character is typed or the scene changes.
     private protected override void RenderUnderlay(DrawingContext context, double scale)
     {
         var p = Palette;
-        var now = Now;
         var plot = new RoundedRect(s_plot, 16);
         context.DrawRectangle(p.Tint(IllustrationInk.SurfaceMuted, 0.55), p.Pen(IllustrationInk.Line, 1), plot);
         using var clip = context.PushClip(plot);
@@ -417,54 +420,19 @@ public class VectorSearch : Illustration
             var text = p.Text(topic, IllustrationInk.Muted, small: true, medium: true);
             context.DrawText(text, new Point(at.X - text.Width / 2, at.Y - text.Height / 2));
         }
-        var shown = Math.Clamp(_queryShown.Value(now), 0, 1.3);
-        var radius = _radius.Value(now);
-        if (radius > 1)
+        foreach (var point in _points)
         {
-            context.DrawEllipse(p.Tint(IllustrationInk.Accent, 0.05), p.Pen(IllustrationInk.Accent, 1, dashed: true), _queryPoint, radius, radius);
-        }
-        for (var i = 0; i < _points.Length; i++)
-        {
-            var h = Math.Clamp(_highlight[i].Value(now), 0, 1.2);
-            if (h > 0.01)
-            {
-                using (context.PushOpacity(Math.Min(1, h)))
-                {
-                    context.DrawLine(p.TintPen(IllustrationInk.Accent, 0.55, 1), _queryPoint, _points[i]);
-                }
-            }
-        }
-        for (var i = 0; i < _points.Length; i++)
-        {
-            var h = Math.Clamp(_highlight[i].Value(now), 0, 1.2);
-            if (h > 0.01)
-            {
-                context.DrawEllipse(p.Tint(IllustrationInk.Accent, 0.2 * Math.Min(1, h)), null, _points[i], 7 * h, 7 * h);
-                context.DrawEllipse(p.Brush(IllustrationInk.Accent), null, _points[i], 3 + 1.2 * h, 3 + 1.2 * h);
-            }
-            else
-            {
-                context.DrawEllipse(p.Brush(IllustrationInk.StrongLine), null, _points[i], 3, 3);
-            }
-        }
-        if (shown > 0.01)
-        {
-            var r = 5 * shown;
-            context.DrawEllipse(p.Tint(IllustrationInk.Accent, 0.22), null, _queryPoint, r * 2.2, r * 2.2);
-            context.DrawEllipse(p.Brush(IllustrationInk.Accent), p.Pen(IllustrationInk.Surface, 2), _queryPoint, r, r);
+            context.DrawEllipse(p.Brush(IllustrationInk.StrongLine), null, point, 3, 3);
         }
     }
 
     private protected override void RenderOverlay(DrawingContext context, double scale)
     {
         var p = Palette;
-        var now = Now;
-
-        // Query box with the typed question and a blinking caret.
         var box = new RoundedRect(s_queryBox, s_queryBox.Height / 2);
         context.DrawRectangle(p.Brush(IllustrationInk.Surface), p.Pen(IllustrationInk.Line, 1), box, p.Shadow);
         DrawIcon(context, ArcIcons.Search, new Rect(s_queryBox.X + 14, s_queryBox.Center.Y - 8, 16, 16), IllustrationInk.Muted);
-        var typedCount = double.IsNaN(_typeStart) ? 0 : (int)Math.Clamp((now - _typeStart) / CharDelay, 0, _query.Length);
+        var typedCount = TypedCount(Now);
         var textX = s_queryBox.X + 40;
         var caretX = textX;
         if (typedCount != _typedCount)
@@ -483,68 +451,27 @@ public class VectorSearch : Illustration
             caretX = Math.Min(textX + text.WidthIncludingTrailingWhitespace + 1, s_queryBox.Right - 14);
         }
         _caretX = caretX;
-
-        // Vector strip: 16 bars around a midline.
         var mid = s_strip.Center.Y;
         context.DrawLine(p.Pen(IllustrationInk.SubtleLine, 1), new Point(s_strip.Left, mid), new Point(s_strip.Right, mid));
-        var barWidth = 5.5;
-        var pitch = (s_strip.Width - barWidth) / (Cells - 1);
-        for (var j = 0; j < Cells; j++)
-        {
-            var v = Math.Clamp(_cells[j].Value(now), -1.2, 1.2);
-            if (Math.Abs(v) < 0.01)
-            {
-                continue;
-            }
-            var height = Math.Abs(v) * (s_strip.Height / 2 - 2);
-            var x = s_strip.Left + j * pitch;
-            var rect = v > 0 ? new Rect(x, mid - height, barWidth, height) : new Rect(x, mid, barWidth, height);
-            context.DrawRectangle(p.Tint(IllustrationInk.Accent, 0.35 + 0.55 * Math.Min(1, Math.Abs(v))), null, new RoundedRect(rect, 1.5));
-        }
-
-        // Results.
-        var header = p.Text(_header, IllustrationInk.Muted, small: true, medium: true);
-        context.DrawText(header, new Point(14, ResultsTop));
-        for (var r = 0; r < _results.Count && r < _rows.Length; r++)
-        {
-            var shown = Math.Clamp(_rows[r].Value(now), 0, 1);
-            if (shown <= 0.01)
-            {
-                continue;
-            }
-            var result = _results[r];
-            var y = ResultsTop + 24 + r * RowHeight + (1 - shown) * 8;
-            using (context.PushOpacity(shown))
-            {
-                var rank = p.Text(_rankTexts[r], IllustrationInk.Muted, small: true, mono: true);
-                context.DrawText(rank, new Point(14, y));
-                var score = p.Text(_scoreTexts[r], IllustrationInk.Secondary, small: true, mono: true);
-                context.DrawText(score, new Point(334 - score.Width, y));
-                var title = p.Text(result.Document.Title, IllustrationInk.Foreground, small: true, medium: r == 0);
-                using (context.PushClip(new Rect(32, y - 2, 334 - score.Width - 44, title.Height + 4)))
-                {
-                    context.DrawText(title, new Point(32, y));
-                }
-                var track = new Rect(32, y + title.Height + 3, 334 - 32, 2);
-                context.DrawRectangle(p.Brush(IllustrationInk.SubtleLine), null, new RoundedRect(track, 1));
-                var fill = track.WithWidth(track.Width * Math.Clamp(result.Score, 0, 1) * shown);
-                if (fill.Width > 0.5)
-                {
-                    context.DrawRectangle(p.Tint(IllustrationInk.Accent, 0.75), null, new RoundedRect(fill, 1));
-                }
-            }
-        }
+        context.DrawText(p.Text(_header, IllustrationInk.Muted, small: true, medium: true), new Point(14, ResultsTop));
     }
 
     private bool IsTyping(double now) =>
         !double.IsNaN(_typeStart) && !double.IsNegativeInfinity(_typeStart) && (now - _typeStart) / CharDelay < _query.Length;
 
+    /// <summary>Characters of the question shown at <paramref name="now"/>.</summary>
+    private int TypedCount(double now) => double.IsNaN(_typeStart) ? 0 : (int)Math.Clamp((now - _typeStart) / CharDelay, 0, _query.Length);
+
     /// <summary>Caret shown while typing, then blinking (0.55s on, 0.45s off); never in the still poster frame.</summary>
     private bool CaretVisible(double now) => IsTyping(now) || (!IsPoster && now % 1.0 < 0.55);
 
-    private protected override bool IsMoving(double now)
+    /// <summary>Typing redraws the static layer only when a character appears (about every third frame).</summary>
+    private protected override bool IsMoving(double now) => TypedCount(now) != _typedCount;
+
+    /// <summary>The motion layer redraws while its parts animate and when the caret blinks.</summary>
+    private protected override bool NeedsMotionFrame(double now)
     {
-        if (IsTyping(now) || _queryShown.IsMoving(now) || _radius.IsMoving(now))
+        if (CaretVisible(now) != _caretDrawn || IsTyping(now) || _queryShown.IsMoving(now) || _radius.IsMoving(now))
         {
             return true;
         }
@@ -572,16 +499,91 @@ public class VectorSearch : Illustration
         return false;
     }
 
-    private protected override bool NeedsMotionFrame(double now) => CaretVisible(now) != _caretDrawn || IsTyping(now);
-
-    /// <summary>The caret blinks on the motion layer, so a blink redraws one line rather than the whole scene.</summary>
+    // Motion layer: the search's animated parts (ring, neighbour lines and points, query point, vector bars, result rows,
+    // caret), so an animation phase re-records these alone and not the plot of every document underneath.
     private protected override void RenderMotionOverlay(DrawingContext context, double scale)
     {
+        var p = Palette;
         var now = Now;
+        using (context.PushClip(new RoundedRect(s_plot, 16)))
+        {
+            var radius = _radius.Value(now);
+            if (radius > 1)
+            {
+                context.DrawEllipse(p.Tint(IllustrationInk.Accent, 0.05), p.Pen(IllustrationInk.Accent, 1, dashed: true), _queryPoint, radius, radius);
+            }
+            foreach (var index in _resultIndices)
+            {
+                var h = Math.Clamp(_highlight[index].Value(now), 0, 1.2);
+                if (h <= 0.01)
+                {
+                    continue;
+                }
+                using (context.PushOpacity(Math.Min(1, h)))
+                {
+                    context.DrawLine(p.TintPen(IllustrationInk.Accent, 0.55, 1), _queryPoint, _points[index]);
+                }
+                context.DrawEllipse(p.Tint(IllustrationInk.Accent, 0.2 * Math.Min(1, h)), null, _points[index], 7 * h, 7 * h);
+                context.DrawEllipse(p.Brush(IllustrationInk.Accent), null, _points[index], 3 + 1.2 * h, 3 + 1.2 * h);
+            }
+            var shown = Math.Clamp(_queryShown.Value(now), 0, 1.3);
+            if (shown > 0.01)
+            {
+                var r = 5 * shown;
+                context.DrawEllipse(p.Tint(IllustrationInk.Accent, 0.22), null, _queryPoint, r * 2.2, r * 2.2);
+                context.DrawEllipse(p.Brush(IllustrationInk.Accent), p.Pen(IllustrationInk.Surface, 2), _queryPoint, r, r);
+            }
+        }
+
+        // Vector strip: 16 bars around the midline.
+        var mid = s_strip.Center.Y;
+        const double barWidth = 5.5;
+        var pitch = (s_strip.Width - barWidth) / (Cells - 1);
+        for (var j = 0; j < Cells; j++)
+        {
+            var v = Math.Clamp(_cells[j].Value(now), -1.2, 1.2);
+            if (Math.Abs(v) < 0.01)
+            {
+                continue;
+            }
+            var height = Math.Abs(v) * (s_strip.Height / 2 - 2);
+            var x = s_strip.Left + j * pitch;
+            var rect = v > 0 ? new Rect(x, mid - height, barWidth, height) : new Rect(x, mid, barWidth, height);
+            context.DrawRectangle(p.Tint(IllustrationInk.Accent, 0.35 + 0.55 * Math.Min(1, Math.Abs(v))), null, new RoundedRect(rect, 1.5));
+        }
+
+        // Result rows rise in.
+        for (var r = 0; r < _results.Count && r < _rows.Length; r++)
+        {
+            var rowShown = Math.Clamp(_rows[r].Value(now), 0, 1);
+            if (rowShown <= 0.01)
+            {
+                continue;
+            }
+            var result = _results[r];
+            var y = ResultsTop + 24 + r * RowHeight + (1 - rowShown) * 8;
+            using (context.PushOpacity(rowShown))
+            {
+                context.DrawText(p.Text(_rankTexts[r], IllustrationInk.Muted, small: true, mono: true), new Point(14, y));
+                var score = p.Text(_scoreTexts[r], IllustrationInk.Secondary, small: true, mono: true);
+                context.DrawText(score, new Point(334 - score.Width, y));
+                var title = p.Text(result.Document.Title, IllustrationInk.Foreground, small: true, medium: r == 0,
+                    maxWidth: 334 - score.Width - 44);
+                context.DrawText(title, new Point(32, y));
+                var track = new Rect(32, y + title.Height + 3, 334 - 32, 2);
+                context.DrawRectangle(p.Brush(IllustrationInk.SubtleLine), null, new RoundedRect(track, 1));
+                var fill = track.WithWidth(track.Width * Math.Clamp(result.Score, 0, 1) * rowShown);
+                if (fill.Width > 0.5)
+                {
+                    context.DrawRectangle(p.Tint(IllustrationInk.Accent, 0.75), null, new RoundedRect(fill, 1));
+                }
+            }
+        }
+
         _caretDrawn = CaretVisible(now);
         if (_caretDrawn)
         {
-            context.DrawLine(Palette.Pen(IllustrationInk.Accent, 1.5), new Point(_caretX, s_queryBox.Center.Y - 8),
+            context.DrawLine(p.Pen(IllustrationInk.Accent, 1.5), new Point(_caretX, s_queryBox.Center.Y - 8),
                 new Point(_caretX, s_queryBox.Center.Y + 8));
         }
     }

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ScrubInputInspectorDemo">
+    <Border Width="320"
+            HorizontalAlignment="Center"
+            Padding="16,26,16,16"
+            CornerRadius="18"
+            BorderThickness="1"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+            <arc:ScrubInput Grid.Row="0" Grid.Column="0" Label="X" Value="120" Unit="px" />
+            <arc:ScrubInput Grid.Row="0" Grid.Column="1" Label="Y" Value="48" Unit="px" />
+            <arc:ScrubInput Grid.Row="1" Grid.Column="0" Label="W" Value="320" Minimum="0" Unit="px" ResetValue="320" />
+            <arc:ScrubInput Grid.Row="1" Grid.Column="1" Label="H" Value="180" Minimum="0" Unit="px" ResetValue="180" />
+            <arc:ScrubInput Grid.Row="2" Grid.Column="0" Label="R" Value="15" Minimum="0" Maximum="360" IsWrapping="True" IsTrackVisible="False" Unit="°" ResetValue="0" />
+            <arc:ScrubInput Grid.Row="2" Grid.Column="1" Label="O" Value="80" Minimum="0" Maximum="100" Unit="%" ResetValue="100" />
+        </Grid>
+    </Border>
+</UserControl>

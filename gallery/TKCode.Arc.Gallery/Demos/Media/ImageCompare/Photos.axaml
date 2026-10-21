@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:pages="using:TKCode.Arc.Gallery.Pages"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageComparePhotosDemo">
+    <arc:ImageCompare BeforeSource="https://picsum.photos/id/1018/1200/800?grayscale"
+                      AfterSource="https://picsum.photos/id/1018/1200/800"
+                      BeforeLabel="Black and white"
+                      AfterLabel="Colour">
+        <arc:ImageCompare.Before>
+            <pages:MediaArt Scene="1" Graded="False" />
+        </arc:ImageCompare.Before>
+        <arc:ImageCompare.After>
+            <pages:MediaArt Scene="1" />
+        </arc:ImageCompare.After>
+    </arc:ImageCompare>
+</UserControl>

@@ -3,6 +3,8 @@ title: Swipe actions
 summary: Reveal row actions with a swipe, or from the same actions in a menu.
 ---
 
+<Demo name="Inbox" />
+
 ## When to use
 
 - A touch first list of triage items, such as mail, notifications or tasks.
@@ -66,25 +68,13 @@ removal does not jump.
 A `SwipeActionsRow` declares its own actions. `IsFullSwipeEnabled="False"` keeps the row from committing on a full
 swipe, so the user must tap the revealed action.
 
-```xml
-<arc:SwipeActions Label="Tasks" Width="440">
-    <arc:SwipeActionsRow Label="Review pull request #418" IsFullSwipeEnabled="False">
-        <arc:SwipeActionsRow.TrailingActions>
-            <arc:SwipeAction Label="Flag" KeepsRow="True" />
-            <arc:SwipeAction Label="Delete" Tone="Danger" />
-        </arc:SwipeActionsRow.TrailingActions>
-        <TextBlock Text="Review pull request #418" VerticalAlignment="Center" />
-    </arc:SwipeActionsRow>
-</arc:SwipeActions>
-```
+<Demo name="OwnActions" />
 
 ### Resting open
 
 `Open` shows a row's actions without a gesture. Only one row of a list is open at a time.
 
-```csharp
-open.AttachedToVisualTree += (_, _) => open.Open(SwipeActionSide.Trailing);
-```
+<Demo name="RestingOpen" />
 
 `Close` puts an open row away, and `SwipeActions.CloseRows()` closes the open row of the list.
 

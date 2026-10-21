@@ -1,8 +1,10 @@
 ---
 title: 主題切換
 summary: 在亮色與暗色外觀之間切換的四種平滑方式。
-source-hash: a1ed29b5c9c0
+source-hash: 3e6c20998294
 ---
+
+<Demo name="Variants" />
 
 ## 何時使用
 
@@ -47,6 +49,8 @@ source-hash: a1ed29b5c9c0
 ### 處理切換要求
 
 主題變更前會觸發 `ThemeChangeRequested`。其引數包含下一個外觀、主題變體、觸發的按鈕以及擴散的起點。設定 `Handled` 後由你自行套用主題，切換控制項不會再次套用。
+
+<Demo name="HandledByApp" />
 
 ```csharp
 switcher.ThemeChangeRequested += (_, e) =>

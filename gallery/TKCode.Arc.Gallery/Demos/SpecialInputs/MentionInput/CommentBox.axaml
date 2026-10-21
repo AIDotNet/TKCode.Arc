@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.MentionInputCommentBoxDemo">
+    <StackPanel Spacing="14">
+        <arc:MentionInput x:Name="Input"
+                          Label="Comment"
+                          Placeholder="Leave a comment. Use @ to mention, # for a channel"
+                          People="{x:Static demos:MentionDemoData.People}"
+                          Channels="{x:Static demos:MentionDemoData.Channels}"
+                          Width="440"
+                          HorizontalAlignment="Center"
+                          MentionAdded="OnMentionAdded" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Mention someone" Variant="Secondary" Size="Small" Click="OnMentionClick" />
+            <arc:Button Content="Link a channel" Variant="Secondary" Size="Small" Click="OnChannelClick" />
+            <arc:Button Content="Clear" Variant="Ghost" Size="Small" Click="OnClearClick" />
+        </WrapPanel>
+        <TextBlock x:Name="Added"
+                   Text="Mentions appear here as you add them."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AnnouncementBarControlsAndCountdownDemo">
+    <Border CornerRadius="18"
+            BorderThickness="1"
+            ClipToBounds="True"
+            Background="{arc:ArcDesignTokenResource Background}"
+            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+        <StackPanel>
+            <arc:AnnouncementBar x:Name="Bar" IsNavigationVisible="True">
+                <arc:AnnouncementBar.Messages>
+                    <arc:Announcement Id="sale" Message="Spring sale: 30% off annual plans.">
+                        <arc:Announcement.Countdown>
+                            <arc:AnnouncementCountdown Label="Ends in" />
+                        </arc:Announcement.Countdown>
+                        <arc:Announcement.Action>
+                            <arc:AnnouncementAction Label="Upgrade" />
+                        </arc:Announcement.Action>
+                    </arc:Announcement>
+                    <arc:Announcement Id="docs" Message="The new docs have a search that understands questions." />
+                    <arc:Announcement Id="mobile" Message="Arc for iOS is in public beta.">
+                        <arc:Announcement.Action>
+                            <arc:AnnouncementAction Label="Join the beta" />
+                        </arc:Announcement.Action>
+                    </arc:Announcement>
+                </arc:AnnouncementBar.Messages>
+            </arc:AnnouncementBar>
+            <TextBlock Text="Page content" Margin="20,24" Opacity="0.6" />
+        </StackPanel>
+    </Border>
+</UserControl>

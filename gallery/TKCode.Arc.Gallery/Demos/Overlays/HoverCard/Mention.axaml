@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoverCardMentionDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:HoverCard>
+            <arc:HoverCard.Trigger>
+                <arc:Button Content="@maya" Variant="Ghost" />
+            </arc:HoverCard.Trigger>
+            <arc:HoverCardProfile DisplayName="Maya Chen"
+                                  Role="Product designer, Payments"
+                                  Bio="Designs checkout and billing flows. Previously at Linear."
+                                  Meta="Lisbon · 14:20 local time">
+                <arc:HoverCardProfile.Stats>
+                    <arc:HoverCardStat Label="Projects" Value="12" />
+                    <arc:HoverCardStat Label="Reviews" Value="48" />
+                </arc:HoverCardProfile.Stats>
+            </arc:HoverCardProfile>
+        </arc:HoverCard>
+    </WrapPanel>
+</UserControl>

@@ -1,8 +1,10 @@
 ---
 title: 用量表
 summary: 顯示什麼占用了配額，以及距離上限還剩多少。
-source-hash: 81cdf27f7574
+source-hash: da12e4afa9b4
 ---
+
+<Demo name="Storage" />
 
 ## 何時使用
 
@@ -50,6 +52,10 @@ media.Value = 17.4; // 進度條、總計與標章都會更新
 ### 接近上限與超出上限
 
 標章顯示剩餘量。達到上限的 90% 時，會變為帶有警告圖示的「即將用完」；超過上限後則顯示超出的部分。`WarnThreshold` 可更改觸發警告的比例。
+
+<Demo name="AlmostFull" />
+
+<Demo name="OverTheLimit" />
 
 ```xml
 <arc:UsageMeter Label="本月 API 呼叫"

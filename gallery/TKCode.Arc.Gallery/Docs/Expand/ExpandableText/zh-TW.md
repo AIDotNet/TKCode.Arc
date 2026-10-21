@@ -1,8 +1,10 @@
 ---
 title: 可展開文字
 summary: 長文字截斷為幾行，底部帶柔和漸隱；點擊「閱讀更多」平滑展開，點擊「收合」折回。僅在文字溢出時顯示切換按鈕。
-source-hash: bc3ff6e10d1b
+source-hash: 5b80f12913ab
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -34,6 +36,8 @@ source-hash: bc3ff6e10d1b
 
 `Lines` 設定文字收合時顯示的行數。留言等高密度清單使用 2 行；個人簡介與商品描述使用 3 或 4 行。
 
+<Demo name="TwoLines" />
+
 ```xml
 <arc:ExpandableText Lines="2"
                     Text="{Binding CommentText}"
@@ -55,19 +59,18 @@ source-hash: bc3ff6e10d1b
 
 `IsExpanded` 為雙向繫結。可以將其繫結到檢視模型屬性，也可以在程式碼中設定。文字展開或收合時會觸發 `ExpandedChanged`。
 
+<Demo name="Controlled" />
+
 ```xml
 <arc:ExpandableText Text="{Binding Bio}"
                     IsExpanded="{Binding BioExpanded, Mode=TwoWay}" />
 ```
 
-```csharp
-bio.ExpandedChanged += (_, e) =>
-{
-    state.Text = e.IsExpanded ? "已展開" : "已收合";
-};
+### 文字能完整顯示
 
-bio.IsExpanded = true;
-```
+只有當文字確實溢出時，切換按鈕才會出現，並且會隨寬度與字型的變化而更新。
+
+<Demo name="Fits" />
 
 ## API 參考
 

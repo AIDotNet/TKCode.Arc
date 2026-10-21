@@ -7,6 +7,8 @@
         <NoWarn>$(NoWarn);CS0436</NoWarn>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
         <ApplicationManifest Condition="'$(OS)' == 'Windows_NT'"></ApplicationManifest>
+        <!-- Icon of the Windows executable. The macOS bundle icon is Assets/AppIcon.icns (tools/macos/bundle.sh). -->
+        <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AtomUI.Desktop.Controls" />

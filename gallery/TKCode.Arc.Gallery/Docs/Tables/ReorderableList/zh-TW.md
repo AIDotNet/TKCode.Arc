@@ -1,8 +1,10 @@
 ---
 title: 可排序清單
 summary: 透過直接拖放整理項目。
-source-hash: e7d0a1b0e1f1
+source-hash: 8eb204439251
 ---
+
+<Demo name="Priorities" />
 
 ## 何時使用
 
@@ -53,6 +55,8 @@ list.MoveItem(0, 2);   // 將第一列移到第三位
 
 `ItemTemplate` 會取代預設的標題與詳細資料。`ItemTitleSelector` 提供用於無障礙名稱與播報的標題。
 
+<Demo name="CustomItemTemplate" />
+
 ```csharp
 var colors = new ReorderableList
 {
@@ -65,6 +69,8 @@ var colors = new ReorderableList
 ### 長度與捲動
 
 當清單高於你提供的空間時，請將其放入 `ScrollViewer`。將某一列拖到捲動區域的邊緣即可捲動。
+
+<Demo name="AutoScroll" />
 
 ```xml
 <ScrollViewer Height="340">

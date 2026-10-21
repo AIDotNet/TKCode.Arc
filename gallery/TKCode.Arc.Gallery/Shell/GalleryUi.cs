@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Gallery.Localization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -81,19 +82,9 @@ public static class GalleryUi
             header.Children.Add(descriptionText);
         }
 
-        var stage = new Border
-        {
-            Padding = new Thickness(32, 40),
-            CornerRadius = new CornerRadius(26),
-            BorderThickness = new Thickness(1),
-            Child = content
-        };
-        ArcTokens.Bind(stage, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
-        ArcTokens.Bind(stage, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
-
         var stack = new StackPanel { Spacing = 16 };
         stack.Children.Add(header);
-        stack.Children.Add(stage);
+        stack.Children.Add(Stage(content));
         return new GallerySection(title) { Child = stack };
     }
 
@@ -121,6 +112,58 @@ public static class GalleryUi
             panel.Children.Add(child);
         }
         return panel;
+    }
+
+    /// <summary>
+    /// A row of tab triggers that only switch what the caller shows below them: the panel area Tabs adds under its list
+    /// stays empty and hidden.
+    /// </summary>
+    public static Tabs TabStrip(params TabItem[] items)
+    {
+        var tabs = new Tabs();
+        foreach (var item in items)
+        {
+            tabs.Items.Add(item);
+        }
+        tabs.TemplateApplied += (_, e) =>
+        {
+            if (e.NameScope.Find<Control>(Tabs.ContentHostPart) is { } host)
+            {
+                host.IsVisible = false;
+            }
+        };
+        return tabs;
+    }
+
+    /// <summary>A tab trigger: a glyph and a localized label.</summary>
+    public static TabItem Tab(GalleryShellLangResourceKind label, Geometry glyph)
+    {
+        var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(text, TextBlock.TextProperty, label);
+        var header = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
+        header.Children.Add(new ArcGlyph { Data = glyph, Size = 16 });
+        header.Children.Add(text);
+        var tab = new TabItem { Header = header };
+        GalleryText.Bind(tab, Avalonia.Automation.AutomationProperties.NameProperty, label);
+        return tab;
+    }
+
+    /// <summary>
+    /// The stage examples stand on: the muted rounded panel of Arc's previews. Rows center themselves on it; anything
+    /// else stretches to its width.
+    /// </summary>
+    public static Border Stage(Control content)
+    {
+        var stage = new Border
+        {
+            Padding = new Thickness(32, 40),
+            CornerRadius = new CornerRadius(26),
+            BorderThickness = new Thickness(1),
+            Child = content
+        };
+        ArcTokens.Bind(stage, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
+        ArcTokens.Bind(stage, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+        return stage;
     }
 
     /// <summary>The 1px vertical rail that rail items hang from.</summary>

@@ -3,6 +3,8 @@ title: Donut chart
 summary: A donut whose arcs morph between datasets, with the active value rolling into the center.
 ---
 
+<Demo name="ToggleSegments" />
+
 ## When to use
 
 - Two to six parts that make up one whole, such as traffic sources or spending categories.
@@ -60,6 +62,8 @@ parts beyond `MaxSegments` (6 by default, including Other) fold into the Other s
 The legend hides and shows segments by default. Set `ShowLegend="False"` for a ring alone. `HiddenKeys` lists the
 hidden keys and is two-way, so the view model can keep it.
 
+<Demo name="RingOnly" />
+
 ```xml
 <arc:DonutChart Label="Visits by source"
                 HiddenKeys="{Binding HiddenKeys}"
@@ -71,18 +75,14 @@ hidden keys and is two-way, so the view model can keep it.
 
 Set `LegendAction="Select"` to pin a segment instead of hiding it. `ActiveKey` holds the pinned key and is two-way.
 
+<Demo name="Select" />
+
 ```xml
 <arc:DonutChart Label="Spend by category"
                 LegendAction="Select"
                 ValueFormat="$#,##0"
                 ActiveKey="{Binding PinnedCategory}"
                 ItemsSource="{Binding Spend}" />
-```
-
-```csharp
-select.ActiveKeyChanged += (_, _) => selected.Text = select.ActiveKey is { } key
-    ? $"Pinned: {key}"
-    : "Click a row or a segment to pin it.";
 ```
 
 ## API reference

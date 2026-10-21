@@ -3,6 +3,8 @@ title: Copy button
 summary: Copy a value with immediate confirmation.
 ---
 
+<Demo name="Outline" />
+
 ## When to use
 
 - A value that the user copies often, such as an API key, an install command or a link.
@@ -42,6 +44,8 @@ the widest of the three, so the button never changes width.
 `IsIconOnly` hides the label. The label stays the accessible name. `Variant="Plain"` drops the outline, which suits
 dense rows and code blocks.
 
+<Demo name="Plain" />
+
 ```xml
 <arc:CopyButton Value="https://uiarc.dev" IsIconOnly="True" />
 <arc:CopyButton Value="#7C5CFF" Label="Copy hex" Variant="Plain" />
@@ -51,6 +55,8 @@ dense rows and code blocks.
 
 Bind `Value` to the text that should be copied. A value of `null` makes the copy fail, and the button shows the
 failed state.
+
+<Demo name="Failure" />
 
 ```xml
 <arc:CopyButton Value="{Binding InstallCommand}" Label="Copy command" />

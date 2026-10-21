@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NumberFieldSizesDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:NumberField Label="Small" Size="Small" Value="2" Maximum="99" />
+        <arc:NumberField Label="Medium" Value="12" Maximum="99" />
+        <arc:NumberField Label="Large" Size="Large" Value="48" Maximum="99" />
+    </WrapPanel>
+</UserControl>

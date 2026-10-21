@@ -1,8 +1,10 @@
 ---
 title: 滑動操作
 summary: 透過滑動顯示列操作，或從選單中的同一組操作執行。
-source-hash: a1c99fc6511f
+source-hash: 94ccb42d0151
 ---
+
+<Demo name="Inbox" />
 
 ## 何時使用
 
@@ -62,25 +64,13 @@ inbox.ActionInvoked += (_, e) =>
 
 `SwipeActionsRow` 宣告自己的操作。`IsFullSwipeEnabled="False"` 會阻止該列在完整滑動時直接確認執行，因此使用者必須點按露出的操作。
 
-```xml
-<arc:SwipeActions Label="待辦" Width="440">
-    <arc:SwipeActionsRow Label="審閱拉取要求 #418" IsFullSwipeEnabled="False">
-        <arc:SwipeActionsRow.TrailingActions>
-            <arc:SwipeAction Label="標記" KeepsRow="True" />
-            <arc:SwipeAction Label="刪除" Tone="Danger" />
-        </arc:SwipeActionsRow.TrailingActions>
-        <TextBlock Text="審閱拉取要求 #418" VerticalAlignment="Center" />
-    </arc:SwipeActionsRow>
-</arc:SwipeActions>
-```
+<Demo name="OwnActions" />
 
 ### 保持展開
 
 `Open` 無需手勢即可顯示某一列的操作。同一清單中一次只能展開一列。
 
-```csharp
-open.AttachedToVisualTree += (_, _) => open.Open(SwipeActionSide.Trailing);
-```
+<Demo name="RestingOpen" />
 
 `Close` 收合已展開的列，`SwipeActions.CloseRows()` 則關閉清單中已展開的列。
 

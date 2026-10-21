@@ -67,6 +67,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<ElasticSlider, string?>(nameof(Label));
 
+    /// <summary>Formats the value in the value tag and readout; when not set, the value is shown with the slider's Decimals.</summary>
     public static readonly StyledProperty<Func<double, string>?> ValueFormatterProperty =
         AvaloniaProperty.Register<ElasticSlider, Func<double, string>?>(nameof(ValueFormatter));
 
@@ -92,6 +93,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         RoutedEvent.Register<ElasticSlider, SliderValueCommittedEventArgs>(nameof(ValueCommitted), RoutingStrategies.Bubble);
 
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+    /// <inheritdoc cref="ValueFormatterProperty"/>
     public Func<double, string>? ValueFormatter { get => GetValue(ValueFormatterProperty); set => SetValue(ValueFormatterProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
     public object? StartIcon { get => GetValue(StartIconProperty); set => SetValue(StartIconProperty, value); }
@@ -210,7 +212,11 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private double ValueAt(double position) => Minimum + position / SliderMath.Span * Span;
 
-    private double Snap(double value) => Math.Clamp(SliderMath.Snap(value, Minimum, Step, Decimals), Minimum, Maximum);
+    private double Snap(double value) => ClampToRange(SliderMath.Snap(value, Minimum, Step, Decimals));
+
+    // Minimum can briefly exceed Maximum while XAML sets them one by one (RangeBase coerces only after EndInit), and
+    // Math.Clamp throws when min > max.
+    private double ClampToRange(double value) => Math.Clamp(value, Minimum, Math.Max(Minimum, Maximum));
 
     internal string FormatValue(double value) => ValueFormatter?.Invoke(value) ?? SliderMath.Format(value, Decimals);
 
@@ -317,7 +323,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     private void SyncThumb(bool animate)
     {
         UpdateText();
-        var target = ToPosition(Math.Clamp(Value, Minimum, Maximum));
+        var target = ToPosition(ClampToRange(Value));
         if (_dragging || _goal == target)
         {
             _rail?.InvalidateVisual();
@@ -344,7 +350,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private void UpdateText()
     {
-        ValueText = FormatValue(Math.Clamp(Value, Minimum, Maximum));
+        ValueText = FormatValue(ClampToRange(Value));
         _tagText.Text = ValueText;
         if (_rail is not null)
         {

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SparklineWithoutHeadlineDemo">
+    <StackPanel Spacing="12">
+        <arc:Button Content="New data" Variant="Secondary" Size="Small" Click="OnNewDataClick" />
+        <arc:Sparkline x:Name="Visits"
+                       Label="Visits (scrub for the value)"
+                       Width="300"
+                       HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

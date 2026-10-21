@@ -3,6 +3,8 @@ title: Icon morph
 summary: Icons that morph between states: menu to close, play to pause, copy to check, and more.
 ---
 
+<Demo name="EightPairs" />
+
 ## When to use
 
 - A button whose icon means something different in each state, such as a menu that becomes a close icon.
@@ -61,6 +63,8 @@ button.Click += (_, _) =>
 `IconSize` sets the rendered size in pixels; the default is 24. `StrokeThickness` is set on the 24-unit grid and scales
 with `IconSize`, so the default stroke of 1.75 stays in proportion at any size.
 
+<Demo name="Sizes" />
+
 ```xml
 <arc:IconMorph Kind="Menu" IconSize="16" />
 <arc:IconMorph Kind="Menu" IconSize="32" StrokeThickness="2" />
@@ -71,10 +75,13 @@ with `IconSize`, so the default stroke of 1.75 stays in proportion at any size.
 For `Chevron`, `ChevronPointing` sets the rest direction, and `ChevronTurn` sets the angle in degrees when the icon is
 active. A value of 180 flips down to up. A value of 90 turns right to down.
 
-```xml
-<arc:IconMorph Kind="Chevron" />
-<arc:IconMorph Kind="Chevron" ChevronPointing="Right" ChevronTurn="90" />
-```
+<Demo name="ChevronAndMoments" />
+
+### MorphGlyph
+
+`MorphGlyph` is the path morph primitive: it morphs between any two pieces of path data. Menu to close keeps its vertices, and close to check resamples by arc length.
+
+<Demo name="MorphGlyph" />
 
 ## API reference
 

@@ -3,6 +3,8 @@ title: Tabs
 summary: Switch between related content in the same context.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - Several views of the same object, such as Overview, Activity and Settings.
@@ -42,6 +44,8 @@ Items are `TabItem` containers. The header is the trigger and the content is the
 Set `ItemsSource`. `ItemTemplate` renders the trigger and `ContentTemplate` renders the panel of the
 selected item. Read the selection through `SelectedItem` or `SelectionChanged`.
 
+<Demo name="Overflow" />
+
 ```xml
 <arc:Tabs ItemsSource="{Binding Folders}"
           SelectedItem="{Binding CurrentFolder}"
@@ -65,13 +69,7 @@ selected item. Read the selection through `SelectedItem` or `SelectionChanged`.
 `ActivationMode` controls what the arrow keys do. `Automatic` (the default) selects the tab that
 receives focus. `Manual` only moves focus; Enter or Space selects the tab.
 
-```xml
-<arc:Tabs ActivationMode="Manual">
-    <arc:TabItem Header="Day" />
-    <arc:TabItem Header="Week" />
-    <arc:TabItem Header="Month" />
-</arc:Tabs>
-```
+<Demo name="ManualActivation" />
 
 ### Selecting in code
 

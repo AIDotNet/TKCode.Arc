@@ -1,8 +1,10 @@
 ---
 title: 徽章
 summary: 用於狀態、類別或中繼資料的小型標籤。
-source-hash: 61b7c843d307
+source-hash: c21246ac5464
 ---
+
+<Demo name="Tones" />
 
 ## 何時使用
 
@@ -43,13 +45,13 @@ source-hash: 61b7c843d307
 
 `Size` 設定高度：`Medium`（預設）為 26，`Small` 為 22。在密集的表格中使用 `Small`。
 
-```xml
-<arc:Badge Size="Small" Tone="Success" Content="上線" />
-```
+<Demo name="Small" />
 
 ### 圖示
 
 `Icon` 接受一個前導圖示。它會採用色調顏色，並對輔助技術隱藏。範例使用來自 `ArcIcons` 的 `ArcGlyph`。
+
+<Demo name="Icons" />
 
 ```csharp
 badge.Tone = BadgeTone.Success;
@@ -61,11 +63,7 @@ badge.Icon = new ArcGlyph { Data = ArcIcons.Check, Size = 12 };
 
 保持徽章掛載並修改 `Content`。新的字串或數字會從柔和的模糊中升起，膠囊寬度會以彈簧方式調整以符合內容。重新建立徽章會失去這項動態效果。
 
-```csharp
-deploy.Content = "部署中";
-deploy.Tone = BadgeTone.Warning;
-deploy.Icon = new ArcGlyph { Data = ArcIcons.LoaderCircle, Size = 12 };
-```
+<Demo name="ChangingInPlace" />
 
 ## API 參考
 

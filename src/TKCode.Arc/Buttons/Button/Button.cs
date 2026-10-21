@@ -28,12 +28,15 @@ public class Button : AvaloniaButton
 
     #region 公共属性定义
 
+    /// <summary>Visual style: Primary (default), Secondary, Ghost or Danger.</summary>
     public static readonly StyledProperty<ButtonVariant> VariantProperty =
         AvaloniaProperty.Register<Button, ButtonVariant>(nameof(Variant), ButtonVariant.Primary);
 
+    /// <summary>Button height: Small, Medium (default) or Large.</summary>
     public static readonly StyledProperty<ControlSize> SizeProperty =
         AvaloniaProperty.Register<Button, ControlSize>(nameof(Size), ControlSize.Medium);
 
+    /// <summary>Puts the button in its loading state while true.</summary>
     public static readonly StyledProperty<bool> IsLoadingProperty =
         AvaloniaProperty.Register<Button, bool>(nameof(IsLoading));
 
@@ -44,18 +47,21 @@ public class Button : AvaloniaButton
     public static readonly StyledProperty<bool> IsPressScaleEnabledProperty =
         AvaloniaProperty.Register<Button, bool>(nameof(IsPressScaleEnabled), true);
 
+    /// <inheritdoc cref="VariantProperty"/>
     public ButtonVariant Variant
     {
         get => GetValue(VariantProperty);
         set => SetValue(VariantProperty, value);
     }
 
+    /// <inheritdoc cref="SizeProperty"/>
     public ControlSize Size
     {
         get => GetValue(SizeProperty);
         set => SetValue(SizeProperty, value);
     }
 
+    /// <inheritdoc cref="IsLoadingProperty"/>
     public bool IsLoading
     {
         get => GetValue(IsLoadingProperty);

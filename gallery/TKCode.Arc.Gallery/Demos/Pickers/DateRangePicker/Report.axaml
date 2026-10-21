@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DateRangePickerReportDemo">
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:DateRangePicker x:Name="Picker"
+                             Culture="en-US"
+                             SelectedRangeChanged="OnApplied" />
+        <TextBlock x:Name="Status"
+                   HorizontalAlignment="Center"
+                   FontSize="14"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

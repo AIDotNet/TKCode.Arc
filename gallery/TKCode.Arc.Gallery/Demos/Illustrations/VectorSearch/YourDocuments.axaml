@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.VectorSearchYourDocumentsDemo">
+    <arc:VectorSearch x:Name="Recipes" TopK="4">
+        <arc:VectorSearch.Queries>
+            <generic:List x:TypeArguments="x:String">
+                <x:String>quick salmon dinner</x:String>
+                <x:String>something sweet with chocolate</x:String>
+                <x:String>eggs for breakfast</x:String>
+            </generic:List>
+        </arc:VectorSearch.Queries>
+    </arc:VectorSearch>
+</UserControl>

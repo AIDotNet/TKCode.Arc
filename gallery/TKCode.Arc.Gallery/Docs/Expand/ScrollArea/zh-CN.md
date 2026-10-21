@@ -1,8 +1,10 @@
 ---
 title: 滚动区域
 summary: 原生滚动容器，配有细长的浮层滚动条，仅在内容溢出时才显示边缘渐隐。
-source-hash: 3a151cda56de
+source-hash: 7a71649db8ce
 ---
+
+<Demo name="Vertical" />
 
 ## 何时使用
 
@@ -42,27 +44,13 @@ source-hash: 3a151cda56de
 
 垂直滚轮在横向区域能够继续滚动时会使其横向滚动，滚到尽头后再把滚轮交还给页面。设置 `HorizontalSnapPointsType` 可让各项吸附对齐。
 
-```xml
-<arc:ScrollArea Orientation="Horizontal"
-                HorizontalSnapPointsType="Mandatory"
-                Label="卡片">
-    <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-        <Border Width="160" Height="100" CornerRadius="18" Background="#F4F4F5" />
-    </StackPanel>
-</arc:ScrollArea>
-```
+<Demo name="HorizontalStrip" />
 
 ### 双向滚动与滚动条可见性
 
 网格需要双向滚动时使用 `Both`。`OverlayScrollbarMode="Always"` 会在内容溢出时始终显示滚动条。默认的 `Auto` 仅在滚动或悬停时显示。
 
-```xml
-<arc:ScrollArea Orientation="Both"
-                OverlayScrollbarMode="Always"
-                Height="240" />
-```
+<Demo name="BothAxes" />
 
 ### 边缘渐隐与隐藏延迟
 

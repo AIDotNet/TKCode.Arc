@@ -1,8 +1,10 @@
 ---
 title: 快速鍵錄入
 summary: 將按鍵組合錄入為鍵帽，支援衝突警告、Kbd 與可搜尋的速查表。
-source-hash: c8b8d9279103
+source-hash: 71acd8b4e49f
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -32,6 +34,8 @@ source-hash: c8b8d9279103
 
 `Value` 保存錄入的 `KeyGesture`，沒有快速鍵時為 `null`。`ResetValue` 是重設按鈕還原的值。範例中它被設為預設快速鍵。
 
+<Demo name="Empty" />
+
 ```csharp
 var palette = new ShortcutRecorder
 {
@@ -47,26 +51,25 @@ var palette = new ShortcutRecorder
 
 `Bindings` 列出已在使用的快速鍵。錄入其中一個時，會出現衝突提示，並帶有「仍要使用」與「取消」按鈕。「仍要使用」會取代原有綁定，並在事件中回報。
 
-```csharp
-var quickSearch = new ShortcutRecorder { Label = "快速搜尋" };
-quickSearch.Bindings.Add(new ShortcutBinding(ShortcutFormatter.Parse("mod+s", ShortcutPlatform.Other), "儲存"));
-quickSearch.Bindings.Add(new ShortcutBinding(ShortcutFormatter.Parse("mod+f", ShortcutPlatform.Other), "尋找"));
-```
+<Demo name="Conflicts" />
 
 關閉分頁或複製等保留組合同樣會發出警告。將 `IsReservedWarningEnabled` 設為 `False` 即可關閉此警告。
+
+<Demo name="Reserved" />
 
 ### 修飾鍵與平台
 
 `IsModifierRequired="False"` 允許單一按鍵。功能鍵一律可用。`Platform` 設定鍵帽樣式為 `Mac` 或 `Other`。預設情況下，錄入器使用目前執行的平台。
 
-```xml
-<arc:ShortcutRecorder Label="下一個對話" IsModifierRequired="False" />
-<arc:ShortcutRecorder Label="Mac" Platform="Mac" />
-```
+<Demo name="NoModifier" />
+
+<Demo name="Platforms" />
 
 ### 事件
 
 `ValueChanged` 會回報舊手勢與新手勢。按下「仍要使用」之後，`Replaced` 會保存被取代的綁定。
+
+<Demo name="Events" />
 
 ```csharp
 recorder.ValueChanged += (_, e) =>
@@ -75,6 +78,30 @@ recorder.ValueChanged += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue}{replaced}");
 };
 ```
+
+### 隱藏標籤
+
+`IsLabelVisible="False"` 會讓標籤僅供螢幕閱讀器使用。
+
+<Demo name="HiddenLabel" />
+
+### 說明文字
+
+`Description` 是欄位下方的輔助文字。錄入提示、修飾鍵提醒與衝突提示在出現時會取代它。
+
+<Demo name="Description" />
+
+### 停用
+
+停用的錄入器會變淡，顯示在柔和的背景上，並且不在 Tab 順序中。
+
+<Demo name="Disabled" />
+
+### 鍵盤
+
+- Enter 或 Space 開始錄入。Escape 取消。Backspace 或 Delete 清除快速鍵，未在錄入時同樣有效。
+- Tab 會停止錄入並移動焦點，且不錄入 Tab。離開欄位也會停止錄入。
+- 按鍵讀取自實體按鍵，因此 Alt+K 錄入的是 K，而不是鍵入的符號。系統保留的組合鍵，例如 ⌘Tab、Alt+Tab 和 Win 鍵組合，永遠不會到達應用程式。
 
 ## API 參考
 

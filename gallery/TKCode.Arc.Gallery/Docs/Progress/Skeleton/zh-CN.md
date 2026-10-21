@@ -1,8 +1,10 @@
 ---
 title: 骨架屏
 summary: 内容仍在加载时预留空间。
-source-hash: 4bb5402f1a7d
+source-hash: d9768e899d18
 ---
+
+<Demo name="Profile" />
 
 ## 何时使用
 
@@ -30,13 +32,13 @@ source-hash: 4bb5402f1a7d
 
 `Lines` 的取值范围为 1 到 6。第一行更短、更高，最后一行的宽度为整体的 72%。
 
-```xml
-<arc:Skeleton Lines="4" />
-```
+<Demo name="Lines" />
 
 ### 已加载的内容
 
 将 `Content` 设为真实视图，并把 `IsLoading` 绑定到加载状态。`IsLoading` 变为 false 时，占位淡出，内容上移就位，高度平滑变化。
+
+<Demo name="IntoContent" />
 
 ```xml
 <arc:Skeleton IsAvatarVisible="True"

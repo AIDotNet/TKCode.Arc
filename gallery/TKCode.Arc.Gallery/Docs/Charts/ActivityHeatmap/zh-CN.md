@@ -1,8 +1,10 @@
 ---
 title: 活动热力图
 summary: 一眼看清一整年的活动，每天一个方块。
-source-hash: ad0de977d26e
+source-hash: d373449b219c
 ---
+
+<Demo name="Contributions" />
 
 ## 何时使用
 
@@ -47,6 +49,8 @@ source-hash: ad0de977d26e
 ### 单位与周
 
 `UnitOne` 和 `UnitOther` 设置计数的单位名词。`FirstDayOfWeek` 设置每个周列的第一行，默认为周日。`Culture` 用于格式化日期和数字。
+
+<Demo name="CustomUnit" />
 
 ```xml
 <arc:ActivityHeatmap Label="训练次数，最近六个月"

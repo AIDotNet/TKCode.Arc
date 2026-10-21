@@ -1,8 +1,10 @@
 ---
 title: 确认变形
 summary: 一个破坏性按钮，可变形为就地确认、加载指示与带撤销的结果。
-source-hash: d3b5eeb1aa3e
+source-hash: d51545d5f9eb
 ---
+
+<Demo name="Press" />
 
 ## 何时使用
 
@@ -32,6 +34,8 @@ source-hash: d3b5eeb1aa3e
 
 问题被回答时会执行 `ConfirmAction`。任务运行期间，药丸形状按钮显示等待状态。若任务抛出异常，则显示错误状态并提供重试。设置 `UndoAction` 可在结果中提供撤销。
 
+<Demo name="ErrorAndRetry" />
+
 ```csharp
 delete.ConfirmAction = () => documentService.DeleteAsync(selected);
 delete.UndoAction = () => documentService.RestoreAsync(selected);
@@ -40,6 +44,10 @@ delete.UndoAction = () => documentService.RestoreAsync(selected);
 ### 确认模式
 
 `ConfirmMode` 决定如何回答问题。`Press` 按一次即执行。`Hold` 要求按住确认按钮达到 `HoldDuration`，默认为一秒。`Countdown` 会启动 `CountdownSeconds` 倒计时，期间仍可通过取消或 Escape 停止。
+
+<Demo name="Hold" />
+
+<Demo name="Countdown" />
 
 ```xml
 <arc:ConfirmMorph Label="移除成员"
@@ -57,14 +65,7 @@ delete.UndoAction = () => documentService.RestoreAsync(selected);
 
 八个文字属性（`ConfirmLabel`、`CancelLabel`、`PendingLabel`、`DoneLabel`、`ErrorLabel`、`RetryLabel`、`UndoLabel` 与 `UndoingLabel`）分别设置每种状态的用词。`Tone="Neutral"` 会以强调色显示确认回答，适用于可以撤销的重要操作。默认的 `Danger` 适用于破坏性操作。
 
-```xml
-<arc:ConfirmMorph Label="撤销访问"
-                  Prompt="撤销 3 个密钥？"
-                  ConfirmLabel="撤销"
-                  PendingLabel="撤销中"
-                  DoneLabel="已撤销"
-                  Tone="Neutral" />
-```
+<Demo name="NeutralTone" />
 
 ### 受控状态与超时
 
@@ -75,6 +76,12 @@ confirm.StateChanged += (_, e) => log.Text = $"状态：{e.NewState}";
 confirm.Cancelled += (_, _) => log.Text = "已取消";
 confirm.State = ConfirmMorphState.Idle;
 ```
+
+### 禁用
+
+`IsEnabled` 为 `False` 时，静止的药丸不再显示阴影。
+
+<Demo name="Disabled" />
 
 ## API 参考
 

@@ -3,6 +3,8 @@ title: Stepper
 summary: Show where a person is in a multi-step flow and what is done.
 ---
 
+<Demo name="Checkout" />
+
 ## When to use
 
 - A strict multi-step flow such as checkout or account setup, where the person moves forward one step at a time.
@@ -67,6 +69,8 @@ stepper.StepSelected += (_, e) =>
 `Orientation` set to `Vertical` gives a timeline. Set `Error` on a step to turn its marker into an alert; the
 message replaces its description.
 
+<Demo name="VerticalWithError" />
+
 ```xml
 <arc:Stepper ItemsSource="{Binding Steps}"
              CurrentIndex="2"
@@ -74,15 +78,14 @@ message replaces its description.
              Width="320" />
 ```
 
-```csharp
-steps[2].Error = "Card declined. Try another card.";
-steps[2].Error = null; // clears the error
-```
-
 ### Compact and current details
 
 `IsCompact` shows markers only, with the current step named underneath. A horizontal stepper narrower than 480 px
 switches to this mode by itself. `Details` set to `Current` shows the description of the current step only.
+
+<Demo name="Compact" />
+
+<Demo name="CurrentDetails" />
 
 ```xml
 <arc:Stepper ItemsSource="{Binding Steps}"

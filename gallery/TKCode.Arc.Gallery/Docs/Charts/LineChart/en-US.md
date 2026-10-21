@@ -3,6 +3,8 @@ title: Line chart
 summary: A multi-series line chart with a gliding crosshair, legend toggles, and paths that morph between ranges.
 ---
 
+<Demo name="Ranges" />
+
 ## When to use
 
 - One to three measures over time, such as signups or revenue per day.
@@ -51,6 +53,8 @@ void Range(int days)
 A list of `ChartPoint` items needs no series. `Unit` is shown in the tooltip, and `Curve` switches from the default
 smooth curve to straight segments.
 
+<Demo name="SingleSeries" />
+
 ```xml
 <arc:LineChart Label="p95 latency" Unit="ms" Curve="Linear" PlotHeight="180" ItemsSource="{Binding Latency}" />
 ```
@@ -70,6 +74,8 @@ With more than one series the legend shows a toggle per series. `ShowLegend` for
 ### Loading and empty states
 
 `IsLoading` dims the lines and shows a skeleton when there are no points. `EmptyLabel` explains an empty range.
+
+<Demo name="Empty" />
 
 ```xml
 <arc:LineChart Label="Refunds" EmptyLabel="No refunds in this range" IsLoading="{Binding IsBusy}" />

@@ -1,8 +1,10 @@
 ---
 title: 程式碼區塊
 summary: 以清楚的層級呈現程式碼，並提供便捷的複製入口。
-source-hash: e303bbd9f987
+source-hash: 134c97dd9bb2
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -28,13 +30,7 @@ source-hash: e303bbd9f987
 
 `IsCollapsible` 會新增一個切換按鈕。`MaxLines` 設定區塊摺疊時顯示的行數。
 
-```xml
-<arc:CodeBlock FileName="greeting.tsx"
-               Language="tsx"
-               IsCollapsible="True"
-               MaxLines="6"
-               Code="{Binding Source}" />
-```
+<Demo name="Collapsible" />
 
 `IsExpanded` 為雙向繫結，表示區塊是否展開。
 
@@ -48,6 +44,8 @@ block.IsExpanded = false;
 
 `Language` 設定語法醒目提示以及標題列中的標籤。它接受常見名稱與別名，例如 `cs`、`ts`、`py`、`sh` 與 `axaml`。沒有對應語法的語言會以純文字顯示。
 
+<Demo name="Languages" />
+
 ```xml
 <arc:CodeBlock FileName="stats.py" Language="py" Code="{Binding PythonSource}" />
 <arc:CodeBlock FileName="notes.txt" Language="text" Code="純文字。" />
@@ -56,6 +54,8 @@ block.IsExpanded = false;
 ### 複製與行號
 
 複製按鈕位於標題列，複製的是 `Code`。`ShowLineNumbers` 會新增行號欄，程式碼橫向捲動時行號保持不動。
+
+<Demo name="LineNumbers" />
 
 ```xml
 <arc:CodeBlock FileName="deploy.sh"
@@ -78,6 +78,18 @@ block.Copied += (_, _) => status.Text = "程式碼已複製";
                ShowAllLinesFormat="顯示全部 {0} 行"
                ShowFewerLinesLabel="收合部分行" />
 ```
+
+### 切換檔案
+
+同時設定新的 `FileName`、`Language` 與 `Code`，即可就地換入另一個檔案。檔名所在的位置會跟隨新的寬度，新的程式碼上浮出現，高度以彈簧動態跟隨。
+
+<Demo name="SwitchingFiles" />
+
+### 窄寬度
+
+寬度低於 420px 時，內距與文字會縮小，複製操作只保留圖示。
+
+<Demo name="Narrow" />
 
 ## API 參考
 

@@ -14,12 +14,15 @@ public class BillingPrice : TemplatedControl
 {
     #region 公共属性定义
 
+    /// <summary>The price shown, formatted with Currency and Decimals.</summary>
     public static readonly StyledProperty<decimal> AmountProperty =
         AvaloniaProperty.Register<BillingPrice, decimal>(nameof(Amount));
 
+    /// <summary>Sign or text placed before the amount (default "$").</summary>
     public static readonly StyledProperty<string> CurrencyProperty =
         AvaloniaProperty.Register<BillingPrice, string>(nameof(Currency), "$");
 
+    /// <summary>Digits after the decimal point; negative values count as 0.</summary>
     public static readonly StyledProperty<int> DecimalsProperty =
         AvaloniaProperty.Register<BillingPrice, int>(nameof(Decimals));
 
@@ -31,8 +34,11 @@ public class BillingPrice : TemplatedControl
     public static readonly StyledProperty<string?> PeriodProperty =
         AvaloniaProperty.Register<BillingPrice, string?>(nameof(Period));
 
+    /// <inheritdoc cref="AmountProperty"/>
     public decimal Amount { get => GetValue(AmountProperty); set => SetValue(AmountProperty, value); }
+    /// <inheritdoc cref="CurrencyProperty"/>
     public string Currency { get => GetValue(CurrencyProperty); set => SetValue(CurrencyProperty, value); }
+    /// <inheritdoc cref="DecimalsProperty"/>
     public int Decimals { get => GetValue(DecimalsProperty); set => SetValue(DecimalsProperty, value); }
     public decimal? WasAmount { get => GetValue(WasAmountProperty); set => SetValue(WasAmountProperty, value); }
     public string? Period { get => GetValue(PeriodProperty); set => SetValue(PeriodProperty, value); }

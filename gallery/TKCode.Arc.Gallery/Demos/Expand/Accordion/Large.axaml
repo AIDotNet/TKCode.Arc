@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AccordionLargeDemo">
+    <arc:Accordion x:Name="Questions" Size="Large" ExpandedIndex="-1">
+        <arc:Accordion.ItemTemplate>
+            <DataTemplate x:DataType="demos:AccordionFaq">
+                <TextBlock Text="{Binding Question}" TextWrapping="Wrap" />
+            </DataTemplate>
+        </arc:Accordion.ItemTemplate>
+        <arc:Accordion.ContentTemplate>
+            <DataTemplate x:DataType="demos:AccordionFaq">
+                <TextBlock Text="{Binding Answer}" TextWrapping="Wrap" />
+            </DataTemplate>
+        </arc:Accordion.ContentTemplate>
+    </arc:Accordion>
+</UserControl>

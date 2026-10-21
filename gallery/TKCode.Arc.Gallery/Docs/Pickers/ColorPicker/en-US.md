@@ -3,6 +3,8 @@ title: Color picker
 summary: A swatch that grows into a picker with format morphing, eyedropper, saved swatches, and contrast readout.
 ---
 
+<Demo name="ColorField" />
+
 ## When to use
 
 - A theme editor, a brand setting or a design tool that needs a color with hex, RGB, HSL or OKLCH input.
@@ -47,27 +49,14 @@ picker.ColorChanged += (_, e) => status.Text = $"Color: {e.Hex}";
 list, so bind to the collection or handle `SwatchesChanged`. `MaxSwatches` is 7 by default; when the list is
 full, the oldest swatch is dropped.
 
-```csharp
-picker.Swatches =
-[
-    ColorSwatch.Create(Color.Parse("#E5484D")),
-    ColorSwatch.Create(Color.Parse("#30A46C")),
-    ColorSwatch.Create(Color.Parse("#0090FF")),
-];
-picker.MaxSwatches = 7;
-```
+<Demo name="FormatsAndSavedSwatches" />
 
 ### Contrast readout
 
 `ContrastBackground` is the color the WCAG readout compares the value with. The panel shows the ratio and the
 grade.
 
-```xml
-<arc:ColorPicker Label="Text on dark"
-                 Color="#A1A1AA"
-                 ContrastBackground="#111113"
-                 Description="The contrast readout compares against #111113." />
-```
+<Demo name="Contrast" />
 
 ### Error and disabled state
 

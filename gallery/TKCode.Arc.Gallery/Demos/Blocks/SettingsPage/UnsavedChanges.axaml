@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsPageUnsavedChangesDemo">
+    <StackPanel Spacing="12">
+        <arc:SettingsPage x:Name="Page" Title="Workspace" Height="420">
+            <arc:SettingsSection x:Name="General" Header="General" Icon="{x:Static arc:ArcIcons.Settings}"
+                                 Description="Name and address of the workspace.">
+                <StackPanel Spacing="16">
+                    <arc:Input x:Name="WorkspaceName" Label="Workspace name" Text="Larkspur Studio" />
+                    <arc:Input Label="Workspace URL" Text="larkspur" Prefix="arc.app/" IsReadOnly="True"
+                               Description="Contact support to change the address." />
+                </StackPanel>
+            </arc:SettingsSection>
+            <arc:SettingsSection Header="Members" Icon="{x:Static arc:ArcIcons.Users}" Badge="6"
+                                 Description="People with access to this workspace.">
+                <arc:SettingsGroup Appearance="Plain">
+                    <arc:SettingsRow Header="Allow invites from members" Description="Otherwise only owners can invite.">
+                        <arc:Switch IsChecked="True" />
+                    </arc:SettingsRow>
+                </arc:SettingsGroup>
+            </arc:SettingsSection>
+        </arc:SettingsPage>
+        <TextBlock x:Name="Log" Text="Rename the workspace to see the save bar." HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

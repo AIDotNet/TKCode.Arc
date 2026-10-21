@@ -53,13 +53,16 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     #region 公共属性定义
 
+    /// <summary>Visible label of the control; also its accessible name.</summary>
     public static readonly StyledProperty<string?> LabelProperty = Select.LabelProperty.AddOwner<MultiSelect>();
 
+    /// <summary>Helper text shown under the control.</summary>
     public static readonly StyledProperty<string?> DescriptionProperty = Select.DescriptionProperty.AddOwner<MultiSelect>();
 
     public static readonly StyledProperty<string?> PlaceholderProperty =
         Select.PlaceholderProperty.AddOwner<MultiSelect>(new StyledPropertyMetadata<string?>("Select options"));
 
+    /// <summary>Whether the option menu is open. Two-way.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty = Select.IsOpenProperty.AddOwner<MultiSelect>();
 
     /// <summary>Defines the <see cref="MaxVisibleChips"/> property.</summary>
@@ -69,10 +72,13 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         Select.MaxDropDownHeightProperty.AddOwner<MultiSelect>(new StyledPropertyMetadata<double>(double.PositiveInfinity));
 
+    /// <summary>Returns the display text for an option.</summary>
     public static readonly StyledProperty<Func<object?, string?>?> TextSelectorProperty = Select.TextSelectorProperty.AddOwner<MultiSelect>();
 
+    /// <summary>Returns the value of an option, used to match the selection.</summary>
     public static readonly StyledProperty<Func<object?, object?>?> ValueSelectorProperty = Select.ValueSelectorProperty.AddOwner<MultiSelect>();
 
+    /// <summary>Returns true for an option that cannot be chosen.</summary>
     public static readonly StyledProperty<Func<object?, bool>?> DisabledSelectorProperty = Select.DisabledSelectorProperty.AddOwner<MultiSelect>();
 
     /// <summary>Defines the <see cref="IsSearchable"/> property.</summary>
@@ -83,9 +89,11 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly StyledProperty<string?> SearchPlaceholderProperty =
         AvaloniaProperty.Register<MultiSelect, string?>(nameof(SearchPlaceholder), "Search");
 
+    /// <summary>Returns true when an option matches the search text; filters the list while searching.</summary>
     public static readonly StyledProperty<Func<object?, string, bool>?> FilterPredicateProperty =
         Combobox.FilterPredicateProperty.AddOwner<MultiSelect>();
 
+    /// <summary>Text shown when no option matches the search (default: No matches found).</summary>
     public static readonly StyledProperty<string?> EmptyTextProperty = Combobox.EmptyTextProperty.AddOwner<MultiSelect>();
 
     /// <summary>Defines the <see cref="SelectedItems"/> property.</summary>
@@ -96,13 +104,16 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly DirectProperty<MultiSelect, IReadOnlyList<object?>> SelectedValuesProperty =
         AvaloniaProperty.RegisterDirect<MultiSelect, IReadOnlyList<object?>>(nameof(SelectedValues), o => o.SelectedValues);
 
+    /// <inheritdoc cref="LabelProperty"/>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
+    /// <inheritdoc cref="DescriptionProperty"/>
     public string? Description { get => GetValue(DescriptionProperty); set => SetValue(DescriptionProperty, value); }
 
     /// <summary>Shown while nothing is selected (Arc: "Select options").</summary>
     public string? Placeholder { get => GetValue(PlaceholderProperty); set => SetValue(PlaceholderProperty, value); }
 
+    /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
 
     /// <summary>Chips shown before the rest fold into "+N" (Arc: 2).</summary>
@@ -128,6 +139,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     /// <inheritdoc cref="Combobox.FilterPredicate"/>
     public Func<object?, string, bool>? FilterPredicate { get => GetValue(FilterPredicateProperty); set => SetValue(FilterPredicateProperty, value); }
 
+    /// <inheritdoc cref="EmptyTextProperty"/>
     public string? EmptyText { get => GetValue(EmptyTextProperty); set => SetValue(EmptyTextProperty, value); }
 
     /// <summary>The selected items (bind a list to set them from a view model).</summary>

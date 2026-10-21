@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StreamgraphTopicsOverTimeDemo">
+    <StackPanel Spacing="16">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="12 weeks" Variant="Secondary" Size="Small" Click="On12WeeksClick" />
+            <arc:Button Content="26 weeks" Variant="Secondary" Size="Small" Click="On26WeeksClick" />
+            <arc:Button Content="52 weeks" Variant="Secondary" Size="Small" Click="On52WeeksClick" />
+            <arc:Button Content="Wiggle" Variant="Secondary" Size="Small" Click="OnWiggleClick" />
+            <arc:Button Content="Silhouette" Variant="Secondary" Size="Small" Click="OnSilhouetteClick" />
+            <arc:Button Content="Zero" Variant="Secondary" Size="Small" Click="OnZeroClick" />
+        </WrapPanel>
+        <arc:Streamgraph x:Name="Chart"
+                         Label="Support tickets by topic"
+                         Unit="tickets"
+                         CategoryLabel="Week">
+            <arc:Streamgraph.Series>
+                <arc:ChartSeries Key="billing" Name="Billing" />
+                <arc:ChartSeries Key="login" Name="Login" />
+                <arc:ChartSeries Key="performance" Name="Performance" />
+                <arc:ChartSeries Key="integrations" Name="Integrations" />
+                <arc:ChartSeries Key="mobile" Name="Mobile" />
+            </arc:Streamgraph.Series>
+        </arc:Streamgraph>
+    </StackPanel>
+</UserControl>

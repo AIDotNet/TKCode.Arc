@@ -3,6 +3,8 @@ title: Waffle chart
 summary: A ten by ten unit chart where every cell is one percent, and cells fly to their new group when the data changes.
 ---
 
+<Demo name="EnergyMix" />
+
 ## When to use
 
 - A share that people need to count, such as the share of answers or the energy mix in percent.
@@ -52,24 +54,15 @@ energy.ItemsSource = Mix2015;
 When the source is not a `WaffleCategory`, set `KeySelector` and `ValueSelector`. `LabelSelector` reads the label of each
 item, and `Decimals` sets the number of decimal places a share shows.
 
-```csharp
-var survey = new WaffleChart
-{
-    Label = "Survey answers",
-    ItemsSource = answers,
-    KeySelector = item => ((Source)item).Name,
-    ValueSelector = item => ((Source)item).Weight,
-    Decimals = 1,
-    MaxWidth = 300,
-    IsLegendVisible = false
-};
-```
+<Demo name="Selectors" />
 
 ### Grid and accent
 
 `Rows` and `Columns` set the grid, which is ten by ten by default. `AccentKey` names the category that takes the first
 series color. Other categories take the secondary colors and then neutral tones. Set `AccentKey` to `NoAccent` to use
 neutral tones only.
+
+<Demo name="Neutral" />
 
 ```xml
 <arc:WaffleChart Label="Quota used" Rows="5" Columns="20" AccentKey="used" ItemsSource="{Binding Quota}" />
@@ -82,6 +75,12 @@ Pinning a legend row keeps its cells highlighted. `ActiveKey` holds the pinned k
 ```csharp
 energy.ActiveKeyChanged += (_, e) => pinned.Text = $"Pinned: {e.Category?.Label ?? "none"}";
 ```
+
+### Empty
+
+With no categories, or a total of zero, the grid shows `EmptyLabel` in place of the cells.
+
+<Demo name="Empty" />
 
 ## API reference
 

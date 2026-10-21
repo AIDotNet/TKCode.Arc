@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SettingsCommandInDialogDemo">
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:Button Content="Open settings"
+                    Variant="Secondary"
+                    HorizontalAlignment="Center"
+                    Click="OnOpenClick" />
+        <TextBlock x:Name="ShortcutHint"
+                   HorizontalAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arc:Dialog x:Name="SettingsDialog"
+                    Title="Settings"
+                    Size="Large"
+                    Opened="OnOpened">
+            <!-- Without its own frame, and over the dialog's 24px body padding, so the search row and the footer run edge to edge. -->
+            <arc:SettingsCommand x:Name="Palette"
+                                 IsFramed="False"
+                                 Margin="-24"
+                                 ResultsMaxHeight="300"
+                                 CloseRequested="OnCloseRequested">
+                <arc:SettingsCommandChoice Group="Appearance" Header="Theme" Icon="{x:Static arc:ArcIcons.Palette}"
+                                           Description="Match your system, or always use light or dark."
+                                           Keywords="dark light mode color scheme"
+                                           Options="Light, Dark, System" SelectedOption="System" />
+                <arc:SettingsCommandToggle Group="Appearance" Header="Compact mode" Icon="{x:Static arc:ArcIcons.Rows2}"
+                                           Description="Tighter rows and smaller gaps in lists."
+                                           Keywords="density dense spacing" />
+                <arc:SettingsCommandToggle Group="Appearance" Header="Reduce motion" Icon="{x:Static arc:ArcIcons.Sparkles}"
+                                           Description="Fewer animations across the app."
+                                           Keywords="animation accessibility" />
+                <arc:SettingsCommandChoice Group="Notifications" Header="Email digests" Icon="{x:Static arc:ArcIcons.Inbox}"
+                                           Description="A summary of activity in your projects."
+                                           Keywords="email summary newsletter"
+                                           Options="Off, Daily, Weekly" SelectedOption="Weekly" />
+                <arc:SettingsCommandToggle Group="Notifications" Header="Mentions" Icon="{x:Static arc:ArcIcons.AtSign}"
+                                           Description="When someone @mentions you in a comment."
+                                           IsChecked="True" />
+                <arc:SettingsCommandAction Group="Account" Header="Change email" Icon="{x:Static arc:ArcIcons.Mail}"
+                                           Description="noor@larkspur.co"
+                                           Keywords="address login" IsNavigation="True" />
+                <arc:SettingsCommandAction Group="Account" Header="Sign out everywhere" Icon="{x:Static arc:ArcIcons.LogOut}"
+                                           Description="Every device except this one."
+                                           Keywords="sessions logout devices" Shortcut="mod+shift+q" />
+            </arc:SettingsCommand>
+        </arc:Dialog>
+    </StackPanel>
+</UserControl>

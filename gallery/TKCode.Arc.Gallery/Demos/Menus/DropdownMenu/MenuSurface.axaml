@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DropdownMenuMenuSurfaceDemo">
+    <UserControl.Resources>
+        <arc:MenuSurface x:Key="DraftMenu" Alignment="Start" AnchorGap="4">
+            <arc:MenuEntry Header="Save as draft"
+                           Icon="{x:Static arc:ArcIcons.FileText}"
+                           InputGestureText="⌘S" />
+            <arc:MenuEntry Header="Schedule" Icon="{x:Static arc:ArcIcons.Clock}" />
+            <arc:MenuEntry Header="Discard"
+                           Icon="{x:Static arc:ArcIcons.Trash2}"
+                           IsDestructive="True"
+                           HasSeparatorBefore="True" />
+        </arc:MenuSurface>
+    </UserControl.Resources>
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Button x:Name="Anchor"
+                    Content="Open a MenuSurface"
+                    Variant="Secondary"
+                    IsPressScaleEnabled="False"
+                    Click="OnAnchorClick" />
+    </WrapPanel>
+</UserControl>

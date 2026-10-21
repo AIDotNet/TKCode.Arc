@@ -1,8 +1,10 @@
 ---
 title: 矩形树图
 summary: 方形化的矩形树图：点击即可下钻，色块放大填满视图，面包屑可返回，指标变化时每个色块平滑过渡。
-source-hash: 41b94359ed01
+source-hash: 05f28046d980
 ---
+
+<Demo name="RevenueByRegion" />
 
 ## 何时使用
 
@@ -59,9 +61,7 @@ chart.Root = root;
 
 如果不设置 `ColorLabel`，每个色块都以同一深度绘制。若只需要一组扁平的顶层叶子节点，使用 `Items`：
 
-```xml
-<arc:Treemap Label="按文件夹统计的存储" PlotHeight="260" />
-```
+<Demo name="OneLevel" />
 
 ```csharp
 chart.Items.Add(new TreemapNode("video", "视频", 112));

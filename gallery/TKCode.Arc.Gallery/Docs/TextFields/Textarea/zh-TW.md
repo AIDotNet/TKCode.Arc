@@ -1,8 +1,10 @@
 ---
 title: 多行文字框
 summary: 用於備註、描述和較長文字的多行輸入欄位。
-source-hash: 095ae5695edb
+source-hash: dde42eb11370
 ---
+
+<Demo name="LiveCount" />
 
 ## 何時使用
 
@@ -36,6 +38,8 @@ source-hash: 095ae5695edb
 ### 即時計數與驗證
 
 文字變動時更新描述。只有變動的數字會滾動。設定 `ErrorMessage` 可將欄位標記為無效；值為空時清除錯誤。
+
+<Demo name="Validation" />
 
 ```csharp
 const int limit = 160;
@@ -77,11 +81,7 @@ notes.FrameHeight = 200;
 
 停用的欄位透明度降至 0.6，且沒有把手。
 
-```xml
-<arc:Textarea Label="備註"
-              Text="暫時唯讀。"
-              IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API 參考
 

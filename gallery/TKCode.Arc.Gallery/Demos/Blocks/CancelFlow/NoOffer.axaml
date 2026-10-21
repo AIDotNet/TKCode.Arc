@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CancelFlowNoOfferDemo">
+    <arc:CancelFlow x:Name="Flow" PlanName="Studio">
+        <arc:CancelFlow.Losses>
+            <x:String>Shared projects become read-only for all 6 members</x:String>
+            <x:String>Version history older than 30 days is deleted</x:String>
+        </arc:CancelFlow.Losses>
+    </arc:CancelFlow>
+</UserControl>

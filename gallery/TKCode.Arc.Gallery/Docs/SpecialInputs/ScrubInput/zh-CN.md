@@ -1,8 +1,10 @@
 ---
 title: 拖动数值
 summary: Figma 风格的数字字段：拖动标签即可调整，也可以键入数值、单位与算术表达式。
-source-hash: 6ed53abe71b8
+source-hash: 5df7f3b92dba
 ---
+
+<Demo name="Inspector" />
 
 ## 何时使用
 
@@ -65,28 +67,19 @@ var rotation = new ScrubInput
 
 设置多个 `Units` 后，单位会变为一个按钮，点击即可在各单位之间切换。键入单位（例如 `50%`）会切换到该单位。无法识别的单位会被拒绝。
 
-```csharp
-var width = new ScrubInput
-{
-    Label = "宽度",
-    Value = 240,
-    Minimum = 0,
-    Units = ["px", "%", "em"]
-};
-```
+<Demo name="CyclingUnits" />
 
 ### 尺寸
 
 `Size` 设定高度：`Small` 为 30px，`Medium`（默认）为 36px。
 
-```xml
-<arc:ScrubInput Label="小" Size="Small" Value="12" Unit="px" />
-<arc:ScrubInput Label="中" Value="12" Unit="px" />
-```
+<Demo name="Sizes" />
 
 ### 绑定与事件
 
 `Value` 为双向绑定。`ValueChanged` 会在每次变化时触发，`ValueCommitted` 则在字段中的一次修改稳定后触发一次。两者都会报告旧值、新值以及 `ChangeSource`。
+
+<Demo name="Events" />
 
 ```xml
 <arc:ScrubInput Label="不透明度" Value="{Binding Opacity, Mode=TwoWay}" Minimum="0" Maximum="100" Unit="%" />
@@ -98,6 +91,18 @@ amount.ValueCommitted += (_, e) =>
     Console.WriteLine($"{e.OldValue} -> {e.NewValue} {e.Unit} ({e.ChangeSource})");
 };
 ```
+
+### 图标标签
+
+标签可以用一个 14px 的图标代替。请为字段设置无障碍名称，双击标签即可重置数值。
+
+<Demo name="GlyphLabels" />
+
+### 状态
+
+禁用的字段会变暗至 50% 并忽略输入。无法识别的输入（例如 `abc`）会被拒绝：边缘变红 900ms 并短暂抖动，旧值保持不变。
+
+<Demo name="States" />
 
 ## API 参考
 

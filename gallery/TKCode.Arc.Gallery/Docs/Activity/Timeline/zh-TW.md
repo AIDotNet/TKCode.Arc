@@ -1,8 +1,10 @@
 ---
 title: 時間軸
 summary: 依日期分組、最新在前，追蹤事件的發生經過。
-source-hash: 069b42d0a5f7
+source-hash: e6dcd3991034
 ---
+
+<Demo name="LiveStream" />
 
 ## 何時使用
 
@@ -63,6 +65,10 @@ timeline.DetachedFromVisualTree += (_, _) => clock.Stop();
 
 帶有 `Detail` 的列在被啟用時會展開。沒有詳細內容的列只是一般文字。`Tone` 會為系統事件著色，因此其標題必須同時說明結果。
 
+<Demo name="ExpandableDetails" />
+
+<Demo name="TonesAndPortraits" />
+
 ```xml
 <arc:Timeline Label="流程管線" Now="2026-10-20T12:00:00+00:00">
     <arc:TimelineEvent Id="t1"
@@ -89,6 +95,10 @@ timeline.Expand("t2");
 ### 長歷程
 
 設定 `MaxHeight` 後，動態串會在內部捲動。目前日期的標籤會在其列捲動時保持固定，而且清單是虛擬化的，因此長歷程依然順暢。
+
+<Demo name="ScrollingFeed" />
+
+<Demo name="ThousandUpdates" />
 
 ```xml
 <arc:Timeline Label="稽核紀錄"

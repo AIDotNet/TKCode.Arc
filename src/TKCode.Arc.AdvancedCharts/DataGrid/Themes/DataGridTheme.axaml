@@ -1,0 +1,611 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- A button without chrome: the header's sort button and the filter cell's value button draw their own look. -->
+    <ControlTheme x:Key="DataGridNakedButtonTheme" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Background="{TemplateBinding Background}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="2"
+                            BorderThickness="2"
+                            CornerRadius="6"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGrid}" TargetType="arc:DataGrid">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGrid">
+                <Panel Name="PART_Root" VerticalAlignment="Top">
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <arc:DataGridToolbar Name="PART_Toolbar"
+                                                 Height="{arc:DataGridTokenResource ToolbarHeight}" />
+                            <ScrollViewer Name="PART_ScrollViewer"
+                                          Grid.Row="1"
+                                          MaxHeight="{TemplateBinding MaxViewportHeight}"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Auto" />
+                            <arc:DataGridStatusBar Name="PART_StatusBar"
+                                                   Grid.Row="2"
+                                                   MinHeight="{arc:DataGridTokenResource StatusBarHeight}" />
+                            <TextBlock Name="PART_Announcer"
+                                       Grid.RowSpan="3"
+                                       Width="1"
+                                       Height="1"
+                                       Opacity="0"
+                                       IsHitTestVisible="False"
+                                       ClipToBounds="True"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       AutomationProperties.LiveSetting="Polite" />
+                        </Grid>
+                    </Border>
+                    <!-- The outline is drawn over the clipped content so cells never cover the rounded corners. -->
+                    <Border Name="PART_Outline"
+                            IsHitTestVisible="False"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SmallFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="MediumWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="SurfaceRaisedBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="SurfaceMutedBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SubtleBorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="StrongBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SecondaryForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="ControlOnBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        <Setter Property="ControlGlyphBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="RowHeightCompact" Value="{arc:DataGridTokenResource RowHeightCompact}" />
+        <Setter Property="RowHeightStandard" Value="{arc:DataGridTokenResource RowHeightStandard}" />
+        <Setter Property="RowHeightComfortable" Value="{arc:DataGridTokenResource RowHeightComfortable}" />
+        <Setter Property="HeaderRowHeight" Value="{arc:DataGridTokenResource HeaderRowHeight}" />
+        <Setter Property="FilterRowHeight" Value="{arc:DataGridTokenResource FilterRowHeight}" />
+        <Setter Property="TotalsRowHeight" Value="{arc:DataGridTokenResource TotalsRowHeight}" />
+        <Setter Property="GutterWidth" Value="{arc:DataGridTokenResource GutterWidth}" />
+        <Setter Property="GutterWidthNarrow" Value="{arc:DataGridTokenResource GutterWidthNarrow}" />
+        <Setter Property="ColumnMaxWidth" Value="{arc:DataGridTokenResource ColumnMaxWidth}" />
+        <Setter Property="ColumnResizeStep" Value="{arc:DataGridTokenResource ColumnResizeStep}" />
+        <Setter Property="PinnedColumnMinWidth" Value="{arc:DataGridTokenResource PinnedColumnMinWidth}" />
+        <Setter Property="CellInlinePadding" Value="{arc:DataGridTokenResource CellInlinePadding}" />
+        <Setter Property="CompactCellFontSize" Value="{arc:DataGridTokenResource CompactCellFontSize}" />
+        <Setter Property="SelectionFillOpacity" Value="{arc:DataGridTokenResource SelectionFillOpacity}" />
+        <Setter Property="CheckedRowFillOpacity" Value="{arc:DataGridTokenResource CheckedRowFillOpacity}" />
+        <Setter Property="WashOpacity" Value="{arc:DataGridTokenResource WashOpacity}" />
+        <Setter Property="GroupIndent" Value="{arc:DataGridTokenResource GroupIndent}" />
+        <Setter Property="WashDuration" Value="{arc:DataGridTokenResource WashDuration}" />
+        <Setter Property="SortSlideWindow" Value="{arc:DataGridTokenResource SortSlideWindow}" />
+        <Setter Property="StatusMessageDuration" Value="{arc:DataGridTokenResource StatusMessageDuration}" />
+        <Setter Property="StatusActionDuration" Value="{arc:DataGridTokenResource StatusActionDuration}" />
+        <!-- With a finite MaxViewportHeight the grid is as tall as its content; with infinity it fills its slot. -->
+        <Style Selector="^:fill /template/ Panel#PART_Root">
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGridHeaderCell}" TargetType="arc:DataGridHeaderCell">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGridHeaderCell">
+                <Border Name="PART_Background"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="0,0,1,1">
+                    <Panel>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Button Name="PART_Sort"
+                                    Theme="{StaticResource DataGridNakedButtonTheme}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="{TemplateBinding LabelAlignment}"
+                                    VerticalContentAlignment="Center"
+                                    Padding="12,0,4,0">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Name="PART_Label"
+                                               Text="{TemplateBinding Header}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <StackPanel Name="PART_SortIndicator"
+                                                Orientation="Horizontal"
+                                                Spacing="1"
+                                                VerticalAlignment="Center"
+                                                Opacity="0">
+                                        <arc:ArcGlyph Name="PART_SortGlyph"
+                                                      Data="{x:Static arc:ArcIcons.ArrowUp}"
+                                                      Size="14"
+                                                      StrokeThickness="1.75"
+                                                      RenderTransformOrigin="50%,50%"
+                                                      RenderTransform="scale(0.8)"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Text="{TemplateBinding SortOrderText}"
+                                                   IsVisible="{TemplateBinding SortOrderText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                   FontSize="10"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="PART_Menu"
+                                    Grid.Column="1"
+                                    Theme="{StaticResource DataGridNakedButtonTheme}"
+                                    Width="24"
+                                    Height="24"
+                                    Margin="0,0,6,0"
+                                    Opacity="0"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="14"
+                                              StrokeThickness="1.75"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Button>
+                        </Grid>
+                        <Border Name="PART_Resizer"
+                                Width="9"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,-5,0"
+                                Background="Transparent"
+                                Cursor="SizeWestEast">
+                            <Border Name="PART_ResizerLine"
+                                    Width="2"
+                                    Margin="0,8"
+                                    CornerRadius="1"
+                                    HorizontalAlignment="Center"
+                                    Opacity="0"
+                                    Background="{arc:ArcDesignTokenResource Accent}" />
+                        </Border>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Style Selector="^ /template/ Button#PART_Sort">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:sorted /template/ Button#PART_Sort">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:sorted /template/ StackPanel#PART_SortIndicator">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:sorted /template/ arc|ArcGlyph#PART_SortGlyph">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:sorted:descending /template/ arc|ArcGlyph#PART_SortGlyph">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Button#PART_Menu">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:touch /template/ Button#PART_Menu">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Menu:focus-visible">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ Button#PART_Menu:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Resizer:pointerover > Border#PART_ResizerLine">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^:resizing /template/ Border#PART_ResizerLine">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:in-range /template/ Border#PART_Background">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:in-range /template/ Button#PART_Sort">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pin-edge /template/ Border#PART_Background">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:numeric /template/ Button#PART_Sort">
+            <Setter Property="Padding" Value="4,0,4,0" />
+        </Style>
+        <Style Selector="^:unsortable /template/ Button#PART_Sort">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ StackPanel#PART_SortIndicator">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_SortGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Button#PART_Menu">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Background">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ StackPanel#PART_SortIndicator">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Button#PART_Menu">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGridFilterBox}" TargetType="arc:DataGridFilterBox">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGridFilterBox">
+                <Border Name="PART_Field"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel VerticalAlignment="Center">
+                        <TextBlock Name="PART_Placeholder"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   IsHitTestVisible="False"
+                                   IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="NoWrap"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Style Selector="^:pointerover /template/ Border#PART_Field">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus /template/ Border#PART_Field">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGridFilterCell}" TargetType="arc:DataGridFilterCell">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGridFilterCell">
+                <Border Name="PART_Background"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="0,0,1,1"
+                        Padding="5,5,6,5">
+                    <Panel>
+                        <arc:DataGridFilterBox Name="PART_Input"
+                                               PlaceholderText="{TemplateBinding Placeholder}" />
+                        <Button Name="PART_Select"
+                                Theme="{StaticResource DataGridNakedButtonTheme}"
+                                IsVisible="False"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Center">
+                            <Border Name="PART_SelectField"
+                                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="8,0,6,0">
+                                <DockPanel>
+                                    <arc:ArcGlyph DockPanel.Dock="Right"
+                                                  Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                  Size="14"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Text="{TemplateBinding SelectText}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </DockPanel>
+                            </Border>
+                        </Button>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:select /template/ arc|DataGridFilterBox#PART_Input">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:select /template/ Button#PART_Select">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:no-filter /template/ arc|DataGridFilterBox#PART_Input">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-filter /template/ Button#PART_Select">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:numeric /template/ arc|DataGridFilterBox#PART_Input">
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:active /template/ arc|DataGridFilterBox#PART_Input">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:active /template/ Border#PART_SelectField">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:invalid /template/ arc|DataGridFilterBox#PART_Input">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:pin-edge /template/ Border#PART_Background">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGridTotalCell}" TargetType="arc:DataGridTotalCell">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGridTotalCell">
+                <Border Name="PART_Background"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="0,1,1,0"
+                        Padding="12,0">
+                    <Panel>
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="6"
+                                    IsVisible="{TemplateBinding HasValue}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <arc:AnimatedCounter Value="{TemplateBinding Value}"
+                                                 Decimals="{TemplateBinding Decimals}"
+                                                 Prefix="{TemplateBinding Prefix}"
+                                                 Suffix="{TemplateBinding Suffix}"
+                                                 CultureName="{TemplateBinding CultureName}"
+                                                 VerticalAlignment="Center"
+                                                 FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                 FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                 FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                 Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </StackPanel>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Style Selector="^:pin-edge /template/ Border#PART_Background">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGridCellEditor}" TargetType="arc:DataGridCellEditor">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGridCellEditor">
+                <Border Name="PART_Field"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel VerticalAlignment="Center">
+                        <TextBlock Name="PART_Placeholder"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   IsHitTestVisible="False"
+                                   IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="NoWrap"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Style Selector="^:numeric">
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DataGridSearchBox}" TargetType="arc:DataGridSearchBox">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DataGridSearchBox">
+                <Panel>
+                    <Border Name="PART_Field"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <DockPanel>
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:ArcIcons.Search}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Margin="0,0,8,0"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <Button Name="PART_Clear"
+                                    DockPanel.Dock="Right"
+                                    Theme="{StaticResource DataGridNakedButtonTheme}"
+                                    Width="20"
+                                    Height="20"
+                                    Margin="4,0,-4,0"
+                                    VerticalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                              Size="14"
+                                              StrokeThickness="1.75"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Button>
+                            <Panel VerticalAlignment="Center">
+                                <TextBlock Name="PART_Placeholder"
+                                           Text="{TemplateBinding PlaceholderText}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           IsHitTestVisible="False"
+                                           IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="NoWrap"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}" />
+                            </Panel>
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="15"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Width" Value="{arc:DataGridTokenResource SearchWidth}" />
+        <Setter Property="Height" Value="{arc:DataGridTokenResource ToolButtonHeight}" />
+        <Setter Property="MinHeight" Value="{arc:DataGridTokenResource ToolButtonHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Style Selector="^:pointerover /template/ Border#PART_Field">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

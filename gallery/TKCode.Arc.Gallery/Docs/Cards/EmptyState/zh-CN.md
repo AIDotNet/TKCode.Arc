@@ -1,8 +1,10 @@
 ---
 title: 空状态
 summary: 暂无内容时，给出清晰的下一步操作。
-source-hash: 3cddac5cfe97
+source-hash: 1cfccde85c07
 ---
+
+<Demo name="FirstUse" />
 
 ## 何时使用
 
@@ -51,18 +53,7 @@ empty.Icon = ArcIcons.Search;
 
 `Action` 可接受一个按钮，也可接受包含多个按钮的面板。该区域在描述下方居中排列。
 
-```xml
-<arc:EmptyState Title="没有与“季度计划”相关的结果"
-                Description="检查拼写，或尝试更宽泛的搜索词。"
-                Icon="{Binding SearchIcon}">
-    <arc:EmptyState.Action>
-        <StackPanel Orientation="Horizontal" Spacing="12">
-            <arc:Button Content="清除搜索" Variant="Secondary" />
-            <arc:Button Content="浏览全部" Variant="Ghost" />
-        </StackPanel>
-    </arc:EmptyState.Action>
-</arc:EmptyState>
-```
+<Demo name="ZeroResults" />
 
 ### 状态切换
 

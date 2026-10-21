@@ -1,8 +1,10 @@
 ---
 title: 搜尋欄位
 summary: 易於辨識的搜尋入口，並帶有清楚的操作提示。
-source-hash: 88552bbca4f4
+source-hash: dffe9e4a01f2
 ---
+
+<Demo name="FilterList" />
 
 ## 何時使用
 
@@ -74,10 +76,7 @@ search.Clear();
 
 `Size` 設定外框高度：`Small` 為 36，`Medium`（預設）為 44，`Large` 為 50。
 
-```xml
-<arc:SearchField Label="小" Size="Small" Placeholder="搜尋" />
-<arc:SearchField Label="大" Size="Large" Text="路線圖" />
-```
+<Demo name="Sizes" />
 
 ## API 參考
 

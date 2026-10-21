@@ -6,8 +6,6 @@ public static partial class GalleryPages
 {
     static partial void RegisterButtons()
     {
-        Register("Button", ButtonPage.Create);
-        Register("CopyButton", CopyButtonPage.Create);
         RegisterButtonsA();
         RegisterButtonsB();
         RegisterButtonsC();

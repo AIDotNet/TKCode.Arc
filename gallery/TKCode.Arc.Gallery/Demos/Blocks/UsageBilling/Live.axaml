@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageBillingLiveDemo">
+    <StackPanel Spacing="20">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button Variant="Secondary" Size="Small" Click="OnAddUsage">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}" Size="14" VerticalAlignment="Center" />
+                    <TextBlock Text="Add usage" VerticalAlignment="Center" />
+                </StackPanel>
+            </arc:Button>
+            <arc:Button Content="Reset" Variant="Ghost" Size="Small" Click="OnReset" />
+        </StackPanel>
+        <arc:UsageBilling x:Name="Billing"
+                          BaseFee="90"
+                          SpendLimit="130"
+                          IsSpendLimitEnabled="True">
+            <arc:UsageBillingMeter Name="API calls"
+                                   Unit="calls"
+                                   Used="1240000"
+                                   Included="1000000"
+                                   UnitPrice="0.40"
+                                   PriceUnit="10000"
+                                   Icon="{x:Static arc:ArcIcons.Activity}" />
+            <arc:UsageBillingMeter Name="Storage"
+                                   Unit="GB"
+                                   Used="182"
+                                   Included="250"
+                                   UnitPrice="0.10"
+                                   Icon="{x:Static arc:ArcIcons.Database}" />
+            <arc:UsageBillingMeter Name="Build minutes"
+                                   Unit="min"
+                                   Used="3420"
+                                   Included="3000"
+                                   UnitPrice="0.008"
+                                   Icon="{x:Static arc:ArcIcons.Timer}" />
+        </arc:UsageBilling>
+    </StackPanel>
+</UserControl>

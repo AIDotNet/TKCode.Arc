@@ -3,6 +3,8 @@ title: Date range picker
 summary: A range picker that grows from its trigger into two months with presets and a stretching range highlight.
 ---
 
+<Demo name="Report" />
+
 ## When to use
 
 - Report and analytics filters with presets such as Last 7 days or This quarter.
@@ -46,27 +48,22 @@ picker.Presets =
 ### Limits and week start
 
 `MinDate` and `MaxDate` disable the days outside the range and the month buttons beyond it. `FirstDayOfWeek`
-sets the first column of the grid. `Culture` sets the month titles, the weekday heads and the range label.
+sets the first column of the grid.
 
-```xml
-<arc:DateRangePicker Label="Stay"
-                     FirstDayOfWeek="Monday"
-                     Culture="en-US" />
-```
-
-```csharp
-picker.MinDate = today;
-picker.MaxDate = today.AddMonths(6);
-```
+<Demo name="Booking" />
 
 ### One or two months
 
 `MonthCount` chooses the panel layout. `Auto` shows two months with a preset column when the window is wide
 enough, and one month with a scrolling preset row otherwise. `One` always uses the compact panel.
 
-```xml
-<arc:DateRangePicker Label="Compact" MonthCount="One" />
-```
+<Demo name="OneMonth" />
+
+### Culture
+
+`Culture` sets the month titles, the weekday heads and the range label.
+
+<Demo name="Culture" />
 
 ### Reacting to Apply
 

@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToastStackStackDemo">
+    <StackPanel Spacing="12">
+        <Border Height="380"
+                CornerRadius="26"
+                BorderThickness="1"
+                ClipToBounds="True"
+                Background="{arc:ArcDesignTokenResource Background}"
+                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+            <Grid>
+                <TextBlock Text="Hover or focus the stack to fan it out. Alt+T jumps into it; Escape closes the focused toast."
+                           Margin="20"
+                           TextWrapping="Wrap" />
+                <arc:ToastStack x:Name="Stack" IsContained="True" />
+            </Grid>
+        </Border>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Success" Size="Small" Variant="Secondary" Click="OnSuccessClick" />
+            <arc:Button Content="Info" Size="Small" Variant="Secondary" Click="OnInfoClick" />
+            <arc:Button Content="Warning" Size="Small" Variant="Secondary" Click="OnWarningClick" />
+            <arc:Button Content="Error" Size="Small" Variant="Secondary" Click="OnErrorClick" />
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Loading → success" Size="Small" Variant="Secondary" Click="OnLoadingClick" />
+            <arc:Button Content="Undo" Size="Small" Variant="Secondary" Click="OnUndoClick" />
+            <arc:Button Content="Dismiss all" Size="Small" Variant="Secondary" Click="OnDismissAllClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

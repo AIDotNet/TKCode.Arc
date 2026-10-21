@@ -52,6 +52,7 @@ public class SortableDataTable : TemplatedControl
     public static readonly StyledProperty<string?> SortKeyProperty =
         AvaloniaProperty.Register<SortableDataTable, string?>(nameof(SortKey), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Sort direction of the sorted column (two-way): None, Ascending or Descending.</summary>
     public static readonly StyledProperty<DataTableSortDirection> SortDirectionProperty =
         AvaloniaProperty.Register<SortableDataTable, DataTableSortDirection>(nameof(SortDirection), defaultBindingMode: BindingMode.TwoWay);
 
@@ -70,12 +71,14 @@ public class SortableDataTable : TemplatedControl
     public static readonly StyledProperty<string> CaptionProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(Caption), "Data table");
 
+    /// <summary>Text shown when there are no rows (default "No rows to show").</summary>
     public static readonly StyledProperty<string> EmptyMessageProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(EmptyMessage), "No rows to show");
 
     public static readonly StyledProperty<bool> IsLoadingProperty =
         AvaloniaProperty.Register<SortableDataTable, bool>(nameof(IsLoading));
 
+    /// <summary>Text shown with the loading spinner (default "Loading rows").</summary>
     public static readonly StyledProperty<string> LoadingMessageProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(LoadingMessage), "Loading rows");
 
@@ -85,12 +88,15 @@ public class SortableDataTable : TemplatedControl
     public static readonly StyledProperty<string> ItemNameOtherProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(ItemNameOther), "rows");
 
+    /// <summary>Word for the selected rows in the count line, as in "2 selected" (default "selected").</summary>
     public static readonly StyledProperty<string> SelectedNounProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(SelectedNoun), "selected");
 
+    /// <summary>Accessible name of the select-all checkbox in the header (default "Select all rows").</summary>
     public static readonly StyledProperty<string> SelectAllLabelProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(SelectAllLabel), "Select all rows");
 
+    /// <summary>Text of the Clear selection action in the count line (default "Clear selection").</summary>
     public static readonly StyledProperty<string> ClearSelectionLabelProperty =
         AvaloniaProperty.Register<SortableDataTable, string>(nameof(ClearSelectionLabel), "Clear selection");
 
@@ -113,6 +119,7 @@ public class SortableDataTable : TemplatedControl
     /// <summary>The sorted column's <see cref="DataTableColumn.EffectiveKey"/> (two-way, for view models).</summary>
     public string? SortKey { get => GetValue(SortKeyProperty); set => SetValue(SortKeyProperty, value); }
 
+    /// <inheritdoc cref="SortDirectionProperty"/>
     public DataTableSortDirection SortDirection { get => GetValue(SortDirectionProperty); set => SetValue(SortDirectionProperty, value); }
 
     /// <summary>When true a third click on a sorted header clears the sort (Arc toggles between ascending and descending).</summary>
@@ -130,11 +137,13 @@ public class SortableDataTable : TemplatedControl
     /// <summary>Accessible name of the table.</summary>
     public string Caption { get => GetValue(CaptionProperty); set => SetValue(CaptionProperty, value); }
 
+    /// <inheritdoc cref="EmptyMessageProperty"/>
     public string EmptyMessage { get => GetValue(EmptyMessageProperty); set => SetValue(EmptyMessageProperty, value); }
 
     /// <summary>Shows a spinner over the body (in place of the empty message when there are no rows).</summary>
     public bool IsLoading { get => GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
 
+    /// <inheritdoc cref="LoadingMessageProperty"/>
     public string LoadingMessage { get => GetValue(LoadingMessageProperty); set => SetValue(LoadingMessageProperty, value); }
 
     /// <summary>Singular noun of the count line, as in "1 project".</summary>
@@ -143,10 +152,13 @@ public class SortableDataTable : TemplatedControl
     /// <summary>Plural noun of the count line, as in "6 projects".</summary>
     public string ItemNameOther { get => GetValue(ItemNameOtherProperty); set => SetValue(ItemNameOtherProperty, value); }
 
+    /// <inheritdoc cref="SelectedNounProperty"/>
     public string SelectedNoun { get => GetValue(SelectedNounProperty); set => SetValue(SelectedNounProperty, value); }
 
+    /// <inheritdoc cref="SelectAllLabelProperty"/>
     public string SelectAllLabel { get => GetValue(SelectAllLabelProperty); set => SetValue(SelectAllLabelProperty, value); }
 
+    /// <inheritdoc cref="ClearSelectionLabelProperty"/>
     public string ClearSelectionLabel { get => GetValue(ClearSelectionLabelProperty); set => SetValue(ClearSelectionLabelProperty, value); }
 
     /// <summary>Raised when the user sorts (header click or keyboard) or <see cref="Sort"/> is called.</summary>

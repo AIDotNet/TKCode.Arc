@@ -81,9 +81,11 @@ public class UserMenu : TemplatedControl
 
     #region 公共属性定义
 
+    /// <summary>Name shown in the menu header; also used in the avatar's automation name.</summary>
     public static readonly StyledProperty<string?> DisplayNameProperty =
         AvaloniaProperty.Register<UserMenu, string?>(nameof(DisplayName));
 
+    /// <summary>Email address shown under the name in the menu header.</summary>
     public static readonly StyledProperty<string?> EmailProperty =
         AvaloniaProperty.Register<UserMenu, string?>(nameof(Email));
 
@@ -99,13 +101,16 @@ public class UserMenu : TemplatedControl
     public static readonly StyledProperty<bool> IsNameVisibleProperty =
         AvaloniaProperty.Register<UserMenu, bool>(nameof(IsNameVisible));
 
+    /// <summary>Theme chosen in the inline switch (Light, Dark or System); two-way bound. Applying it is up to the app.</summary>
     public static readonly StyledProperty<UserMenuThemePreference> ThemePreferenceProperty =
         AvaloniaProperty.Register<UserMenu, UserMenuThemePreference>(nameof(ThemePreference), UserMenuThemePreference.System,
             defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Shows the inline light / dark / system switch.</summary>
     public static readonly StyledProperty<bool> IsThemeSwitchVisibleProperty =
         AvaloniaProperty.Register<UserMenu, bool>(nameof(IsThemeSwitchVisible), true);
 
+    /// <summary>Presence status (Available, Busy or Away) shown by the dot and the status switch; two-way bound.</summary>
     public static readonly StyledProperty<UserMenuStatus> StatusProperty =
         AvaloniaProperty.Register<UserMenu, UserMenuStatus>(nameof(Status), defaultBindingMode: BindingMode.TwoWay);
 
@@ -121,6 +126,7 @@ public class UserMenu : TemplatedControl
     public static readonly StyledProperty<string?> SignOutGestureTextProperty =
         AvaloniaProperty.Register<UserMenu, string?>(nameof(SignOutGestureText));
 
+    /// <summary>Whether the menu is open; two-way bound.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<UserMenu, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
 
@@ -132,12 +138,14 @@ public class UserMenu : TemplatedControl
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<UserMenu, IEnumerable?>(nameof(ItemsSource));
 
+    /// <summary>Data template applied to the header of each row generated from ItemsSource.</summary>
     public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
         AvaloniaProperty.Register<UserMenu, IDataTemplate?>(nameof(ItemTemplate));
 
     public static readonly DirectProperty<UserMenu, bool> IsSigningOutProperty =
         AvaloniaProperty.RegisterDirect<UserMenu, bool>(nameof(IsSigningOut), o => o.IsSigningOut);
 
+    /// <summary>Raised when an account destination row is clicked; the argument carries the entry and its item.</summary>
     public static readonly RoutedEvent<MenuEntryClickedEventArgs> ItemClickedEvent =
         RoutedEvent.Register<UserMenu, MenuEntryClickedEventArgs>(nameof(ItemClicked), RoutingStrategies.Bubble);
 
@@ -150,18 +158,22 @@ public class UserMenu : TemplatedControl
     public static readonly RoutedEvent<RoutedEventArgs> SignOutRequestedEvent =
         RoutedEvent.Register<UserMenu, RoutedEventArgs>(nameof(SignOutRequested), RoutingStrategies.Bubble);
 
+    /// <summary>Raised when the menu opens.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> OpenedEvent =
         RoutedEvent.Register<UserMenu, RoutedEventArgs>(nameof(Opened), RoutingStrategies.Direct);
 
+    /// <summary>Raised when the menu closes.</summary>
     public static readonly RoutedEvent<RoutedEventArgs> ClosedEvent =
         RoutedEvent.Register<UserMenu, RoutedEventArgs>(nameof(Closed), RoutingStrategies.Direct);
 
+    /// <inheritdoc cref="DisplayNameProperty"/>
     public string? DisplayName
     {
         get => GetValue(DisplayNameProperty);
         set => SetValue(DisplayNameProperty, value);
     }
 
+    /// <inheritdoc cref="EmailProperty"/>
     public string? Email
     {
         get => GetValue(EmailProperty);
@@ -186,18 +198,21 @@ public class UserMenu : TemplatedControl
         set => SetValue(IsNameVisibleProperty, value);
     }
 
+    /// <inheritdoc cref="ThemePreferenceProperty"/>
     public UserMenuThemePreference ThemePreference
     {
         get => GetValue(ThemePreferenceProperty);
         set => SetValue(ThemePreferenceProperty, value);
     }
 
+    /// <inheritdoc cref="IsThemeSwitchVisibleProperty"/>
     public bool IsThemeSwitchVisible
     {
         get => GetValue(IsThemeSwitchVisibleProperty);
         set => SetValue(IsThemeSwitchVisibleProperty, value);
     }
 
+    /// <inheritdoc cref="StatusProperty"/>
     public UserMenuStatus Status
     {
         get => GetValue(StatusProperty);
@@ -222,6 +237,7 @@ public class UserMenu : TemplatedControl
         set => SetValue(SignOutGestureTextProperty, value);
     }
 
+    /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
     {
         get => GetValue(IsOpenProperty);
@@ -240,6 +256,7 @@ public class UserMenu : TemplatedControl
         set => SetValue(ItemsSourceProperty, value);
     }
 
+    /// <inheritdoc cref="ItemTemplateProperty"/>
     public IDataTemplate? ItemTemplate
     {
         get => GetValue(ItemTemplateProperty);
@@ -262,6 +279,7 @@ public class UserMenu : TemplatedControl
     /// <summary>The menu surface (the panel on wide windows, the sheet content on narrow ones).</summary>
     public MenuSurface Menu { get; }
 
+    /// <summary>Raised when an account destination row is clicked; the argument carries the entry and its item.</summary>
     public event EventHandler<MenuEntryClickedEventArgs>? ItemClicked
     {
         add => AddHandler(ItemClickedEvent, value);
@@ -289,12 +307,14 @@ public class UserMenu : TemplatedControl
         remove => RemoveHandler(SignOutRequestedEvent, value);
     }
 
+    /// <summary>Raised when the menu opens.</summary>
     public event EventHandler<RoutedEventArgs>? Opened
     {
         add => AddHandler(OpenedEvent, value);
         remove => RemoveHandler(OpenedEvent, value);
     }
 
+    /// <summary>Raised when the menu closes.</summary>
     public event EventHandler<RoutedEventArgs>? Closed
     {
         add => AddHandler(ClosedEvent, value);

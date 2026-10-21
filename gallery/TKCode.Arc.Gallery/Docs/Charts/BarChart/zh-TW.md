@@ -1,8 +1,10 @@
 ---
 title: 長條圖
 summary: 跨日、週或月比較同一指標，並可逐一查看任一長條的數值。
-source-hash: 7232de4d9e70
+source-hash: 6081740b5a03
 ---
+
+<Demo name="WeekAndMonth" />
 
 ## 何時使用
 
@@ -54,6 +56,8 @@ void Week()
 ### 標題標籤
 
 `AverageLabel` 為靜止時標題區的名稱，`ValueLabel` 為逐一查看時長條數值的名稱。若參考線沒有用處，可使用 `ShowAverage` 隱藏平均線。
+
+<Demo name="WithoutAverage" />
 
 ```xml
 <arc:BarChart Label="部署次數"

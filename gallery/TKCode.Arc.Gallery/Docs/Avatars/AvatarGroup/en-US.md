@@ -3,6 +3,8 @@ title: Avatar group
 summary: Show a team or set of contributors in a small space.
 ---
 
+<Demo name="Team" />
+
 ## When to use
 
 - Who owns or is editing an item, in a page header, a card or a table cell.
@@ -66,10 +68,18 @@ number folded into the chip. Only the visible people get controls, so long lists
 
 `Size` applies to every avatar and the overflow chip: `Small` is 28, `Medium` (the default) is 36 and `Large` is 48. `XLarge` is drawn as `Large`.
 
+<Demo name="SizesAndLimits" />
+
 ```xml
 <arc:AvatarGroup ItemsSource="{Binding Team}" Size="Small" MaxVisibleCount="3" />
 <arc:AvatarGroup ItemsSource="{Binding Team}" Size="Large" MaxVisibleCount="5" />
 ```
+
+### Inline members
+
+Members can be written in place of a bound list.
+
+<Demo name="InlineMembers" />
 
 ## API reference
 

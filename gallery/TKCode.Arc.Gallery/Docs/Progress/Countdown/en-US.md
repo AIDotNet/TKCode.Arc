@@ -3,6 +3,8 @@ title: Countdown
 summary: A launch countdown with rolling digits that morphs into a live state at zero.
 ---
 
+<Demo name="Launch" />
+
 ## When to use
 
 - A launch or event page where the time left to a fixed moment is the main message.
@@ -34,6 +36,8 @@ launch.Target = new DateTimeOffset(2030, 1, 1, 9, 0, 0, TimeSpan.Zero);
 
 `Variant` set to `Compact` shows one pill that is sized to the font. Use it in tight places.
 
+<Demo name="Compact" />
+
 ```xml
 <arc:Countdown Variant="Compact"
                Units="Hours, Minutes"
@@ -63,6 +67,8 @@ countdown.Target = Countdown.ResolveTarget("2030-01-01T09:00:00", timeZone);
 
 A duration countdown keeps its remaining time while it is paused. A target countdown keeps counting to the same
 moment, so pausing only freezes the display.
+
+<Demo name="DurationWithPause" />
 
 ```xml
 <arc:Countdown Duration="00:00:12"

@@ -75,9 +75,13 @@ public class InViewTitle : Control
     public static readonly StyledProperty<double> SoftBlurRadiusProperty =
         AvaloniaProperty.Register<InViewTitle, double>(nameof(SoftBlurRadius), 4);
 
+    /// <summary>Font family of the title.</summary>
     public static readonly StyledProperty<FontFamily> FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner<InViewTitle>();
+    /// <summary>Font size of the title, in device-independent pixels.</summary>
     public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<InViewTitle>();
+    /// <summary>Font weight of the title.</summary>
     public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<InViewTitle>();
+    /// <summary>Brush the title is painted with; black when not set.</summary>
     public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<InViewTitle>();
 
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
@@ -89,9 +93,13 @@ public class InViewTitle : Control
     public double Leading { get => GetValue(LeadingProperty); set => SetValue(LeadingProperty, value); }
     public double BlurRadius { get => GetValue(BlurRadiusProperty); set => SetValue(BlurRadiusProperty, value); }
     public double SoftBlurRadius { get => GetValue(SoftBlurRadiusProperty); set => SetValue(SoftBlurRadiusProperty, value); }
+    /// <inheritdoc cref="FontFamilyProperty"/>
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
+    /// <inheritdoc cref="FontSizeProperty"/>
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
+    /// <inheritdoc cref="FontWeightProperty"/>
     public FontWeight FontWeight { get => GetValue(FontWeightProperty); set => SetValue(FontWeightProperty, value); }
+    /// <inheritdoc cref="ForegroundProperty"/>
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
 
     /// <summary>Defines the <see cref="IsRevealed"/> property.</summary>

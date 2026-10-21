@@ -3,6 +3,8 @@ title: Expandable card
 summary: Give a dense card more room when requested.
 ---
 
+<Demo name="Default" />
+
 ## When to use
 
 - A summary card, such as a plan, an order or a log entry, whose details are useful but not always needed.
@@ -41,26 +43,13 @@ Without a width, the card fills its container.
 `ExpandedWidth` caps the width while the card is open. The card grows from `CollapsedWidth` to `ExpandedWidth`
 on the same spring as its height. When `ExpandedWidth` is not set, the card uses `CollapsedWidth` when open.
 
-```xml
-<arc:ExpandableCard Header="Order #4821"
-                    Description="Shipped · arrives Thursday"
-                    CollapsedWidth="360"
-                    ExpandedWidth="520">
-    <TextBlock Text="2 × Linen shirt, 1 × Canvas tote" />
-</arc:ExpandableCard>
-```
+<Demo name="GrowingSideways" />
 
 ### Open by default
 
 `IsExpanded` is two-way. Set it to `True` to start open, or bind it to a view model property.
 
-```xml
-<arc:ExpandableCard Header="Deploy failed"
-                    Description="api-gateway · 2 minutes ago"
-                    IsExpanded="True">
-    <TextBlock Text="Health check on /ready timed out after 30s." TextWrapping="Wrap" />
-</arc:ExpandableCard>
-```
+<Demo name="OpenByDefault" />
 
 ### Updating the summary
 

@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RidgelineDistributionsByMonthDemo">
+    <StackPanel Spacing="16">
+        <arc:Ridgeline x:Name="Chart"
+                       Label="Daily highs in Zurich"
+                       Unit="°C"
+                       DomainMinimum="-5"
+                       DomainMaximum="35" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Zurich" Variant="Secondary" Click="OnZurichClick" />
+            <arc:Button Content="Lisbon" Variant="Secondary" Click="OnLisbonClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

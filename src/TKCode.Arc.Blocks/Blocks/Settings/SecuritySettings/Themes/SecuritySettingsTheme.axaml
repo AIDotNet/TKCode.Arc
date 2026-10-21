@@ -1,0 +1,363 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The password row: the SettingsRow template with its description in a BlurSwap, so "Last changed …" turns into
+        "Updated just now" in place. Part names match SettingsRow's, so its theme still styles the divider, the icon tile,
+        the control and the stacked layout.
+    -->
+    <ControlTemplate x:Key="SecuritySettingsPasswordRowTemplate" TargetType="arc:SettingsRow">
+        <Panel Background="{TemplateBinding Background}">
+            <Border Name="PART_Divider"
+                    Height="1"
+                    VerticalAlignment="Top"
+                    IsHitTestVisible="False"
+                    Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Grid Name="PART_Layout"
+                  Margin="{TemplateBinding Padding}"
+                  ColumnDefinitions="Auto,*,Auto"
+                  RowDefinitions="Auto,Auto">
+                <Border Name="PART_IconTile"
+                        IsVisible="False"
+                        VerticalAlignment="Center"
+                        Width="{arc:SettingsRowTokenResource IconTile}"
+                        Height="{arc:SettingsRowTokenResource IconTile}"
+                        CornerRadius="{arc:SettingsRowTokenResource IconTileRadius}"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                    <arc:ArcGlyph Data="{TemplateBinding Icon}"
+                                  Size="{arc:SettingsRowTokenResource IconGlyph}"
+                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Name="PART_Label"
+                            Grid.Column="1"
+                            Background="Transparent"
+                            VerticalAlignment="Center"
+                            Spacing="{arc:SettingsRowTokenResource TextGap}">
+                    <TextBlock Name="PART_Header"
+                               Text="{TemplateBinding Header}"
+                               IsVisible="{TemplateBinding Header, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="{arc:SettingsRowTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <arc:ArcContentSwap Name="PART_DescriptionSwap"
+                                        Mode="BlurSwap"
+                                        HorizontalContentAlignment="Left"
+                                        Content="{TemplateBinding Description}"
+                                        IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                        AutomationProperties.LiveSetting="Polite"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                        <arc:ArcContentSwap.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{Binding}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="{arc:SettingsRowTokenResource BodyLineHeight}" />
+                            </DataTemplate>
+                        </arc:ArcContentSwap.ContentTemplate>
+                    </arc:ArcContentSwap>
+                </StackPanel>
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Grid.Column="2"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Right"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Grid>
+        </Panel>
+    </ControlTemplate>
+
+    <!--
+        Security settings: four cards stacked 16 apart. Summary (shield tile, title, count, a four-segment meter, one
+        segment per safeguard), password (row + a form that springs open under it), two-step verification (four rows)
+        and signed-in sessions (rows built in code, each in a PresenceHost so it collapses as it leaves).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SecuritySettings}" TargetType="arc:SecuritySettings">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="CompactWidth" Value="{arc:SecuritySettingsTokenResource CompactThreshold}" />
+        <Setter Property="SessionRowStackWidth" Value="{arc:SecuritySettingsTokenResource InlineRowStackWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SecuritySettings">
+                <StackPanel Name="PART_Stack" Spacing="{arc:SecuritySettingsTokenResource GroupGap}">
+                    <StackPanel.Styles>
+                        <!--
+                            Session rows sit in PresenceHosts, so SettingsRow's own :nth-child(1) never matches them:
+                            the first host's row drops its hairline here instead.
+                        -->
+                        <Style Selector="arc|PresenceHost:nth-child(1) > arc|SettingsRow /template/ Border#PART_Divider">
+                            <Setter Property="IsVisible" Value="False" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <!-- 1. Summary -->
+                    <arc:SettingsGroup Name="PART_SummaryGroup">
+                        <Grid Name="PART_Summary" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                            <Border Name="PART_ShieldTile"
+                                    VerticalAlignment="Center"
+                                    Width="{arc:SecuritySettingsTokenResource ShieldTile}"
+                                    Height="{arc:SecuritySettingsTokenResource ShieldTile}"
+                                    CornerRadius="{arc:SecuritySettingsTokenResource ShieldTileRadius}"
+                                    Margin="{arc:SecuritySettingsTokenResource ShieldTileMargin}">
+                                <arc:ArcGlyph Name="PART_ShieldGlyph"
+                                              Size="{arc:SecuritySettingsTokenResource ShieldGlyph}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel Name="PART_SummaryText"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:SecuritySettingsTokenResource SummaryTextGap}">
+                                <arc:ArcContentSwap Name="PART_SummaryTitle"
+                                                    Mode="BlurSwap"
+                                                    HorizontalContentAlignment="Left"
+                                                    AutomationProperties.LiveSetting="Polite"
+                                                    AutomationProperties.HeadingLevel="2"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                    TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}">
+                                    <arc:ArcContentSwap.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                                        </DataTemplate>
+                                    </arc:ArcContentSwap.ContentTemplate>
+                                </arc:ArcContentSwap>
+                                <arc:ArcContentSwap Name="PART_SummaryCount"
+                                                    Mode="Roll"
+                                                    HorizontalContentAlignment="Left"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Meter"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:SecuritySettingsTokenResource MeterGap}">
+                                <Panel Classes="segment">
+                                    <Border Classes="segment-track" />
+                                    <Border Name="PART_SegmentPassword" Classes="segment-fill" />
+                                </Panel>
+                                <Panel Classes="segment">
+                                    <Border Classes="segment-track" />
+                                    <Border Name="PART_SegmentTwoStep" Classes="segment-fill" />
+                                </Panel>
+                                <Panel Classes="segment">
+                                    <Border Classes="segment-track" />
+                                    <Border Name="PART_SegmentPasskey" Classes="segment-fill" />
+                                </Panel>
+                                <Panel Classes="segment">
+                                    <Border Classes="segment-track" />
+                                    <Border Name="PART_SegmentRecovery" Classes="segment-fill" />
+                                </Panel>
+                            </StackPanel>
+                        </Grid>
+                    </arc:SettingsGroup>
+
+                    <!-- 2. Password -->
+                    <arc:SettingsGroup Name="PART_PasswordGroup">
+                        <arc:SettingsRow Name="PART_PasswordRow"
+                                         Icon="{x:Static arc:ArcIcons.Lock}"
+                                         Template="{StaticResource SecuritySettingsPasswordRowTemplate}">
+                            <arc:Button Name="PART_ChangePassword" Variant="Secondary" Size="Small" />
+                        </arc:SettingsRow>
+                        <arc:SpringSizeDecorator Name="PART_PasswordFormHost"
+                                                 Axis="Height"
+                                                 IsExpanded="False"
+                                                 CrossClipOverflow="12">
+                            <Border Name="PART_PasswordForm" IsVisible="False">
+                                <StackPanel Name="PART_PasswordFields" Spacing="{arc:SecuritySettingsTokenResource FormGap}">
+                                    <arc:PasswordField Name="PART_CurrentPassword" />
+                                    <arc:PasswordStrength Name="PART_NewPassword" />
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                Spacing="{arc:SecuritySettingsTokenResource FormActionsGap}">
+                                        <arc:Button Name="PART_CancelPassword" Variant="Ghost" Size="Small" />
+                                        <arc:Button Name="PART_UpdatePassword" Variant="Primary" Size="Small" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </arc:SpringSizeDecorator>
+                    </arc:SettingsGroup>
+
+                    <!-- 3. Two-step verification -->
+                    <arc:SettingsGroup Name="PART_TwoStepGroup">
+                        <arc:SettingsRow Name="PART_AuthenticatorRow"
+                                         Icon="{x:Static arc:ArcIcons.Smartphone}"
+                                         StackWidth="{arc:SecuritySettingsTokenResource InlineRowStackWidth}">
+                            <arc:Switch Name="PART_AuthenticatorSwitch" />
+                        </arc:SettingsRow>
+                        <arc:SettingsRow Name="PART_TextMessageRow"
+                                         Icon="{x:Static arc:ArcIcons.MessageSquare}"
+                                         StackWidth="{arc:SecuritySettingsTokenResource InlineRowStackWidth}">
+                            <arc:Switch Name="PART_TextMessageSwitch" />
+                        </arc:SettingsRow>
+                        <arc:SettingsRow Name="PART_PasskeysRow" Icon="{x:Static arc:ArcIcons.Fingerprint}">
+                            <arc:Button Name="PART_AddPasskey" Variant="Secondary" Size="Small" />
+                        </arc:SettingsRow>
+                        <arc:SettingsRow Name="PART_RecoveryRow" Icon="{x:Static arc:ArcIcons.Key}">
+                            <arc:Button Name="PART_RecoveryCodes" Variant="Secondary" Size="Small" />
+                        </arc:SettingsRow>
+                    </arc:SettingsGroup>
+
+                    <!-- 4. Sessions (rows, the empty note and the sign-out-others button are placed from code) -->
+                    <arc:SettingsGroup Name="PART_SessionsGroup" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Summary: the tone follows the score (4 success, 2–3 accent, 0–1 warning). -->
+        <Style Selector="^ /template/ Border#PART_ShieldTile">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ShieldGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <!-- Meter: a track per safeguard and a fill that shows while it is on. -->
+        <Style Selector="^ /template/ Grid#PART_Summary">
+            <Setter Property="Margin" Value="{arc:SecuritySettingsTokenResource SummaryInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Meter">
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Margin" Value="{arc:SecuritySettingsTokenResource MeterMargin}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^ /template/ Panel.segment">
+            <Setter Property="Width" Value="{arc:SecuritySettingsTokenResource MeterSegmentWidth}" />
+            <Setter Property="Height" Value="{arc:SecuritySettingsTokenResource MeterSegmentHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Border.segment-track">
+            <Setter Property="CornerRadius" Value="{arc:SecuritySettingsTokenResource MeterSegmentRadius}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        </Style>
+        <Style Selector="^ /template/ Border.segment-fill">
+            <Setter Property="CornerRadius" Value="{arc:SecuritySettingsTokenResource MeterSegmentRadius}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:password-on /template/ Border#PART_SegmentPassword">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:two-step-on /template/ Border#PART_SegmentTwoStep">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:passkey-on /template/ Border#PART_SegmentPasskey">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:recovery-on /template/ Border#PART_SegmentRecovery">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!-- Tones come after the base values so they win. -->
+        <Style Selector="^:tone-accent">
+            <Style Selector="^ /template/ Border#PART_ShieldTile">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_ShieldGlyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            </Style>
+            <Style Selector="^ /template/ Border.segment-fill">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            </Style>
+        </Style>
+        <Style Selector="^:tone-success">
+            <Style Selector="^ /template/ Border#PART_ShieldTile">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_ShieldGlyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+            <Style Selector="^ /template/ Border.segment-fill">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+
+        <!-- Password form: lined up with the row's text, full width once rows stack. -->
+        <Style Selector="^ /template/ Border#PART_PasswordForm">
+            <Setter Property="Padding" Value="{arc:SecuritySettingsTokenResource FormInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_PasswordFields">
+            <Setter Property="Width" Value="{arc:SecuritySettingsTokenResource FormMaxWidth}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:rows-stacked">
+            <Style Selector="^ /template/ Border#PART_PasswordForm">
+                <Setter Property="Padding" Value="{arc:SecuritySettingsTokenResource StackedFormInset}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_PasswordFields">
+                <Setter Property="Width" Value="NaN" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+
+        <!-- Compact: the meter moves under the summary text. -->
+        <Style Selector="^:compact /template/ StackPanel#PART_Meter">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Margin" Value="{arc:SecuritySettingsTokenResource CompactMeterMargin}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_ShieldTile">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_ShieldTile">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_ShieldGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border.segment-fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ Border#PART_ShieldTile">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_ShieldGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border.segment-fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

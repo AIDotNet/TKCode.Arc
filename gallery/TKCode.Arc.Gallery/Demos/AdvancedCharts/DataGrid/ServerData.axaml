@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DataGridServerDataDemo">
+    <arc:DataGrid x:Name="OrdersGrid"
+                  Label="Orders"
+                  MaxViewportHeight="420"
+                  ExportFormats="Csv">
+        <arc:DataGridColumn Key="order" Header="Order" Width="120" />
+        <arc:DataGridColumn Key="customer" Header="Customer" Width="170" />
+        <arc:DataGridColumn Key="status" Header="Status" Type="Select" Width="130" />
+        <arc:DataGridColumn Key="placed" Header="Placed" Type="Date" Width="130" />
+        <arc:DataGridColumn Key="amount" Header="Amount" Type="Currency" Decimals="2" Width="130" />
+    </arc:DataGrid>
+</UserControl>

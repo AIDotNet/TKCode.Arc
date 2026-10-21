@@ -91,6 +91,7 @@ public class ButtonGroup : ItemsControl
     public static readonly StyledProperty<string> LabelProperty =
         AvaloniaProperty.Register<ButtonGroup, string>(nameof(Label), "Actions");
 
+    /// <summary>Outline (default) for a bordered surface, or Solid for the main action of a screen (use at most once).</summary>
     public static readonly StyledProperty<ButtonGroupVariant> VariantProperty =
         AvaloniaProperty.Register<ButtonGroup, ButtonGroupVariant>(nameof(Variant));
 
@@ -98,6 +99,7 @@ public class ButtonGroup : ItemsControl
     public static readonly StyledProperty<ControlSize> SizeProperty =
         AvaloniaProperty.Register<ButtonGroup, ControlSize>(nameof(Size), ControlSize.Medium);
 
+    /// <summary>Lays the segments out in a row (Horizontal, default) or a column (Vertical).</summary>
     public static readonly StyledProperty<Orientation> OrientationProperty =
         AvaloniaProperty.Register<ButtonGroup, Orientation>(nameof(Orientation), Orientation.Horizontal);
 
@@ -130,10 +132,12 @@ public class ButtonGroup : ItemsControl
 
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
+    /// <inheritdoc cref="VariantProperty"/>
     public ButtonGroupVariant Variant { get => GetValue(VariantProperty); set => SetValue(VariantProperty, value); }
 
     public ControlSize Size { get => GetValue(SizeProperty); set => SetValue(SizeProperty, value); }
 
+    /// <inheritdoc cref="OrientationProperty"/>
     public Orientation Orientation { get => GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
 
     public bool IsLabelCollapseEnabled { get => GetValue(IsLabelCollapseEnabledProperty); set => SetValue(IsLabelCollapseEnabledProperty, value); }

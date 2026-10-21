@@ -12,6 +12,7 @@ public sealed class GalleryWindow : AtomWindow
     public GalleryWindow()
     {
         Title = "TKCode.Arc Gallery";
+        Icon = GalleryBrand.CreateWindowIcon();
         Width = 1280;
         Height = 860;
         MinWidth = 900;

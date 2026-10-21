@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AnnouncementBarInvertedDemo">
+    <Border CornerRadius="18"
+            BorderThickness="1"
+            ClipToBounds="True"
+            Background="{arc:ArcDesignTokenResource Background}"
+            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+        <StackPanel>
+            <arc:AnnouncementBar x:Name="Bar" Tone="Inverted">
+                <arc:AnnouncementBar.Messages>
+                    <arc:Announcement Id="maintenance" Message="Scheduled maintenance tonight.">
+                        <arc:Announcement.Countdown>
+                            <arc:AnnouncementCountdown Label="Starts in" />
+                        </arc:Announcement.Countdown>
+                    </arc:Announcement>
+                </arc:AnnouncementBar.Messages>
+            </arc:AnnouncementBar>
+            <TextBlock Text="Page content" Margin="20,24" Opacity="0.6" />
+        </StackPanel>
+    </Border>
+</UserControl>

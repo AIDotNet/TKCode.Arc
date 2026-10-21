@@ -6,7 +6,6 @@ public static partial class GalleryPages
 {
     static partial void RegisterOverlays()
     {
-        Register("Tooltip", TooltipPage.Create);
         RegisterOverlaysA();
         RegisterOverlaysB();
         RegisterOverlaysC();

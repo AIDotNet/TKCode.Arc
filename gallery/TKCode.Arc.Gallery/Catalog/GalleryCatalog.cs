@@ -1,10 +1,12 @@
 namespace TKCode.Arc.Gallery.Catalog;
 
 /// <param name="IsArc">True for Arc components (uiarc.dev originals); false for TKCode extras such as Markdown.</param>
-public sealed record GalleryEntry(string ClassName, string Title, string Slug, int Phase, string Description, bool IsArc = true)
+/// <param name="ArcPath">The page under uiarc.dev/components/ when it is not the slug (blocks live under <c>blocks/</c>).</param>
+public sealed record GalleryEntry(string ClassName, string Title, string Slug, int Phase, string Description, bool IsArc = true,
+    string? ArcPath = null)
 {
     /// <summary>The Arc original on uiarc.dev; null for extras, which have none.</summary>
-    public string? ArcUrl => IsArc ? $"https://uiarc.dev/components/{Slug}" : null;
+    public string? ArcUrl => IsArc ? $"https://uiarc.dev/components/{ArcPath ?? Slug}" : null;
 }
 
 /// <param name="IsArc">True for Arc's sidebar groups; false for the TKCode extras group.</param>
@@ -24,6 +26,12 @@ public static partial class GalleryCatalog
     /// </summary>
     public static readonly GalleryCategory[] Extras =
     [
+        new("AdvancedCharts", "Advanced charts", "高级图表",
+        [
+            new("DataGrid", "Data grid", "data-grid", 0,
+                "A spreadsheet grid with range selection, inline editing, a fill handle, clipboard, undo, sorting, filters, grouping, totals and export.",
+                IsArc: false),
+        ], IsArc: false),
         new("Content", "Extras", "扩展",
         [
             new("Markdown", "Markdown", "markdown", 0,
@@ -48,11 +56,15 @@ public static partial class GalleryCatalog
     ];
 
     /// <summary>
-    /// The Blocks group under Components, with its subgroups from the TKCode.Arc.Blocks catalog. Not part of the 110
-    /// Arc components (<see cref="Categories"/> / <see cref="Count"/>), and it holds no blocks yet.
+    /// The Blocks group under Components, with its subgroups and blocks from the TKCode.Arc.Blocks catalog. Not part of
+    /// the 110 Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
+    /// uiarc.dev page; original blocks have none.
     /// </summary>
     public static readonly GalleryCategory Blocks = new("Blocks", "Blocks", "区块", [],
-        Subcategories: BlockCatalog.Groups.Select(g => new GalleryCategory(g.Code, g.Title, g.ChineseTitle, [])).ToArray());
+        Subcategories: BlockCatalog.Groups.Select(g => new GalleryCategory(g.Code, g.Title, g.ChineseTitle,
+            BlockCatalog.Blocks.Where(b => b.Group == g.Code)
+                .Select(b => new GalleryEntry(b.ClassName, b.Title, b.Slug, 0, b.Description, IsArc: b.IsArcPort, ArcPath: $"blocks/{b.Slug}"))
+                .ToArray())).ToArray());
 
     /// <summary>
     /// The Docs section of the sidebar: the gallery's own documentation pages, listed first, as on uiarc.dev. Not Arc
@@ -68,8 +80,13 @@ public static partial class GalleryCatalog
         new("DocsChangelog", "Changelog", "changelog", 0, "Release notes.", IsArc: false),
     ], IsArc: false);
 
-    /// <summary>The Components section of the sidebar: Arc's groups, then the extras.</summary>
-    public static IEnumerable<GalleryCategory> AllCategories => Categories.Concat(Extras);
+    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 110 Arc components.</summary>
+    public static GalleryCategory AdvancedCharts => Extras[0];
+
+    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts after Charts, then the other extras.</summary>
+    public static IEnumerable<GalleryCategory> AllCategories =>
+        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts } : new[] { c })
+                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts)));
 
     /// <summary>Every entry the gallery lists: the Docs, Components and Blocks sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>

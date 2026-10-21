@@ -1,8 +1,10 @@
 ---
 title: 下拉選擇
 summary: 精簡的選擇欄位，選單支援鍵盤操作。
-source-hash: 8f3c194c2ee3
+source-hash: b1afd8c9839f
 ---
+
+<Demo name="Field" />
 
 ## 何時使用
 
@@ -63,17 +65,7 @@ sort.SelectionChanged += (_, _) => Console.WriteLine(sort.SelectedValue);
 
 對於不是 `SelectOption` 的資料項目，請設定 `TextSelector` 與 `ValueSelector`。與 `DisplayMemberBinding` 不同，它們對 AOT 友善。
 
-```csharp
-var zones = new Select
-{
-    Label = "時區",
-    Placeholder = "選擇時區",
-    Width = 300,
-    ItemsSource = cities,
-    TextSelector = item => item is City c ? $"{c.Name} ({c.Offset})" : null,
-    ValueSelector = item => item is City c ? c.Id : null
-};
-```
+<Demo name="Selectors" />
 
 ### 預留位置文字與說明文字
 
@@ -86,6 +78,10 @@ var zones = new Select
 ### 長清單與停用狀態
 
 選單的高度上限為 `MaxDropDownHeight`（預設 320），超出的部分可以捲動。只會繪製可見的列，因此包含數千個項目的清單仍能保持流暢回應。停用的 `Select` 會忽略輸入。
+
+<Demo name="LongLists" />
+
+<Demo name="Disabled" />
 
 ```xml
 <arc:Select Label="建置編號" ItemsSource="{Binding Builds}" MaxDropDownHeight="240" />

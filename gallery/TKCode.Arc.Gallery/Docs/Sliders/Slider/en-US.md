@@ -3,6 +3,8 @@ title: Slider
 summary: Pick a value or a range on a track that follows your finger.
 ---
 
+<Demo name="SingleValue" />
+
 ## When to use
 
 - Approximate values where position matters more than the exact number, such as volume, opacity or a price range.
@@ -50,6 +52,8 @@ Basic usage is a single value. `Value` is the position on the track, and `Minimu
 Set `IsRange` to show two thumbs. Read and write the ends with `LowerValue` and `UpperValue`, and keep the thumbs
 apart with `MinStepsBetweenThumbs`. `ValueFormatter` formats the readout, the bubble and the spoken value.
 
+<Demo name="Range" />
+
 ```xml
 <arc:Slider Label="Price"
             IsRange="True"
@@ -69,21 +73,7 @@ apart with `MinStepsBetweenThumbs`. `ValueFormatter` formats the readout, the bu
 `SmallChange` is the step the value snaps to. `Marks` adds ticks on the track. A mark with a label prints the label
 under the track, and clicking the label moves the nearest thumb there.
 
-```csharp
-var speed = new Slider
-{
-    Label = "Playback speed",
-    Minimum = 0.5,
-    Maximum = 2,
-    SmallChange = 0.25,
-    Value = 1,
-    ValueFormatter = v => $"{v:0.##}×"
-};
-speed.Marks.Add(new SliderMark(0.5, "0.5×"));
-speed.Marks.Add(new SliderMark(1, "1×"));
-speed.Marks.Add(new SliderMark(2, "2×"));
-speed.Marks.Add(1.5);
-```
+<Demo name="StepsAndMarks" />
 
 ### Events
 
@@ -95,6 +85,12 @@ changed by keys.
 price.ValueCommitted += (_, e) => SavePriceFilter(e.LowerValue, e.UpperValue);
 price.RangeChanged += (_, e) => committed.Text = $"${e.LowerValue:N0} – ${e.UpperValue:N0}";
 ```
+
+### Disabled
+
+A disabled slider leaves the tab order.
+
+<Demo name="Disabled" />
 
 ## API reference
 

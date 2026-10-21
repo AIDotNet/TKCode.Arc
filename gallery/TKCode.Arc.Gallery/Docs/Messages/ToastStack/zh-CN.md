@@ -1,8 +1,10 @@
 ---
 title: 轻提示堆叠
 summary: 将简短结果堆叠在边缘，直到你需要查看时再展开。
-source-hash: 60b234c3a4b4
+source-hash: 5220d94576ed
 ---
+
+<Demo name="Stack" />
 
 ## 何时使用
 
@@ -88,6 +90,8 @@ stack.Show(new ToastOptions
 ### 位置与数量限制
 
 `Position` 将堆叠移到左下、居中或右侧边缘。`VisibleToasts` 设置同时显示的轻提示数量，`Limit` 则在超过数量时丢弃最早的轻提示。
+
+<Demo name="Position" />
 
 ```xml
 <arc:ToastStack Position="BottomCenter" VisibleToasts="3" Limit="12" />

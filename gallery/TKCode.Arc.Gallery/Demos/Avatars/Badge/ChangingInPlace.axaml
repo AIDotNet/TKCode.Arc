@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BadgeChangingInPlaceDemo">
+    <StackPanel Spacing="16">
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Badge x:Name="Deploy" Tone="Info" Content="Queued">
+                <arc:Badge.Icon>
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Clock}" Size="12" />
+                </arc:Badge.Icon>
+            </arc:Badge>
+            <arc:Badge x:Name="Comments" Content="3" />
+        </WrapPanel>
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Next state" Variant="Secondary" Click="OnNextStateClick" />
+            <arc:Button Content="Add comment" Variant="Secondary" Click="OnAddCommentClick" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

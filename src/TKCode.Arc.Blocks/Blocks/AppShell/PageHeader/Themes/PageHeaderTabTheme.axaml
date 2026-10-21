@@ -1,0 +1,101 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- Ported from Arc's free page-header block (.tab, .count; MIT, Copyright (c) 2026 Elia Kuratli). -->
+    <ControlTheme x:Key="{x:Type arc:PageHeaderTab}" TargetType="arc:PageHeaderTab">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PageHeaderTab">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            IsHitTestVisible="False"
+                            Margin="{arc:PageHeaderTabTokenResource HoverInset}"
+                            CornerRadius="{arc:PageHeaderTabTokenResource HoverRadius}"
+                            Background="{arc:PageHeaderTabTokenResource HoverFill}" />
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="{TemplateBinding Padding}"
+                                Spacing="{arc:PageHeaderTabTokenResource CountGap}">
+                        <ContentPresenter Name="PART_HeaderPresenter"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                        <arc:RollingDigits Name="PART_Count"
+                                           IsVisible="False"
+                                           VerticalAlignment="Center"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:PageHeaderTabTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:PageHeaderTabTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Height" Value="{arc:PageHeaderTabTokenResource TabHeight}" />
+        <Setter Property="Padding" Value="{arc:PageHeaderTabTokenResource TabPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|RollingDigits#PART_Count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:has-count /template/ arc|RollingDigits#PART_Count">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|RollingDigits#PART_Count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:PageHeaderTabTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Arc drops these transitions under reduced motion. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Hover">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|RollingDigits#PART_Count">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

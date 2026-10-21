@@ -6,18 +6,16 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 
 namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
-/// The top bar of uiarc.dev: brand mark, the section tab, a search shortcut, the Appearance popover and the
+/// The top bar of uiarc.dev: brand logo, the section tab, a search shortcut, the Appearance popover and the
 /// light / dark toggle.
 /// </summary>
 public sealed class GalleryTopBar : Border
 {
-    // Three nested arches: the Arc mark, drawn as 24x24 stroke geometry like every other glyph.
-    private static readonly Geometry s_mark = ArcIcons.Parse("M3 21V12a9 9 0 0 1 18 0v9M7.5 21v-9a4.5 4.5 0 0 1 9 0v9M12 21v-9");
-
     private readonly GalleryTheme _theme;
     private readonly Button _themeToggle;
     private readonly Button _appearance;
@@ -72,8 +70,9 @@ public sealed class GalleryTopBar : Border
 
     private static Control BuildBrand()
     {
-        var mark = new ArcGlyph { Data = s_mark, Size = 28, StrokeThickness = 2 };
-        ArcTokens.Bind(mark, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.Foreground);
+        // The logo carries its own light rounded tile, so it reads the same on the light and the dark bar.
+        var mark = new Image { Source = GalleryBrand.CreateLogo(), Width = 30, Height = 30 };
+        RenderOptions.SetBitmapInterpolationMode(mark, BitmapInterpolationMode.HighQuality);
         var name = GalleryUi.Text("Arc", ArcDesignTokenKind.Foreground, 20, FontWeight.SemiBold);
         var tag = GalleryUi.Chip(GalleryUi.Text("Gallery", ArcDesignTokenKind.TextSecondary, 11, FontWeight.Medium), padding: new Thickness(8, 2));
         var brand = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };

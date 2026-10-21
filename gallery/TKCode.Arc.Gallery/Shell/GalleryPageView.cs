@@ -11,57 +11,105 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.VisualTree;
+using StreamMark.Avalonia;
+using StreamMark.Avalonia.Rendering;
+using StreamMark.Core.Streaming;
 
 namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
-/// One component page, laid out like a uiarc.dev docs page: breadcrumb, title, summary, usage and status, the
-/// Preview and Code tabs, the examples, and a sticky "On this page" list that follows the scroll position. Code shows
-/// the component's Markdown page (<see cref="GalleryDocs"/>) in the current AtomUI language and follows language
-/// changes.
+/// One component page, laid out like a uiarc.dev docs page: breadcrumb, title, summary, install command and status, the
+/// page content, and a sticky "On this page" list that follows the scroll position. The content is the component's docs
+/// page (<see cref="GalleryDocs"/>) with its live demos (<see cref="GalleryDemoView"/>): "On this page" lists the page's
+/// sections and "Copy page" copies it, in the current AtomUI language. A component without demos (a planned one) shows a
+/// plain body instead, such as its placeholder.
 /// </summary>
 public sealed class GalleryPageView : Grid
 {
     private const double MainWidth = 780;
-    // Docs tables need more room than the examples; Arc's docs column is about 890 wide.
-    private const double CodeWidth = 880;
+    // Docs tables need more room than a plain body; Arc's docs column is about 890 wide.
+    private const double DocsWidth = 880;
     private const double TocWidth = 196;
     private const double TocMinimumPageWidth = 960;
+    // StreamMark shrinks every column of a table that is too wide, so short types and defaults break mid-word: a docs
+    // page keeps its API tables at least this wide and drops "On this page" first.
+    private const double DocsMinimumWidth = 840;
 
     private readonly GalleryEntry _entry;
     private readonly ScrollViewer _scroll = new() { HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled };
     private readonly Border _padding = new();
-    private readonly List<GallerySection> _sections;
-    private readonly GalleryToc? _toc;
-    private readonly Control _body;
     private readonly Panel _content = new();
     private readonly ColumnDefinition _mainColumn = new(GridLength.Star) { MaxWidth = MainWidth };
-    private readonly PageTab _previewTab = new(GalleryShellLangResourceKind.Preview, ArcIcons.Eye);
-    private readonly PageTab _codeTab = new(GalleryShellLangResourceKind.Code, GalleryIcons.Code);
-    private readonly TextBlock _live = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 13);
-    private readonly CopyButton _copyMarkdown = new() { Variant = CopyButtonVariant.Plain, IsVisible = false };
     private readonly TextBlock _summary = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 16);
-    private Markdown? _code;
+    private readonly List<Control> _anchors = new();
+    private GalleryToc? _toc;
     private MotionValue<double>? _scrollY;
 
+    // The docs page.
+    private readonly Markdown? _docs;
+    private readonly CopyButton? _copyPage;
+    private MarkdownView? _docsView;
+    private DocumentSnapshot? _outlineSnapshot;
+
+    /// <summary>
+    /// A page without demos: <paramref name="body"/> (a planned component's placeholder, or examples registered with
+    /// <c>GalleryPages.Register</c>) under the page header; its <see cref="GallerySection"/>s are "On this page".
+    /// </summary>
     public GalleryPageView(GalleryEntry entry, Control body, bool implemented)
     {
         _entry = entry;
-        _body = body;
-        _sections = body.GetLogicalDescendants().OfType<GallerySection>().ToList();
+        _content.Children.Add(body);
+        Build(implemented);
 
+        var sections = body.GetLogicalDescendants().OfType<GallerySection>().ToList();
+        SetSections(sections.Select(s => s.Title).ToList(), sections.Cast<Control>().ToList());
+        // The summary comes from the docs page when there is one, in the current language.
+        RefreshLanguage();
+        GalleryText.Track(this, RefreshLanguage);
+    }
+
+    /// <summary>The docs page: the component's Markdown page with its live demos is the whole page.</summary>
+    public GalleryPageView(GalleryEntry entry)
+    {
+        _entry = entry;
+        _docs = new Markdown { Services = GalleryDemoPlugin.Services };
+        _copyPage = new CopyButton { Variant = CopyButtonVariant.Outline };
+        GalleryText.Bind(_copyPage, CopyButton.LabelProperty, GalleryShellLangResourceKind.CopyPage);
+        GalleryText.Bind(_copyPage, CopyButton.CopiedLabelProperty, GalleryShellLangResourceKind.Copied);
+        GalleryText.Bind(_copyPage, CopyButton.FailedLabelProperty, GalleryShellLangResourceKind.Failed);
+        _content.Children.Add(_docs);
+        _mainColumn.MaxWidth = DocsWidth;
+        Build(implemented: true);
+
+        // StreamMark lays the document out a frame after the text is set, and again after every language change: the
+        // section list is rebuilt whenever a new snapshot has been laid out.
+        _docs.LayoutUpdated += (_, _) => SyncOutline();
+        RefreshLanguage();
+        GalleryText.Track(this, RefreshLanguage);
+    }
+
+    /// <summary>Whether this is a docs page with live demos (otherwise it shows a plain body).</summary>
+    public bool IsDocsPage => _docs is not null;
+
+    /// <summary>The docs page's Markdown (null on a page with a plain body).</summary>
+    public Markdown? Docs => _docs;
+
+    /// <summary>The titles "On this page" lists.</summary>
+    public IReadOnlyList<string> SectionTitles { get; private set; } = [];
+
+    private void Build(bool implemented)
+    {
         var column = new StackPanel();
-        column.Children.Add(BuildBreadcrumb(entry));
-        column.Children.Add(Spaced(GalleryUi.Text(entry.Title, ArcDesignTokenKind.Foreground, 44), top: 14));
+        column.Children.Add(BuildBreadcrumb(_entry));
+        column.Children.Add(Spaced(GalleryUi.Text(_entry.Title, ArcDesignTokenKind.Foreground, 44), top: 14));
         _summary.MaxWidth = 640;
         _summary.HorizontalAlignment = HorizontalAlignment.Left;
         column.Children.Add(Spaced(_summary, top: 12));
-        column.Children.Add(Spaced(BuildUsage(entry, implemented), top: 24));
-        column.Children.Add(Spaced(BuildTabs(), top: 40));
-        _content.Children.Add(body);
-        column.Children.Add(Spaced(_content, top: 32));
+        column.Children.Add(Spaced(BuildUsage(_entry, implemented), top: 24));
+        column.Children.Add(Spaced(_content, top: 28));
 
-        // The main column fills the page up to MainWidth and stays left; a hugging panel would resize with its content.
+        // The main column fills the page up to its maximum width and stays left; a hugging panel would resize with its content.
         var fixedWidth = new Grid { ColumnDefinitions = { _mainColumn, new ColumnDefinition(GridLength.Auto) } };
         fixedWidth.Children.Add(column);
 
@@ -70,28 +118,8 @@ public sealed class GalleryPageView : Grid
         _scroll.Content = _padding;
         Children.Add(_scroll);
 
-        if (_sections.Count >= 2)
-        {
-            _toc = new GalleryToc(_sections.Select(s => s.Title).ToList(), ScrollToSection, () => ScrollTo(0), entry.IsArc ? OpenOriginal : null)
-            {
-                Width = TocWidth,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, 36, 40, 0),
-                IsVisible = false
-            };
-            Children.Add(_toc);
-            _scroll.ScrollChanged += (_, _) => UpdateActiveSection();
-            _scroll.AddHandler(PointerWheelChangedEvent, (_, _) => StopScrollAnimation(), Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
-        }
-
-        GalleryText.Bind(_live, TextBlock.TextProperty, GalleryShellLangResourceKind.LivePreview);
-        GalleryText.Bind(_copyMarkdown, CopyButton.LabelProperty, GalleryShellLangResourceKind.CopyMarkdown);
-        GalleryText.Bind(_copyMarkdown, CopyButton.CopiedLabelProperty, GalleryShellLangResourceKind.Copied);
-        GalleryText.Bind(_copyMarkdown, CopyButton.FailedLabelProperty, GalleryShellLangResourceKind.Failed);
-        // The summary and the Code tab are the page text that comes from the docs, in the current language.
-        RefreshLanguage();
-        GalleryText.Track(this, RefreshLanguage);
+        _scroll.ScrollChanged += (_, _) => UpdateActiveSection();
+        _scroll.AddHandler(PointerWheelChangedEvent, (_, _) => StopScrollAnimation(), Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -103,10 +131,37 @@ public sealed class GalleryPageView : Grid
         }
     }
 
+    /// <summary>Replaces the "On this page" list: one row per title, each scrolling to the top of its anchor.</summary>
+    private void SetSections(IReadOnlyList<string> titles, IReadOnlyList<Control> anchors)
+    {
+        if (_toc is not null)
+        {
+            Children.Remove(_toc);
+            _toc = null;
+        }
+        SectionTitles = titles;
+        _anchors.Clear();
+        _anchors.AddRange(anchors);
+        if (titles.Count >= 2)
+        {
+            _toc = new GalleryToc(titles, ScrollToSection, () => ScrollTo(0), _entry.IsArc ? OpenOriginal : null)
+            {
+                Width = TocWidth,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 36, 40, 0),
+                IsVisible = false
+            };
+            Children.Add(_toc);
+        }
+        UpdateToc();
+        UpdateActiveSection();
+    }
+
     private void UpdateToc()
     {
-        // The list follows the examples, so it belongs to the Preview tab.
-        var visible = _toc is not null && !IsShowingCode && Bounds.Width >= TocMinimumPageWidth;
+        var minimum = IsDocsPage ? 56 + DocsMinimumWidth + 24 + TocWidth + 56 : TocMinimumPageWidth;
+        var visible = _toc is not null && Bounds.Width >= minimum;
         if (_toc is not null && _toc.IsVisible != visible)
         {
             _toc.IsVisible = visible;
@@ -137,12 +192,15 @@ public sealed class GalleryPageView : Grid
         var left = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 12, LineSpacing = 12 };
         if (implemented)
         {
-            left.Children.Add(BuildUsagePill($"<arc:{entry.ClassName} />"));
+            left.Children.Add(BuildInstallCommand($"dotnet add package {GalleryDocs.PackageOf(entry.ClassName) ?? "TKCode.Arc"} --prerelease"));
         }
         left.Children.Add(BuildStatus(entry, implemented));
 
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-        grid.Children.Add(left);
+        var right = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Top };
+        if (_copyPage is not null)
+        {
+            right.Children.Add(_copyPage);
+        }
         // Extras have no Arc original to link to.
         if (entry.IsArc)
         {
@@ -154,36 +212,42 @@ public sealed class GalleryPageView : Grid
                 IsPressScaleEnabled = false
             };
             original.Click += (_, _) => OpenOriginal();
-            Grid.SetColumn(original, 1);
-            original.VerticalAlignment = VerticalAlignment.Top;
-            grid.Children.Add(original);
+            right.Children.Add(original);
         }
+
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+        Grid.SetColumn(right, 1);
+        grid.Children.Add(left);
+        grid.Children.Add(right);
         return grid;
     }
 
-    /// <summary>The Arc "$ pnpm dlx …" install pill; here it is the tag to put in AXAML, with a copy button.</summary>
-    private static Control BuildUsagePill(string markup)
+    /// <summary>The install command box, like Arc's "$ npx shadcn add …": the NuGet package the component ships in.</summary>
+    private static Control BuildInstallCommand(string command)
     {
-        var copy = new CopyButton { Value = markup, IsIconOnly = true, Variant = CopyButtonVariant.Plain };
-        GalleryText.Bind(copy, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.CopyMarkup);
-        var text = GalleryUi.Mono(markup, ArcDesignTokenKind.TextSecondary, 13);
-        text.Margin = new Thickness(0, 0, 4, 0);
-        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
-        row.Children.Add(GalleryUi.Mono("$", ArcDesignTokenKind.TextMuted, 13));
+        var copy = new CopyButton { Value = command, IsIconOnly = true, Variant = CopyButtonVariant.Plain, VerticalAlignment = VerticalAlignment.Center };
+        GalleryText.Bind(copy, Avalonia.Automation.AutomationProperties.NameProperty, GalleryShellLangResourceKind.CopyCommand);
+        var prompt = GalleryUi.Mono("$", ArcDesignTokenKind.TextMuted, 13);
+        var text = GalleryUi.Mono(command, ArcDesignTokenKind.TextSecondary, 13);
+        prompt.VerticalAlignment = VerticalAlignment.Center;
+        text.VerticalAlignment = VerticalAlignment.Center;
+        text.Margin = new Thickness(0, 0, 2, 0);
+        var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
+        row.Children.Add(prompt);
         row.Children.Add(text);
         row.Children.Add(copy);
 
-        var pill = new Border
+        var box = new Border
         {
             MinHeight = 36,
-            Padding = new Thickness(14, 0, 3, 0),
-            CornerRadius = new CornerRadius(999),
+            Padding = new Thickness(12, 0, 2, 0),
+            CornerRadius = new CornerRadius(10),
             BorderThickness = new Thickness(1),
             Child = row
         };
-        ArcTokens.Bind(pill, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
-        ArcTokens.Bind(pill, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
-        return pill;
+        ArcTokens.Bind(box, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
+        ArcTokens.Bind(box, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
+        return box;
     }
 
     private static Control BuildStatus(GalleryEntry entry, bool implemented)
@@ -219,128 +283,18 @@ public sealed class GalleryPageView : Grid
         return row;
     }
 
-    /// <summary>Preview is the live page; Code is the component's Markdown page, unavailable until one is written.</summary>
-    private Control BuildTabs()
-    {
-        _previewTab.IsActive = true;
-        _previewTab.Click += () => ShowCode(false);
-        _codeTab.Click += () => ShowCode(true);
-        if (!GalleryDocs.Has(_entry.ClassName))
-        {
-            _codeTab.IsAvailable = false;
-            GalleryText.Bind(_codeTab, Tooltip.TipProperty, GalleryShellLangResourceKind.NoDocsYet);
-        }
-        var tabs = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 24 };
-        tabs.Children.Add(_previewTab);
-        tabs.Children.Add(_codeTab);
-
-        _live.VerticalAlignment = VerticalAlignment.Center;
-        _copyMarkdown.VerticalAlignment = VerticalAlignment.Center;
-        var actions = new Panel();
-        actions.Children.Add(_live);
-        actions.Children.Add(_copyMarkdown);
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto") };
-        Grid.SetColumn(actions, 2);
-        grid.Children.Add(tabs);
-        grid.Children.Add(actions);
-
-        var line = new Border { BorderThickness = new Thickness(0, 0, 0, 1), Child = grid };
-        ArcTokens.Bind(line, Border.BorderBrushProperty, ArcDesignTokenKind.BorderSubtle);
-        return line;
-    }
-
-    /// <summary>Whether the Code tab is showing.</summary>
-    public bool IsShowingCode => _codeTab.IsActive;
-
-    /// <summary>Switches between the examples and the docs page (Code is ignored when there is no page).</summary>
-    public void ShowCode(bool code)
-    {
-        if (code == IsShowingCode || (code && !GalleryDocs.Has(_entry.ClassName)))
-        {
-            return;
-        }
-        if (code && _code is null)
-        {
-            _code = new Markdown();
-            _content.Children.Add(_code);
-            RefreshLanguage();
-        }
-        _previewTab.IsActive = !code;
-        _codeTab.IsActive = code;
-        _body.IsVisible = !code;
-        if (_code is not null)
-        {
-            _code.IsVisible = code;
-        }
-        _live.IsVisible = !code;
-        _copyMarkdown.IsVisible = code;
-        _mainColumn.MaxWidth = code ? CodeWidth : MainWidth;
-        UpdateToc();
-    }
-
     /// <summary>
-    /// Shows the summary and the Code tab in the current AtomUI language. A page that is not translated falls back to
+    /// Shows the summary and the docs page in the current AtomUI language. A page that is not translated falls back to
     /// en-US by itself, and a component without a docs page keeps its catalog description.
     /// </summary>
     private void RefreshLanguage()
     {
         var language = GalleryText.CurrentLanguage;
         _summary.Text = GalleryDocs.Summary(_entry.ClassName, language) ?? _entry.Description;
-        if (_code is not null && GalleryDocs.Get(_entry.ClassName, language) is { } doc && _code.Text != doc.Markdown)
+        if (_docs is not null && GalleryDocs.Get(_entry.ClassName, language) is { } doc && _docs.Text != doc.Markdown)
         {
-            _code.Text = doc.Markdown;
-            _copyMarkdown.Value = doc.Markdown;
-        }
-    }
-
-    /// <summary>A page tab: a glyph and a label over a 2px underline that marks the active tab.</summary>
-    private sealed class PageTab : Border
-    {
-        private readonly GalleryNavRow _row;
-        private IDisposable? _underline;
-
-        public PageTab(GalleryShellLangResourceKind label, Geometry glyph)
-        {
-            var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
-            GalleryText.Bind(text, TextBlock.TextProperty, label);
-            var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
-            content.Children.Add(new ArcGlyph { Data = glyph, Size = 16 });
-            content.Children.Add(text);
-            _row = new GalleryNavRow(content, fontSize: 14, height: 0, padding: new Thickness(0, 12), radius: 8,
-                weight: FontWeight.Medium, rest: ArcDesignTokenKind.TextMuted);
-            GalleryText.Bind(_row, Avalonia.Automation.AutomationProperties.NameProperty, label);
-            _row.Click += () => Click?.Invoke();
-            Margin = new Thickness(0, 0, 0, -1);
-            BorderThickness = new Thickness(0, 0, 0, 2);
-            Child = _row;
-        }
-
-        public event Action? Click;
-
-        public bool IsActive
-        {
-            get => _row.IsSelected;
-            set
-            {
-                _row.IsSelected = value;
-                _underline?.Dispose();
-                _underline = value ? ArcTokens.Bind(this, BorderBrushProperty, ArcDesignTokenKind.Foreground) : null;
-            }
-        }
-
-        /// <summary>
-        /// An unavailable tab cannot be focused or clicked. It is dimmed and shows the default cursor, and it stays
-        /// hoverable (the tooltip sits on the tab itself, which remains enabled) so the tooltip can explain.
-        /// </summary>
-        public bool IsAvailable
-        {
-            get => _row.IsEnabled;
-            set
-            {
-                _row.IsEnabled = value;
-                _row.Cursor = value ? new Cursor(StandardCursorType.Hand) : Cursor.Default;
-                Opacity = value ? 1 : 0.45;
-            }
+            _docs.Text = doc.Markdown;
+            _copyPage!.Value = doc.CopyMarkdown;
         }
     }
 
@@ -360,17 +314,57 @@ public sealed class GalleryPageView : Grid
 
     #endregion
 
+    #region Docs outline
+
+    /// <summary>
+    /// Lists the page's preview (the demo above the first section) and its sections ("## " headings) in "On this page",
+    /// once StreamMark has laid out a new snapshot of the document.
+    /// </summary>
+    private void SyncOutline()
+    {
+        _docsView ??= _docs?.GetVisualDescendants().OfType<MarkdownView>().FirstOrDefault();
+        if (_docsView?.Snapshot is not { } snapshot || ReferenceEquals(snapshot, _outlineSnapshot))
+        {
+            return;
+        }
+        var blocks = _docsView.GetVisualChildren().OfType<BlockView>().ToList();
+        if (blocks.Count == 0)
+        {
+            return;
+        }
+        _outlineSnapshot = snapshot;
+
+        var titles = new List<string>();
+        var anchors = new List<Control>();
+        if (_docsView.GetVisualDescendants().OfType<GalleryDemoView>().FirstOrDefault(d => d.IsHero) is { } hero)
+        {
+            titles.Add(GalleryText.Get(GalleryShellLangResourceKind.Preview));
+            anchors.Add(hero);
+        }
+        foreach (var item in _docsView.GetOutline().Where(i => i.Level == 2))
+        {
+            if (blocks.FirstOrDefault(b => b.TopKey == item.Target.BlockKey) is { } heading)
+            {
+                titles.Add(item.Text);
+                anchors.Add(heading);
+            }
+        }
+        SetSections(titles, anchors);
+    }
+
+    #endregion
+
     #region Scrolling
 
-    private double SectionTop(GallerySection section)
-        => section.TranslatePoint(default, _padding) is { } point ? point.Y : 0;
+    private double SectionTop(Control anchor)
+        => anchor.TranslatePoint(default, _padding) is { } point ? point.Y : 0;
 
-    /// <summary>Scrolls to the <paramref name="index"/>th example (what a click in "On this page" does).</summary>
+    /// <summary>Scrolls to the <paramref name="index"/>th entry of "On this page" (what a click on it does).</summary>
     public void ScrollToSection(int index)
     {
-        if (index >= 0 && index < _sections.Count)
+        if (index >= 0 && index < _anchors.Count)
         {
-            ScrollTo(Math.Max(0, SectionTop(_sections[index]) - 24));
+            ScrollTo(Math.Max(0, SectionTop(_anchors[index]) - 24));
         }
     }
 
@@ -401,22 +395,22 @@ public sealed class GalleryPageView : Grid
     /// <summary>The section being read: the last one whose top has passed a line a little below the viewport top.</summary>
     private void UpdateActiveSection()
     {
-        if (_toc is null || _sections.Count == 0)
+        if (_toc is null || _anchors.Count == 0)
         {
             return;
         }
         var offset = _scroll.Offset.Y;
         var active = 0;
-        for (var i = 0; i < _sections.Count; i++)
+        for (var i = 0; i < _anchors.Count; i++)
         {
-            if (SectionTop(_sections[i]) <= offset + 120)
+            if (SectionTop(_anchors[i]) <= offset + 120)
             {
                 active = i;
             }
         }
         if (offset + _scroll.Viewport.Height >= _scroll.Extent.Height - 2)
         {
-            active = _sections.Count - 1;
+            active = _anchors.Count - 1;
         }
         _toc.SetActive(active);
     }

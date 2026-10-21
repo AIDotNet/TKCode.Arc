@@ -3,6 +3,8 @@ title: User menu
 summary: Your account, settings, theme, and sign out behind the avatar. Opens as a bottom sheet on phones.
 ---
 
+<Demo name="TopBar" />
+
 ## When to use
 
 - The one account entry point in an app's top bar, behind the avatar.
@@ -41,6 +43,8 @@ Set the identity properties and declare the destinations under `UserMenu.Items`.
 
 `ThemePreference` is `Light`, `Dark` or `System`. The menu reports the choice and stays open. The app applies the theme
 itself. `IsThemeSwitchVisible="False"` hides the switch.
+
+<Demo name="Presence" />
 
 ```xml
 <arc:UserMenu DisplayName="Grace Hopper"

@@ -3,6 +3,8 @@ title: Activity heatmap
 summary: See a year of activity at a glance, one square per day.
 ---
 
+<Demo name="Contributions" />
+
 ## When to use
 
 - Daily rhythm over a long period, such as contributions or workouts across a year.
@@ -49,6 +51,8 @@ such as a year switch. The grid recolors in a sweep instead of redrawing.
 
 `UnitOne` and `UnitOther` set the noun for the count. `FirstDayOfWeek` sets the first row of each week column, which is
 Sunday by default. `Culture` formats dates and numbers.
+
+<Demo name="CustomUnit" />
 
 ```xml
 <arc:ActivityHeatmap Label="Workouts, last six months"

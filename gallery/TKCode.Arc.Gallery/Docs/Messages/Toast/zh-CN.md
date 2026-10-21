@@ -1,8 +1,10 @@
 ---
 title: 轻提示
 summary: 已完成后台操作的简短确认。
-source-hash: 6adfd1506979
+source-hash: 4abc10dde3e3
 ---
+
+<Demo name="LocalToast" />
 
 ## 何时使用
 
@@ -67,9 +69,7 @@ toast.Closed += (_, e) =>
 
 `Toast.Show` 可从窗口中的任何控件，将轻提示发送到窗口的 `ToastStack`。当消息来自不持有 `Toast` 控件的代码时使用它。`ToastKind` 选择图标与颜色。`Toast.Show` 返回一个 id，可传给 `Toast.Update` 与 `Toast.Dismiss`。
 
-```csharp
-Toast.Show(button, "邀请已发送", ToastKind.Success, "Maya 很快会收到一封邮件。");
-```
+<Demo name="FromAnywhere" />
 
 ## API 参考
 

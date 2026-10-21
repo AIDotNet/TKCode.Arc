@@ -1,8 +1,10 @@
 ---
 title: 操作按钮
 summary: 用于高频工具栏操作的紧凑按钮。
-source-hash: f0f196c4f1de
+source-hash: b3c11d0f2177
 ---
+
+<Demo name="Default" />
 
 ## 何时使用
 
@@ -42,6 +44,10 @@ var save = new ActionButton
 
 `Label` 是空闲状态的文字，同时也是无障碍名称。`AsyncAction` 运行期间显示 `PendingLabel`，完成后显示 `SuccessLabel`。`ResetAfter` 设定成功状态保持的时长，默认为 2.4 秒。设为零时，成功状态会一直保留，直到调用 `Reset()`。
 
+<Demo name="Labels" />
+
+<Demo name="KeepResult" />
+
 ```xml
 <arc:ActionButton Label="发布帖子"
                   PendingLabel="发布中"
@@ -49,24 +55,11 @@ var save = new ActionButton
                   ResetAfter="00:00:03" />
 ```
 
-```csharp
-var settings = new ActionButton
-{
-    Label = "保存设置",
-    SuccessLabel = "设置已保存",
-    ResetAfter = TimeSpan.Zero
-};
-
-reset.Click += (_, _) => settings.Reset();
-```
-
 ### 失败
 
 `AsyncAction` 抛出异常时，按钮回到空闲状态，并引发 `ActionFailed`。事件参数携带 `Exception`。
 
-```csharp
-sync.ActionFailed += (_, e) => message.Text = $"已回到空闲状态：{e.Exception.Message}";
-```
+<Demo name="Failure" />
 
 ### 命令与点击
 
@@ -76,9 +69,7 @@ sync.ActionFailed += (_, e) => message.Text = $"已回到空闲状态：{e.Excep
 
 将 `IsEnabled` 设为 `False` 即可使按钮变暗。`AsyncAction` 等待期间，按钮保持键盘焦点，并忽略重复激活。
 
-```xml
-<arc:ActionButton Label="保存" IsEnabled="False" />
-```
+<Demo name="Disabled" />
 
 ## API 参考
 

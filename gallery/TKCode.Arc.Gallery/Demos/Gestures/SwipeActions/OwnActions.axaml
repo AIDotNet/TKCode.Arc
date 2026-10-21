@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SwipeActionsOwnActionsDemo">
+    <arc:SwipeActions x:Name="Tasks"
+                      Label="Tasks"
+                      Width="440"
+                      HorizontalAlignment="Left"
+                      ActionInvoked="OnActionInvoked">
+        <arc:SwipeActionsRow Label="Write the release notes">
+            <arc:SwipeActionsRow.LeadingActions>
+                <arc:SwipeAction Label="Done" Icon="{x:Static arc:ArcIcons.Check}" Tone="Accent" />
+            </arc:SwipeActionsRow.LeadingActions>
+            <arc:SwipeActionsRow.TrailingActions>
+                <arc:SwipeAction Label="Flag" Icon="{x:Static arc:ArcIcons.Flag}" KeepsRow="True" />
+                <arc:SwipeAction Label="Delete" Icon="{x:Static arc:ArcIcons.Trash2}" Tone="Danger" />
+            </arc:SwipeActionsRow.TrailingActions>
+            <TextBlock Text="Write the release notes"
+                       VerticalAlignment="Center"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+        </arc:SwipeActionsRow>
+        <arc:SwipeActionsRow Label="Review pull request #418" IsFullSwipeEnabled="False">
+            <arc:SwipeActionsRow.LeadingActions>
+                <arc:SwipeAction Label="Done" Icon="{x:Static arc:ArcIcons.Check}" Tone="Accent" />
+            </arc:SwipeActionsRow.LeadingActions>
+            <arc:SwipeActionsRow.TrailingActions>
+                <arc:SwipeAction Label="Flag" Icon="{x:Static arc:ArcIcons.Flag}" KeepsRow="True" />
+                <arc:SwipeAction Label="Delete" Icon="{x:Static arc:ArcIcons.Trash2}" Tone="Danger" />
+            </arc:SwipeActionsRow.TrailingActions>
+            <StackPanel Spacing="2" VerticalAlignment="Center">
+                <TextBlock Text="Review pull request #418"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Full swipe off: tap the revealed action"
+                           FontSize="13"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </arc:SwipeActionsRow>
+        <arc:SwipeActionsRow Label="Book flights for the offsite">
+            <arc:SwipeActionsRow.LeadingActions>
+                <arc:SwipeAction Label="Done" Icon="{x:Static arc:ArcIcons.Check}" Tone="Accent" />
+            </arc:SwipeActionsRow.LeadingActions>
+            <arc:SwipeActionsRow.TrailingActions>
+                <arc:SwipeAction Label="Flag" Icon="{x:Static arc:ArcIcons.Flag}" KeepsRow="True" />
+                <arc:SwipeAction Label="Delete" Icon="{x:Static arc:ArcIcons.Trash2}" Tone="Danger" />
+            </arc:SwipeActionsRow.TrailingActions>
+            <TextBlock Text="Book flights for the offsite"
+                       VerticalAlignment="Center"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+        </arc:SwipeActionsRow>
+    </arc:SwipeActions>
+</UserControl>

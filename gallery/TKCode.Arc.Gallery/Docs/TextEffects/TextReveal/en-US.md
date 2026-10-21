@@ -3,6 +3,8 @@ title: Text reveal
 summary: Reveal a short piece of content with restrained motion.
 ---
 
+<Demo name="Hero" />
+
 ## When to use
 
 - A hero headline or landing page opening that should play once when it appears.
@@ -33,14 +35,9 @@ characters wide.
 `Level` sets the heading level (`H1`, `H2`, `H3`) or `Paragraph`. Headings use display type and tighter leading. A
 paragraph uses body type and a softer blur. The level also sets `AutomationProperties.HeadingLevel` for headings.
 
-```xml
-<arc:TextReveal Text="Ship the quiet details.&#10;Keep the motion honest."
-                Level="H2"
-                Delay="0:0:0.2" />
+<Demo name="ForcedLinesAndDelay" />
 
-<arc:TextReveal Text="A paragraph reveals with a softer blur, word after word."
-                Level="Paragraph" />
-```
+<Demo name="Paragraph" />
 
 `Delay` waits before the first word rises. The stagger after it stays under half a second, so long text does not
 extend the entrance.

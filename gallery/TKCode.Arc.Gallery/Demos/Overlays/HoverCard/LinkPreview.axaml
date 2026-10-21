@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HoverCardLinkPreviewDemo">
+    <TextBlock Text="uiarc.dev/components/hover-card"
+               Cursor="Hand"
+               Foreground="{arc:ArcDesignTokenResource Accent}">
+        <arc:HoverCard.Attach>
+            <arc:HoverCard Placement="Top"
+                           Content="Hover card: preview a person or link on hover or focus without leaving the page." />
+        </arc:HoverCard.Attach>
+    </TextBlock>
+</UserControl>

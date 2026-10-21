@@ -32,15 +32,25 @@ public class LineChart : ChartBase
     private static readonly SpringSpec Settle = SpringSpec.FromVisual(0.4, 0);
     private static readonly SpringSpec Glide = SpringSpec.FromVisual(0.26, 0.12);
 
+    /// <summary>Series toggles. Null shows the legend when there is more than one series.</summary>
     public static new readonly StyledProperty<bool?> ShowLegendProperty = ChartBase.ShowLegendProperty.AddOwner<LineChart>();
+    /// <summary>Horizontal gridlines at the value ticks.</summary>
     public static new readonly StyledProperty<bool> ShowGridProperty = ChartBase.ShowGridProperty.AddOwner<LineChart>();
+    /// <summary>The category (time) axis labels under the plot.</summary>
     public static new readonly StyledProperty<bool> ShowXAxisProperty = ChartBase.ShowXAxisProperty.AddOwner<LineChart>();
+    /// <summary>The value axis labels in the right-hand gutter.</summary>
     public static new readonly StyledProperty<bool> ShowYAxisProperty = ChartBase.ShowYAxisProperty.AddOwner<LineChart>();
+    /// <summary>Fixes the bottom of the value axis (default: zero, or the data minimum when it dips below).</summary>
     public static new readonly StyledProperty<double?> YMinimumProperty = ChartBase.YMinimumProperty.AddOwner<LineChart>();
+    /// <summary>Fixes the top of the value axis (default: the next nice tick above the data).</summary>
     public static new readonly StyledProperty<double?> YMaximumProperty = ChartBase.YMaximumProperty.AddOwner<LineChart>();
+    /// <summary>Formats value-axis ticks. Defaults to a compact number, such as 1.2K.</summary>
     public static new readonly StyledProperty<Func<double, string>?> TickFormatterProperty = ChartBase.TickFormatterProperty.AddOwner<LineChart>();
+    /// <summary>Smooth monotone curves that never swing past the data, or straight segments.</summary>
     public static new readonly StyledProperty<ChartCurve> CurveProperty = ChartBase.CurveProperty.AddOwner<LineChart>();
+    /// <summary>Keys of hidden series. Two-way; the legend toggles it.</summary>
     public static new readonly StyledProperty<IReadOnlyList<string>?> HiddenSeriesProperty = ChartBase.HiddenSeriesProperty.AddOwner<LineChart>();
+    /// <summary>Keeps the current shapes on screen, dimmed and breathing, while the next range loads.</summary>
     public static new readonly StyledProperty<bool> IsLoadingProperty = ChartBase.IsLoadingProperty.AddOwner<LineChart>();
 
     /// <inheritdoc cref="ChartBase.ShowLegendProperty"/>
@@ -73,6 +83,7 @@ public class LineChart : ChartBase
     /// <inheritdoc cref="ChartBase.IsLoadingProperty"/>
     public bool IsLoading { get => GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
 
+    /// <summary>Raised when the legend shows or hides a series; the argument carries the hidden series keys.</summary>
     /// <inheritdoc cref="ChartBase.HiddenSeriesChangedEvent"/>
     public event EventHandler<ChartHiddenSeriesChangedEventArgs>? HiddenSeriesChanged
     {

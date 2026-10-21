@@ -1,8 +1,10 @@
 ---
 title: 标签组
 summary: 用几个会随选择而变形的标签进行筛选。
-source-hash: 3111842585f6
+source-hash: be8b71bea6f8
 ---
+
+<Demo name="FilterChips" />
 
 ## 何时使用
 
@@ -57,17 +59,13 @@ topics.SelectionChanged += (_, _) => Console.WriteLine(string.Join(", ", topics.
 
 `IsMultiple="False"` 一次只允许一个标签。已选中的标签仍可再次点击以清除选择。
 
-```xml
-<arc:ChipGroup Label="状态" IsMultiple="False">
-    <arc:SelectItem Content="待处理" Value="open" />
-    <arc:SelectItem Content="进行中" Value="progress" />
-    <arc:SelectItem Content="已关闭" Value="closed" />
-</arc:ChipGroup>
-```
+<Demo name="SingleChoice" />
 
 ### 折叠长列表
 
 `MaxVisibleItems` 显示指定数量的标签，其余标签折叠在"+N 更多"标签之后。已选中的标签即使超出限制也会保持可见。`IsExpanded` 为双向绑定，用于显示或隐藏折叠的标签。
+
+<Demo name="Folded" />
 
 ```xml
 <arc:ChipGroup Label="主题"

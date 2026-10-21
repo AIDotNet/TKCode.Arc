@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvatarInitialsDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Avatar DisplayName="Ada Lovelace" Size="Small" />
+        <arc:Avatar DisplayName="Grace Hopper" Size="Medium" />
+        <arc:Avatar DisplayName="Alan Turing" Size="Large" />
+        <arc:Avatar DisplayName="Katherine Johnson" Size="XLarge" />
+    </WrapPanel>
+</UserControl>

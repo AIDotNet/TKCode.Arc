@@ -38,6 +38,7 @@ public class MenuEntry : TemplatedControl
     public static readonly StyledProperty<object?> HeaderProperty =
         AvaloniaProperty.Register<MenuEntry, object?>(nameof(Header));
 
+    /// <summary>Data template that renders the header; without one, a string header is drawn as ellipsizing text.</summary>
     public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty =
         AvaloniaProperty.Register<MenuEntry, IDataTemplate?>(nameof(HeaderTemplate));
 
@@ -53,9 +54,11 @@ public class MenuEntry : TemplatedControl
     public static readonly StyledProperty<string?> InputGestureTextProperty =
         AvaloniaProperty.Register<MenuEntry, string?>(nameof(InputGestureText));
 
+    /// <summary>Command run when the row is activated; the row is disabled while the command cannot execute.</summary>
     public static readonly StyledProperty<ICommand?> CommandProperty =
         AvaloniaProperty.Register<MenuEntry, ICommand?>(nameof(Command));
 
+    /// <summary>Parameter passed to Command when the row is activated.</summary>
     public static readonly StyledProperty<object?> CommandParameterProperty =
         AvaloniaProperty.Register<MenuEntry, object?>(nameof(CommandParameter));
 
@@ -63,6 +66,7 @@ public class MenuEntry : TemplatedControl
     public static readonly StyledProperty<bool> IsDestructiveProperty =
         AvaloniaProperty.Register<MenuEntry, bool>(nameof(IsDestructive));
 
+    /// <summary>How the row toggles when activated: None for a command row, CheckBox, or Radio.</summary>
     public static readonly StyledProperty<MenuEntryToggleType> ToggleTypeProperty =
         AvaloniaProperty.Register<MenuEntry, MenuEntryToggleType>(nameof(ToggleType));
 
@@ -116,6 +120,7 @@ public class MenuEntry : TemplatedControl
         set => SetValue(HeaderProperty, value);
     }
 
+    /// <inheritdoc cref="HeaderTemplateProperty"/>
     public IDataTemplate? HeaderTemplate
     {
         get => GetValue(HeaderTemplateProperty);
@@ -140,12 +145,14 @@ public class MenuEntry : TemplatedControl
         set => SetValue(InputGestureTextProperty, value);
     }
 
+    /// <inheritdoc cref="CommandProperty"/>
     public ICommand? Command
     {
         get => GetValue(CommandProperty);
         set => SetValue(CommandProperty, value);
     }
 
+    /// <inheritdoc cref="CommandParameterProperty"/>
     public object? CommandParameter
     {
         get => GetValue(CommandParameterProperty);
@@ -158,6 +165,7 @@ public class MenuEntry : TemplatedControl
         set => SetValue(IsDestructiveProperty, value);
     }
 
+    /// <inheritdoc cref="ToggleTypeProperty"/>
     public MenuEntryToggleType ToggleType
     {
         get => GetValue(ToggleTypeProperty);

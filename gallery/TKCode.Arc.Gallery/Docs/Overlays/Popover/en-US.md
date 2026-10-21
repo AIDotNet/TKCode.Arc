@@ -3,6 +3,8 @@ title: Popover
 summary: A small anchored surface for contextual information.
 ---
 
+<Demo name="Share" />
+
 ## When to use
 
 - Interactive content that should not block the page, such as share settings or a small filter form.
@@ -56,6 +58,8 @@ Set `Trigger` to the control that opens the panel. The content of the popover is
 `Alignment` places it along the trigger edge: `Start`, `Center` or `End`. `Offset` is the gap to the trigger in
 pixels; the default is 6.
 
+<Demo name="Sides" />
+
 ```xml
 <arc:Popover Placement="Bottom" Alignment="Center" Offset="8">
     <arc:Popover.Trigger>
@@ -69,14 +73,7 @@ pixels; the default is 6.
 
 `ShowAt` anchors the popover to any control. `IsOpen` is two-way and `Opened` and `Closed` report the state changes.
 
-```csharp
-var popover = new Popover
-{
-    Content = "Opened from code with ShowAt(anchor).",
-    Alignment = PopoverAlignment.Center
-};
-popover.ShowAt(anchor);
-```
+<Demo name="FromCode" />
 
 ### Modal popover
 
@@ -87,6 +84,12 @@ popover.ShowAt(anchor);
     <TextBlock Text="Pick one option first." />
 </arc:Popover>
 ```
+
+### Small form
+
+A popover can hold a small form, such as a filter. The page stays usable while it is open.
+
+<Demo name="SmallForm" />
 
 ## API reference
 

@@ -1,8 +1,10 @@
 ---
 title: 聊天会话
 summary: 带分组消息、表情回应、已读回执、输入状态以及带附件输入区的聊天会话。
-source-hash: 507f292278a9
+source-hash: 1cd766b47d7a
 ---
+
+<Demo name="SupportConversation" />
 
 ## 何时使用
 
@@ -78,6 +80,8 @@ thread.RetryRequested += (_, e) => e.Message.Status = ChatMessageStatus.Sent;
 
 `ReactionToggled` 报告读者选择的表情回应。使用 `AppendToMessage` 与 `CompleteMessage` 可以流式输出回复：Markdown 正文只接收新增的文字。
 
+<Demo name="StreamingMarkdownReply" />
+
 ```csharp
 thread.ReactionToggled += (_, e) => ToggleReaction(e.Message, e.Emoji);
 
@@ -86,6 +90,18 @@ thread.AppendToMessage("r1", "下面是一个带重试功能的小工具函数�
 thread.CompleteMessage("r1");
 thread.ScrollToBottom();
 ```
+
+### 一千条消息
+
+行会被虚拟化并回收：只有视野内（外加少量余量）的消息真正存在。向上滚动后，来自他人的新消息会让提示胶囊出现。
+
+<Demo name="ThousandMessages" />
+
+### 单独使用输入区
+
+`ChatComposer` 最多增长到六行，可以通过按钮、粘贴或拖放接收文件，按 Enter 发送（Shift + Enter 换行）。
+
+<Demo name="ComposerOnItsOwn" />
 
 ## API 参考
 

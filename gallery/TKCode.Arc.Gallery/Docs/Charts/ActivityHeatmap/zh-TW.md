@@ -1,8 +1,10 @@
 ---
 title: 活動熱圖
 summary: 一眼看清整年的活動，每天一個方格。
-source-hash: ad0de977d26e
+source-hash: d373449b219c
 ---
+
+<Demo name="Contributions" />
 
 ## 何時使用
 
@@ -47,6 +49,8 @@ source-hash: ad0de977d26e
 ### 單位與週
 
 `UnitOne` 與 `UnitOther` 設定計數的單位名詞。`FirstDayOfWeek` 設定每個週欄的第一列，預設為週日。`Culture` 用於格式化日期與數字。
+
+<Demo name="CustomUnit" />
 
 ```xml
 <arc:ActivityHeatmap Label="訓練次數，最近六個月"

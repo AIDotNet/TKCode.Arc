@@ -1,8 +1,10 @@
 ---
 title: 分段控制項
 summary: 在一組相關的檢視之間切換。
-source-hash: c75d07f09527
+source-hash: 32fa7950664f
 ---
+
+<Demo name="ViewSwitcher" />
 
 ## 何時使用
 
@@ -49,6 +51,8 @@ var sections = new SegmentedControl
 
 `Accessory` 是顯示在標籤之後的內容，例如數量。
 
+<Demo name="AccessoryAndIntent" />
+
 ```xml
 <arc:SegmentedControl SelectedValue="all">
     <arc:SegmentedOption Value="all" Label="全部" />
@@ -79,6 +83,12 @@ var sections = new SegmentedControl
 segmented.ItemIntent += (_, e) => hint.Text = $"預覽：{e.Value}";
 segmented.SelectionChanged += (_, _) => ShowView(segmented.SelectedValue);
 ```
+
+### 溢出
+
+當選項比控制項更寬時，選項列會在控制項內部捲動，有更多內容的一側會顯示淡出的邊緣。
+
+<Demo name="Overflow" />
 
 ## API 參考
 

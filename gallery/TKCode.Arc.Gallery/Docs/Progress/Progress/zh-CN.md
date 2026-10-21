@@ -1,8 +1,10 @@
 ---
 title: 进度
 summary: 展示已知总量任务的完成进度。
-source-hash: 6f3cee19c3a3
+source-hash: d642f7397d3e
 ---
+
+<Demo name="CountedValue" />
 
 ## 何时使用
 
@@ -33,24 +35,19 @@ source-hash: 6f3cee19c3a3
 
 不设置标签和数值时，进度条单独使用。其无障碍名称为 "进度"。
 
-```xml
-<arc:Progress Value="62" />
-```
+<Demo name="BarOnly" />
 
 ### 自定义最大值
 
 `Percentage` 为 `round(Value / Maximum × 100)`，例如 1,392 / 2,400 显示为 58%。
 
-```xml
-<arc:Progress Label="正在导入联系人"
-              IsValueVisible="True"
-              Maximum="2400"
-              Value="1392" />
-```
+<Demo name="CustomMaximum" />
 
 ### 切换标签
 
 切换 `Label` 时，新文字从柔和的模糊中升起，旧文字同时淡出。
+
+<Demo name="ChangingLabel" />
 
 ```xml
 <arc:Progress Label="{Binding PhaseName}"

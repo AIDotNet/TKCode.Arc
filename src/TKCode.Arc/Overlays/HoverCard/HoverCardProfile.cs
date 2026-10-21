@@ -60,6 +60,7 @@ public class HoverCardProfile : TemplatedControl
     public static readonly StyledProperty<ImageSource?> AvatarSourceProperty =
         AvaloniaProperty.Register<HoverCardProfile, ImageSource?>(nameof(AvatarSource));
 
+    /// <summary>Short biography shown under the name; empty when not set.</summary>
     public static readonly StyledProperty<string?> BioProperty =
         AvaloniaProperty.Register<HoverCardProfile, string?>(nameof(Bio));
 
@@ -78,6 +79,7 @@ public class HoverCardProfile : TemplatedControl
     /// <summary>Portrait; a downloading portrait fades in from a soft blur.</summary>
     public ImageSource? AvatarSource { get => GetValue(AvatarSourceProperty); set => SetValue(AvatarSourceProperty, value); }
 
+    /// <inheritdoc cref="BioProperty"/>
     public string? Bio { get => GetValue(BioProperty); set => SetValue(BioProperty, value); }
 
     /// <summary>Footer line, such as a location and local time (string or content).</summary>

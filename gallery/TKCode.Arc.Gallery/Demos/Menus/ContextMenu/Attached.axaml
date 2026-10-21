@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContextMenuAttachedDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <Border Width="220"
+                Height="96"
+                CornerRadius="18"
+                BorderThickness="1"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:ContextMenu.Menu>
+                <arc:MenuSurface>
+                    <arc:MenuEntry Header="New folder" Icon="{x:Static arc:ArcIcons.Folder}" />
+                    <arc:MenuEntry Header="Paste"
+                                   Icon="{x:Static arc:ArcIcons.Copy}"
+                                   InputGestureText="⌘V" />
+                    <arc:MenuEntry Header="Refresh" Icon="{x:Static arc:ArcIcons.RefreshCw}" />
+                </arc:MenuSurface>
+            </arc:ContextMenu.Menu>
+            <TextBlock Text="Right-click anywhere here"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Border>
+    </WrapPanel>
+</UserControl>

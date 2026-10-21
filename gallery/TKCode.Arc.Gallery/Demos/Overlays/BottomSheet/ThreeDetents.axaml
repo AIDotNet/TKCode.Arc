@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BottomSheetThreeDetentsDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Button Content="Share options"
+                    Variant="Secondary"
+                    Command="{Binding #ShareSheet.OpenCommand}" />
+        <arc:BottomSheet x:Name="ShareSheet"
+                         Title="Share"
+                         Detents="0.3, 0.6, 0.95"
+                         InitialDetentIndex="1">
+            <StackPanel Spacing="12">
+                <TextBlock Text="Copy link"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Send by email"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Embed"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Export as PDF"
+                           FontSize="14"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            </StackPanel>
+        </arc:BottomSheet>
+    </WrapPanel>
+</UserControl>

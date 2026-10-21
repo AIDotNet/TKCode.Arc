@@ -1,8 +1,10 @@
 ---
 title: 可展開卡片
 summary: 在需要時為密集的卡片提供更多空間。
-source-hash: d64e7cfac845
+source-hash: 452e4ce95fef
 ---
+
+<Demo name="Default" />
 
 ## 何時使用
 
@@ -41,26 +43,13 @@ source-hash: d64e7cfac845
 
 `ExpandedWidth` 限制卡片展開時的寬度上限。卡片會以與高度相同的彈簧，從 `CollapsedWidth` 增長到 `ExpandedWidth`。未設定 `ExpandedWidth` 時，展開後的卡片使用 `CollapsedWidth`。
 
-```xml
-<arc:ExpandableCard Header="訂單 #4821"
-                    Description="已出貨 · 週四送達"
-                    CollapsedWidth="360"
-                    ExpandedWidth="520">
-    <TextBlock Text="2 × 亞麻襯衫，1 × 帆布托特包" />
-</arc:ExpandableCard>
-```
+<Demo name="GrowingSideways" />
 
 ### 預設展開
 
 `IsExpanded` 為雙向繫結。設為 `True` 即可預設展開，也可以繫結到檢視模型屬性。
 
-```xml
-<arc:ExpandableCard Header="部署失敗"
-                    Description="api-gateway · 2 分鐘前"
-                    IsExpanded="True">
-    <TextBlock Text="/ready 的健康檢查在 30 秒後逾時。" TextWrapping="Wrap" />
-</arc:ExpandableCard>
-```
+<Demo name="OpenByDefault" />
 
 ### 更新摘要
 

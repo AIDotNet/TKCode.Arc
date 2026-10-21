@@ -1,8 +1,10 @@
 ---
 title: 图标变形
 summary: 在不同状态之间变形的图标：菜单变关闭、播放变暂停、复制变勾选等。
-source-hash: a46fa0c6e43e
+source-hash: e691e73b8fa1
 ---
+
+<Demo name="EightPairs" />
 
 ## 何时使用
 
@@ -58,6 +60,8 @@ button.Click += (_, _) =>
 
 `IconSize` 设置渲染尺寸，单位为像素，默认值为 24。`StrokeThickness` 在 24 单位的网格上设置，并随 `IconSize` 等比缩放，因此默认线宽 1.75 在任何尺寸下都保持比例。
 
+<Demo name="Sizes" />
+
 ```xml
 <arc:IconMorph Kind="Menu" IconSize="16" />
 <arc:IconMorph Kind="Menu" IconSize="32" StrokeThickness="2" />
@@ -67,10 +71,13 @@ button.Click += (_, _) =>
 
 对于 `Chevron`，`ChevronPointing` 设置静止时的方向，`ChevronTurn` 设置激活时转动的角度（单位为度）。值为 180 时由下向上翻转，值为 90 时由右向下转动。
 
-```xml
-<arc:IconMorph Kind="Chevron" />
-<arc:IconMorph Kind="Chevron" ChevronPointing="Right" ChevronTurn="90" />
-```
+<Demo name="ChevronAndMoments" />
+
+### MorphGlyph
+
+`MorphGlyph` 是路径变形基础组件，可作用于任意路径数据。从菜单到关闭会保留顶点，从关闭到对勾则按弧长重新采样。
+
+<Demo name="MorphGlyph" />
 
 ## API 参考
 

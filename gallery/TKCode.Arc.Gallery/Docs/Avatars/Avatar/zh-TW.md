@@ -1,8 +1,10 @@
 ---
 title: 大頭貼
 summary: 用於人員與帳號的精簡身分標示。
-source-hash: 3e5c344918ce
+source-hash: c09244e66188
 ---
+
+<Demo name="Initials" />
 
 ## 何時使用
 
@@ -29,11 +31,7 @@ source-hash: 3e5c344918ce
 
 `Source` 用於載入照片。載入期間會顯示首字母；若載入失敗，則保留首字母。
 
-```xml
-<arc:Avatar DisplayName="Mia Chen"
-            Size="Large"
-            Source="https://i.pravatar.cc/160?img=47" />
-```
+<Demo name="Photos" />
 
 ### 尺寸
 
@@ -50,18 +48,7 @@ source-hash: 3e5c344918ce
 
 `Status` 會在右下角顯示在線或離線圓點。`AvatarStatus.None` 則隱藏該圓點。
 
-```xml
-<arc:Avatar DisplayName="Leah Fox" Size="Large" Status="Online" />
-```
-
-```csharp
-avatar.Status = avatar.Status switch
-{
-    AvatarStatus.Online => AvatarStatus.Offline,
-    AvatarStatus.Offline => AvatarStatus.None,
-    _ => AvatarStatus.Online
-};
-```
+<Demo name="Status" />
 
 ### 首字母
 

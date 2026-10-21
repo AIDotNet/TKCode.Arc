@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CodeBlockNarrowDemo">
+    <arc:CodeBlock x:Name="Block"
+                   Width="360"
+                   HorizontalAlignment="Left"
+                   Language="css"
+                   FileName="card.module.css" />
+</UserControl>

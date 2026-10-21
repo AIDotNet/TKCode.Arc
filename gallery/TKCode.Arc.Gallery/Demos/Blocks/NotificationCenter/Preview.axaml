@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NotificationCenterPreviewDemo">
+    <!-- The margin keeps the badge, which overhangs the bell by 5px, inside the demo. -->
+    <arc:NotificationCenter HorizontalAlignment="Center" Margin="0,6,0,0">
+        <arc:NotificationItem Id="mention"
+                              Title="Mia Chen mentioned you in Checkout redesign"
+                              Description="Can you check the empty cart state before Friday’s review?"
+                              Time="2m"
+                              ActorName="Mia Chen"
+                              ActorSource="https://i.pravatar.cc/160?img=47" />
+        <arc:NotificationItem Id="deploy"
+                              Title="Deploy to production finished"
+                              Description="Version 2.4.1 is live in every region."
+                              Time="18m"
+                              Tone="Success" />
+        <arc:NotificationItem Id="storage"
+                              Title="Storage is at 85% of your plan"
+                              Description="Archive old projects or upgrade to keep files syncing."
+                              Time="1h"
+                              Tone="Warning" />
+        <arc:NotificationItem Id="roadmap"
+                              Title="Noah Park shared Q3 roadmap"
+                              Time="3h"
+                              ActorName="Noah Park"
+                              ActorSource="https://i.pravatar.cc/160?img=12"
+                              IsRead="True" />
+        <arc:NotificationItem Id="digest"
+                              Title="Your weekly digest is ready"
+                              Time="Yesterday"
+                              IsRead="True" />
+        <arc:NotificationItem Id="access"
+                              Title="Ava Rossi approved your request"
+                              Description="You can now edit the Analytics workspace."
+                              Time="Mon"
+                              ActorName="Ava Rossi"
+                              ActorSource="https://i.pravatar.cc/160?img=32"
+                              IsRead="True" />
+    </arc:NotificationCenter>
+</UserControl>
