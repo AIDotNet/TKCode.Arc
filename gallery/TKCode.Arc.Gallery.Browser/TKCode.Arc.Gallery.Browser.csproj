@@ -9,6 +9,11 @@
         <WasmBuildNative>true</WasmBuildNative>
         <!-- AtomUI's browser TypeMap publish needs SDK 10.0.300 (ATOMUIREG006); this repo builds with SDK 11, so publish is untrimmed. -->
         <PublishTrimmed>false</PublishTrimmed>
+        <!-- Publishing shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
+             everything. -p:ArcWasmPrune=false publishes with everything, -p:ArcWasmPrune=true shrinks a build as well. -->
+        <ArcWasmPrune Condition="'$(ArcWasmPrune)' == ''">$(_IsPublishing)</ArcWasmPrune>
+        <!-- LazyAssemblies uses JSImport. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AtomUI.Desktop.Controls" />
@@ -21,4 +26,85 @@
     <ItemGroup>
         <StaticWebAssetFingerprintPattern Include="JS" Pattern="*.js" Expression="#[.{fingerprint}]!" />
     </ItemGroup>
+
+    <!-- Without trimming, every assembly of the runtime pack and of every package reference goes into the boot list and is
+         downloaded at startup. These are never loaded in the browser: AtomUI.Desktop.Controls pulls in Avalonia.Desktop with
+         its Windows, X11, Wayland and macOS backends. Avalonia.OpenGL, .Metal and .Vulkan are NOT in this list: Avalonia.Skia
+         loads them. Pass -p:ArcWasmPrune=false to publish with everything. -->
+    <ItemGroup>
+        <ArcWasmUnusedAssembly Include="Avalonia.Desktop;Avalonia.Dialogs;Avalonia.DesignerSupport;Avalonia.Remote.Protocol" />
+        <ArcWasmUnusedAssembly Include="Avalonia.Win32;Avalonia.Win32.Automation" />
+        <ArcWasmUnusedAssembly Include="Avalonia.X11;Avalonia.Wayland;NWayland" />
+        <ArcWasmUnusedAssembly Include="Avalonia.FreeDesktop;Avalonia.FreeDesktop.AtSpi;Tmds.DBus.Protocol" />
+        <ArcWasmUnusedAssembly Include="Avalonia.Native;Avalonia.MicroCom;MicroCom.Runtime;AtomUI.Native" />
+        <!-- The docs screenshots: resources of this assembly in a desktop host, files under wwwroot/shots here. -->
+        <ArcWasmUnusedAssembly Include="TKCode.Arc.Gallery.Shots" />
+    </ItemGroup>
+
+    <!-- Runtime-pack assemblies that no assembly of the app, its packages or the runtime pack itself references by type
+         (the types an assembly defines or forwards are matched by full name against every kept assembly's type
+         references, then closed over the runtime pack). Assemblies the browser loads are all outside this list; facades
+         are kept. Re-check after an Avalonia, AtomUI or StreamMark upgrade, or when the app starts to use a new BCL
+         area: a pruned assembly that is needed fails at run time with FileNotFoundException, not at build time. -->
+    <ItemGroup>
+        <ArcWasmUnusedAssembly Include="System.Private.DataContractSerialization;System.Text.Encoding.CodePages;System.Linq.AsyncEnumerable;Microsoft.VisualBasic.Core;Microsoft.CSharp" />
+        <ArcWasmUnusedAssembly Include="System.Threading.Tasks.Dataflow;System.Threading.Tasks.Parallel;System.Threading.Channels" />
+        <ArcWasmUnusedAssembly Include="System.Net.WebSockets;System.Net.WebSockets.Client;System.Net.Mail;System.Net.Sockets;System.Net.HttpListener;System.Net.Http.Json;System.Net.WebClient" />
+        <ArcWasmUnusedAssembly Include="System.Net.NetworkInformation;System.Net.ServerSentEvents;System.Net.Quic;System.Net.Ping;System.Net.NameResolution;System.Net.WebProxy" />
+        <ArcWasmUnusedAssembly Include="System.Security.AccessControl;System.Security.Claims;System.Security.Principal.Windows;System.Threading.AccessControl;Microsoft.Win32.Registry" />
+        <ArcWasmUnusedAssembly Include="System.IO.Compression.ZipFile;System.IO.Compression.Brotli;System.IO.Pipes;System.IO.Pipes.AccessControl;System.IO.IsolatedStorage;System.Formats.Tar" />
+        <ArcWasmUnusedAssembly Include="System.IO.FileSystem.Watcher;System.IO.FileSystem.AccessControl;System.IO.FileSystem.DriveInfo" />
+        <ArcWasmUnusedAssembly Include="System.Reflection.DispatchProxy;System.Diagnostics.TextWriterTraceListener;System.Web.HttpUtility;System.ComponentModel.EventBasedAsync;System.Xml.XPath.XDocument" />
+    </ItemGroup>
+
+    <!-- Assemblies a session may never touch (SVG, ReactiveUI, the CJK font, Lucide, QR codes). They stay out of the boot list
+         and are published as wwwroot/_lazy/<Name>.dll; the first time the runtime asks for one, LazyAssemblies fetches it
+         (main.js, arc-lazy module), so a visitor who never reaches them never downloads them. An assembly with P/Invokes into
+         the statically linked native libraries (SkiaSharp, HarfBuzzSharp, Onigwrap) must not be listed here: the P/Invoke
+         table is built from the boot list. -->
+    <ItemGroup>
+        <ArcWasmLazyAssembly Include="Svg.Controls.Avalonia;Svg.Model;Svg.SceneGraph;Svg.Custom;ShimSkiaSharp;ExCSS" />
+        <ArcWasmLazyAssembly Include="ReactiveUI;ReactiveUI.Avalonia;DynamicData;Splat;Splat.Core;Splat.Logging;Splat.Builder" />
+        <ArcWasmLazyAssembly Include="SkiaSharp.QrCode;TKCode.Arc.Icons.Lucide;AtomUI.Fonts.AlibabaSans" />
+    </ItemGroup>
+
+    <!-- The WebAssembly SDK builds the boot list (build and publish) and the P/Invoke scan from ReferenceCopyLocalPaths, so
+         removing the items here keeps them out of both. -->
+    <Target Name="ArcPruneWasmAssemblies" AfterTargets="ResolveReferences" Condition="'$(ArcWasmPrune)' == 'true'">
+        <PropertyGroup>
+            <_ArcWasmLazyNames>;@(ArcWasmLazyAssembly);</_ArcWasmLazyNames>
+            <_ArcWasmLeftOutNames>;@(ArcWasmUnusedAssembly);@(ArcWasmLazyAssembly);</_ArcWasmLeftOutNames>
+        </PropertyGroup>
+        <ItemGroup>
+            <_ArcWasmPrunedFile Include="@(ReferenceCopyLocalPaths)"
+                                Condition="'%(Extension)' == '.dll' And $(_ArcWasmLeftOutNames.Contains(';%(Filename);'))" />
+            <_ArcWasmLazyFile Include="@(ReferenceCopyLocalPaths)"
+                              Condition="'%(Extension)' == '.dll' And $(_ArcWasmLazyNames.Contains(';%(Filename);'))" />
+            <ReferenceCopyLocalPaths Remove="@(_ArcWasmPrunedFile)" />
+        </ItemGroup>
+        <!-- Program reads this switch: with the screenshots assembly gone, HttpShotSource fetches the pictures. -->
+        <ItemGroup>
+            <RuntimeHostConfigurationOption Include="Arc.Gallery.ShotsOverHttp" Value="true" />
+        </ItemGroup>
+        <Message Importance="high" Text="Arc: left @(_ArcWasmPrunedFile->Count()) assemblies out of the WebAssembly boot list, @(_ArcWasmLazyFile->Count()) of them to load on demand" />
+    </Target>
+
+    <!-- The screenshots of the docs pages, served as files (HttpShotSource): wwwroot/shots/Docs/<Category>/<Component>/images/<Name>.png. -->
+    <ItemGroup>
+        <Content Include="../TKCode.Arc.Gallery/Docs/**/images/*.png" Link="wwwroot/shots/Docs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="../TKCode.Arc.Gallery/Guides/**/images/*.png" Link="wwwroot/shots/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <!-- The screenshots are PNG in the repository (tools/docshots writes them) and lossless WebP on the wire: the same pixels at about a
+         quarter of the size. Without cwebp the publish keeps the PNGs and says so; HttpShotSource falls back to them. -->
+    <Target Name="ArcShotsToWebp" AfterTargets="Publish" Condition="'$(ArcWasmPrune)' == 'true' And '$(WasmBuildingForNestedPublish)' != 'true' And !$([MSBuild]::IsOSPlatform('Windows'))">
+        <Exec Command="sh &quot;$(MSBuildThisFileDirectory)../../tools/wasm/webp-shots.sh&quot; &quot;$(PublishDir)wwwroot/shots&quot;" IgnoreExitCode="true" StandardErrorImportance="low">
+            <Output TaskParameter="ExitCode" PropertyName="_ArcWebpExitCode" />
+        </Exec>
+        <Warning Condition="'$(_ArcWebpExitCode)' != '0'" Text="The published screenshots are still PNG, about four times larger than WebP: install cwebp (brew install webp, apt install webp) and publish again." />
+    </Target>
+
+    <Target Name="ArcCopyLazyAssemblies" AfterTargets="Publish" Condition="'$(WasmBuildingForNestedPublish)' != 'true' And '@(_ArcWasmLazyFile)' != ''">
+        <Copy SourceFiles="@(_ArcWasmLazyFile)" DestinationFolder="$(PublishDir)wwwroot/_lazy" SkipUnchangedFiles="true" />
+    </Target>
 </Project>

@@ -11,6 +11,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Gallery.Shots/TKCode.Arc.Gallery.Shots.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Generators/TKCode.Arc.Gallery.Generators.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"
@@ -20,6 +21,15 @@
     <!-- The brand logo (Shell/GalleryBrand.cs). -->
     <ItemGroup>
         <AvaloniaResource Include="Assets/*.png" />
+    </ItemGroup>
+
+    <!-- Docs screenshots (GalleryShotView): Docs/<Category>/<Component>/images/<Name>.png and <Name>.dark.png, captured
+         by tools/docshots from the XAML block under each ![caption](images/<Name>.png) line. They are resources of
+         TKCode.Arc.Gallery.Shots (GalleryDocs.ScreenshotUri), which reads them from this folder. -->
+
+    <!-- The Docs section of the sidebar (GalleryGuides): Guides/<Page>/<language>.md and their screenshots, read at run time. -->
+    <ItemGroup>
+        <AvaloniaResource Include="Guides/**/*.md" />
     </ItemGroup>
 
     <!-- Docs pages (design/decisions/0012-gallery-docs.md): pages and API translations go to GalleryDocsGenerator, which

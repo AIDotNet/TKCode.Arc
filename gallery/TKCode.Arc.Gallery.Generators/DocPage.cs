@@ -66,6 +66,20 @@ internal sealed class DocPage
 
     public string Language { get; }
 
+    /// <summary>
+    /// The page's folder below <c>Docs/</c>, such as <c>TextFields/Input</c>: where its screenshots
+    /// (<c>images/*.png</c>) are found at run time.
+    /// </summary>
+    public string Folder
+    {
+        get
+        {
+            var directory = (System.IO.Path.GetDirectoryName(Path) ?? string.Empty).Replace('\\', '/');
+            var docs = directory.LastIndexOf("/Docs/", System.StringComparison.Ordinal);
+            return docs < 0 ? ClassName : directory.Substring(docs + "/Docs/".Length);
+        }
+    }
+
     public string Title { get; private set; } = string.Empty;
 
     public string Summary { get; private set; } = string.Empty;

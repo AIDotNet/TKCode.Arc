@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <RootNamespace>TKCode.Arc.Gallery.Shots</RootNamespace>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+    </ItemGroup>
+
+    <!-- The screenshots of the docs and guide pages (Shell/GalleryShotView): Docs/<Category>/<Component>/images/ and
+         Guides/<Page>/images/ in the gallery project, where tools/docshots writes them. They live in an assembly of
+         their own so a host that serves them as files (the WebAssembly host) can leave the assembly out: PNG does not
+         compress, and 200 captures are the largest part of what a browser would download at startup. -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Docs/**/images/*.png" Link="Docs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/images/*.png" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

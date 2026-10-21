@@ -289,7 +289,7 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
         foreach (var page in pages)
         {
             code.Append("        new(").Append(Literal(page.ClassName)).Append(", ").Append(Literal(page.Language)).Append(", ")
-                .Append(Literal(page.Title)).Append(", ").Append(Literal(page.Summary)).Append(", ")
+                .Append(Literal(page.Folder)).Append(", ").Append(Literal(page.Title)).Append(", ").Append(Literal(page.Summary)).Append(", ")
                 .Append(outdated.Contains(page) ? "true" : "false").Append(",").AppendLine();
             code.Append("            ").Append(Literal(page.Body)).AppendLine("),");
         }
