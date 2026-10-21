@@ -253,6 +253,36 @@ public class TreeViewTests
     }
 
     [AvaloniaFact]
+    public void Changes_Before_The_Next_Layout_Pass_Diff_Against_Rows_Still_Closing()
+    {
+        var frames = new ManualFrameClock();
+        using var install = frames.Install();
+        var tree = Sample(out var src, out var components, out var readme);
+        var window = Show(tree, ArcMotionLevel.Full);
+        try
+        {
+            tree.Expand(components);
+            frames.Advance(TimeSpan.FromSeconds(1.5));
+            Dispatcher.UIThread.RunJobs();
+
+            // Both closes land in one dispatcher job: the second diffs while the first one's space is still open.
+            tree.Collapse(components);
+            tree.Collapse(src);
+            Labels(tree).ShouldBe(["src", "README.md"]);
+            // components and index.ts still hold their space (button.tsx and card.tsx left with index.ts, their anchor).
+            tree.RowsPanel!.RowTop(1).ShouldBe(38 + 2 * 38, 0.5);
+            frames.Advance(TimeSpan.FromSeconds(1.5));
+            Dispatcher.UIThread.RunJobs();
+            Row(tree, readme).Bounds.Top.ShouldBe(38, 0.5);
+            tree.RowsPanel.HasRowMotion.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Clicking_A_Folder_Selects_And_Toggles_It()
     {
         var tree = Sample(out _, out var components, out _);

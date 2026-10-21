@@ -294,6 +294,9 @@ internal abstract class TablesTreeRowsPanel : Control
         {
             StartGap(gap);
         }
+        // Geometry must match the new rows and runs before the next measure: another SetRows, Realize or a
+        // viewport change can ask for row positions first.
+        UpdateAnimationState();
         RebindLive();
         InvalidateMeasure();
     }

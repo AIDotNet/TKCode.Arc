@@ -6,6 +6,14 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`
 and `TKCode.Arc.Icons.Lucide`.
 
+## Unreleased
+
+### Fixed
+
+- TreeView and JsonViewer: a second change to the rows before the next layout pass, while rows from the first change were
+  still closing, threw `IndexOutOfRangeException` in `RowTop`. The panel now refreshes its row geometry as soon as the
+  rows change.
+
 ## 0.2.0-preview.1 - 2026-10-21
 
 ### Added
