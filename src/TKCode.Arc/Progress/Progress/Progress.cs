@@ -146,6 +146,12 @@ public class Progress : AvaloniaRangeBase
     private void UpdateState(bool animate)
     {
         var percentage = ComputePercentage(Value, Maximum);
+        if (_shown is not null && percentage == Percentage)
+        {
+            // A download reports far more often than the whole percentage changes: keep the spring running toward
+            // the same target instead of restarting it, and skip the readout and automation work.
+            return;
+        }
         Percentage = percentage;
         IsComplete = percentage >= 100;
         UpdateAutomation();

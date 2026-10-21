@@ -114,4 +114,48 @@ public class CheckboxTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_New_Data_Context_Shows_The_Mark_At_Once_But_A_Click_Draws_It_In()
+    {
+        var clock = new Motion.ManualFrameClock();
+        using var _ = clock.Install();
+        var box = new Checkbox { Content = "Rows" };
+        box.Bind(Avalonia.Controls.Primitives.ToggleButton.IsCheckedProperty, new Avalonia.Data.Binding(nameof(Item.On)));
+        var host = new Avalonia.Controls.Border { Child = box, DataContext = new Item() };
+        var window = TestHelpers.Show(host, Motion.ArcMotionLevel.Full);
+        try
+        {
+            var mark = TestHelpers.Descendant<CheckboxMark>(box);
+            clock.Advance(TimeSpan.FromSeconds(1));
+            Dispatcher.UIThread.RunJobs();
+            // A click draws the mark in.
+            box.IsChecked = true;
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(30));
+            Dispatcher.UIThread.RunJobs();
+            mark.DrawProgress.ShouldBeLessThan(1);
+            clock.Advance(TimeSpan.FromSeconds(1));
+            box.IsChecked = false;
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromSeconds(1));
+            Dispatcher.UIThread.RunJobs();
+            // A reused detail view gets the next item: the mark is simply there.
+            host.DataContext = new Item { On = true };
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromMilliseconds(30));
+            Dispatcher.UIThread.RunJobs();
+            mark.DrawProgress.ShouldBe(1);
+            mark.FadeValue.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private sealed class Item
+    {
+        public bool? On { get; set; } = false;
+    }
 }

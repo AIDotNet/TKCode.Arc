@@ -46,6 +46,30 @@ public class SegmentedControlTests
     }
 
     [AvaloniaFact]
+    public void A_Hidden_Control_Places_Its_Pill_When_Shown_Again()
+    {
+        var control = Views();
+        var host = new Avalonia.Controls.Border { Child = control };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            host.IsVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            control.SelectedValue = "month";
+            Dispatcher.UIThread.RunJobs();
+            host.IsVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            var pill = TestHelpers.Descendant<GlidingIndicator>(control);
+            var segment = control.ContainerFromIndex(2)!;
+            pill.CurrentRect.X.ShouldBe(segment.Bounds.X + 0.5, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Pill_Sits_Under_The_Selected_Segment()
     {
         var control = Views();

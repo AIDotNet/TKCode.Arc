@@ -45,6 +45,9 @@ public sealed class ArcMotion
     private static readonly AttachedProperty<IDisposable?> TokenSubscriptionProperty =
         AvaloniaProperty.RegisterAttached<ArcMotion, Control, IDisposable?>("TokenSubscription");
 
+    private static readonly AttachedProperty<int> SettlingProperty =
+        AvaloniaProperty.RegisterAttached<ArcMotion, Control, int>("Settling");
+
     static ArcMotion()
     {
         TracksProperty.Changed.AddClassHandler<Control>(OnTracksChanged);
@@ -145,9 +148,36 @@ public sealed class ArcMotion
         pseudo.Set(ReducedPseudoClass, false);
     }
 
+    /// <summary>
+    /// Holds a tracking control's transitions off while values arrive without user intent (a new data context in a
+    /// recycled template, a reused detail view), so the new state shows at once instead of animating from the old
+    /// item's. Pair with <see cref="EndSettle"/>; calls nest.
+    /// </summary>
+    internal static void BeginSettle(Control control)
+    {
+        control.SetValue(SettlingProperty, control.GetValue(SettlingProperty) + 1);
+        var pseudo = (IPseudoClasses)control.Classes;
+        pseudo.Set(FullPseudoClass, false);
+        pseudo.Set(ReducedPseudoClass, false);
+    }
+
+    /// <inheritdoc cref="BeginSettle"/>
+    internal static void EndSettle(Control control)
+    {
+        var count = Math.Max(0, control.GetValue(SettlingProperty) - 1);
+        control.SetValue(SettlingProperty, count);
+        if (count == 0)
+        {
+            Refresh(control);
+        }
+    }
+
+    /// <summary>True between <see cref="BeginSettle"/> and <see cref="EndSettle"/>: code-driven motion jumps too.</summary>
+    internal static bool IsSettling(Control control) => control.GetValue(SettlingProperty) > 0;
+
     private static void Refresh(Control control)
     {
-        if (!control.GetValue(TracksProperty) || !control.GetValue(ActiveProperty))
+        if (!control.GetValue(TracksProperty) || !control.GetValue(ActiveProperty) || control.GetValue(SettlingProperty) > 0)
         {
             return;
         }

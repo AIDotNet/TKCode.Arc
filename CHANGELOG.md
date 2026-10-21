@@ -31,6 +31,15 @@ and `TKCode.Arc.Icons.Lucide`.
 
 - **ExpandableText**: a change of `IsExpanded` that arrives with a new data context, for example in a recycled item
   template, no longer animates or scrolls the page.
+- **Switch**, **Checkbox**: a value that arrives with a new data context, for example when a detail view is reused for
+  the next item, shows at once; the thumb no longer slides and stretches, and the check mark no longer draws in, as if
+  the user had clicked.
+- **Progress**: a `Value` change that leaves the whole percentage unchanged no longer restarts the spring or updates the
+  readout and the accessibility status. A download that reports hundreds of times a second now costs one update per
+  percent.
+- **SegmentedControl** and the other gliding-indicator toggles: a hidden control no longer places its indicator on
+  every layout pass of the window; it is placed when the control is shown again.
+- **GlidingIndicator**: the outline pen is kept between frames instead of being created on every render.
 - TreeView and JsonViewer: a second change to the rows before the next layout pass, while rows from the first change were
   still closing, threw `IndexOutOfRangeException` in `RowTop`. The panel now refreshes its row geometry as soon as the
   rows change.

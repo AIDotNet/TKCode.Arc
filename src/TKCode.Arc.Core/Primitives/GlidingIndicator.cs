@@ -153,10 +153,25 @@ public class GlidingIndicator : Control
         }
         var radius = CornerRadius;
         var rounded = new RoundedRect(rect, radius.TopLeft, radius.TopRight, radius.BottomRight, radius.BottomLeft);
-        var pen = Stroke is { } stroke && StrokeThickness > 0 ? new Pen(stroke, StrokeThickness) : null;
         using (context.PushOpacity(_opacity.Value))
         {
-            context.DrawRectangle(Fill, pen, rounded, BoxShadow);
+            context.DrawRectangle(Fill, StrokePen(), rounded, BoxShadow);
         }
+    }
+
+    private Pen? _pen;
+
+    /// <summary>The outline pen, rebuilt only when the stroke changes (a glide renders every frame).</summary>
+    private Pen? StrokePen()
+    {
+        if (Stroke is not { } stroke || StrokeThickness <= 0)
+        {
+            return null;
+        }
+        if (_pen is null || !ReferenceEquals(_pen.Brush, stroke) || _pen.Thickness != StrokeThickness)
+        {
+            _pen = new Pen(stroke, StrokeThickness);
+        }
+        return _pen;
     }
 }

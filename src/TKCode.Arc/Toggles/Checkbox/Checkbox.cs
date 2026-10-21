@@ -1,3 +1,4 @@
+using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -146,6 +147,19 @@ public class Checkbox : AvaloniaCheckBox
         _mark?.Apply(ToState(IsChecked), animate: false);
     }
 
+    /// <summary>A value that arrives with a new data context is not a click: the mark jumps instead of drawing in.</summary>
+    protected override void OnDataContextBeginUpdate()
+    {
+        base.OnDataContextBeginUpdate();
+        ArcMotion.BeginSettle(this);
+    }
+
+    protected override void OnDataContextEndUpdate()
+    {
+        base.OnDataContextEndUpdate();
+        ArcMotion.EndSettle(this);
+    }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -159,7 +173,7 @@ public class Checkbox : AvaloniaCheckBox
                 SetCurrentValue(CheckedStateProperty, newState);
                 _syncing = false;
             }
-            _mark?.Apply(newState, animate: true);
+            _mark?.Apply(newState, animate: !ArcMotion.IsSettling(this));
             if (oldState != newState)
             {
                 RaiseEvent(new CheckboxStateChangedEventArgs(CheckedStateChangedEvent, oldState, newState));

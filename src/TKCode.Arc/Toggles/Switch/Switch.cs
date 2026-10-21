@@ -84,10 +84,23 @@ public class Switch : ToggleButton
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsCheckedProperty && IsLoaded)
+        if (change.Property == IsCheckedProperty && IsLoaded && !ArcMotion.IsSettling(this))
         {
             PlayStretch();
         }
+    }
+
+    /// <summary>A value that arrives with a new data context is not a toggle: the thumb jumps, no slide or stretch.</summary>
+    protected override void OnDataContextBeginUpdate()
+    {
+        base.OnDataContextBeginUpdate();
+        ArcMotion.BeginSettle(this);
+    }
+
+    protected override void OnDataContextEndUpdate()
+    {
+        base.OnDataContextEndUpdate();
+        ArcMotion.EndSettle(this);
     }
 
     /// <summary>

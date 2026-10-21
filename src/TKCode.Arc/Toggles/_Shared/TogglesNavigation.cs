@@ -210,7 +210,17 @@ internal sealed class TogglesIndicatorTracker
         Place();
     }
 
-    private void OnLayoutUpdated(object? sender, EventArgs e) => Place();
+    /// <summary>
+    /// LayoutUpdated is raised for every layout pass of the window, not only this control's: a hidden control (a
+    /// settings page kept in the tree) skips it, and showing it again runs a layout pass that places the indicator.
+    /// </summary>
+    private void OnLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (_owner.IsEffectivelyVisible)
+        {
+            Place();
+        }
+    }
 
     public void Place()
     {
