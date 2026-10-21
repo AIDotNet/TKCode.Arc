@@ -9,9 +9,9 @@ ARG NGINX_VERSION=1.26.3
 FROM ${BUILDER_IMAGE} AS build
 # Passed to the publish when set; empty keeps the version pinned in Directory.Packages.props.
 ARG STREAMMARK_VERSION=
-# python3 is needed by WasmBuildNative (Emscripten); brotli and gzip compress the output below.
+# python3 is needed by WasmBuildNative (Emscripten); webp (cwebp) turns the screenshots into WebP during the publish; brotli and gzip compress the output below.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3 brotli gzip \
+    && apt-get install -y --no-install-recommends python3 brotli gzip webp \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
 # The SDK is the one global.json pins (11.0.100-rc.2). The .NET 10 runtime is needed too: AtomUI's build worker is net10.
@@ -30,9 +30,10 @@ RUN dotnet publish gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser
         -c Release -o /app \
         ${STREAMMARK_VERSION:+-p:StreamMarkVersion=${STREAMMARK_VERSION}}
 # Pre-compress the text-like files: nginx serves *.br (brotli_static) and *.gz (gzip_static) without compressing per request.
+# The *.dll files are the assemblies the publish loads on demand (wwwroot/_lazy, see the Browser project file).
 RUN cd /app/wwwroot \
     && find . -type f \( -name '*.js' -o -name '*.wasm' -o -name '*.dat' -o -name '*.json' -o -name '*.html' \
-                         -o -name '*.css' -o -name '*.map' -o -name '*.svg' -o -name '*.xml' \) -print0 \
+                         -o -name '*.css' -o -name '*.map' -o -name '*.svg' -o -name '*.xml' -o -name '*.dll' \) -print0 \
        | xargs -0 -P "$(nproc)" -I{} sh -c 'brotli -q 11 -c "{}" > "{}.br" && gzip -9 -c "{}" > "{}.gz"'
 
 # nginx with the brotli module, built from source: Alpine ships no nginx-mod-http-brotli package.

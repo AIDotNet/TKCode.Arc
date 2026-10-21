@@ -17,6 +17,8 @@ TestResults/
 # Rider / VS Code
 .vscode/*
 !.vscode/settings.json
+blog/
+blog/*
 
 # Local work area: Arc reference sources and parallel sandboxes
 .work/
