@@ -68,6 +68,10 @@
         <source>Shown after the action succeeds (default "Saved").</source>
         <target>操作成功后显示的标签（默认为“已保存”）。</target>
       </trans-unit>
+      <trans-unit id="ActionsRenderer">
+        <source>Draws a row of icon buttons in the cell, such as Edit and Delete at the end of a row. A click runs the action's `Command` with the row object and raises `CellInvoked` with the action's label as the part; the cell is not selected by that click.</source>
+        <target>在单元格中画一排图标按钮，例如行尾的编辑和删除。点击会带着该行对象运行动作的 `Command`，并以动作的标签作为部分名触发 `CellInvoked`；该次点击不会选中单元格。</target>
+      </trans-unit>
       <trans-unit id="ActivityDay">
         <source>One day of an `ActivityHeatmap`.</source>
         <target>`ActivityHeatmap` 中的一天。</target>
@@ -335,6 +339,10 @@
       <trans-unit id="Badge.Tone">
         <source>Color treatment (Arc `tone`, neutral by default).</source>
         <target>颜色样式（Arc `tone`，默认为中性）。</target>
+      </trans-unit>
+      <trans-unit id="BadgeRenderer">
+        <source>Shows the cell as a small pill colored by its value, such as a stage or a status. Map values to tones with `Tones` (or `ToneMap` in XAML); values without a mapping use `DefaultTone`.</source>
+        <target>把单元格显示为按值着色的小药丸，例如阶段或状态。用 `Tones`（XAML 中用 `ToneMap`）把值映射到色调；没有映射的值使用 `DefaultTone`。</target>
       </trans-unit>
       <trans-unit id="BarChart">
         <source>Arc's bar chart: one measure across a run of days, weeks or months, with an average reference line and a headline that reads the average at rest and the scrubbed bar while exploring. Bars grow in a left-to-right wave the first time the chart is seen; a new range zooms the slots around the latest bar while bars that keep their key morph, new ones grow beside them and leaving ones sink into the baseline. Motion is code-driven (`MotionValue` per bar) because bar heights, slots and the scale are coordinates inside the self-drawn plot, which ControlTheme transitions cannot reach.</source>
@@ -1160,6 +1168,10 @@
         <source>The field must be checked before a form is submitted (reported to assistive technology).</source>
         <target>表单提交前必须勾选此字段（会告知辅助技术）。</target>
       </trans-unit>
+      <trans-unit id="CheckboxRenderer">
+        <source>Draws a yes or no value as a checkbox in the middle of the cell; a click on it flips the value (one undo step, and `CellEditEnding` can refuse it). Boolean columns use it without setting `Renderer`; set it on a column of another type to show a 0 or 1 that way. Values that are not a `Boolean` draw as text.</source>
+        <target>在单元格中间把是或否的值画成复选框；点击它会翻转值（是一步撤销，`CellEditEnding` 可以拒绝）。Boolean 列无需设置 `Renderer` 就会使用它；设置在其他类型的列上，可以用这种方式显示 0 或 1。不是 `Boolean` 的值会画成文字。</target>
+      </trans-unit>
       <trans-unit id="ChipGroup">
         <source>Arc chip group: toggle chips for facets people switch often (topics, statuses, tags). Picking a chip morphs it: a check grows in, the label slides over and the chip's edge follows on a spring while the neighbours glide to their new places, even across lines. Long sets fold behind a "+N more" chip (selected chips always stay in view); expanding staggers the revealed chips in and the group height springs. With `IsMultiple` false it is a single choice that can still be cleared. Keyboard: one tab stop; arrows move between chips and wrap, Home / End jump to the ends; Enter or Space toggles the focused chip or expands the folded ones.</source>
         <target>Arc 标签组：用于人们经常切换的筛选项（主题、状态、标签）的可切换标签。选中标签时会变形：勾号生长出来，文字滑动，标签边缘以弹簧跟随，相邻标签滑动到新位置，即使跨行也是如此。项目较多时，会折叠到一个 "+N more" 标签之后（已选中的标签始终可见）；展开时，被显示的标签依次淡入，组的高度以弹簧变化。`IsMultiple` 为 false 时为单选，但仍可清除选择。键盘操作：只有一个 Tab 停留点；方向键在标签之间移动并循环，Home / End 跳到两端；Enter 或空格切换焦点标签，或展开折叠的标签。</target>
@@ -1373,8 +1385,8 @@
         <target>数据项的值（AOT 安全的 `SelectedValueBinding` 替代方案）。</target>
       </trans-unit>
       <trans-unit id="CommandPalette">
-        <source>Arc command palette: the keyboard entry point to product-wide actions and navigation. A search field over grouped results with icons, descriptions and shortcut caps. Typing filters the commands (label, description, group and keywords); ↓ / ↑ / Home / End move one shared highlight (a 70ms slide for keys, a snappy spring for the pointer), Enter runs the highlighted command (or, after typing, the top match), Escape clears the query and then raises `CloseRequested`. Cmd/Ctrl+K anywhere in the window focuses the field. While filtering, the remaining rows glide into place and the results frame springs to the new height. Ported from Arc's free command-palette block (MIT, Copyright (c) 2026 Elia Kuratli).</source>
-        <target>Arc 命令面板：用键盘进入产品级操作与导航的入口。搜索框下方是带图标、描述和快捷键提示的分组结果。输入内容会筛选命令（按名称、描述、分组和关键词）；↓ / ↑ / Home / End 在同一个共享高亮之间移动（键盘移动为 70ms 滑动，指针移动为灵敏的弹簧动画），Enter 执行高亮的命令（输入后则执行排在最前的匹配项），Escape 先清空查询，再触发 `CloseRequested`。窗口内任意位置按 Cmd/Ctrl+K 均可聚焦搜索框。筛选时，其余行会滑动到新位置，结果框会以弹簧动画调整到新高度。移植自 Arc 免费的命令面板模块（MIT 许可，版权所有 (c) 2026 Elia Kuratli）。</target>
+        <source>Arc command palette: the keyboard entry point to product-wide actions and navigation. A search field over grouped results with icons, descriptions and shortcut caps. Typing filters the commands (label, description, group and keywords); ↓ / ↑ / Home / End move one shared highlight (a 70ms slide for keys, a snappy spring for the pointer), Enter runs the highlighted command (or, after typing, the top match), Escape clears the query and then raises `CloseRequested`. Cmd/Ctrl+K anywhere in the window focuses the field. While filtering, the remaining rows glide into place and the results frame springs to the new height. Only the rows near the visible part of the list exist, so a thousand commands cost the same as ten. The control itself is inline, like Arc's: it does not open or close. For a popup that opens on Cmd+K (or from a button) over the page and closes with a key, use `CommandPaletteDialog`, which hosts a palette. Ported from Arc's free command-palette block (MIT, Copyright (c) 2026 Elia Kuratli).</source>
+        <target>Arc 命令面板：面向全产品操作与导航的键盘入口。搜索框之下是带图标、描述和快捷键键帽的分组结果。输入会筛选命令（标题、描述、分组与关键词）；↓ / ↑ / Home / End 移动同一个共享高亮（按键使用 70ms 滑动，指针使用灵敏弹簧），Enter 执行高亮的命令（输入后则执行排在最前的匹配项），Escape 清空查询，随后触发 `CloseRequested`。窗口内任意位置按 Cmd/Ctrl+K 会聚焦搜索框。筛选时，保留的行平滑滑到新位置，结果外框通过弹簧过渡到新高度。只有列表可见部分附近的行真实存在，因此一千个命令的开销与十个相同。该控件本身是内联的，与 Arc 一致：它不负责打开或关闭。若需要按 Cmd+K（或点击按钮）在页面上方打开、并可用按键关闭的弹出层，请使用承载面板的 `CommandPaletteDialog`。移植自 Arc 的免费 command-palette 区块（MIT，Copyright (c) 2026 Elia Kuratli）。</target>
       </trans-unit>
       <trans-unit id="CommandPalette.ActiveItem">
         <source>The highlighted command (keyboard or pointer), or null.</source>
@@ -1393,8 +1405,8 @@
         <target>“Esc”关闭按钮的无障碍名称。</target>
       </trans-unit>
       <trans-unit id="CommandPalette.CloseRequested">
-        <source>Raised by Escape in an empty field or by the "Esc" button: the host should close the palette.</source>
-        <target>在空搜索框中按 Escape，或点击“Esc”按钮时触发：宿主应关闭面板。</target>
+        <source>Raised by Escape in an empty field or by the "Esc" button: the host should close the palette. Escape is not marked handled, so an overlay around the palette can also close on it (`CommandPaletteDialog` does).</source>
+        <target>在空搜索框中按 Escape，或点击“Esc”按钮时触发：宿主应关闭面板。Escape 不会被标记为已处理，因此面板外围的浮层也可以据此关闭（`CommandPaletteDialog` 就是如此）。</target>
       </trans-unit>
       <trans-unit id="CommandPalette.DefaultGroup">
         <source>Heading for commands without a `Group`.</source>
@@ -1441,12 +1453,128 @@
         <target>以选中的 `CommandPaletteItem` 执行。</target>
       </trans-unit>
       <trans-unit id="CommandPalette.ShortcutHint">
-        <source>Text of the shortcut cap at the end of the search row; null shows "⌘ K" on macOS and "Ctrl K" elsewhere.</source>
-        <target>搜索行末尾快捷键提示的文本；为 null 时，macOS 上显示“⌘ K”，其他平台显示“Ctrl K”。</target>
+        <source>Text of the shortcut cap at the end of the search row; null shows "⌘ K" on macOS and "Ctrl K" elsewhere, an empty string hides the cap.</source>
+        <target>搜索行末尾快捷键键帽的文本；为 null 时，macOS 上显示“⌘ K”，其他平台显示“Ctrl K”，空字符串则隐藏键帽。</target>
       </trans-unit>
       <trans-unit id="CommandPalette.ShowCloseButton">
         <source>Shows the "Esc" button that raises `CloseRequested` (for a palette in an overlay).</source>
         <target>显示“Esc”按钮，按下后触发 `CloseRequested`（用于浮层中的面板）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog">
+        <source>The command palette as a popup: declare it once and it opens a `CommandPalette` above the page on Cmd+K (Ctrl+K elsewhere) or from a button, and closes it with a key. It renders nothing in place; while `IsOpen` is true it shows the palette near the top centre of the window over a dimmed scrim. Keys: the open gesture (`OpenGesture`) toggles it from anywhere in the window; ↓ ↑ Home End move the highlight, Enter runs the highlighted command (or the top match after typing), Escape clears the query and, in an empty field, closes. A press on the scrim, a click on the "Esc" key cap and choosing a command also close it (`CloseOnOutsidePress`, `CloseOnSelect`); focus returns to what had it before. The palette is built the first time the dialog opens and reused after that; while the dialog is closed it only listens for the open gesture. It is mounted by Core `ModalPresence` (scrim fade, focus trap, stacking with other modals) and rises 6px on the smooth spring (reduced motion: fade only, Off: instant).</source>
+        <target>以弹出层呈现的命令面板：只需声明一次，它就会在按下 Cmd+K（其他平台为 Ctrl+K）或点击按钮时，在页面上方打开一个 `CommandPalette`，并可用按键关闭。它在原位不渲染任何内容；`IsOpen` 为 true 时，它会在窗口顶部居中附近、淡淡的遮罩之上显示面板。按键：打开手势（`OpenGesture`）可在窗口中任意位置切换它；↓ ↑ Home End 移动高亮，Enter 执行高亮的命令（输入后则执行排在最前的匹配项），Escape 清空查询，搜索框为空时则关闭。点击遮罩、点击 “Esc” 键帽以及选择命令同样会关闭它（`CloseOnOutsidePress`、`CloseOnSelect`）；焦点会回到此前拥有焦点的元素。面板在对话框第一次打开时创建并复用；对话框关闭期间只处理打开手势。它由 Core 的 `ModalPresence` 挂载（遮罩淡入、焦点陷阱、与其他模态层堆叠），并沿平滑弹簧上移 6px（Reduced：仅淡入淡出；Off：立即显示）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.BackdropBlur">
+        <source>Backdrop blur radius in px applied to the page while the scrim is shown (default 0: none; Arc's dialog uses 7). Off under the ReduceTransparency token.</source>
+        <target>遮罩显示期间应用于页面的背景模糊半径，单位 px（默认 0：无；Arc 的对话框使用 7）。在 ReduceTransparency 下关闭。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ClearButtonLabel">
+        <source>Accessible name of the button that clears the query.</source>
+        <target>用于清空查询的按钮的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.CloseButtonLabel">
+        <source>Accessible name of the "Esc" close button.</source>
+        <target>“Esc”关闭按钮的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.CloseOnEscape">
+        <source>Escape closes the dialog in an empty field (default true; cancellable through `Closing`).</source>
+        <target>搜索框为空时，按 Escape 关闭对话框（默认 true；可通过 `Closing` 取消）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.CloseOnOutsidePress">
+        <source>A press outside the palette closes the dialog (default true; cancellable through `Closing`).</source>
+        <target>在面板之外按下会关闭对话框（默认 true；可通过 `Closing` 取消）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.CloseOnSelect">
+        <source>Choosing a command closes the dialog, before `ItemSelected` is raised (default true).</source>
+        <target>选择命令会关闭对话框，关闭发生在引发 `ItemSelected` 之前（默认 true）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Closed">
+        <source>Raised when the dialog closes (the exit may still be playing).</source>
+        <target>对话框关闭时触发（退出动画可能仍在播放）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Closing">
+        <source>Raised before a close requested by the user, a command or `Close`; cancel to keep it open.</source>
+        <target>在用户、某个命令或 `Close` 请求关闭之前触发；取消则保持打开。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.DefaultGroup">
+        <source>Heading for commands without a `Group`.</source>
+        <target>未设置 `Group` 的命令所使用的标题。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.EmptyDescription">
+        <source>Description of the empty state when nothing matches.</source>
+        <target>没有匹配项时空状态的描述。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.EmptyTitle">
+        <source>Title of the empty state when nothing matches.</source>
+        <target>没有匹配项时空状态的标题。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.IsModal">
+        <source>Modal (default): a scrim over the page, a focus trap, and a press on the scrim closes. When false the page stays interactive and focus is free, and a press anywhere outside the palette closes it.</source>
+        <target>模态（默认）：页面上方有遮罩、焦点陷阱，点击遮罩会关闭。为 false 时页面保持可交互、焦点不受限制，在面板之外的任何位置按下都会关闭它。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.IsOpen">
+        <source>Shown while true; set false (or call `Close`) to play the exit. Two-way by default.</source>
+        <target>为 true 时显示；设为 false（或调用 `Close`）会播放退出动画。默认双向绑定。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.IsShortcutEnabled">
+        <source>Turns the window-level open gesture on (default) or off. The gesture is ignored while the dialog is not attached, not visible or disabled, and while another modal is on top.</source>
+        <target>开启（默认）或关闭窗口级的打开手势。对话框未在窗口中、不可见或已禁用时，以及有另一个模态层位于最上层时，该手势会被忽略。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ItemSelected">
+        <source>Raised when a command is chosen (Enter or a click). With `CloseOnSelect` the dialog has already started to close, so a handler that opens another dialog finds the focus back on the page; the palette then runs `SelectCommand` and the command's own `Command`.</source>
+        <target>选择命令（按 Enter 或点击）时触发。启用 `CloseOnSelect` 时，对话框此时已开始关闭，因此打开另一个对话框的处理程序会发现焦点已回到页面；随后面板会执行 `SelectCommand` 以及该命令自身的 `Command`。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ItemsSource">
+        <source>The commands to list; when set it replaces `Items`. Collection changes are followed.</source>
+        <target>要列出的命令；设置后将替代 `Items`。集合变更会同步更新。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Label">
+        <source>Accessible name of the dialog and of its search field.</source>
+        <target>对话框及其搜索框的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.OpenGesture">
+        <source>The key combination that toggles the dialog from anywhere in the window (handled before the window's own shortcuts). Null is Cmd+K or Ctrl+K on every platform.</source>
+        <target>在窗口中任意位置切换对话框的组合键（先于窗口自身的快捷键处理）。为 null 时在所有平台上都是 Cmd+K 或 Ctrl+K。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Opened">
+        <source>Raised when the dialog opens.</source>
+        <target>对话框打开时触发。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.Opens">
+        <source>Set on a button: clicking it opens that dialog.</source>
+        <target>设置在按钮上：点击它即可打开该对话框。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.PanelTopRatio">
+        <source>The palette's distance from the window top as a fraction of the window height (default 0.13; at least 16px).</source>
+        <target>面板顶部距窗口顶端的距离，以窗口高度的比例表示（默认 0.13；至少 16px）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.PanelWidth">
+        <source>Preferred width of the palette in px; it shrinks to fit the window minus 16px on each side (default 560).</source>
+        <target>面板的首选宽度，单位 px；它会缩小到窗口宽度减去两侧各 16px（默认 560）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.PlaceholderText">
+        <source>Hint in the empty search field.</source>
+        <target>空搜索框中的提示文字。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ResultsLabel">
+        <source>Accessible name of the result list.</source>
+        <target>搜索结果列表的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ScrimBrush">
+        <source>Scrim brush (the theme sets a light dim).</source>
+        <target>遮罩画刷（主题设置为淡淡的暗化）。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.SelectCommand">
+        <source>Executed with the chosen `CommandPaletteItem`.</source>
+        <target>以选中的 `CommandPaletteItem` 执行。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ShortcutHint">
+        <source>Text of the shortcut key cap in the search row. Null shows the open gesture ("⌘ K" on macOS, "Ctrl K" elsewhere) and hides the cap while `IsShortcutEnabled` is false; an empty string always hides it.</source>
+        <target>搜索行中快捷键键帽的文本。为 null 时显示打开手势（macOS 上为“⌘ K”，其他平台为“Ctrl K”），并在 `IsShortcutEnabled` 为 false 时隐藏键帽；空字符串则始终隐藏。</target>
+      </trans-unit>
+      <trans-unit id="CommandPaletteDialog.ShowCloseButton">
+        <source>Shows the clickable "Esc" key cap in the search row (default true).</source>
+        <target>在搜索行中显示可点击的“Esc”键帽（默认 true）。</target>
       </trans-unit>
       <trans-unit id="CommandPaletteItem">
         <source>One command of a `CommandPalette`: a label with an optional description, group, icon, shortcut and search keywords. Choosing it raises `ItemSelected` and runs its `Command`.</source>
@@ -1872,6 +2000,14 @@
         <source>Shows Delete for checked rows; deleting can be undone.</source>
         <target>为勾选的行显示“删除”；删除可以撤销。</target>
       </trans-unit>
+      <trans-unit id="DataGrid.CanEditCell">
+        <source>Decides per cell whether it can be edited, on top of `IsEditable` (for example locking the rows of closed deals). Edits, pastes, fills and clears skip cells it refuses. Keep it cheap: it runs for every cell a write touches.</source>
+        <target>在列的 `IsEditable` 之外，逐个单元格决定能否编辑（例如锁定已结案交易的行）。编辑、粘贴、填充和清除会跳过它拒绝的单元格。请保持轻量：每次写入涉及的每个单元格都会运行它。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.CanInsertRows">
+        <source>Shows Add row in the toolbar and allows `AddRow` and `InsertRow` (Ctrl+Shift+Plus inserts above the active row). Needs an `ItemsSource` that is a writable list, and either `DataGridRow` rows or a `RowFactory`. Added rows can be undone. Default false.</source>
+        <target>在工具栏显示“添加行”，并允许调用 `AddRow` 和 `InsertRow`（Ctrl+Shift+加号在活动行上方插入）。需要可写列表的 `ItemsSource`，以及 `DataGridRow` 行或 `RowFactory`。添加的行可以撤销。默认 false。</target>
+      </trans-unit>
       <trans-unit id="DataGrid.CanRedo">
         <source>Whether there is a step to redo.</source>
         <target>是否有可重做的步骤。</target>
@@ -1880,9 +2016,29 @@
         <source>Whether there is a step to undo.</source>
         <target>是否有可撤销的步骤。</target>
       </trans-unit>
+      <trans-unit id="DataGrid.CellClick">
+        <source>Raised when a body cell is pressed with the primary button, after the selection moved (or when a renderer took the press).</source>
+        <target>用主按钮按下主体单元格时触发，此时选区已经移动（或渲染器已经接管了这次按下）。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.CellContextRequested">
+        <source>Raised when a context menu is asked for on a body cell; set `Handled` to show your own menu instead of the built-in one.</source>
+        <target>在主体单元格上请求右键菜单时触发；设置 `Handled` 可以显示你自己的菜单，而不是内置菜单。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.CellDoubleClick">
+        <source>Raised on a double click or double tap of a body cell, before the editor opens; set `Handled` to keep the editor from opening.</source>
+        <target>双击或双点主体单元格时、编辑器打开之前触发；设置 `Handled` 可以阻止编辑器打开。</target>
+      </trans-unit>
       <trans-unit id="DataGrid.CellEditEnding">
         <source>Raised before an edit is written; cancel it to keep the editor open with an error.</source>
         <target>编辑写入前触发；取消它可让编辑器保持打开并显示错误。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.CellInvoked">
+        <source>Raised when a cell renderer reports a click on something actionable, such as a link.</source>
+        <target>当单元格渲染器报告对可操作内容（例如链接）的点击时触发。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.CellStyleSelector">
+        <source>Picks a tone for a cell from its row and value, for looks the column's `FormatRules` cannot express. It runs for every cell in view on every frame, so keep it cheap; null from it falls through to the format rules.</source>
+        <target>根据单元格所在的行和值为它选择色调，用于列的 `FormatRules` 无法表达的外观。它每一帧都会为视口内的每个单元格运行，所以请保持轻量；返回 null 时交给格式规则处理。</target>
       </trans-unit>
       <trans-unit id="DataGrid.CellsChanged">
         <source>Raised after an edit, paste, cut, clear, fill, fill down, undo or redo wrote cells.</source>
@@ -1891,6 +2047,18 @@
       <trans-unit id="DataGrid.CheckedRowKeys">
         <source>Keys of the checked rows, in data order (two-way).</source>
         <target>勾选行的键，按数据顺序（双向）。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.ColumnOrder">
+        <source>Column keys in display order (people drag headers, or press Alt+Shift+arrows in one, to change it). Columns not listed follow in their defined order; null keeps the defined order. Pinned columns still come first. Two-way.</source>
+        <target>按显示顺序排列的列键（用户拖动表头，或在表头上按 Alt+Shift+方向键来改变它）。未列出的列按定义顺序排在后面；为 null 时保持定义顺序。固定列仍然排在最前。双向。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.ColumnWidths">
+        <source>The widths people set by dragging, double clicking or pressing Alt+arrows on a header, by column key. Two-way.</source>
+        <target>用户通过拖动、双击或在表头上按 Alt+方向键设置的宽度，按列键保存。双向。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.ContextMenuOpening">
+        <source>Raised before the built-in menu opens, so the entries can be changed or the menu cancelled.</source>
+        <target>在内置菜单打开之前触发，可以修改条目或取消菜单。</target>
       </trans-unit>
       <trans-unit id="DataGrid.Culture">
         <source>Culture for formatting and parsing values; null follows the AtomUI language.</source>
@@ -1907,6 +2075,10 @@
       <trans-unit id="DataGrid.EmptyMessage">
         <source>Shown when there are no rows at all; null uses the built-in "No rows yet".</source>
         <target>完全没有行时显示的文字；为 null 时使用内置的“暂无数据”。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.ErrorCount">
+        <source>How many cells are flagged for failing their rules (see `Flag` and `ValidateAll`).</source>
+        <target>因不满足规则而被标出的单元格数量（见 `Flag` 和 `ValidateAll`）。</target>
       </trans-unit>
       <trans-unit id="DataGrid.ExportFileName">
         <source>Export file name without the extension; null derives one from `Label`.</source>
@@ -1956,21 +2128,49 @@
         <source>Accessible name of the grid; also names exported files and the xlsx worksheet.</source>
         <target>表格的无障碍名称；也用于命名导出文件和 xlsx 工作表。</target>
       </trans-unit>
+      <trans-unit id="DataGrid.MaxPasteCells">
+        <source>Most cells a paste may hold (default 1,000,000). A bigger clipboard is refused with a message instead of being read, so a huge or hostile table cannot exhaust memory.</source>
+        <target>一次粘贴最多允许的单元格数（默认 1,000,000）。超过时会拒绝并给出提示，而不是读取内容，因此过大或恶意构造的表格不会耗尽内存。</target>
+      </trans-unit>
       <trans-unit id="DataGrid.MaxViewportHeight">
         <source>Tallest the scrolling area grows before it scrolls, in px (default 400); infinity fills the available height.</source>
         <target>滚动区域开始滚动前的最大高度，单位 px（默认 400）；无穷大表示占满可用高度。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.NeutralizeCsvFormulas">
+        <source>Prefixes exported CSV text that a spreadsheet would run as a formula (it starts with =, +, -, @, a tab or a carriage return) with a single quote, which blocks CSV injection (default true). Numbers and days are not touched.</source>
+        <target>为导出的 CSV 中电子表格会当作公式执行的文本（以 =、+、-、@、制表符或回车符开头）加上一个单引号前缀，以防止 CSV 注入（默认 true）。数字和日期不受影响。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.PasteOverflow">
+        <source>What a paste does with clipboard rows that run past the last row: drop them (default) or add rows for them.</source>
+        <target>粘贴时超出最后一行的剪贴板行如何处理：丢弃（默认）或为它们添加行。</target>
       </trans-unit>
       <trans-unit id="DataGrid.PinnedColumns">
         <source>Keys of the pinned columns (two-way); null uses `IsPinned`, or the first column when no column sets it.</source>
         <target>固定列的键（双向）；为 null 时使用 `IsPinned`，没有任何列设置时固定第一列。</target>
       </trans-unit>
+      <trans-unit id="DataGrid.RowActivated">
+        <source>Raised when Enter is pressed on a cell that cannot be edited, and on a double click of the row number: "open this row".</source>
+        <target>对不可编辑的单元格按 Enter 时触发，也在双击行号时触发：“打开这一行”。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.RowFactory">
+        <source>Creates the object for a new row, for typed rows: `() =&gt; new Account()`. Rows of `DataGridRow` need no factory. Give typed rows a key that `RowKeySelector` reads and that no other row has.</source>
+        <target>为自有类的行创建新行的对象：`() =&gt; new Account()`。`DataGridRow` 类型的行不需要工厂。请给自有类的行一个 `RowKeySelector` 能读到、且没有其他行使用的键。</target>
+      </trans-unit>
       <trans-unit id="DataGrid.RowKeySelector">
         <source>Stable row identity; defaults to `Key`, else the item itself. Required with `DataSource`.</source>
         <target>稳定的行标识；默认用 `Key`，否则用行对象本身。使用 `DataSource` 时必须设置。</target>
       </trans-unit>
+      <trans-unit id="DataGrid.RowStyleSelector">
+        <source>Tints a whole row with a tone chosen from the row object (null for no tint). Runs for every row in view on every frame.</source>
+        <target>根据行对象选择的色调给整行着色（返回 null 表示不着色）。每一帧都会为视口内的每一行运行。</target>
+      </trans-unit>
       <trans-unit id="DataGrid.RowsDeleted">
         <source>Raised after checked rows were deleted (removed from the source when it is a writable list).</source>
         <target>勾选的行被删除后触发（数据源是可写列表时会从中移除）。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.RowsInserted">
+        <source>Raised after rows are added, and after a redo puts them back (undoing an addition raises `RowsDeleted`).</source>
+        <target>在添加行之后，以及重做把它们放回去之后触发（撤销添加会触发 `RowsDeleted`）。</target>
       </trans-unit>
       <trans-unit id="DataGrid.RowsRestored">
         <source>Raised after a delete was undone (rows put back into a writable source at their old indices).</source>
@@ -1983,6 +2183,10 @@
       <trans-unit id="DataGrid.SelectedRange">
         <source>The selected range, or null when the grid has no cells.</source>
         <target>选中的范围；表格没有单元格时为 null。</target>
+      </trans-unit>
+      <trans-unit id="DataGrid.ShowContextMenu">
+        <source>Shows the built-in right-click menu (also Shift+F10 and the menu key, and a long press on touch). Default true.</source>
+        <target>显示内置的右键菜单（也包括 Shift+F10、菜单键，以及触屏上的长按）。默认 true。</target>
       </trans-unit>
       <trans-unit id="DataGrid.ShowRowNumbers">
         <source>Shows the row number in the gutter. When false the gutter narrows to 40px and its checkboxes always show.</source>
@@ -2008,6 +2212,10 @@
         <source>Steps kept for undo (default 100; 0 turns undo off).</source>
         <target>撤销保留的步数（默认 100；0 表示关闭撤销）。</target>
       </trans-unit>
+      <trans-unit id="DataGrid.ValidationMode">
+        <source>What happens to a value that fails its column's rules: refused (default) or accepted and flagged.</source>
+        <target>不满足列规则的值如何处理：拒绝（默认），或接受并标出。</target>
+      </trans-unit>
       <trans-unit id="DataGrid.VisibleRowCount">
         <source>Number of rows the filters keep (the data source's row count with a `DataSource`).</source>
         <target>筛选后保留的行数（使用 `DataSource` 时为数据源报告的行数）。</target>
@@ -2032,6 +2240,50 @@
         <source>Button text; also the accessible name. The label hides below 640px of grid width.</source>
         <target>按钮文字，也是无障碍名称。表格宽度小于 640px 时隐藏标签。</target>
       </trans-unit>
+      <trans-unit id="DataGridCellAction">
+        <source>One icon button of an `ActionsRenderer`.</source>
+        <target>`ActionsRenderer` 的一个图标按钮。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellAction.Command">
+        <source>Runs with the row object as its parameter; the button is disabled while `CanExecute` is false.</source>
+        <target>以该行对象为参数运行；`CanExecute` 为 false 时按钮被禁用。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellAction.Icon">
+        <source>A 24 x 24 stroked geometry drawn at 16 px (such as `ArcIcons.Trash2`).</source>
+        <target>24 x 24 的描边几何图形，以 16 px 绘制（例如 `ArcIcons.Trash2`）。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellAction.IsDanger">
+        <source>Draws the icon in the danger color.</source>
+        <target>用危险色绘制图标。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellAction.Label">
+        <source>Names the action in `Part` and for screen readers.</source>
+        <target>在 `Part` 中以及对屏幕阅读器命名这个动作。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellContext">
+        <source>One cell as the grid hands it to a validation rule, an editability predicate or a style selector.</source>
+        <target>表格交给校验规则、可编辑判断或样式选择器的一个单元格。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellEventArgs">
+        <source>Arguments of the cell events of a `DataGrid`: `CellClick`, `CellDoubleClick`, `CellContextRequested` and `RowActivated`.</source>
+        <target>`DataGrid` 单元格事件的参数：`CellClick`、`CellDoubleClick`、`CellContextRequested` 和 `RowActivated`。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellInvokedEventArgs">
+        <source>Arguments of `CellInvoked`.</source>
+        <target>`CellInvoked` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellPointerContext">
+        <source>A pointer press over a cell, for `OnPointerPressed`.</source>
+        <target>单元格上的一次指针按下，用于 `OnPointerPressed`。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellRenderContext">
+        <source>Everything a `DataGridCellRenderer` needs to draw one cell.</source>
+        <target>`DataGridCellRenderer` 绘制一个单元格所需的全部信息。</target>
+      </trans-unit>
+      <trans-unit id="DataGridCellRenderer">
+        <source>Draws the cells of a `DataGridColumn` in place of the plain text: a status badge, a progress bar, a link, an icon. The grid keeps drawing rows itself, so a renderer is a few draw calls over the cell, never a control. Sorting, filtering, totals, copy and export keep working on the column's value; `GetText` decides the text that copy and screen readers see.</source>
+        <target>取代纯文字来绘制 `DataGridColumn` 的单元格：状态徽标、进度条、链接、图标。表格仍然自己绘制行，所以渲染器只是在单元格上的几次绘制调用，绝不是控件。排序、筛选、合计、复制和导出仍然作用于列的值；`GetText` 决定复制和屏幕阅读器看到的文字。</target>
+      </trans-unit>
       <trans-unit id="DataGridColumn">
         <source>One column of a `DataGrid`. The cell value comes from `ValueGetter`, else from `Binding` (a compiled binding against the row item, written back two-way), else from the `DataGridRow` field (or dictionary entry) named by `Key`. Values are normalized to a string, a `Decimal`, a `DateOnly` or null by `Type`.</source>
         <target>`DataGrid` 的一列。单元格的值来自 `ValueGetter`，其次是 `Binding`（针对行对象的编译绑定，双向写回），再次是 `Key` 指定的 `DataGridRow` 字段（或字典项）。值按 `Type` 归一为字符串、`Decimal`、`DateOnly` 或 null。</target>
@@ -2051,6 +2303,10 @@
       <trans-unit id="DataGridColumn.Decimals">
         <source>Decimal places of Number, Currency and Percent values.</source>
         <target>Number、Currency 和 Percent 值的小数位数。</target>
+      </trans-unit>
+      <trans-unit id="DataGridColumn.EditTemplate">
+        <source>Replaces the text box that edits the column's cells with your own content (a slider, a rating, a picker). The template gets a `DataGridEditContext` as its data context; only the cell being edited is a real control.</source>
+        <target>用你自己的内容（滑块、评分、选择器）替换编辑该列单元格的文本框。模板以 `DataGridEditContext` 作为数据上下文；只有正在编辑的单元格是真正的控件。</target>
       </trans-unit>
       <trans-unit id="DataGridColumn.Header">
         <source>Header text; also used for copied header rows, exports and accessible names.</source>
@@ -2092,6 +2348,10 @@
         <source>Choices of a Select column, in sort order; null uses up to 200 distinct values already in the column.</source>
         <target>Select 列的选项，按排序顺序；为 null 时取该列已有的最多 200 个不同值。</target>
       </trans-unit>
+      <trans-unit id="DataGridColumn.Renderer">
+        <source>Draws the column's cells in place of the plain text: a status badge, a progress bar, a link, an icon, or your own `DataGridCellRenderer`. Null draws the formatted value. Sorting, filtering, totals and export still use the value.</source>
+        <target>取代纯文字来绘制该列的单元格：状态徽标、进度条、链接、图标，或你自己的 `DataGridCellRenderer`。为 null 时绘制格式化后的值。排序、筛选、合计和导出仍然使用值。</target>
+      </trans-unit>
       <trans-unit id="DataGridColumn.Type">
         <source>Kind of data: Text, Number, Currency, Percent, Select or Date.</source>
         <target>数据类型：Text、Number、Currency、Percent、Select 或 Date。</target>
@@ -2099,6 +2359,54 @@
       <trans-unit id="DataGridColumn.Width">
         <source>Starting width in px (default 140). The last column absorbs spare width on a wide grid.</source>
         <target>初始宽度，单位 px（默认 140）。表格较宽时，最后一列吸收多余的宽度。</target>
+      </trans-unit>
+      <trans-unit id="DataGridContextMenuOpeningEventArgs">
+        <source>Arguments of `ContextMenuOpening`: change `Items` or set `Cancel` to stop the menu.</source>
+        <target>`ContextMenuOpening` 的参数：修改 `Items` 或设置 `Cancel` 来阻止菜单。</target>
+      </trans-unit>
+      <trans-unit id="DataGridEditContext">
+        <source>What a `EditTemplate` edits: the value of one cell. The template's content gets this object as its `DataContext`; bind your controls to `Value` and call `Commit` or `Cancel` (Enter, Tab and Escape do the same when the focused control leaves them alone).</source>
+        <target>`EditTemplate` 所编辑的内容：一个单元格的值。模板的内容以该对象作为 `DataContext`；把你的控件绑定到 `Value`，并调用 `Commit` 或 `Cancel`（当获得焦点的控件不处理时，Enter、Tab 和 Escape 同样有效）。</target>
+      </trans-unit>
+      <trans-unit id="DataGridEditContext.PropertyChanged">
+        <source>Raised when `Value` or `ErrorMessage` changes.</source>
+        <target>当 `Value` 或 `ErrorMessage` 改变时触发。</target>
+      </trans-unit>
+      <trans-unit id="DataGridFilterState">
+        <source>A column filter as stored in a `DataGridLayoutState`: an expression or the values a select column keeps.</source>
+        <target>保存在 `DataGridLayoutState` 中的列筛选：一个表达式，或选择列保留的值。</target>
+      </trans-unit>
+      <trans-unit id="DataGridFormatRule">
+        <source>Tints the cells of a column whose value passes a test, such as an ARR below 10,000 or a stage that reads "Lost". Add rules to `FormatRules`; the first rule that matches decides. Compared values are read the way the column reads typed text, so `Value` for a date column is a day such as 2026-03-01.</source>
+        <target>给值通过某项测试的列单元格着色，例如低于 10,000 的 ARR，或写着“Lost”的阶段。把规则添加到 `FormatRules`；第一条匹配的规则生效。被比较的值按该列读取键入文字的方式读取，所以日期列的 `Value` 是形如 2026-03-01 的日期。</target>
+      </trans-unit>
+      <trans-unit id="DataGridLayoutState">
+        <source>The view of a `DataGrid` that people shape: column order, widths, pinned and hidden columns, sort, filters, grouping and density. `GetLayoutState` reads it and `SetLayoutState` applies it, so a view can be saved when a window closes and restored when it opens. `ToJson` and `FromJson` use a source-generated serializer (trim and AOT safe); unknown fields are ignored and missing fields fall back to the defaults.</source>
+        <target>用户塑造的 `DataGrid` 视图：列顺序、宽度、固定与隐藏的列、排序、筛选、分组和行密度。`GetLayoutState` 读取它，`SetLayoutState` 应用它，所以视图可以在窗口关闭时保存、在打开时恢复。`ToJson` 和 `FromJson` 使用源生成的序列化器（对裁剪和 AOT 安全）；未知字段会被忽略，缺失字段回到默认值。</target>
+      </trans-unit>
+      <trans-unit id="DataGridMenuItem">
+        <source>An entry you add to the grid's context menu through `ContextMenuItems`.</source>
+        <target>通过 `ContextMenuItems` 添加到表格右键菜单的一个条目。</target>
+      </trans-unit>
+      <trans-unit id="DataGridMenuItem.Command">
+        <source>Runs with the row object of the clicked cell as its parameter.</source>
+        <target>以被点击单元格的行对象为参数运行。</target>
+      </trans-unit>
+      <trans-unit id="DataGridMenuItem.Icon">
+        <source>A 24 x 24 stroked geometry shown before the label.</source>
+        <target>显示在标签前的 24 x 24 描边几何图形。</target>
+      </trans-unit>
+      <trans-unit id="DataGridMenuItem.Label">
+        <source>The entry's text.</source>
+        <target>条目的文字。</target>
+      </trans-unit>
+      <trans-unit id="DataGridRenderPalette">
+        <source>The colors and pens a `DataGridCellRenderer` draws with. They are resolved from the ArcDesign tokens and follow the theme and the accent, so a renderer never holds a color of its own.</source>
+        <target>`DataGridCellRenderer` 绘制时使用的颜色和画笔。它们由 ArcDesign 令牌解析而来，并跟随主题和强调色，所以渲染器从不持有自己的颜色。</target>
+      </trans-unit>
+      <trans-unit id="DataGridRule">
+        <source>A check on the values of a column. Add rules to `Rules`; they run when a value is typed, pasted, filled or set by a renderer, and `ValidateAll` runs them over every row. The first rule that returns a message decides.</source>
+        <target>对列的值的一项检查。把规则添加到 `Rules`；在键入、粘贴、填充或由渲染器设置值时运行，`ValidateAll` 会对每一行运行它们。第一条返回消息的规则生效。</target>
       </trans-unit>
       <trans-unit id="DataTableColumn">
         <source>One column of a `SortableDataTable`. The cell value comes from `ValueSelector` or `Binding` (compiled against the table's item type in XAML); sorting uses `SortValueSelector` / `SortBinding` when given, else the cell value, and `Comparer` when given, else Arc's comparison (numbers numerically, text with natural ordering, empty values last in both directions). Cells are drawn as text; `CellTemplate` hosts custom content.</source>
@@ -3172,6 +3480,10 @@
         <source>Stroke width on the 24-unit grid (default 1.75); it scales with `IconSize`.</source>
         <target>24 单位网格上的描边宽度（默认 1.75）；随 `IconSize` 缩放。</target>
       </trans-unit>
+      <trans-unit id="IconTextRenderer">
+        <source>Shows an icon chosen by the cell's value, with the text after it. Icons are 24 x 24 stroked geometries (`ArcIcons`) drawn at 16 px; `Tones` can color them by value.</source>
+        <target>显示按单元格的值选择的图标，文字跟在后面。图标是 24 x 24 的描边几何图形（`ArcIcons`），以 16 px 绘制；`Tones` 可以按值给它们着色。</target>
+      </trans-unit>
       <trans-unit id="Illustration.Caption">
         <source>What the current step shows (also the accessible help text).</source>
         <target>当前步骤展示的内容（同时作为无障碍帮助文字）。</target>
@@ -3520,6 +3832,10 @@
         <source>Fixes the bottom of the value axis (default: zero, or the data minimum when it dips below).</source>
         <target>固定数值轴的底部（默认：零；若数据最小值低于零，则为数据最小值）。</target>
       </trans-unit>
+      <trans-unit id="LinkRenderer">
+        <source>Shows the cell as an accent-colored link with an underline that strengthens on hover. A click on the text raises `CellInvoked` with `Part`; the cell is not selected by that click.</source>
+        <target>把单元格显示为强调色链接，下划线在悬停时加深。点击文字会以 `Part` 触发 `CellInvoked`；该次点击不会选中单元格。</target>
+      </trans-unit>
       <trans-unit id="Markdown">
         <source>An Arc-styled Markdown document rendered by StreamMark: headings, lists, tables, quotes, links, inline code and fenced code highlighted in Arc's syntax palette. Show static text with `Text`, or stream a reply with `Append` / `Complete` (or your own `Stream`). The document grows with its content (no internal scrolling); put long documents in a `ScrollViewer`.</source>
         <target>由 StreamMark 渲染的 Arc 风格 Markdown 文档：标题、列表、表格、引用、链接、行内代码，以及按 Arc 语法配色高亮的围栏代码块。使用 `Text` 显示静态文本，或使用 `Append` / `Complete`（或你自己的 `Stream`）流式输出回复。文档随内容增长（无内部滚动）；长文档请放入 `ScrollViewer`。</target>
@@ -3527,6 +3843,22 @@
       <trans-unit id="Markdown.BlockSpacing">
         <source>Vertical space between blocks (paragraphs, lists, code, tables).</source>
         <target>区块之间的垂直间距（段落、列表、代码、表格）。</target>
+      </trans-unit>
+      <trans-unit id="Markdown.CurrentMatchIndex">
+        <source>The 0-based index of the current match, or -1 when the search has no match.</source>
+        <target>当前匹配的序号（从 0 开始），没有匹配时为 -1。</target>
+      </trans-unit>
+      <trans-unit id="Markdown.DocumentReady">
+        <source>The current document is parsed and applied, so `GetOutline` and the scroll methods have their final targets. Raised again when a new `Text` or `Stream` becomes ready, and after a new template is applied. Runs on the UI thread.</source>
+        <target>当前文档已解析并应用，因此 `GetOutline` 与跳转方法的目标已最终确定。新的 `Text` 或 `Stream` 就绪、以及重新套用模板后再次引发。在 UI 线程上运行。</target>
+      </trans-unit>
+      <trans-unit id="Markdown.HasSelection">
+        <source>True when the document has a selection, so a copy action can be enabled.</source>
+        <target>文档存在选区时为 true，可用于启用复制操作。</target>
+      </trans-unit>
+      <trans-unit id="Markdown.IsDocumentReady">
+        <source>True when the current document has been parsed and the result is applied to the view, so the outline, the search matches and the scroll targets are final. A static `Text` becomes ready once; a stream becomes ready when it completes. False before the template is applied and while a new source is being parsed.</source>
+        <target>当前文档已解析且结果已应用到视图时为 true，此时大纲、查找匹配与跳转目标均已最终确定。静态 `Text` 就绪一次；流在结束时就绪。模板尚未应用时、以及新源正在解析期间为 false。</target>
       </trans-unit>
       <trans-unit id="Markdown.IsStreaming">
         <source>Whether a stream is attached and has not completed yet.</source>
@@ -3540,9 +3872,21 @@
         <source>A link was clicked (anchors inside the document scroll by themselves and do not arrive here).</source>
         <target>链接被点击时触发（文档内的锚点会自行滚动，不会传到这里）。</target>
       </trans-unit>
+      <trans-unit id="Markdown.MatchCount">
+        <source>The number of matches of the last `Find`, 0 when nothing is searched.</source>
+        <target>最近一次 `Find` 的匹配数量，未查找时为 0。</target>
+      </trans-unit>
       <trans-unit id="Markdown.OpensLinks">
         <source>Opens allowed absolute links (http, https, mailto) with the system launcher when no `LinkClicked` handler marks the event handled and the link policy does not ask for confirmation.</source>
         <target>在没有 `LinkClicked` 处理程序将事件标记为已处理，且链接策略不要求确认时，使用系统启动器打开允许的绝对链接（http、https、mailto）。</target>
+      </trans-unit>
+      <trans-unit id="Markdown.SearchChanged">
+        <source>The matches or the current match of `Find` changed (including when the document changes under a search and the query is run again). Runs on the UI thread.</source>
+        <target>`Find` 的匹配或当前匹配发生变化（包括查找期间文档变化、查询重新执行）。在 UI 线程上运行。</target>
+      </trans-unit>
+      <trans-unit id="Markdown.SelectionChanged">
+        <source>The selection of the document view changed; `HasSelection` and the copy results follow.</source>
+        <target>文档视图的选区发生变化；`HasSelection` 与复制结果随之更新。</target>
       </trans-unit>
       <trans-unit id="Markdown.Services">
         <source>StreamMark services (plugins, code block options, link policy). Null uses services set on an ancestor with `MarkdownServices.SetServices`, else `DefaultServices`.</source>
@@ -3555,6 +3899,10 @@
       <trans-unit id="Markdown.Text">
         <source>The Markdown source to show. Setting it ends a stream started with `Append`.</source>
         <target>要显示的 Markdown 源文本。设置该属性会结束由 `Append` 开始的流。</target>
+      </trans-unit>
+      <trans-unit id="MaxLengthRule">
+        <source>Fails text longer than `Length` characters.</source>
+        <target>文字长度超过 `Length` 个字符时不通过。</target>
       </trans-unit>
       <trans-unit id="MentionChannel">
         <source>A channel offered after `#`.</source>
@@ -4408,6 +4756,10 @@
         <source>The current strength word.</source>
         <target>当前的强度文字。</target>
       </trans-unit>
+      <trans-unit id="PatternRule">
+        <source>Fails text that does not match a regular expression; empty values pass (add `RequiredRule` to refuse them).</source>
+        <target>文字不匹配正则表达式时不通过；空值通过（添加 `RequiredRule` 可拒绝空值）。</target>
+      </trans-unit>
       <trans-unit id="PaymentFlow">
         <source>An animated card payment: the customer pays at checkout, the gateway tokenizes the card, the authorization request travels through the card network to the issuing bank, the issuer approves or declines, the response comes back and approved payments settle to the merchant account, whose balance grows.</source>
         <target>动画演示的卡片支付：顾客在结账时付款，支付网关对卡片进行令牌化，授权请求经卡组织传送至发卡银行，发卡行批准或拒绝，响应返回；获批的付款结算至商户账户，其余额随之增长。</target>
@@ -4588,6 +4940,10 @@
         <source>Defines the `Percentage` property.</source>
         <target>定义 `Percentage` 属性。</target>
       </trans-unit>
+      <trans-unit id="ProgressRenderer">
+        <source>Shows a number as a horizontal bar with its text at the right edge. The value is read against `Minimum` and `Maximum` (0 to 100 by default, which suits a percent column).</source>
+        <target>把数字显示为水平条，文字显示在右端。值按 `Minimum` 和 `Maximum` 读取（默认 0 到 100，适合百分比列）。</target>
+      </trans-unit>
       <trans-unit id="RadioCardOption">
         <source>One option of `RadioCards` (Arc `RadioCardOption`): a label with optional description, a meta value (price, estimate), a decorative icon, and a reason shown in place of the description when the option is disabled.</source>
         <target>`RadioCards` 的一个选项（Arc 的 `RadioCardOption`）：包含标签（可选描述）、元数据值（价格、预估时长）、装饰性图标，以及选项被禁用时代替描述显示的原因。</target>
@@ -4615,6 +4971,10 @@
       <trans-unit id="RadioOption">
         <source>One option of a `RadioGroup` (Arc `{ value, label, description? }`). Use it in `ItemsSource` or inline in XAML; the group reports `Value` as its `SelectedValue`.</source>
         <target>`RadioGroup` 的一个选项（Arc 的 `{ value, label, description? }`）。可用于 `ItemsSource` 或 XAML 内联；该组会将 `Value` 作为其 `SelectedValue` 报告。</target>
+      </trans-unit>
+      <trans-unit id="RangeRule">
+        <source>Fails a number outside `Minimum` and `Maximum`; empty values and other types pass.</source>
+        <target>数字超出 `Minimum` 和 `Maximum` 时不通过；空值和其他类型通过。</target>
       </trans-unit>
       <trans-unit id="Reaction">
         <source>The state of one reaction (Arc's `Reaction`): how many people chose it and whether the viewer did. A reaction whose count reaches zero leaves the bar.</source>
@@ -4691,6 +5051,10 @@
       <trans-unit id="ReorderableListEntry">
         <source>A row of a `ReorderableList` as Arc models it: an id, a title and an optional detail line.</source>
         <target>Arc 建模的 `ReorderableList` 中的一行：包含一个 id、一个标题和一个可选的详细信息行。</target>
+      </trans-unit>
+      <trans-unit id="RequiredRule">
+        <source>Fails an empty value (null, empty text).</source>
+        <target>空值（null、空文字）不通过。</target>
       </trans-unit>
       <trans-unit id="ResizablePanel">
         <source>One pane of a `ResizablePanels` group. It carries the pane's configuration (label, default share, limits, collapsibility) and shows its content. Below its minimum the content keeps its minimum width, stays anchored to the moving edge and fades, so a closing pane slides away like a drawer instead of being crushed.</source>
@@ -4984,6 +5348,30 @@
         <source>Raised once when a change settles: a scrub ends (or is cancelled), Enter or blur commits typing, a key step lands, or a reset. Like Arc it also fires when a commit leaves the value unchanged (a clamped entry at the limit).</source>
         <target>变化稳定后引发一次：拖动结束（或被取消）、按下 Enter 或失焦提交输入、方向键步进落定，或重置时。与 Arc 一致，即使提交后值未变（例如在上限处被钳制的输入）也会引发。</target>
       </trans-unit>
+      <trans-unit id="SearchDateFilter">
+        <source>A date range over `Date`, edited with a two-thumb slider. The range spans `Minimum` to `Maximum` (the oldest and newest item date when null); `Start` and `End` are the chosen ends (null: that end of the range). Items of kinds outside `AppliesTo` pass the filter, so a range over documents does not hide people.</source>
+        <target>按 `Date` 的日期范围，通过双滑块编辑。范围从 `Minimum` 到 `Maximum`（为 null 时取最早和最新项目的日期）；`Start` 和 `End` 为所选的两端（为 null 时该端取范围边界）。不在 `AppliesTo` 所列种类之内的项目不受此筛选影响，因此针对文档的日期范围不会隐藏人员。</target>
+      </trans-unit>
+      <trans-unit id="SearchDateFilter.AppliesTo">
+        <source>The kinds the range applies to, as a comma separated list ("Docs, Files"). Empty: every item. Also words the default caption ("Applies to docs and files").</source>
+        <target>此范围适用的种类，以逗号分隔的列表表示（"Docs, Files"）。为空时适用于所有项目。也用于默认注脚的文字（"Applies to docs and files"）。</target>
+      </trans-unit>
+      <trans-unit id="SearchDateFilter.End">
+        <source>The chosen end of the range (two-way). Null: the maximum.</source>
+        <target>所选的范围结束端（双向绑定）。为 null 时取最大值。</target>
+      </trans-unit>
+      <trans-unit id="SearchDateFilter.Maximum">
+        <source>The newest date the slider reaches. Null: the newest item date.</source>
+        <target>滑块能到达的最新日期。为 null 时取最新项目的日期。</target>
+      </trans-unit>
+      <trans-unit id="SearchDateFilter.Minimum">
+        <source>The oldest date the slider reaches. Null: the oldest item date.</source>
+        <target>滑块能到达的最早日期。为 null 时取最早项目的日期。</target>
+      </trans-unit>
+      <trans-unit id="SearchDateFilter.Start">
+        <source>The chosen start of the range (two-way). Null: the minimum.</source>
+        <target>所选的范围起始端（双向绑定）。为 null 时取最小值。</target>
+      </trans-unit>
       <trans-unit id="SearchField">
         <source>Arc search field: a labeled search input with a leading glass that wakes up (full contrast) while the field is focused or filled, and a clear button that pops into a reserved slot, so the field never changes width. Every keystroke updates the two-way `Text` (debounce expensive filtering yourself); Escape clears the field, Enter raises `SearchSubmitted`, and clearing with the button returns focus to the field.</source>
         <target>Arc 搜索框：带标签的搜索输入框，左侧的放大镜图标在字段获得焦点或已填入内容时亮起（全对比度），清除按钮会出现在预留的位置，因此字段宽度永远不会改变。每次击键都会更新双向绑定的 `Text`（开销大的过滤请自行做防抖处理）；Escape 清空字段，Enter 引发 `SearchSubmitted`，用按钮清空后焦点会回到字段。</target>
@@ -4996,13 +5384,93 @@
         <source>Raised when Enter is pressed in the field.</source>
         <target>在字段中按下 Enter 时引发。</target>
       </trans-unit>
+      <trans-unit id="SearchFilter">
+        <source>A way to narrow the results of a `SearchResults`: a `SearchValueFilter` (a group of checkbox values) or a `SearchDateFilter` (a date range). Filters AND together; the values of one value filter OR.</source>
+        <target>用于缩小 `SearchResults` 结果的一种方式：`SearchValueFilter`（一组复选框值）或 `SearchDateFilter`（日期范围）。各筛选器之间为与关系；同一个值筛选器的各个值之间为或关系。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilter.Caption">
+        <source>A muted line under the filter ("Applies to docs and files").</source>
+        <target>筛选器下方的弱化提示行（"Applies to docs and files"）。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilter.Key">
+        <source>Names the attribute of `SearchResultItem` the filter reads (see `Attributes`).</source>
+        <target>指定筛选器读取的 `SearchResultItem` 属性名（参见 `Attributes`）。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilter.Title">
+        <source>The heading above the filter ("Type", "Team", "Edited").</source>
+        <target>筛选器上方的标题（"Type"、"Team"、"Edited"）。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilterValue">
+        <source>One value of a `SearchValueFilter`: a checkbox with a label and a count.</source>
+        <target>`SearchValueFilter` 的一个值：带文字标签和数量的复选框。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilterValue.Count">
+        <source>The results behind the value. `SearchResults` writes it while it filters; with `IsFilteringEnabled` false it is yours (a server's facet counts) and the control only reads it. A value with a count of 0 is dimmed and cannot be ticked, but keeps its place.</source>
+        <target>该值对应的结果数量。`SearchResults` 在筛选时写入此值；当 `IsFilteringEnabled` 为 false 时由你设置（例如服务器的分面计数），控件只读取它。数量为 0 的值会变暗且无法勾选，但仍保留其位置。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilterValue.IsSelected">
+        <source>Whether the checkbox is ticked (two-way).</source>
+        <target>复选框是否已勾选（双向绑定）。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilterValue.Label">
+        <source>The text beside the checkbox; `Value` when null.</source>
+        <target>复选框旁的文字；为 null 时使用 `Value`。</target>
+      </trans-unit>
+      <trans-unit id="SearchFilterValue.Value">
+        <source>What an item's attribute has to equal (ignoring case).</source>
+        <target>项目的属性必须等于的值（忽略大小写）。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultDetail">
+        <source>One key/value row of a result's detail sheet.</source>
+        <target>结果详情面板中的一行键值。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultDetail.Avatar">
+        <source>A person's photo for the avatar before the value.</source>
+        <target>人物的照片，显示在值之前的头像中。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultDetail.AvatarName">
+        <source>A person's name: a small avatar with their initials is shown before the value.</source>
+        <target>人物的姓名：值之前会显示一个带其姓名首字母的小头像。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultDetail.Label">
+        <source>The muted name on the left ("Team").</source>
+        <target>左侧弱化显示的名称（"Team"）。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultDetail.Note">
+        <source>A muted remark after the value ("3 weeks ago").</source>
+        <target>值之后弱化显示的备注（"3 weeks ago"）。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultDetail.Value">
+        <source>The value on the right.</source>
+        <target>右侧显示的值。</target>
+      </trans-unit>
       <trans-unit id="SearchResultItem">
-        <source>One searchable entry of a `SearchResults`: a document, issue, file, person or anything else your workspace holds. `Kind` decides the facet and the group it is listed under.</source>
-        <target>`SearchResults` 中的一条可搜索条目：文档、议题、文件、人员或工作区中的其他任何内容。`Kind` 决定它归属的分面以及所在的分组。</target>
+        <source>One searchable entry of a `SearchResults`: a document, a person, a file or anything else your workspace holds. `Kind` and `Attributes` feed the filters, the text properties are searched and shown, and the detail properties fill the sheet that opens when the result is chosen.</source>
+        <target>`SearchResults` 中一个可搜索的条目：文档、人员、文件或工作区中的任何其他内容。`Kind` 和 `Attributes` 用于筛选器；文本属性会被搜索并显示；详情属性会填充选中结果时打开的详情面板。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.Avatar">
+        <source>A photo for a person: the row and the detail show a round avatar instead of the icon.</source>
+        <target>人物的照片：行和详情中会显示圆形头像而非图标。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.AvatarName">
+        <source>A person's name: the avatar shows its initials (and the photo's fallback). Setting it switches the row to an avatar.</source>
+        <target>人物的姓名：头像会显示其姓名首字母（也是照片加载失败时的回退内容）。设置后该行会切换为头像。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.Body">
+        <source>The paragraphs shown in the detail sheet, separated by blank lines. Searched and marked there.</source>
+        <target>详情面板中显示的段落，以空行分隔。在此处进行搜索并醒目标示。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.Caption">
+        <source>A last, muted line under the snippet, such as an email address. Not searched.</source>
+        <target>摘录下方最后一行弱化显示的文字，例如电子邮件地址。不参与搜索。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.Date">
+        <source>When the result was last edited; sorts "Newest" and feeds a `SearchDateFilter`.</source>
+        <target>结果最后编辑的时间；用于 "Newest" 排序，并为 `SearchDateFilter` 提供数据。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Icon">
-        <source>A 16px icon: a 24×24 Lucide `Geometry` or a control. Default: Lucide FileText.</source>
-        <target>16px 的图标：24×24 的 Lucide `Geometry` 或一个控件。默认：Lucide FileText。</target>
+        <source>A 20px icon: a 24×24 Lucide `Geometry` or a control. Default: Lucide FileText.</source>
+        <target>20px 图标：24×24 的 Lucide `Geometry` 或一个控件。默认为 Lucide FileText。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Id">
         <source>Stable id; the title is used when it is empty.</source>
@@ -5017,72 +5485,172 @@
         <target>同样可用于查找结果的额外词语（同义词、id、标签）。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Kind">
-        <source>The facet the result belongs to, such as "Docs", "Issues" or "Files"; null lists it under "Other".</source>
-        <target>结果所属的分面，例如“Docs”、“Issues”或“Files”；为 null 时将其列在“Other”下。</target>
+        <source>The type of the result ("Docs", "People", "Files"): the value of the filter whose key is `KindKey`.</source>
+        <target>结果的类型（"Docs"、"People"、"Files"）：即键为 `KindKey` 的筛选器的值。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.KindLabel">
+        <source>The singular name of the kind ("Doc") used in the subtitle and the detail sheet; `Kind` when null.</source>
+        <target>该类型的单数名称（"文档"），用于副标题和详情面板；为 null 时使用 `Kind`。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Location">
-        <source>Where the result lives: a path or a breadcrumb line under the title. Also searched.</source>
-        <target>结果所在位置：路径或标题下方的面包屑行。同样参与搜索。</target>
-      </trans-unit>
-      <trans-unit id="SearchResultItem.Meta">
-        <source>A short note on the right of the title, such as "Updated 2d ago". Not searched.</source>
-        <target>标题右侧的简短备注，例如“Updated 2d ago”。不参与搜索。</target>
+        <source>Where the result lives: a path or a breadcrumb ("Engineering / Handbook"). Also searched.</source>
+        <target>结果所在的位置：路径或面包屑（"Engineering / Handbook"）。同样参与搜索。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Snippet">
-        <source>A passage of the content; long passages are cut to a window around the first match.</source>
-        <target>内容中的一段文字；较长的段落会截取为围绕第一个匹配项的一个窗口。</target>
+        <source>A passage of the content; long passages are cut to a window around the first match. Searched.</source>
+        <target>内容的一段文字；较长的段落会裁剪为围绕第一个匹配项的一个窗口。参与搜索。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.Subtitle">
+        <source>The line under the title (a person's role and city). When null the row shows "`KindLabel` in `Location`" (or just the location).</source>
+        <target>标题下方的一行（人员的角色和城市）。为 null 时该行显示 "`KindLabel` in `Location`"（或仅显示位置）。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Tag">
         <source>Any value you want back when the result is opened.</source>
         <target>任意希望在打开结果时取回的值。</target>
       </trans-unit>
       <trans-unit id="SearchResultItem.Title">
-        <source>The name of the result; searched first and ranked by.</source>
-        <target>结果名称；优先参与搜索，并作为排序依据。</target>
+        <source>The name of the result; searched first, marked where it matches and ranked by.</source>
+        <target>结果的名称；优先参与搜索，匹配处会高亮显示，并作为排序依据。</target>
+      </trans-unit>
+      <trans-unit id="SearchResultItem.Url">
+        <source>The address "Copy link" puts on the clipboard.</source>
+        <target>"复制链接"写入剪贴板的地址。</target>
       </trans-unit>
       <trans-unit id="SearchResults">
-        <source>A search results page for a workspace (an original TKCode design, after Algolia InstantSearch's search box, hits, highlight, refinement list and stats). A large search field, facet tabs for the kinds of content with live counts that roll as you type, a stats line, and the results: grouped by kind under All (a few per group with "See all"), or one kind at a time with "Show more". Every term of the query must match; matches are marked in titles and in a snippet window cut around the first match. One cursor block glides between the results: ArrowDown leaves the field for the list, arrows, Home, End and the page keys move it, Enter opens a result. Set `IsFilteringEnabled` to false when a server searches (counts and highlights still follow the query), and `IsLoading` while it does.</source>
-        <target>工作区的搜索结果页（TKCode 原创设计，参考了 Algolia InstantSearch 的搜索框、命中结果、高亮、筛选列表和统计信息）。顶部是一个大型搜索框；各类内容的分面标签带有实时计数，输入时计数会滚动更新；下方是统计信息行和结果：在 All 下按类型分组显示（每组若干条，并附有“See all”），或每次只显示一种类型并附有“Show more”。查询的每个词都必须匹配；匹配内容会在标题中，以及围绕首个匹配项截取的摘要窗口中高亮标出。一个光标块在结果之间滑动：ArrowDown 将焦点从搜索框移到列表，方向键、Home、End 和翻页键移动光标，Enter 打开结果。由服务器负责搜索时，请将 `IsFilteringEnabled` 设为 false（计数和高亮仍会跟随查询），搜索进行时设置 `IsLoading`。</target>
+        <source>A search results page for a workspace (an original TKCode design, after Algolia InstantSearch's search box, hits, highlight, refinement list and stats). A large search field with a suggestions popup (recent and suggested searches), a filters column (checkbox groups whose counts follow the query and the other filters, and a date range), a results header with the count, the time it took and a sort switch, the active filters as removable chips, and the results: people and documents in one list, matches marked in titles and in a snippet cut around the first match. One cursor block glides between the results; Enter or a click opens a result in a detail dialog (a bottom sheet on narrow screens). Below 560 the filters move behind a button into a sheet.</source>
+        <target>工作区的搜索结果页面（TKCode 原创设计，参照 Algolia InstantSearch 的搜索框、命中结果、高亮、细化列表和统计信息）。包含一个大型搜索框及建议弹层（最近搜索和推荐搜索）、筛选列（复选框分组，其计数随查询和其他筛选条件变化，另有日期范围）、带数量、耗时和排序切换的结果标题栏、以可移除标签形式显示的已启用筛选器，以及结果列表：人员和文档混合显示，标题和摘录中的匹配项均会高亮，摘录围绕第一个匹配项裁剪。一个光标块在结果之间平滑移动；按 Enter 或点击可在详情对话框中打开结果（窄屏时为底部面板）。宽度小于 560 时，筛选器会收入按钮后的面板中。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.ActiveFilterCount">
+        <source>The number of filter values ticked plus date ranges narrowed (read-only).</source>
+        <target>已勾选的筛选值数量加上已缩小范围的日期范围数量（只读）。</target>
       </trans-unit>
       <trans-unit id="SearchResults.ActiveItem">
         <source>The result under the cursor, or null.</source>
         <target>游标所在的结果，或为 null。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.AllLabel">
-        <source>Label of the facet that shows every kind.</source>
-        <target>显示全部类型的分面的标签。</target>
+      <trans-unit id="SearchResults.AndText">
+        <source>The word between the last two kinds of the default caption. Default "and".</source>
+        <target>默认标题中最后两种类型之间的连接词。默认为 "and"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.AppliesToFormat">
+        <source>The caption of a date filter without one; {0} lists its kinds ("docs and files"). Default "Applies to {0}".</source>
+        <target>未设置标题的日期筛选器的标题；{0} 列出其类型（"docs and files"）。默认为 "Applies to {0}"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.BestMatchText">
+        <source>The "Best match" sort option.</source>
+        <target>"最佳匹配"排序选项。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.ClearAllText">
+        <source>The link that clears every filter (in the column and in the active filters bar). Default "Clear all".</source>
+        <target>清除所有筛选器的链接（位于筛选列和已启用筛选器栏中）。默认为 "Clear all"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.ClearFiltersText">
+        <source>The empty state's button that clears the filters. Default "Clear filters".</source>
+        <target>空状态中用于清除筛选器的按钮。默认为 "Clear filters"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.ClearSearchText">
+        <source>Names the clear button of the field. Default "Clear search".</source>
+        <target>搜索框清除按钮的名称。默认为 "Clear search"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.CloseText">
+        <source>Names the close buttons of the detail and the filters sheet. Default "Close".</source>
+        <target>详情面板和筛选器面板关闭按钮的名称。默认为 "Close"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.CopyLinkText">
+        <source>The detail's secondary button. Default "Copy link".</source>
+        <target>详情中的次要按钮。默认为 "Copy link"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.DateFormat">
+        <source>The month and year format of a date range ("Sep 2025"). Default "MMM yyyy".</source>
+        <target>日期范围的月份和年份格式（"Sep 2025"）。默认为 "MMM yyyy"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.DetailActionInvoked">
+        <source>Raised when a button of the detail is pressed.</source>
+        <target>按下详情中的按钮时触发。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.DetailTemplate">
+        <source>Replaces the built-in content of the detail (everything between the header and the buttons); its data is the `SearchResultItem`.</source>
+        <target>替换详情中的内置内容（标题与按钮之间的全部内容）；其数据为 `SearchResultItem`。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.Elapsed">
+        <source>How long the search took, shown after the count ("in 0.12 seconds"). Null shows nothing; the app measures it.</source>
+        <target>搜索耗时，显示在数量之后（"in 0.12 seconds"）。为 null 时不显示；耗时由应用测量。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.ElapsedFormat">
+        <source>The time after the count; {0} is the seconds. Default "in {0} seconds".</source>
+        <target>数量之后的时间文本；{0} 为秒数。默认为 "in {0} seconds"。</target>
       </trans-unit>
       <trans-unit id="SearchResults.EmptyDescription">
-        <source>Empty state description when no facet has results.</source>
-        <target>没有任何分面有结果时的空状态描述。</target>
+        <source>Empty state description. Default "Check the spelling or try fewer words."</source>
+        <target>空状态描述。默认为 "Check the spelling or try fewer words."</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.EmptyFilteredDescription">
+        <source>Empty state description while filters hide results. Default "The filters leave nothing. Remove one to see more."</source>
+        <target>筛选器隐藏所有结果时的空状态描述。默认为 "The filters leave nothing. Remove one to see more."</target>
       </trans-unit>
       <trans-unit id="SearchResults.EmptyTitleFormat">
         <source>Empty state title; {0} is the query. Default "No results for “{0}”".</source>
         <target>空状态标题；{0} 为查询内容。默认为“No results for “{0}””。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.GroupPreviewCount">
-        <source>Results shown per group under All before "See all N"; at least 1. Default 3.</source>
-        <target>在 All 下，每组在“See all N”出现之前显示的结果数；至少为 1。默认为 3。</target>
+      <trans-unit id="SearchResults.FiltersButtonText">
+        <source>The narrow layout's button that opens the filters. Default "Filters".</source>
+        <target>窄屏布局中用于打开筛选器的按钮。默认为 "Filters"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.FiltersTitle">
+        <source>The filters column title. Default "Filters".</source>
+        <target>筛选列的标题。默认为 "Filters"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.HasActiveFilters">
+        <source>True while at least one filter narrows the results (read-only).</source>
+        <target>至少有一个筛选器缩小结果范围时为 true（只读）。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.HintMoveText">
+        <source>The key hint "to move". Default "to move,".</source>
+        <target>按键提示"移动"。默认为 "to move,"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.HintOpenText">
+        <source>The key hint "to open". Default "to open,".</source>
+        <target>按键提示"打开"。默认为 "to open,"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.HintSearchText">
+        <source>The key hint "to search". Default "to search".</source>
+        <target>按键提示"搜索"。默认为 "to search"。</target>
       </trans-unit>
       <trans-unit id="SearchResults.InvokeCommand">
         <source>Executed with the opened `SearchResultItem`.</source>
         <target>以被打开的 `SearchResultItem` 执行。</target>
       </trans-unit>
+      <trans-unit id="SearchResults.IsDetailEnabled">
+        <source>Whether Enter or a click opens the built-in detail. Turn it off when your app navigates on `ItemInvoked`.</source>
+        <target>按 Enter 或点击时是否打开内置详情。当应用在 `ItemInvoked` 中进行导航时请关闭此项。</target>
+      </trans-unit>
       <trans-unit id="SearchResults.IsFilteringEnabled">
-        <source>When true (default) the items are matched and ranked here. Set it to false when a server searched: the items are shown as given and counted per kind, and the query's terms are still marked.</source>
-        <target>为 true（默认）时，项目在此处进行匹配和排序。当服务器负责搜索时将其设为 false：项目会按原样显示并按类型计数，查询词仍会被高亮标出。</target>
+        <source>When true (default) the items are matched, filtered, counted and sorted here. Set it to false when a server searched: the items are shown as given, `Count` is yours, and the query's terms are still marked.</source>
+        <target>为 true（默认）时，项会在此处进行匹配、筛选、计数和排序。当搜索由服务器执行时请设为 false：项按原样显示，`Count` 由你自行提供，查询词仍会高亮标示。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.IsHintsVisible">
+        <source>Whether the keyboard hints show under the results. Default true.</source>
+        <target>是否在结果下方显示键盘提示。默认 true。</target>
       </trans-unit>
       <trans-unit id="SearchResults.IsLoading">
         <source>Shows skeleton rows in place of the results (keeping the previous results' height).</source>
         <target>以骨架行代替结果显示（保持先前结果的高度）。</target>
       </trans-unit>
+      <trans-unit id="SearchResults.IsSuggestionsEnabled">
+        <source>Whether the suggestions popup opens under the focused field. Default true.</source>
+        <target>是否在获得焦点的输入框下方打开建议弹层。默认 true。</target>
+      </trans-unit>
       <trans-unit id="SearchResults.ItemInvoked">
-        <source>Raised when a result is opened with Enter or a click.</source>
-        <target>通过 Enter 或点击打开结果时引发。</target>
+        <source>Raised when a result is opened with Enter or a click (before the detail shows; set Handled to skip the detail).</source>
+        <target>通过 Enter 或点击打开结果时引发（在显示详情之前；设置 Handled 可跳过详情）。</target>
       </trans-unit>
       <trans-unit id="SearchResults.ItemsSource">
         <source>Items to search; when null the inline `Items` are used. Collection changes are followed.</source>
         <target>要搜索的项目；为 null 时使用内联的 `Items`。会跟随集合的变化。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.KindLocationFormat">
+        <source>The kind and the location in a result's subtitle; {0} is the kind label, {1} the location. Default "{0} in {1}".</source>
+        <target>结果副标题中的类型和位置；{0} 为类型标签，{1} 为位置。默认 "{0} in {1}"。</target>
       </trans-unit>
       <trans-unit id="SearchResults.Label">
         <source>Names the search landmark and the search field.</source>
@@ -5092,25 +5660,37 @@
         <source>Stats text while `IsLoading` is true. Default "Searching…".</source>
         <target>`IsLoading` 为 true 时的统计信息文本。默认为“Searching…”。</target>
       </trans-unit>
+      <trans-unit id="SearchResults.MatchesLabel">
+        <source>The first row of the detail table: how often the query matches. Default "Matches".</source>
+        <target>详情表格的第一行：查询的匹配次数。默认 "Matches"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.MaxRecent">
+        <source>How many recent searches are kept. Default 5.</source>
+        <target>保留的最近搜索数量。默认 5。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.NewestText">
+        <source>The "Newest" sort option.</source>
+        <target>"Newest" 排序选项。</target>
+      </trans-unit>
       <trans-unit id="SearchResults.NoResultsText">
         <source>Stats text (and empty title without a query) when nothing matches. Default "No results".</source>
         <target>没有任何匹配时的统计信息文本（无查询时也用作空状态标题）。默认为“No results”。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.OneResultText">
-        <source>Stats text for one result. Default "1 result".</source>
-        <target>只有一条结果时的统计信息文本。默认为“1 result”。</target>
+      <trans-unit id="SearchResults.OneResultFormat">
+        <source>Stats text for one result; {0} is the count. Default "{0} result".</source>
+        <target>单个结果的统计文本；{0} 为数量。默认 "{0} result"。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.OtherFacetFormat">
-        <source>Empty state description when the current facet is empty but another is not; {0} is the count text ("4 results") and {1} the kind with the most results. Default "{0} in {1}.".</source>
-        <target>当前分面为空而其他分面有结果时的空状态描述；{0} 为计数文本（“4 results”），{1} 为结果最多的类型。默认为“{0} in {1}.”。</target>
+      <trans-unit id="SearchResults.OpenFormat">
+        <source>The detail's primary button; {0} is the kind label in lower case. Default "Open {0}".</source>
+        <target>详情的主按钮；{0} 为小写的类型标签。默认 "Open {0}"。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.OtherLabel">
-        <source>Facet and group label of items without a `Kind`.</source>
-        <target>没有 `Kind` 的项目所用的分面及分组标签。</target>
+      <trans-unit id="SearchResults.OpenedItem">
+        <source>The result whose detail is open, or null (two-way). Setting it opens that result's detail.</source>
+        <target>当前打开详情的结果，或为 null（双向）。设置此项会打开该结果的详情。</target>
       </trans-unit>
       <trans-unit id="SearchResults.PageSize">
-        <source>Results first shown for a single facet; "Show more" adds as many again. Default 20.</source>
-        <target>单个分面下首次显示的结果数；“Show more”每次再追加同样数量。默认为 20。</target>
+        <source>Results listed first; more follow when the list is scrolled to its end or "Show more" is pressed. Default 15.</source>
+        <target>首先列出的结果数；当列表滚动到末尾或按下 "Show more" 时会加载更多。默认 15。</target>
       </trans-unit>
       <trans-unit id="SearchResults.PlaceholderText">
         <source>Hint in the empty search field.</source>
@@ -5120,37 +5700,61 @@
         <source>The text in the search field (two-way).</source>
         <target>搜索框中的文本（双向）。</target>
       </trans-unit>
+      <trans-unit id="SearchResults.QuerySubmitted">
+        <source>Raised when a query is submitted: Enter in the field, or a suggestion chosen.</source>
+        <target>提交查询时引发：在输入框中按 Enter，或选择了某个建议时。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.RecentLabel">
+        <source>The group of recent searches in the popup. Default "Recent".</source>
+        <target>弹层中最近搜索的分组。默认 "Recent"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.RemoveFilterText">
+        <source>Names the remove button of a filter chip. Default "Remove filter".</source>
+        <target>为筛选器标签的移除按钮命名。默认 "Remove filter"。</target>
+      </trans-unit>
       <trans-unit id="SearchResults.ResultCount">
-        <source>The number of results in the current facet for the current query.</source>
-        <target>当前查询在当前分面中的结果数量。</target>
+        <source>The number of results for the current query and filters.</source>
+        <target>当前查询和筛选器下的结果数量。</target>
       </trans-unit>
       <trans-unit id="SearchResults.ResultsFormat">
-        <source>Stats text for several results; {0} is the count. Default "{0} results".</source>
-        <target>多条结果时的统计信息文本；{0} 为数量。默认为“{0} results”。</target>
+        <source>Stats text for several results; {0} is the count (it rolls). Default "{0} results".</source>
+        <target>多个结果的统计文本；{0} 为数量（数字会滚动更新）。默认 "{0} results"。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.SearchAllText">
-        <source>Button in the empty state that switches back to All. Default "Search all".</source>
-        <target>空状态中用于切换回 All 的按钮。默认为“Search all”。</target>
+      <trans-unit id="SearchResults.SearchChanged">
+        <source>Raised when the query, a filter or the sort order changed (ask your server again).</source>
+        <target>查询、筛选器或排序方式更改时引发（请让服务器重新搜索）。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.SeeAllFormat">
-        <source>Link under a group in All; {0} is the count and {1} the kind. Default "See all {0} {1}".</source>
-        <target>All 中每组下方的链接；{0} 为数量，{1} 为类型。默认为“See all {0} {1}”。</target>
-      </trans-unit>
-      <trans-unit id="SearchResults.SelectedKind">
-        <source>The current facet: a `Kind`, or null for All (two-way).</source>
-        <target>当前分面：某个 `Kind`；选择 All 时为 null（双向）。</target>
+      <trans-unit id="SearchResults.ShortcutText">
+        <source>The key hint on the field's keycap (the key that focuses it). Default "/".</source>
+        <target>输入框键帽上的按键提示（即用于聚焦该输入框的按键）。默认 "/"。</target>
       </trans-unit>
       <trans-unit id="SearchResults.ShowMoreText">
-        <source>Button under a single facet's results when more are left. Default "Show more".</source>
-        <target>单个分面结果下方的按钮，在仍有剩余结果时显示。默认为“Show more”。</target>
+        <source>Button under the listed results when more are left. Default "Show more".</source>
+        <target>当仍有更多结果时，显示在已列出结果下方的按钮。默认 "Show more"。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.SortOrder">
+        <source>How the results are ordered (two-way). Default `BestMatch`.</source>
+        <target>结果的排序方式（双向）。默认 `BestMatch`。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.SuggestedLabel">
+        <source>The group of suggested searches in the popup. Default "Suggested".</source>
+        <target>弹层中建议搜索的分组。默认 "Suggested"。</target>
       </trans-unit>
       <trans-unit id="SearchResults.Suggestions">
-        <source>Queries offered when nothing matches; choosing one fills the search field.</source>
-        <target>没有任何匹配时提供的查询建议；选择其中一项会填入搜索框。</target>
+        <source>Queries offered under "Suggested" in the popup and when nothing matches; choosing one fills the search field.</source>
+        <target>在弹层的 "Suggested" 下以及无匹配结果时提供的查询；选择其中一项会填充搜索框。</target>
       </trans-unit>
-      <trans-unit id="SearchResults.SuggestionsLabel">
-        <source>The word before the suggestions. Default "Try".</source>
-        <target>建议列表之前的提示词。默认为“Try”。</target>
+      <trans-unit id="SearchResults.TitleSortText">
+        <source>The "A to Z" sort option.</source>
+        <target>"A to Z" 排序选项。</target>
+      </trans-unit>
+      <trans-unit id="SearchResults.TryText">
+        <source>The word before the suggestions of the empty state. Default "Try".</source>
+        <target>空状态下建议之前的提示词。默认 "Try"。</target>
+      </trans-unit>
+      <trans-unit id="SearchValueFilter">
+        <source>A group of checkbox values over one attribute. Tick several values to see results with any of them. Leave `Values` empty to list the values found in the items (in the order they first appear); list them yourself to fix their order and labels. `SearchResults` writes each value's `Count`: the results that value would show with the query and the other filters applied.</source>
+        <target>基于同一属性的一组复选框值。勾选多个值可查看匹配其中任一值的结果。将 `Values` 留空时，会按项中值首次出现的顺序列出找到的值；如需固定顺序和标签，请自行列出。`SearchResults` 会写入每个值的 `Count`：即在应用查询和其他筛选器后，该值会显示的结果数。</target>
       </trans-unit>
       <trans-unit id="SecuritySettings">
         <source>The account security page: a checkup of four safeguards (password, two-step verification, passkeys, recovery codes), the password with a change form that opens in place, the two-step methods, and every signed-in session with a way to sign it out. Each action happens on the page; the host hears about it through routed events.</source>
@@ -5589,8 +6193,12 @@
         <target>`Value` 变化时触发（录入、清除、重置或由代码设置）。</target>
       </trans-unit>
       <trans-unit id="Sidebar">
-        <source>The app's main navigation (an original TKCode design): a header for a workspace switcher, an optional filter box, sections of pages with icons, counts and one level of nested pages, and a footer for the signed-in user. The selected page carries a muted block with an accent bar that glides between rows on a snappy spring; parents open their pages with a height spring and a turning chevron. The sidebar collapses to a 64px icon rail on a width spring: labels and counts fade, counts become dots, every page gets a tooltip on the right and a parent shows its pages in a menu. Keyboard (WAI-ARIA tree model): the list is one tab stop; ↑ / ↓, Home / End move, → opens a parent or enters it, ← closes it or goes back to the parent, Enter / Space choose, typing jumps to a page by its first letters, and Cmd / Ctrl+B collapses or expands the sidebar while focus is inside it.</source>
-        <target>应用的主导航（TKCode 原创设计）：顶部区域为工作区切换器，下面是可选的筛选框，然后是分区的页面（带图标和计数，并支持一层嵌套页面），底部区域显示已登录的用户。选中的页面带有柔和色块和强调色条，色条以轻快的弹簧动画在各行之间滑动；父级页面通过高度弹簧动画展开子页面，并带有旋转的 V 形箭头。侧边栏通过宽度弹簧动画收起为 64px 的图标窄栏：文字和计数淡出，计数变为圆点，每个页面在右侧显示工具提示，父级页面则以菜单形式显示其子页面。键盘操作（WAI-ARIA 树形模型）：列表只占一个 Tab 停靠点；↑ / ↓、Home / End 移动焦点，→ 展开父级或进入其中，← 收起或返回父级，Enter / Space 选择，输入字母可按页面首字母跳转，焦点在侧边栏内时 Cmd / Ctrl+B 可收起或展开侧边栏。</target>
+        <source>The app's main navigation (an original TKCode design): a header for a logo or a workspace switcher, an optional filter box, sections of pages with icons, counts and one level of nested pages, and a footer for the signed-in user. The selected page carries a muted block behind it and an accent-colored icon; the block glides between rows on a snappy spring. Parents open their pages with a height spring and a turning chevron. The sidebar collapses to a 64px icon rail on a width spring: labels and counts fade, counts become dots, every page gets a tooltip on the right and a parent shows its pages in a menu. Keyboard (WAI-ARIA tree model): the list is one tab stop; ↑ / ↓, Home / End move, → opens a parent or enters it, ← closes it or goes back to the parent, Enter / Space choose, typing jumps to a page by its first letters, and Cmd / Ctrl+B collapses or expands the sidebar while focus is inside it.</source>
+        <target>应用的主导航（TKCode 原创设计）：顶部区域放徽标或工作区切换器，下面是可选的筛选框，然后是分区的页面（带图标和计数，并支持一层嵌套页面），底部区域显示已登录的用户。选中的页面背后有一块柔和色块，图标变为强调色，色块以轻快的弹簧动画在各行之间滑动；父级页面通过高度弹簧动画展开子页面，并带有旋转的 V 形箭头。侧边栏通过宽度弹簧动画收起为 64px 的图标窄栏：文字和计数淡出，计数变为圆点，每个页面在右侧显示工具提示，父级页面则以菜单形式显示其子页面。键盘操作（WAI-ARIA 树形模型）：列表只占一个 Tab 停靠点；↑ / ↓、Home / End 移动焦点，→ 展开父级或进入其中，← 收起或返回父级，Enter / Space 选择，输入字母可按页面首字母跳转，焦点在侧边栏内时 Cmd / Ctrl+B 可收起或展开侧边栏。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.CollapseButtonPlacement">
+        <source>Where the collapse button sits while the sidebar is open: in the header row (default) or beside the filter box. On the rail it always sits at the top.</source>
+        <target>侧边栏展开时收起按钮的位置：头部行（默认）或筛选框旁边。在窄栏上它总是位于顶部。</target>
       </trans-unit>
       <trans-unit id="Sidebar.CollapseButtonText">
         <source>Accessible name and tooltip of the collapse button while the sidebar is open.</source>
@@ -5609,24 +6217,24 @@
         <target>筛选文本（双向）。标签包含该文本的页面将保留显示；含有匹配页面的父级会自动展开。</target>
       </trans-unit>
       <trans-unit id="Sidebar.Footer">
-        <source>Content at the bottom (the signed-in user). It keeps its open-width layout on the rail, clipped to the rail; use the `:collapsed` pseudo-class to adapt it.</source>
-        <target>底部内容（已登录用户）。在窄栏上仍保持展开时的宽度布局，并裁剪至窄栏内；可使用 `:collapsed` 伪类进行适配。</target>
+        <source>Content at the bottom (the signed-in user, a storage meter), under a thin separator. It keeps its open-width layout on the rail, clipped to the rail; use the `:collapsed` pseudo-class to adapt it.</source>
+        <target>底部内容（已登录用户、存储用量条），位于一条细分隔线下。在窄栏上仍保持展开时的宽度布局，并裁剪至窄栏内；可使用 `:collapsed` 伪类进行适配。</target>
       </trans-unit>
       <trans-unit id="Sidebar.Header">
-        <source>Content at the top, beside the collapse button (a workspace switcher). It is hidden on the rail while the collapse button shows.</source>
-        <target>顶部内容，位于收起按钮旁边（工作区切换器）。在窄栏上，收起按钮显示时此区域隐藏。</target>
+        <source>Content at the top (a logo and title, a workspace switcher), beside the collapse button when that sits in the header row. It is hidden on the rail while the collapse button shows.</source>
+        <target>顶部内容（徽标和标题、工作区切换器）；收起按钮位于头部行时，显示在它旁边。在窄栏上，收起按钮显示时此区域隐藏。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsCollapseButtonVisible">
-        <source>Shows the collapse / expand button (PanelLeft icon) in the header row.</source>
-        <target>显示标题行中的折叠或展开按钮（PanelLeft 图标）。</target>
+        <source>Shows the collapse / expand button (PanelLeft icon). Its place is `CollapseButtonPlacement`.</source>
+        <target>显示收起或展开按钮（PanelLeft 图标）。它的位置由 `CollapseButtonPlacement` 决定。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsCollapsed">
         <source>Whether the sidebar is the 64px icon rail (two-way). The width springs between the two.</source>
         <target>侧边栏是否为 64px 图标窄栏（双向）。宽度在两种状态之间以弹簧动画变化。</target>
       </trans-unit>
       <trans-unit id="Sidebar.IsFilterVisible">
-        <source>Shows the filter box under the header (hidden on the rail).</source>
-        <target>在标题下方显示筛选框（窄栏中隐藏）。</target>
+        <source>Shows the filter box under the header (it becomes a search button on the rail).</source>
+        <target>在头部下方显示筛选框（在窄栏上变为搜索按钮）。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ItemInvoked">
         <source>Raised when a page is chosen (click, Enter or Space, or a page in a rail menu), also when it already was the selected page.</source>
@@ -5640,6 +6248,10 @@
         <source>Text shown when the filter matches no page.</source>
         <target>筛选无匹配页面时显示的文本。</target>
       </trans-unit>
+      <trans-unit id="Sidebar.ResizeMode">
+        <source>How the width change between the open sidebar and the rail reaches the page next to it: `Push` (default) or `Overlay`.</source>
+        <target>展开与窄栏之间的宽度变化如何传到旁边的页面：`Push`（默认）或 `Overlay`。</target>
+      </trans-unit>
       <trans-unit id="Sidebar.SelectCommand">
         <source>Runs when a page is chosen; the parameter is the `SidebarItem`.</source>
         <target>选择页面时执行；参数为 `SidebarItem`。</target>
@@ -5651,6 +6263,10 @@
       <trans-unit id="Sidebar.SelectedKey">
         <source>The `Key` of the selected page (two-way), kept in step with `SelectedItem`; bind it to your route.</source>
         <target>选中页面的 `Key`（双向），与 `SelectedItem` 保持同步；可绑定到路由。</target>
+      </trans-unit>
+      <trans-unit id="Sidebar.UnreadText">
+        <source>Added to the accessible name of a page that has `IsUnread` ("Inbox, unread").</source>
+        <target>附加到带有 `IsUnread` 的页面的无障碍名称中（“Inbox, unread”）。</target>
       </trans-unit>
       <trans-unit id="SidebarItem">
         <source>One page of a `Sidebar`: a row with an icon, a label and an optional count. An item with `Items` is a parent: it opens and closes its child pages instead of being selected (one level of nesting).</source>
@@ -5672,6 +6288,10 @@
         <source>The 16px leading icon: a 24x24 Lucide `Geometry` (for example an `ArcIcons` glyph) or any control.</source>
         <target>16px 的前置图标：24x24 的 Lucide `Geometry`（例如 `ArcIcons` 图标），或任意控件。</target>
       </trans-unit>
+      <trans-unit id="SidebarItem.IsAction">
+        <source>Makes the row an action instead of a page: muted, never selected. Choosing it raises `ItemInvoked` and runs the commands, but `SelectedItem` stays (for example "New project", "More").</source>
+        <target>让该行成为操作而不是页面：颜色柔和，永远不会被选中。选择它会触发 `ItemInvoked` 并执行命令，但 `SelectedItem` 保持不变（例如“New project”“More”）。</target>
+      </trans-unit>
       <trans-unit id="SidebarItem.IsEnabled">
         <source>Whether the page can be chosen. Disabled rows are dimmed and skipped by the arrow keys.</source>
         <target>页面是否可以被选择。禁用的行会变淡，并在方向键导航时被跳过。</target>
@@ -5679,6 +6299,10 @@
       <trans-unit id="SidebarItem.IsExpanded">
         <source>Whether the child pages of a parent are shown (two-way).</source>
         <target>父项的子页面是否显示（双向）。</target>
+      </trans-unit>
+      <trans-unit id="SidebarItem.IsUnread">
+        <source>Marks the page as having something new: a small accent dot at the end of the row, a stronger label, and a dot on the icon on the rail.</source>
+        <target>把页面标记为有新内容：行末显示一个小的强调色圆点，名称更醒目，在窄栏上图标上会出现一个圆点。</target>
       </trans-unit>
       <trans-unit id="SidebarItem.Key">
         <source>A stable id for the page (a route or view name); `SelectedKey` selects by it.</source>
@@ -5691,6 +6315,10 @@
       <trans-unit id="SidebarItem.Tag">
         <source>Any value you want back when the page is chosen.</source>
         <target>选择页面时返回的任意值。</target>
+      </trans-unit>
+      <trans-unit id="SidebarItem.TrailingIcon">
+        <source>An icon after the label, in the label's muted color (for example a chevron on a "More" row): a 24x24 Lucide `Geometry` or any control.</source>
+        <target>名称之后的图标，颜色与名称的柔和色相同（例如“More”行上的箭头）：24x24 的 Lucide `Geometry` 或任意控件。</target>
       </trans-unit>
       <trans-unit id="SidebarSection">
         <source>One group of pages in a `Sidebar`: an optional small heading over its `Items`. A collapsible section folds its pages away under the heading; on the icon rail sections are separated by a thin line instead.</source>
