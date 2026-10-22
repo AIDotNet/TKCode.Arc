@@ -21,6 +21,12 @@ internal sealed class ButtonToken : AbstractControlDesignToken
     /// <summary>Disabled danger label: 55% danger mixed into surface-muted (accent independent).</summary>
     public Color DangerDisabledForeground { get; set; }
 
+    /// <summary>
+    /// Ghost hover and press fill on a raised surface: the foreground mixed into surface-raised (7% dark, 5% light), because
+    /// surface-muted is only a few steps away from surface-raised and the hover would nearly vanish there.
+    /// </summary>
+    public Color GhostRaisedHoverBackground { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
@@ -36,5 +42,6 @@ internal sealed class ButtonToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         var neutrals = ArcPalette.Neutrals(isDarkMode);
         DangerDisabledForeground = Oklch.MixOklab(neutrals.SurfaceMuted, neutrals.Danger, 0.55);
+        GhostRaisedHoverBackground = Oklch.MixOklab(neutrals.SurfaceRaised, neutrals.Foreground, isDarkMode ? 0.07 : 0.05);
     }
 }

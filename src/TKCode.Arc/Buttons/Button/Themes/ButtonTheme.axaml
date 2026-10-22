@@ -120,6 +120,13 @@
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             </Style>
+            <!-- On a raised surface (dialog, drawer, sheet, popover, menu) surface-muted nearly matches the fill. -->
+            <Style Selector="^:raised:pointerover">
+                <Setter Property="Background" Value="{arc:ButtonTokenResource GhostRaisedHoverBackground}" />
+            </Style>
+            <Style Selector="^:raised:pressed">
+                <Setter Property="Background" Value="{arc:ButtonTokenResource GhostRaisedHoverBackground}" />
+            </Style>
             <Style Selector="^:disabled">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             </Style>

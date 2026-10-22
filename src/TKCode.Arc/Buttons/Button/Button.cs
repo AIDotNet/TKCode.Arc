@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -19,12 +20,15 @@ public enum ButtonVariant
 /// label changes crossfade with a short blur while the width springs to fit, and <see cref="IsLoading"/>
 /// shows a spinner while keeping keyboard focus (clicks are swallowed instead of disabling the button).
 /// </summary>
-[PseudoClasses(LoadingPseudoClass, NarrowPseudoClass, WidePseudoClass)]
+[PseudoClasses(LoadingPseudoClass, NarrowPseudoClass, WidePseudoClass, RaisedPseudoClass)]
 public class Button : AvaloniaButton
 {
     public const string LoadingPseudoClass = ":loading";
     public const string NarrowPseudoClass = ":narrow";
     public const string WidePseudoClass = ":wide";
+
+    /// <summary>The button sits on a raised surface (<see cref="ArcSurface.ElevationProperty"/>): ghost hover uses a stronger fill.</summary>
+    public const string RaisedPseudoClass = ":raised";
 
     #region 公共属性定义
 
@@ -92,6 +96,10 @@ public class Button : AvaloniaButton
         if (change.Property == IsLoadingProperty)
         {
             PseudoClasses.Set(LoadingPseudoClass, IsLoading);
+        }
+        else if (change.Property == ArcSurface.ElevationProperty)
+        {
+            PseudoClasses.Set(RaisedPseudoClass, ArcSurface.GetElevation(this) == ArcSurfaceElevation.Raised);
         }
         else if (change.Property == BoundsProperty)
         {

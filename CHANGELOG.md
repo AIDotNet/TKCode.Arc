@@ -6,6 +6,24 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`
 and `TKCode.Arc.Icons.Lucide`.
 
+## Unreleased
+
+### Added
+
+- **Core**: `ArcSurface.Elevation`, an inherited attached property (`Base` / `Raised`). Dialogs, drawers, bottom
+  sheets, popovers and menus set it to `Raised`, so their content knows it sits on `SurfaceRaised`.
+- **Button**: the `:raised` pseudo-class on a raised surface. A ghost button there fills with
+  `GhostRaisedHoverBackground` on hover and press (the foreground mixed into `SurfaceRaised`, 7% dark and 5% light):
+  `SurfaceMuted` is only a few steps off `SurfaceRaised` (`#242424` against `#1F1F1F` in dark), so the hover nearly
+  vanished in dialogs.
+
+### Fixed
+
+- **Motion**: `ArcBrushTransition` mixes solid colors with premultiplied alpha. It was Avalonia's `BrushTransition`, a
+  plain ARGB mix, and `Transparent` is transparent white, so fading a fill in from or out to `Transparent` (ghost
+  buttons, menu rows) passed through a translucent light gray that flashed on dark surfaces. Other brushes still switch
+  halfway. The class now derives from `InterpolatingTransitionBase<IBrush?>` instead of `BrushTransition`.
+
 ## 0.3.0-preview.1 - 2026-10-22
 
 ### Added

@@ -82,7 +82,8 @@ important is this action compared with the one next to it?"
 ```
 
 Each variant has its own states. `Primary` lowers its opacity on hover and press. `Secondary` and `Ghost` fill with the
-muted surface on hover and press. `Danger` turns its border to the danger colour on hover and press. Disabled buttons
+muted surface on hover and press. On a raised surface (a dialog, drawer, bottom sheet, popover or menu) `Ghost` uses a
+stronger fill instead, because the muted surface is nearly the colour of the raised one. `Danger` turns its border to the danger colour on hover and press. Disabled buttons
 keep their shape: `Primary` fades to 52 percent opacity, while the outlined variants switch to muted text on a muted
 surface. The disabled danger label is tinted toward the surface, so it still reads as a danger action.
 

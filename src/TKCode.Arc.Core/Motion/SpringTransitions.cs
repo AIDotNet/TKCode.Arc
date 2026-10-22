@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc.Motion;
 
@@ -140,14 +141,54 @@ public enum ArcTween
     Spring
 }
 
-/// <summary>A brush transition preconfigured with an Arc tween (default: fast + standard ease).</summary>
-public class ArcBrushTransition : BrushTransition
+/// <summary>
+/// A brush transition preconfigured with an Arc tween (default: fast + standard ease). Solid colors mix with premultiplied
+/// alpha, so a transparent end contributes no color: <c>Transparent</c> is transparent white, and Avalonia's
+/// <see cref="BrushTransition"/> (a plain ARGB mix) passes through a translucent light gray on the way from or to it, which
+/// reads as a flash on dark surfaces (a ghost button's hover). Other brushes switch halfway, as BrushTransition does.
+/// </summary>
+public class ArcBrushTransition : InterpolatingTransitionBase<IBrush?>
 {
     private ArcTween _tween = ArcTween.Fast;
 
     public ArcBrushTransition() => ArcTweenConfig.Apply(this, _tween);
 
     public ArcTween Tween { get => _tween; set { _tween = value; ArcTweenConfig.Apply(this, _tween); } }
+
+    protected override IBrush? Interpolate(double progress, IBrush? from, IBrush? to)
+    {
+        if (progress >= 1)
+        {
+            return to;
+        }
+        if (from is not (ISolidColorBrush or null) || to is not (ISolidColorBrush or null) || (from is null && to is null))
+        {
+            return progress < 0.5 ? from : to;
+        }
+        return new ImmutableSolidColorBrush(MixPremultiplied(Effective(from), Effective(to), Math.Max(progress, 0)));
+    }
+
+    private static Color Effective(IBrush? brush) => brush is ISolidColorBrush solid
+        ? Color.FromArgb((byte)Math.Round(solid.Color.A * Math.Clamp(solid.Opacity, 0, 1)), solid.Color.R, solid.Color.G, solid.Color.B)
+        : Colors.Transparent;
+
+    /// <summary>
+    /// Mixes two colors with premultiplied alpha: a transparent end keeps the other end's hue, so every intermediate color
+    /// lies between the two as they appear on screen.
+    /// </summary>
+    public static Color MixPremultiplied(Color from, Color to, double progress)
+    {
+        var a1 = from.A / 255.0;
+        var a2 = to.A / 255.0;
+        var a = a1 + (a2 - a1) * progress;
+        if (a <= 0)
+        {
+            return Color.FromArgb(0, to.R, to.G, to.B);
+        }
+        byte Channel(byte c1, byte c2) =>
+            (byte)Math.Clamp(Math.Round((c1 * a1 * (1 - progress) + c2 * a2 * progress) / a), 0, 255);
+        return Color.FromArgb((byte)Math.Round(a * 255), Channel(from.R, to.R), Channel(from.G, to.G), Channel(from.B, to.B));
+    }
 }
 
 /// <summary>A double (opacity) transition preconfigured with an Arc tween.</summary>
