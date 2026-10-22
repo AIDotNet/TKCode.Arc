@@ -15,7 +15,9 @@
   <Folder Name="/gallery/">
     <Project Path="gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
     <Project Path="gallery/TKCode.Arc.Gallery.Shots/TKCode.Arc.Gallery.Shots.csproj" />
+    <Project Path="gallery/TKCode.Arc.Gallery.Content/TKCode.Arc.Gallery.Content.csproj" />
     <Project Path="gallery/TKCode.Arc.Gallery.Desktop/TKCode.Arc.Gallery.Desktop.csproj" />
     <Project Path="gallery/TKCode.Arc.Gallery.Generators/TKCode.Arc.Gallery.Generators.csproj" />
+    <Project Path="gallery/TKCode.Arc.Gallery.Llms/TKCode.Arc.Gallery.Llms.csproj" />
   </Folder>
 </Solution>

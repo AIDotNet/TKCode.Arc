@@ -7,6 +7,10 @@
     <!-- Pages have addresses such as /components/button (BrowserRouter), so every relative URL below starts at the site's root. -->
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- The app draws to a canvas, so this page carries no text. AI assistants read the pages as Markdown instead, starting from
+         llms.txt (written by gallery/TKCode.Arc.Gallery.Llms when the site is built). -->
+    <meta name="description" content="TKCode.Arc: Arc's components for Avalonia. AI assistants: every page is available as Markdown, listed in /llms.txt.">
+    <link rel="alternate" type="text/plain" href="llms.txt" title="Docs for AI assistants (llms.txt)">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="preload" id="webassembly" />

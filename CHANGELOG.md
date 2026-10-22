@@ -17,6 +17,20 @@ and `TKCode.Arc.Icons.Lucide`.
   `SurfaceMuted` is only a few steps off `SurfaceRaised` (`#242424` against `#1F1F1F` in dark), so the hover nearly
   vanished in dialogs.
 
+- **Gallery**: the docs site serves files for AI assistants, generated from the docs pages when the image is built
+  (`gallery/TKCode.Arc.Gallery.Llms`): `https://docs.tkcode.si/llms.txt`, an index of every guide, component and block;
+  `llms-full.txt` with every page in one file; every page as Markdown at its address plus `.md` (such as
+  `/components/button.md`), with the Simplified and Traditional Chinese pages under `/zh-CN/` and `/zh-TW/`; and an
+  agent skill under `/skills/tkcode-arc/` (`SKILL.md`, a component catalog and a review checklist). The AI and MCP
+  guide shows how to use them.
+
+### Changed
+
+- **Gallery**: the WebAssembly site downloads about 1.5 MB less before its first frame (12.0 MB to 10.5 MB, brotli). The
+  docs pages and guides in all three languages were most of the gallery assembly; they now live in the resource-only
+  `TKCode.Arc.Gallery.Content`, which the site leaves out and serves as files, fetching a page when it is shown. The
+  desktop gallery reads them as resources and calls `WithGalleryContent()`.
+
 ### Fixed
 
 - **Motion**: `ArcBrushTransition` mixes solid colors with premultiplied alpha. It was Avalonia's `BrushTransition`, a

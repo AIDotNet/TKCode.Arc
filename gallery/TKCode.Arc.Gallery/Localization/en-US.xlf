@@ -561,5 +561,10 @@
         <source>languages</source>
       </segment>
     </unit>
+    <unit id="PageLoadFailed">
+      <segment>
+        <source>This page could not be loaded. Check your connection and open the page again.</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

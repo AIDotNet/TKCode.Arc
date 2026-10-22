@@ -1,0 +1,67 @@
+# TKCode.Arc
+
+> TKCode.Arc brings Arc (uiarc.dev) to Avalonia: {{arc-count}} components in Arc's 22 groups, {{block-count}} page-level blocks, a spreadsheet-style data grid and a streaming Markdown renderer, as native Avalonia {{avalonia}} controls built on AtomUI {{atomui}}. Every control derives from an Avalonia base type and reads one set of design tokens, with light and dark appearances, eight accents and spring motion that respects reduced motion. MIT licensed, trimming and NativeAOT compatible.
+
+Version {{version}} (preview: pin the exact version). Each link below is a page as Markdown: when to use the component, when not to and what to use instead, usage in XAML and C#, the source of every live example, the API reference generated from the library (every property with its type and default, events, pseudo-classes), accessibility and motion.
+
+Any page of {{base}} is available as Markdown at its address plus `.md`, for example {{base}}/components/button.md for {{base}}/components/button. The site itself is an Avalonia WebAssembly app that draws to a canvas, so its HTML carries no text: read the Markdown. Simplified and Traditional Chinese pages are under {{base}}/zh-CN/ and {{base}}/zh-TW/, for example {{base}}/zh-CN/components/button.md.
+
+## Install
+
+```bash
+dotnet add package TKCode.Arc --version {{version}}
+dotnet add package TKCode.Arc.Fonts --version {{version}}   # optional: Geist and Geist Mono
+dotnet add package Avalonia.Fonts.Inter --version {{avalonia}}    # optional: Inter for body text
+```
+
+Register Arc in AtomUI's builder, and declare the `Application` class `partial` (AtomUI's source generator adds to it; the build stops with `ATOMUILOC008` otherwise):
+
+```csharp
+AppBuilder.Configure<App>()
+          .UsePlatformDetect()
+          .WithInterFont()
+          .WithArcFonts()
+          .UseAtomUI(builder =>
+          {
+              builder.UseDesktopControls();
+              builder.UseArc();
+          });
+```
+
+Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. `TKCode.Arc.Blocks` (`UseArcBlocks()`) and `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid) are not on NuGet yet: reference those projects from {{repository}}.
+
+## Rules for agents
+
+- This is Avalonia {{avalonia}} with AtomUI {{atomui}}, not WPF, WinUI or HTML: no `Visibility`, no `DataTemplateSelector`, no `x:Array`, no CSS.
+- Write the `arc:` prefix. Without it, `Button`, `Slider`, `TreeView` and the other names Arc shares with Avalonia resolve to Avalonia's own controls. In C#, alias one namespace: `using ArcButton = TKCode.Arc.Button;`.
+- Use only the properties, events and enum values in the component's API reference. Anything else is invented and fails at build or run time.
+- Colors, radii, spacing and fonts come from tokens: `{arc:ArcDesignTokenResource Surface}` in XAML, `ArcTokens.Bind(...)` in code. A hard-coded hex color breaks dark mode and the accents.
+- Arc controls animate themselves. A custom control declares its transitions in its ControlTheme under `^:motion-full` and `^:motion-reduced` with `arc:ArcMotion.Tracks="True"`; the levels are Full, Reduced and Off (`ArcMotion.Level`).
+- Fields are named by `Label`, explained by `Description`, and show errors through `ErrorMessage` or data validation on the bound property.
+- One `Primary` button per surface. Copy is sentence case, and a button says what it does: "Save changes", not "OK" or "Submit".
+
+## Agent skill
+
+- [SKILL.md]({{skill}}/SKILL.md): the TKCode.Arc skill for coding agents: workflow, rules and quick component decisions. Save it with the two files below in a `{{skill-name}}` folder of your agent's skills directory, such as `.claude/skills/{{skill-name}}/`.
+- [components.md]({{skill}}/components.md): every component and block by group, with its class and purpose.
+- [checklist.md]({{skill}}/checklist.md): the review checklist to run before finishing a screen.
+
+## Docs
+
+{{docs}}
+
+## Components
+
+{{components}}
+
+## Blocks
+
+Blocks are complete screens and page regions built from the components, in `TKCode.Arc.Blocks` (not on NuGet yet).
+
+{{blocks}}
+
+## Optional
+
+- [llms-full.txt]({{base}}/llms-full.txt): every page above, in full, in one file (about {{full-size}}; fetch single pages when you can).
+- [Source code]({{repository}}): the repository; its `AGENTS.md` is for work on the library itself.
+- [NuGet](https://www.nuget.org/packages/TKCode.Arc): the TKCode.Arc package.

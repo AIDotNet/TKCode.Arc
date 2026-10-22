@@ -1,11 +1,11 @@
 ---
 title: AI 与 MCP
-source-hash: b46831a331bd
+source-hash: 2aba9c808c40
 ---
 
 # AI 与 MCP
 
-AI 编程助手能很好地配合 TKCode.Arc 使用，因为它需要的一切都以纯文本形式写成：每个组件都有一个根据其源代码编写的 Markdown 页面，每个公共属性和事件都有 XML 描述，而且各部分的约定保持一致。生成的代码能否编译、会不会凭空捏造属性，关键在于助手拿到的上下文。本页说明这些上下文位于何处、如何提供给助手，以及如何审查它返回的结果。
+AI 编程助手能很好地配合 TKCode.Arc 使用，因为它需要的一切都以纯文本形式写成：每个组件都有一个根据其源代码编写的 Markdown 页面，每个公共属性和事件都有 XML 描述，而且各部分的约定保持一致。生成的代码能否编译、会不会凭空捏造属性，关键在于助手拿到的上下文。本页说明这些上下文位于何处、如何提供给助手，以及如何审查它返回的结果。文档站点也为能自行获取内容的助手发布了同样的知识：`llms.txt` 索引、每个页面的 Markdown 版本，以及一个智能体技能（skill）。
 
 ## 助手应先了解的事项
 
@@ -24,6 +24,9 @@ AI 编程助手能很好地配合 TKCode.Arc 使用，因为它需要的一切�
 
 | 来源 | 位置 | 最适合 |
 |---|---|---|
+| `llms.txt` | https://docs.tkcode.si/llms.txt | 最先交给助手的内容：安装步骤、规则，以及每个页面的一句话摘要和指向其 Markdown 的链接。 |
+| 页面的 Markdown 版本 | 页面地址加 `.md`，例如 https://docs.tkcode.si/components/button.md（译文位于 `/zh-CN/` 与 `/zh-TW/` 之下） | 无需克隆仓库即可完整读取一个组件、区块或指南，包括示例源代码与 API 参考。 |
+| 智能体技能 | https://docs.tkcode.si/skills/tkcode-arc/SKILL.md | 会加载技能的编程智能体：工作流程、规则、组件选择与审查清单。 |
 | 组件页面 | `gallery/TKCode.Arc.Gallery/Docs/<Category>/<Component>/en-US.md`（另有 `zh-CN.md`、`zh-TW.md`） | 了解何时使用某个组件、用法、绑定、验证、无障碍、键盘与动效。 |
 | 实时示例 | `gallery/TKCode.Arc.Gallery/Demos/<Category>/<Component>/*.axaml` | 页面中每个示例的可运行 XAML。 |
 | API 描述 | 随包发布的 XML 文档 | 每个公共属性、事件与类型，即 IntelliSense 显示的内容以及 API 表格列出的内容。 |
@@ -35,6 +38,45 @@ AI 编程助手能很好地配合 TKCode.Arc 使用，因为它需要的一切�
 每个组件页面顶部都有 **复制页面**。它会将整个页面复制为 Markdown，包括每个实时示例的源代码（`.axaml` 及其代码后置文件）以及生成的 API 表格。在请求组件帮助时把它粘贴到对话中，助手便会依据真实的 API 与真实的示例工作，而不是凭记忆。
 
 若某个界面使用了多个组件，请复制这些组件各自的页面；如果助手能直接读取文件，也可以让它查看仓库中的 Markdown 文件。
+
+## llms.txt 与 Markdown 页面
+
+位于 https://docs.tkcode.si 的图库是一个绘制在画布上的 Avalonia WebAssembly 应用，助手获取页面地址时拿不到任何文字。因此站点在每次发布时，都会根据文档页面生成同样内容的纯文本版本：
+
+| 地址 | 内容 |
+|---|---|
+| `/llms.txt` | 采用 llms.txt 格式的索引：库的简介、安装方法、给智能体的规则，以及每个指南、组件与区块的一句话摘要和指向其 Markdown 的链接。 |
+| `/llms-full.txt` | 全部英文页面合为一个文件，适合上下文窗口较大的助手。 |
+| `/<section>/<slug>.md` | 单个页面：页面地址加 `.md`，例如 `/docs/theming.md`、`/components/button.md` 或 `/blocks/sidebar.md`。组件页面的内容与 **复制页面** 复制的相同，顶部另有包名与安装命令。 |
+| `/zh-CN/…`、`/zh-TW/…` | 同样页面的简体中文与繁体中文版本，例如 `/zh-CN/components/button.md`。 |
+
+对于能获取网页的助手，一句话就够了：
+
+```text
+使用 TKCode.Arc 编写界面代码之前，先阅读 https://docs.tkcode.si/llms.txt，再获取你所用每个组件的
+Markdown 页面，并且只使用其 API 参考中列出的属性与事件。
+```
+
+## 智能体技能
+
+技能（skill）是一个指令文件夹，编程智能体会在任务需要时加载它。TKCode.Arc 技能包含工作流程、本页中的规则、一张说明哪种需求适合哪个组件的表格，以及两个参考文件：
+
+| 文件 | 内容 |
+|---|---|
+| `SKILL.md` | 工作流程（查找、阅读、安装、连接、样式、审查）、规则、常用令牌，以及快速选择组件的表格。 |
+| `components.md` | 按分组列出的每个组件与区块，包括类名、用途与页面链接。 |
+| `checklist.md` | 智能体在完成一个界面之前运行的审查清单。 |
+
+要在某个项目中为 Claude Code 安装它，把这三个文件下载到 `.claude/skills/tkcode-arc/`：
+
+```bash
+mkdir -p .claude/skills/tkcode-arc
+for file in SKILL.md components.md checklist.md; do
+  curl -fsSL "https://docs.tkcode.si/skills/tkcode-arc/$file" -o ".claude/skills/tkcode-arc/$file"
+done
+```
+
+若要在所有项目中使用，请把该文件夹放到 `~/.claude/skills/`；其他支持技能的智能体会从各自的技能文件夹读取同样的结构。这些文件注明了它们所描述的 TKCode.Arc 版本，升级之后请重新下载。
 
 ## 项目指令文件
 
@@ -53,7 +95,8 @@ Claude Code、Cursor 与 GitHub Copilot 等助手会读取仓库中的指令文�
 - 动效：Arc 控件会自行产生动画。对于自定义控件，请在 ^:motion-full 与
   ^:motion-reduced 下声明过渡，并设置 arc:ArcMotion.Tracks="True"。
 - 视图模型使用 CommunityToolkit.Mvvm（[ObservableProperty]、[RelayCommand]）。
-- 组件文档：<克隆仓库的路径>/gallery/TKCode.Arc.Gallery/Docs/<Category>/<Component>/en-US.md
+- 组件文档：https://docs.tkcode.si/llms.txt（每个页面都有 Markdown 版本，例如
+  https://docs.tkcode.si/zh-CN/components/button.md）
 ```
 
 ## 有效的提示词
@@ -79,12 +122,15 @@ Claude Code、Cursor 与 GitHub Copilot 等助手会读取仓库中的指令文�
 - **动效。** 控件已经产生动画的地方不再手写动画；自定义过渡放在动效伪类之下。
 - **线程。** 来自后台工作的值在 UI 线程上设置（`Dispatcher.UIThread`）。
 
+技能中的 `checklist.md` 是这份清单的详细版本，供智能体对自己写的代码逐项检查。
+
 ## MCP
 
 模型上下文协议（MCP）让助手可以从服务器读取资源并调用工具，而不必依赖对话中粘贴的内容。
 
-TKCode.Arc 目前尚未提供自己的 MCP 服务器。在提供之前，有两种方式可以直接把文档交给助手：
+TKCode.Arc 目前尚未提供自己的 MCP 服务器。在提供之前，有三种方式可以直接把文档交给助手：
 
+- **能获取网页的助手**：让它从 https://docs.tkcode.si/llms.txt 开始（见上文）。
 - **能读取文件的助手**（Claude Code、Cursor 等）：把仓库克隆到你的项目旁边，或将其加入工作区，并让助手指向 `gallery/TKCode.Arc.Gallery/Docs` 与 `.../Demos`。
 - **只使用 MCP 的客户端**：在文档文件夹上运行文件系统 MCP 服务器。使用 MCP 项目的参考服务器时，客户端配置如下：
 

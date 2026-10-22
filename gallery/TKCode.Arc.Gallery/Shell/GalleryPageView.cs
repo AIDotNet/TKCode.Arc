@@ -51,6 +51,9 @@ public sealed class GalleryPageView : Grid
     private readonly CopyButton? _copyPage;
     private MarkdownView? _docsView;
     private DocumentSnapshot? _outlineSnapshot;
+    // The language whose docs page is shown or on its way: the constructor, attaching and attaching again all refresh, and
+    // only a new language fetches the text again.
+    private string? _docsLanguage;
 
     /// <summary>
     /// A page without demos: <paramref name="body"/> (a planned component's placeholder, or examples registered with
@@ -291,10 +294,35 @@ public sealed class GalleryPageView : Grid
     {
         var language = GalleryText.CurrentLanguage;
         _summary.Text = GalleryDocs.Summary(_entry.ClassName, language) ?? _entry.Description;
-        if (_docs is not null && GalleryDocs.Get(_entry.ClassName, language) is { } doc && _docs.Text != doc.Markdown)
+        if (_docs is not null && _docsLanguage != language)
         {
-            _docs.Text = doc.Markdown;
-            _copyPage!.Value = doc.CopyMarkdown;
+            _docsLanguage = language;
+            _ = ShowDocsAsync(_docs, _copyPage!, language);
+        }
+    }
+
+    /// <summary>
+    /// Shows the docs page in <paramref name="language"/>. The gallery's resources hand its text over at once, so the page
+    /// is laid out with its first frame; the WebAssembly host fetches it, and the header shows until it arrives. A page
+    /// that arrives after the language changed again is dropped, and one that cannot be read says so and is asked for
+    /// again on the next refresh.
+    /// </summary>
+    private async Task ShowDocsAsync(Markdown docs, CopyButton copyPage, string language)
+    {
+        var doc = await GalleryDocs.GetAsync(_entry.ClassName, language);
+        if (language != _docsLanguage)
+        {
+            return;
+        }
+        if (doc is null)
+        {
+            docs.Text = "> " + GalleryText.Get(GalleryShellLangResourceKind.PageLoadFailed);
+            _docsLanguage = null;
+        }
+        else if (docs.Text != doc.Markdown)
+        {
+            docs.Text = doc.Markdown;
+            copyPage.Value = doc.CopyMarkdown;
         }
     }
 

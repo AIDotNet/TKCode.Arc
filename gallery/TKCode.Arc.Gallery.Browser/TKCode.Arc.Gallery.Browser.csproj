@@ -41,8 +41,9 @@
         <ArcWasmUnusedAssembly Include="Avalonia.X11;Avalonia.Wayland;NWayland" />
         <ArcWasmUnusedAssembly Include="Avalonia.FreeDesktop;Avalonia.FreeDesktop.AtSpi;Tmds.DBus.Protocol" />
         <ArcWasmUnusedAssembly Include="Avalonia.Native;Avalonia.MicroCom;MicroCom.Runtime;AtomUI.Native" />
-        <!-- The docs screenshots: resources of this assembly in a desktop host, files under wwwroot/shots here. -->
-        <ArcWasmUnusedAssembly Include="TKCode.Arc.Gallery.Shots" />
+        <!-- The docs screenshots and the pages' text: resources of these assemblies in a desktop host, files under wwwroot/shots and
+             wwwroot/content here. -->
+        <ArcWasmUnusedAssembly Include="TKCode.Arc.Gallery.Shots;TKCode.Arc.Gallery.Content" />
     </ItemGroup>
 
     <!-- Runtime-pack assemblies that no assembly of the app, its packages or the runtime pack itself references by type
@@ -75,10 +76,10 @@
     <!-- The WebAssembly SDK builds the boot list (build and publish) and the P/Invoke scan from ReferenceCopyLocalPaths, so
          removing the items here keeps them out of both. -->
     <Target Name="ArcPruneWasmAssemblies" AfterTargets="ResolveReferences" Condition="'$(ArcWasmPrune)' == 'true'">
-        <!-- Trimmed: only the screenshots assembly is left out. Nothing refers to it by code, so ILLink would drop it anyway; leaving it
-             out here and setting the switch below makes the site fetch the pictures as files. -->
+        <!-- Trimmed: only the screenshots and the pages' text are left out. Nothing refers to their assemblies by code, so ILLink would
+             drop them anyway; leaving them out here and setting the switches below makes the site fetch the pictures and pages as files. -->
         <PropertyGroup Condition="'$(PublishTrimmed)' == 'true'">
-            <_ArcWasmLeftOutNames>;TKCode.Arc.Gallery.Shots;</_ArcWasmLeftOutNames>
+            <_ArcWasmLeftOutNames>;TKCode.Arc.Gallery.Shots;TKCode.Arc.Gallery.Content;</_ArcWasmLeftOutNames>
         </PropertyGroup>
         <PropertyGroup Condition="'$(PublishTrimmed)' != 'true'">
             <_ArcWasmLazyNames>;@(ArcWasmLazyAssembly);</_ArcWasmLazyNames>
@@ -91,9 +92,11 @@
                               Condition="'%(Extension)' == '.dll' And $(_ArcWasmLazyNames.Contains(';%(Filename);'))" />
             <ReferenceCopyLocalPaths Remove="@(_ArcWasmPrunedFile)" />
         </ItemGroup>
-        <!-- Program reads this switch: with the screenshots assembly gone, HttpShotSource fetches the pictures. -->
+        <!-- Program reads these switches: with the screenshots assembly gone, HttpShotSource fetches the pictures; with the content
+             assembly gone, HttpTextSource fetches a page's text when it is shown. -->
         <ItemGroup>
             <RuntimeHostConfigurationOption Include="Arc.Gallery.ShotsOverHttp" Value="true" />
+            <RuntimeHostConfigurationOption Include="Arc.Gallery.TextsOverHttp" Value="true" />
             <!-- Program installs LazyAssemblies only when some assemblies were left out to be fetched. -->
             <RuntimeHostConfigurationOption Include="Arc.Gallery.LazyAssemblies" Value="true" Condition="'$(PublishTrimmed)' != 'true'" />
         </ItemGroup>
@@ -104,6 +107,13 @@
     <ItemGroup>
         <Content Include="../TKCode.Arc.Gallery/Docs/**/images/*.webp" Link="wwwroot/shots/Docs/%(RecursiveDir)%(Filename)%(Extension)" />
         <Content Include="../TKCode.Arc.Gallery/Guides/**/images/*.webp" Link="wwwroot/shots/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <!-- The text of the docs pages and guides, served as files (HttpTextSource): wwwroot/content/Docs/<Category>/<Component>/<language>.md
+         and wwwroot/content/Guides/<Page>/<language>.md. -->
+    <ItemGroup>
+        <Content Include="../TKCode.Arc.Gallery/Docs/**/*.md" Link="wwwroot/content/Docs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <Content Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="wwwroot/content/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
 
     <Target Name="ArcCopyLazyAssemblies" AfterTargets="Publish" Condition="'$(WasmBuildingForNestedPublish)' != 'true' And '@(_ArcWasmLazyFile)' != ''">

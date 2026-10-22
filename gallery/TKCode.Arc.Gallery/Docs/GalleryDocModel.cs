@@ -2,11 +2,20 @@ using Avalonia;
 
 namespace TKCode.Arc.Gallery.Docs;
 
-/// <summary>One component page in one language, as written in <c>Docs/&lt;Category&gt;/&lt;ClassName&gt;/&lt;Language&gt;.md</c>.</summary>
+/// <summary>
+/// One component page in one language, as written in <c>Docs/&lt;Category&gt;/&lt;ClassName&gt;/&lt;Language&gt;.md</c>: what the
+/// generator read from it. The Markdown itself is read when the page is shown (<see cref="GalleryTexts"/>).
+/// </summary>
 /// <param name="IsOutdated">A translation whose en-US page changed after it was translated (its source-hash differs).</param>
 /// <param name="Folder">The page's folder below <c>Docs/</c>, such as <c>TextFields/Input</c>; its screenshots are in <c>images/</c> there.</param>
-/// <param name="Body">The Markdown after the front matter, with its <c>&lt;!-- api: Type --&gt;</c> lines still in place.</param>
-public sealed record GalleryDocPage(string ClassName, string Language, string Folder, string Title, string Summary, bool IsOutdated, string Body);
+/// <param name="Demos">The demos the page shows, in order, as <c>Component.Name</c>.</param>
+/// <param name="Screenshots">The page's screenshot lines, in order: the capture's name and its caption.</param>
+public sealed record GalleryDocPage(string ClassName, string Language, string Folder, string Title, string Summary, bool IsOutdated,
+                                    string[] Demos, (string Name, string Caption)[] Screenshots)
+{
+    /// <summary>The page's file, relative to the gallery project: <c>Docs/&lt;Folder&gt;/&lt;Language&gt;.md</c>.</summary>
+    public string Path => $"Docs/{Folder}/{Language}.md";
+}
 
 public enum GalleryApiMemberKind
 {

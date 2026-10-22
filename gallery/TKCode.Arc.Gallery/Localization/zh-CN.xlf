@@ -673,5 +673,11 @@
         <target state="translated">种语言</target>
       </segment>
     </unit>
+    <unit id="PageLoadFailed">
+      <segment>
+        <source>This page could not be loaded. Check your connection and open the page again.</source>
+        <target state="translated">无法加载此页面。请检查网络连接，然后重新打开此页面。</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

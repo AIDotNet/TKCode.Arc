@@ -51,6 +51,8 @@ internal sealed class DocPage
     private static readonly Regex s_directive = new(@"^[ \t]*<!--[ \t]*api:[ \t]*([A-Za-z_][A-Za-z0-9_]*)[ \t]*-->[ \t]*$", RegexOptions.Multiline);
     // Shared with the gallery's GalleryDocs as well.
     private static readonly Regex s_demo = new(@"^[ \t]*<Demo[ \t]+name=""([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)?)""[ \t]*/>[ \t]*$", RegexOptions.Multiline);
+    // Shared with the gallery's GalleryDocs as well: a screenshot line, ![caption](images/Name.png).
+    private static readonly Regex s_screenshot = new(@"^[ \t]*!\[([^\]\n]*)\]\(images/([A-Za-z0-9_-]+)\.png\)[ \t]*$", RegexOptions.Multiline);
     private static readonly Regex s_language = new(@"^[a-z]{2,3}(-[A-Z][a-z]{3})?(-[A-Z]{2})?$");
 
     private DocPage(string path, string className, string language)
@@ -90,11 +92,12 @@ internal sealed class DocPage
     /// <summary>The hash of this file, which translations of an en-US page record as their <c>source-hash</c>.</summary>
     public string Hash { get; private set; } = string.Empty;
 
-    public string Body { get; private set; } = string.Empty;
-
     public List<ApiDirective> Directives { get; } = new();
 
     public List<DemoReference> Demos { get; } = new();
+
+    /// <summary>The screenshot lines, in order: the capture's name and its caption.</summary>
+    public List<(string Name, string Caption)> Screenshots { get; } = new();
 
     public List<Diagnostic> Diagnostics { get; } = new();
 
@@ -132,7 +135,6 @@ internal sealed class DocPage
             page.Report(0, "The front matter needs a 'title' and a 'summary'");
         }
 
-        page.Body = normalized.Substring(bodyStart).TrimStart('\n');
         foreach (Match match in s_directive.Matches(normalized, bodyStart))
         {
             var line = LineOf(normalized, match.Index);
@@ -142,6 +144,10 @@ internal sealed class DocPage
         {
             var name = match.Groups[1].Value;
             page.Demos.Add(new DemoReference(name.IndexOf('.') < 0 ? className + "." + name : name, page.LocationAt(LineOf(normalized, match.Index))));
+        }
+        foreach (Match match in s_screenshot.Matches(normalized, bodyStart))
+        {
+            page.Screenshots.Add((match.Groups[2].Value, match.Groups[1].Value));
         }
         return page;
     }

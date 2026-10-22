@@ -7,6 +7,7 @@ using Avalonia.Browser;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
 using TKCode.Arc.Gallery;
+using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Shell;
 
 namespace TKCode.Arc.Gallery.Browser;
@@ -24,6 +25,11 @@ internal sealed partial class Program
         if (AppContext.TryGetSwitch("Arc.Gallery.ShotsOverHttp", out var shotsOverHttp) && shotsOverHttp && args.Length > 1)
         {
             GalleryShots.Source = new HttpShotSource(new Uri(args[1]));
+        }
+        // Nor the pages' text (the content assembly): a page is fetched when it is shown, in the language it is shown in.
+        if (AppContext.TryGetSwitch("Arc.Gallery.TextsOverHttp", out var textsOverHttp) && textsOverHttp && args.Length > 1)
+        {
+            GalleryTexts.Source = new HttpTextSource(new Uri(args[1]));
         }
         return BuildAvaloniaApp().StartBrowserAppAsync("out");
     }

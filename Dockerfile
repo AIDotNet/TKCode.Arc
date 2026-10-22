@@ -29,11 +29,16 @@ COPY . .
 RUN dotnet publish gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser.csproj \
         -c Release -o /app \
         ${STREAMMARK_VERSION:+-p:StreamMarkVersion=${STREAMMARK_VERSION}}
+# The files for AI assistants next to the app: llms.txt, llms-full.txt, every docs page as Markdown (English, zh-CN, zh-TW)
+# and the agent skill, with links on the site's fixed address (gallery/TKCode.Arc.Gallery.Llms).
+RUN dotnet run --project gallery/TKCode.Arc.Gallery.Llms -c Release -- /app/wwwroot --base-url https://docs.tkcode.si
 # Pre-compress the text-like files: nginx serves *.br (brotli_static) and *.gz (gzip_static) without compressing per request.
-# The *.dll files are the assemblies the publish loads on demand (wwwroot/_lazy, see the Browser project file); the *.otf file is the Chinese font.
+# The *.dll files are the assemblies the publish loads on demand (wwwroot/_lazy, see the Browser project file); the *.otf file is the Chinese font;
+# the *.md and *.txt files are the pages for AI assistants.
 RUN cd /app/wwwroot \
     && find . -type f \( -name '*.js' -o -name '*.wasm' -o -name '*.dat' -o -name '*.json' -o -name '*.html' \
-                         -o -name '*.css' -o -name '*.map' -o -name '*.svg' -o -name '*.xml' -o -name '*.dll' -o -name '*.otf' \) -print0 \
+                         -o -name '*.css' -o -name '*.map' -o -name '*.svg' -o -name '*.xml' -o -name '*.dll' -o -name '*.otf' \
+                         -o -name '*.md' -o -name '*.txt' \) -print0 \
        | xargs -0 -P "$(nproc)" -I{} sh -c 'brotli -q 11 -c "{}" > "{}.br" && gzip -9 -c "{}" > "{}.gz"'
 
 # nginx with the brotli module, built from source: Alpine ships no nginx-mod-http-brotli package.

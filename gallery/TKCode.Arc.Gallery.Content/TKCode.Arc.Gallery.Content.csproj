@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <RootNamespace>TKCode.Arc.Gallery.Content</RootNamespace>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+    </ItemGroup>
+
+    <!-- The text of the docs pages and of the Docs-section guides (Docs/GalleryTexts): Docs/<Category>/<Component>/<language>.md
+         and Guides/<Page>/<language>.md in the gallery project, where they are written. They live in an assembly of their own,
+         like the screenshots, so a host that serves them as files (the WebAssembly host) can leave the assembly out: every page in
+         three languages was most of the gallery assembly, and a visitor reads a few pages in one language. -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Docs/**/*.md" Link="Docs/%(RecursiveDir)%(Filename)%(Extension)" />
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

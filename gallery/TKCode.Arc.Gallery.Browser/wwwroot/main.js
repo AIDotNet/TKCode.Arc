@@ -80,6 +80,20 @@ dotnetRuntime.setModuleImports('arc-shots', {
     }
 });
 
+// The text of the docs pages and guides (HttpTextSource.cs): '' when the server has no such file. A host that answers a missing
+// file with its index.html does not count as having it.
+dotnetRuntime.setModuleImports('arc-texts', {
+    load: async url => {
+        try {
+            const response = await fetch(url);
+            return response.ok && !/^text\/html\b/.test(response.headers.get('content-type') ?? '') ? await response.text() : '';
+        } catch {
+            // Offline or blocked: the page says it could not be loaded.
+            return '';
+        }
+    }
+});
+
 // The GitHub star count of the top bar, kept for an hour (BrowserStarCache.cs); -1 when there is none.
 const starsKey = 'arc.gallery.stars';
 dotnetRuntime.setModuleImports('arc-stars', {

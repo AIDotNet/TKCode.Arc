@@ -7,7 +7,8 @@ namespace TKCode.Arc.Gallery.Docs;
 
 /// <summary>
 /// The docs pages' Markdown. A component's page comes in the requested language, or in en-US with a notice when it
-/// has no translation; each <c>&lt;!-- api: Type --&gt;</c> line becomes that type's API reference, built from the
+/// has no translation, read from <see cref="GalleryTexts"/> (the generated <see cref="GalleryDocData"/> holds what the
+/// gallery needs before a page is shown: titles, summaries, demos and screenshots); each <c>&lt;!-- api: Type --&gt;</c> line becomes that type's API reference, built from the
 /// generated <see cref="GalleryDocData"/> (descriptions translated through <c>Docs/Api/&lt;language&gt;.xlf</c>,
 /// defaults read from the Avalonia property metadata), each <c>&lt;Demo name="..." /&gt;</c> line becomes a live
 /// example (<see cref="GalleryDemos"/>), and each <c>![caption](images/Name.png)</c> line a screenshot that follows the
@@ -34,7 +35,7 @@ public static partial class GalleryDocs
 
     /// <summary>Whether <paramref name="className"/>'s en-US page shows live examples, so it is the component's whole page.</summary>
     public static bool HasDemos(string className)
-        => s_pages.TryGetValue(className, out var pages) && Find(pages, SourceLanguage) is { } page && DemoTag().IsMatch(page.Body);
+        => s_pages.TryGetValue(className, out var pages) && Find(pages, SourceLanguage) is { Demos.Length: > 0 };
 
     /// <summary>The demos <paramref name="className"/>'s page in <paramref name="language"/> shows, in order (<c>Component.Name</c>).</summary>
     public static IReadOnlyList<string> DemoIds(string className, string language)
@@ -43,8 +44,7 @@ public static partial class GalleryDocs
         {
             return [];
         }
-        var page = Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0];
-        return DemoTag().Matches(page.Body).Select(m => DemoId(className, m.Groups[1].Value)).ToArray();
+        return (Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0]).Demos;
     }
 
     /// <summary>Every component with a page.</summary>
@@ -57,6 +57,10 @@ public static partial class GalleryDocs
     public static string? PackageOf(string className)
         => s_types.TryGetValue(className, out var type) ? type.Owner.Assembly.GetName().Name : null;
 
+    /// <summary>The folder of <paramref name="className"/>'s page below <c>Docs/</c>, such as <c>TextFields/Input</c>; null when it has no page.</summary>
+    public static string? FolderOf(string className)
+        => s_pages.TryGetValue(className, out var pages) ? pages[0].Folder : null;
+
     /// <summary>The languages <paramref name="className"/>'s page is written in, en-US first.</summary>
     public static IReadOnlyList<string> Languages(string className)
         => s_pages.TryGetValue(className, out var pages) ? pages.Select(p => p.Language).ToArray() : [];
@@ -67,15 +71,26 @@ public static partial class GalleryDocs
 
     /// <summary>
     /// <paramref name="className"/>'s page in <paramref name="language"/> (en-US when it is not translated), or null when
-    /// the component has no page.
+    /// the component has no page or its text cannot be read. For callers that cannot wait: it fails when
+    /// <see cref="GalleryTexts.Source"/> fetches the text (a page view uses <see cref="GetAsync"/>).
     /// </summary>
     public static GalleryDoc? Get(string className, string language)
+        => PageFor(className, language) is { } page && GalleryTexts.Read(page.Path) is { } text ? Assemble(page, language, text) : null;
+
+    /// <summary>
+    /// <paramref name="className"/>'s page in <paramref name="language"/>, as <see cref="Get"/>, once its text has been read:
+    /// at once from the gallery's resources, later when the WebAssembly host fetches it. Null when the component has no
+    /// page or its text cannot be read.
+    /// </summary>
+    public static async ValueTask<GalleryDoc?> GetAsync(string className, string language)
+        => PageFor(className, language) is { } page && await GalleryTexts.Source.ReadAsync(page.Path) is { } text ? Assemble(page, language, text) : null;
+
+    private static GalleryDocPage? PageFor(string className, string language)
+        => s_pages.TryGetValue(className, out var pages) ? Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0] : null;
+
+    private static GalleryDoc Assemble(GalleryDocPage page, string language, string file)
     {
-        if (!s_pages.TryGetValue(className, out var pages))
-        {
-            return null;
-        }
-        var page = Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0];
+        var className = page.ClassName;
         var text = GalleryDocText.For(language);
         var markdown = new StringBuilder();
         if (!string.Equals(page.Language, language, StringComparison.OrdinalIgnoreCase))
@@ -86,13 +101,32 @@ public static partial class GalleryDocs
         {
             markdown.Append("> ").Append(text.Outdated).Append("\n\n");
         }
-        markdown.Append(Directive().Replace(page.Body, match => ApiReference(match.Groups[1].Value, language).TrimEnd()));
+        markdown.Append(Directive().Replace(BodyOf(file), match => ApiReference(match.Groups[1].Value, language).TrimEnd()));
         var body = markdown.ToString();
         var shown = WithScreenshots(body, $"Docs/{page.Folder}");
-        return new GalleryDoc(page.ClassName, page.Language, language, page.Title, page.Summary,
+        return new GalleryDoc(className, page.Language, language, page.Title, page.Summary,
             DemoTag().Replace(shown, match => DemoBlock(className, match, shown)),
             DemoTag().Replace(body, match => DemoSource(className, match.Groups[1].Value)),
             page.IsOutdated);
+    }
+
+    /// <summary>
+    /// The Markdown after a page's front matter, read the way the generator reads it (its <c>DocPage.Parse</c>): LF line
+    /// endings, no blank lines around it.
+    /// </summary>
+    private static string BodyOf(string file)
+    {
+        var normalized = file.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n').TrimEnd();
+        var start = 0;
+        if (normalized.StartsWith("---\n", StringComparison.Ordinal))
+        {
+            var end = normalized.IndexOf("\n---", 3, StringComparison.Ordinal);
+            if (end >= 0 && (end + 4 == normalized.Length || normalized[end + 4] == '\n'))
+            {
+                start = Math.Min(normalized.Length, end + 5);
+            }
+        }
+        return normalized[start..].TrimStart('\n');
     }
 
     /// <summary>
@@ -106,9 +140,9 @@ public static partial class GalleryDocs
             return [];
         }
         var page = Find(pages, language) ?? Find(pages, SourceLanguage) ?? pages[0];
-        return ScreenshotTag().Matches(page.Body)
-                              .Select(m => new GalleryScreenshot(m.Groups[2].Value, m.Groups[1].Value, ScreenshotUri($"Docs/{page.Folder}/images/{m.Groups[2].Value}", false)))
-                              .ToArray();
+        return page.Screenshots
+                   .Select(s => new GalleryScreenshot(s.Name, s.Caption, ScreenshotUri($"Docs/{page.Folder}/images/{s.Name}", false)))
+                   .ToArray();
     }
 
     /// <summary>
@@ -117,6 +151,13 @@ public static partial class GalleryDocs
     /// </summary>
     internal static string WithScreenshots(string markdown, string folder)
         => ScreenshotTag().Replace(markdown, match => ScreenshotBlock(folder, match));
+
+    /// <summary>
+    /// <paramref name="markdown"/> with each <c>![caption](images/Name.png)</c> line pointing at the address
+    /// <paramref name="address"/> gives for <c>Name</c>, for Markdown read outside the gallery (the static pages of the web host).
+    /// </summary>
+    public static string WithScreenshotAddresses(string markdown, Func<string, string> address)
+        => ScreenshotTag().Replace(markdown, match => $"![{match.Groups[1].Value}]({address(match.Groups[2].Value)})");
 
     /// <summary>The names and captions of the screenshot lines in <paramref name="markdown"/>, in order.</summary>
     public static IEnumerable<(string Name, string Caption)> ScreenshotLines(string markdown)

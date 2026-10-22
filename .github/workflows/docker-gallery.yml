@@ -66,7 +66,9 @@ jobs:
           cache-to: type=gha,mode=max
 
   # Runs the image that was just pushed and checks what matters to the browser: brotli for the
-  # fingerprinted WebAssembly, long-lived caching for it, and revalidation for index.html.
+  # fingerprinted WebAssembly, long-lived caching for it, and revalidation for index.html and for the
+  # files that keep their names across deploys (the Chinese font, the screenshots); and to AI
+  # assistants: llms.txt and the Markdown pages as UTF-8 text, and a 404 for a page that does not exist.
   smoke:
     name: Check the pushed image
     needs: image
@@ -101,6 +103,16 @@ jobs:
           grep -qi '^cache-control: no-cache' js.headers
           curl -sfI http://127.0.0.1:8080/ | tee index.headers
           grep -qi '^cache-control: no-cache' index.headers
+          curl -sfI http://127.0.0.1:8080/fonts/NotoSansSC-Subset.otf | tee font.headers
+          grep -qi '^cache-control: no-cache' font.headers
+          curl -sfI http://127.0.0.1:8080/llms.txt | tee llms.headers
+          grep -qi '^content-type: text/plain; charset=utf-8' llms.headers
+          curl -sfI -H 'Accept-Encoding: br' http://127.0.0.1:8080/zh-CN/components/button.md | tee md.headers
+          grep -qi '^content-type: text/markdown; charset=utf-8' md.headers
+          grep -qi '^content-encoding: br' md.headers
+          grep -qi '^access-control-allow-origin: \*' md.headers
+          curl -sf http://127.0.0.1:8080/skills/tkcode-arc/SKILL.md | head -2 | grep -q '^name: tkcode-arc'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/components/no-such-page.md)" = 404
 
       - name: Logs on failure
         if: failure()

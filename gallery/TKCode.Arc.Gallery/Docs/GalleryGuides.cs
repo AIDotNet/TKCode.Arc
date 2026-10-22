@@ -1,5 +1,4 @@
 using System.Text;
-using Avalonia.Platform;
 
 namespace TKCode.Arc.Gallery.Docs;
 
@@ -13,7 +12,7 @@ public sealed record GalleryGuide(string Page, string Language, string Requested
 
 /// <summary>
 /// The pages of the sidebar's Docs section (Introduction, Installation, …): <c>Guides/&lt;Page&gt;/&lt;language&gt;.md</c>,
-/// embedded as resources and read at run time. Like the component pages, a page starts with a front matter
+/// read from <see cref="GalleryTexts"/> when they are shown. Like the component pages, a page starts with a front matter
 /// (<c>title</c>, and in translations <c>source-hash</c>), and a <c>![caption](images/Name.png)</c> line shows a
 /// screenshot from <c>Guides/&lt;Page&gt;/images/</c>; an untranslated page falls back to en-US with a notice.
 /// </summary>
@@ -25,32 +24,49 @@ public static class GalleryGuides
     /// <summary>The languages a guide may be written in, en-US first.</summary>
     public static readonly IReadOnlyList<string> Languages = [GalleryDocs.SourceLanguage, "zh-CN", "zh-TW"];
 
-    /// <summary>The file of <paramref name="page"/> in <paramref name="language"/> as written, or null when there is none.</summary>
-    public static string? Read(string page, string language)
-    {
-        var uri = new Uri($"avares://TKCode.Arc.Gallery/Guides/{page}/{language}.md");
-        if (!AssetLoader.Exists(uri))
-        {
-            return null;
-        }
-        using var reader = new StreamReader(AssetLoader.Open(uri), Encoding.UTF8);
-        return reader.ReadToEnd().Replace("\r\n", "\n");
-    }
+    /// <summary>
+    /// The file of <paramref name="page"/> in <paramref name="language"/> as written, or null when there is none. For callers
+    /// that cannot wait: it fails when <see cref="GalleryTexts.Source"/> fetches the text.
+    /// </summary>
+    public static string? Read(string page, string language) => GalleryTexts.Read(PathOf(page, language))?.Replace("\r\n", "\n");
 
-    /// <summary><paramref name="page"/> in <paramref name="language"/> (en-US when it is not translated), or null.</summary>
+    /// <summary>
+    /// <paramref name="page"/> in <paramref name="language"/> (en-US when it is not translated), or null. For callers that
+    /// cannot wait: it fails when <see cref="GalleryTexts.Source"/> fetches the text (a page view uses <see cref="GetAsync"/>).
+    /// </summary>
     public static GalleryGuide? Get(string page, string language)
     {
-        var shown = Languages.FirstOrDefault(l => string.Equals(l, language, StringComparison.OrdinalIgnoreCase)) ?? GalleryDocs.SourceLanguage;
-        var text = Read(page, shown);
-        if (text is null)
+        var shown = Shown(language);
+        if (Read(page, shown) is { } text)
         {
-            shown = GalleryDocs.SourceLanguage;
-            text = Read(page, shown);
+            return Assemble(page, shown, language, text);
         }
-        if (text is null)
+        return shown != GalleryDocs.SourceLanguage && Read(page, GalleryDocs.SourceLanguage) is { } english
+            ? Assemble(page, GalleryDocs.SourceLanguage, language, english)
+            : null;
+    }
+
+    /// <summary><paramref name="page"/> in <paramref name="language"/>, as <see cref="Get"/>, once its text has been read.</summary>
+    public static async ValueTask<GalleryGuide?> GetAsync(string page, string language)
+    {
+        var shown = Shown(language);
+        if (await GalleryTexts.Source.ReadAsync(PathOf(page, shown)) is { } text)
         {
-            return null;
+            return Assemble(page, shown, language, text.Replace("\r\n", "\n"));
         }
+        return shown != GalleryDocs.SourceLanguage && await GalleryTexts.Source.ReadAsync(PathOf(page, GalleryDocs.SourceLanguage)) is { } english
+            ? Assemble(page, GalleryDocs.SourceLanguage, language, english.Replace("\r\n", "\n"))
+            : null;
+    }
+
+    private static string PathOf(string page, string language) => $"Guides/{page}/{language}.md";
+
+    /// <summary>The language a page is shown in: <paramref name="language"/> when guides are written in it, otherwise en-US.</summary>
+    private static string Shown(string language)
+        => Languages.FirstOrDefault(l => string.Equals(l, language, StringComparison.OrdinalIgnoreCase)) ?? GalleryDocs.SourceLanguage;
+
+    private static GalleryGuide Assemble(string page, string shown, string language, string text)
+    {
         var (front, body) = Split(text);
         var markdown = new StringBuilder();
         if (!string.Equals(shown, language, StringComparison.OrdinalIgnoreCase))

@@ -118,4 +118,5 @@ public enum GalleryShellLangResourceKind
     HomeStatGroups,
     HomeStatBlocks,
     HomeStatLanguages,
+    PageLoadFailed,
 }

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Writes the files the web host serves to AI assistants (design/engineering/gallery-app.md, 6.10): llms.txt,
+         llms-full.txt, every docs page as Markdown and the agent skill. The Dockerfile runs it on the published Browser
+         host's wwwroot; see Program for the command line. -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <RootNamespace>TKCode.Arc.Gallery.Llms</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Headless" />
+        <ProjectReference Include="../TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
+    </ItemGroup>
+    <!-- The hand-written text (llms.txt's prose, the skill), with {{placeholders}} that LlmsSite fills in. -->
+    <ItemGroup>
+        <EmbeddedResource Include="Content/*" LogicalName="Content/%(Filename)%(Extension)" />
+    </ItemGroup>
+    <!-- The versions the text names, from build/Versions.props. -->
+    <ItemGroup>
+        <AssemblyMetadata Include="ArcVersion" Value="$(ArcVersion)" />
+        <AssemblyMetadata Include="AtomUIVersion" Value="$(AtomUIVersion)" />
+        <AssemblyMetadata Include="AvaloniaVersion" Value="$(AvaloniaVersion)" />
+    </ItemGroup>
+</Project>

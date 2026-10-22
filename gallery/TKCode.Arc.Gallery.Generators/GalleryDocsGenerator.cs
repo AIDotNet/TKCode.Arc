@@ -11,7 +11,9 @@ namespace TKCode.Arc.Gallery.Generators;
 /// <summary>
 /// Builds <c>GalleryDocData</c>, the data behind the gallery's Code tab:
 /// <list type="bullet">
-/// <item>every page (<c>Docs/&lt;Category&gt;/&lt;ClassName&gt;/&lt;language&gt;.md</c>, item metadata <c>GalleryDocKind=Page</c>);</item>
+/// <item>every page (<c>Docs/&lt;Category&gt;/&lt;ClassName&gt;/&lt;language&gt;.md</c>, item metadata <c>GalleryDocKind=Page</c>): its
+/// front matter, demos and screenshots, not its Markdown, which the gallery reads when the page is shown
+/// (<c>GalleryTexts</c>), so a host can fetch it instead of carrying every page in every language;</item>
 /// <item>the API reference of every type a page names with <c>&lt;!-- api: Type --&gt;</c>, read from the referenced
 /// TKCode.Arc assemblies and their XML documentation (<c>GalleryDocKind=XmlDoc</c>);</item>
 /// <item>the API description translations (<c>Docs/Api/&lt;language&gt;.xlf</c>, <c>GalleryDocKind=ApiTranslation</c>).</item>
@@ -291,7 +293,8 @@ public sealed class GalleryDocsGenerator : IIncrementalGenerator
             code.Append("        new(").Append(Literal(page.ClassName)).Append(", ").Append(Literal(page.Language)).Append(", ")
                 .Append(Literal(page.Folder)).Append(", ").Append(Literal(page.Title)).Append(", ").Append(Literal(page.Summary)).Append(", ")
                 .Append(outdated.Contains(page) ? "true" : "false").Append(",").AppendLine();
-            code.Append("            ").Append(Literal(page.Body)).AppendLine("),");
+            code.Append("            [").Append(string.Join(", ", page.Demos.Select(d => Literal(d.Id)))).Append("],").AppendLine();
+            code.Append("            [").Append(string.Join(", ", page.Screenshots.Select(s => $"({Literal(s.Name)}, {Literal(s.Caption)})"))).AppendLine("]),");
         }
         code.AppendLine("    ];");
         code.AppendLine();

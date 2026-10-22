@@ -2,6 +2,7 @@ using AtomUI;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
 using TKCode.Arc.Gallery;
+using TKCode.Arc.Gallery.Content;
 using TKCode.Arc.Gallery.Shots;
 using AtomUI.Desktop.Controls;
 using AtomUI.Localization;
@@ -20,6 +21,7 @@ internal static class Program
                   .WithInterFont()
                   .WithArcFonts()
                   .WithGalleryShots()
+                  .WithGalleryContent()
                   .UseAtomUI(builder =>
                   {
                       builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);

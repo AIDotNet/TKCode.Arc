@@ -76,7 +76,7 @@ public static partial class GalleryCatalog
         new("DocsInstallation", "Installation", "installation", 0, "Add the Arc packages to a project.", IsArc: false),
         new("DocsTheming", "Theming", "theming", 0, "Themes, design tokens and appearance.", IsArc: false),
         new("DocsMotion", "Motion", "motion", 0, "The motion engine and its presets.", IsArc: false),
-        new("DocsAiAndMcp", "AI and MCP", "ai-and-mcp", 0, "Use Arc with AI assistants through MCP.", IsArc: false),
+        new("DocsAiAndMcp", "AI and MCP", "ai-and-mcp", 0, "Use Arc with AI assistants: llms.txt, Markdown pages, an agent skill and MCP.", IsArc: false),
         new("DocsChangelog", "Changelog", "changelog", 0, "Release notes.", IsArc: false),
     ], IsArc: false);
 

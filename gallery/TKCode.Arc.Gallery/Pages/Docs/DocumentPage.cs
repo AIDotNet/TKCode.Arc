@@ -31,13 +31,38 @@ public static class DocumentPage
                 Child = document,
             },
         };
+        // The language whose guide is shown or on its way: attaching again does not fetch it again.
+        string? shown = null;
         GalleryText.Track(scroller, () =>
         {
-            if (GalleryGuides.Get(page, GalleryText.CurrentLanguage) is { } guide && document.Text != guide.Markdown)
+            var language = GalleryText.CurrentLanguage;
+            if (language != shown)
             {
-                document.Text = guide.Markdown;
+                shown = language;
+                _ = ShowAsync(language);
             }
         });
         return scroller;
+
+        // Shows the guide in language once its text is read (at once from the gallery's resources, later when the
+        // WebAssembly host fetches it). A guide that arrives after the language changed again is dropped, and one that
+        // cannot be read says so and is asked for again on the next refresh.
+        async Task ShowAsync(string language)
+        {
+            var guide = await GalleryGuides.GetAsync(page, language);
+            if (language != shown)
+            {
+                return;
+            }
+            if (guide is null)
+            {
+                shown = null;
+            }
+            var text = guide?.Markdown ?? "> " + GalleryText.Get(GalleryShellLangResourceKind.PageLoadFailed);
+            if (document.Text != text)
+            {
+                document.Text = text;
+            }
+        }
     }
 }

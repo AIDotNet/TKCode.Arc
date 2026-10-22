@@ -12,6 +12,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Shots/TKCode.Arc.Gallery.Shots.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Gallery.Content/TKCode.Arc.Gallery.Content.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Generators/TKCode.Arc.Gallery.Generators.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"
@@ -27,10 +28,8 @@
          by tools/docshots from the XAML block under each ![caption](images/<Name>.png) line. They are resources of
          TKCode.Arc.Gallery.Shots (GalleryDocs.ScreenshotUri), which reads them from this folder. -->
 
-    <!-- The Docs section of the sidebar (GalleryGuides): Guides/<Page>/<language>.md and their screenshots, read at run time. -->
-    <ItemGroup>
-        <AvaloniaResource Include="Guides/**/*.md" />
-    </ItemGroup>
+    <!-- The Docs section of the sidebar (GalleryGuides) and the docs pages' Markdown are read at run time (Docs/GalleryTexts) from
+         TKCode.Arc.Gallery.Content, which holds them as resources; the generator below still reads the docs pages to check them. -->
 
     <!-- Docs pages (design/decisions/0012-gallery-docs.md): pages and API translations go to GalleryDocsGenerator, which
          also collects the Demos/**/*.axaml views that <Demo name="..." /> lines show (Avalonia passes them in).
