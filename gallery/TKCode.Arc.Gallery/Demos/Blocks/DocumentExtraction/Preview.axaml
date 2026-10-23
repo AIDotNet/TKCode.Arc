@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DocumentExtractionPreviewDemo">
+    <!-- Press Extract: the fields fill in as the model reads, and pointing at a field or at its text links the two. Switch to the email from the file menu. -->
+    <arc:DocumentExtraction x:Name="Extraction" MaxWidth="1080" Margin="0,12" />
+</UserControl>

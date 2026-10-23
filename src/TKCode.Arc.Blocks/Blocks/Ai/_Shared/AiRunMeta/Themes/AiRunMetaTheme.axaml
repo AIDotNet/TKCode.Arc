@@ -1,0 +1,71 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        "[mark 14] Lumen Extract S · $0.0003 · 3.2 s": 12 / 16.8, 7px between the parts; the name in TextSecondary, the cost
+        and the time in TextMuted with tabular figures; each dot a 3px TextMuted circle at 55%. A hidden part takes no room
+        and no spacing (the panel skips it).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiRunMeta}" TargetType="arc:AiRunMeta">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiRunMeta">
+                <StackPanel Name="PART_Line"
+                            Orientation="Horizontal"
+                            Spacing="7"
+                            VerticalAlignment="Center"
+                            AutomationProperties.AccessibilityView="Raw">
+                    <arc:ModelMark Name="PART_Mark"
+                                   Mark="{TemplateBinding ModelMark}"
+                                   IsVisible="{TemplateBinding ModelMark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   Size="14"
+                                   VerticalAlignment="Center" />
+                    <TextBlock Name="PART_Name"
+                               Text="{TemplateBinding ModelName}"
+                               IsVisible="{TemplateBinding ShowsName}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center" />
+                    <Ellipse Name="PART_CostDot"
+                             Classes="dot"
+                             IsVisible="{TemplateBinding CostDot}" />
+                    <TextBlock Name="PART_Cost"
+                               Classes="figure"
+                               Text="{TemplateBinding CostText}"
+                               IsVisible="{TemplateBinding ShowsCost}" />
+                    <Ellipse Name="PART_ElapsedDot"
+                             Classes="dot"
+                             IsVisible="{TemplateBinding ElapsedDot}" />
+                    <TextBlock Name="PART_Elapsed"
+                               Classes="figure"
+                               Text="{TemplateBinding ElapsedText}"
+                               IsVisible="{TemplateBinding ShowsElapsed}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock">
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="LetterSpacing" Value="-0.14" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.figure">
+            <Setter Property="FontFeatures" Value="tnum" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse.dot">
+            <Setter Property="Width" Value="3" />
+            <Setter Property="Height" Value="3" />
+            <Setter Property="Opacity" Value="0.55" />
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

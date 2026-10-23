@@ -1,0 +1,273 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The run's status line: Surface, padding 10 12 8 14 (Arc), a 1px bottom edge that is transparent until the form
+        scrolls (then BorderSubtle, 160ms). Inside, a height spring (Smooth) around the face swap (crossfade, 100 / 160ms,
+        the old face pinned top-left out of layout) and, docked right, the action pill fading in and out on its own.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiRunStatusLine}" TargetType="arc:AiRunStatusLine">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="14,10,12,8" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiRunStatusLine">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:SpringSizeDecorator Name="PART_Size"
+                                             Axis="Height"
+                                             Spring="Smooth"
+                                             VerticalAlignment="Top">
+                        <DockPanel Name="PART_Row">
+                            <arc:PresenceHost Name="PART_ActionPresence"
+                                              DockPanel.Dock="Right"
+                                              Mode="Fade"
+                                              IsPresent="{TemplateBinding ShowsAction}"
+                                              VerticalAlignment="Top">
+                                <arc:AiRunStatusAction Name="PART_Action"
+                                                       Content="{TemplateBinding ActionText}"
+                                                       Margin="8,1,0,1" />
+                            </arc:PresenceHost>
+                            <arc:ArcContentSwap Name="PART_Face"
+                                                Mode="Crossfade"
+                                                ExitDuration="0:0:0.1"
+                                                EnterDuration="0:0:0.16"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Top" />
+                        </DockPanel>
+                    </arc:SpringSizeDecorator>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:edge">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One status: a row at least 30 high (the 16px icon cell, 8px, the text 14 / 19.6) and the detail under it (12 / 16.8,
+        TextMuted, 24px in, 4px below). The face carries its own text color, so a face that leaves keeps it: Idle TextMuted,
+        NeedsCheck and Failed Foreground, the rest TextSecondary. Running shows the shimmering text (band = Foreground) and
+        the count (TextMuted, tabular) 8px after it. Icons: triangle-alert Warning, circle-check Success, a 9px filled
+        TextMuted square (stopped), circle-alert Danger; stroke 1.75.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiRunStatusFace}" TargetType="arc:AiRunStatusFace">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiRunStatusFace">
+                <StackPanel Name="PART_Stack">
+                    <DockPanel Name="PART_Line" MinHeight="30">
+                        <Panel Name="PART_IconCell"
+                               DockPanel.Dock="Left"
+                               Width="16"
+                               Height="16"
+                               Margin="0,0,8,0"
+                               VerticalAlignment="Center"
+                               IsVisible="False">
+                            <arc:ArcGlyph Name="PART_Warning"
+                                          Data="{x:Static arc:ArcIcons.TriangleAlert}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource Warning}"
+                                          IsVisible="False" />
+                            <arc:ArcGlyph Name="PART_Check"
+                                          Data="{x:Static arc:ArcIcons.CircleCheck}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource Success}"
+                                          IsVisible="False" />
+                            <Border Name="PART_Square"
+                                    Width="9"
+                                    Height="9"
+                                    CornerRadius="1.5"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{arc:ArcDesignTokenResource TextMuted}"
+                                    IsVisible="False" />
+                            <arc:ArcGlyph Name="PART_Alert"
+                                          Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource Danger}"
+                                          IsVisible="False" />
+                        </Panel>
+                        <Panel VerticalAlignment="Center">
+                            <StackPanel Name="PART_Running"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        IsVisible="False">
+                                <arc:TextShimmer Name="PART_Shimmer"
+                                                 Text="{TemplateBinding Text}"
+                                                 IsActive="{TemplateBinding Sweeps}"
+                                                 FontFamily="{TemplateBinding FontFamily}"
+                                                 FontSize="{TemplateBinding FontSize}"
+                                                 FontWeight="{TemplateBinding FontWeight}"
+                                                 Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                 VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Count"
+                                           Text="{TemplateBinding CountText}"
+                                           FontFeatures="tnum"
+                                           LineHeight="19.6"
+                                           LetterSpacing="-0.14"
+                                           TextWrapping="NoWrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           VerticalAlignment="Center"
+                                           IsVisible="False" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding Text}"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center" />
+                        </Panel>
+                    </DockPanel>
+                    <TextBlock Name="PART_Detail"
+                               Text="{TemplateBinding DetailText}"
+                               Margin="24,0,0,4"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               LetterSpacing="-0.14"
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               IsVisible="False" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:idle">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:needs-check, ^:failed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^:running /template/ StackPanel#PART_Running">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:running /template/ TextBlock#PART_Text">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:count /template/ TextBlock#PART_Count">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:detail /template/ TextBlock#PART_Detail">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:needs-check /template/ Panel#PART_IconCell, ^:done /template/ Panel#PART_IconCell, ^:accepted /template/ Panel#PART_IconCell, ^:stopped /template/ Panel#PART_IconCell, ^:failed /template/ Panel#PART_IconCell">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:needs-check /template/ arc|ArcGlyph#PART_Warning">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Check, ^:accepted /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:stopped /template/ Border#PART_Square">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_Alert">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The action pill ("Review"): 28 high, padding 0 11, pill radius, 1px Border on Surface, 12 / 16.8 medium Foreground.
+        Hover: SurfaceMuted fill and BorderStrong edge, 160ms (reduced 120ms). Keyboard focus: the ring 4px out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiRunStatusAction}" TargetType="arc:AiRunStatusAction">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="11,0" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiRunStatusAction">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_Label"
+                                          Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

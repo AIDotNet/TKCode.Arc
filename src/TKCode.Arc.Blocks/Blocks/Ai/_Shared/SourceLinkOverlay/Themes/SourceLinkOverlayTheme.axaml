@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The link overlay draws everything itself in the tone it is given; the theme only supplies the ring of the dot on the
+        form (the surface, so the dot reads as cut out of the row). The dot on the paper keeps its white ring in both themes.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SourceLinkOverlay}" TargetType="arc:SourceLinkOverlay">
+        <Setter Property="EndDotStroke" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

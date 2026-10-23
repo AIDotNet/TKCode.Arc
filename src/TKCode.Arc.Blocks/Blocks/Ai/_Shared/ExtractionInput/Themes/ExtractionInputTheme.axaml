@@ -1,0 +1,145 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The value box of an extraction field (spec 3.4): 32 high, padding 0 8, radius 9, a 1px border, 14 / 19.6 Foreground;
+        a table cell is 28 high, padding 0 7, radius 7, 12 / 16.8. No focus ring: the border tells the focus. The fill and the
+        border are set by the box from its state (ExtractionInput.UpdateLook); the theme declares their 160ms transitions.
+        Away from focus a trimmed copy shows the value (a long value ends in an ellipsis); the editable text takes over while
+        focused. A landing value (:landed) fades its text in: 160ms standard, 120ms linear with reduced motion.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ExtractionInput}" TargetType="arc:ExtractionInput">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExtractionInput">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel Name="PART_Content">
+                        <TextBlock Name="PART_Display"
+                                   Text="{TemplateBinding Text}"
+                                   TextAlignment="{TemplateBinding TextAlignment}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False" />
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      BringIntoViewOnFocusChange="False">
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="NoWrap"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </ScrollViewer>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Away from focus the trimmed copy shows the value; the editable text takes over while focused. -->
+        <Style Selector="^ /template/ ScrollViewer#PART_ScrollViewer">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:focus /template/ ScrollViewer#PART_ScrollViewer">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus /template/ TextBlock#PART_Display">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- A table cell. -->
+        <Style Selector="^:cell">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="7,0" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LetterSpacing" Value="0" />
+            <Setter Property="LineHeight" Value="16.8" />
+        </Style>
+        <!-- Numbers: tabular figures (the alignment is set by the box). -->
+        <Style Selector="^:numeric">
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:landed /template/ Panel#PART_Content">
+                <Style.Animations>
+                    <Animation Duration="0:0:0.16" Easing="0.22,1,0.36,1" FillMode="Both">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="0" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:landed /template/ Panel#PART_Content">
+                <Style.Animations>
+                    <Animation Duration="0:0:0.12" Easing="LinearEasing" FillMode="Both">
+                        <KeyFrame Cue="0%">
+                            <Setter Property="Opacity" Value="0" />
+                        </KeyFrame>
+                        <KeyFrame Cue="100%">
+                            <Setter Property="Opacity" Value="1" />
+                        </KeyFrame>
+                    </Animation>
+                </Style.Animations>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

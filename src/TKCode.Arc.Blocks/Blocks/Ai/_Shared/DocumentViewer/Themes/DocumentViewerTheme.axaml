@@ -1,0 +1,293 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The viewer (spec 3.1, 3.3): a 48 high toolbar on Surface with a BorderSubtle line under it (padding 0 8, gap 8; the
+        tools on the right 6 apart: page count, zoom group, Fit) over the canvas. The canvas color is set by the viewer from
+        the theme (5% Foreground over Surface in the light theme, Background in the dark one). The canvas is the main
+        package's scroll area on both axes (no edge fades, its own inset focus ring); the page sits in a sizer with the
+        canvas padding as its margin (22, 14 when stacked), centered across.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DocumentViewer}" TargetType="arc:DocumentViewer">
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DocumentViewer">
+                <Grid RowDefinitions="48,*">
+                    <Border Name="PART_Toolbar"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="0,0,0,1"
+                            Padding="8,0">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <arc:DocumentViewerButton Name="PART_FileButton"
+                                                      Kind="File"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Center">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                    <arc:DocumentFileMark Name="PART_FileMark" VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_FileName"
+                                               Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               LineHeight="19.6"
+                                               TextWrapping="NoWrap"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ArcGlyph Name="PART_Chevron"
+                                                  Grid.Column="2"
+                                                  Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                  Size="14"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                            </arc:DocumentViewerButton>
+                            <StackPanel Name="PART_Tools"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="6"
+                                        VerticalAlignment="Center">
+                                <TextBlock Name="PART_PageCount"
+                                           Margin="6,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           FontFeatures="tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <Border Name="PART_ZoomGroup"
+                                        Height="30"
+                                        Padding="1,0"
+                                        BorderThickness="1"
+                                        CornerRadius="10"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <arc:DocumentViewerButton Name="PART_ZoomOut"
+                                                                  Kind="Step"
+                                                                  Glyph="{x:Static arc:ArcIcons.Minus}" />
+                                        <arc:DocumentViewerButton Name="PART_ZoomReset" Kind="Percent">
+                                            <TextBlock Name="PART_Percent"
+                                                       LineHeight="16.8"
+                                                       FontFeatures="tnum"
+                                                       VerticalAlignment="Center" />
+                                        </arc:DocumentViewerButton>
+                                        <arc:DocumentViewerButton Name="PART_ZoomIn"
+                                                                  Kind="Step"
+                                                                  Glyph="{x:Static arc:ArcIcons.Plus}" />
+                                    </StackPanel>
+                                </Border>
+                                <arc:DocumentViewerButton Name="PART_Fit" Kind="Fit" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_CanvasHost"
+                            Grid.Row="1"
+                            Background="{TemplateBinding CanvasBrush}">
+                        <arc:ScrollArea Name="PART_Canvas"
+                                        Orientation="Both"
+                                        FadeLength="0">
+                            <arc:DocumentViewerSizer Name="PART_Sizer"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Top">
+                                <Panel Name="PART_Stage">
+                                    <arc:DocumentPage Name="PART_Page" Document="{TemplateBinding Document}" />
+                                </Panel>
+                            </arc:DocumentViewerSizer>
+                        </arc:ScrollArea>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|DocumentViewerSizer#PART_Sizer">
+            <Setter Property="Margin" Value="22" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|DocumentViewerSizer#PART_Sizer">
+            <Setter Property="Margin" Value="14" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:menu /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:email /template/ TextBlock#PART_PageCount, ^:narrow /template/ TextBlock#PART_PageCount">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The toolbar buttons (spec 3.3, 4.2). Hover (mouse and pen) lays Foreground at 5% over the button; the file button keeps
+        it while its menu is open. Keyboard focus draws the ring 2px outside (radius + 4). Background, border and color move
+        in 160 ms on the standard curve.
+          File     32 high, padding 0 8 0 6, radius 10, 14/500 Foreground.
+          Step     28 × 26, radius 8, a 14px glyph at 1.75 in TextSecondary (Foreground on hover); disabled at the ends.
+          Percent  46 × 26, radius 8, 12px Foreground tabular figures.
+          Fit      30 high, padding 0 11, radius 10, 12px; off: 1px Border, TextSecondary; on: SurfaceMuted, Foreground.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DocumentViewerButton}" TargetType="arc:DocumentViewerButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DocumentViewerButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Tint"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource Foreground}" />
+                    <Panel Margin="{TemplateBinding Padding}">
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      Data="{TemplateBinding Glyph}"
+                                      IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Size="14"
+                                      StrokeThickness="1.75"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        <ContentPresenter Name="PART_Content"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-trigger base so the hover and open styles can change it (a template local would win). -->
+        <Style Selector="^ /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:hover /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0.05" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+
+        <Style Selector="^[Kind=File]">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="6,0,8,0" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="14" />
+            </Style>
+            <Style Selector="^:on /template/ Border#PART_Tint">
+                <Setter Property="Opacity" Value="0.05" />
+            </Style>
+        </Style>
+
+        <Style Selector="^[Kind=Step]">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="12" />
+            </Style>
+            <Style Selector="^:hover">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^[Kind=Percent]">
+            <Setter Property="Width" Value="46" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="12" />
+            </Style>
+        </Style>
+
+        <Style Selector="^[Kind=Fit]">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Padding" Value="11,0" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="14" />
+            </Style>
+            <Style Selector="^:on">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^:hover">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The document mark: a white-on-surface sheet outlined in BorderStrong with a Danger type tag; an email in TextSecondary. -->
+    <ControlTheme x:Key="{x:Type arc:DocumentFileMark}" TargetType="arc:DocumentFileMark">
+        <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="TagFill" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="MailStroke" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+    </ControlTheme>
+</ResourceDictionary>

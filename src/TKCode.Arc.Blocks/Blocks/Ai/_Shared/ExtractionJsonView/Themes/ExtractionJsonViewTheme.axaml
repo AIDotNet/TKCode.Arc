@@ -1,0 +1,60 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The JSON / Schema code view of the document extraction (spec 3.5): 1px Border, radius 14, SurfaceMuted, padding
+        10 0; monospace 12 / 20.4, each line padded 0 14 and drawn by ExtractionJsonLines (colors mixed in code from the
+        brushes below: keys Foreground, strings 78% Success, numbers 80% Series1, null / false TextMuted, punctuation
+        TextSecondary). Long lines scroll sideways inside the box. A Tab stop: the focus ring is 2px, 2px inside the edge.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ExtractionJsonView}" TargetType="arc:ExtractionJsonView">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Padding" Value="0,10" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="LineHeight" Value="20.4" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PunctuationForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="StringBase" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="NumberBase" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="FlashBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExtractionJsonView">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <ScrollViewer Name="PART_Scroll"
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <arc:ExtractionJsonLines Name="PART_Lines" Margin="{TemplateBinding Padding}" />
+                        </ScrollViewer>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="2"
+                            CornerRadius="12"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

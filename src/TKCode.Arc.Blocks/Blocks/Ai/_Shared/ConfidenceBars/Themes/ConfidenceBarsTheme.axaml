@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The footer's mini bars: an 18px strip of 4px bars 3px apart, standing on the bottom. The bars draw themselves; the
+        theme hands them the status colors (sure = 55% Success over Surface, check = Warning, accepted = Success, pending =
+        Border). Motion is code-driven per bar (Smooth height spring, 160ms color) because each bar has its own target.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ConfidenceBars}" TargetType="arc:ConfidenceBars">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="PendingBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConfidenceBars">
+                <arc:ConfidenceBarsStrip Name="PART_Strip" VerticalAlignment="Center" HorizontalAlignment="Left" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

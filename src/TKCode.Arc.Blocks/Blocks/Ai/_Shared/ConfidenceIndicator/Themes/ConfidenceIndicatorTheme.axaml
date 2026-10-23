@@ -1,0 +1,67 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The confidence column (spec 3.4): right-aligned faces that crossfade, the old one out in 100ms, the new one in over
+        160ms (standard) rising 2px; reduced motion crossfades in 120ms (ArcContentSwap).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ConfidenceIndicator}" TargetType="arc:ConfidenceIndicator">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConfidenceIndicator">
+                <arc:ArcContentSwap Name="PART_Swap"
+                                    Mode="Crossfade"
+                                    EnterOffset="2"
+                                    HorizontalContentAlignment="Right"
+                                    VerticalContentAlignment="Center" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        One face: a 13px icon (stroke 2) 4px before the text, 12 / 16.8 with tabular figures. Type names and plain percents
+        are TextMuted; a low value has a Warning triangle and Foreground digits; a checked or accepted one a Success check
+        and TextMuted digits; an edited one a TextMuted pencil and word.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ConfidenceIndicatorFace}" TargetType="arc:ConfidenceIndicatorFace">
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontFeatures" Value="tnum" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConfidenceIndicatorFace">
+                <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="13"
+                                  StrokeThickness="2"
+                                  VerticalAlignment="Center"
+                                  IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               LineHeight="16.8"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:low">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

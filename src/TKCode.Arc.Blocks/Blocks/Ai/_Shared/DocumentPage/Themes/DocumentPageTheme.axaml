@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A sheet of paper: pure white in both themes (the document keeps its own colors, spec 3.3), radius 2, a 0.5px black
+        12% hairline around it and ShadowRaised (the dark theme's own raised shadow there). Three layers: the raised shadow,
+        the hairline (a spread-only shadow, drawn over the raised one), and the sheet that clips the content to the paper
+        (a clipping border would clip its own shadow). The page sizes itself in code: 540 wide, 764 high for a Pdf page,
+        the content's height for an email. Layout rounding is off for the page and everything in it: the page is laid out
+        in base units and scaled as a whole by the viewer, and rounding every line (15.5, 11.25) up to a device pixel would
+        add up to several units down the page and push the text into the pinned footer.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DocumentPage}" TargetType="arc:DocumentPage">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="UseLayoutRounding" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DocumentPage">
+                <Panel>
+                    <Border Name="PART_Shadow"
+                            CornerRadius="2"
+                            Background="White"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}" />
+                    <Border Name="PART_Hairline"
+                            CornerRadius="2"
+                            Background="White"
+                            BoxShadow="0 0 0 0.5 #1F000000" />
+                    <Border Name="PART_Sheet" CornerRadius="2" ClipToBounds="True">
+                        <Decorator Name="PART_Content" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DocumentExtractionCustomDemo">
+    <!-- Your own schema: three fields and no groups, so each field gets its own color. -->
+    <arc:DocumentExtraction x:Name="Extraction" MaxWidth="1080" Margin="0,12" />
+</UserControl>

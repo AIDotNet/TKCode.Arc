@@ -1,0 +1,171 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A table field (spec 3.4): a box of radius 12, padding 4 4 6 8 (lit: the group color at 6%, set by the grid). The header
+        line is 30 high: a 7px dot 8 before the label (12 / 500 TextSecondary), the count 8 after it (12 TextMuted, tabular),
+        the confidence of the cells on the right (60, narrow 54). The grid: a 1px Border of radius 10 on Surface, its height on
+        the smooth spring, scrolling sideways below 304; column headers 28 high with a BorderSubtle line under them; the empty
+        text 12 / 16.8 TextMuted with padding 10 9.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ExtractionTableGrid}" TargetType="arc:ExtractionTableGrid">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="8,4,4,6" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExtractionTableGrid">
+                <Border Name="PART_Wrapper"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <Grid Name="PART_Head" Height="30" ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+                            <Ellipse Name="PART_Dot"
+                                     Width="7"
+                                     Height="7"
+                                     Margin="0,0,8,0"
+                                     VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Label"
+                                       Grid.Column="1"
+                                       Text="{TemplateBinding Label}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="16.8"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                            <TextBlock Name="PART_Count"
+                                       Grid.Column="2"
+                                       Margin="8,0,0,0"
+                                       Text="{TemplateBinding CountText}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontFeatures="tnum"
+                                       LineHeight="16.8"
+                                       VerticalAlignment="Center" />
+                            <arc:ConfidenceIndicator Name="PART_Summary"
+                                                     Grid.Column="4"
+                                                     Width="60"
+                                                     Value="{TemplateBinding SummaryValue}"
+                                                     EditedText="{TemplateBinding EditedText}"
+                                                     IsAccepted="{TemplateBinding IsAccepted}"
+                                                     AutomationText="{TemplateBinding SummaryAutomationText}" />
+                        </Grid>
+                        <Border Name="PART_Frame"
+                                BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                CornerRadius="10"
+                                ClipToBounds="True">
+                            <arc:SpringSizeDecorator Name="PART_Size" Axis="Height" Spring="Smooth">
+                                <ScrollViewer Name="PART_Scroll"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <StackPanel Name="PART_Body" HorizontalAlignment="Left">
+                                        <Border Name="PART_HeaderLine"
+                                                Height="28"
+                                                BorderThickness="0,0,0,1"
+                                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                AutomationProperties.ControlTypeOverride="Header">
+                                            <arc:ExtractionTableRowPanel Name="PART_HeaderRow" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Name="PART_Rows" />
+                                        <TextBlock Name="PART_Empty"
+                                                   Margin="9,10"
+                                                   Text="{TemplateBinding ShownEmptyText}"
+                                                   IsVisible="{TemplateBinding ShownEmptyText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </arc:SpringSizeDecorator>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:narrow /template/ arc|ConfidenceIndicator#PART_Summary">
+            <Setter Property="Width" Value="54" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A column header: 12 TextMuted, padding 0 9, numbers right-aligned (set by the cell); a header wider than a narrow column overflows, as Arc's does. -->
+    <ControlTheme x:Key="{x:Type arc:ExtractionTableHeaderCell}" TargetType="arc:ExtractionTableHeaderCell">
+        <Setter Property="Padding" Value="9,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="LineHeight" Value="16.8" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </ControlTheme>
+
+    <!-- A data row: a BorderSubtle line above every row but the first; a lit row's fill fades in 160ms. -->
+    <ControlTheme x:Key="{x:Type arc:ExtractionTableRow}" TargetType="arc:ExtractionTableRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Style Selector="^:separated">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A cell: padding 2 around its 28px box; a lit cell's fill fades in 160ms. -->
+    <ControlTheme x:Key="{x:Type arc:ExtractionTableCell}" TargetType="arc:ExtractionTableCell">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="Background" Value="Transparent" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
