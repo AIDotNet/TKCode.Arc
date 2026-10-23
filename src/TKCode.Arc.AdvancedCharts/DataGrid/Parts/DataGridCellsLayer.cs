@@ -225,6 +225,7 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
         var fontSize = _grid.CellFontSize;
         var styled = _grid.HasStyling;
         var errors = _grid.HasErrors;
+        var finding = _grid.IsFindHighlighting;
         var item = styled ? _grid.ItemOfRow(row) : null;
         if (item is not null && _grid.RowStyleSelector is { } rowSelector && rowSelector(item) is { } rowTone)
         {
@@ -251,6 +252,10 @@ internal sealed class DataGridCellsLayer : Avalonia.Controls.Control
                 {
                     context.FillRectangle(palette.Tone(tinted.Tone).Fill, new Rect(left, y, width - 1, rowHeight - 1));
                 }
+            }
+            if (finding && _grid.IsFindMatch(row, c))
+            {
+                context.FillRectangle(palette.WashFill, new Rect(left, y, width - 1, rowHeight - 1));
             }
             if (errors && _grid.ErrorOf(key, accessor) is not null)
             {

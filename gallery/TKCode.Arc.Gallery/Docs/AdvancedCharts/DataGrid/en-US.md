@@ -41,7 +41,7 @@ column bindings or accessors. Every row needs a unique, stable key. Store raw va
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DataGrid Label="Renewals" MaxViewportHeight="440" ExportFormats="All">
         <arc:DataGridColumn Key="account" Header="Account" Width="188" IsPinned="True" />
         <arc:DataGridColumn Key="stage" Header="Stage" Type="Select" />
@@ -308,6 +308,25 @@ row; change them for one opening with `ContextMenuOpening` (`Items`, `Cancel`); 
         <arc:DataGridMenuItem Label="Open account" />
     </arc:DataGrid.ContextMenuItems>
 </arc:DataGrid>
+```
+
+### Find and replace
+
+Ctrl+F opens the find bar at the top right of the body, and Ctrl+H adds the replace row (the chevron does too). It looks
+in the text people see, so `1,200` finds a cell that shows `$1,200`. While the bar is open every match is tinted and the bar
+counts them ("3 of 27"). Enter and Shift+Enter, or F3 and Shift+F3, step to the next and previous match, wrapping round;
+Escape closes the bar. `Match case` and `Match entire cell` narrow the search.
+
+Replace swaps the text in the active match and moves to the next one; Replace all changes every match as one undo step.
+The new text is read back the way typing reads it, so replacing inside a currency or date cell works when the result is
+still a valid value, and a cell it would break (an option that does not exist, text in a number column) is skipped and
+counted in the status bar. Read-only cells are skipped too. With a `DataSource` Ctrl+F focuses the toolbar search instead,
+since only the blocks in view are loaded.
+
+```csharp
+grid.FindText = "labs";
+grid.FindMatchCase = false;
+grid.ReplaceAll("Group");   // one undo step; cells whose new text does not parse are skipped
 ```
 
 ### Rows from your own classes
@@ -652,6 +671,8 @@ The grid body is the focus stop. These keys apply when no editor is open; Ctrl m
 | `Escape` | Collapse a multi-cell selection to the active cell; otherwise clear the row checks |
 | `Delete` / `Backspace` | Clear the selection; read-only cells are skipped |
 | `Ctrl+D` | Fill down from the first row of the selection |
+| `Ctrl+F` / `Ctrl+H` | Open find, or find and replace |
+| `F3` / `Shift+F3` | Next or previous match |
 | `Ctrl+C` / `Ctrl+X` / `Ctrl+V` | Copy, cut and paste |
 | `Ctrl+Z` / `Ctrl+Shift+Z` or `Ctrl+Y` | Undo and redo |
 | `Tab` / `Shift+Tab` | Leave the grid |

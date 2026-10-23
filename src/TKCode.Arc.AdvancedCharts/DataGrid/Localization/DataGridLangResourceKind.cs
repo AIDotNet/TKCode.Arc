@@ -174,5 +174,20 @@ public enum DataGridLangResourceKind
     FilterByValue,
     InsertRowAbove,
     InsertRowBelow,
-    Paste
+    Paste,
+    CloseFind,
+    FindCount,
+    FindMatchCase,
+    FindNext,
+    FindNoMatches,
+    FindPlaceholder,
+    FindPrevious,
+    FindWholeCell,
+    NothingToReplace,
+    ReplaceAll,
+    ReplaceOne,
+    ReplacePlaceholder,
+    ReplacedCellsOne,
+    ReplacedCellsOther,
+    ToggleReplace
 }

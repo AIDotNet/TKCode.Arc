@@ -23,6 +23,7 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
 
     private readonly DataGrid _grid;
     private readonly DataGridCellsLayer _pinnedCells;
+    private readonly DataGridFindBar _findBar;
     private readonly DataGridCellsLayer _scrollCells;
     private readonly DataGridSelectionLayer _selection;
     private readonly DataGridEditorLayer _editorLayer;
@@ -88,7 +89,8 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         _totals = new DataGridTotalsRow(grid, this);
         _filterRow = new DataGridFilterRow(grid, this);
         _header = new DataGridHeaderRow(grid, this);
-        foreach (var child in new Control[] { _scrollCells, _pinnedCells, _selection, _editorLayer, _empty, _totals, _filterRow, _header })
+        _findBar = new DataGridFindBar(grid);
+        foreach (var child in new Control[] { _scrollCells, _pinnedCells, _selection, _editorLayer, _empty, _totals, _filterRow, _header, _findBar })
         {
             LogicalChildren.Add(child);
             VisualChildren.Add(child);
@@ -96,6 +98,8 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
     }
 
     internal DataGridHeaderRow Header => _header;
+
+    internal DataGridFindBar FindBar => _findBar;
 
     internal DataGridFilterRow FilterRow => _filterRow;
 
@@ -240,6 +244,7 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         _filterRow.Measure(new Size(width, _grid.FilterRowHeight));
         _totals.Measure(new Size(width, _grid.TotalsRowHeight));
         _empty.Measure(new Size(width, 176));
+        _findBar.Measure(new Size(Math.Max(0, width - 24), double.PositiveInfinity));
         _editorLayer.Measure(new Size(width, height));
         foreach (var layer in new Control[] { _scrollCells, _pinnedCells, _selection })
         {
@@ -276,6 +281,8 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
         _editorLayer.Arrange(new Rect(0, bodyTop, width, bodyHeight));
         _empty.Arrange(new Rect(0, bodyTop, width, bodyHeight));
         _header.Arrange(new Rect(0, 0, width, HeaderHeight));
+        var findSize = _findBar.DesiredSize;
+        _findBar.Arrange(new Rect(Math.Max(0, width - findSize.Width - 12), bodyTop + 8, Math.Min(width, findSize.Width), findSize.Height));
         _filterRow.Arrange(new Rect(0, HeaderHeight, width, _grid.FilterRowHeight));
         _filterRow.Clip = FilterProgress >= 0.999 ? null : new RectangleGeometry(new Rect(0, 0, width, FilterHeight));
         _filterRow.IsVisible = FilterProgress > 0.001;
@@ -303,6 +310,15 @@ internal sealed class DataGridViewport : Control, ILogicalScrollable
     {
         _pinnedCells.ClearText();
         _scrollCells.ClearText();
+        InvalidateLayers();
+        _header.Refresh();
+        _filterRow.Refresh();
+        _totals.Refresh();
+    }
+
+    /// <summary>A column was resized: redraw the cells and move the header, filter and totals cells, keeping the text layouts.</summary>
+    internal void InvalidateWidths()
+    {
         InvalidateLayers();
         _header.Refresh();
         _filterRow.Refresh();

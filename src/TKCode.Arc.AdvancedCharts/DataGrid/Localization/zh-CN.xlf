@@ -139,6 +139,12 @@
         <target state="translated">已清空 {0} 个单元格</target>
       </segment>
     </unit>
+    <unit id="CloseFind">
+      <segment>
+        <source>Close find</source>
+        <target state="translated">关闭查找</target>
+      </segment>
+    </unit>
     <unit id="Collapse">
       <segment>
         <source>Collapse</source>
@@ -505,6 +511,48 @@
         <target state="translated">已清除筛选</target>
       </segment>
     </unit>
+    <unit id="FindCount">
+      <segment>
+        <source>{0} of {1}</source>
+        <target state="translated">第 {0} 个，共 {1} 个</target>
+      </segment>
+    </unit>
+    <unit id="FindMatchCase">
+      <segment>
+        <source>Match case</source>
+        <target state="translated">区分大小写</target>
+      </segment>
+    </unit>
+    <unit id="FindNext">
+      <segment>
+        <source>Next match</source>
+        <target state="translated">下一个匹配</target>
+      </segment>
+    </unit>
+    <unit id="FindNoMatches">
+      <segment>
+        <source>No matches</source>
+        <target state="translated">没有匹配</target>
+      </segment>
+    </unit>
+    <unit id="FindPlaceholder">
+      <segment>
+        <source>Find</source>
+        <target state="translated">查找</target>
+      </segment>
+    </unit>
+    <unit id="FindPrevious">
+      <segment>
+        <source>Previous match</source>
+        <target state="translated">上一个匹配</target>
+      </segment>
+    </unit>
+    <unit id="FindWholeCell">
+      <segment>
+        <source>Match entire cell</source>
+        <target state="translated">匹配整个单元格</target>
+      </segment>
+    </unit>
     <unit id="FitColumnWidth">
       <segment>
         <source>Fit column width</source>
@@ -637,6 +685,12 @@
         <target state="translated">没有可重做的操作</target>
       </segment>
     </unit>
+    <unit id="NothingToReplace">
+      <segment>
+        <source>Nothing to replace</source>
+        <target state="translated">没有可替换的内容</target>
+      </segment>
+    </unit>
     <unit id="NothingToUndo">
       <segment>
         <source>Nothing to undo</source>
@@ -713,6 +767,36 @@
       <segment>
         <source>Redone</source>
         <target state="translated">已重做</target>
+      </segment>
+    </unit>
+    <unit id="ReplaceAll">
+      <segment>
+        <source>Replace all</source>
+        <target state="translated">全部替换</target>
+      </segment>
+    </unit>
+    <unit id="ReplaceOne">
+      <segment>
+        <source>Replace</source>
+        <target state="translated">替换</target>
+      </segment>
+    </unit>
+    <unit id="ReplacePlaceholder">
+      <segment>
+        <source>Replace with</source>
+        <target state="translated">替换为</target>
+      </segment>
+    </unit>
+    <unit id="ReplacedCellsOne">
+      <segment>
+        <source>Replaced in {0} cell</source>
+        <target state="translated">已在 {0} 个单元格中替换</target>
+      </segment>
+    </unit>
+    <unit id="ReplacedCellsOther">
+      <segment>
+        <source>Replaced in {0} cells</source>
+        <target state="translated">已在 {0} 个单元格中替换</target>
       </segment>
     </unit>
     <unit id="ResizeHint">
@@ -971,6 +1055,12 @@
       <segment>
         <source>Stopped grouping by {0}</source>
         <target state="translated">已取消按{0}分组</target>
+      </segment>
+    </unit>
+    <unit id="ToggleReplace">
+      <segment>
+        <source>Show replace</source>
+        <target state="translated">显示替换</target>
       </segment>
     </unit>
     <unit id="TotalCellLabel">

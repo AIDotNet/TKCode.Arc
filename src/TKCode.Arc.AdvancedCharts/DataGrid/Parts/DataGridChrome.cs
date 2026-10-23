@@ -463,7 +463,33 @@ internal sealed class DataGridToolbar : Border
         {
             return;
         }
-        grid.SetCurrentValue(DataGrid.SearchTextProperty, _search.Text ?? string.Empty);
+        // Every change of SearchText filters, sorts and regroups the whole grid (and starts a server query in a data
+        // source), so typing waits for a pause; clearing the box and leaving it with Enter apply at once.
+        if (string.IsNullOrEmpty(_search.Text))
+        {
+            _searchDebounce?.Stop();
+            grid.SetCurrentValue(DataGrid.SearchTextProperty, string.Empty);
+            return;
+        }
+        if (_searchDebounce is null)
+        {
+            _searchDebounce = new DispatcherTimer { Interval = SearchDebounce };
+            _searchDebounce.Tick += (_, _) => FlushSearch();
+        }
+        _searchDebounce.Stop();
+        _searchDebounce.Start();
+    }
+
+    private static readonly TimeSpan SearchDebounce = TimeSpan.FromMilliseconds(180);
+    private DispatcherTimer? _searchDebounce;
+
+    private void FlushSearch()
+    {
+        _searchDebounce?.Stop();
+        if (_grid is { } grid && grid.SearchText != (_search.Text ?? string.Empty))
+        {
+            grid.SetCurrentValue(DataGrid.SearchTextProperty, _search.Text ?? string.Empty);
+        }
     }
 
     private void OnSearchKeyDown(object? sender, KeyEventArgs e)
@@ -488,6 +514,7 @@ internal sealed class DataGridToolbar : Border
             case Key.Enter:
             case Key.Down:
                 e.Handled = true;
+                FlushSearch();
                 grid.Viewport.FocusGrid();
                 break;
         }

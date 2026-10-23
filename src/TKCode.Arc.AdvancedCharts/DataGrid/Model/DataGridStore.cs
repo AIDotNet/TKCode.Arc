@@ -409,7 +409,69 @@ internal sealed class DataGridStore
             _batchChanged = true;
             return;
         }
-        Reload();
+        if (!TryAppend(e))
+        {
+            Reload();
+        }
+    }
+
+    /// <summary>
+    /// Rows added at the end of the source (a stream, a paged load) keep every cached column and every watched item:
+    /// only the new rows are read. Anything else, or any doubt about the source, reloads.
+    /// </summary>
+    private bool TryAppend(NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action != NotifyCollectionChangedAction.Add || e.NewItems is not { Count: > 0 } added
+            || e.NewStartingIndex != _items.Count || _source is not ICollection source || source.Count != _items.Count + added.Count)
+        {
+            return false;
+        }
+        var first = _items.Count;
+        var keys = new List<object>(added.Count);
+        foreach (var item in added)
+        {
+            if (item is null)
+            {
+                return false;
+            }
+            var key = _keySelector?.Invoke(item) ?? (item is DataGridRow row ? row.Key : item);
+            if (_indexByKey.ContainsKey(key) || keys.Contains(key) || _indexByItem.ContainsKey(item))
+            {
+                return false;
+            }
+            keys.Add(key);
+        }
+        var index = first;
+        foreach (var item in added)
+        {
+            _indexByKey.Add(keys[index - first], index);
+            _indexByItem.Add(item!, index);
+            _items.Add(item!);
+            _keys.Add(keys[index - first]);
+            if (item is INotifyPropertyChanged notifier && _watched.Add(notifier))
+            {
+                notifier.PropertyChanged += OnItemPropertyChanged;
+            }
+            index++;
+        }
+        for (var a = 0; a < _accessors.Length; a++)
+        {
+            if (_values[a] is not { } values)
+            {
+                continue;
+            }
+            Array.Resize(ref values, _items.Count);
+            for (var i = first; i < values.Length; i++)
+            {
+                values[i] = _accessors[a].Read(_items[i]);
+            }
+            _accessors[a].Release();
+            _values[a] = values;
+        }
+        Array.Resize(ref _rowVersions, _items.Count);
+        Version++;
+        Reset?.Invoke();
+        return true;
     }
 
     private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)

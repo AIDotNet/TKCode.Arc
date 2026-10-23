@@ -158,6 +158,18 @@ public partial class DataGrid
             InsertRow(below: false);
             return;
         }
+        if (command && !shift && !alt && e.Key is Key.F or Key.H)
+        {
+            e.Handled = true;
+            OpenFind(replace: e.Key == Key.H);
+            return;
+        }
+        if (e.Key == Key.F3 && !command && !alt && FindText.Length > 0 && !HasDataSource)
+        {
+            e.Handled = true;
+            FindStep(forward: !shift, inclusive: false);
+            return;
+        }
         if (e.Key == Key.F8 && !command && !alt)
         {
             e.Handled = true;
