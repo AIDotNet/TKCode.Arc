@@ -11,6 +11,32 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
+## 0.3.0-preview.4 (2026-10-24)
+
+### Added
+
+- **Special components › AI**: five agent UI components in `TKCode.Arc.Special`: `AgentStatus` (a live status pill that
+  opens into the recent steps), `ToolCall` and `ToolCallGroup` (tool call rows with input and output, approval and
+  retry), `AgentPlan` (an editable draft plan that becomes a live checklist), `AgentTimeline` (a replay of a multi-agent
+  run on one time axis) and `ContextWindow` (a 200-cell token budget grid with a compaction threshold).
+- **Blocks › Headers and footers**: `SiteHeader`, `SiteFooter`, `CtaSection` and `NewsletterSignup`, ported from Arc's
+  free blocks.
+- **Blocks › AI**: the model arena (`ModelArena`, a blind test of two models with streamed answers, a vote and
+  standings) and document extraction (`DocumentExtraction`, a document beside a form that fills in as the model reads,
+  with links from each value to its source text). All nine AI blocks are now available.
+- **AnnouncementBar**: `DismissalDuration` lets a remembered dismissal expire.
+
+### Changed
+
+- **Gallery**: the language has its own menu in the top bar, starts from the system language and is remembered. The
+  home page has a Friends section, and a docs page shows a placeholder while it loads.
+
+### Fixed
+
+- **Combobox** (#9): a focused field no longer draws a dark ring; only its border turns `BorderStrong`, as in Arc.
+- **Gallery** (#8, #10): the examples no longer cut off the left side of the inline edit frame and of focus rings.
+- **Gallery** (#11): a NativeAOT publish of the desktop gallery loads its docs pages and screenshots again.
+
 ## 0.3.0-preview.3 (2026-10-23)
 
 ### Fixed

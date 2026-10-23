@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: feab159e33e4
+source-hash: 2ad836a9f46d
 ---
 
 # 更新日誌
@@ -8,6 +8,25 @@ source-hash: feab159e33e4
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 與 `TKCode.Arc.Special`。
+
+## 0.3.0-preview.4 (2026-10-24)
+
+### 新增
+
+- **特別元件 › AI**：`TKCode.Arc.Special` 中的五個智慧代理介面元件：`AgentStatus`（即時狀態膠囊，可展開查看最近的步驟）、`ToolCall` 與 `ToolCallGroup`（顯示輸入與輸出的工具呼叫列，可核准與重試）、`AgentPlan`（可編輯的計畫草稿，核准後成為即時清單）、`AgentTimeline`（在同一時間軸上重播多代理執行）與 `ContextWindow`（具壓縮門檻的 200 格權杖預算網格）。
+- **Blocks › 頁首與頁尾**：`SiteHeader`、`SiteFooter`、`CtaSection` 與 `NewsletterSignup`，移植自 Arc 的免費區塊。
+- **Blocks › AI**：模型競技場（`ModelArena`，兩個模型的盲測：串流回答、投票與排行）與文件擷取（`DocumentExtraction`，文件旁的表單隨模型閱讀逐項填寫，每個值都連結到其來源文字）。九個 AI 區塊現已全部可用。
+- **AnnouncementBar**：`DismissalDuration` 讓記住的關閉狀態在一段時間後失效。
+
+### 變更
+
+- **Gallery**：語言在頂欄有了獨立的選單，首次啟動跟隨系統語言並會被記住。首頁新增友站連結，文件頁載入時顯示佔位內容。
+
+### 修復
+
+- **Combobox**（#9）：聚焦時不再顯示深色的環，只把邊框變為 `BorderStrong`，與 Arc 一致。
+- **Gallery**（#8、#10）：範例不再切掉行內編輯框與焦點環的左側。
+- **Gallery**（#11）：以 NativeAOT 發佈的桌面 Gallery 能重新載入文件頁與截圖。
 
 ## 0.3.0-preview.3 (2026-10-23)
 

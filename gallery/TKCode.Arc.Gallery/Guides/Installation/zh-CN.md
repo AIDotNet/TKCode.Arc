@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: d01a8d8c8917
+source-hash: 96069fe6b6f2
 ---
 
 # 安装
@@ -21,9 +21,9 @@ TKCode.Arc 目前处于预览阶段，AtomUI 与 Avalonia 都固定为确切版�
 ## 1. 添加包
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.0-preview.3
-dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.3           # 可选：Geist 与 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.3    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 0.3.0-preview.4
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.4           # 可选：Geist 与 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.4    # 可选：完整的 Lucide 图标集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可选：正文使用的 Inter
 ```
 
@@ -31,9 +31,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.3.0-preview.3" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.0-preview.3" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.0-preview.3" />
+    <PackageVersion Include="TKCode.Arc" Version="0.3.0-preview.4" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.0-preview.4" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.0-preview.4" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -151,9 +151,9 @@ Arc 自有的图标字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 个
 `TKCode.Arc.Blocks`（页面级区块）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）和 `TKCode.Arc.Special`（AI 动画讲解）是独立的包。按需添加，并把它们注册在 `UseArc()` 旁边：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.3
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.3
-dotnet add package TKCode.Arc.Special --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.4
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.4
+dotnet add package TKCode.Arc.Special --version 0.3.0-preview.4
 ```
 
 ```csharp
