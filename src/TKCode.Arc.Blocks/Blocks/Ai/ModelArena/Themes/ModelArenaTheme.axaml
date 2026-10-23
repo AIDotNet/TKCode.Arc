@@ -1,0 +1,187 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The arena card (spec 3.1, 3.2): Surface, a 1px Border, radius 26, clipped, at most 800 wide; Classes="flat" drops the
+        outer border and the two rules (above the stage and above the vote strip), keeping only the line between the panes.
+        Top to bottom: the header (52 high, padding 8 10 0 20, 8 6 0 20 when compact): "Arena" in the display face 14 / 500
+        (letter spacing −0.42), then 6px, a TextMuted "·", 6px and "Round" with its rolling number; at the right, 6px apart,
+        the Leaderboard ghost button (Trophy 16 with the unseen dot, 9 × 9 Accent ringed by 2px of Surface, 3 above and 4
+        right of the glyph) and the Blind switch with its word on the left (10px apart, padding 0 6 0 8). Then the prompt
+        row, the stage (a 1px Border rule, the two panes 1px apart, or the tab strip and the selected pane when narrow), the
+        vote strip and the hidden live region. The standings open in a popover from the Leaderboard button (bottom, end,
+        8px away) with no padding of its own.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ModelArena}" TargetType="arc:ModelArena">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MaxWidth" Value="{arc:ModelArenaTokenResource MaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="NarrowBreakpoint" Value="{arc:ModelArenaTokenResource NarrowBreakpoint}" />
+        <Setter Property="CompactBreakpoint" Value="{arc:ModelArenaTokenResource CompactBreakpoint}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelArena">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <Border Name="PART_Head" Height="{arc:ModelArenaTokenResource HeadHeight}">
+                            <DockPanel>
+                                <StackPanel Name="PART_Tools"
+                                            DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            VerticalAlignment="Center">
+                                    <arc:Button Name="PART_Leaderboard"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                IsPressScaleEnabled="False"
+                                                VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <Panel Width="16" Height="16" VerticalAlignment="Center" ClipToBounds="False">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Trophy}" Size="16" StrokeThickness="1.75" />
+                                                <Ellipse Name="PART_UnseenDot"
+                                                         Width="9"
+                                                         Height="9"
+                                                         Margin="0,-3,-4,0"
+                                                         HorizontalAlignment="Right"
+                                                         VerticalAlignment="Top"
+                                                         Fill="{arc:ArcDesignTokenResource Accent}"
+                                                         Stroke="{arc:ArcDesignTokenResource Surface}"
+                                                         StrokeThickness="2"
+                                                         Opacity="0"
+                                                         IsHitTestVisible="False" />
+                                            </Panel>
+                                            <TextBlock Name="PART_LeaderboardText"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LineHeight="19.6"
+                                                       LetterSpacing="-0.14"
+                                                       VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </arc:Button>
+                                    <Border Name="PART_BlindHost"
+                                            Height="36"
+                                            Padding="8,0,6,0"
+                                            Background="Transparent"
+                                            Cursor="Hand"
+                                            VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                            <TextBlock Name="PART_BlindText"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                       LineHeight="19.6"
+                                                       LetterSpacing="-0.14"
+                                                       VerticalAlignment="Center" />
+                                            <arc:Switch Name="PART_Blind" MinHeight="0" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" ClipToBounds="True">
+                                    <TextBlock Name="PART_Title"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="15.4"
+                                               LetterSpacing="-0.42"
+                                               VerticalAlignment="Center" />
+                                    <StackPanel Name="PART_Round" Orientation="Horizontal" Margin="6,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="·"
+                                                   Margin="0,0,6,0"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   LineHeight="19.6"
+                                                   VerticalAlignment="Center"
+                                                   AutomationProperties.AccessibilityView="Raw" />
+                                        <TextBlock Name="PART_RoundWord"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   LineHeight="19.6"
+                                                   LetterSpacing="-0.14"
+                                                   VerticalAlignment="Center" />
+                                        <arc:RollingDigits Name="PART_RoundDigits"
+                                                           Margin="4,0,0,0"
+                                                           Falloff="None"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           VerticalAlignment="Center"
+                                                           AutomationProperties.AccessibilityView="Raw" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                        <arc:ArenaPromptForm Name="PART_Form" Text="{TemplateBinding PromptText, Mode=TwoWay}" />
+                        <Border Name="PART_StageFrame"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <arc:ArenaStagePanel Name="PART_Stage">
+                                <arc:ArenaPaneTabs Name="PART_Tabs" IsVisible="False" />
+                                <arc:ArenaPane Name="PART_PaneA" AnswerHeight="{arc:ModelArenaTokenResource AnswerHeight}" />
+                                <Border Name="PART_Divider" Width="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                <arc:ArenaPane Name="PART_PaneB" AnswerHeight="{arc:ModelArenaTokenResource AnswerHeight}" />
+                            </arc:ArenaStagePanel>
+                        </Border>
+                        <arc:ArenaVoteBar Name="PART_VoteBar" />
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                        <!-- No trigger of its own (nothing in place): opened at the Leaderboard button in code, so that its rows
+                             are filled before it shows and exist only while it does. -->
+                        <arc:Popover Name="PART_StandingsPopover"
+                                     Placement="Bottom"
+                                     Alignment="End"
+                                     Offset="{arc:ModelArenaTokenResource StandingsOffset}"
+                                     ContentTemplate="{x:Null}">
+                            <arc:ArenaStandings Name="PART_Standings" />
+                        </arc:Popover>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Head">
+            <Setter Property="Padding" Value="{arc:ModelArenaTokenResource HeadPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Head">
+            <Setter Property="Padding" Value="{arc:ModelArenaTokenResource CompactHeadPadding}" />
+        </Style>
+
+        <!-- The dot shows while a vote has not been looked at in the standings. -->
+        <Style Selector="^:unseen /template/ Ellipse#PART_UnseenDot">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <!-- The Leaderboard button looks hovered while its popover is open (screenshot 09). -->
+        <Style Selector="^:leaderboard-open /template/ arc|Button#PART_Leaderboard">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^.flat">
+            <Setter Property="BorderThickness" Value="0" />
+            <Style Selector="^ /template/ Border#PART_StageFrame">
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArenaVoteBar#PART_VoteBar">
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Ellipse#PART_UnseenDot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Ellipse#PART_UnseenDot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

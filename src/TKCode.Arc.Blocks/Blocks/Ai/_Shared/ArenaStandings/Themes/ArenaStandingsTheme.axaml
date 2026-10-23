@@ -1,0 +1,107 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The standings popover's content (model arena spec 3.8): 318 wide (320 with the popover's border), 14 16 8 inside.
+        Header: title Display 14 / 15.4 medium and the vote count 12 / 16.8 TextMuted (tabular) on the right, 8 apart,
+        6 above the body. Body: rows (36 each) or the empty text (14 / 19.6 TextSecondary, 2 from the top; the body is as
+        tall as the text, like Arc's measured 39) on the Smooth height spring. Footnote: 1px BorderSubtle line 6 below the
+        body, 4 above its row: the rule 12 / 16.8 TextMuted and Reset (ghost, small, RotateCcw 14, 10 inside, pulled 10
+        into the padding so its text lines up with the content edge).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaStandings}" TargetType="arc:ArenaStandings">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="318" />
+        <Setter Property="Padding" Value="16,14,16,8" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaStandings">
+                <DockPanel Margin="{TemplateBinding Padding}">
+                    <Grid Name="PART_Head"
+                          DockPanel.Dock="Top"
+                          ColumnDefinitions="*,Auto"
+                          ColumnSpacing="8"
+                          Margin="0,0,0,6">
+                        <TextBlock Name="PART_Title"
+                                   Text="{TemplateBinding Title}"
+                                   VerticalAlignment="Center"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="15.4"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Name="PART_Votes"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding VotesText}"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="16.8"
+                                   FontFeatures="tnum"
+                                   TextWrapping="NoWrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </Grid>
+                    <Border Name="PART_Foot"
+                            DockPanel.Dock="Bottom"
+                            Margin="0,6,0,0"
+                            Padding="0,4,0,0"
+                            BorderThickness="0,1,0,0"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBlock Name="PART_Footnote"
+                                       Text="{TemplateBinding FootnoteText}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <arc:Button Name="PART_Reset"
+                                        Grid.Column="1"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        Padding="10,0"
+                                        Margin="0,0,-10,0"
+                                        IsEnabled="False"
+                                        AutomationProperties.Name="{TemplateBinding ResetText}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                  Size="14"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ResetText"
+                                               Text="{TemplateBinding ResetText}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </Grid>
+                    </Border>
+                    <arc:SpringSizeDecorator Name="PART_BodySize"
+                                             Axis="Height"
+                                             Spring="Smooth"
+                                             VerticalAlignment="Top">
+                        <arc:ArenaStandingsBody Name="PART_Body">
+                            <arc:RankedBarList Name="PART_List"
+                                               Limit="{TemplateBinding Limit}"
+                                               RankFormat="{TemplateBinding RankFormat}"
+                                               WinRateSuffix="{TemplateBinding WinRateSuffix}" />
+                            <TextBlock Name="PART_Empty"
+                                       Text="{TemplateBinding EmptyText}"
+                                       Margin="0,2,0,-2"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       TextWrapping="Wrap"
+                                       IsVisible="False"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </arc:ArenaStandingsBody>
+                    </arc:SpringSizeDecorator>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

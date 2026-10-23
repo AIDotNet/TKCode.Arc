@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelArenaPreviewDemo">
+    <!-- Two hidden models answer the same prompt at the same pace; vote to reveal them. Press Run or pick a sample prompt. -->
+    <arc:ModelArena x:Name="Arena" AutoStart="True" MaxWidth="800" Margin="0,12" />
+</UserControl>

@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        One arena answer (spec 3.5): the head, 48 high with 20 4 12 0 inside, the identity on the left and the status pill on
+        the right (8 apart, the pill's right edge fixed while its width springs); the answer area (272, it scrolls); the
+        metrics row, 8 20 14 inside (39 high with the 16.8 line). No background or border of its own: the arena draws the
+        card and the rule between the panes. The narrow layout hides the head (its tabs show identity and status).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaPane}" TargetType="arc:ArenaPane">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaPane">
+                <DockPanel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Head"
+                            DockPanel.Dock="Top"
+                            Height="48"
+                            Padding="20,4,12,0">
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <arc:ArenaIdentity Name="PART_Identity" />
+                            <arc:AiStatusPill Name="PART_Status"
+                                              Grid.Column="1"
+                                              Margin="8,0,0,0"
+                                              HorizontalAlignment="Right" />
+                        </Grid>
+                    </Border>
+                    <arc:ArenaPaneGroup Name="PART_Metrics"
+                                        DockPanel.Dock="Bottom"
+                                        Padding="20,8,20,14">
+                        <arc:AiMetricLine Name="PART_MetricLine"
+                                          Placeholder="–"
+                                          HorizontalAlignment="Left" />
+                    </arc:ArenaPaneGroup>
+                    <arc:ArenaAnswerView Name="PART_Answer" Height="{TemplateBinding AnswerHeight}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:no-header /template/ Border#PART_Head">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

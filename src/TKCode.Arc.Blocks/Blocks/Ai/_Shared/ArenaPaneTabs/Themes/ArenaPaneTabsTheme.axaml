@@ -1,0 +1,114 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        One narrow tab: 52 high, 0 12 inside, two lines centered: the identity (14 / 19.6 medium, the short name once revealed)
+        and the compact status pill (20 high) 7px to the left so its icon lines up with the name. The name is TextSecondary
+        and turns Foreground when the tab is selected or hovered (160ms; Reduced 120ms). The keyboard ring is 2px of FocusRing
+        2px outside the tab (radius 17, around the highlight's 15).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaPaneTab}" TargetType="arc:ArenaPaneTab">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="52" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaPaneTab">
+                <Panel Background="{TemplateBinding Background}">
+                    <StackPanel Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch">
+                        <arc:ArenaIdentity Name="PART_Identity" ShowsShortName="True" />
+                        <arc:AiStatusPill Name="PART_Status"
+                                          IsCompact="True"
+                                          Margin="-7,0,0,0"
+                                          HorizontalAlignment="Left" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="17"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The name's color (a non-trigger style so the states can change it; the identity's own theme sets Foreground). -->
+        <Style Selector="^ /template/ arc|ArenaIdentity#PART_Identity">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:selected /template/ arc|ArenaIdentity#PART_Identity, ^:hover /template/ arc|ArenaIdentity#PART_Identity">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArenaIdentity#PART_Identity">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|ArenaIdentity#PART_Identity">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The narrow layout's tab list (spec 7): 60 high, 3 inside, SurfaceMuted with a 1px Border, radius 18; the two tabs share
+        the width; under the selected one a Surface highlight with a 1px Border and radius 15 slides on a 220ms tween (code;
+        its outline is drawn half a pixel in, so the radius of the stroke's center line is 14.5). Margin 12 20 0: 12 below the
+        stage's top rule and 20 in from the card's sides.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaPaneTabs}" TargetType="arc:ArenaPaneTabs">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Margin" Value="20,12,20,0" />
+        <Setter Property="Height" Value="60" />
+        <Setter Property="Padding" Value="3" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaPaneTabs">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="14.5" />
+                        <Grid ColumnDefinitions="*,*">
+                            <arc:ArenaPaneTab Name="PART_TabA" />
+                            <arc:ArenaPaneTab Name="PART_TabB" Grid.Column="1" />
+                        </Grid>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelArenaProgrammaticDemo">
+    <!-- Start rounds from code, make the next stream fail, and read each vote. -->
+    <StackPanel Spacing="12" Margin="0,12" MaxWidth="800">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button x:Name="RunButton" Content="Run round" />
+            <Button x:Name="NextButton" Content="Next round" />
+            <CheckBox x:Name="BreakBox" Content="Break the next stream" VerticalAlignment="Center" />
+        </StackPanel>
+        <arc:ModelArena x:Name="Arena" />
+        <TextBlock x:Name="LastVote" Classes="muted" Text="No votes yet." />
+    </StackPanel>
+</UserControl>

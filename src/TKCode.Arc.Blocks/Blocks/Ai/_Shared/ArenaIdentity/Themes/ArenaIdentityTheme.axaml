@@ -1,0 +1,71 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A pane's name slot: 14 / 19.6 medium, Foreground, one line. The face swaps in label mode inside a width spring (Quick)
+        that clips at the moving edge ("Model A" 55 → mark and name about 133), measuring the new face only once it is shown.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaIdentity}" TargetType="arc:ArenaIdentity">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaIdentity">
+                <arc:SpringSizeDecorator Name="PART_Size"
+                                         Axis="Width"
+                                         Spring="Quick"
+                                         CapsToAvailable="True"
+                                         ClipOverflow="0"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center">
+                    <arc:ArcContentSwap Name="PART_Face"
+                                        Mode="Label"
+                                        ExitDuration="0:0:0.1"
+                                        EnterDuration="0:0:0.16"
+                                        EnterOffset="2"
+                                        HorizontalAlignment="Left"
+                                        HorizontalContentAlignment="Left"
+                                        VerticalContentAlignment="Center" />
+                </arc:SpringSizeDecorator>
+            </ControlTemplate>
+        </Setter>
+        <!-- Reduced motion jumps the width and crossfades in place: a longer name that leaves stays inside the slot. -->
+        <Style Selector="^:motion-reduced /template/ arc|SpringSizeDecorator#PART_Size">
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The mark (16, only when there is one), 8px, the name; the name trims when the slot has no room. -->
+    <ControlTheme x:Key="{x:Type arc:ArenaIdentityFace}" TargetType="arc:ArenaIdentityFace">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaIdentityFace">
+                <DockPanel VerticalAlignment="Center">
+                    <arc:ModelMark Name="PART_Mark"
+                                   DockPanel.Dock="Left"
+                                   Size="16"
+                                   Margin="0,0,8,0"
+                                   Mark="{TemplateBinding Mark}"
+                                   MarkColor="{TemplateBinding MarkColor}"
+                                   IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   VerticalAlignment="Center" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               LineHeight="19.6"
+                               LetterSpacing="-0.14"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

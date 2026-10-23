@@ -1,0 +1,116 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The answer's scroller: the AI chat's follow logic without its scroll-to-latest button (no PART_Jump; the arena has
+        none). The scroll area is not focusable and draws no edge fades of its own: the answer is the Tab stop, takes the keys
+        and masks both edges itself.
+    -->
+    <ControlTheme x:Key="ArenaAnswerScrollerTheme" TargetType="arc:AiFollowScroller">
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFollowScroller">
+                <arc:ScrollArea Name="PART_Scroll"
+                                FadeLength="0"
+                                Focusable="False"
+                                IsTabStop="False"
+                                FocusAdorner="{x:Null}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A model arena answer (spec 3.5, 3.6). 8 20 18 inside (the padding scrolls with the text), Markdown 14 / 22.4 with 12
+        between blocks, then the error card: 14 below the text, a 1px Border box with radius 14 and 12 14 14 inside, rows 4
+        apart: CircleAlert 14 in Danger, 8, the title (14 / 500, Foreground); the text (14, TextSecondary) with 8 below; a
+        secondary small button (RotateCcw 14, 8, the label; the glyph only for a retry). The keyboard ring is 2px of FocusRing
+        just inside the edges, on a layer above the edge fade.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaAnswerView}" TargetType="arc:ArenaAnswerView">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Padding" Value="20,8,20,18" />
+        <Setter Property="TopFade" Value="8" />
+        <Setter Property="BottomFade" Value="18" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaAnswerView">
+                <Panel>
+                    <arc:AiFollowScroller Name="PART_Follow" Theme="{StaticResource ArenaAnswerScrollerTheme}">
+                        <!-- Content of the scroller is hosted by the scroll area, which becomes its templated parent: no
+                             TemplateBinding below this point (the control sets the texts, the padding and the glyph). -->
+                        <StackPanel Name="PART_Body">
+                            <arc:Markdown Name="PART_Markdown"
+                                          FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                          LineHeight="22.4"
+                                          BlockSpacing="12"
+                                          IsPaced="False"
+                                          RevealFadeInReducedMotion="False" />
+                            <arc:ArenaAnswerErrorHost Name="PART_ErrorHost">
+                                <arc:ArenaAnswerErrorCard Name="PART_ErrorCard"
+                                                          Margin="0,14,0,0"
+                                                          Padding="14,12,14,14"
+                                                          BorderThickness="1"
+                                                          BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                          CornerRadius="14">
+                                    <StackPanel Spacing="4">
+                                        <DockPanel>
+                                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                                          Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                          Size="14"
+                                                          StrokeThickness="2"
+                                                          Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                          Margin="0,0,8,0"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ErrorTitle"
+                                                       FontWeight="Medium"
+                                                       LineHeight="18.2"
+                                                       LetterSpacing="-0.14"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                       TextWrapping="Wrap"
+                                                       VerticalAlignment="Center" />
+                                        </DockPanel>
+                                        <TextBlock Name="PART_ErrorText"
+                                                   LineHeight="19.6"
+                                                   LetterSpacing="-0.14"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,8" />
+                                        <arc:Button Name="PART_ErrorAction"
+                                                    Variant="Secondary"
+                                                    Size="Small"
+                                                    HorizontalAlignment="Left">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <arc:ArcGlyph Name="PART_ErrorActionIcon"
+                                                              Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                              Size="14"
+                                                              StrokeThickness="2"
+                                                              IsVisible="False"
+                                                              Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                              VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_ErrorActionText" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                    </StackPanel>
+                                </arc:ArenaAnswerErrorCard>
+                            </arc:ArenaAnswerErrorHost>
+                        </StackPanel>
+                    </arc:AiFollowScroller>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

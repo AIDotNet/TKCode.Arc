@@ -1,0 +1,80 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The standings body (model arena spec 3.8): a 14px rank column and the rows, 8 apart. Ranks are 12px TextMuted, one
+        per row height, and never move. Rows are opaque (the popover's SurfaceRaised by default) so two rows that cross
+        during a replay hide each other instead of mixing text. No transitions here: the replay is code-driven.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RankedBarList}" TargetType="arc:RankedBarList">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RankedBarList">
+                <Grid ColumnDefinitions="14,*" ColumnSpacing="8">
+                    <arc:RankedBarRanks Name="PART_Ranks"
+                                        VerticalAlignment="Top"
+                                        RowHeight="{TemplateBinding RowHeight}"
+                                        FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                        FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <arc:RankedBarPanel Name="PART_Rows"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Top"
+                                        RowHeight="{TemplateBinding RowHeight}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A row: 16 | name | 56 | 40, 10 apart. Mark 16; name 14 / 19.6 Foreground with an ellipsis; a 56 × 4 pill track at
+        9% Foreground filled from the left in the series color; the value 14 Foreground, a rolling whole number and "%",
+        right-aligned in its 40px slot.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RankedBarRow}" TargetType="arc:RankedBarRow">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RankedBarRow">
+                <Border Background="{TemplateBinding Background}">
+                    <Grid ColumnDefinitions="16,*,56,40" ColumnSpacing="10">
+                        <arc:ModelMark Name="PART_Mark"
+                                       Size="16"
+                                       Mark="{TemplateBinding Mark}"
+                                       MarkColor="{TemplateBinding MarkColor}" />
+                        <TextBlock Name="PART_Name"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding ItemName}"
+                                   VerticalAlignment="Center"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis" />
+                        <arc:RankedBarBar Name="PART_Bar"
+                                          Grid.Column="2"
+                                          Height="4"
+                                          VerticalAlignment="Center"
+                                          TrackBrush="{arc:ArcDesignTokenResource Foreground}"
+                                          FillBrush="{TemplateBinding FillBrush}" />
+                        <arc:RollingDigits Name="PART_Value"
+                                           Grid.Column="3"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Suffix="%"
+                                           UseGrouping="False" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

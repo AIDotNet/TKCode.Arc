@@ -1,0 +1,123 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        "First token 1.83s · 152 tok/s · $0.0041": 12 / 16.8, labels, unit and dots TextMuted, values Foreground (the time
+        TextSecondary while timing, 240ms on the enter curve). Items 8px apart, wrapped rows 2px apart; inside an item 5px; a
+        dot is a TextMuted "·" with 8px to its value (Arc: the dot's 3px margin and the item's 5px gap). The speed cell is as
+        wide as "000" (tabular) so the unit stays put; the unit is 3px after it. Rolling digits are cut at the line box.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiMetricLine}" TargetType="arc:AiMetricLine">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiMetricLine">
+                <WrapPanel Name="PART_Line"
+                           ItemSpacing="8"
+                           LineSpacing="2"
+                           AutomationProperties.AccessibilityView="Raw">
+                    <StackPanel Name="PART_FirstTokenItem" Orientation="Horizontal" Spacing="5" MinHeight="16.8">
+                        <TextBlock Name="PART_FirstTokenLabel"
+                                   Text="{TemplateBinding FirstTokenText}"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Name="PART_FirstTokenValue"
+                                   Text="{TemplateBinding FirstTokenDisplay}"
+                                   FontFeatures="tnum"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Name="PART_SpeedItem" Orientation="Horizontal" MinHeight="16.8">
+                        <TextBlock Name="PART_SpeedDot"
+                                   Text="·"
+                                   Margin="0,0,8,0"
+                                   VerticalAlignment="Center" />
+                        <Panel Name="PART_SpeedCell" VerticalAlignment="Center">
+                            <TextBlock Name="PART_SpeedReserve"
+                                       Text="000"
+                                       FontFeatures="tnum"
+                                       LetterSpacing="0"
+                                       Opacity="0"
+                                       TextWrapping="NoWrap"
+                                       VerticalAlignment="Center" />
+                            <arc:RollingDigits Name="PART_Speed"
+                                               Falloff="None"
+                                               IsVisible="{TemplateBinding HasSpeed}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" />
+                            <TextBlock Name="PART_SpeedPlaceholder"
+                                       Text="{TemplateBinding Placeholder}"
+                                       IsVisible="{TemplateBinding HasSpeed, Converter={x:Static BoolConverters.Not}}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center" />
+                        </Panel>
+                        <TextBlock Name="PART_SpeedUnit"
+                                   Text="{TemplateBinding SpeedUnitText}"
+                                   Margin="3,0,0,0"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Name="PART_CostItem" Orientation="Horizontal" MinHeight="16.8">
+                        <TextBlock Name="PART_CostDot"
+                                   Text="·"
+                                   Margin="0,0,8,0"
+                                   VerticalAlignment="Center" />
+                        <Panel VerticalAlignment="Center">
+                            <arc:RollingDigits Name="PART_Cost"
+                                               Prefix="$"
+                                               Decimals="4"
+                                               Falloff="None"
+                                               IsVisible="{TemplateBinding HasCost}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" />
+                            <TextBlock Name="PART_CostPlaceholder"
+                                       Text="{TemplateBinding Placeholder}"
+                                       IsVisible="{TemplateBinding HasCost, Converter={x:Static BoolConverters.Not}}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center" />
+                        </Panel>
+                    </StackPanel>
+                </WrapPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Arc's text inherits -0.14px of letter spacing (-0.01em at 14px); the rolling digits keep tabular cells. -->
+        <Style Selector="^ /template/ TextBlock">
+            <Setter Property="LetterSpacing" Value="-0.14" />
+        </Style>
+
+        <!-- The time: Foreground at rest, TextSecondary while the timer runs (a non-trigger style so :timing can change it). -->
+        <Style Selector="^ /template/ TextBlock#PART_FirstTokenValue">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:timing /template/ TextBlock#PART_FirstTokenValue">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ TextBlock#PART_FirstTokenValue">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Enter" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ TextBlock#PART_FirstTokenValue">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The vote strip (spec 3.7): a 1px Border rule on top (none while hidden; set BorderThickness 0 for a flat arena), the
+        row inside padding 12 12 12 20, 14 / 19.6. The height follows the row on the smooth spring; the rows crossfade (out
+        100, in 160, standard curve, no movement) pinned to the top, so a taller old row is cut by the shrinking strip.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaVoteBar}" TargetType="arc:ArenaVoteBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Padding" Value="20,12,12,12" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaVoteBar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <arc:SpringSizeDecorator Name="PART_Size" Axis="Height" Spring="Smooth">
+                        <arc:ArcContentSwap Name="PART_Swap"
+                                            Mode="Crossfade"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Top" />
+                    </arc:SpringSizeDecorator>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hidden">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

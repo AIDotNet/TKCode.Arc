@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelArenaNarrowDemo">
+    <!-- In a narrow container the two answers become tabs, and below 480 the layout is compact. -->
+    <arc:ModelArena x:Name="Arena" AutoStart="True" Width="400" HorizontalAlignment="Left" Margin="0,12" />
+</UserControl>

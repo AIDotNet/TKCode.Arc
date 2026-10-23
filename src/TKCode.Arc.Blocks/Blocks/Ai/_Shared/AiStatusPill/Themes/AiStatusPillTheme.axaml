@@ -1,0 +1,198 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A pane's status pill: 24 high (compact 20), pill radius, 12 / 16.8. The face (its own 8px, compact 7px, inside) swaps in
+        label mode inside a width spring (Quick) that clips at the moving edge, so a longer word is revealed as the width
+        catches up; the pill's fill follows the spring. Only Finished first has a fill (AccentSubtle), fading in 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiStatusPill}" TargetType="arc:AiStatusPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiStatusPill">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:SpringSizeDecorator Name="PART_Size"
+                                             Axis="Width"
+                                             Spring="Quick"
+                                             CapsToAvailable="True"
+                                             ClipOverflow="0"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center">
+                        <arc:ArcContentSwap Name="PART_Face"
+                                            Mode="Label"
+                                            ExitDuration="0:0:0.1"
+                                            EnterDuration="0:0:0.16"
+                                            EnterOffset="2"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Center" />
+                    </arc:SpringSizeDecorator>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:compact">
+            <Setter Property="Height" Value="20" />
+        </Style>
+        <Style Selector="^:finished-first">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Reduced motion jumps the width and crossfades in place: a longer word that leaves stays inside the pill. -->
+        <Style Selector="^:motion-reduced /template/ arc|SpringSizeDecorator#PART_Size">
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One status: the icon cell (14, compact 12), 6px, the word. The face carries its own color, so a word that leaves keeps
+        it: TextSecondary, AccentStrong for Finished first. Thinking and Writing turn a LoaderCircle (stroke 1.75) and shimmer
+        the word (highlight = the text color, base = 12% of it mixed into TextMuted); Done is a Success check, Finished first a
+        flag, Stopped a filled square (Lucide Square filled at 10, about 8 on screen), Failed a Danger alert circle.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiStatusPillFace}" TargetType="arc:AiStatusPillFace">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiStatusPillFace">
+                <StackPanel Name="PART_Row"
+                            Orientation="Horizontal"
+                            Spacing="6"
+                            Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="Center">
+                    <Panel Name="PART_IconCell" VerticalAlignment="Center">
+                        <arc:AiToolSpinner Name="PART_Spinner" IsVisible="False" />
+                        <arc:ArcGlyph Name="PART_Check"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource Success}"
+                                      IsVisible="False" />
+                        <arc:ArcGlyph Name="PART_Flag"
+                                      Data="{x:Static arc:ArcIcons.Flag}"
+                                      StrokeThickness="1.75"
+                                      IsVisible="False" />
+                        <Border Name="PART_Square"
+                                Background="{TemplateBinding Foreground}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsVisible="False" />
+                        <arc:ArcGlyph Name="PART_Alert"
+                                      Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource Danger}"
+                                      IsVisible="False" />
+                    </Panel>
+                    <Panel VerticalAlignment="Center">
+                        <arc:TextShimmer Name="PART_Shimmer"
+                                         Text="{TemplateBinding Text}"
+                                         FontFamily="{TemplateBinding FontFamily}"
+                                         FontSize="{TemplateBinding FontSize}"
+                                         FontWeight="{TemplateBinding FontWeight}"
+                                         Foreground="{TemplateBinding Foreground}"
+                                         IsActive="False"
+                                         IsVisible="False" />
+                        <TextBlock Name="PART_Word"
+                                   Text="{TemplateBinding Text}"
+                                   LineHeight="16.8"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Sizes in non-trigger styles so the compact face can change them. -->
+        <Style Selector="^ /template/ Panel#PART_IconCell">
+            <Setter Property="Width" Value="14" />
+            <Setter Property="Height" Value="14" />
+        </Style>
+        <Style Selector="^ /template/ arc|AiToolSpinner#PART_Spinner">
+            <Setter Property="Size" Value="14" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph">
+            <Setter Property="Size" Value="14" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Square">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="1.5" />
+        </Style>
+
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="7,0" />
+        </Style>
+        <Style Selector="^:compact /template/ Panel#PART_IconCell">
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Height" Value="12" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AiToolSpinner#PART_Spinner">
+            <Setter Property="Size" Value="12" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ArcGlyph">
+            <Setter Property="Size" Value="12" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Square">
+            <Setter Property="Width" Value="7" />
+            <Setter Property="Height" Value="7" />
+            <Setter Property="CornerRadius" Value="1.25" />
+        </Style>
+
+        <!-- Busy: the turning loader and the shimmering word instead of the plain word. -->
+        <Style Selector="^:thinking /template/ arc|AiToolSpinner#PART_Spinner, ^:writing /template/ arc|AiToolSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:thinking /template/ arc|TextShimmer#PART_Shimmer, ^:writing /template/ arc|TextShimmer#PART_Shimmer">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="IsActive" Value="True" />
+        </Style>
+        <Style Selector="^:thinking /template/ TextBlock#PART_Word, ^:writing /template/ TextBlock#PART_Word">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:finished-first">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:finished-first /template/ arc|ArcGlyph#PART_Flag">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:stopped /template/ Border#PART_Square">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_Alert">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

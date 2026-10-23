@@ -1,0 +1,363 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The box: no frame (the form's field draws it), 14 / 19.6 in Foreground with -0.14 letter spacing, the placeholder in
+        TextMuted, one line. Without the focus a non-empty text shows as a trimmed copy (ellipsis at the end) and the real
+        text layer is invisible but still takes the pointer, so a click lands the caret where it points.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaPromptBox}" TargetType="arc:ArenaPromptBox">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaPromptBox">
+                <Border Background="{TemplateBinding Background}">
+                    <Panel>
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </ScrollViewer>
+                        <TextBlock Name="PART_Placeholder"
+                                   Foreground="{TemplateBinding PlaceholderForeground}"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   IsHitTestVisible="False"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                   IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                        <TextBlock Name="PART_Resting"
+                                   Text="{TemplateBinding Text}"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   IsHitTestVisible="False"
+                                   IsVisible="False"
+                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:not(:focus):not(:empty)">
+            <Style Selector="^ /template/ TextBlock#PART_Resting">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextPresenter#PART_TextPresenter">
+                <Setter Property="Opacity" Value="0" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Run / Stop: 36 high, padding 0 12, a pill with a 1px edge. Idle: Accent fill and edge, AccentForeground 14 / 500;
+        hover 0.91 opacity and ShadowResting. Running: the secondary look (Surface, Border, Foreground; hover and press
+        SurfaceMuted and ShadowResting). Press scales to 0.97 (full motion), disabled 0.52. Keyboard focus: a 2px ring 2px
+        outside. Two hidden reserve faces keep the width of the wider face.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaRunButton}" TargetType="arc:ArenaRunButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaRunButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Decorator Name="PART_RunReserve" Opacity="0" IsHitTestVisible="False" />
+                            <Decorator Name="PART_StopReserve" Opacity="0" IsHitTestVisible="False" />
+                            <arc:ArcContentSwap Name="PART_Face"
+                                                Mode="Crossfade"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover:not(:running)">
+            <Setter Property="Opacity" Value="0.91" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:running">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:running:pointerover, ^:running:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.52" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A chip: 28 high, a pill with a 1px Border, 12 / 16.8 regular in TextSecondary, padding 0 11 inside the edge.
+        Pressed: SurfaceMuted, BorderStrong, Foreground. Hover and press: a 5% Foreground tint, BorderStrong, Foreground.
+        No scale. Colors and the tint move in 160ms on the standard curve. Keyboard focus: a 2px ring 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaPromptChip}" TargetType="arc:ArenaPromptChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="11,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaPromptChip">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Tint"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource Foreground}" />
+                    <Border Padding="{TemplateBinding Padding}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   LineHeight="16.8" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <!-- Non-trigger base so the hover style can change it (a template local would win). -->
+        <Style Selector="^ /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover, ^:pressed">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Tint, ^:pressed /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0.05" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The prompt row (spec 3.4): padding 6 20 14 around it. The field: 48 high, padding 0 5 0 16, radius 18, Surface with a
+        1px Border that turns BorderStrong under the pointer and while the focus is inside (160ms), no focus ring; the box and
+        Run 8px apart. The chips: 10 below, 6 apart, one line that scrolls sideways without a scrollbar out to the edges.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArenaPromptForm}" TargetType="arc:ArenaPromptForm">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="20,6,20,14" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ArenaPromptForm">
+                <StackPanel>
+                    <Border Name="PART_Field"
+                            Height="48"
+                            Padding="16,0,5,0"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Background="{arc:ArcDesignTokenResource Surface}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <arc:ArenaPromptBox Name="PART_Box"
+                                                Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                PlaceholderText="{TemplateBinding Placeholder}"
+                                                VerticalAlignment="Stretch" />
+                            <arc:ArenaRunButton Name="PART_Run"
+                                                Grid.Column="1"
+                                                Margin="8,0,0,0"
+                                                RunText="{TemplateBinding RunText}"
+                                                StopText="{TemplateBinding StopText}" />
+                        </Grid>
+                    </Border>
+                    <ScrollViewer Name="PART_ChipsScroller"
+                                  Focusable="False"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <StackPanel Name="PART_Chips"
+                                    Orientation="Horizontal"
+                                    Spacing="6"
+                                    AutomationProperties.ControlTypeOverride="Group" />
+                    </ScrollViewer>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <!-- Non-trigger base so the states can change it (a template local would win). -->
+        <Style Selector="^ /template/ Border#PART_Field">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Field:pointerover, ^ /template/ Border#PART_Field:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Field">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Field">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

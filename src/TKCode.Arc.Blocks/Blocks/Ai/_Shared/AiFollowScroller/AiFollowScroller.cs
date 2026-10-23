@@ -19,7 +19,7 @@ namespace TKCode.Arc;
 /// <para>
 /// A scroll by the person (wheel, touch, dragging the scrollbar, keys such as PageUp, ↑ or Home) that moves the offset up
 /// releases the follow, however short; offsets the scroller sets itself (and offsets code sets without any input) never
-/// do. Coming back within <see cref="AttachDistance"/> (6px) of the bottom, or <see cref="ScrollToLatest"/>, follows
+/// do. Coming back within <see cref="ReattachDistance"/> (6px) of the bottom, or <see cref="ScrollToLatest"/>, follows
 /// again. While it does not follow and there is content below, a round "scroll to latest" button shows centered 10px above
 /// the bottom of the viewport (in 160ms, out 100ms); pressing it chases back down.
 /// </para>
@@ -44,6 +44,9 @@ internal class AiFollowScroller : TemplatedControl
 
     /// <summary>Within this distance (px) of the bottom the scroller follows again (Arc: 8 still shows the button, 4 does not).</summary>
     internal const double AttachDistance = 6;
+
+    /// <summary>Within this distance (px) of the bottom the scroller follows again: <see cref="AttachDistance"/>, 4 in the model arena.</summary>
+    internal double ReattachDistance { get; set; } = AttachDistance;
 
     /// <summary>The share of the remaining distance the chase covers in a 60 Hz frame.</summary>
     internal const double ChaseRate = 0.22;
@@ -248,6 +251,19 @@ internal class AiFollowScroller : TemplatedControl
         }
     }
 
+    /// <summary>
+    /// Starts over at the top and follows, without motion (a new round in the model arena, whose content was just cleared):
+    /// earlier input no longer counts as a scroll by the person, so the clamp of the emptied content cannot release.
+    /// </summary>
+    internal void ResetToTop()
+    {
+        CancelRestore();
+        _chase.Stop();
+        _lastInput = DateTime.MinValue;
+        SetFollowing(true);
+        Write(0);
+    }
+
     private void SetFollowing(bool following)
     {
         if (following == _isFollowing)
@@ -362,7 +378,7 @@ internal class AiFollowScroller : TemplatedControl
             return;
         }
         // The person's scroll up releases at once, before the next chase frame could pull it back down.
-        if (_isFollowing && now < old - 0.5 && IsUserScrolling() && DistanceToBottom > AttachDistance)
+        if (_isFollowing && now < old - 0.5 && IsUserScrolling() && DistanceToBottom > ReattachDistance)
         {
             _ownOffset = now;
             SetFollowing(false);
@@ -381,7 +397,7 @@ internal class AiFollowScroller : TemplatedControl
         {
             // A scroll the scroller did not make: the person's, a clamp, or code's.
             _ownOffset = y;
-            if (DistanceToBottom <= AttachDistance)
+            if (DistanceToBottom <= ReattachDistance)
             {
                 SetFollowing(true);
             }
@@ -410,6 +426,12 @@ internal class AiFollowScroller : TemplatedControl
 
     private void OnUserInput(object? sender, RoutedEventArgs e) => _lastInput = Now();
 
+    /// <summary>
+    /// Counts the offset changes of the next <see cref="InputWindow"/> as the person's scroll. For an owner that takes the
+    /// keys itself (the model arena's answer is the focus, not the scroll area, so its keys never pass the area).
+    /// </summary>
+    internal void NoteUserInput() => _lastInput = Now();
+
     private void OnPointerMovedInput(object? sender, PointerEventArgs e)
     {
         // Only a drag scrolls (scrollbar thumb, touch pan); hovering over the thread does not.
@@ -431,7 +453,7 @@ internal class AiFollowScroller : TemplatedControl
         {
             return;
         }
-        var show = !_isFollowing && DistanceToBottom > AttachDistance;
+        var show = !_isFollowing && DistanceToBottom > ReattachDistance;
         if (!show && _jump is { IsKeyboardFocusWithin: true })
         {
             // The button goes away under the keyboard: stay in the thread (the scroll area takes keys, not a tab stop).
@@ -498,7 +520,7 @@ internal class AiFollowScroller : TemplatedControl
             return;
         }
         Write(Math.Min(saved.Offset, BottomOffset));
-        SetFollowing(DistanceToBottom <= AttachDistance);
+        SetFollowing(DistanceToBottom <= ReattachDistance);
     }
 
     private void CancelRestore()
