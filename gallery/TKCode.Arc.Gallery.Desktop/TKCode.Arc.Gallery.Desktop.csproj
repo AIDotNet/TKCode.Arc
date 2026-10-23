@@ -20,4 +20,11 @@
         <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
+    <!-- The screenshots and the page text are resource-only assemblies that Avalonia finds by name (avares://). NativeAOT keeps no
+         metadata for an assembly whose types nothing uses, so Assembly.Load fails and every docs page reports that it could not
+         be loaded; rooting them keeps them in a trimmed and in a NativeAOT publish. -->
+    <ItemGroup>
+        <TrimmerRootAssembly Include="TKCode.Arc.Gallery.Shots" />
+        <TrimmerRootAssembly Include="TKCode.Arc.Gallery.Content" />
+    </ItemGroup>
 </Project>
