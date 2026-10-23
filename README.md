@@ -32,8 +32,7 @@ dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.2    # option
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
-(the animated AI explainers of the Special components section) are built from this repository and are not published on
-NuGet yet. Versions carry a `-preview` suffix, so the API may still change between
+(the animated AI explainers of the Special components section) are separate packages on NuGet. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started

@@ -111,8 +111,9 @@ as small, fast-starting single files.
 | `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. | NuGet |
 | `TKCode.Arc.Fonts` | Geist and Geist Mono (`WithArcFonts()`). | NuGet |
 | `TKCode.Arc.Icons.Lucide` | The full Lucide set (2155 icons): the `LucideIcon` control and the `LucideGeometry` markup extension. | NuGet |
-| `TKCode.Arc.Blocks` | Page-level blocks (`UseArcBlocks()`). | Build from the repository |
-| `TKCode.Arc.AdvancedCharts` | The `DataGrid` (`UseArcAdvancedCharts()`). | Build from the repository |
+| `TKCode.Arc.Blocks` | Page-level blocks (`UseArcBlocks()`). | NuGet |
+| `TKCode.Arc.AdvancedCharts` | The `DataGrid` (`UseArcAdvancedCharts()`). | NuGet |
+| `TKCode.Arc.Special` | Animated AI explainers (`UseArcSpecial()`). | NuGet |
 
 **Installation** walks through adding them to an application.
 

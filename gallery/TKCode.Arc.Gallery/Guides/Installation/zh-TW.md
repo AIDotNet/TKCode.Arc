@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: 5c4e9ad89dbb
+source-hash: d01a8d8c8917
 ---
 
 # 安裝
@@ -148,13 +148,20 @@ Arc 自有的圖示字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 個
 
 ### 區塊與資料表格
 
-`TKCode.Arc.Blocks`（應用程式外殼與設定區塊）與 `TKCode.Arc.AdvancedCharts`（`DataGrid`）尚未發佈到 NuGet。請從儲存庫的複本參照這些專案，並將它們註冊在 `UseArc()` 旁邊：
+`TKCode.Arc.Blocks`（頁面層級區塊）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）與 `TKCode.Arc.Special`（AI 動畫講解）是獨立的套件。依需要加入，並將它們註冊在 `UseArc()` 旁邊：
+
+```bash
+dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.Special --version 0.3.0-preview.2
+```
 
 ```csharp
 builder.UseDesktopControls();
 builder.UseArc();
 builder.UseArcBlocks();          // TKCode.Arc.Blocks
 builder.UseArcAdvancedCharts();  // TKCode.Arc.AdvancedCharts
+builder.UseArcSpecial();         // TKCode.Arc.Special
 ```
 
 ### 語言
@@ -194,7 +201,7 @@ dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 | 數字或日期格式錯誤，或格式化時擲出例外 | 啟用了 `InvariantGlobalization` | 從專案檔中移除它。 |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` 與 `Avalonia.Controls` 同時被匯入 | 為其中一個設定別名，如上所示。 |
 | 關於 Avalonia 版本的還原警告 | 其他套件引入了不同版本的 Avalonia | 在應用程式中明確參照 Avalonia `12.1.4`。 |
-| 找不到 Blocks 或 `DataGrid` 型別 | 這些套件尚未發佈到 NuGet | 從儲存庫參照專案，並呼叫 `UseArcBlocks()` 或 `UseArcAdvancedCharts()`。 |
+| 找不到 Blocks、`DataGrid` 或 Special 型別 | 未參照該套件或未註冊 | 加入 `TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 或 `TKCode.Arc.Special`，並呼叫 `UseArcBlocks()`、`UseArcAdvancedCharts()` 或 `UseArcSpecial()`。 |
 
 ## 下一步
 

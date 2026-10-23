@@ -9,7 +9,7 @@ version carries a `-preview` suffix, the API may still change between releases; 
 keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`. `TKCode.Arc.Blocks` and `TKCode.Arc.AdvancedCharts` are built from the repository.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
 ## 0.3.0-preview.2 (2026-10-23)
 

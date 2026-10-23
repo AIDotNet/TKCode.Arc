@@ -1,13 +1,13 @@
 ---
 title: 更新日志
-source-hash: bbca0d2b2907
+source-hash: feab159e33e4
 ---
 
 # 更新日志
 
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
-每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 和 `TKCode.Arc.Icons.Lucide`。`TKCode.Arc.Blocks` 与 `TKCode.Arc.AdvancedCharts` 从仓库构建。
+每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 和 `TKCode.Arc.Special`。
 
 ## 0.3.0-preview.2 (2026-10-23)
 

@@ -32,7 +32,7 @@ dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.2    # 可选
 ```
 
 `TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`
-（Special components 区的 AI 动画讲解组件）目前只能从本仓库构建，尚未发布到 NuGet。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
+（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
 
 ## 快速开始
 

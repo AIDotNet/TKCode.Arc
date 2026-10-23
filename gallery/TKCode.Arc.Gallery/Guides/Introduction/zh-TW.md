@@ -1,6 +1,6 @@
 ---
 title: 介紹
-source-hash: 34ecfe855e77
+source-hash: ef5b7ba19b53
 ---
 
 # 介紹
@@ -99,8 +99,9 @@ TKCode.Arc 將 [Arc](https://uiarc.dev) 帶到 Avalonia：相同的元件分組�
 | `TKCode.Arc.Core` | ArcDesign 設計權杖與調色盤、彈簧動態效果引擎、共用基礎元件、187 個內建 Lucide 字形。 | NuGet |
 | `TKCode.Arc.Fonts` | Geist 與 Geist Mono（`WithArcFonts()`）。 | NuGet |
 | `TKCode.Arc.Icons.Lucide` | 完整的 Lucide 集（2155 個圖示）：`LucideIcon` 控制項與 `LucideGeometry` 標記延伸。 | NuGet |
-| `TKCode.Arc.Blocks` | 頁面層級區塊（`UseArcBlocks()`）。 | 從儲存庫建置 |
-| `TKCode.Arc.AdvancedCharts` | `DataGrid`（`UseArcAdvancedCharts()`）。 | 從儲存庫建置 |
+| `TKCode.Arc.Blocks` | 頁面層級區塊（`UseArcBlocks()`）。 | NuGet |
+| `TKCode.Arc.AdvancedCharts` | `DataGrid`（`UseArcAdvancedCharts()`）。 | NuGet |
+| `TKCode.Arc.Special` | AI 動畫講解（`UseArcSpecial()`）。 | NuGet |
 
 **安裝**一節說明如何將它們加入應用程式。
 

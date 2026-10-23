@@ -3,8 +3,8 @@
 All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Versioning](https://semver.org/);
 while the version carries a `-preview` suffix the API may still change between releases.
 
-NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`
-and `TKCode.Arc.Icons.Lucide`.
+NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
 ## 0.3.0-preview.2 - 2026-10-23
 

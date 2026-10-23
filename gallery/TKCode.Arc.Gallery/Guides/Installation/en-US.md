@@ -158,14 +158,21 @@ Lucide icon, add `TKCode.Arc.Icons.Lucide` and use its namespace:
 
 ### Blocks and the data grid
 
-`TKCode.Arc.Blocks` (application shell and settings blocks) and `TKCode.Arc.AdvancedCharts` (the `DataGrid`) are not
-on NuGet yet. Reference the projects from a clone of the repository and register them next to `UseArc()`:
+`TKCode.Arc.Blocks` (page-level blocks), `TKCode.Arc.AdvancedCharts` (the `DataGrid`) and `TKCode.Arc.Special` (animated
+AI explainers) are separate packages. Add the ones you need and register them next to `UseArc()`:
+
+```bash
+dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.Special --version 0.3.0-preview.2
+```
 
 ```csharp
 builder.UseDesktopControls();
 builder.UseArc();
 builder.UseArcBlocks();          // TKCode.Arc.Blocks
 builder.UseArcAdvancedCharts();  // TKCode.Arc.AdvancedCharts
+builder.UseArcSpecial();         // TKCode.Arc.Special
 ```
 
 ### Languages
@@ -212,7 +219,7 @@ dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 | Wrong number or date formats, or exceptions while formatting | `InvariantGlobalization` is enabled | Remove it from the project file. |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` and `Avalonia.Controls` are both imported | Alias one of them, as shown above. |
 | Restore warnings about Avalonia versions | Another package pulls a different Avalonia | Reference Avalonia `12.1.4` explicitly in the application. |
-| Blocks or `DataGrid` types are not found | The packages are not on NuGet yet | Reference the projects from the repository and call `UseArcBlocks()` or `UseArcAdvancedCharts()`. |
+| Blocks, `DataGrid` or Special types are not found | The package is not referenced or not registered | Add `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` or `TKCode.Arc.Special` and call `UseArcBlocks()`, `UseArcAdvancedCharts()` or `UseArcSpecial()`. |
 
 ## Next steps
 
