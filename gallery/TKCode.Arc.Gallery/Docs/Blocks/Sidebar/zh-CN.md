@@ -1,7 +1,7 @@
 ---
 title: 侧边栏
 summary: 工作区导航，包含分组、嵌套页面、数量和滑动的选中标记；可收起为图标窄栏。
-source-hash: 5a9d0d12ca5b
+source-hash: 4b3733075654
 ---
 
 <Demo name="Preview" />
