@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeculativeDecodingStatusStatesDemo">
+    <StackPanel Spacing="12" MaxWidth="720">
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Loading" Variant="Secondary" Size="Small" Click="OnLoadingClick" />
+            <arc:Button Content="Error" Variant="Secondary" Size="Small" Click="OnErrorClick" />
+            <arc:Button Content="Ready" Variant="Secondary" Size="Small" Click="OnReadyClick" />
+        </WrapPanel>
+        <!-- The run comes from a server: loading dims the lanes, an error offers a retry because the page handles it. -->
+        <arc:SpeculativeDecoding x:Name="Decoder"
+                                 Status="Loading"
+                                 ErrorText="The trace from the inference server could not be read"
+                                 RetryRequested="OnRetryRequested" />
+    </StackPanel>
+</UserControl>

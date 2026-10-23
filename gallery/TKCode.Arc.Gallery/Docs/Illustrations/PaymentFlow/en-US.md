@@ -45,7 +45,7 @@ the merchant Northwind and the card ending in 4242.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PaymentFlow />
 </UserControl>
 ```

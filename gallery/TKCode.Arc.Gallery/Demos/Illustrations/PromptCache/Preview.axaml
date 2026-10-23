@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PromptCachePreviewDemo">
+    <!-- The built-in story: a freight support assistant whose four questions share one 45.5K-token prefix. -->
+    <arc:PromptCache MaxWidth="744" />
+</UserControl>

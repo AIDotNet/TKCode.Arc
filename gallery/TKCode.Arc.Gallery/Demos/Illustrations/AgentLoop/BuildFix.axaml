@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentLoopBuildFixDemo">
+    <arc:AgentLoop Title="Build fix"
+                   Task="Fix the failing nightly build and tell #builds."
+                   Summary="The build cache key had changed. Clearing it fixed the build, and #builds has the details.">
+        <arc:AgentLoop.Model>
+            <arc:ExplainerModel Name="Quill 2 Mini" />
+        </arc:AgentLoop.Model>
+        <arc:AgentLoopIteration>
+            <arc:AgentLoopIteration.Gather>
+                <arc:AgentLoopContext Label="Build log" Detail="Stage 3 of 7 failed" Tokens="2900" Mark="{x:Static arc:ArcIcons.Terminal}" />
+            </arc:AgentLoopIteration.Gather>
+            <arc:AgentLoopCall Tool="CI" Action="Read pipeline run" Result="Cache key changed" Mark="{x:Static arc:ArcIcons.GitBranch}" />
+            <arc:AgentLoopIteration.Verify>
+                <arc:AgentLoopCheck Passed="False" Note="Fix not applied yet" />
+            </arc:AgentLoopIteration.Verify>
+        </arc:AgentLoopIteration>
+        <arc:AgentLoopIteration>
+            <arc:AgentLoopIteration.Gather>
+                <arc:AgentLoopContext Label="Pipeline file" Detail="build.yml, 62 lines" Tokens="1700" Mark="{x:Static arc:ArcIcons.FileCode}" />
+            </arc:AgentLoopIteration.Gather>
+            <arc:AgentLoopCall Tool="CI" Action="Clear cache and rerun" Result="Build passed in 4m 05s" Mark="{x:Static arc:ArcIcons.GitBranch}" />
+            <arc:AgentLoopCall Tool="Chat" Action="Post update" Result="Posted in #builds" Mark="{x:Static arc:ArcIcons.MessageCircle}" />
+            <arc:AgentLoopIteration.Verify>
+                <arc:AgentLoopCheck Passed="True" Note="Build green, team told" />
+            </arc:AgentLoopIteration.Verify>
+        </arc:AgentLoopIteration>
+    </arc:AgentLoop>
+</UserControl>

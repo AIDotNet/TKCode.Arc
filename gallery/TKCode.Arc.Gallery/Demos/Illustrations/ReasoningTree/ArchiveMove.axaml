@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReasoningTreeArchiveMoveDemo">
+    <!-- The built-in story: three plans for moving a photo archive, searched with a beam of two. -->
+    <arc:ReasoningTree MaxWidth="744" HorizontalAlignment="Center" VerticalAlignment="Top" />
+</UserControl>

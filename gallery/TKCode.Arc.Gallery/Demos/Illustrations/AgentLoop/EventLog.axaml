@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentLoopEventLogDemo">
+    <StackPanel Spacing="16">
+        <arc:AgentLoop x:Name="Loop"
+                       AutoPlay="False"
+                       AreControlsVisible="False"
+                       StationChanged="OnStationChanged"
+                       Finished="OnFinished" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button x:Name="PlayButton" Content="Play" Variant="Secondary" Size="Small" Click="OnPlayClick" />
+            <arc:Button Content="Next step" Variant="Secondary" Size="Small" Click="OnStepClick" />
+            <arc:Button Content="Start over" Variant="Ghost" Size="Small" Click="OnRestartClick" />
+            <arc:Switch x:Name="Fast" Content="Double speed" IsCheckedChanged="OnFastChanged" VerticalAlignment="Center" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Press Play: each station the head reaches is logged here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

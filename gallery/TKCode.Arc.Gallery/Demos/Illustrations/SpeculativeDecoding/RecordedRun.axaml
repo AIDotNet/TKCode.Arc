@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeculativeDecodingRecordedRunDemo">
+    <StackPanel Spacing="12" MaxWidth="720">
+        <!-- Rounds recorded from a code completion replace the simulation; the draft length slider is hidden. -->
+        <arc:SpeculativeDecoding x:Name="Decoder"
+                                 Title="Code completion, recorded"
+                                 Completed="OnCompleted" />
+        <TextBlock x:Name="Log"
+                   Text="Waiting for the run to finish."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

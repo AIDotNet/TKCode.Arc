@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentLoopStoppedRunDemo">
+    <!-- The last check fails, so the run ends stopped: the ring stays neutral and the summary says why. -->
+    <arc:AgentLoop Title="Flaky test"
+                   Task="Find out why the checkout test fails one run in ten."
+                   Summary="Two passes found no cause. The agent stopped and left the test quarantined for a person to look at.">
+        <arc:AgentLoopIteration>
+            <arc:AgentLoopIteration.Gather>
+                <arc:AgentLoopContext Label="Test history" Detail="7 failures in 70 runs" Tokens="3100" Mark="{x:Static arc:ArcIcons.ChartBar}" />
+            </arc:AgentLoopIteration.Gather>
+            <arc:AgentLoopCall Tool="CI" Action="Rerun with logs" Result="Passed 20 times in a row" Mark="{x:Static arc:ArcIcons.GitBranch}" />
+            <arc:AgentLoopIteration.Verify>
+                <arc:AgentLoopCheck Passed="False" Note="Failure not reproduced" />
+            </arc:AgentLoopIteration.Verify>
+        </arc:AgentLoopIteration>
+        <arc:AgentLoopIteration>
+            <arc:AgentLoopIteration.Gather>
+                <arc:AgentLoopContext Label="Test source" Detail="checkout.spec, 140 lines" Tokens="2200" Mark="{x:Static arc:ArcIcons.FileCode}" />
+            </arc:AgentLoopIteration.Gather>
+            <arc:AgentLoopCall Tool="CI" Action="Run under load" Result="Runner ran out of time" Status="Error" Mark="{x:Static arc:ArcIcons.GitBranch}" />
+            <arc:AgentLoopCall Tool="Tracker" Action="Quarantine test" Result="Marked as flaky" Mark="{x:Static arc:ArcIcons.Flag}" />
+            <arc:AgentLoopIteration.Verify>
+                <arc:AgentLoopCheck Passed="False" Note="Cause still unknown" />
+            </arc:AgentLoopIteration.Verify>
+        </arc:AgentLoopIteration>
+    </arc:AgentLoop>
+</UserControl>

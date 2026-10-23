@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MixtureOfExpertsRouteLogDemo">
+    <StackPanel Spacing="16" MaxWidth="760">
+        <arc:MixtureOfExperts x:Name="Card"
+                              IsLooping="False"
+                              CapacityFactor="Infinity"
+                              FirstChoiceBrush="{arc:ArcDesignTokenResource Series3}"
+                              SecondChoiceBrush="{arc:ArcDesignTokenResource Series4}"
+                              Routed="OnRouted" />
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+            <TextBlock Text="Routes so far"
+                       FontWeight="Medium"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12">
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="{Binding #Card.TopK, StringFormat='Top {0}'}" />
+                <TextBlock VerticalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="{Binding #Card.ActiveParameters, StringFormat='{}{0}B active'}" />
+                <arc:Button Content="Route again" Variant="Secondary" Size="Small" Click="OnRestartClick" />
+            </StackPanel>
+            <TextBlock x:Name="Log"
+                       Grid.Row="1"
+                       Grid.ColumnSpan="2"
+                       Margin="0,8,0,0"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="12"
+                       LineHeight="18"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="Waiting for the first token…" />
+        </Grid>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeculativeDecodingBoundControlsDemo">
+    <StackPanel Spacing="12" MaxWidth="720">
+        <!-- The page drives the card: draft length and comparison are two-way, and every change is logged. -->
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Draft 2" Variant="Secondary" Size="Small" Click="OnShortClick" />
+            <arc:Button Content="Draft 4" Variant="Secondary" Size="Small" Click="OnMiddleClick" />
+            <arc:Button Content="Draft 8" Variant="Secondary" Size="Small" Click="OnLongClick" />
+            <arc:Button Content="Toggle the race" Variant="Ghost" Size="Small" Click="OnCompareClick" />
+        </WrapPanel>
+        <arc:SpeculativeDecoding x:Name="Decoder"
+                                 PropertyChanged="OnDecoderPropertyChanged"
+                                 Completed="OnCompleted" />
+        <TextBlock x:Name="Log"
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 多区域故障转移
 summary: 全局负载均衡器将流量切换到备用区域，并在主区域故障时提升其数据库为主库。
-source-hash: 257f488cd958
+source-hash: 5a1c99bbadee
 ---
 
 <Demo name="AutomaticFailover" />
@@ -30,7 +30,7 @@ source-hash: 257f488cd958
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MultiRegionFailover />
 </UserControl>
 ```

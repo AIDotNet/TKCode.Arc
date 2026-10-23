@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeculativeDecodingSimulatedRunDemo">
+    <!-- The built-in sample: a 22-token maintenance notice, drafted four tokens at a time. -->
+    <arc:SpeculativeDecoding MaxWidth="720" />
+</UserControl>

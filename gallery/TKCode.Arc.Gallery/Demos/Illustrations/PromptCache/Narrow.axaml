@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PromptCacheNarrowDemo">
+    <!-- The layout follows the card's own width: under 660px of content the cache panel sits above the requests,
+         under 480px every request takes three lines and the statistics stack. -->
+    <arc:PromptCache Width="420" HorizontalAlignment="Center" />
+</UserControl>

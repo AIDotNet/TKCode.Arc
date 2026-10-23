@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentLoopNarrowDemo">
+    <!-- In a 340px column the context stack moves under the ring, the two lanes merge into one, the station labels drop
+         their icons and the lower stations move further down the ring; the speed control wraps under the buttons. -->
+    <arc:AgentLoop Width="340" HorizontalAlignment="Center" />
+</UserControl>

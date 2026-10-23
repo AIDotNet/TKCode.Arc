@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReasoningTreeAnswerLogDemo">
+    <StackPanel Spacing="16" MaxWidth="744">
+        <!-- No scores: every thought gets a seeded one, so the same seed always searches the same way. -->
+        <arc:ReasoningTree x:Name="Tree"
+                           VerticalAlignment="Top"
+                           Question="Which week should the beta open?"
+                           QuestionDetail="Which week should the public beta of the team calendar open, given the support rota and the marketing plan?"
+                           Answered="OnAnswered">
+            <arc:ReasoningThought Key="early" Label="Open in week 18" Text="Open the beta in week 18, right after the spring release.">
+                <arc:ReasoningThought Key="invites" Label="Invite-only start" Text="Start with the 400 teams on the waitlist and open fully a week later.">
+                    <arc:ReasoningThought Key="mon" Label="Monday launch" Text="Send the invitations on Monday morning, when support is fully staffed." />
+                    <arc:ReasoningThought Key="thu" Label="Thursday launch" Text="Send them on Thursday so the first feedback lands before the weekend." />
+                </arc:ReasoningThought>
+                <arc:ReasoningThought Key="open" Label="Open to everyone" Text="Let anyone sign up from the first day." />
+            </arc:ReasoningThought>
+            <arc:ReasoningThought Key="mid" Label="Open in week 20" Text="Open the beta in week 20, together with the conference talk.">
+                <arc:ReasoningThought Key="talk" Label="Announce on stage" Text="Announce the beta during the conference keynote." />
+                <arc:ReasoningThought Key="blog" Label="Blog post first" Text="Publish a blog post a day ahead so the talk can point to it." />
+            </arc:ReasoningThought>
+            <arc:ReasoningThought Key="late" Label="Open in week 23" Text="Open the beta in week 23, after the support team has grown." />
+        </arc:ReasoningTree>
+        <WrapPanel ItemSpacing="8" LineSpacing="8" VerticalAlignment="Center">
+            <arc:Button Content="Beam 1" Variant="Secondary" Size="Small" Click="OnBeamOneClick" />
+            <arc:Button Content="Beam 2" Variant="Secondary" Size="Small" Click="OnBeamTwoClick" />
+            <arc:Button Content="Beam 3" Variant="Secondary" Size="Small" Click="OnBeamThreeClick" />
+            <arc:Button Content="Next seed" Variant="Ghost" Size="Small" Click="OnNextSeedClick" />
+            <TextBlock x:Name="State"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   Text="Answers appear here as the search finds them."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

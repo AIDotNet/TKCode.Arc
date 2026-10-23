@@ -1,7 +1,7 @@
 ---
 title: 資料流
 summary: 事件從來源出發，經佇列與批次轉換後進入資料倉儲和即時儀表板。
-source-hash: 3c30ffd8cef0
+source-hash: 73ef3738d3ab
 ---
 
 <Demo name="EventPipeline" />
@@ -30,7 +30,7 @@ source-hash: 3c30ffd8cef0
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DataFlow Label="事件管線" />
 </UserControl>
 ```
