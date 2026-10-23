@@ -7,6 +7,16 @@ namespace TKCode.Arc.Tests.Gallery;
 public class GalleryRouteTests
 {
     [Fact]
+    public void The_Friends_Page_Has_Its_Own_Address()
+    {
+        GalleryRoute.Friends.Path.ShouldBe("/friends");
+        GalleryRoute.Friends.Title.ShouldBe("Friends · Arc Gallery");
+        GalleryRoute.Parse("/friends")!.ShouldBe(GalleryRoute.Friends);
+        GalleryRoute.Parse("/Friends/")!.ShouldBe(GalleryRoute.Friends);
+        GalleryRoute.Parse("/friends/avalonia").ShouldBeNull();
+    }
+
+    [Fact]
     public void The_Home_Page_Is_The_Root()
     {
         GalleryRoute.Home.Path.ShouldBe("/");

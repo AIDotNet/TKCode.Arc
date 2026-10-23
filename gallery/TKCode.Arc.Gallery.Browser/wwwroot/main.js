@@ -66,7 +66,7 @@ dotnetRuntime.setModuleImports('arc-shots', {
     load: async url => {
         try {
             const response = await fetch(url);
-            if (response.ok && /^image\/webp\b/.test(response.headers.get('content-type') ?? '')) {
+            if (response.ok && /^image\/(webp|png)\b/.test(response.headers.get('content-type') ?? '')) {
                 shots.set(url, new Uint8Array(await response.arrayBuffer()));
             }
         } catch {
@@ -110,6 +110,27 @@ dotnetRuntime.setModuleImports('arc-stars', {
             localStorage.setItem(starsKey, JSON.stringify({ stars, at: Date.now() }));
         } catch {
             // Storage may be blocked; the count is fetched again next time.
+        }
+    }
+});
+
+// The language of the gallery (BrowserLanguageStore.cs): the browser's preferred languages, most preferred first, decide the first
+// visit; the one chosen in the top bar is kept in local storage after that.
+const languageKey = 'arc.gallery.language';
+dotnetRuntime.setModuleImports('arc-lang', {
+    preferred: () => (navigator.languages?.length ? navigator.languages : [navigator.language ?? '']).join(','),
+    read: () => {
+        try {
+            return localStorage.getItem(languageKey) ?? '';
+        } catch {
+            return '';
+        }
+    },
+    write: tag => {
+        try {
+            localStorage.setItem(languageKey, tag);
+        } catch {
+            // Storage may be blocked; the next visit follows the browser's language again.
         }
     }
 });

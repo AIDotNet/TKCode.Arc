@@ -139,7 +139,7 @@ public class GalleryTextSourceTests
         GalleryTexts.Source = pending;
         try
         {
-            var page = DocumentPage.Create("Theming");
+            var page = global::TKCode.Arc.Gallery.Pages.DocumentPage.Create("Theming");
             var window = TestHelpers.Show(page);
             try
             {

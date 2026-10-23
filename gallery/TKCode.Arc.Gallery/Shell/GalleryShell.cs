@@ -20,7 +20,9 @@ public sealed class GalleryShell : Grid
     private readonly GalleryTheme _theme = new();
     private readonly ContentControl _pageHost = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
     private readonly GallerySidebar _sidebar = new() { Width = SidebarWidth };
+    private readonly GallerySponsorBanner _banner = new();
     private GalleryHomeView? _home;
+    private GalleryFriendsView? _friends;
     private GalleryRoute _route = GalleryRoute.Home;
     private GalleryEntry? _lastComponent;
     private GalleryEntry? _lastBlock;
@@ -29,16 +31,18 @@ public sealed class GalleryShell : Grid
     public GalleryShell(GalleryRoute? initial = null)
     {
         var topBar = TopBar = new GalleryTopBar(_theme, this);
-        Grid.SetRow(topBar, 0);
+        Grid.SetRow(_banner, 0);
+        Grid.SetRow(topBar, 1);
 
         var body = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*") };
         _sidebar.EntrySelected += OnEntrySelected;
         Grid.SetColumn(_pageHost, 1);
         body.Children.Add(_sidebar);
         body.Children.Add(_pageHost);
-        Grid.SetRow(body, 1);
+        Grid.SetRow(body, 2);
 
-        RowDefinitions = new RowDefinitions("Auto,*");
+        RowDefinitions = new RowDefinitions("Auto,Auto,*");
+        Children.Add(_banner);
         Children.Add(topBar);
         Children.Add(body);
         ArcTokens.Bind(this, Panel.BackgroundProperty, ArcDesignTokenKind.Background);
@@ -67,6 +71,13 @@ public sealed class GalleryShell : Grid
     /// <summary>Opens the page at <paramref name="route"/>: the home page without a sidebar, any other with it.</summary>
     public void Navigate(GalleryRoute route)
     {
+        if (route.Kind == GalleryRouteKind.Friends)
+        {
+            _sidebar.IsVisible = false;
+            _pageHost.Content = _friends ??= new GalleryFriendsView();
+            SetRoute(GalleryRoute.Friends);
+            return;
+        }
         if (route.Entry is not { } entry)
         {
             _sidebar.IsVisible = false;
@@ -91,6 +102,7 @@ public sealed class GalleryShell : Grid
         GalleryRouteKind.Components => GalleryRoute.To(_lastComponent ?? GalleryCatalog.Categories[0].Entries[0]),
         GalleryRouteKind.Blocks => GalleryRoute.To(_lastBlock ?? GalleryCatalog.Blocks.AllEntries.First()),
         GalleryRouteKind.Docs => GalleryRoute.To(GalleryCatalog.Docs.Entries[0]),
+        GalleryRouteKind.Friends => GalleryRoute.Friends,
         _ => GalleryRoute.Home
     };
 

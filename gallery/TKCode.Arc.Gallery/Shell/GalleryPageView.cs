@@ -45,6 +45,10 @@ public sealed class GalleryPageView : Grid
     private readonly List<Control> _anchors = new();
     private GalleryToc? _toc;
     private MotionValue<double>? _scrollY;
+    // The page opens at the top and stays there until the visitor scrolls (see KeepAtTopUntilTouched).
+    private bool _touched;
+    // Shown in place of the docs while their text is fetched and laid out, so the page is never an empty frame.
+    private Control? _loading;
 
     // The docs page.
     private readonly Markdown? _docs;
@@ -81,7 +85,9 @@ public sealed class GalleryPageView : Grid
         GalleryText.Bind(_copyPage, CopyButton.LabelProperty, GalleryShellLangResourceKind.CopyPage);
         GalleryText.Bind(_copyPage, CopyButton.CopiedLabelProperty, GalleryShellLangResourceKind.Copied);
         GalleryText.Bind(_copyPage, CopyButton.FailedLabelProperty, GalleryShellLangResourceKind.Failed);
+        _loading = BuildLoading();
         _content.Children.Add(_docs);
+        _content.Children.Add(_loading);
         _mainColumn.MaxWidth = DocsWidth;
         Build(implemented: true);
 
@@ -121,8 +127,40 @@ public sealed class GalleryPageView : Grid
         _scroll.Content = _padding;
         Children.Add(_scroll);
 
+        KeepAtTopUntilTouched();
         _scroll.ScrollChanged += (_, _) => UpdateActiveSection();
         _scroll.AddHandler(PointerWheelChangedEvent, (_, _) => StopScrollAnimation(), Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
+    }
+
+    /// <summary>
+    /// A new page opens at the top. Demos that are built as the page lays out (or take the focus, or ask to be brought into
+    /// view) would otherwise carry it away; the first wheel, key or press, or a jump from "On this page", hands the scroll
+    /// over.
+    /// </summary>
+    private void KeepAtTopUntilTouched()
+    {
+        void Touch(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => _touched = true;
+        _scroll.AddHandler(PointerWheelChangedEvent, Touch, Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
+        _scroll.AddHandler(PointerPressedEvent, Touch, Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
+        _scroll.AddHandler(KeyDownEvent, Touch, Avalonia.Interactivity.RoutingStrategies.Tunnel, handledEventsToo: true);
+        _scroll.BringIntoViewOnFocusChange = false;
+        _scroll.ScrollChanged += (_, _) =>
+        {
+            if (!_touched && _scroll.Offset.Y > 0)
+            {
+                _scroll.Offset = default;
+            }
+        };
+    }
+
+    /// <summary>Grey blocks in the shape of a preview and a few paragraphs, until the document is laid out.</summary>
+    private static Control BuildLoading()
+    {
+        var panel = new StackPanel { Spacing = 24, IsHitTestVisible = false, VerticalAlignment = VerticalAlignment.Top };
+        panel.Children.Add(new Skeleton { Lines = 1, Height = 260, HorizontalAlignment = HorizontalAlignment.Stretch });
+        panel.Children.Add(new Skeleton { Lines = 5 });
+        panel.Children.Add(new Skeleton { Lines = 4 });
+        return panel;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -361,6 +399,10 @@ public sealed class GalleryPageView : Grid
             return;
         }
         _outlineSnapshot = snapshot;
+        if (_loading is not null)
+        {
+            _loading.IsVisible = false;
+        }
 
         var titles = new List<string>();
         var anchors = new List<Control>();
@@ -398,6 +440,7 @@ public sealed class GalleryPageView : Grid
 
     private void ScrollTo(double offset)
     {
+        _touched = true;
         var max = Math.Max(0, _scroll.Extent.Height - _scroll.Viewport.Height);
         offset = Math.Clamp(offset, 0, max);
         // ScrollViewer.Offset is a direct property, which a ControlTheme transition cannot target,

@@ -27,4 +27,8 @@
         <TrimmerRootAssembly Include="TKCode.Arc.Gallery.Shots" />
         <TrimmerRootAssembly Include="TKCode.Arc.Gallery.Content" />
     </ItemGroup>
+    <!-- The logos of the Friends page: the files the WebAssembly host serves from wwwroot/friends, here as resources (AssetLogoSource). -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery.Browser/wwwroot/friends/*.png" Link="Friends/%(Filename)%(Extension)" />
+    </ItemGroup>
 </Project>

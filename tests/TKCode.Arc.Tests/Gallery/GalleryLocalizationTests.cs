@@ -276,40 +276,24 @@ public class GalleryLocalizationTests
     }
 
     [AvaloniaFact]
-    public void Appearance_Panel_Switches_And_Follows_The_Language()
+    public void Appearance_Panel_Follows_The_Language_And_Leaves_It_To_The_Top_Bar()
     {
         var owner = new Window();
         var panel = new GalleryAppearancePanel(new GalleryTheme(), owner);
         var window = TestHelpers.Show(panel);
         try
         {
-            var segmented = panel.GetVisualDescendants().OfType<GallerySegmented>().ToList();
-            segmented.Count.ShouldBe(3);
-            var language = segmented[^1];
-            language.SelectedIndex.ShouldBe(0);
-            Texts(panel).ShouldContain("Language");
-            Texts(panel).ShouldContain("English");
-            Texts(panel).ShouldContain("简体中文");
-            Texts(panel).ShouldContain("繁體中文");
+            // Mode and motion; the language has its own menu in the top bar (GalleryLanguagesTests).
+            panel.GetVisualDescendants().OfType<GallerySegmented>().Count().ShouldBe(2);
+            Texts(panel).ShouldNotContain("Language");
+            Texts(panel).ShouldNotContain("English");
 
-            // Choosing a language in the panel switches the whole application.
-            var chinese = language.GetVisualDescendants().OfType<Button>().First(b => b.Content as string == "简体中文");
-            chinese.Focus();
-            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+            GalleryText.SetLanguage("zh-CN");
             Dispatcher.UIThread.RunJobs();
-            GalleryText.CurrentLanguage.ShouldBe("zh-CN");
-            language.SelectedIndex.ShouldBe(1);
-            Texts(panel).ShouldContain("语言");
             Texts(panel).ShouldContain("浅色");
             // The accent swatches are named for assistive technology and in their tooltips.
             panel.GetVisualDescendants().OfType<Button>()
                  .Select(Avalonia.Automation.AutomationProperties.GetName).ShouldContain("珊瑚");
-
-            // And a change from outside moves the selection.
-            GalleryText.SetLanguage("zh-TW");
-            Dispatcher.UIThread.RunJobs();
-            language.SelectedIndex.ShouldBe(2);
-            Texts(panel).ShouldContain("語言");
         }
         finally
         {

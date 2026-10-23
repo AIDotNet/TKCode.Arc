@@ -91,6 +91,11 @@
         <source>Extras</source>
       </segment>
     </unit>
+    <unit id="Category_Ai">
+      <segment>
+        <source>AI</source>
+      </segment>
+    </unit>
     <unit id="Category_Illustrations">
       <segment>
         <source>Illustrations</source>
@@ -466,6 +471,11 @@
         <source>Content</source>
       </segment>
     </unit>
+    <unit id="BlockGroup_HeadersFooters">
+      <segment>
+        <source>Headers and footers</source>
+      </segment>
+    </unit>
     <unit id="BlockGroup_Showpieces">
       <segment>
         <source>Showpieces</source>
@@ -559,6 +569,146 @@
     <unit id="HomeStatLanguages">
       <segment>
         <source>languages</source>
+      </segment>
+    </unit>
+    <unit id="NavFriends">
+      <segment>
+        <source>Friends</source>
+      </segment>
+    </unit>
+    <unit id="HomeBadge">
+      <segment>
+        <source>Open source · Preview</source>
+      </segment>
+    </unit>
+    <unit id="HomeWallTitle">
+      <segment>
+        <source>Every example is live</source>
+      </segment>
+    </unit>
+    <unit id="HomeWallSubtitle">
+      <segment>
+        <source>Real controls, not screenshots. Click, drag and type.</source>
+      </segment>
+    </unit>
+    <unit id="HomeExplodeTitle">
+      <segment>
+        <source>Take a screen apart</source>
+      </segment>
+    </unit>
+    <unit id="HomeExplodeSubtitle">
+      <segment>
+        <source>Scroll on. A week page of an app lifts into layers, one Arc part at a time.</source>
+      </segment>
+    </unit>
+    <unit id="HomeFriendsTitle">
+      <segment>
+        <source>Friends and sponsors</source>
+      </segment>
+    </unit>
+    <unit id="HomeFriendsSubtitle">
+      <segment>
+        <source>The projects and people that keep Arc going.</source>
+      </segment>
+    </unit>
+    <unit id="HomeSeeAll">
+      <segment>
+        <source>See all</source>
+      </segment>
+    </unit>
+    <unit id="HomeCtaTitle">
+      <segment>
+        <source>Start building with Arc</source>
+      </segment>
+    </unit>
+    <unit id="HomeCtaSubtitle">
+      <segment>
+        <source>One package, spring motion and design tokens included.</source>
+      </segment>
+    </unit>
+    <unit id="FriendsTitle">
+      <segment>
+        <source>Friends and sponsors</source>
+      </segment>
+    </unit>
+    <unit id="FriendsSubtitle">
+      <segment>
+        <source>Arc is open source. These are the people and projects that make it possible.</source>
+      </segment>
+    </unit>
+    <unit id="FriendsSponsors">
+      <segment>
+        <source>Sponsors</source>
+      </segment>
+    </unit>
+    <unit id="FriendsSponsorsHint">
+      <segment>
+        <source>Companies and people who fund the work.</source>
+      </segment>
+    </unit>
+    <unit id="FriendsFriends">
+      <segment>
+        <source>Friends</source>
+      </segment>
+    </unit>
+    <unit id="FriendsFriendsHint">
+      <segment>
+        <source>Projects and sites we build on, learn from and recommend.</source>
+      </segment>
+    </unit>
+    <unit id="FriendsSlotTitle">
+      <segment>
+        <source>Your logo here</source>
+      </segment>
+    </unit>
+    <unit id="FriendsSlotHint">
+      <segment>
+        <source>Sponsor Arc and your site appears on this page and on the home page.</source>
+      </segment>
+    </unit>
+    <unit id="FriendsBecome">
+      <segment>
+        <source>Become a sponsor</source>
+      </segment>
+    </unit>
+    <unit id="FriendsVisit">
+      <segment>
+        <source>Visit</source>
+      </segment>
+    </unit>
+    <unit id="FriendAvaloniaDesc">
+      <segment>
+        <source>The cross-platform .NET UI framework Arc is built on.</source>
+      </segment>
+    </unit>
+    <unit id="FriendAtomUIDesc">
+      <segment>
+        <source>The Avalonia component library under TKCode.Arc.</source>
+      </segment>
+    </unit>
+    <unit id="FriendLucideDesc">
+      <segment>
+        <source>The open-source icon set behind the Arc glyphs.</source>
+      </segment>
+    </unit>
+    <unit id="FriendAiDotNetDesc">
+      <segment>
+        <source>The open-source organization that hosts TKCode.Arc.</source>
+      </segment>
+    </unit>
+    <unit id="SponsorBannerText">
+      <segment>
+        <source>Mainly sponsored by nextco.work: affordable access to Claude, OpenAI and DeepSeek models.</source>
+      </segment>
+    </unit>
+    <unit id="SponsorBannerAction">
+      <segment>
+        <source>Visit</source>
+      </segment>
+    </unit>
+    <unit id="FriendNextcoDesc">
+      <segment>
+        <source>Affordable, easy-to-use access to Claude, OpenAI and DeepSeek models.</source>
       </segment>
     </unit>
     <unit id="PageLoadFailed">

@@ -108,6 +108,7 @@ public static class GalleryText
             "Media" => GalleryShellLangResourceKind.Category_Media,
             "TextEffects" => GalleryShellLangResourceKind.Category_TextEffects,
             "Content" => GalleryShellLangResourceKind.Category_Content,
+            "Ai" => GalleryShellLangResourceKind.Category_Ai,
             "Illustrations" => GalleryShellLangResourceKind.Category_Illustrations,
             "Blocks" => GalleryShellLangResourceKind.Category_Blocks,
             "Docs" => GalleryShellLangResourceKind.Category_Docs,
@@ -143,6 +144,7 @@ public static class GalleryText
             "Features" => GalleryShellLangResourceKind.BlockGroup_Features,
             "SocialProof" => GalleryShellLangResourceKind.BlockGroup_SocialProof,
             "Content" => GalleryShellLangResourceKind.BlockGroup_Content,
+            "HeadersFooters" => GalleryShellLangResourceKind.BlockGroup_HeadersFooters,
             "Showpieces" => GalleryShellLangResourceKind.BlockGroup_Showpieces,
             _ => null
         };

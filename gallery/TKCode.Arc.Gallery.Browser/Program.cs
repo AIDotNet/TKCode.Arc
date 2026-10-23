@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
 using AtomUI;
 using AtomUI.Desktop.Controls;
-using AtomUI.Localization;
 using Avalonia;
 using Avalonia.Browser;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
 using TKCode.Arc.Gallery;
 using TKCode.Arc.Gallery.Docs;
+using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
 
 namespace TKCode.Arc.Gallery.Browser;
@@ -21,6 +21,11 @@ internal sealed partial class Program
         {
             LazyAssemblies.Install();
         }
+        // The logos of the Friends page are files of the site (wwwroot/friends); a desktop host has none and shows letters.
+        if (args.Length > 1)
+        {
+            GalleryLogos.Source = new HttpLogoSource(new Uri(args[1]));
+        }
         // A published site has no screenshots assembly (the project file leaves it out) and serves the pictures as files.
         if (AppContext.TryGetSwitch("Arc.Gallery.ShotsOverHttp", out var shotsOverHttp) && shotsOverHttp && args.Length > 1)
         {
@@ -31,6 +36,8 @@ internal sealed partial class Program
         {
             GalleryTexts.Source = new HttpTextSource(new Uri(args[1]));
         }
+        // The language chosen in the top bar is kept in local storage; until there is one, the browser's languages decide.
+        GalleryLanguages.Store = new BrowserLanguageStore();
         return BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
 
@@ -41,7 +48,7 @@ internal sealed partial class Program
                   .WithCjkFont()
                   .UseAtomUI(builder =>
                   {
-                      builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);
+                      builder.UseLanguages(GalleryLanguages.Initial(BrowserLanguageStore.Preferred()), GalleryLanguages.Tags);
                       builder.UseDesktopControls();
                       builder.UseArc();
                       builder.UseArcGallery();

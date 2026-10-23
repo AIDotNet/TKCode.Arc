@@ -109,6 +109,12 @@
         <target state="translated">扩展</target>
       </segment>
     </unit>
+    <unit id="Category_Ai">
+      <segment>
+        <source>AI</source>
+        <target state="translated">AI</target>
+      </segment>
+    </unit>
     <unit id="Category_Illustrations">
       <segment>
         <source>Illustrations</source>
@@ -559,6 +565,12 @@
         <target state="translated">内容</target>
       </segment>
     </unit>
+    <unit id="BlockGroup_HeadersFooters">
+      <segment>
+        <source>Headers and footers</source>
+        <target state="translated">页眉与页脚</target>
+      </segment>
+    </unit>
     <unit id="BlockGroup_Showpieces">
       <segment>
         <source>Showpieces</source>
@@ -671,6 +683,174 @@
       <segment>
         <source>languages</source>
         <target state="translated">种语言</target>
+      </segment>
+    </unit>
+    <unit id="NavFriends">
+      <segment>
+        <source>Friends</source>
+        <target state="translated">伙伴</target>
+      </segment>
+    </unit>
+    <unit id="HomeBadge">
+      <segment>
+        <source>Open source · Preview</source>
+        <target state="translated">开源 · 预览版</target>
+      </segment>
+    </unit>
+    <unit id="HomeWallTitle">
+      <segment>
+        <source>Every example is live</source>
+        <target state="translated">每个示例都是实时的</target>
+      </segment>
+    </unit>
+    <unit id="HomeWallSubtitle">
+      <segment>
+        <source>Real controls, not screenshots. Click, drag and type.</source>
+        <target state="translated">真实的控件，不是截图。可以点击、拖动和输入。</target>
+      </segment>
+    </unit>
+    <unit id="HomeExplodeTitle">
+      <segment>
+        <source>Take a screen apart</source>
+        <target state="translated">把一个界面拆开来看</target>
+      </segment>
+    </unit>
+    <unit id="HomeExplodeSubtitle">
+      <segment>
+        <source>Scroll on. A week page of an app lifts into layers, one Arc part at a time.</source>
+        <target state="translated">继续滚动，一个应用的周视图会被拆成多层，一层一个 Arc 部件。</target>
+      </segment>
+    </unit>
+    <unit id="HomeFriendsTitle">
+      <segment>
+        <source>Friends and sponsors</source>
+        <target state="translated">朋友与赞助商</target>
+      </segment>
+    </unit>
+    <unit id="HomeFriendsSubtitle">
+      <segment>
+        <source>The projects and people that keep Arc going.</source>
+        <target state="translated">让 Arc 持续前行的项目与伙伴。</target>
+      </segment>
+    </unit>
+    <unit id="HomeSeeAll">
+      <segment>
+        <source>See all</source>
+        <target state="translated">查看全部</target>
+      </segment>
+    </unit>
+    <unit id="HomeCtaTitle">
+      <segment>
+        <source>Start building with Arc</source>
+        <target state="translated">开始用 Arc 构建</target>
+      </segment>
+    </unit>
+    <unit id="HomeCtaSubtitle">
+      <segment>
+        <source>One package, spring motion and design tokens included.</source>
+        <target state="translated">一个包，内置弹簧动效与设计令牌。</target>
+      </segment>
+    </unit>
+    <unit id="FriendsTitle">
+      <segment>
+        <source>Friends and sponsors</source>
+        <target state="translated">朋友与赞助商</target>
+      </segment>
+    </unit>
+    <unit id="FriendsSubtitle">
+      <segment>
+        <source>Arc is open source. These are the people and projects that make it possible.</source>
+        <target state="translated">Arc 是开源的，这些人和项目让它成为可能。</target>
+      </segment>
+    </unit>
+    <unit id="FriendsSponsors">
+      <segment>
+        <source>Sponsors</source>
+        <target state="translated">赞助商</target>
+      </segment>
+    </unit>
+    <unit id="FriendsSponsorsHint">
+      <segment>
+        <source>Companies and people who fund the work.</source>
+        <target state="translated">为这项工作提供资金的公司与个人。</target>
+      </segment>
+    </unit>
+    <unit id="FriendsFriends">
+      <segment>
+        <source>Friends</source>
+        <target state="translated">朋友</target>
+      </segment>
+    </unit>
+    <unit id="FriendsFriendsHint">
+      <segment>
+        <source>Projects and sites we build on, learn from and recommend.</source>
+        <target state="translated">我们依赖、学习并推荐的项目与网站。</target>
+      </segment>
+    </unit>
+    <unit id="FriendsSlotTitle">
+      <segment>
+        <source>Your logo here</source>
+        <target state="translated">这里放你的标志</target>
+      </segment>
+    </unit>
+    <unit id="FriendsSlotHint">
+      <segment>
+        <source>Sponsor Arc and your site appears on this page and on the home page.</source>
+        <target state="translated">赞助 Arc，你的网站会出现在本页和首页。</target>
+      </segment>
+    </unit>
+    <unit id="FriendsBecome">
+      <segment>
+        <source>Become a sponsor</source>
+        <target state="translated">成为赞助商</target>
+      </segment>
+    </unit>
+    <unit id="FriendsVisit">
+      <segment>
+        <source>Visit</source>
+        <target state="translated">访问</target>
+      </segment>
+    </unit>
+    <unit id="FriendAvaloniaDesc">
+      <segment>
+        <source>The cross-platform .NET UI framework Arc is built on.</source>
+        <target state="translated">Arc 所基于的跨平台 .NET UI 框架。</target>
+      </segment>
+    </unit>
+    <unit id="FriendAtomUIDesc">
+      <segment>
+        <source>The Avalonia component library under TKCode.Arc.</source>
+        <target state="translated">TKCode.Arc 所依托的 Avalonia 组件库。</target>
+      </segment>
+    </unit>
+    <unit id="FriendLucideDesc">
+      <segment>
+        <source>The open-source icon set behind the Arc glyphs.</source>
+        <target state="translated">Arc 图标所用的开源图标集。</target>
+      </segment>
+    </unit>
+    <unit id="FriendAiDotNetDesc">
+      <segment>
+        <source>The open-source organization that hosts TKCode.Arc.</source>
+        <target state="translated">托管 TKCode.Arc 的开源组织。</target>
+      </segment>
+    </unit>
+    <unit id="SponsorBannerText">
+      <segment>
+        <source>Mainly sponsored by nextco.work: affordable access to Claude, OpenAI and DeepSeek models.</source>
+        <target state="translated">主要赞助商 nextco.work，提供实惠的 Claude、OpenAI、DeepSeek 模型服务。</target>
+      </segment>
+    </unit>
+    <unit id="SponsorBannerAction">
+      <segment>
+        <source>Visit</source>
+        <target state="translated">访问</target>
+      </segment>
+    </unit>
+    <unit id="FriendNextcoDesc">
+      <segment>
+        <source>Affordable, easy-to-use access to Claude, OpenAI and DeepSeek models.</source>
+        <target state="translated">价格实惠、简单易用的 Claude、OpenAI 和 DeepSeek 模型服务。</target>
       </segment>
     </unit>
     <unit id="PageLoadFailed">

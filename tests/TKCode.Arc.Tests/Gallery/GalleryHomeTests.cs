@@ -144,14 +144,14 @@ public class GalleryHomeTests
         try
         {
             var home = window.GetVisualDescendants().OfType<GalleryHomeView>().Single();
-            home.Cards.Count.ShouldBe(4);
+            home.Cards.Count.ShouldBe(6);
             foreach (var card in home.Cards)
             {
                 card.EnsureCreated();
                 card.IsCreated.ShouldBeTrue();
                 card.Entry.ShouldNotBeNull();
             }
-            home.Cards.Select(c => c.Entry.ClassName).ShouldBe(["ButtonGroup", "Gauge", "ChatThread", "CommandPalette"]);
+            home.Cards.Select(c => c.Entry.ClassName).ShouldBe(["ButtonGroup", "Gauge", "ChatThread", "CommandPalette", "Calendar", "MultiSelect"]);
         }
         finally
         {

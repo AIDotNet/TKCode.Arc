@@ -7,7 +7,8 @@ public enum GalleryRouteKind
     Home,
     Docs,
     Components,
-    Blocks
+    Blocks,
+    Friends
 }
 
 /// <summary>
@@ -22,6 +23,9 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
     private static readonly Lazy<Dictionary<(GalleryRouteKind, string), GalleryEntry>> s_entries = new(BuildIndex);
 
     public static GalleryRoute Home { get; } = new(GalleryRouteKind.Home);
+
+    /// <summary>The friends and sponsors page.</summary>
+    public static GalleryRoute Friends { get; } = new(GalleryRouteKind.Friends);
 
     /// <summary>The route of <paramref name="entry"/>'s page.</summary>
     public static GalleryRoute To(GalleryEntry entry) => new(KindOf(entry), entry);
@@ -40,11 +44,11 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
 
     /// <summary>The address: <c>/</c> for the home page, otherwise <c>/&lt;section&gt;/&lt;slug&gt;</c>.</summary>
     public string Path => Entry is null
-        ? "/"
+        ? Kind == GalleryRouteKind.Friends ? "/friends" : "/"
         : $"/{Kind.ToString().ToLowerInvariant()}/{Entry.Slug}";
 
     /// <summary>The page title: the brand, preceded by the entry's title on a page of the gallery.</summary>
-    public string Title => Entry is null ? Brand : $"{Entry.Title} · {Brand}";
+    public string Title => Kind == GalleryRouteKind.Friends ? $"Friends · {Brand}" : Entry is null ? Brand : $"{Entry.Title} · {Brand}";
 
     /// <summary>
     /// The route at <paramref name="path"/>, or null when no page has that address. A query, a fragment, a trailing slash
@@ -62,7 +66,11 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
         {
             return Home;
         }
-        if (segments.Length != 2 || !Enum.TryParse<GalleryRouteKind>(segments[0], ignoreCase: true, out var kind) || kind == GalleryRouteKind.Home)
+        if (segments.Length == 1 && segments[0].Equals("friends", StringComparison.OrdinalIgnoreCase))
+        {
+            return Friends;
+        }
+        if (segments.Length != 2 || !Enum.TryParse<GalleryRouteKind>(segments[0], ignoreCase: true, out var kind) || kind is GalleryRouteKind.Home or GalleryRouteKind.Friends)
         {
             return null;
         }
