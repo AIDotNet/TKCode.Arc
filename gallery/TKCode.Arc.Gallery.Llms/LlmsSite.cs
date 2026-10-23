@@ -30,7 +30,7 @@ public static partial class LlmsSite
     /// <summary>The skill's name (its folder, and <c>name</c> in its front matter).</summary>
     public const string SkillName = "tkcode-arc";
 
-    private const string Repository = "https://github.com/AtomUICommunity/TKCode.Arc";
+    private const string Repository = "https://github.com/AIDotNet/TKCode.Arc";
 
     /// <summary>The packages on nuget.org; the others are built from the repository (see the Push step of .github/workflows/ci.yml).</summary>
     private static readonly HashSet<string> s_onNuGet = ["TKCode.Arc", "TKCode.Arc.Core", "TKCode.Arc.Fonts", "TKCode.Arc.Icons.Lucide"];
@@ -41,6 +41,7 @@ public static partial class LlmsSite
         ["TKCode.Arc"] = "UseArc()",
         ["TKCode.Arc.Blocks"] = "UseArcBlocks()",
         ["TKCode.Arc.AdvancedCharts"] = "UseArcAdvancedCharts()",
+        ["TKCode.Arc.Special"] = "UseArcSpecial()",
     };
 
     /// <summary>A page of the gallery: a guide of the Docs section, or a component or block with a docs page.</summary>
@@ -53,7 +54,7 @@ public static partial class LlmsSite
     {
         baseUrl = baseUrl.TrimEnd('/');
         var docs = GalleryCatalog.Docs.Entries.Select(e => new Page(e, GalleryRoute.To(e).Path, e.ClassName["Docs".Length..])).ToArray();
-        var components = GalleryCatalog.AllCategories.Select(c => (c.Title, Pages: Documented(c.AllEntries))).Where(g => g.Pages.Length > 0).ToArray();
+        var components = GalleryCatalog.AllCategories.Concat(GalleryCatalog.Special).Select(c => (c.Title, Pages: Documented(c.AllEntries))).Where(g => g.Pages.Length > 0).ToArray();
         var blocks = (GalleryCatalog.Blocks.Subcategories ?? []).Select(c => (c.Title, Pages: Documented(c.AllEntries))).Where(g => g.Pages.Length > 0).ToArray();
         var all = docs.Concat(components.SelectMany(g => g.Pages)).Concat(blocks.SelectMany(g => g.Pages)).ToArray();
 
@@ -151,7 +152,7 @@ public static partial class LlmsSite
         markdown.Append("- ").Append(words.Package).Append(s_onNuGet.Contains(package)
             ? string.Format(words.OnNuGet, $"`{package}`", $"`dotnet add package {package} --version {version}`")
             : string.Format(words.NotOnNuGet, $"`{package}`", Repository, $"`{s_registration.GetValueOrDefault(package, "UseArc()")}`")).Append('\n');
-        markdown.Append("- ").Append(words.Namespace).Append("`xmlns:arc=\"https://github.com/AtomUICommunity/TKCode.Arc\"`\n");
+        markdown.Append("- ").Append(words.Namespace).Append("`xmlns:arc=\"https://github.com/AIDotNet/TKCode.Arc\"`\n");
         markdown.Append("- ").Append(words.LivePage).Append(baseUrl).Append(page.Address).Append("\n\n");
         markdown.Append(Shots(baseUrl, doc.CopyMarkdown, $"Docs/{GalleryDocs.FolderOf(className)}"));
         return markdown.ToString();

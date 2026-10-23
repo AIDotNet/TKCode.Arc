@@ -15,7 +15,7 @@ public interface IGalleryStarCache
 /// <summary>The gallery's repository on GitHub and its star count, shown by the top bar's GitHub button.</summary>
 public static class GalleryGitHub
 {
-    public const string Repository = "AtomUICommunity/TKCode.Arc";
+    public const string Repository = "AIDotNet/TKCode.Arc";
 
     public static Uri RepositoryUrl { get; } = new($"https://github.com/{Repository}");
 

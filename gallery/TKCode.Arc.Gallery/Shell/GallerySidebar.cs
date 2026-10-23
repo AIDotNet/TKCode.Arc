@@ -123,8 +123,8 @@ public sealed class GallerySidebar : Border
         // Arc's groups, then the extras group (not counted among the Arc components in the footer).
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Components, ArcIcons.LayoutGrid, GalleryCatalog.AllCategories.ToArray()));
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true));
-        // The Special components section (uiarc.dev's fourth section). Its groups are not catalogued yet, so it is empty.
-        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Special, ArcIcons.Sparkles, []));
+        // The Special components section (uiarc.dev's fourth section).
+        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Special, ArcIcons.Sparkles, GalleryCatalog.Special));
         _empty.Margin = new Thickness(16, 12);
         _empty.IsVisible = false;
         list.Children.Add(_empty);

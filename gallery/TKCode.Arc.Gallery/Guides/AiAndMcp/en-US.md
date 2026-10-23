@@ -19,7 +19,7 @@ instruction file or at the start of a conversation:
 | Fact | Why it matters |
 |---|---|
 | This is Avalonia 12 with AtomUI 6.2.8, not WPF, WinUI or HTML. | Assistants otherwise mix in WPF properties (`Visibility`, `DataTemplateSelector`) or CSS ideas. |
-| Arc controls live in `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"`. | Without the prefix, `Button` resolves to Avalonia's own button and loses Arc's look. |
+| Arc controls live in `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`. | Without the prefix, `Button` resolves to Avalonia's own button and loses Arc's look. |
 | The app calls `UseArc()` inside `UseAtomUI(...)`, and the `Application` class is `partial`. | Missing either produces unstyled controls or a build error. |
 | Colors, radii and fonts come from `{arc:ArcDesignTokenResource ...}` or `ArcTokens`. | Hard-coded hex values break dark mode and accents. |
 | Motion is declared under `^:motion-full` and `^:motion-reduced` and respects `ArcMotion.Level`. | Hand-written animations otherwise ignore reduced motion. |
@@ -102,7 +102,7 @@ most of the mistakes above:
 ## UI library: TKCode.Arc
 
 - UI is Avalonia 12.1.4 + AtomUI 6.2.8 + TKCode.Arc. Do not use WPF or WinUI APIs.
-- Arc controls use xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc" (arc:Button, arc:Input, ...).
+- Arc controls use xmlns:arc="https://github.com/AIDotNet/TKCode.Arc" (arc:Button, arc:Input, ...).
 - Only use properties, events and enum values that the component's docs page or API table lists.
 - Colors, radii, spacing and fonts: {arc:ArcDesignTokenResource Name} in XAML, ArcTokens.Bind in code.
   Never hard-code a color.

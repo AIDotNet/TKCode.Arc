@@ -100,7 +100,7 @@ animates:
 ```xml
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <ControlTheme x:Key="StatusPanelTheme" TargetType="Border">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Style Selector="^:motion-full">

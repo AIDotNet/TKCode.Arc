@@ -37,7 +37,18 @@ public static partial class GalleryCatalog
             new("Markdown", "Markdown", "markdown", 0,
                 "Render Markdown documents and streamed replies in Arc's style, with fenced code highlighted in Arc's syntax palette.",
                 IsArc: false),
+            new("TokenTextEditor", "Token text editor", "token-text-editor", 0,
+                "A multi-line text editor whose tokens, such as commands and mentions, behave as single units, with triggers that open a query for your own list.",
+                IsArc: false),
         ], IsArc: false),
+    ];
+
+    /// <summary>
+    /// The groups of the Special components section, listed after Blocks as on uiarc.dev. Their pages live under
+    /// <c>/components/</c> like any component, but they are not part of the 110 Arc components (<see cref="Count"/>).
+    /// </summary>
+    public static readonly GalleryCategory[] Special =
+    [
         new("Illustrations", "Illustrations", "插图",
         [
             new("DataFlow", "Data flow", "data-flow", 0,
@@ -51,6 +62,21 @@ public static partial class GalleryCatalog
                 IsArc: false),
             new("VectorSearch", "Vector search", "vector-search", 0,
                 "A question is embedded as a vector and answered with its nearest documents by cosine similarity.",
+                IsArc: false),
+            new("AgentLoop", "Agent loop", "agent-loop", 0,
+                "An agent gathers context, calls tools and checks the result, going round the loop until the task is done.",
+                IsArc: false),
+            new("MixtureOfExperts", "Mixture of experts", "mixture-of-experts", 0,
+                "A router scores every expert for each token and sends it to its top choices, whose outputs blend into the result.",
+                IsArc: false),
+            new("SpeculativeDecoding", "Speculative decoding", "speculative-decoding", 0,
+                "A small draft model guesses a few tokens ahead and the large model checks them in one pass, keeping the ones it agrees with.",
+                IsArc: false),
+            new("PromptCache", "Prompt cache", "prompt-cache", 0,
+                "Requests that share a prompt prefix read it from the cache instead of processing it again, and the savings add up.",
+                IsArc: false),
+            new("ReasoningTree", "Reasoning tree", "reasoning-tree", 0,
+                "A search over candidate thoughts: each is scored, weak branches are pruned, the best expand and the winning path draws in.",
                 IsArc: false),
         ], IsArc: false),
     ];
@@ -88,9 +114,9 @@ public static partial class GalleryCatalog
         Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts } : new[] { c })
                   .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts)));
 
-    /// <summary>Every entry the gallery lists: the Docs, Components and Blocks sections.</summary>
+    /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>
-        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries);
+        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries).Concat(Special.SelectMany(c => c.AllEntries));
 
     /// <summary>Number of Arc components (extras not included).</summary>
     public static int Count => Categories.Sum(c => c.Entries.Length);

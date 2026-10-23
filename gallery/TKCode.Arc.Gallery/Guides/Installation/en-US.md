@@ -100,14 +100,14 @@ public partial class App : Application
 
 ## 3. Use the controls in XAML
 
-Arc's XAML namespace is `https://github.com/AtomUICommunity/TKCode.Arc`; every control, token resource and markup
+Arc's XAML namespace is `https://github.com/AIDotNet/TKCode.Arc`; every control, token resource and markup
 extension lives there.
 
 ![A notification settings card built in the first minutes with Arc](images/FirstScreen.png)
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              Width="560">
     <arc:Card Title="Notifications" Description="Choose how Acme Analytics keeps your team informed.">
         <StackPanel Spacing="16" Margin="0,12,0,0">
@@ -151,7 +151,7 @@ Lucide icon, add `TKCode.Arc.Icons.Lucide` and use its namespace:
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:lucide="https://github.com/AtomUICommunity/TKCode.Arc/lucide">
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide">
     <lucide:LucideIcon Kind="Sparkles" Size="20" />
 </UserControl>
 ```

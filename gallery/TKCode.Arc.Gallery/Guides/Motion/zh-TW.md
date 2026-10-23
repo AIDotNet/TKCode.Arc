@@ -1,6 +1,6 @@
 ---
 title: 動態效果
-source-hash: 6e37f18585de
+source-hash: 09a655958638
 ---
 
 # 動態效果
@@ -82,7 +82,7 @@ Arc 的彈簧由它們呈現出的時長與回彈程度定義，而不是由物�
 ```xml
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <ControlTheme x:Key="StatusPanelTheme" TargetType="Border">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Style Selector="^:motion-full">
