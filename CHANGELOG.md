@@ -6,7 +6,7 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`
 and `TKCode.Arc.Icons.Lucide`.
 
-## Unreleased
+## 0.3.0-preview.2 - 2026-10-23
 
 ### Added
 
@@ -101,6 +101,13 @@ and `TKCode.Arc.Icons.Lucide`.
   answer are actions (copy with sources, answer again with a model submenu, thumbs with a reasons list, share link, a
   version pager), the model line, related questions and a follow-up box. `AiAnswer` asks an `IAiAnswerResponder` or shows a
   finished answer; asking again replaces the answer in place and keeps the versions of the question.
+- **Blocks**: the AI side panel and the prompt studio, the sixth and seventh blocks of the AI group (original design).
+  `AiSidePanel` is an assistant beside a page the person reads: it reads the whole page, answers about it or about a
+  selection, and proposes changes as a word diff (`AiDiffText`, `AiDiffTable`) that the person applies, discards or undoes
+  from an Undo pill; it becomes a bottom sheet on narrow widths. `PromptStudio` edits a prompt template with coloured
+  variable chips, runs it on saved test cases through a `PromptRunHandler`, and compares, promotes and undoes versions,
+  with version and model menus, variable fields, a Run button and an output panel. `TokenTextEditor` gains `TokenParser`
+  and `TokenRenderer` for custom inline tokens.
 
 ### Changed
 
@@ -298,6 +305,7 @@ and `TKCode.Arc.Icons.Lucide`.
 
 First preview release.
 
+[0.3.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.1...v0.3.0-preview.2
 [0.3.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.2.0-preview.1...v0.3.0-preview.1
 [0.2.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.1.1-preview.1...v0.2.0-preview.1
 [0.1.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.1.0-preview.1...v0.1.1-preview.1

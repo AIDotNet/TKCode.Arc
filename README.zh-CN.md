@@ -23,12 +23,12 @@ TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 
 
 ## 安装
 
-最新预览版为 [`0.3.0-preview.1`](CHANGELOG.md)，已发布到 [NuGet](https://www.nuget.org/packages/TKCode.Arc)：
+最新预览版为 [`0.3.0-preview.2`](CHANGELOG.md)，已发布到 [NuGet](https://www.nuget.org/packages/TKCode.Arc)：
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.0-preview.1
-dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.1           # 可选：Geist 与 Geist Mono 字体
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.1    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.2           # 可选：Geist 与 Geist Mono 字体
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.2    # 可选：完整的 Lucide 图标集
 ```
 
 `TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`

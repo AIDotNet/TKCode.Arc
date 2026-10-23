@@ -1272,6 +1272,198 @@
         <source>The group title in the "More models" list.</source>
         <target>"More models" 列表中的分組標題。</target>
       </trans-unit>
+      <trans-unit id="AiPanelBlock.Id">
+        <source>Stable id; selections and changes refer to blocks by it.</source>
+        <target>穩定 ID；選取範圍與修改透過它參照區塊。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelBlock.Label">
+        <source>The name of the block ("Introduction", "Pricing table"): shown on the selection pill, the change card, the placeholder and to screen readers.</source>
+        <target>區塊的名稱（“Introduction”、“Pricing table”）：顯示在選取範圍膠囊、修改卡片、占位文字上，也會朗讀給螢幕閱讀器。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelChange">
+        <source>A change to one block that the assistant proposes: shown as a card with a word diff, applied or discarded by the person.</source>
+        <target>助手提議對某個區塊所做的一項修改：以逐字差異卡片呈現，由使用者套用或捨棄。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelChange.After">
+        <source>The whole new block.</source>
+        <target>整個新區塊。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelChange.Before">
+        <source>The block as it is on the page when the card is made; the block to restore on undo.</source>
+        <target>製作修改卡片時頁面上的區塊；復原時要還原的區塊。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelChange.BlockId">
+        <source>The id of the block that changes.</source>
+        <target>會變更的區塊 ID。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelChange.State">
+        <source>Where the change is.</source>
+        <target>修改所處的狀態。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelHeading">
+        <source>A heading of the page.</source>
+        <target>頁面中的一個標題。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelHeading.Text">
+        <source>The heading text.</source>
+        <target>標題文字。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelPage">
+        <source>The page the assistant reads and edits: a title, a line of meta text and blocks.</source>
+        <target>助手讀取與編輯的頁面：標題、一行中繼文字與多個區塊。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelPage.Meta">
+        <source>A line under the title ("Updated Mar 3 by Priya").</source>
+        <target>標題下方的一行文字（“Updated Mar 3 by Priya”）。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelPage.Title">
+        <source>The title.</source>
+        <target>標題。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelParagraph">
+        <source>A paragraph of the page.</source>
+        <target>頁面中的一個段落。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelParagraph.Text">
+        <source>The paragraph text.</source>
+        <target>段落文字。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTable">
+        <source>A table of the page.</source>
+        <target>頁面中的一個表格。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn">
+        <source>One exchange of the thread: the question, the context it was asked in, the answer and an optional change.</source>
+        <target>對話中的一輪：問題、提問時的脈絡、回答，以及可選的修改。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn.Answer">
+        <source>The answer text; grows while it streams.</source>
+        <target>回答文字；串流輸出時逐步增長。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn.Change">
+        <source>The change the assistant proposes with its answer, if any.</source>
+        <target>助手隨回答提出的修改（如有）。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn.ContextLabel">
+        <source>The label of the selection the question was asked about, if any.</source>
+        <target>提問所針對之選取範圍的標籤（如有）。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn.ErrorMessage">
+        <source>Why the turn failed.</source>
+        <target>這一輪失敗的原因。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn.Prompt">
+        <source>What the person asked.</source>
+        <target>使用者提出的問題。</target>
+      </trans-unit>
+      <trans-unit id="AiPanelTurn.State">
+        <source>Where the turn is.</source>
+        <target>這一輪所處的狀態。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel">
+        <source>An assistant beside a page the person reads: the page on the left, the assistant on the right (or a bottom sheet in a narrow container). The assistant reads the whole page, answers questions about it or about a selection, and when the page should change it answers with a card that shows the change as a word diff. The person applies it (the block on the page sweeps with a tint and an Undo pill appears), discards it, or undoes it.</source>
+        <target>放在使用者閱讀之頁面旁的助手：左側為頁面，右側為助手（容器較窄時為底部面板）。助手會閱讀整個頁面，回答關於頁面或選取範圍的問題；當頁面應該變更時，它會以卡片呈現修改，並以逐字差異顯示。使用者可以套用（區塊會以色調掃過頁面，並出現「復原」膠囊）、捨棄或復原它。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.ApplyCommand">
+        <source>Run when the person applies a change, with the `AiPanelChange` as the parameter.</source>
+        <target>使用者套用修改時執行，參數為 `AiPanelChange`。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.AssistantMark">
+        <source>The assistant's mark (a geometry in a 24 × 24 box or an image); null shows a spark icon.</source>
+        <target>助手的標記（24 × 24 方框內的幾何圖形或圖片）；為 null 時顯示火花圖示。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.AssistantName">
+        <source>The assistant's name, used in the header, the reopen button and the status texts.</source>
+        <target>助手的名稱，用於標題列、重新開啟按鈕與狀態文字。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.ChangeApplied">
+        <source>Raised after a change is applied and the page data is updated; save the page here.</source>
+        <target>修改套用且頁面資料更新後引發；請在此儲存頁面。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.ChangeDiscarded">
+        <source>Raised after a change is discarded.</source>
+        <target>修改被捨棄後引發。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.ChangeUndone">
+        <source>Raised after a change is undone.</source>
+        <target>修改被復原後引發。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.DiscardCommand">
+        <source>Run when the person discards a change.</source>
+        <target>使用者捨棄修改時執行。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.IsBusy">
+        <source>Whether the assistant is reading the page or writing (read-only).</source>
+        <target>助手是否正在閱讀頁面或寫入（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.IsOpen">
+        <source>Whether the assistant is open (two-way): docked beside the page, or a bottom sheet in a narrow container.</source>
+        <target>助手是否開啟（雙向）：停靠在頁面旁，或在容器較窄時為底部面板。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.IsSheetMode">
+        <source>Whether the assistant is a bottom sheet because the container is narrow (read-only).</source>
+        <target>因容器較窄，助手是否為底部面板（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.Labels">
+        <source>Every word the block shows or announces.</source>
+        <target>區塊顯示或朗讀的每一個文字。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.LastApplied">
+        <source>The change the Undo pill would undo (read-only).</source>
+        <target>「復原」膠囊將復原的修改（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.MaxWordsPerStep">
+        <source>The most whole words a step shows; a long backlog is released at this rate to catch up.</source>
+        <target>每一步顯示的完整字詞數上限；積壓的內容以此速率釋出以追上進度。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.MinWordsPerStep">
+        <source>The fewest whole words a step shows.</source>
+        <target>每一步顯示的完整字詞數下限。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.ModelName">
+        <source>A second line in the header, such as the model's name.</source>
+        <target>標題列中的第二行文字，例如模型名稱。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.Page">
+        <source>The page to read and change. Replacing the object resets the thread and the undo.</source>
+        <target>要閱讀與變更的頁面。替換此物件會重設對話與復原記錄。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.PageMaxWidth">
+        <source>The widest the page column grows.</source>
+        <target>頁面欄可延展的最大寬度。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.PanelWidth">
+        <source>The width of the docked assistant.</source>
+        <target>停靠助手的寬度。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.Responder">
+        <source>Answers the questions; null lets the box send nothing.</source>
+        <target>回答問題的元件；為 null 時輸入框不會傳送任何內容。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.Selection">
+        <source>The selection the next question is about (read-only); `ClearSelection` removes it.</source>
+        <target>下一個問題所針對的選取範圍（唯讀）；`ClearSelection` 會將其移除。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.SelectionAsked">
+        <source>Raised when a selection is added as the context of the next question.</source>
+        <target>選取範圍被加入為下一個問題的脈絡時引發。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.SheetBreakpoint">
+        <source>Below this container width the assistant is a bottom sheet over the page.</source>
+        <target>容器寬度低於此值時，助手會以底部面板覆蓋在頁面上。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.SheetHeightRatio">
+        <source>The height of the bottom sheet as a share of the container's height.</source>
+        <target>底部面板的高度，佔容器高度的比例。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.StreamInterval">
+        <source>How often streamed text is released (50 ms): each step shows a few whole words.</source>
+        <target>串流文字的釋出間隔（50 ms）：每一步顯示數個完整字詞。</target>
+      </trans-unit>
+      <trans-unit id="AiSidePanel.UndoCommand">
+        <source>Run when the person undoes a change.</source>
+        <target>使用者復原修改時執行。</target>
+      </trans-unit>
       <trans-unit id="AiSource">
         <source>A source an AI reply drew on: a page, a document or a record. Shown as a numbered citation in the text, as a row in a source list and as a preview card. Data only: an `AvaloniaObject` so that a change reaches what is on screen.</source>
         <target>AI 回覆所引用的來源：網頁、文件或紀錄。在正文中顯示為帶編號的引用，在來源清單中顯示為一列，並在預覽卡片中顯示。僅為資料：它是一個 `AvaloniaObject`，因此資料變更會反映到畫面上。</target>
@@ -8060,6 +8252,18 @@
         <source>Any object the app wants to keep with the person.</source>
         <target>應用程式希望與該人員一同保存的任意物件。</target>
       </trans-unit>
+      <trans-unit id="PromptAuthor">
+        <source>Who wrote a version.</source>
+        <target>撰寫某個版本的人。</target>
+      </trans-unit>
+      <trans-unit id="PromptAuthor.Avatar">
+        <source>The picture; without one the avatar shows the initials.</source>
+        <target>頭像圖片；沒有圖片時，頭像會顯示姓名縮寫。</target>
+      </trans-unit>
+      <trans-unit id="PromptAuthor.Name">
+        <source>The name.</source>
+        <target>名稱。</target>
+      </trans-unit>
       <trans-unit id="PromptCache">
         <source>An animated explainer of prompt caching. Up to four requests share a prompt prefix (tool schemas, instructions, documents, the chat so far) and add a new message each. The first processes every segment in one steady sweep and carries the prefix into the cache panel, where a time-to-live ring fills; later requests read the prefix back under one passing band and only process their message, and their processed tokens, input cost and first-token time roll down from the row above. A toggle edits one segment: the next request matches the cache only up to it, shows a break there and writes the rest again. When no request arrives the ring drains on an accelerated clock and the cache expires; then the round starts over. The totals roll into the input cost saved and the first-token speedup. Costs and times are computed from `Pricing` and `FirstTokenEstimator`; the numbers are illustrative.</source>
         <target>提示快取的動畫講解。最多四個請求共享一段提示前綴（工具架構、指令、文件、至今的對話），並各自加入一則新訊息。第一個請求以穩定的一次掃過處理每個段落，並將前綴帶入快取面板，其中的存活時間環逐漸填滿；後續請求在一條掠過的光帶下讀回前綴，只處理它們的訊息，而它們處理的 token、輸入成本與第一個 token 時間會從上一列向下滾入。切換開關可編輯一個段落：下一個請求只會比對到該段落為止的快取，在那裡顯示斷點，並重新寫入其餘部分。若沒有請求到達，存活時間環會以加速的時鐘排空，快取隨之過期；然後整輪重新開始。合計數值彙總為節省的輸入成本與第一個 token 加速比。成本與時間由 `Pricing` 與 `FirstTokenEstimator` 計算；數字僅為示意。</target>
@@ -8163,6 +8367,150 @@
       <trans-unit id="PromptCacheSegment.Tokens">
         <source>Defines the `Tokens` property.</source>
         <target>定義 `Tokens` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio">
+        <source>A card to edit a prompt template, try it on saved test cases, and compare and ship versions: the version and the model on top, a system / user template editor whose `{{name}}` variables are colored chips, a field for each variable, a row of test cases, a Run button and an output panel for the reply. A version menu compares the open version with another as a word diff or promotes it to production, and a model menu picks the model and the effort. With no `RunHandler` a built-in simulator answers and the card says so.</source>
+        <target>用於編輯提示詞範本的卡片，可用已儲存的測試案例試跑，並比較與發布版本：頂部為版本與模型；系統 / 使用者範本編輯器中，`{{name}}` 變數會顯示為彩色膠囊（chip）；每個變數一個欄位；一排測試案例、一個「執行」按鈕，以及顯示回覆的輸出面板。版本選單可將開啟的版本與另一版本以逐字差異比較，或將其升為正式版本；模型選單用於選擇模型與推理強度。若沒有 `RunHandler`，內建模擬器會回覆，卡片會說明這一點。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.ActivePart">
+        <source>The part of the template that is shown (two-way).</source>
+        <target>範本中目前顯示的部分（雙向）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.CompareVersion">
+        <source>The version the open one is compared with (two-way).</source>
+        <target>與目前開啟的版本比較的版本（雙向）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.Draft">
+        <source>The template being edited, the draft (two-way); starts as the open version's.</source>
+        <target>正在編輯的範本，即草稿（雙向）；初始值為開啟版本的範本。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.Effort">
+        <source>The effort (two-way).</source>
+        <target>推理強度（雙向）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.IsCompareMode">
+        <source>Whether the editor shows the word diff against `CompareVersion` (two-way); Escape leaves it.</source>
+        <target>編輯器是否顯示與 `CompareVersion` 的逐字差異（雙向）；按 Escape 離開。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.Labels">
+        <source>Every word the block shows or announces.</source>
+        <target>區塊顯示或朗讀的每一個文字。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.LastResult">
+        <source>What the last finished run produced (read-only).</source>
+        <target>上一次完成的執行所產生的結果（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.Now">
+        <source>The moment relative times ("last week") are measured from; null uses now.</source>
+        <target>相對時間（「上週」）的計算基準時刻；為 null 時使用目前時間。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.OpenVersion">
+        <source>The version the editor has open (two-way); null opens the first (newest).</source>
+        <target>編輯器目前開啟的版本（雙向）；為 null 時開啟第一個（最新）版本。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.ProductionVersion">
+        <source>The version in production (two-way); null follows `OpenVersion`. Promoting updates it at once and raises `Promoted`.</source>
+        <target>正式版本（雙向）；為 null 時跟隨 `OpenVersion`。升為正式版本會立即更新它，並引發 `Promoted`。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.Promoted">
+        <source>Raised when a version is promoted to production or a promotion is undone; set `Cancel` to roll it back.</source>
+        <target>版本升為正式版本或撤銷升級時引發；設定 `Cancel` 可回復。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.RunCommand">
+        <source>Run the prompt (read-only command for toolbars).</source>
+        <target>執行提示詞（供工具列使用的唯讀命令）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.RunCompleted">
+        <source>Raised when a run ends: done, stopped or failed.</source>
+        <target>執行結束時引發：完成、停止或失敗。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.RunFailed">
+        <source>Raised when the handler throws; change `Message` to word the error.</source>
+        <target>處理常式擲出例外時引發；修改 `Message` 可調整錯誤文字。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.RunHandler">
+        <source>Runs the prompt; null uses the built-in simulator.</source>
+        <target>執行提示詞；為 null 時使用內建模擬器。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.RunStarted">
+        <source>Raised when a run starts.</source>
+        <target>執行開始時引發。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.RunState">
+        <source>Where the run is (read-only).</source>
+        <target>執行所處的狀態（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.SelectedModel">
+        <source>The selected model (two-way); choosing one sets `Effort` to its default.</source>
+        <target>所選模型（雙向）；選擇模型會將 `Effort` 設為其預設值。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.SelectedTestCase">
+        <source>The selected test case (two-way); choosing one resets the values to its own.</source>
+        <target>所選測試案例（雙向）；選擇後，變數值會重設為該案例自身的值。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.StopCommand">
+        <source>Stop the run (read-only command for toolbars).</source>
+        <target>停止執行（供工具列使用的唯讀命令）。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.TemplateChanged">
+        <source>Raised after every edit of the template; save it here.</source>
+        <target>每次編輯範本後引發；請在此儲存。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.Title">
+        <source>The name of the prompt, in the header.</source>
+        <target>提示詞的名稱，顯示在標題列中。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.TokenEstimator">
+        <source>Estimates the tokens of a text; null uses about a quarter of the characters.</source>
+        <target>估算文字的權杖數；為 null 時以約四分之一字元數計算。</target>
+      </trans-unit>
+      <trans-unit id="PromptStudio.VariableAdded">
+        <source>Raised after a variable is added from the editor.</source>
+        <target>從編輯器新增變數後引發。</target>
+      </trans-unit>
+      <trans-unit id="PromptTestCase">
+        <source>A saved test case: a label and a value for each variable.</source>
+        <target>已儲存的測試案例：一個標籤，以及每個變數的一個值。</target>
+      </trans-unit>
+      <trans-unit id="PromptTestCase.Id">
+        <source>Stable id.</source>
+        <target>穩定 ID。</target>
+      </trans-unit>
+      <trans-unit id="PromptTestCase.Label">
+        <source>A short label; all cases share one segmented control.</source>
+        <target>簡短標籤；所有案例共用一個分段控制項。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion">
+        <source>One saved version of the prompt.</source>
+        <target>提示詞的一個已儲存版本。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.Author">
+        <source>Who wrote it.</source>
+        <target>撰寫此版本的人。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.CreatedAt">
+        <source>When it was written.</source>
+        <target>撰寫時間。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.Id">
+        <source>Stable id.</source>
+        <target>穩定 ID。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.Label">
+        <source>The short name ("v4").</source>
+        <target>簡短名稱（“v4”）。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.Message">
+        <source>The commit message.</source>
+        <target>提交訊息。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.System">
+        <source>The system message of this version.</source>
+        <target>此版本的系統訊息。</target>
+      </trans-unit>
+      <trans-unit id="PromptVersion.User">
+        <source>The user message of this version.</source>
+        <target>此版本的使用者訊息。</target>
       </trans-unit>
       <trans-unit id="RadioCardOption">
         <source>One option of `RadioCards` (Arc `RadioCardOption`): a label with optional description, a meta value (price, estimate), a decorative icon, and a reason shown in place of the description when the option is disabled.</source>
@@ -10229,8 +10577,8 @@
         <target>篩選沒有符合的頁面時顯示的文字。</target>
       </trans-unit>
       <trans-unit id="Sidebar.ResizeMode">
-        <source>How the width change between the open sidebar and the rail reaches the page next to it: `Push` (default) or `Overlay`.</source>
-        <target>展開與窄欄之間的寬度變化如何傳到旁邊的頁面：`Push`（預設）或 `Overlay`。</target>
+        <source>How the width change between the open sidebar and the rail reaches the page next to it: `Overlay` (default) or `Push`.</source>
+        <target>展開的側邊欄與收合的側欄之間的寬度變化，如何傳遞給相鄰頁面：`Overlay`（預設）或 `Push`。</target>
       </trans-unit>
       <trans-unit id="Sidebar.SelectCommand">
         <source>Runs when a page is chosen; the parameter is the `SidebarItem`.</source>
@@ -11479,6 +11827,14 @@
       <trans-unit id="TokenTextEditor.TokenPadding">
         <source>Defines the `TokenPadding` property.</source>
         <target>定義 `TokenPadding` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="TokenTextEditor.TokenParser">
+        <source>Defines the `TokenParser` property.</source>
+        <target>定義 `TokenParser` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="TokenTextEditor.TokenRenderer">
+        <source>Defines the `TokenRenderer` property.</source>
+        <target>定義 `TokenRenderer` 屬性。</target>
       </trans-unit>
       <trans-unit id="TokenTextEditor.Tokens">
         <source>Defines the `Tokens` property.</source>

@@ -11,6 +11,50 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`. `TKCode.Arc.Blocks` and `TKCode.Arc.AdvancedCharts` are built from the repository.
 
+## 0.3.0-preview.2 (2026-10-23)
+
+### Added
+
+- **Special components**: five animated AI explainers in the new package `TKCode.Arc.Special` (`UseArcSpecial()`):
+  `AgentLoop`, `MixtureOfExperts`, `SpeculativeDecoding`, `PromptCache` and `ReasoningTree`, built on the shared
+  `Explainer` base. Every number is computed from the data.
+- **Blocks**: five Projects blocks (`WeekCalendar`, `AvailabilityPicker`, `ProjectBoard`, `ReleaseReadiness`,
+  `KanbanBoard`), six Showpieces (`ActivityTerrain`, `RevenueGlobe`, `CustomerGalaxy`, `SemanticZoom`, `LayoutMorph`,
+  `ExplodedView`) and the first AI blocks (Model picker, Agent memory, AI composer, AI chat, AI answer, plus the side
+  panel and prompt studio).
+- **Core**: `ArcSurface.Elevation` (dialogs, drawers, popovers and menus content knows it sits on a raised surface),
+  `RollingDigitsFalloff.None`, new springs, `ArcContentSwap` modes, `ArcRing`, `WordDiff`, `WordPacer`,
+  `DecoratedTextBlock` and 23 more Lucide glyphs.
+- **Button**: a ghost button on a raised surface now has a visible hover and press fill.
+- **Special inputs**: `TokenTextEditor`, a multi-line editor whose tokens act as single units; `MentionInput` is built
+  on it.
+- **Gallery**: the docs site serves `llms.txt`, `llms-full.txt`, every page as Markdown and an agent skill for AI
+  assistants.
+
+### Changed
+
+- **Breaking, repository move**: the repository is now `AIDotNet/TKCode.Arc` and the XAML namespace follows it. Change
+  `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"` to `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`
+  (and the Lucide namespace likewise).
+- **Sidebar**: `ResizeMode` now defaults to `Overlay`; set `ResizeMode="Push"` for the previous behavior.
+- **Performance**: the motion scheduler advances each driver once per frame, hidden loops cost nothing, cached blur
+  effects and text layouts, and a much cheaper ActivityTerrain and LayoutMorph.
+- **Gallery**: the WebAssembly site downloads about 1.5 MB less before its first frame.
+
+### Fixed
+
+- **Tabs**, **PageHeader**, **Breadcrumb**, **ArcContentSwap**, **DataGrid**: templates are no longer built with a
+  `null` data context.
+- **Core**: a content swap that left the window mid-change no longer comes back half transparent; anchored popups draw
+  their shadow with rounded corners again.
+- **Sidebar**: content no longer keeps the first-frame width after the sidebar opens from the rail.
+- **Motion**: fading a fill from or out to `Transparent` no longer flashes a gray (`ArcBrushTransition` mixes with
+  premultiplied alpha).
+- **TagInput**, **Textarea**, **TimePicker**: the heavy focus ring is gone; `FieldFrameToken` `FocusRing*` values are
+  removed.
+
+The full list is in `CHANGELOG.md` in the repository.
+
 ## 0.3.0-preview.1 (2026-10-22)
 
 ### Added

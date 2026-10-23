@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 350f15cc72a5
+source-hash: bbca0d2b2907
 ---
 
 # 更新日志
@@ -8,6 +8,34 @@ source-hash: 350f15cc72a5
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 和 `TKCode.Arc.Icons.Lucide`。`TKCode.Arc.Blocks` 与 `TKCode.Arc.AdvancedCharts` 从仓库构建。
+
+## 0.3.0-preview.2 (2026-10-23)
+
+### 新增
+
+- **特别组件**：新包 `TKCode.Arc.Special`（`UseArcSpecial()`）中的五个 AI 动画讲解：`AgentLoop`、`MixtureOfExperts`、`SpeculativeDecoding`、`PromptCache` 和 `ReasoningTree`，基于共用的 `Explainer` 基类。所有数字都由数据计算得出。
+- **Blocks**：五个项目区块（`WeekCalendar`、`AvailabilityPicker`、`ProjectBoard`、`ReleaseReadiness`、`KanbanBoard`），六个展示区块（`ActivityTerrain`、`RevenueGlobe`、`CustomerGalaxy`、`SemanticZoom`、`LayoutMorph`、`ExplodedView`），以及首批 AI 区块（模型选择器、智能体记忆、AI 输入框、AI 聊天、AI 回答，以及侧边面板和提示词工作台）。
+- **Core**：`ArcSurface.Elevation`（对话框、抽屉、气泡卡片和菜单的内容知道自己位于抬升的界面上）、`RollingDigitsFalloff.None`、新的弹簧、`ArcContentSwap` 模式、`ArcRing`、`WordDiff`、`WordPacer`、`DecoratedTextBlock`，以及另外 23 个 Lucide 图标。
+- **Button**：抬升界面上的幽灵按钮现在有清晰可见的悬停和按下填充。
+- **特殊输入**：`TokenTextEditor`，令牌作为整体处理的多行编辑器；`MentionInput` 基于它构建。
+- **Gallery**：文档站点提供 `llms.txt`、`llms-full.txt`、每个页面的 Markdown 版本，以及供 AI 助手使用的代理技能。
+
+### 变更
+
+- **破坏性变更，仓库迁移**：仓库现在位于 `AIDotNet/TKCode.Arc`，XAML 命名空间随之改变。请把 `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"` 改为 `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`（Lucide 命名空间同样处理）。
+- **Sidebar**：`ResizeMode` 现在默认为 `Overlay`；设为 `ResizeMode="Push"` 可恢复之前的行为。
+- **性能**：动效调度器每帧只推进每个驱动一次，隐藏的循环不再产生开销，缓存模糊效果和文本排版，ActivityTerrain 与 LayoutMorph 大幅提速。
+- **Gallery**：WebAssembly 站点在首帧之前少下载约 1.5 MB。
+
+### 修复
+
+- **Tabs**、**PageHeader**、**Breadcrumb**、**ArcContentSwap**、**DataGrid**：模板不再以 `null` 数据上下文构建。
+- **Core**：中途离开窗口的内容切换不再恢复为半透明；锚定弹层的阴影重新使用圆角。
+- **Sidebar**：从侧栏轨道展开后，内容不再保留第一帧的宽度。
+- **Motion**：从 `Transparent` 渐入或渐出填充时不再闪出灰色（`ArcBrushTransition` 使用预乘 alpha 混合）。
+- **TagInput**、**Textarea**、**TimePicker**：去掉了粗重的焦点环；移除了 `FieldFrameToken` 的 `FocusRing*` 值。
+
+完整清单见仓库中的 `CHANGELOG.md`。
 
 ## 0.3.0-preview.1 (2026-10-22)
 
