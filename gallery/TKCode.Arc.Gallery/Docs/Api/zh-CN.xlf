@@ -520,6 +520,474 @@
         <source>From this share of `Capacity` the meter turns to the warning color.</source>
         <target>当占用达到 `Capacity` 的这一比例时，计量条变为警告颜色。</target>
       </trans-unit>
+      <trans-unit id="AgentModel">
+        <source>The model or agent behind a run in the AI components (`AgentStatus`, `AgentPlan`, `AgentTimeline`): a display name and an optional mark. Data only; set it once per run.</source>
+        <target>智能体或模型：在 AI 组件（`AgentStatus`、`AgentPlan`、`AgentTimeline`）中负责一次运行的模型或智能体，包含显示名称和一个可选的标记。仅为数据；每次运行设置一次即可。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan">
+        <source>The plan an agent writes before it acts, then works through as a live checklist (Arc Agent plan, design reference). A header shows the model's mark, "Plan · 6 steps" (the number rolls) and the goal. While `CurrentStatus` is `Draft` every step can be renamed in place (Enter saves, Escape undoes, Backspace in an empty title removes the step), dragged by its grip or moved with Alt and the arrow keys, removed or added to; Keep planning asks the agent for one more step, which streams in before the last one. Approve plan locks the plan: the grips become status marks, the header counts "3 of 6" over a thin progress line, the current step shimmers beside a spinning arc with its activity lines underneath, a finished step draws its check and settles to secondary text with its time, the agent can insert a step (a faint accent wash), a failed step offers Retry and Skip, the run can be paused, and the footer ends with the total time, a streamed one-line summary and Start over.</source>
+        <target>智能体在行动前编写的计划，随后以实时清单的形式逐项执行（Arc 智能体计划，设计参考）。页眉显示模型的标记、"Plan · 6 steps"（数字滚动变化）和目标。当 `CurrentStatus` 为 `Draft` 时，每个步骤都可以原地重命名（Enter 保存，Escape 撤销，标题为空时按 Backspace 删除该步骤），可通过抓手拖动或使用 Alt 加方向键移动，也可以删除或新增；继续规划（Keep planning）会请求智能体再添加一个步骤，该步骤会在最后一步之前流式出现。批准计划（Approve plan）将计划锁定：抓手变为状态标记，页眉以细进度线显示 "3 of 6" 计数，当前步骤在旋转圆弧旁闪烁，其下方显示活动行；已完成的步骤绘制对勾并沉降为次要文本，同时显示耗时；智能体可以插入一个步骤（淡强调色底色），失败的步骤提供重试（Retry）和跳过（Skip），运行可以暂停，页脚显示总耗时、一行流式摘要以及重新开始（Start over）。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Approved">
+        <source>Defines the `Approved` event.</source>
+        <target>定义 `Approved` 事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.CanKeepPlanning">
+        <source>Defines the `CanKeepPlanning` property.</source>
+        <target>定义 `CanKeepPlanning` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Changed">
+        <source>Defines the `Changed` event.</source>
+        <target>定义 `Changed` 事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.CurrentStatus">
+        <source>Defines the `CurrentStatus` property.</source>
+        <target>定义 `CurrentStatus` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Goal">
+        <source>Defines the `Goal` property.</source>
+        <target>定义 `Goal` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.IsPlanning">
+        <source>Defines the `IsPlanning` property.</source>
+        <target>定义 `IsPlanning` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.KeepPlanningRequested">
+        <source>Defines the `KeepPlanningRequested` event.</source>
+        <target>定义 `KeepPlanningRequested` 事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Labels">
+        <source>Defines the `Labels` property.</source>
+        <target>定义 `Labels` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Model">
+        <source>Defines the `Model` property.</source>
+        <target>定义 `Model` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.PauseChanged">
+        <source>Defines the `PauseChanged` event.</source>
+        <target>定义 `PauseChanged` 事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Simulation">
+        <source>Defines the `Simulation` property.</source>
+        <target>定义 `Simulation` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.StartOverRequested">
+        <source>Defines the `StartOverRequested` event.</source>
+        <target>定义 `StartOverRequested` 事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Status">
+        <source>Defines the `Status` property.</source>
+        <target>定义 `Status` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.StepAction">
+        <source>Defines the `StepAction` event.</source>
+        <target>定义 `StepAction` 事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Steps">
+        <source>Defines the `Steps` property.</source>
+        <target>定义 `Steps` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlan.Summary">
+        <source>Defines the `Summary` property.</source>
+        <target>定义 `Summary` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanApprovedEventArgs">
+        <source>Arguments of `Approved`: the steps in their final order, titles trimmed, empty steps removed.</source>
+        <target>`Approved` 的参数：最终顺序的步骤，标题已去除首尾空白，空步骤已移除。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanChangedEventArgs">
+        <source>Arguments of `Changed`: the draft after an edit and what the edit was.</source>
+        <target>`Changed` 的参数：编辑后的草稿以及本次编辑的内容。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanLabels">
+        <source>Every word an `AgentPlan` shows or announces, in English by default. Replace the instance to translate or reword; texts with numbers or names are functions so that word order and plurals can change. The numbers in `StepCount` and `Position` roll on screen while the words around them stay.</source>
+        <target>`AgentPlan` 显示或播报的每一段文字，默认为英文。替换该实例即可翻译或改写；包含数字或名称的文字为函数，以便调整语序和复数形式。`StepCount` 和 `Position` 中的数字在屏幕上滚动变化，其周围的文字保持不变。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanPauseChangedEventArgs">
+        <source>Arguments of `PauseChanged`: Pause (true) or Resume (false).</source>
+        <target>`PauseChanged` 的参数：暂停（true）或恢复（false）。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanScriptedStep">
+        <source>A step with its simulation script: what the sample draft, the suggestions and the inserted step are made of.</source>
+        <target>带有模拟脚本的步骤：示例草稿、建议和插入步骤的内容均由它构成。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanSimulation">
+        <source>The built-in simulated agent of an `AgentPlan` that has no `Status`: it answers the plan's buttons (Approve plan, Keep planning, Pause, Resume, Retry, Skip, Start over) and plays a scripted run, one step after the other, with the beats measured on the reference. Scripts are found by step id; a step without one runs `GenericScript`. It is event-driven: exactly one timer waits per state change, nothing runs while the plan is idle, and Pause keeps the remaining time of that timer so Resume continues where the run stopped.</source>
+        <target>`AgentPlan` 的内置模拟智能体，适用于没有设置 `Status` 的情况：它响应计划的按钮（批准计划、继续规划、暂停、继续、重试、跳过、重新开始），并按照参考实现测得的节拍，逐步播放预设的运行过程。脚本通过步骤 id 查找；没有脚本的步骤运行 `GenericScript`。它由事件驱动：每次状态变化只等待一个计时器，计划空闲时不运行任何内容；暂停（Pause）会保留该计时器剩余的时间，因此继续（Resume）会从停止处接着运行。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep">
+        <source>One step of an `AgentPlan`: an id, an instruction-style title, and while the plan runs its state, the activity lines the agent reports, an optional note (a suggested or agent-inserted step), the reason of a failure and the time a finished step took. Every property is observed, so changing a step updates the plan on screen.</source>
+        <target>`AgentPlan` 的一个步骤：一个 id、一个指令式标题；计划运行时还包括其状态、智能体报告的活动行、可选的备注（建议或智能体插入的步骤）、失败原因以及已完成步骤所用的时间。每个属性都会被观察，因此修改步骤会更新屏幕上的计划。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep.Duration">
+        <source>Defines the `Duration` property.</source>
+        <target>定义 `Duration` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep.Error">
+        <source>Defines the `Error` property.</source>
+        <target>定义 `Error` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep.Note">
+        <source>Defines the `Note` property.</source>
+        <target>定义 `Note` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep.NoteKind">
+        <source>Defines the `NoteKind` property.</source>
+        <target>定义 `NoteKind` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep.State">
+        <source>Defines the `State` property.</source>
+        <target>定义 `State` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStep.Title">
+        <source>Defines the `Title` property.</source>
+        <target>定义 `Title` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStepActionEventArgs">
+        <source>Arguments of `StepAction`: Retry or Skip on a failed step.</source>
+        <target>`StepAction` 的参数：对失败的步骤执行重试（Retry）或跳过（Skip）。</target>
+      </trans-unit>
+      <trans-unit id="AgentPlanStepScript">
+        <source>How the built-in simulation runs one step: the activity lines it reports, the time it took, and optionally a failure (after the last line) with the lines and time of the retry, and a step the agent inserts after one of the lines.</source>
+        <target>内置模拟如何运行一个步骤：它报告的活动行和耗时；可选地在最后一行之后出现失败，以及重试所用的行和耗时，还有智能体在某一行之后插入的步骤。</target>
+      </trans-unit>
+      <trans-unit id="AgentRunScenario">
+        <source>A scripted agent run for `AgentRunSimulation`: the agent, its steps with their timing, the outcome and the notices the simulation announces for each action. `AgentStatusSamples` has two invented runs. Data only.</source>
+        <target>用于 `AgentRunSimulation` 的脚本化智能体运行：智能体、其带时序的步骤、结果，以及模拟为每个操作宣布的通知。`AgentStatusSamples` 提供两个虚构的运行。仅为数据。</target>
+      </trans-unit>
+      <trans-unit id="AgentRunScenarioStep">
+        <source>One step of an `AgentRunScenario`: its present- and past-tense labels, icon and active duration, an optional count that ticks in place, an optional approval gate before it runs and an optional failure on its first attempt.</source>
+        <target>`AgentRunScenario` 的一个步骤：其进行时和完成时的标签、图标以及活动时长；可选的计数（原地跳动）、运行前可选的审批关卡，以及首次尝试时可选的失败。</target>
+      </trans-unit>
+      <trans-unit id="AgentRunSimulation">
+        <source>Plays an `AgentRunScenario` as a live run: after `StartDelay` of Ready it works through the steps on the scenario's timing, ticks counts in place, waits for as long as it takes on an approval or a failure, and reacts to Pause, Resume, Stop, Approve, Deny, Retry and Open run. Nothing runs for real: every action only changes this object's state and says so through `Notice`. It holds no UI: give it to `Simulation` (which copies its state into the pill and routes the pill's buttons back to it), or read its state yourself after each `Changed`. Timing uses the given `TimeProvider` (the system clock by default; tests pass a manual one), and its callbacks run on the synchronization context that created the simulation (the UI thread).</source>
+        <target>将 `AgentRunScenario` 作为实时运行播放：在 `StartDelay` 的就绪（Ready）状态之后，按照场景的时序逐步执行各步骤，原地更新计数，遇到审批或失败时等待所需的时长，并响应暂停（Pause）、继续（Resume）、停止（Stop）、批准（Approve）、拒绝（Deny）、重试（Retry）和打开运行（Open run）。没有任何内容真正运行：每个操作只改变此对象的状态，并通过 `Notice` 说明这一点。它不包含界面：将其交给 `Simulation`（它把状态复制到胶囊中，并将胶囊的按钮路由回此对象），或在每次 `Changed` 之后自行读取其状态。计时使用给定的 `TimeProvider`（默认为系统时钟；测试时传入手动时钟），其回调在创建该模拟的同步上下文（UI 线程）上运行。</target>
+      </trans-unit>
+      <trans-unit id="AgentRunSimulation.Changed">
+        <source>Raised after every change of the state (a beat, an action, a restart).</source>
+        <target>在状态每次变化之后引发（一个节拍、一个操作或一次重新开始）。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus">
+        <source>A compact live status pill for a running agent (Arc Agent status, design reference): the agent's mark inside a thin live ring, the current activity with a matching icon, and an elapsed timer in tabular figures. A new activity rolls in from below while the pill's width follows on a spring, and the label fades at its right edge while it is wider than its room. Pressing the pill opens it in place into a small floating panel with the latest steps (icon, text, duration), a segmented step progress bar and Pause, Stop and Open run; Escape or a press outside closes it and returns focus to the pill. It covers idle (Ready), working, needs input (an accent dot and inline Approve and Deny), paused, done (the ring closes and the mark becomes a drawn check, then it settles back to Ready), failed (with Retry) and stopped. Drive it from your agent's events: set `Status`, keep `Activity` to the latest tool call in the present tense, add `Steps`, give a fixed `StartedAt` (the timer leaves out paused and failed time itself) and handle the action events; `Actions` chooses which buttons are offered, the counterpart of showing a control only when its handler exists. With nothing set, or with a `Simulation`, it plays an invented sample run on its own.</source>
+        <target>运行中智能体的紧凑实时状态胶囊（Arc 智能体状态，设计参考）：智能体标记位于细的实时环内，显示当前活动及与之匹配的图标，并以表格数字显示已用时间。新活动从下方滚入，胶囊宽度以弹簧方式跟随变化，标签宽于可用空间时在右侧边缘淡出。按下胶囊会就地展开为一个小型浮动面板，列出最新步骤（图标、文字、耗时）、分段式步骤进度条，以及暂停（Pause）、停止（Stop）和打开运行（Open run）按钮；按下 Escape 或在外部按下即可关闭面板，并将焦点返回胶囊。它涵盖空闲（就绪，Ready）、工作中、需要输入（强调色圆点，并内联批准（Approve）和拒绝（Deny））、已暂停、已完成（环闭合，标记变为绘制的对勾，随后回落到就绪）、失败（带重试（Retry））和已停止。请通过智能体的事件驱动它：设置 `Status`，将 `Activity` 保持为最新的工具调用（现在时态），添加 `Steps`，给出固定的 `StartedAt`（计时器自行排除暂停和失败的时间），并处理操作事件；`Actions` 选择提供哪些按钮，这相当于仅在存在处理程序时才显示控件。若两者均未设置，或设置了 `Simulation`，则它会自行播放一段虚构的示例运行。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Actions">
+        <source>Which action buttons may show (all by default); a button also needs the right state.</source>
+        <target>可显示哪些操作按钮（默认全部）；按钮还需要相应的状态。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Activity">
+        <source>What the agent does now, in the present tense. While input is needed it is the request ("Needs your approval to run a command"), when done it is the outcome that follows "Done in …", and after a failure it is the failure.</source>
+        <target>智能体当前正在做什么，使用现在时态。需要输入时为请求内容（"Needs your approval to run a command"）；完成时为结果，接在 "Done in …" 之后；失败后为失败原因。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Agent">
+        <source>The agent and its mark (drawn at 12px inside the ring); null is a plain "Agent" with a default mark.</source>
+        <target>智能体及其标记（在环内以 12px 绘制）；为 null 时显示普通的 "Agent"，并使用默认标记。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.ApproveRequested">
+        <source>Raised when Approve is pressed.</source>
+        <target>按下批准（Approve）时引发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.DenyRequested">
+        <source>Raised when Deny is pressed.</source>
+        <target>按下拒绝（Deny）时引发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.EndedAt">
+        <source>When the run ended; by default the moment the status turned done or stopped.</source>
+        <target>运行结束的时间；默认为状态变为已完成或已停止的时刻。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.ExpandedChanged">
+        <source>Raised when the panel opens or closes.</source>
+        <target>面板打开或关闭时引发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.IsExpanded">
+        <source>Whether the panel is open. Two-way: pressing the pill, Escape and a press outside change it.</source>
+        <target>面板是否打开。双向绑定：按下胶囊、Escape 以及外部按下都会改变它。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Labels">
+        <source>The words and number formats; replace to translate or reword.</source>
+        <target>文字和数字格式；替换即可翻译或改写。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.MaxSteps">
+        <source>How many of the latest steps the panel lists (5); older ones slide out at the top.</source>
+        <target>面板列出的最新步骤数量（5）；较旧的步骤会从顶部滑出。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Notice">
+        <source>A one-off message for screen readers, such as the result of an action; it joins the status announcement.</source>
+        <target>供屏幕阅读器播报的一次性消息，例如某个操作的结果；它会与状态播报合并。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.OpenRunRequested">
+        <source>Raised when Open run is pressed.</source>
+        <target>按下打开运行（Open run）时引发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.PanelAlignment">
+        <source>Which edge of the pill the panel grows from.</source>
+        <target>面板从胶囊的哪一边缘展开。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.PauseRequested">
+        <source>Raised when Pause is pressed.</source>
+        <target>按下暂停时触发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.ResumeRequested">
+        <source>Raised when Resume is pressed.</source>
+        <target>按下继续时触发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.RetryRequested">
+        <source>Raised when Retry is pressed.</source>
+        <target>按下重试时触发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.SettleAfter">
+        <source>How long after done or stopped the pill settles back to Ready (4 seconds); null keeps the result on screen.</source>
+        <target>运行完成或停止后，状态胶囊回到就绪状态前等待的时长（4 秒）；为 null 时结果会一直保留在屏幕上。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Settled">
+        <source>Raised when a finished or stopped run settles back to Ready.</source>
+        <target>运行完成或停止后回到就绪状态时触发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Simulation">
+        <source>A simulated run that drives the pill (its status, activity, steps and times; its buttons are routed back to it). With no data set at all the pill plays the first sample run on its own.</source>
+        <target>模拟运行，用来驱动状态胶囊（其状态、活动、步骤和时间；其按钮会转回给它）。若完全未设置数据，胶囊会自行播放第一个示例运行。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.StartedAt">
+        <source>When the run started: the timer counts from here and leaves out time spent paused or failed.</source>
+        <target>运行开始的时间：计时器从此处开始计时，并且不计入暂停或失败期间所花的时间。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Status">
+        <source>Where the run is. Ignored while a `Simulation` drives the pill.</source>
+        <target>运行所处的状态。在 `Simulation` 驱动胶囊时会被忽略。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.Steps">
+        <source>The steps list: every step of the run, pending ones included, so the progress bar knows the total.</source>
+        <target>步骤列表：包含运行的每一个步骤（含尚未开始的步骤），以便进度条知道总数。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.StopRequested">
+        <source>Raised when Stop is pressed.</source>
+        <target>按下停止时触发。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatus.TimeProvider">
+        <source>The clock for the timer and the settle delay (the system clock by default; tests pass a manual one).</source>
+        <target>计时器和延迟回落所使用的时钟（默认为系统时钟；测试时传入手动时钟）。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusActionEventArgs">
+        <source>Arguments of the action events of an `AgentStatus` (Pause, Resume, Stop, Approve, Deny, Retry, Open run).</source>
+        <target>`AgentStatus` 动作事件的参数（暂停、继续、停止、批准、拒绝、重试、打开运行）。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusActivity">
+        <source>What an agent is doing now: a short present-tense label ("Reading 12 files"), an optional icon and an optional count that ticks in place ("8 of 12"). While input is needed the label is the request, when done it is the outcome that follows "Done in …", and after a failure it is the failure. Immutable: set a new instance to change it; a new label or icon rolls in, a changed count only changes its digits.</source>
+        <target>智能体当前正在做的事：一段简短的现在时标签（"Reading 12 files"）、可选的图标以及可选的计数，计数会原地跳动（"8 of 12"）。需要输入时，标签为请求内容；完成时，标签为结果，接在 "Done in …" 之后；失败后，标签为失败信息。该对象不可变：如需更改，请设置新实例；新的标签或图标会滚入，计数变化时只更新其数字。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusExpandedChangedEventArgs">
+        <source>Arguments of `ExpandedChangedEvent`.</source>
+        <target>`ExpandedChangedEvent` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusLabels">
+        <source>Every word an `AgentStatus` shows or announces, in English by default. Replace the instance (or set its properties) to translate or reword; texts with numbers or names are functions so that the word order can change. The durations they receive are already formatted by `FormatTimer`, `FormatTotal` and the other format functions.</source>
+        <target>`AgentStatus` 显示或播报的每一个文字，默认为英文。替换该实例（或设置其属性）即可翻译或改写；含数字或名称的文字为函数，以便调整词序。它们接收的时长已由 `FormatTimer`、`FormatTotal` 等格式化函数处理完毕。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusSamples">
+        <source>Two invented runs for `AgentRunSimulation` (the agents, file names and texts are made up). They keep the reference's rhythm: the coding run takes six steps of 1.9, 1.5, 2.5, 1.9 and 3.3 seconds (the fifth counting 12 specs in place) and then waits for an approval for as long as it takes; the research run takes five steps, and its third fails once after five of nine pages so Retry can be seen.</source>
+        <target>为 `AgentRunSimulation` 准备的两个虚构运行（智能体、文件名和文字均为虚构）。它们保留了参考设计的节奏：编码运行共六个步骤，耗时分别为 1.9、1.5、2.5、1.9 和 3.3 秒（第五步原地计数 12 个规格），之后等待批准，等待多久都可以；研究运行共五个步骤，其中第三步在处理完九页中的第五页后失败一次，以便看到重试。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep">
+        <source>One step of an agent's run in an `AgentStatus`. List every step, pending ones included, so the progress bar knows the total; the panel lists the latest finished and running ones. Write a running step's label in the present tense and a finished one's in the past tense ("Running tests", then "Passed 12 of 12 tests"), so the words carry the state. Changes reach the screen at once (each property is observed).</source>
+        <target>`AgentStatus` 中智能体运行的一个步骤。应列出每一个步骤（含尚未开始的步骤），以便进度条知道总数；面板会列出最近完成的和正在进行的步骤。正在进行步骤的标签使用现在时，已完成步骤的标签使用过去时（"Running tests"，随后为 "Passed 12 of 12 tests"），让文字本身表达状态。变更会立即反映到界面上（每个属性都被监听）。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep.Duration">
+        <source>How long a finished step took; shown with one decimal ("1.9s").</source>
+        <target>已完成步骤的耗时；以一位小数显示（"1.9s"）。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep.Icon">
+        <source>A 24 × 24 stroked glyph drawn at 16px before the label (a Lucide icon), or null.</source>
+        <target>一个 24 × 24 的描边图形，以 16px 绘制在标签之前（Lucide 图标），或为 null。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep.Id">
+        <source>A stable id for the step (keeps its row when the label changes).</source>
+        <target>步骤的稳定 ID（标签变化时仍保留其行）。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep.Label">
+        <source>What the step does or did.</source>
+        <target>步骤正在做或已做的事。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep.StartedAt">
+        <source>When an active or waiting step started; its time counts in whole seconds from here, leaving out paused time.</source>
+        <target>活动或等待中的步骤的开始时间；其耗时以整秒从此处计算，并且不计入暂停的时间。</target>
+      </trans-unit>
+      <trans-unit id="AgentStatusStep.State">
+        <source>Where the step is; pending steps only count in the progress bar.</source>
+        <target>步骤所处的状态；待开始的步骤仅计入进度条。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline">
+        <source>A compact timeline of one orchestrated multi-agent run: the orchestrator and its subagents share a time axis, one row each (color dot, name, model). Spans show thinking (a tint of the agent's color), tool calls (solid) and waiting (hatched); thin elbow connectors show work handed down to a subagent and results coming back up, with a dot where they meet the upper row. The run replays: a playhead sweeps, the active span grows with a square leading edge and a short shine, connectors draw in as handoffs happen, and the header counts time, tokens and cost until it settles into a summary with the parallel speedup. Hover or focus a span for a card with what it did; click it (or press Enter) to pin it and dim everything off its handoff path. Play, pause, restart, a speed control and scrubbing on the axis drive the replay; live mode follows a run in progress.</source>
+        <target>一次由编排器协调的多智能体运行的紧凑时间线：编排器与其子智能体共享同一时间轴，每个智能体占一行（色点、名称、模型）。跨度表示思考（智能体颜色的淡色调）、工具调用（实心）和等待（斜线填充）；细肘形连接线表示交给子智能体的工作以及结果回传，两者在与上一行相交处带有一个圆点。运行会回放：播放头扫过，活动跨度以方形前缘和短暂光泽增长，连接线在交接发生时逐步绘出，标题栏计算时间、令牌数和成本，直至沉淀为带有并行加速比的摘要。将鼠标悬停或聚焦在跨度上会显示一张说明其所做工作的提示卡；点击（或按 Enter）可固定它，并使其交接路径之外的内容变暗。播放、暂停、重新开始、速度控件以及在时间轴上拖动定位都可驱动回放；实时模式会跟随进行中的运行。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.ActualTitle">
+        <source>Defines the `ActualTitle` property.</source>
+        <target>定义 `ActualTitle` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Agents">
+        <source>Defines the `Agents` property.</source>
+        <target>定义 `Agents` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.AutoPlay">
+        <source>Defines the `AutoPlay` property.</source>
+        <target>定义 `AutoPlay` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Completed">
+        <source>Defines the `Completed` routed event.</source>
+        <target>定义 `Completed` 路由事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.CurrentTime">
+        <source>Defines the `CurrentTime` property.</source>
+        <target>定义 `CurrentTime` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Duration">
+        <source>Defines the `Duration` property.</source>
+        <target>定义 `Duration` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Handoffs">
+        <source>Defines the `Handoffs` property.</source>
+        <target>定义 `Handoffs` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.IsLive">
+        <source>Defines the `IsLive` property.</source>
+        <target>定义 `IsLive` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.IsPlaying">
+        <source>Defines the `IsPlaying` property.</source>
+        <target>定义 `IsPlaying` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Labels">
+        <source>Defines the `Labels` property.</source>
+        <target>定义 `Labels` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Phase">
+        <source>Defines the `Phase` property.</source>
+        <target>定义 `Phase` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.PinnedSpan">
+        <source>Defines the `PinnedSpan` property.</source>
+        <target>定义 `PinnedSpan` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.PlaybackChanged">
+        <source>Defines the `PlaybackChanged` routed event.</source>
+        <target>定义 `PlaybackChanged` 路由事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Run">
+        <source>Defines the `Run` property.</source>
+        <target>定义 `Run` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.SpanSelected">
+        <source>Defines the `SpanSelected` routed event.</source>
+        <target>定义 `SpanSelected` 路由事件。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Spans">
+        <source>Defines the `Spans` property.</source>
+        <target>定义 `Spans` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Speed">
+        <source>Defines the `Speed` property.</source>
+        <target>定义 `Speed` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Speeds">
+        <source>Defines the `Speeds` property.</source>
+        <target>定义 `Speeds` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Summary">
+        <source>Defines the `Summary` property.</source>
+        <target>定义 `Summary` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimeline.Title">
+        <source>Defines the `Title` property.</source>
+        <target>定义 `Title` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineAgent">
+        <source>One agent of a run, shown as a row of an `AgentTimeline`: a color dot, its name and its model. The first agent of a run is the orchestrator. Data only; set it before handing the run to the timeline.</source>
+        <target>运行中的一个智能体，在 `AgentTimeline` 中表现为一行：色点、名称和模型。运行中的第一个智能体为编排器。仅为数据；在将运行交给时间线之前设置即可。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineHandoff">
+        <source>Work handed from one agent to another at a moment of the run: drawn as a thin elbow connector with a dot where it meets the upper row. Handing work down a row (orchestrator to subagent) is a dispatch: it drops at `At` and enters the target's next span. Handing it up (subagent to orchestrator) is a result: it leaves the end of the source's last span and rises to the target at `At`.</source>
+        <target>在运行的某一时刻，从一个智能体交给另一个智能体的工作：以细肘形连接线绘制，并在与上一行相交处带有一个圆点。沿行向下交接（编排器到子智能体）为分派：在 `At` 处落下，并进入目标的下一个跨度。向上交接（子智能体到编排器）为结果：从源智能体最后一个跨度的末端离开，并在 `At` 处升至目标。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineLabels">
+        <source>Every word an `AgentTimeline` shows or speaks, with English defaults. Sentences with numbers are format delegates; numbers reach them already rounded (times in seconds to one decimal, speeds as given). Replace the whole object to translate the timeline.</source>
+        <target>`AgentTimeline` 显示或朗读的每一个文字，默认为英文。含数字的句子由格式化函数生成；数字传入前已取整（时间以秒为单位保留一位小数，速度按给定值）。替换整个对象即可翻译时间线。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineLiveDriver">
+        <source>Plays a finished run into an `AgentTimeline` as if it were happening now, for demos of live mode: it hands the timeline a growing copy of the run (`LiveRun`), turns `IsLive` on, and on a wall-clock timer appends each span when it starts (without an end), sets its end when it finishes and appends each handoff at its moment, the way events would arrive from a backend. When the source run is over it turns live mode off, so the timeline settles on its summary.</source>
+        <target>将一次已完成的运行以“仿佛正在发生”的方式播放到 `AgentTimeline` 中，用于实时模式演示：它向时间线提供一份不断增长的运行副本（`LiveRun`），开启 `IsLive`，并按挂钟定时器在每个跨度开始时追加该跨度（不带结束时间），在其完成时设置结束时间，并在交接发生的时刻追加每次交接，就像事件从后端到达一样。源运行结束后，它会关闭实时模式，使时间线沉淀为摘要。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineLiveDriver.Finished">
+        <source>Raised when the whole run has arrived and live mode was turned off.</source>
+        <target>整个运行到达且实时模式已关闭后触发。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelinePlaybackChangedEventArgs">
+        <source>Arguments of `PlaybackChanged`: what the person did, and the time and speed after it.</source>
+        <target>`PlaybackChanged` 的参数：用户所做的操作，以及操作之后的时间和速度。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineRun">
+        <source>One orchestrated run for an `AgentTimeline`: its agents (rows, the orchestrator first), their spans and the handoffs between them. The three lists are observed: append spans and handoffs as events arrive in a live run, and set a span's `End` when it closes.</source>
+        <target>`AgentTimeline` 的一次编排运行：其智能体（各占一行，编排器居首）、各自的跨度以及它们之间的交接。三个列表均被监听：在实时运行中随事件到达追加跨度和交接，并在跨度关闭时设置其 `End`。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan">
+        <source>One stretch of an agent's work on the time axis of an `AgentTimeline`: thinking, a tool call or waiting, from `Start` to `End` in seconds from the start of the run. An open span (no `End`) grows to the current time in a live run. Changes to its properties reach the timeline at once.</source>
+        <target>智能体工作在 `AgentTimeline` 时间轴上的一段：思考、工具调用或等待，从运行开始后以秒计的 `Start` 到 `End`。开放的时段（没有 `End`）在实时运行中会增长到当前时间。修改其属性会立即同步到时间轴。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.AgentId">
+        <source>Defines the `AgentId` property.</source>
+        <target>定义 `AgentId` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Cost">
+        <source>Defines the `Cost` property.</source>
+        <target>定义 `Cost` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Detail">
+        <source>Defines the `Detail` property.</source>
+        <target>定义 `Detail` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.End">
+        <source>Defines the `End` property.</source>
+        <target>定义 `End` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Id">
+        <source>Defines the `Id` property.</source>
+        <target>定义 `Id` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.IsRetry">
+        <source>Defines the `IsRetry` property.</source>
+        <target>定义 `IsRetry` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Kind">
+        <source>Defines the `Kind` property.</source>
+        <target>定义 `Kind` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Label">
+        <source>Defines the `Label` property.</source>
+        <target>定义 `Label` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Start">
+        <source>Defines the `Start` property.</source>
+        <target>定义 `Start` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Status">
+        <source>Defines the `Status` property.</source>
+        <target>定义 `Status` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Tokens">
+        <source>Defines the `Tokens` property.</source>
+        <target>定义 `Tokens` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.Tool">
+        <source>Defines the `Tool` property.</source>
+        <target>定义 `Tool` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpan.ToolMark">
+        <source>Defines the `ToolMark` property.</source>
+        <target>定义 `ToolMark` 属性。</target>
+      </trans-unit>
+      <trans-unit id="AgentTimelineSpanSelectedEventArgs">
+        <source>Arguments of `SpanSelected`: the span that was pinned, or null when it was unpinned.</source>
+        <target>`SpanSelected` 的参数：被固定的时段；取消固定时为 null。</target>
+      </trans-unit>
       <trans-unit id="AiAnswer">
         <source>A page that answers one question, written like an article: the reasoning first, then the sources as small cards, then the answer streamed in with headings, lists, a table, code and numbered citations. Pointing at a citation lights the sentence it supports and its source card; pointing at a card lights every sentence that cites it. Under the answer are actions (copy, answer again, rate, share, versions), the model line and related questions, and a box asks a follow-up. Asking again replaces the answer in place: this is one question at a time, not a conversation.</source>
         <target>一个回答单个问题的页面，以文章的形式呈现：先是推理，然后是以小卡片形式展示的来源，接着是流式输出的回答，包含标题、列表、表格、代码和编号引用。指向某个引用时，会点亮它所支持的句子及其来源卡片；指向某张卡片时，会点亮所有引用它的句子。回答下方有操作（复制、重新回答、评分、分享、版本）、模型信息行和相关问题，并有一个输入框用于追问。重新提问会原地替换回答：这是一次只处理一个问题的页面，而不是对话。</target>
@@ -1627,6 +2095,58 @@
       <trans-unit id="AnnouncementBar.Tone">
         <source>Neutral (muted surface, default) or inverted (foreground fill).</source>
         <target>中性（柔和底色，默认）或反色（前景色填充）。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState">
+        <source>What one of the arena's two answers shows. The arena owns and updates it; read it to follow a round. Before the vote `Model` is set but nothing the person sees carries its name (see `IsBlind`).</source>
+        <target>竞技场两个回答之一的显示状态。由竞技场拥有并更新；通过它可跟踪某一轮。投票前，`Model` 已设置，但用户看到的任何内容都不显示其名称（参见 `IsBlind`）。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.ErrorText">
+        <source>The error card's text; null when the answer did not fail.</source>
+        <target>错误卡片的文本；回答未失败时为 null。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.ErrorTitle">
+        <source>The error card's title; null when the answer did not fail.</source>
+        <target>错误卡片的标题；回答未失败时为 null。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.IsRetryable">
+        <source>Whether a failed answer can be retried.</source>
+        <target>失败的回答是否可以重试。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.Metrics">
+        <source>What the answer cost and how fast it came so far.</source>
+        <target>回答的成本以及目前的生成速度。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.Model">
+        <source>The model that answers in this slot in the current round; null before the first round.</source>
+        <target>在当前轮中应答该栏的模型；第一轮开始前为 null。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.Slot">
+        <source>The slot.</source>
+        <target>栏位。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.Status">
+        <source>Where the answer is.</source>
+        <target>回答所处的状态。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPaneState.Text">
+        <source>The text shown so far (what the pacer has released), as Markdown.</source>
+        <target>目前已显示的文本（即节奏控制器已放出的部分），为 Markdown 格式。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPrompt">
+        <source>A sample prompt: a chip that fills the box and runs.</source>
+        <target>示例提示：点击即填入输入框并运行的胶囊。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPrompt.Id">
+        <source>The prompt's id.</source>
+        <target>提示的 ID。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPrompt.Label">
+        <source>The chip's text.</source>
+        <target>胶囊的文字。</target>
+      </trans-unit>
+      <trans-unit id="ArenaPrompt.Text">
+        <source>The whole prompt sent to both models.</source>
+        <target>发送给两个模型的完整提示。</target>
       </trans-unit>
       <trans-unit id="AvailabilityConfirmRequestedEventArgs">
         <source>Arguments of `ConfirmRequested`: set `Cancel` to keep the selection unconfirmed.</source>
@@ -3456,6 +3976,122 @@
         <source>Whether a plain click or tap on the target opens the menu (Arc: true).</source>
         <target>在目标上普通点击或轻触是否打开菜单（Arc 为 true）。</target>
       </trans-unit>
+      <trans-unit id="ContextWindow">
+        <source>A model's context window as a fixed budget of 200 cells (20 × 10) that fills in reading order: the system prompt, tool definitions, files and memory, the summary and the conversation, then free space, with the output reserve held as outlined cells at the end. A dashed line marks the compaction threshold. The header reads the tokens used, the window, the percentage and the free tokens, with a pill to switch models; a legend lists every part with its tokens and share; Send message, Attach file and Compact now change the window, and a status line says what happened. Crossing the threshold after a send or an attachment, or switching to a model the window overfills, folds every message but the newest two into one summary (about 6% of them, between 4K and 24K), and the space comes back. The card rewrites `Items` as it goes and raises `ItemsChanged`, `Compacted` and `ModelChanged`. Given no data at all it shows an invented sample session with three sample models (`ContextWindowSamples`).</source>
+        <target>以 200 个单元格（20 × 10）组成的固定预算表示模型的上下文窗口，按阅读顺序填充：系统提示、工具定义、文件与记忆、摘要与对话，然后是剩余空间，输出预留部分以轮廓单元格保留在末尾。虚线标记压缩阈值。标题栏显示已用令牌、窗口大小、百分比和剩余令牌，并带有切换模型的胶囊；图例列出每个部分的令牌数和占比；发送消息、附加文件和立即压缩会改变窗口，状态行说明发生了什么。发送或附加后超过阈值，或切换到窗口容纳不下的模型时，除最新两条之外的所有消息会合并为一条摘要（约占其中的 6%，介于 4K 与 24K 之间），空间随之释放。该卡片会在运行中改写 `Items`，并引发 `ItemsChanged`、`Compacted` 和 `ModelChanged`。若完全没有数据，它会显示内置的虚构示例会话和三个示例模型（`ContextWindowSamples`）。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.AutoCompact">
+        <source>Defines the `AutoCompact` property.</source>
+        <target>定义 `AutoCompact` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.CanCompact">
+        <source>Defines the `CanCompact` property.</source>
+        <target>定义 `CanCompact` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Compacted">
+        <source>Defines the `Compacted` routed event.</source>
+        <target>定义 `Compacted` 路由事件。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Files">
+        <source>Defines the `Files` property.</source>
+        <target>定义 `Files` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.FreeTokens">
+        <source>Defines the `FreeTokens` property.</source>
+        <target>定义 `FreeTokens` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Items">
+        <source>Defines the `Items` property.</source>
+        <target>定义 `Items` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.ItemsChanged">
+        <source>Defines the `ItemsChanged` routed event.</source>
+        <target>定义 `ItemsChanged` 路由事件。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.KeepRecentMessages">
+        <source>Defines the `KeepRecentMessages` property.</source>
+        <target>定义 `KeepRecentMessages` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Labels">
+        <source>Defines the `Labels` property.</source>
+        <target>定义 `Labels` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.ModelChanged">
+        <source>Defines the `ModelChanged` routed event.</source>
+        <target>定义 `ModelChanged` 路由事件。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Models">
+        <source>Defines the `Models` property.</source>
+        <target>定义 `Models` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Phase">
+        <source>Defines the `Phase` property.</source>
+        <target>定义 `Phase` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.SelectedModel">
+        <source>Defines the `SelectedModel` property.</source>
+        <target>定义 `SelectedModel` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Summarizer">
+        <source>Defines the `Summarizer` property.</source>
+        <target>定义 `Summarizer` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Threshold">
+        <source>Defines the `Threshold` property.</source>
+        <target>定义 `Threshold` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.Turns">
+        <source>Defines the `Turns` property.</source>
+        <target>定义 `Turns` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindow.UsedTokens">
+        <source>Defines the `UsedTokens` property.</source>
+        <target>定义 `UsedTokens` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowCompactedEventArgs">
+        <source>Arguments of `Compacted`: what was folded, the summary it became and the totals around it.</source>
+        <target>`Compacted` 的参数：被折叠的内容、它变成的摘要以及其前后的合计。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowItem">
+        <source>One thing in the context window: the system prompt, a tool definition, a file, the summary or a conversation turn, with its size in tokens. Items are grouped by `Category` in the grid, so their order matters only within a category. Changing a property updates the card at once.</source>
+        <target>上下文窗口中的一项：系统提示、工具定义、文件、摘要或一轮对话，附其大小（令牌数）。项目在网格中按 `Category` 分组，因此顺序只在同一类别内有意义。更改任一属性都会立即更新卡片。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowItem.Category">
+        <source>Defines the `Category` property.</source>
+        <target>定义 `Category` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowItem.Id">
+        <source>Defines the `Id` property.</source>
+        <target>定义 `Id` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowItem.Label">
+        <source>Defines the `Label` property.</source>
+        <target>定义 `Label` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowItem.Tokens">
+        <source>Defines the `Tokens` property.</source>
+        <target>定义 `Tokens` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowItemsChangedEventArgs">
+        <source>Arguments of `ItemsChanged`: the items after a send, an attachment, an added item or a compaction.</source>
+        <target>`ItemsChanged` 的参数：发送、附加、新增项或压缩之后的项目。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowLabels">
+        <source>Every word a `ContextWindow` shows or announces, in English by default: the readout, the legend, the caption under the grid, the actions, the status line and the accessible names. Replace the instance to translate or reword; sentences with numbers are functions so that word order can change. Token counts and percentages arrive already formatted ("31K", "80").</source>
+        <target>`ContextWindow` 显示或播报的每个词语，默认为英文：读数、图例、网格下方的说明、操作、状态行以及无障碍名称。替换该实例即可翻译或改写；含数字的句子是函数，以便调整语序。令牌数和百分比在传入时已经格式化（"31K"、"80"）。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowModel">
+        <source>A model the `ContextWindow` can switch to: its window and the part of it held back for the reply, in tokens, with a name and a mark for the model menu. Data only; replace the object to change a model on screen.</source>
+        <target>`ContextWindow` 可以切换到的模型：其窗口，以及为回复保留的部分（以令牌计），附名称和模型菜单的标记。仅为数据；替换该对象即可在屏幕上更改模型。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowModelChangedEventArgs">
+        <source>Arguments of `ModelChanged`.</source>
+        <target>`ModelChanged` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="ContextWindowTurn">
+        <source>A turn that Send message adds (a message with the tool results and the reply it produced), or a file that Attach file adds. Send and Attach take them in order and start over after the last.</source>
+        <target>“发送消息”添加的一轮（一条带工具结果及其所产生回复的消息），或“附加文件”添加的一个文件。发送和附加会按顺序取用它们，用完后从头开始。</target>
+      </trans-unit>
       <trans-unit id="CookieCategory">
         <source>One group of cookies a visitor can allow or refuse.</source>
         <target>访客可以允许或拒绝的一组 Cookie。</target>
@@ -3599,6 +4235,110 @@
       <trans-unit id="Countdown.Variant">
         <source>Large display digits with unit names (default) or one compact pill.</source>
         <target>带单位名称的大号显示数字（默认），或紧凑的单个胶囊。</target>
+      </trans-unit>
+      <trans-unit id="CtaAction">
+        <source>One action of a `CtaSection` (Arc's `CtaAction`). With `Href` it is a link-style action: pressing it raises `ActionInvoked` and, when nobody handles the event, opens an absolute http, https or mailto address. With a `Command`, or when a handler marks the event handled, it only runs. With none of these it confirms in place (a check and `ConfirmedLabel`; pressing again restores it), so a preview always answers a press.</source>
+        <target>`CtaSection` 的一个操作（Arc 的 `CtaAction`）。设置 `Href` 时它是链接式操作：按下会引发 `ActionInvoked`，若无人处理该事件，则打开一个绝对的 http、https 或 mailto 地址。设置 `Command`，或处理程序将事件标记为已处理时，它只会执行。两者都未设置时，它会就地确认（显示一个勾选标记和 `ConfirmedLabel`；再次按下即恢复），因此预览始终会对按下做出响应。</target>
+      </trans-unit>
+      <trans-unit id="CtaAction.Command">
+        <source>Runs when the action is pressed, after `ActionInvoked`.</source>
+        <target>按下该操作时运行，在 `ActionInvoked` 之后。</target>
+      </trans-unit>
+      <trans-unit id="CtaAction.CommandParameter">
+        <source>The parameter passed to `Command`.</source>
+        <target>传给 `Command` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="CtaAction.ConfirmedLabel">
+        <source>The text shown after an in-place confirmation (default: `Label`).</source>
+        <target>就地确认后显示的文本（默认：`Label`）。</target>
+      </trans-unit>
+      <trans-unit id="CtaAction.Href">
+        <source>The destination: makes the action a link.</source>
+        <target>目标地址：使该操作成为链接。</target>
+      </trans-unit>
+      <trans-unit id="CtaAction.Label">
+        <source>The button text.</source>
+        <target>按钮文本。</target>
+      </trans-unit>
+      <trans-unit id="CtaActionEventArgs">
+        <source>Event data of `ActionInvoked`.</source>
+        <target>`ActionInvoked` 的事件数据。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection">
+        <source>A call to action in three shapes: a centered closing section, a split layout beside a setup card that completes itself once it is in view, and a compact banner that closes its gap when dismissed. With no properties set it shows Arc's copy for the chosen `Variant`. Actions (`PrimaryAction`, `SecondaryAction`) are links, run a command, raise `ActionInvoked`, or, with none of these, confirm in place so a preview always answers a press. The banner closes with `Dismiss` or its dismiss button and then raises `Dismissed`.</source>
+        <target>三种形态的行动号召：居中的收尾区块、与设置卡片并排的分栏布局（卡片进入视野后会自行完成），以及在关闭时会收起间距的紧凑横幅。未设置任何属性时，显示 Arc 为所选 `Variant` 提供的文案。操作（`PrimaryAction`、`SecondaryAction`）可以是链接、执行命令、引发 `ActionInvoked`，或者在两者都未设置时就地确认，因此预览始终会对按下做出响应。横幅可通过 `Dismiss` 或其关闭按钮关闭，随后引发 `Dismissed`。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.ActionInvoked">
+        <source>An action was pressed (before it opens its link, runs its command or confirms in place).</source>
+        <target>某个操作被按下（在打开其链接、执行其命令或就地确认之前）。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Description">
+        <source>The supporting text; null shows the variant's Arc text.</source>
+        <target>辅助文本；为 null 时显示该形态的 Arc 文本。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.DismissLabel">
+        <source>The dismiss button's accessible name.</source>
+        <target>关闭按钮的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Dismissed">
+        <source>The banner was dismissed and its exit motion finished.</source>
+        <target>横幅已关闭，且其退场动效已结束。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Faces">
+        <source>The faces beside the note in the Centered shape (at most four are shown).</source>
+        <target>居中形态中备注旁的头像（最多显示四个）。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.IsDismissible">
+        <source>Shows the banner's dismiss button (Arc: passing `onDismiss`).</source>
+        <target>显示横幅的关闭按钮（Arc 中对应传入 `onDismiss`）。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.IsOpen">
+        <source>Whether the banner is shown (two way). Dismissing plays the exit motion first and then sets this to false. Setting it to false from outside plays the same exit; setting it to true brings the banner back at once.</source>
+        <target>横幅是否显示（双向）。关闭时先播放退场动效，然后将其设为 false。从外部将其设为 false 会播放同样的退场动效；将其设为 true 则立即让横幅重新出现。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.IsSecondaryActionVisible">
+        <source>False hides the second action (Arc: `secondaryAction = null`).</source>
+        <target>为 false 时隐藏第二个操作（Arc 中对应 `secondaryAction = null`）。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Note">
+        <source>Small print under the actions of the Centered shape; null shows "No credit card required", empty hides it.</source>
+        <target>居中形态中操作下方的小字说明；为 null 时显示 "No credit card required"，为空时隐藏。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Points">
+        <source>The short benefit lines of the Split shape; null shows Arc's three, an empty list hides them.</source>
+        <target>分栏形态中简短的优势条目；为 null 时显示 Arc 提供的三条，空列表则隐藏它们。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.PrimaryAction">
+        <source>The main action; null shows the variant's Arc action.</source>
+        <target>主要操作；为 null 时显示该形态的 Arc 操作。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.SecondaryAction">
+        <source>The second action (Centered and Split); null shows the variant's Arc action. The banner never shows one.</source>
+        <target>第二个操作（居中和分栏形态）；为 null 时显示该形态的 Arc 操作。横幅从不显示它。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.SetupFaces">
+        <source>The teammates' faces that slide in on the setup card's last step.</source>
+        <target>设置卡片最后一步滑入的队友头像。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.SetupSteps">
+        <source>The setup card's steps; null shows Arc's three.</source>
+        <target>设置卡片的步骤；为 null 时显示 Arc 提供的三个。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.SetupWorkspace">
+        <source>The workspace shown on the setup card; its first letter is the mark.</source>
+        <target>设置卡片上显示的工作区；其首字母作为标记。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Title">
+        <source>The headline; null shows the variant's Arc headline.</source>
+        <target>标题；为 null 时显示该形态的 Arc 标题。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Variant">
+        <source>The shape: Centered (default), Split or Banner.</source>
+        <target>形态：Centered（默认）、Split 或 Banner。</target>
+      </trans-unit>
+      <trans-unit id="CtaSection.Visual">
+        <source>Replaces the Split shape's setup card (any control or content); null shows the setup card.</source>
+        <target>替换分栏形态的设置卡片（可以是任意控件或内容）；为 null 时显示设置卡片。</target>
       </trans-unit>
       <trans-unit id="CustomerGalaxy">
         <source>A customer galaxy: every account a dot, its area by monthly recurring revenue and its color by health, slowly turning as a tilted two-armed spiral. Group the accounts by any dimension and the dots spring into one packed cluster per value, labelled with its MRR and size; pan, zoom about the pointer, double-click a cluster to fly into it, hover a dot for its card and click it to select it. A totals panel beside the stage (under it in narrow containers) shows the MRR, accounts, growing and at-risk MRR of everything or of the focused cluster, and a list of the clusters by MRR or by accounts whose rows fly to their cluster.</source>
@@ -4512,6 +5252,130 @@
         <source>Panel width: Small 360, Medium 440 (Arc), Large 560 — always within the viewport minus 32px.</source>
         <target>面板宽度：Small 360、Medium 440（Arc）、Large 560——始终不超过视口宽度减去 32px。</target>
       </trans-unit>
+      <trans-unit id="DocumentExtraction">
+        <source>Turns a document into typed data and shows where each value came from. A quiet viewer of the document sits on the left and an editable form on the right; while a model reads, the fields fill in one by one and the text each value came from is tinted. Pointing at a field or at its text lights both and draws a curved link between them; values the model is unsure of carry its reason and a "Looks right" button; "Accept all" hands the typed result to the app.</source>
+        <target>把文档转为带类型的数据，并显示每个值的来源。左侧是文档的只读查看器，右侧是可编辑的表单；模型读取时，字段逐个填入，每个值的来源文本会被着色。指向字段或其文本会同时点亮两者，并绘制一条曲线连线；模型不确定的值会附带理由和一个“看起来正确”按钮；“全部接受”把带类型的结果交给应用。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Accepted">
+        <source>Raised after the accept was saved.</source>
+        <target>保存接受结果后触发。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Accepting">
+        <source>Raised by Accept all so the app can save the output; throw or set `Cancel` to undo it.</source>
+        <target>由“全部接受”触发，以便应用保存输出；抛出异常或设置 `Cancel` 可撤销。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.AverageConfidence">
+        <source>The mean confidence of every value, table cells included (read-only).</source>
+        <target>所有值（包括表格单元格）的平均置信度（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.CheckCount">
+        <source>How many values need a check (read-only).</source>
+        <target>需要复核的值的数量（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Cost">
+        <source>The cost of the run so far, in dollars (read-only).</source>
+        <target>本次运行到目前为止的费用，单位为美元（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Document">
+        <source>The document to read; when null the selected sample's document is used.</source>
+        <target>要读取的文档；为 null 时使用所选示例的文档。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Elapsed">
+        <source>The time of the run (read-only).</source>
+        <target>运行的耗时（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ErrorMessage">
+        <source>What went wrong when the run failed (read-only).</source>
+        <target>运行失败的原因（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ExtractCommand">
+        <source>Run by Extract and Retry.</source>
+        <target>由“抽取”和“重试”执行。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ExtractionCompleted">
+        <source>Raised when a run ends: done, stopped or failed.</source>
+        <target>运行结束时触发：完成、停止或失败。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ExtractionStarted">
+        <source>Raised when a run starts.</source>
+        <target>运行开始时触发。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Extractor">
+        <source>Reads the document with a model; null disables Extract.</source>
+        <target>使用模型读取文档；为 null 时禁用“抽取”。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.FieldCount">
+        <source>How many values there are to find (read-only): every scalar field and every table cell so far; an empty table counts as one.</source>
+        <target>需要查找的值的数量（只读）：目前为止的每个标量字段和每个表格单元格；空表格计为一个。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.FoundCount">
+        <source>How many fields have a value (read-only; a table counts its cells).</source>
+        <target>已有值的字段数量（只读；表格按其单元格计数）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.IsFitWidth">
+        <source>Whether the page is fitted to the canvas width (two-way); zooming by hand turns it off.</source>
+        <target>页面是否适应画布宽度（双向）；手动缩放会将其关闭。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Labels">
+        <source>Every word the block shows or announces.</source>
+        <target>区块显示或朗读的每一个文字。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Model">
+        <source>The model's name and prices, for the footer and the cost.</source>
+        <target>模型的名称和价格，用于页脚和费用计算。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ModelMark">
+        <source>The mark shown before the model's name in the footer (a geometry in a 24 × 24 box or an image).</source>
+        <target>页脚中模型名称前显示的标记（24 × 24 方框中的几何图形或图片）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Output">
+        <source>The typed output as it is now (read-only).</source>
+        <target>当前的带类型输出（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ReviewThreshold">
+        <source>Values below this confidence are marked for a check (0.8).</source>
+        <target>低于此置信度的值会被标记为需要复核（0.8）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Schema">
+        <source>What to extract; when null the selected sample's schema is used.</source>
+        <target>要抽取的模式；为 null 时使用所选示例的模式。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.SelectedPath">
+        <source>The path of the field the document and the form are linked on (two-way); Escape clears it.</source>
+        <target>文档与表单相互链接的字段路径（双向）；按 Escape 清除。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.SelectedPathChanged">
+        <source>Raised when the linked field changes.</source>
+        <target>相互链接的字段变化时触发。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.SelectedSample">
+        <source>The sample chosen on the file menu (two-way); choosing one clears the values.</source>
+        <target>在文件菜单中选择的示例（双向）；选择示例会清空值。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.SelectedTab">
+        <source>The tab of the form pane (two-way).</source>
+        <target>表单窗格的选项卡（双向）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.State">
+        <source>Where the extraction is (read-only).</source>
+        <target>抽取所处的状态（只读）。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ValueChanged">
+        <source>Raised when a value changes, by the model or by the person.</source>
+        <target>值由模型或由用户更改时触发。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ValueChecked">
+        <source>Raised when the person marks a low-confidence value "Looks right".</source>
+        <target>用户将低置信度的值标记为“看起来正确”时触发。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.Zoom">
+        <source>The zoom of the page, 0.4 to 2 (two-way); while `IsFitWidth` it follows the canvas width.</source>
+        <target>页面的缩放比例，范围 0.4 到 2（双向）；`IsFitWidth` 开启时随画布宽度变化。</target>
+      </trans-unit>
+      <trans-unit id="DocumentExtraction.ZoomSteps">
+        <source>The zoom steps of the buttons and the keys.</source>
+        <target>按钮和按键的缩放步进。</target>
+      </trans-unit>
       <trans-unit id="DonutChart">
         <source>Arc's donut chart: a few parts of one whole. The legend and the ring show and hide segments together, the center reads the active segment (or the total at rest) and rolls like a drum between readouts, small parts fold into "Other", and new data moves every arc from where it is on screen, keeping its velocity. The first time the chart is seen all segments sweep out of the top together, each trailing edge a beat behind. Arc interpolates start and end angles rather than paths; every angle is a `MotionValue` written into one self-drawn ring, which ControlTheme transitions cannot express.</source>
         <target>Arc 环形图：表示一个整体的若干部分。图例与圆环同步显示和隐藏分段；中心显示当前激活分段（静止时显示总计），并在读数之间像滚筒一样滚动；过小的部分合并为“Other”；新数据会让每段圆弧从其在屏幕上的当前位置出发，并保留其速度。首次看到该图表时，所有分段会一同从顶部扫出，每段的后缘比前缘晚一拍。Arc 对起始角与结束角进行插值，而非路径；每个角度都是写入一个自绘圆环的 `MotionValue`，这是 ControlTheme 过渡无法表达的。</target>
@@ -5203,6 +6067,50 @@
       <trans-unit id="ExplodedView.Title">
         <source>The section title above the stage; null shows none.</source>
         <target>舞台上方的区段标题；为 null 时不显示。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionDocument">
+        <source>A document to read: a name and the blocks to draw.</source>
+        <target>要读取的文档：名称和要绘制的块。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionSchema">
+        <source>What to extract from a document.</source>
+        <target>要从文档中抽取的模式。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue">
+        <source>One value of the form: what the document says, how sure the model was and where the person has taken it.</source>
+        <target>表单中的一个值：文档所述的内容、模型的确定程度，以及人员对其的修改。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.Confidence">
+        <source>The confidence, 0 to 1.</source>
+        <target>置信度，0 到 1。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.Error">
+        <source>Why the text does not fit the type; null when it does.</source>
+        <target>文本为何与类型不符；符合时为 null。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.NeedsCheck">
+        <source>Whether the value is below the review threshold and not yet checked or edited.</source>
+        <target>值是否低于复核阈值，且尚未复核或编辑。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.Note">
+        <source>The model's note.</source>
+        <target>模型的备注。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.SourceId">
+        <source>The id of the cited span.</source>
+        <target>所引用片段的 id。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.Status">
+        <source>The review status.</source>
+        <target>复核状态。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.Text">
+        <source>The text.</source>
+        <target>文本。</target>
+      </trans-unit>
+      <trans-unit id="ExtractionValue.TypedValue">
+        <source>The parsed value (date, number, text); null when invalid.</source>
+        <target>解析后的值（日期、数字、文本）；无效时为 null。</target>
       </trans-unit>
       <trans-unit id="FieldTextBox.Description">
         <source>Helper copy under the frame (rewrites changed words in place; counts roll).</source>
@@ -7124,6 +8032,94 @@
         <source>Heading. Changing it while open crossfades (the new copy rises in with a soft blur).</source>
         <target>标题。打开时更改它会交叉淡化（新文字带着轻微模糊升起）。</target>
       </trans-unit>
+      <trans-unit id="ModelArena">
+        <source>A blind test of two models: one prompt goes to two anonymous models, both answers stream in at the same pace, and only after the person votes are the models revealed. Each answer shows how fast it started, how fast it came and what it cost, and a small standings list ranks the models by win rate.</source>
+        <target>模型竞技场是一项盲测：一条提示发送给两个匿名模型，两个回答以相同的速度流式呈现，只有在用户投票后才会揭示模型身份。每个回答都会显示开始速度、生成速度和成本，并附有一个小型战绩榜，按胜率对模型排名。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.AutoStart">
+        <source>Whether the first round starts by itself when the arena is shown.</source>
+        <target>竞技场显示时，第一轮是否自动开始。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.HasUnseenResult">
+        <source>Whether a vote was cast that the person has not yet seen in the standings (read-only).</source>
+        <target>是否有用户尚未在战绩榜中看到的投票（只读）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.IsBlind">
+        <source>Whether the models are hidden until the vote (two-way). Turning it off shows them at once and turning it on hides them again.</source>
+        <target>模型是否在投票前隐藏（双向绑定）。关闭时立即显示模型，开启时再次隐藏。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.IsLeaderboardOpen">
+        <source>Whether the standings popover is open (two-way).</source>
+        <target>战绩榜弹出层是否打开（双向绑定）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.Labels">
+        <source>Every word the block shows or announces.</source>
+        <target>区块显示或播报的每一段文字。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.LastVote">
+        <source>The last vote of this round, or null (read-only).</source>
+        <target>本轮的最后一次投票，若无则为 null（只读）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.LeaderboardReset">
+        <source>Raised when the standings are reset.</source>
+        <target>战绩榜重置时触发。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.LeaderboardSize">
+        <source>The most rows the standings show.</source>
+        <target>战绩榜最多显示的行数。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.Pacing">
+        <source>How the two answers are paced when shown.</source>
+        <target>两个回答显示时的节奏控制方式。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.PairPicker">
+        <source>Chooses the pair of each round; null picks two random models and avoids repeating the last pair.</source>
+        <target>为每一轮选择模型配对；为 null 时随机选取两个模型，并避免重复上一组配对。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.PaneA">
+        <source>The first answer (read-only).</source>
+        <target>第一栏的回答（只读）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.PaneB">
+        <source>The second answer (read-only).</source>
+        <target>第二栏的回答（只读）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.PaneFailed">
+        <source>Raised when one answer fails.</source>
+        <target>某个回答失败时触发。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.Phase">
+        <source>Where the round is (read-only).</source>
+        <target>本轮所处的阶段（只读）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.PromptText">
+        <source>The prompt in the box (two-way). The first time `Prompts` has an item the box shows its text.</source>
+        <target>输入框中的提示（双向绑定）。`Prompts` 首次有项目时，输入框显示其文本。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.Round">
+        <source>The number of the current round; it grows with every run (read-only).</source>
+        <target>当前轮的编号；每次运行都会递增（只读）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.RoundStarted">
+        <source>Raised when a round starts (every run starts a round).</source>
+        <target>一轮开始时触发（每次运行都会开始一轮）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.RunStopped">
+        <source>Raised when a run is stopped before both answers finish.</source>
+        <target>两个回答都未完成就停止运行时触发。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.Runner">
+        <source>Streams the models' answers; null cannot run (the Gallery supplies a scripted runner).</source>
+        <target>流式输出模型的回答；为 null 时无法运行（Gallery 提供脚本化的运行器）。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.VoteCast">
+        <source>Raised once for each vote.</source>
+        <target>每次投票时触发一次。</target>
+      </trans-unit>
+      <trans-unit id="ModelArena.VoteCommand">
+        <source>Run when a vote is cast, with the `ArenaVote` as the parameter.</source>
+        <target>投票时执行，参数为 `ArenaVote`。</target>
+      </trans-unit>
       <trans-unit id="ModelPicker">
         <source>Chooses a model and its reasoning effort from one compact pill. The pill shows the current choice; its menu lists a few featured models with a one-line note each, an effort setting, and every other model grouped by provider. Under the pill a summary shows what the model can hold and costs, and confirms each change for a moment. A composition of `ModelPill`, `ModelMenu` and `ModelSummary`: the catalog, the selection and the effort are properties, so bind them or read them back from the events. The pill opens on a pointer press or on Enter, Space and ArrowDown; the menu has a featured list, an Effort row and a More models row that open submenus (or pages in a narrow window); choosing closes the menu and returns focus to the pill; the effort moves to the nearest level a new model offers. Set `IsSummaryVisible` to false for the pill alone (a toolbar, a header). Screen readers hear a polite announcement after each change ("Now using Aurora Prime 3, medium effort"); the visible confirmation under the summary stays for `NoticeDuration`.</source>
         <target>从一个紧凑的胶囊中选择模型及其推理强度。胶囊显示当前选择；其菜单列出几个精选模型（每个附一行说明）、一项推理强度设置，以及按提供方分组的其他所有模型。胶囊下方的概览显示该模型可容纳的内容与费用，并在每次更改后短暂给出确认。它由 `ModelPill`、`ModelMenu` 和 `ModelSummary` 组合而成：目录、选择和推理强度都是属性，因此可以绑定它们，或从事件中读回。胶囊在指针按下，或按 Enter、Space 与 ArrowDown 时打开菜单；菜单包含精选列表、Effort 行和 More models 行，它们会打开子菜单（窗口较窄时改为页面）；选择后菜单关闭，焦点回到胶囊；推理强度会移到新模型所提供的最接近的一档。把 `IsSummaryVisible` 设为 false，就只剩胶囊（用于工具栏或标题栏）。每次更改后，屏幕阅读器会听到一条礼貌式播报（"Now using Aurora Prime 3, medium effort"）；概览下方的确认提示会保留 `NoticeDuration` 的时长。</target>
@@ -7411,6 +8407,206 @@
       <trans-unit id="MultiSelect.ValueSelector">
         <source>Returns the value of an option, used to match the selection.</source>
         <target>返回选项的值，用于匹配所选项。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterIssue">
+        <source>One issue of the newsletter as it appears on the stack. The first three `Stories` are shown.</source>
+        <target>电子通讯的一期，以它在堆叠中的样子呈现。显示前三个 `Stories`。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterIssue.Date">
+        <source>The send date as it should read, such as "Friday, September 25".</source>
+        <target>发送日期的显示文本，例如 "Friday, September 25"。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterIssue.Number">
+        <source>The issue number. It is the identity of the issue on the stack, so give every issue its own.</source>
+        <target>期号。它是该期在堆叠中的标识，因此每一期都应使用各自的期号。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterIssue.Subject">
+        <source>The subject line, shown large under the masthead.</source>
+        <target>主题行，显示在报头下方并使用大号字体。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterNavigateEventArgs">
+        <source>Arguments of `Navigate`.</source>
+        <target>`Navigate` 的参数。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterPublication">
+        <source>The publication shown beside the form: its name, the next issue and the recent ones. When someone subscribes the `Upcoming` issue, addressed to the new reader, lands on the front of the stack and the oldest issue drops away.</source>
+        <target>显示在表单旁边的刊物：其名称、下一期以及近期各期。当有人订阅时，专门写给新读者的 `Upcoming` 一期会落到堆叠最前面，最旧的一期则被移出。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterPublication.Name">
+        <source>The publication name, the masthead of every issue.</source>
+        <target>刊物名称，即每一期的报头。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterPublication.Upcoming">
+        <source>The next issue. It joins the front of the stack once a reader has subscribed.</source>
+        <target>下一期。读者订阅后，它会加入堆叠最前面。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup">
+        <source>A newsletter signup framed by the newsletter itself: a stack of recent issues. Subscribing drops the next issue, addressed to the new reader, onto the front of the stack, drops the oldest one away and ticks the reader count up by one. It comes as an `Inline` page section (copy and form beside the stack) or a self-contained `Card` (the stack in a tray on top).</source>
+        <target>由电子通讯本身呈现的订阅表单：一叠近期各期。订阅后，专门写给新读者的下一期会落到堆叠最前面，最旧的一期被移出，读者人数加一。它有两种形式：`Inline` 页面区块（文案与表单位于堆叠旁边），或独立的 `Card`（堆叠位于顶部的托盘中）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.ButtonLabel">
+        <source>The label of the button in its idle state ("Subscribe").</source>
+        <target>按钮在空闲状态下的文本（"Subscribe"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Description">
+        <source>The line under the heading. Null uses Arc's copy for the variant.</source>
+        <target>标题下方的文字行。为 null 时使用该变体的 Arc 文案。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.DifferentEmailLabel">
+        <source>The label of the button that starts over ("Use a different email").</source>
+        <target>重新开始按钮的文本（"Use a different email"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.DoneLabel">
+        <source>The button label once subscribed ("Subscribed").</source>
+        <target>订阅后按钮的文本（"Subscribed"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.DoneMessage">
+        <source>The confirmation after a successful send ("Check your inbox to confirm.").</source>
+        <target>发送成功后的确认信息（"Check your inbox to confirm."）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.EmailLabel">
+        <source>The hidden label of the email field ("Email address").</source>
+        <target>邮箱字段的隐藏标签（"Email address"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.EmptyMessage">
+        <source>The message for an empty field ("Enter your email address").</source>
+        <target>空字段的提示信息（"Enter your email address"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.FailedMessage">
+        <source>The message after a failed send.</source>
+        <target>发送失败后的提示信息。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.FormatMessage">
+        <source>The message for a malformed address ("Enter an email like name@company.com").</source>
+        <target>地址格式不正确时的提示信息（"Enter an email like name@company.com"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.IncludingYou">
+        <source>The phrase that opens after the count once subscribed (", including you").</source>
+        <target>订阅后紧跟在计数之后出现的短语（", including you"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.IsPrivacyLinkVisible">
+        <source>Whether the privacy link shows after the note (true).</source>
+        <target>隐私链接是否显示在说明文字之后（true）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.IsPublicationVisible">
+        <source>Whether the stack of issues shows (true). Set false for the form alone.</source>
+        <target>是否显示期刊堆叠（true）。设为 false 时只显示表单。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.IsReadersVisible">
+        <source>Whether the readers row (faces and count) shows (true).</source>
+        <target>是否显示读者行（头像与人数）（true）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.IssueFormat">
+        <source>The issue number at the top of an issue; {0} is the number ("Issue {0}").</source>
+        <target>位于一期顶部的期号格式；{0} 为期号（"Issue {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.IssueNameFormat">
+        <source>The screen reader name of the front issue; {0} is the publication, {1} the number ("{0}, issue {1}").</source>
+        <target>屏幕阅读器中最前一期的名称；{0} 为刊物名，{1} 为期号（"{0}, issue {1}"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.MinutesFormat">
+        <source>The reading time of a story; {0} is the minutes ("{0} min").</source>
+        <target>文章阅读时长的格式；{0} 为分钟数（"{0} min"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Navigate">
+        <source>The privacy link was pressed. Mark the event handled to stop the default (opening an absolute address).</source>
+        <target>隐私链接被按下时触发。将事件标记为已处理可阻止默认行为（打开绝对地址）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.NavigateCommand">
+        <source>Runs when the privacy link is pressed, after `Navigate`; its parameter is the destination.</source>
+        <target>隐私链接被按下时运行，在 `Navigate` 之后执行；其参数为目标地址。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Phase">
+        <source>Where the subscription stands: Idle, Sending or Done (read only).</source>
+        <target>订阅所处的阶段：Idle、Sending 或 Done（只读）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Placeholder">
+        <source>The placeholder of the email field ("you@company.com").</source>
+        <target>邮箱字段的占位文本（"you@company.com"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.PrivacyLinkHref">
+        <source>Where the privacy link goes ("#privacy"). Pressing it raises `Navigate`; when nobody handles the event and the value is an absolute http, https or mailto address, it is opened with the platform launcher.</source>
+        <target>隐私链接的目标地址（"#privacy"）。按下时触发 `Navigate`；若无人处理该事件，且该值为绝对的 http、https 或 mailto 地址，则使用平台启动器打开。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.PrivacyLinkLabel">
+        <source>The label of the link after the privacy note ("Privacy policy").</source>
+        <target>隐私说明之后链接的文字（"Privacy policy"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.PrivacyNote">
+        <source>The short line under the form about frequency and privacy.</source>
+        <target>表单下方的简短说明，内容涉及发送频率和隐私。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Publication">
+        <source>The publication behind the stack. Null shows Arc's sample publication "Margins" (without thumbnails).</source>
+        <target>堆叠背后的期刊。为 null 时显示 Arc 的示例期刊 "Margins"（不显示缩略图）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.ReaderCount">
+        <source>The number of readers (12480). Subscribing shows one more.</source>
+        <target>读者人数（12480）。订阅后增加一人。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.ReaderFaces">
+        <source>The faces next to the reader count (the first three are shown).</source>
+        <target>读者人数旁边的头像（仅显示前三个）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.ReadersWord">
+        <source>The word after the reader count ("readers").</source>
+        <target>读者人数之后的文字（"readers"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.RecipientFormat">
+        <source>The recipient line of an addressed issue; {0} is the address ("To {0}").</source>
+        <target>指定收件人的一期所显示的收件人行格式；{0} 为地址（"To {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.RetryLabel">
+        <source>The button label after a failed send ("Try again").</source>
+        <target>发送失败后按钮的文字（"Try again"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.SendingLabel">
+        <source>The button label while sending ("Subscribing").</source>
+        <target>发送过程中按钮的文字（"Subscribing"）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.SentToFormat">
+        <source>What the screen reader adds to the confirmation; {0} is the address (" The link went to {0}.").</source>
+        <target>屏幕阅读器在确认信息后追加的内容；{0} 为地址（" The link went to {0}."）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Subscribed">
+        <source>A subscription succeeded: the next issue now sits on the front of the stack.</source>
+        <target>订阅成功：下一期即显示在堆叠的最前面。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.SubscribedCommand">
+        <source>Runs when a subscription succeeds; its parameter is the address.</source>
+        <target>订阅成功时运行；其参数为地址。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.SubscribedEmail">
+        <source>The address that was subscribed, or null before that (read only).</source>
+        <target>已订阅的地址；订阅前为 null（只读）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Title">
+        <source>The heading. Null uses Arc's copy for the variant.</source>
+        <target>标题。为 null 时使用 Arc 针对该变体的文案。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSignup.Variant">
+        <source>`Inline` (the default) or `Card`.</source>
+        <target>`Inline`（默认）或 `Card`。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterStory">
+        <source>One story teased in an issue: a title, a small square thumbnail and a reading time.</source>
+        <target>期刊中预告的一篇文章：包含标题、小方形缩略图和阅读时长。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterStory.Image">
+        <source>The thumbnail, drawn as a 44 px rounded square (the longer side is cropped). Null leaves the muted tile.</source>
+        <target>缩略图，以 44 px 圆角方形绘制（较长的一边会被裁剪）。为 null 时保留柔和的占位方块。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterStory.Minutes">
+        <source>The reading time in minutes, shown as "5 min" (see `MinutesFormat`).</source>
+        <target>阅读时长（分钟），显示为 "5 min"（参见 `MinutesFormat`）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterStory.Title">
+        <source>The story title (at most two lines are shown).</source>
+        <target>文章标题（最多显示两行）。</target>
+      </trans-unit>
+      <trans-unit id="NewsletterSubscribedEventArgs">
+        <source>Arguments of `Subscribed`.</source>
+        <target>`Subscribed` 的参数。</target>
       </trans-unit>
       <trans-unit id="NotificationCenter">
         <source>A home for updates: a bell with an unread badge that opens a panel of notifications with read state, an All / Unread switch, expandable details and bulk actions ("Mark all read", "Clear read"). Use it when updates need a persistent place instead of a brief toast, and connect the read state to your data store through `IsRead` and the `ReadChanged` and `Dismissed` events. The panel grows out of the bell (6px toward it at scale 0.97, standard 240ms) and leaves in 120ms; counts roll, the summary rises into its new wording, the view highlight glides on the morph spring, rows collapse their height on the smooth spring as they leave (cascading 35ms apart after a bulk action) and settle in with a 4px rise when the panel opens. Escape closes the panel and returns focus to the bell. Ported from Arc's free notification-center block (MIT, Copyright (c) 2026 Elia Kuratli).</source>
@@ -10712,6 +11908,350 @@
         <source>Raised after every change: a stroke drawn, undo, redo or clear (Arc's `onChange`).</source>
         <target>每次变化后触发：画出一笔、撤销、重做或清空（Arc 中为 `onChange`）。</target>
       </trans-unit>
+      <trans-unit id="SiteFooter">
+        <source>A website footer in three layouts: link columns with a newsletter signup (`Columns`), a single quiet row (`Minimal`), and a closing layout where the Arc arch rises in, oversized and cropped by the bottom edge, fading into the page (`Logo`). The newsletter validates in place, keeps its width while the button morphs, and confirms without a toast. Every text, link, column and the status line can be replaced; with nothing set the footer shows Arc's sample footer.</source>
+        <target>网站页脚，提供三种布局：带电子报订阅的链接列（`Columns`）、单行简洁布局（`Minimal`），以及收尾布局（`Logo`），在此布局中 Arc 的拱形图案从底部升起，尺寸放大并被底边裁切，渐隐于页面之中。电子报订阅会就地验证，按钮变形时保持宽度，并在不弹出提示的情况下确认。所有文字、链接、列和状态行都可以替换；未设置时显示 Arc 的示例页脚。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.BrandHref">
+        <source>Where the brand name leads; without it the name only raises the navigate event.</source>
+        <target>品牌名称指向的地址；未设置时，点击名称只会触发导航事件。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.BrandMark">
+        <source>The brand mark; null draws Arc's arch.</source>
+        <target>品牌标识；为 null 时绘制 Arc 的拱形图案。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.BrandName">
+        <source>The brand name, next to the mark and in the copyright line.</source>
+        <target>品牌名称，显示在标识旁边以及版权行中。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Columns">
+        <source>The link columns; empty (and without `ColumnsSource`) shows Arc's three sample columns.</source>
+        <target>链接列；为空（且未设置 `ColumnsSource`）时显示 Arc 的三列示例。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.ColumnsSource">
+        <source>The link columns from a collection; when set it wins over `Columns` and is observed.</source>
+        <target>从集合获取的链接列；设置后优先于 `Columns`，并会被监听变化。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.IsNewsletterVisible">
+        <source>Whether the newsletter signup shows (Columns layout only).</source>
+        <target>是否显示电子邮件订阅入口（仅限 Columns 布局）。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.IsStatusVisible">
+        <source>Whether the status link shows.</source>
+        <target>是否显示状态链接。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.LegalLabel">
+        <source>The accessible name of the legal links.</source>
+        <target>法律链接的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.LegalLinks">
+        <source>Small links beside the copyright; empty shows Privacy, Terms and Licenses.</source>
+        <target>版权声明旁的小型链接；为空时显示隐私、条款和许可证。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Links">
+        <source>The one-row links of the Minimal layout; null shows the first link of each column and the first two legal links.</source>
+        <target>Minimal 布局中单行排列的链接；null 时显示每列的第一个链接以及前两个法律链接。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Navigate">
+        <source>A link, the brand or the status was pressed. Mark it handled to keep the footer from opening the address.</source>
+        <target>链接、品牌标识或状态被按下时触发。将其标记为已处理，可阻止页脚打开地址。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NavigateCommand">
+        <source>Runs when a link is pressed, after `Navigate`; its parameter is the event arguments.</source>
+        <target>链接被按下时运行，位于 `Navigate` 之后；其参数为事件参数。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NavigationLabel">
+        <source>The accessible name of the link navigation.</source>
+        <target>链接导航的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterConfirmFormat">
+        <source>The confirmation after subscribing; `{0}` is the address.</source>
+        <target>订阅后的确认信息；`{0}` 为地址。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterDescription">
+        <source>The hint under the newsletter input.</source>
+        <target>电子邮件订阅输入框下方的提示。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterEmailLabel">
+        <source>The accessible name of the newsletter input.</source>
+        <target>电子邮件订阅输入框的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterEmptyEmailMessage">
+        <source>The error for an empty address.</source>
+        <target>邮箱地址为空时的错误信息。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterFailedMessage">
+        <source>The error shown when `SubscribeAsync` throws.</source>
+        <target>`SubscribeAsync` 抛出异常时显示的错误信息。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterInvalidEmailMessage">
+        <source>The error for an address that does not look like `name@domain.tld`.</source>
+        <target>地址格式不像 `name@domain.tld` 时的错误信息。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterPlaceholder">
+        <source>The placeholder of the newsletter input.</source>
+        <target>电子邮件订阅输入框的占位文本。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterSubscribeLabel">
+        <source>The text of the subscribe button.</source>
+        <target>订阅按钮的文本。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterSubscribedLabel">
+        <source>The text of the button after subscribing.</source>
+        <target>订阅成功后按钮的文本。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.NewsletterTitle">
+        <source>The newsletter's title.</source>
+        <target>电子邮件订阅的标题。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.SocialLabel">
+        <source>The accessible name of the social links.</source>
+        <target>社交链接的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.SocialLinks">
+        <source>Social links at the end of the legal row; empty shows X, GitHub and LinkedIn.</source>
+        <target>位于法律链接行末尾的社交链接；为空时显示 X、GitHub 和 LinkedIn。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.StatusHref">
+        <source>Where the status leads; without it the status only raises the navigate event.</source>
+        <target>状态指向的位置；未设置时，状态只会引发导航事件。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.StatusLabel">
+        <source>The text of the status link.</source>
+        <target>状态链接的文本。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.StatusTone">
+        <source>The color of the status dot.</source>
+        <target>状态圆点的颜色。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.SubscribeAsync">
+        <source>Called with a valid address; throw to show the failure message, return to show the subscribed state. Null simulates a 900 ms success.</source>
+        <target>使用有效地址调用；抛出异常以显示失败信息，返回则显示已订阅状态。为 null 时模拟 900 ms 的成功。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Subscribed">
+        <source>The newsletter signup succeeded.</source>
+        <target>电子邮件订阅成功。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Tagline">
+        <source>One short line under the brand (and in the copyright line of Minimal); empty hides it.</source>
+        <target>品牌下方的一行简短文字（Minimal 布局中也显示在版权行）；为空时隐藏。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Variant">
+        <source>The layout: Columns (default), Minimal or Logo.</source>
+        <target>布局：Columns（默认）、Minimal 或 Logo。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooter.Year">
+        <source>The year of the copyright line; null uses this year.</source>
+        <target>版权行的年份；为 null 时使用当前年份。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterColumn">
+        <source>A titled column of links in a `SiteFooter`.</source>
+        <target>`SiteFooter` 中带标题的一列链接。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterColumn.Title">
+        <source>The heading of the column.</source>
+        <target>该列的标题。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterLink">
+        <source>One link of a `SiteFooter`. A link without `Href` only raises the footer's navigate event.</source>
+        <target>`SiteFooter` 中的一个链接。没有 `Href` 的链接只会引发页脚的导航事件。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterLink.Href">
+        <source>The destination. An absolute http, https or mailto address is opened when the navigate event is not handled.</source>
+        <target>目标地址。未处理导航事件时，将打开绝对的 http、https 或 mailto 地址。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterLink.IsExternal">
+        <source>Whether the link leaves the site: it shows an outward arrow.</source>
+        <target>链接是否指向站外：显示向外的箭头。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterLink.Label">
+        <source>The text of the link.</source>
+        <target>链接的文本。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterNavigateEventArgs">
+        <source>Arguments of `NavigateEvent`: a link or the status was pressed.</source>
+        <target>`NavigateEvent` 的参数：链接或状态被按下。</target>
+      </trans-unit>
+      <trans-unit id="SiteFooterSubscribedEventArgs">
+        <source>Arguments of `SubscribedEvent`: the newsletter signup succeeded.</source>
+        <target>`SubscribedEvent` 的参数：电子邮件订阅成功。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader">
+        <source>A website header in three layouts (Arc's site header block): it sticks to the top of its scroll view and turns solid once the page scrolls, marks the current section with an indicator that glides between links, opens springy mega menu panels whose content slides in from the side you moved toward, and folds into a menu sheet when it is narrower than `CollapseWidth` (the block's own width, not the window's). Data driven: the links are `SiteHeaderItem`s (or `ItemsSource`); without items the header shows Arc's example set. Choosing any destination raises `Navigate` (and runs `NavigateCommand`); when nobody handles the event and the destination has an absolute http, https or mailto address, it is opened.</source>
+        <target>网站页眉，提供三种布局（Arc 网站页眉区块）：它会吸附在滚动视图顶部，页面滚动后变为实色背景；用随链接滑动的指示器标记当前章节；打开带弹性的大型菜单面板，其内容从你移动的方向滑入；当宽度小于 `CollapseWidth`（区块自身的宽度，而非窗口宽度）时，折叠为菜单面板。数据驱动：链接为 `SiteHeaderItem`s（或 `ItemsSource`）；未提供项目时，页眉显示 Arc 的示例项。选择任一目标都会引发 `Navigate`（并执行 `NavigateCommand`）；若无人处理该事件且目标为绝对 http、https 或 mailto 地址，则会将其打开。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.BrandHref">
+        <source>Identifies `BrandHref`.</source>
+        <target>标识 `BrandHref`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.BrandMark">
+        <source>Identifies `BrandMark`.</source>
+        <target>标识 `BrandMark`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.BrandName">
+        <source>Identifies `BrandName`.</source>
+        <target>标识 `BrandName`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.CloseMenuLabel">
+        <source>Identifies `CloseMenuLabel`.</source>
+        <target>标识 `CloseMenuLabel`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.CollapseWidth">
+        <source>Identifies `CollapseWidth`.</source>
+        <target>标识 `CollapseWidth`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.Current">
+        <source>Identifies `Current`.</source>
+        <target>标识 `Current`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.IsCollapsed">
+        <source>Identifies `IsCollapsed`.</source>
+        <target>标识 `IsCollapsed`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.IsMenuOpen">
+        <source>Identifies `IsMenuOpen`.</source>
+        <target>标识 `IsMenuOpen`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.IsPrimaryActionVisible">
+        <source>Identifies `IsPrimaryActionVisible`.</source>
+        <target>标识 `IsPrimaryActionVisible`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.IsScrolled">
+        <source>Identifies `IsScrolled`.</source>
+        <target>标识 `IsScrolled`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.IsSecondaryActionVisible">
+        <source>Identifies `IsSecondaryActionVisible`.</source>
+        <target>标识 `IsSecondaryActionVisible`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.IsSticky">
+        <source>Identifies `IsSticky`.</source>
+        <target>标识 `IsSticky`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.Items">
+        <source>Identifies `Items`.</source>
+        <target>标识 `Items`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.ItemsSource">
+        <source>Identifies `ItemsSource`.</source>
+        <target>标识 `ItemsSource`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.Label">
+        <source>Identifies `Label`.</source>
+        <target>标识 `Label`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.Navigate">
+        <source>Identifies `Navigate`.</source>
+        <target>标识 `Navigate`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.NavigateCommand">
+        <source>Identifies `NavigateCommand`.</source>
+        <target>标识 `NavigateCommand`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.OpenItemValue">
+        <source>Identifies `OpenItemValue`.</source>
+        <target>标识 `OpenItemValue`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.OpenMenuLabel">
+        <source>Identifies `OpenMenuLabel`.</source>
+        <target>标识 `OpenMenuLabel`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.PrimaryActionHref">
+        <source>Identifies `PrimaryActionHref`.</source>
+        <target>标识 `PrimaryActionHref`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.PrimaryActionLabel">
+        <source>Identifies `PrimaryActionLabel`.</source>
+        <target>标识 `PrimaryActionLabel`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.ScrollSource">
+        <source>Identifies `ScrollSource`.</source>
+        <target>标识 `ScrollSource`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.ScrollThreshold">
+        <source>Identifies `ScrollThreshold`.</source>
+        <target>标识 `ScrollThreshold`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.SecondaryActionHref">
+        <source>Identifies `SecondaryActionHref`.</source>
+        <target>标识 `SecondaryActionHref`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.SecondaryActionLabel">
+        <source>Identifies `SecondaryActionLabel`.</source>
+        <target>标识 `SecondaryActionLabel`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.Variant">
+        <source>Identifies `Variant`.</source>
+        <target>标识 `Variant`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderFeature">
+        <source>The card beside the links of a mega menu panel (Arc's `SiteHeaderFeature`).</source>
+        <target>位于大型菜单面板链接旁的卡片（Arc 的 `SiteHeaderFeature`）。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderFeature.Description">
+        <source>Identifies `Description`.</source>
+        <target>标识 `Description`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderFeature.Href">
+        <source>Identifies `Href`.</source>
+        <target>标识 `Href`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderFeature.Image">
+        <source>Identifies `Image`.</source>
+        <target>标识 `Image`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderFeature.ImageDescription">
+        <source>Identifies `ImageDescription`.</source>
+        <target>标识 `ImageDescription`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderFeature.Title">
+        <source>Identifies `Title`.</source>
+        <target>标识 `Title`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderItem">
+        <source>A top level destination of the `SiteHeader` (Arc's `SiteHeaderItem`). With `Links` and the `Mega` variant it opens a panel; otherwise it is a plain link.</source>
+        <target>`SiteHeader` 的顶级目的地（Arc 的 `SiteHeaderItem`）。与 `Links` 以及 `Mega` 变体一起使用时，它会打开一个面板；否则它就是普通链接。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderItem.Feature">
+        <source>Identifies `Feature`.</source>
+        <target>标识 `Feature`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderItem.Href">
+        <source>Identifies `Href`.</source>
+        <target>标识 `Href`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderItem.Label">
+        <source>Identifies `Label`.</source>
+        <target>标识 `Label`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderItem.Value">
+        <source>Identifies `Value`.</source>
+        <target>标识 `Value`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderLink">
+        <source>One destination inside a mega menu panel (Arc's `SiteHeaderLink`).</source>
+        <target>大型菜单面板中的一个目的地（Arc 的 `SiteHeaderLink`）。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderLink.Description">
+        <source>Identifies `Description`.</source>
+        <target>标识 `Description`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderLink.Href">
+        <source>Identifies `Href`.</source>
+        <target>标识 `Href`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderLink.Icon">
+        <source>Identifies `Icon`.</source>
+        <target>标识 `Icon`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderLink.Label">
+        <source>Identifies `Label`.</source>
+        <target>标识 `Label`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeaderNavigateEventArgs">
+        <source>Arguments of `Navigate`.</source>
+        <target>`Navigate` 的参数。</target>
+      </trans-unit>
       <trans-unit id="Skeleton">
         <source>Reserves space while content is still loading (Arc Skeleton): an optional round avatar and 1–6 text lines that pulse top to bottom in a calm, finite wave. With `Content` it crossfades into the content when `IsLoading` turns false (the content rises 4px into place) while the height springs from the placeholder to the content. Without content the placeholder always shows.</source>
         <target>在内容仍在加载时预留空间（Arc 骨架屏）：可选的圆形头像和 1–6 行文本占位，以平稳有限的波浪自上而下脉动。设置 `Content` 后，当 `IsLoading` 变为 false 时，内容会淡入替换占位（内容上移 4px 就位），同时高度以弹簧从占位过渡到内容的高度。没有内容时始终显示占位。</target>
@@ -11879,6 +13419,230 @@
       <trans-unit id="TokenTrigger.Symbol">
         <source>Defines the `Symbol` property.</source>
         <target>定义 `Symbol` 属性。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall">
+        <source>One tool call of an agent transcript (Arc Tool call, design reference): the tool's mark, the call as a verb phrase, quiet meta ("4 results · 1.2s") and a status icon. The whole row is a button: it springs open into Input (the arguments as a mono key / value list) and Output (the result as a list, a table, tinted JSON or text, folding long ones behind "Show N more lines"), each with a copy button. A running call shimmers its title next to a spinner; a failed one shows its reason and Retry; one that waits for approval sits on an accent outline with Deny and Allow; a denied one is muted. Bind `Item` and change the item in place as the call moves on. Allow, Deny and Retry raise `ApproveRequested`, `DenyRequested` and `RetryRequested` (they bubble, so a `ToolCallGroup` or any parent can handle them): update the call's status yourself and set `Handled`. When nothing handles them, Deny marks the call denied here; Allow and Retry only simulate a run on the built-in sample data (`ToolCallSamples`) and change nothing otherwise. With no item the row shows a sample web search. On its own the row sits in a 1px bordered Surface frame (radius 16, 4px in); inside a group it is flush.</source>
+        <target>智能体转录中的一次工具调用（Arc Tool call，设计参考）：工具的标记、以动词短语表示的调用、低调的元信息（"4 results · 1.2s"）以及状态图标。整行是一个按钮：点击后以弹性动效展开为输入（参数，等宽的键/值列表）和输出（结果，以列表、表格、着色的 JSON 或文本呈现，过长内容折叠在"Show N more lines"之后），两者都带复制按钮。运行中的调用会在旋转指示器旁让标题闪烁；失败的调用会显示原因和重试；等待批准的调用带强调色轮廓，并显示拒绝和允许；被拒绝的调用会变为弱化显示。绑定 `Item`，调用推进时就地修改该项。允许、拒绝和重试会引发 `ApproveRequested`、`DenyRequested` 和 `RetryRequested`（它们会冒泡，因此 `ToolCallGroup` 或任何父级都可以处理）：由你自行更新调用的状态并设置 `Handled`。若无人处理，拒绝会在此处将调用标记为已拒绝；允许和重试只会在内置示例数据（`ToolCallSamples`）上模拟运行，其他情况下不做任何改变。没有项目时，该行显示一个示例网页搜索。单独使用时，该行位于 1px 带边框的 Surface 外框中（圆角 16，内缩 4px）；在分组中则与边缘齐平。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.ApproveRequested">
+        <source>Raised when the person presses Allow on a call waiting for approval. Bubbles.</source>
+        <target>当人员在等待批准的调用上按下“允许”时引发。会冒泡。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.DenyRequested">
+        <source>Raised when the person presses Deny on a call waiting for approval. Bubbles.</source>
+        <target>当人员在等待批准的调用上按下“拒绝”时引发。会冒泡。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.DisplayedItem">
+        <source>The call on screen: `Item`, or the sample when it is null.</source>
+        <target>屏幕上显示的调用：即 `Item`；为 null 时则显示示例。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.ExpandedChanged">
+        <source>Raised when Input and Output open or close.</source>
+        <target>输入和输出展开或收起时引发。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.IsExpanded">
+        <source>Whether Input and Output are open (two-way).</source>
+        <target>输入和输出是否展开（双向）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.IsFlush">
+        <source>Drops the row's own frame (a group sets it on its rows).</source>
+        <target>去掉该行自身的外框（分组会为其行设置此项）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.Item">
+        <source>The call shown. Change it in place; the row follows every change. Null shows a sample web search.</source>
+        <target>展示的调用。直接修改它，行会随每次修改同步更新。为 null 时展示一个示例网页搜索。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.Labels">
+        <source>Every word the row shows or says.</source>
+        <target>这一行展示或说出的每一个文字。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.OutputTemplate">
+        <source>Draws a successful call's result in the Output well (a chart, a file preview); a template that does not match the item, or builds nothing, falls back to the built-in view. It receives the `ToolCallItem`.</source>
+        <target>在输出区域绘制成功调用的结果（图表、文件预览）；模板与项不匹配或未构建任何内容时，回退到内置视图。它接收 `ToolCallItem`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCall.RetryRequested">
+        <source>Raised when the person presses Retry on a failed call. Bubbles.</source>
+        <target>当用户按下失败调用的重试时引发。会冒泡。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallActionEventArgs">
+        <source>Data of `ApproveRequested`, `DenyRequested` and `RetryRequested`: the call the person acted on. Set `Handled` when you update the call yourself.</source>
+        <target>`ApproveRequested`、`DenyRequested` 和 `RetryRequested` 的数据：用户操作的那个调用。你自行更新调用时设置 `Handled`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallArgument">
+        <source>One argument of a tool call, shown as a key and a value in the call's mono Input list.</source>
+        <target>工具调用的一个参数，以键和值的形式显示在调用的等宽输入列表中。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallExpandedChangedEventArgs">
+        <source>Data of `ExpandedChanged` and `ExpandedChanged`.</source>
+        <target>`ExpandedChanged` 与 `ExpandedChanged` 的数据。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup">
+        <source>Every tool call of one assistant turn in one quiet card (Arc Tool call group, design reference): a header with the tools' overlapping marks, "Used 4 tools" (or "Using 3 tools" with a shimmer while the agent works, or "Waiting for approval") and, on the right, "1 failed" or the total duration; below it, one `ToolCall` row per call. Append calls to `Items` (or an observable `ItemsSource`) as the agent starts them and change them in place: a new row grows in from zero height, a new tool's mark joins the stack on a spring. Opening the header staggers the rows in. While the agent works the group stays open; 450ms after every call finished it folds itself away (`AutoCollapse`) unless the person opened or closed the group or a row. A call that needs a decision (a failure, an approval) opens a folded group. An empty group takes no space; its first call grows it in. With neither `Items` nor `ItemsSource` it shows four finished sample calls. Allow, Deny and Retry bubble up from the rows as `ApproveRequested`, `DenyRequested` and `RetryRequested`; see `ToolCall` for what happens when nothing handles them.</source>
+        <target>将一个助手回合的所有工具调用放在一张安静的卡片中（Arc 工具调用组，设计参考）：标题栏包含工具的重叠标记，"Used 4 tools"（代理工作时为带闪烁效果的 "Using 3 tools"，或 "Waiting for approval"），右侧为 "1 failed" 或总时长；下方每个调用对应一行 `ToolCall`。代理开始调用时将其追加到 `Items`（或可观察的 `ItemsSource`），并原地修改它们：新行从零高度展开，新工具的标记以弹簧动画加入标记堆叠。展开标题栏时各行依次错开进入。代理工作期间该组保持展开；每次调用完成后 450ms，若用户未展开或收起该组或任一行，它会自动折叠（`AutoCollapse`）。需要决定的调用（失败、需要批准）会展开已折叠的组。空组不占用空间；其第一个调用会使其展开。若既未设置 `Items` 也未设置 `ItemsSource`，则显示四个已完成的示例调用。行中的允许、拒绝和重试会以 `ApproveRequested`、`DenyRequested` 和 `RetryRequested` 冒泡上传；未被处理时的行为见 `ToolCall`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.ApproveRequested">
+        <source>Raised when a row's Allow is pressed (it bubbles from the row).</source>
+        <target>按下某行的允许时引发（从该行冒泡）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.AutoCollapse">
+        <source>Folds the list `AutoCollapseDelay` after every call finished, so the answer reads right under "Used 4 tools"; skipped once the person opened or closed the group or any row.</source>
+        <target>每次调用完成后等待 `AutoCollapseDelay`，然后折叠列表，使答案紧接在 "Used 4 tools" 下方显示；若用户已展开或收起该组或任一行，则跳过。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.AutoCollapseDelay">
+        <source>The wait before the group folds itself (450ms).</source>
+        <target>群组自动折叠前的等待时间（450ms）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.DenyRequested">
+        <source>Raised when a row's Deny is pressed (it bubbles from the row).</source>
+        <target>按下某行的拒绝时引发（从该行冒泡）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.ExpandedChanged">
+        <source>Raised when the list opens or closes, by the person, the app or the group itself (see `IsAutomatic`).</source>
+        <target>列表展开或收起时引发，无论是由用户、应用程序还是群组自身触发（参见 `IsAutomatic`）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.FailedCount">
+        <source>The number of failed calls.</source>
+        <target>失败调用的数量。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.HeaderText">
+        <source>The header as read: the label and the meta ("Used 3 tools 1 failed").</source>
+        <target>读出的标题栏文字：标签和元信息（"Used 3 tools 1 failed"）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.IsActive">
+        <source>Whether the agent is still working in this turn, so the header keeps saying "Using" between calls; null (default) means "while any call runs".</source>
+        <target>代理在本回合中是否仍在工作，使标题在调用之间保持"Using"的状态；null（默认）表示"任一调用运行期间"。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.IsExpanded">
+        <source>Whether the list is open (two-way). Until it is set, the group opens while any call runs, waits or failed, and a finished transcript starts folded.</source>
+        <target>列表是否展开（双向绑定）。在设置之前，只要有任一调用在运行、等待或失败，该组就会展开；已完成的记录默认折叠。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.ItemsSource">
+        <source>An observable list of calls that wins over `Items`.</source>
+        <target>可观察的调用列表，优先于 `Items`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.Labels">
+        <source>Every word the group and its rows show or say.</source>
+        <target>群组及其各行展示或说出的每一个文字。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.OutputTemplate">
+        <source>A custom result view for every successful call (see `OutputTemplate`).</source>
+        <target>每个成功调用的自定义结果视图（参见 `OutputTemplate`）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.RetryRequested">
+        <source>Raised when a row's Retry is pressed (it bubbles from the row).</source>
+        <target>按下某行的重试时引发（从该行冒泡）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallGroup.TotalDuration">
+        <source>The sum of the successful calls' durations (shown once nothing runs or waits).</source>
+        <target>成功调用耗时的总和（在没有任何调用运行或等待后显示）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem">
+        <source>One tool call of an agent turn: which tool ran, what it did in plain words, how it went, its arguments and what came back. Change `Status` (and the other properties) in place as the call moves on: a row keeps its place and its open state, and every change reaches the screen. Keep `Id` stable.</source>
+        <target>代理回合中的一个工具调用：运行了哪个工具、用平实的语言说明其作用、结果如何、它的参数以及返回了什么。随调用推进原地修改 `Status`（及其他属性）：行会保持其位置和展开状态，每次修改都会反映到屏幕上。保持 `Id` 稳定。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.ApprovalTitle">
+        <source>The phrase while waiting for approval, as a request ("Post a status note to #finance-ops"); null uses `Title`.</source>
+        <target>等待批准时显示的短语，写成请求的形式（"Post a status note to #finance-ops"）；为 null 时使用 `Title`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Duration">
+        <source>How long the call took, shown as "760ms" or "1.2s"; a group adds up the successful ones.</source>
+        <target>调用耗时，显示为 "760ms" 或 "1.2s"；群组会将成功调用的耗时相加。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.ErrorTitle">
+        <source>The phrase after a failure ("Could not read the export job log"); null uses `Title`.</source>
+        <target>失败后显示的短语（"Could not read the export job log"）；为 null 时使用 `Title`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Id">
+        <source>A stable id. A group keys its rows by it, so a call whose status changes keeps its row.</source>
+        <target>稳定的 id。群组按此 id 为各行建立索引，因此状态变化的调用会保留其行。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Message">
+        <source>One line under the title while the call failed (the reason) or waits for approval (what allowing will do). Not shown in the other statuses.</source>
+        <target>调用失败（原因）或等待批准（允许后将发生什么）时，标题下方的一行文字。其他状态下不显示。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Output">
+        <source>What came back: a list, a table, JSON or text. Shown under Output once the call succeeded.</source>
+        <target>返回的内容：列表、表格、JSON 或文本。调用成功后显示在"Output"下方。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.RunningTitle">
+        <source>The phrase while running, in the present tense ("Searching tickets in finance/close"); null uses `Title`.</source>
+        <target>运行期间显示的现在时短语（"Searching tickets in finance/close"）；为 null 时使用 `Title`。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Status">
+        <source>Where the call stands. Change it in place as the call runs, fails, waits or finishes.</source>
+        <target>调用当前所处的状态。随调用运行、失败、等待或完成而原地修改。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Summary">
+        <source>Quiet meta before the duration, such as "4 results". Null derives it from `Output` (results, rows, fields, items).</source>
+        <target>耗时之前的次要元信息，例如 "4 results"。为 null 时从 `Output` 推导（结果、行、字段、项目）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.Title">
+        <source>The settled verb phrase in the past tense, such as "Searched tickets in finance/close". One line; it truncates.</source>
+        <target>已完成的过去时动词短语，例如 "Searched tickets in finance/close"。一行；超出时截断。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.ToolMark">
+        <source>The tool's mark: a 24 × 24 stroked glyph such as a Lucide icon, drawn at 16px in the row and 12px in a group's mark stack. Null draws a wrench.</source>
+        <target>工具的标记：一个 24 × 24 的描边图标（例如 Lucide 图标），在行中以 16px 绘制，在群组的标记堆叠中以 12px 绘制。为 null 时绘制扳手。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.ToolMarkBrush">
+        <source>The mark's color; null uses the text color, which follows the theme.</source>
+        <target>标记的颜色；为 null 时使用随主题变化的文本颜色。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallItem.ToolName">
+        <source>The tool's name, read before the title by screen readers ("Search: Searched the web …").</source>
+        <target>工具的名称，屏幕阅读器会在标题之前读出（"Search: Searched the web …"）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallJsonOutput">
+        <source>A JSON result (an API response): indented two spaces, tinted (keys, strings, numbers, literals and punctuation in their own colors), 20px lines, folding after ten lines behind "Show N more lines". Wide lines scroll inside the well. Built on `Nodes`, so no reflection is involved.</source>
+        <target>JSON 结果（API 响应）：以两个空格缩进，带颜色高亮（键、字符串、数字、字面量和标点各有其颜色），每行 20px，超过十行后折叠，并显示"Show N more lines"。过宽的行在结果区域内滚动。基于 `Nodes` 构建，不涉及反射。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallLabels">
+        <source>Every word `ToolCall` and `ToolCallGroup` show or say, in English by default. Replace the whole object to localize or reword; sentences with numbers or names are format functions.</source>
+        <target>`ToolCall` 和 `ToolCallGroup` 展示或说出的每一个文字，默认为英文。若要本地化或改写，请替换整个对象；包含数字或名称的句子使用格式化函数。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallListEntry">
+        <source>One entry of a `ToolCallListOutput`: a short mono lead (an id such as "#482"), a title and a tag.</source>
+        <target>`ToolCallListOutput` 的一个条目：简短的等宽前导（如 "#482" 之类的 id）、标题和标签。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallListOutput">
+        <source>A list result (search hits, tickets): a lead, a title and a tag per row, 32px rows, folding after five.</source>
+        <target>列表结果（搜索命中、工单）：每行一个前导、标题和标签，行高 32px，超过五行后折叠。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallOutput">
+        <source>What a tool call returned, shown under Output once the call succeeded: a `ToolCallListOutput`, a `ToolCallTableOutput`, a `ToolCallJsonOutput` or a `ToolCallTextOutput`. Assign a new output to change what a row shows; an output is read when the row opens.</source>
+        <target>工具调用的返回内容，在调用成功后显示在"Output"下方：`ToolCallListOutput`、`ToolCallTableOutput`、`ToolCallJsonOutput` 或 `ToolCallTextOutput` 之一。赋予新的输出即可更改该行显示的内容；行在打开时才读取输出。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallSimulation">
+        <source>Plays a scripted agent turn into `Items` on a clock: calls are appended one after another, run for their time and settle; a failing call waits for `Retry` and a call that needs approval waits for `Approve` or `Deny`. Bind a `ToolCallGroup`'s `ItemsSource` to `Items` and its `IsActive` to `IsWorking`: Allow, Deny and Retry on the group's rows reach the simulation when nothing else handles them. The default script is `Script`. Time comes from a `TimeProvider`, so tests can step it; callbacks run on the UI thread.</source>
+        <target>按时间顺序将脚本化的代理回合播放到 `Items` 中：调用依次追加，运行其耗时后结束；失败的调用等待 `Retry`，需要批准的调用等待 `Approve` 或 `Deny`。将 `ToolCallGroup` 的 `ItemsSource` 绑定到 `Items`，并将其 `IsActive` 绑定到 `IsWorking`：群组各行上的允许、拒绝和重试，若无其他处理方，会传递给模拟。默认脚本为 `Script`。时间来自 `TimeProvider`，因此测试可以逐步推进；回调在 UI 线程上运行。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallSimulation.Changed">
+        <source>Raised on the UI thread at every beat of the run (a call appended, settled, failed, retried, allowed, denied; the start and the end).</source>
+        <target>在运行的每个节拍时于 UI 线程上引发（调用被追加、完成、失败、重试、允许、拒绝；以及开始和结束）。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallSimulation.IsWorking">
+        <source>Whether the agent is working (appending or running calls): bind a group's `IsActive` to it, so its header keeps saying "Using" between calls.</source>
+        <target>代理是否正在工作（追加或运行调用）：将群组的 `IsActive` 绑定到它，使其标题在调用之间保持"Using"的状态。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallSimulation.State">
+        <source>Where the run stands.</source>
+        <target>运行所处的状态。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallSimulationEventArgs">
+        <source>Data of `Changed`.</source>
+        <target>`Changed` 的数据。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallSimulationStep">
+        <source>One scripted call of a `ToolCallSimulation`.</source>
+        <target>`ToolCallSimulation` 的一个脚本化调用。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallTableOutput">
+        <source>A table result (database rows): column headers and mono cells, 30px rows, folding after five rows. A null cell reads "null". A wide table scrolls inside its well.</source>
+        <target>表格结果（数据库行）：列标题和等宽单元格，行高 30px，超过五行后折叠。空单元格显示为 "null"。过宽的表格在其结果区域内滚动。</target>
+      </trans-unit>
+      <trans-unit id="ToolCallTextOutput">
+        <source>A text result (a sent message, a short log): one paragraph that keeps its line breaks.</source>
+        <target>文本结果（已发送的消息、简短日志）：一个保留换行的段落。</target>
       </trans-unit>
       <trans-unit id="Tooltip">
         <source>A short label on hover or keyboard focus. Attach it to any control with `arc:Tooltip.Tip="Copy link"` (and optionally `arc:Tooltip.Side`). The first tooltip waits 250ms and rises 3px from its trigger; while any tooltip is open, and for 300ms after the last one closes, the next opens at once with a fade only. String content that changes while open crossfades and the bubble springs to the new size. The `Tooltip` instance itself is the bubble shown in the popup.</source>

@@ -8,12 +8,39 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ## Unreleased
 
+### Added
+
+- **Special components › AI** (`TKCode.Arc.Special`, original designs that take Arc's Pro behaviour and motion as a
+  reference): `AgentStatus` (live status pill that opens into the recent steps, with a built-in `AgentRunSimulation`),
+  `ToolCall` and `ToolCallGroup` (tool call rows with input and output, inline approval and retry, a transcript
+  simulation), `AgentPlan` (editable, reorderable draft plan that becomes a live checklist), `AgentTimeline` (replay of a
+  multi-agent run on one time axis, with handoffs, span cards, pinning, scrubbing and a live mode) and `ContextWindow`
+  (200-cell token budget grid with a compaction threshold, legend and send / attach / compact actions). Docs and demos in
+  English, 简体中文 and 繁體中文.
+- **Blocks › Headers and footers** (ported from Arc's free blocks): `SiteHeader` (sticky header that turns solid on
+  scroll, gliding current-link marker, mega menu panels whose height springs and whose content slides in from the side
+  you moved toward, mobile menu sheet), `SiteFooter` (link columns with a validating newsletter, a minimal row, and a
+  large fading arch mark), `CtaSection` (centered, split beside a setup card that completes itself, dismissible
+  banner) and `NewsletterSignup` (email signup framed by a stack of past issues; subscribing drops the next issue onto
+  the front).
+
+### Changed
+
+- **Gallery**: the language has its own menu in the top bar instead of a row in the Appearance popover. The first start
+  picks English, 简体中文 or 繁體中文 from the system's language (the browser's preferred languages on the web), and a
+  language chosen in the menu is remembered for the next start (local storage on the web, a small file in the local
+  application data folder on the desktop).
+
 ### Fixed
 
 - **Combobox**: a focused field drew a dark 3px ring around a dark border. Arc's focused combobox only turns its border
   to `BorderStrong`; its halo is transparent, so the ring is gone.
 - **Gallery**: the examples stage no longer clips a view to its bounds, which cut off the left side of the inline edit
   frame and of the focus rings that sit a few pixels outside a control.
+- **Gallery**: a NativeAOT publish of the desktop gallery (`-p:PublishAot=true`) showed "This page could not be loaded"
+  on every docs page, and no screenshots. The page text and the screenshots are resource-only assemblies that Avalonia
+  finds by name, and NativeAOT keeps no metadata for an assembly whose types nothing uses; the desktop host now roots
+  both (`TrimmerRootAssembly`).
 
 ## 0.3.0-preview.3 - 2026-10-23
 
@@ -131,6 +158,18 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   variable chips, runs it on saved test cases through a `PromptRunHandler`, and compares, promotes and undoes versions,
   with version and model menus, variable fields, a Run button and an output panel. `TokenTextEditor` gains `TokenParser`
   and `TokenRenderer` for custom inline tokens.
+- **Blocks**: the model arena, the eighth block of the AI group (original design): a blind test of two models. One prompt goes
+  to two anonymous models, both answers stream in on one shared clock in whole words whatever the real speeds, and the
+  vote reveals the models. Each answer shows time to first token, speed and cost measured on the raw stream, a failed
+  answer keeps its text and offers a retry of that model alone, and the standings rank the models by win rate and replay the
+  change the first time they are opened after a vote. `ModelArena` takes `Contestants`, `Prompts` and an `IArenaRunner`; in a
+  narrow container the answers become tabs.
+- **Blocks**: document extraction, the ninth and last block of the AI group (original design): turns a document into typed data
+  and shows where each value came from. A quiet viewer draws the document on white paper beside an editable form; while a
+  model reads, the fields fill in one by one, the text each value came from is tinted, and pointing at a field or its text lights
+  both and draws a curved link. Values below a confidence threshold carry the model's reason and a "Looks right" button, a
+  value that does not fit its type is null and blocks "Accept all", and the JSON and Schema tabs show the typed result and the
+  schema sent to the model. `DocumentExtraction` takes `Samples` (document plus schema) and an `IDocumentExtractor`.
 
 ### Changed
 
