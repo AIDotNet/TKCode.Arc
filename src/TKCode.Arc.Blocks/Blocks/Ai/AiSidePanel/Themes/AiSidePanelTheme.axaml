@@ -1,0 +1,704 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The side panel fills its container (spec 3.1) on Background, clipped: the dock with the page (left, or under the
+        sheet) and the assistant (right behind a 1px line, or the bottom sheet), and the hidden live region. The assistant,
+        top to bottom: the header (padding 16 / 12, 87 high with its BorderSubtle edge: the 15px mark, the name 14 / 500 and
+        the model 12 TextMuted 7px apart, the 30px close button at the right; 8px below, the 24px context pills 6px apart),
+        the thread (padding 16 16 52, turns 18 apart; the empty state sits at its bottom), the Undo pill 8px above the box,
+        and the box (padding 0 12 12). The panel itself is transparent: the dock gives it Surface (SurfaceRaised as a sheet).
+        The page view and the panel are the content of the dock's presenters: template bindings and /template/ styles do not
+        reach them, so their values (the page, the close glyph: PanelRightClose docked, X as a sheet) are set in code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSidePanel}" TargetType="arc:AiSidePanel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="ReadingMinimum" Value="{arc:AiSidePanelTokenResource ReadingMinimum}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSidePanel">
+                <Panel Background="{TemplateBinding Background}">
+                    <arc:AiPanelDock Name="PART_Dock"
+                                     IsOpen="{TemplateBinding IsOpen, Mode=TwoWay}"
+                                     PanelWidth="{TemplateBinding PanelWidth}"
+                                     SheetBreakpoint="{TemplateBinding SheetBreakpoint}"
+                                     SheetHeightRatio="{TemplateBinding SheetHeightRatio}"
+                                     AssistantMark="{TemplateBinding AssistantMark}">
+                        <arc:AiPanelDock.Page>
+                            <!-- Content of another control's presenter: its values are set in code (template bindings do not reach it). -->
+                            <arc:AiPanelPageView Name="PART_Page" />
+                        </arc:AiPanelDock.Page>
+                        <arc:AiPanelDock.Panel>
+                            <Grid Name="PART_Panel" RowDefinitions="Auto,*,Auto">
+                                <Border Name="PART_Header"
+                                        Padding="{arc:AiSidePanelTokenResource HeaderPadding}"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                    <StackPanel>
+                                        <DockPanel Height="{arc:AiSidePanelTokenResource TitleRowHeight}">
+                                            <arc:AiPanelIconButton Name="PART_Close"
+                                                                   DockPanel.Dock="Right"
+                                                                   Margin="8,0,0,0"
+                                                                   Glyph="{x:Static arc:ArcIcons.PanelRightClose}"
+                                                                   arc:Tooltip.Side="Bottom"
+                                                                   VerticalAlignment="Center" />
+                                            <Grid ColumnDefinitions="Auto,Auto,*" VerticalAlignment="Center">
+                                                <arc:ModelMark Name="PART_Mark"
+                                                               Size="{arc:AiSidePanelTokenResource HeaderMarkSize}"
+                                                               MarkColor="{arc:ArcDesignTokenResource Accent}"
+                                                               VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_Name"
+                                                           Grid.Column="1"
+                                                           Margin="{arc:AiSidePanelTokenResource IdentityGapMargin}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           LineHeight="19.6"
+                                                           LetterSpacing="-0.14"
+                                                           VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_Model"
+                                                           Grid.Column="2"
+                                                           Margin="{arc:AiSidePanelTokenResource IdentityGapMargin}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           LineHeight="16.8"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center" />
+                                            </Grid>
+                                        </DockPanel>
+                                        <DockPanel Name="PART_Chips"
+                                                   Margin="{arc:AiSidePanelTokenResource ChipsMargin}"
+                                                   Height="{arc:AiSidePanelTokenResource ChipHeight}"
+                                                   ClipToBounds="True">
+                                            <arc:AiPanelContextPill Name="PART_PagePill"
+                                                                    DockPanel.Dock="Left"
+                                                                    Glyph="{x:Static arc:ArcIcons.FileText}" />
+                                            <arc:AiPanelSelectionPill Name="PART_SelectionPill"
+                                                                      Margin="{arc:AiSidePanelTokenResource ChipGapMargin}"
+                                                                      HorizontalAlignment="Left" />
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Panel Name="PART_Body" Grid.Row="1">
+                                    <arc:AiFollowScroller Name="PART_Scroller">
+                                        <Border Name="PART_Thread" Padding="{arc:AiSidePanelTokenResource ThreadPadding}">
+                                            <StackPanel Name="PART_Turns" Spacing="{arc:AiSidePanelTokenResource TurnGap}" />
+                                        </Border>
+                                    </arc:AiFollowScroller>
+                                    <StackPanel Name="PART_Empty"
+                                                Margin="{arc:AiSidePanelTokenResource ThreadPadding}"
+                                                Spacing="{arc:AiSidePanelTokenResource EmptyGap}"
+                                                VerticalAlignment="Bottom">
+                                        <TextBlock Name="PART_EmptyTitle"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="19.6"
+                                                   LetterSpacing="-0.14"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Name="PART_EmptyText"
+                                                   Margin="0,0,0,8"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="18"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextWrapping="Wrap" />
+                                        <arc:AiPanelSuggestionRow Name="PART_EmptySuggestions" />
+                                    </StackPanel>
+                                    <arc:AiUndoPill Name="PART_UndoPill"
+                                                    VerticalAlignment="Bottom"
+                                                    Margin="{arc:AiSidePanelTokenResource UndoPillMargin}" />
+                                </Panel>
+                                <Border Name="PART_ComposerArea"
+                                        Grid.Row="2"
+                                        Padding="{arc:AiSidePanelTokenResource ComposerAreaPadding}">
+                                    <arc:AiPanelBox Name="PART_Box" />
+                                </Border>
+                            </Grid>
+                        </arc:AiPanelDock.Panel>
+                    </arc:AiPanelDock>
+                    <arc:AiAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A turn: its parts 10px apart. The question at the right: the context line (TextSelect 12 and 12 / 16.8 in
+        TextMuted, 4px apart) 4px above the bubble (13 / 18.2 Foreground on SurfaceMuted, radius 14, padding 7 12), which
+        always leaves 40px on its left. Then the shimmer (13 / 18.2 on TextMuted), the answer, the stopped line (a 10px
+        square in TextMuted, 6px, 12 / 16.8 TextMuted), the error card and the change card. Parts without content are hidden
+        and leave no gap.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelTurnView}" TargetType="arc:AiPanelTurnView">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelTurnView">
+                <StackPanel Spacing="{arc:AiSidePanelTokenResource TurnBodyGap}">
+                    <StackPanel Name="PART_Ask"
+                                Spacing="{arc:AiSidePanelTokenResource AskGap}"
+                                HorizontalAlignment="Right"
+                                Margin="{arc:AiSidePanelTokenResource BubbleInsetMargin}">
+                        <StackPanel Name="PART_Context"
+                                    Orientation="Horizontal"
+                                    Spacing="4"
+                                    HorizontalAlignment="Right"
+                                    IsVisible="False">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.SquareDashedText}"
+                                          Size="12"
+                                          StrokeThickness="2"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Name="PART_ContextText"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Border Name="PART_Bubble"
+                                HorizontalAlignment="Right"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:AiSidePanelTokenResource BubbleRadius}"
+                                Padding="{arc:AiSidePanelTokenResource BubblePadding}">
+                            <SelectableTextBlock Name="PART_Prompt"
+                                                 IsTabStop="False"
+                                                 FontSize="13"
+                                                 LineHeight="18.2"
+                                                 Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                 SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                 TextWrapping="Wrap" />
+                        </Border>
+                    </StackPanel>
+                    <arc:TextShimmer Name="PART_Reading"
+                                     FontSize="13"
+                                     Height="18.2"
+                                     HorizontalAlignment="Left"
+                                     BaseForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                     IsVisible="False" />
+                    <arc:AiPanelAnswerText Name="PART_Answer" IsVisible="False" />
+                    <StackPanel Name="PART_Stopped" Orientation="Horizontal" Spacing="6" IsVisible="False">
+                        <Border Width="10"
+                                Height="10"
+                                CornerRadius="2"
+                                Background="{arc:ArcDesignTokenResource TextMuted}"
+                                VerticalAlignment="Center" />
+                        <TextBlock Name="PART_StoppedText"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="16.8"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <arc:AiPanelErrorCard Name="PART_Error" IsVisible="False" />
+                    <Decorator Name="PART_CardHost" IsVisible="False" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The answer: paragraphs one empty line apart (a 21.7 line). -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelAnswerText}" TargetType="arc:AiPanelAnswerText">
+        <Setter Property="Spacing" Value="{arc:AiSidePanelTokenResource AnswerLineHeight}" />
+    </ControlTheme>
+
+    <!-- An answer paragraph: 14 / 21.7 in Foreground, wrapping; the selection AccentSubtle. -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelAnswerParagraph}" TargetType="arc:AiPanelAnswerParagraph">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:AiSidePanelTokenResource AnswerLineHeight}" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <!--
+        The close button (and the selection pill's remove button, class "remove": 18 round, X 12): transparent with the glyph
+        in TextMuted; under a mouse or pen SurfaceMuted with the glyph in Foreground (160ms standard); the keyboard ring 2px out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelIconButton}" TargetType="arc:AiPanelIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:AiSidePanelTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:AiSidePanelTokenResource CloseButtonSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:AiSidePanelTokenResource CloseButtonRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelIconButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Name="PART_Icon"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="{arc:AiSidePanelTokenResource CloseGlyphSize}"
+                                  StrokeThickness="2"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.remove">
+            <Setter Property="Width" Value="{arc:AiSidePanelTokenResource ChipRemoveSize}" />
+            <Setter Property="Height" Value="{arc:AiSidePanelTokenResource ChipRemoveSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^.remove /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Size" Value="12" />
+        </Style>
+        <Style Selector="^.remove /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- "This page": 24 high, padding 0 9, a 1px Border pill without fill; FileText 13 TextMuted, 5px, 12 / 16.8 TextSecondary. -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelContextPill}" TargetType="arc:AiPanelContextPill">
+        <Setter Property="Height" Value="{arc:AiSidePanelTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:AiSidePanelTokenResource PagePillPadding}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelContextPill">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:AiSidePanelTokenResource ChipGlyphGap}" VerticalAlignment="Center">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{arc:AiSidePanelTokenResource ChipGlyphSize}"
+                                      StrokeThickness="2"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Text="{TemplateBinding Text}" LineHeight="16.8" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The selection pill: padding 0 3 0 9 on Accent 7% over Surface, its edge Accent 28% over Border (layered borders: the
+        mixes follow the accent); TextSelect 13 in Accent, 5px, the text 12 Foreground with an ellipsis, then the 18px remove
+        button.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelSelectionPill}" TargetType="arc:AiPanelSelectionPill">
+        <Setter Property="Height" Value="{arc:AiSidePanelTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:AiSidePanelTokenResource SelectionPillPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelSelectionPill">
+                <Panel>
+                    <Border Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Background="{arc:ArcDesignTokenResource Accent}"
+                            Opacity="0.07"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border BorderBrush="{arc:ArcDesignTokenResource Accent}"
+                            BorderThickness="1"
+                            Opacity="0.28"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <DockPanel Margin="{TemplateBinding Padding}">
+                        <arc:ArcGlyph DockPanel.Dock="Left"
+                                      Data="{x:Static arc:ArcIcons.SquareDashedText}"
+                                      Size="{arc:AiSidePanelTokenResource ChipGlyphSize}"
+                                      StrokeThickness="2"
+                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                      Margin="0,0,5,0"
+                                      VerticalAlignment="Center" />
+                        <arc:AiPanelIconButton Name="PART_Remove"
+                                               Classes="remove"
+                                               DockPanel.Dock="Right"
+                                               Margin="4,0,0,0"
+                                               Glyph="{x:Static arc:ArcIcons.X}"
+                                               VerticalAlignment="Center" />
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   LineHeight="16.8"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </DockPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The suggestion rows: pills 6px apart, wrapping. -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelSuggestionRow}" TargetType="arc:AiPanelSuggestionRow">
+        <Setter Property="ItemSpacing" Value="{arc:AiSidePanelTokenResource ChipGap}" />
+        <Setter Property="LineSpacing" Value="{arc:AiSidePanelTokenResource ChipGap}" />
+    </ControlTheme>
+
+    <!--
+        A suggestion: 30 high, padding 0 12, a 1px Border pill on Surface, 13 / 18.2 TextSecondary; under a mouse or pen
+        SurfaceMuted with Foreground text (160ms standard); the keyboard ring 2px out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelSuggestionPill}" TargetType="arc:AiPanelSuggestionPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:AiSidePanelTokenResource SuggestionHeight}" />
+        <Setter Property="Padding" Value="{arc:AiSidePanelTokenResource SuggestionPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelSuggestionPill">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   LineHeight="18.2"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The error card: a 1px Border box, radius 14, padding 10 10 10 12; CircleAlert 16 in Danger, 10px, the title (13 /
+        18.2 Foreground, wrapping) over the detail (12 / 16.8 TextMuted), and Retry (a 30px secondary button: RotateCcw 13,
+        8px, the label).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelErrorCard}" TargetType="arc:AiPanelErrorCard">
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:AiSidePanelTokenResource CardRadius}" />
+        <Setter Property="Padding" Value="{arc:AiSidePanelTokenResource ErrorCardPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelErrorCard">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <DockPanel>
+                        <arc:ArcGlyph DockPanel.Dock="Left"
+                                      Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                      Size="16"
+                                      StrokeThickness="2"
+                                      Foreground="{arc:ArcDesignTokenResource Danger}"
+                                      Margin="0,0,10,0"
+                                      VerticalAlignment="Center" />
+                        <arc:Button Name="PART_Retry"
+                                    DockPanel.Dock="Right"
+                                    Variant="Secondary"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                              Size="13"
+                                              StrokeThickness="2"
+                                              Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding RetryText}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:Button>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       FontSize="13"
+                                       LineHeight="18.2"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="{TemplateBinding Detail}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button#PART_Retry">
+            <Setter Property="MinHeight" Value="{arc:AiSidePanelTokenResource CardButtonHeight}" />
+            <Setter Property="Height" Value="{arc:AiSidePanelTokenResource CardButtonHeight}" />
+            <Setter Property="Padding" Value="{arc:AiSidePanelTokenResource CardButtonPadding}" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The change card: a 1px Border box, radius 14, on Surface, clipped. The head (padding 10 12 0): PenLine 14 TextMuted,
+        7px, the label 13 / 18.2 500 Foreground, the summary 12 / 16.8 TextMuted at the right. The body (padding 8 12 12) at
+        50% when discarded (240ms standard). The footer: 43 high under a BorderSubtle line, padding 0 7 0 12, the state at
+        the left and the buttons (30 high, padding 0 12, 13 / 500) at the right, both swapping in place (out 100 / in 160).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelChangeCard}" TargetType="arc:AiPanelChangeCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:AiSidePanelTokenResource CardRadius}" />
+        <Setter Property="ButtonHeight" Value="{arc:AiSidePanelTokenResource CardButtonHeight}" />
+        <Setter Property="ButtonPadding" Value="{arc:AiSidePanelTokenResource CardButtonPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelChangeCard">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <DockPanel Name="PART_Head" Margin="{arc:AiSidePanelTokenResource CardHeadPadding}">
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:ArcIcons.PenLine}"
+                                          Size="14"
+                                          StrokeThickness="2"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          Margin="0,0,7,0"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Summary"
+                                       DockPanel.Dock="Right"
+                                       Margin="8,0,0,0"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Label"
+                                       FontSize="13"
+                                       LineHeight="18.2"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                        <Border Name="PART_Body" Padding="{arc:AiSidePanelTokenResource CardBodyPadding}" />
+                        <Border Name="PART_Footer"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                Height="{arc:AiSidePanelTokenResource CardFooterHeightWithEdge}"
+                                Padding="{arc:AiSidePanelTokenResource CardFooterPadding}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <arc:ArcContentSwap Name="PART_Status"
+                                                    Mode="Crossfade"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center" />
+                                <arc:ArcContentSwap Name="PART_Actions"
+                                                    Grid.Column="1"
+                                                    Mode="Crossfade"
+                                                    HorizontalContentAlignment="Right"
+                                                    VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:discarded /template/ Border#PART_Body">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Body">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Body">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The box's text field: no frame of its own, 14 / 19.6 in Foreground, the placeholder in TextMuted, one line. -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelInput}" TargetType="arc:AiPanelInput">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelInput">
+                <Border Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       IsHitTestVisible="False"
+                                       IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The box: 44 high, radius 18, a 1px Border (BorderStrong while the focus is inside, 160ms standard), padding 0 6 0 14
+        on Surface; the text field and the 32px solid send button 6px apart.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelBox}" TargetType="arc:AiPanelBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:AiSidePanelTokenResource BoxHeight}" />
+        <Setter Property="Padding" Value="{arc:AiSidePanelTokenResource BoxPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelBox">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <arc:AiPanelInput Name="PART_Input"
+                                          Text="{TemplateBinding Text, Mode=TwoWay}"
+                                          PlaceholderText="{TemplateBinding Placeholder}"
+                                          VerticalAlignment="Stretch" />
+                        <arc:AiSendButton Name="PART_Send"
+                                          Grid.Column="1"
+                                          Appearance="Solid"
+                                          Margin="6,0,0,0"
+                                          Width="{arc:AiSidePanelTokenResource SendDiameter}"
+                                          Height="{arc:AiSidePanelTokenResource SendDiameter}"
+                                          VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

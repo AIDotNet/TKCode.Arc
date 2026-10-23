@@ -1,0 +1,302 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A System / User tab (Arc 3.3): 30 high, 0 12 padding, pill corners, no fill of its own (the gliding background
+        shows under the active tab); Inter 14 / 19.6, TextMuted at rest, Foreground on hover and when active (160ms). In
+        the compare view a changed part shows a 5px dot (Foreground at 55%) 6px after its name. Keyboard focus draws a 2px
+        ring inside the tab's edge (Arc's outline offset -2).
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptPartTab}" TargetType="arc:PromptPartTab">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:PromptStudioTokenResource TabHeight}" />
+        <Setter Property="Padding" Value="{arc:PromptStudioTokenResource TabPadding}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptPartTab">
+                <Panel Background="{TemplateBinding Background}">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="{TemplateBinding Padding}"
+                                Spacing="{arc:PromptStudioTokenResource ChangedDotGap}"
+                                VerticalAlignment="Center">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Text}"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14" />
+                        <Ellipse Name="PART_Dot"
+                                 IsVisible="False"
+                                 Width="{arc:PromptStudioTokenResource ChangedDotSize}"
+                                 Height="{arc:PromptStudioTokenResource ChangedDotSize}"
+                                 Opacity="0.55"
+                                 Fill="{arc:ArcDesignTokenResource Foreground}"
+                                 VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover, ^:pressed, ^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:changed /template/ Ellipse#PART_Dot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The tab list: the two tabs 2px apart over one SurfaceMuted pill that glides under the active tab (code: quick spring). -->
+    <ControlTheme x:Key="{x:Type arc:PromptPartTabs}" TargetType="arc:PromptPartTabs">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptPartTabs">
+                <Panel>
+                    <arc:GlidingIndicator Name="PART_Highlight"
+                                          Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                          CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:PromptStudioTokenResource TabGap}">
+                        <arc:PromptPartTab Name="PART_SystemTab" />
+                        <arc:PromptPartTab Name="PART_UserTab" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The card (Arc prompt studio 3.1): at most 760 wide, 1px Border, Surface, RadiusSurface (34), no shadow, Inter 14.
+        Header (14 16 14 28, bottom rule): the title (Geist 16 / 17.6 medium, -0.48) and the version button 10 apart on the
+        left, the model button on the right (under the title when they do not fit). Editor (10 16 12, bottom rule): a 36px
+        bar with the tabs and, on the right, the token estimate or, comparing, the word counts and Back to editing; the two
+        editors and the compare view in one cell (as high as the highest); the hint line (6 12 0). Variables (14 16 16):
+        the fields, then 14 below them the test cases and Run. The output panel closes the card. A compact card (520 and
+        less) tightens the sides to 12 (24 left in the header); a narrow one (480 and less) stacks the test cases and Run,
+        each the full width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptStudio}" TargetType="arc:PromptStudio">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:PromptStudioTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CompactWidth" Value="{arc:PromptStudioTokenResource CompactWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:PromptStudioTokenResource NarrowWidth}" />
+        <Setter Property="TwoColumnWidth" Value="{arc:PromptStudioTokenResource TwoColumnWidth}" />
+        <Setter Property="OneColumnWidth" Value="{arc:PromptStudioTokenResource OneColumnWidth}" />
+        <Setter Property="HintGap" Value="{arc:PromptStudioTokenResource HintGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptStudio">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <StackPanel>
+                            <Border Name="PART_Header"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                <arc:PromptStudioHeaderPanel Name="PART_HeaderRow"
+                                                             ColumnGap="{arc:PromptStudioTokenResource HeaderColumnGap}"
+                                                             RowGap="{arc:PromptStudioTokenResource HeaderRowGap}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:PromptStudioTokenResource TitleGap}">
+                                        <TextBlock Name="PART_Title"
+                                                   Text="{TemplateBinding Title}"
+                                                   VerticalAlignment="Center"
+                                                   TextWrapping="NoWrap"
+                                                   ClipToBounds="True"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:PromptStudioTokenResource TitleFontSize}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:PromptStudioTokenResource TitleLineHeight}"
+                                                   LetterSpacing="{arc:PromptStudioTokenResource TitleLetterSpacing}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:PromptVersionPill Name="PART_VersionPill" />
+                                    </StackPanel>
+                                    <arc:PromptModelPill Name="PART_ModelPill" />
+                                </arc:PromptStudioHeaderPanel>
+                            </Border>
+                            <Border Name="PART_EditorSection"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                <StackPanel>
+                                    <Grid Name="PART_EditorBar"
+                                          Height="{arc:PromptStudioTokenResource EditorBarHeight}"
+                                          ColumnDefinitions="*,Auto">
+                                        <arc:PromptPartTabs Name="PART_Tabs" />
+                                        <Panel Name="PART_Corner" Grid.Column="1" VerticalAlignment="Center">
+                                            <arc:PromptTokenCount Name="PART_Tokens" />
+                                            <StackPanel Name="PART_CompareCorner"
+                                                        Orientation="Horizontal"
+                                                        Spacing="{arc:PromptStudioTokenResource CornerGap}"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center">
+                                                <StackPanel Name="PART_DiffStats"
+                                                            Orientation="Horizontal"
+                                                            Spacing="8"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Name="PART_Added"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               LineHeight="16.8"
+                                                               FontFeatures="tnum"
+                                                               VerticalAlignment="Center"
+                                                               AutomationProperties.AccessibilityView="Raw" />
+                                                    <TextBlock Name="PART_Removed"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               LineHeight="16.8"
+                                                               FontFeatures="tnum"
+                                                               VerticalAlignment="Center"
+                                                               AutomationProperties.AccessibilityView="Raw" />
+                                                </StackPanel>
+                                                <arc:Button Name="PART_Back"
+                                                            Variant="Ghost"
+                                                            Size="Small"
+                                                            Height="{arc:PromptStudioTokenResource BackButtonHeight}"
+                                                            VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Panel>
+                                    </Grid>
+                                    <Panel Name="PART_EditorStack" Margin="{arc:PromptStudioTokenResource EditorStackMargin}">
+                                        <arc:PromptTemplateEditor Name="PART_SystemEditor" />
+                                        <arc:PromptTemplateEditor Name="PART_UserEditor" />
+                                        <arc:AiDiffText Name="PART_Diff"
+                                                        Appearance="Studio"
+                                                        Padding="12,2,12,6"
+                                                        VerticalAlignment="Top" />
+                                    </Panel>
+                                    <arc:ArcContentSwap Name="PART_Hint"
+                                                        Mode="Label"
+                                                        Margin="{arc:PromptStudioTokenResource HintMargin}"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Top" />
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_Vars">
+                                <StackPanel>
+                                    <arc:PromptVariableFields Name="PART_Fields" />
+                                    <Grid Name="PART_RunRow"
+                                          Margin="{arc:PromptStudioTokenResource RunRowMargin}"
+                                          ColumnDefinitions="*,Auto"
+                                          RowDefinitions="Auto,Auto">
+                                        <arc:PromptTestCases Name="PART_Cases" VerticalAlignment="Center" />
+                                        <arc:PromptRunButton Name="PART_RunButton" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <arc:PromptRunPanel Name="PART_Output" />
+                        </StackPanel>
+                    </Border>
+                    <arc:PromptVersionMenu Name="PART_VersionMenu" />
+                    <arc:PromptModelMenu Name="PART_ModelMenu" />
+                    <arc:AiAnnouncer Name="PART_Status" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The sections' paddings and the run row's gaps change with the card's width, so they are styles, not template values. -->
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_EditorSection">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource EditorPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Vars">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource VarsPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|PromptRunPanel#PART_Output">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource OutputInset}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_RunRow">
+            <Setter Property="ColumnSpacing" Value="{arc:PromptStudioTokenResource RunRowGap}" />
+            <Setter Property="RowSpacing" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|PromptTestCases#PART_Cases">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^ /template/ arc|PromptRunButton#PART_RunButton">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <!-- Compact card (520 and less): 12 at the sides (24 on the header's left). -->
+        <Style Selector="^:compact /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource HeaderPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_EditorSection">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource EditorPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Vars">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource VarsPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|PromptRunPanel#PART_Output">
+            <Setter Property="Padding" Value="{arc:PromptStudioTokenResource OutputInsetCompact}" />
+        </Style>
+
+        <!-- Narrow card (480 and less): the test cases and Run stack, each the whole width (the cases share it equally). -->
+        <Style Selector="^:narrow /template/ Grid#PART_RunRow">
+            <Setter Property="ColumnSpacing" Value="0" />
+            <Setter Property="RowSpacing" Value="{arc:PromptStudioTokenResource RunRowGap}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|PromptTestCases#PART_Cases">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|PromptRunButton#PART_RunButton">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
