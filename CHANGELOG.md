@@ -6,6 +6,20 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
+## 0.3.0-preview.3 - 2026-10-23
+
+### Fixed
+
+- **Select**: the option highlight was square. Its corner radius was only copied to the glide indicator when the
+  property changed, and the theme sets the default (14), which never raises a change; it is now applied when the list is
+  created.
+- **Select**: with the Full motion level the menu faded out after a pick, over the text below the field, although the
+  documented behavior is to close at once. `ArcPopup` has a new `IsExitInstant` (Select sets it): at Full the popup
+  closes without an exit motion; Reduced still fades out.
+- **Combobox, MorphSelect**: clicking the input on macOS could end the app with an `NSInvalidArgumentException`.
+  Opening the list wrote an empty text into the accessibility live region, and Avalonia.Native raises a notification with
+  a nil value for it. The announcer now only receives messages.
+
 ## 0.3.0-preview.2 - 2026-10-23
 
 ### Added
@@ -305,6 +319,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.2...v0.3.0-preview.3
 [0.3.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.1...v0.3.0-preview.2
 [0.3.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.2.0-preview.1...v0.3.0-preview.1
 [0.2.0-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.1.1-preview.1...v0.2.0-preview.1

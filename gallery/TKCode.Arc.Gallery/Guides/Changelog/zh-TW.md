@@ -9,6 +9,14 @@ TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版�
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 與 `TKCode.Arc.Special`。
 
+## 0.3.0-preview.3 (2026-10-23)
+
+### 修復
+
+- **Select**：選項高亮是直角；現在使用主題的選項圓角（14）。
+- **Select**：Full 動態等級下，選取後選單會在欄位下方的文字上淡出。現在依文件約定立即關閉；為此 `ArcPopup` 新增了 `IsExitInstant`。Reduced 等級仍然淡出。
+- **Combobox、MorphSelect**：在 macOS 上點擊輸入框可能因 `NSInvalidArgumentException` 導致應用程式結束。無障礙即時區域不再接收空文字。
+
 ## 0.3.0-preview.2 (2026-10-23)
 
 ### 新增

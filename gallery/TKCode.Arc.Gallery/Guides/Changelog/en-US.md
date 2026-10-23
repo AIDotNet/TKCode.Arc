@@ -11,6 +11,16 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
+## 0.3.0-preview.3 (2026-10-23)
+
+### Fixed
+
+- **Select**: the option highlight was square; it now takes the option corner radius of the theme (14).
+- **Select**: with the Full motion level the menu faded out after a pick, over the text below the field. It now closes at
+  once, as documented; `ArcPopup` has a new `IsExitInstant` for this. Reduced still fades out.
+- **Combobox, MorphSelect**: clicking the input on macOS could end the app with an `NSInvalidArgumentException`. The
+  accessibility live region no longer receives an empty text.
+
 ## 0.3.0-preview.2 (2026-10-23)
 
 ### Added

@@ -21,9 +21,9 @@ TKCode.Arc 目前處於預覽階段，AtomUI 與 Avalonia 都固定為確切版�
 ## 1. 加入套件
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.0-preview.2
-dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.2           # 選用：Geist 與 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.2    # 選用：完整的 Lucide 圖示集
+dotnet add package TKCode.Arc --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.3           # 選用：Geist 與 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.3    # 選用：完整的 Lucide 圖示集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選用：內文使用的 Inter
 ```
 
@@ -31,9 +31,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.3.0-preview.2" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.0-preview.2" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.0-preview.2" />
+    <PackageVersion Include="TKCode.Arc" Version="0.3.0-preview.3" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.0-preview.3" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.0-preview.3" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -151,9 +151,9 @@ Arc 自有的圖示字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 個
 `TKCode.Arc.Blocks`（頁面層級區塊）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）與 `TKCode.Arc.Special`（AI 動畫講解）是獨立的套件。依需要加入，並將它們註冊在 `UseArc()` 旁邊：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.2
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.2
-dotnet add package TKCode.Arc.Special --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.Special --version 0.3.0-preview.3
 ```
 
 ```csharp

@@ -22,9 +22,9 @@ application; mixing versions leads to restore warnings and, at run time, to miss
 ## 1. Add the packages
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.0-preview.2
-dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.2           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.2    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.3           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.3    # optional: the full Lucide set
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
 ```
 
@@ -33,9 +33,9 @@ the versions to `Directory.Packages.props` once and keep the project files versi
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.3.0-preview.2" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.0-preview.2" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.0-preview.2" />
+    <PackageVersion Include="TKCode.Arc" Version="0.3.0-preview.3" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.0-preview.3" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.0-preview.3" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -162,9 +162,9 @@ Lucide icon, add `TKCode.Arc.Icons.Lucide` and use its namespace:
 AI explainers) are separate packages. Add the ones you need and register them next to `UseArc()`:
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.2
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.2
-dotnet add package TKCode.Arc.Special --version 0.3.0-preview.2
+dotnet add package TKCode.Arc.Blocks --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.0-preview.3
+dotnet add package TKCode.Arc.Special --version 0.3.0-preview.3
 ```
 
 ```csharp
