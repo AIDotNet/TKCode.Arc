@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentStatusPreviewDemo">
+    <!-- The pill runs an invented sample run on its own. The scenario switch and Replay belong to this demo, not to the
+         control: they only change the AgentRunSimulation that drives the pill. -->
+    <Grid RowDefinitions="Auto,Auto" Height="400">
+        <arc:AgentStatus x:Name="Pill" Margin="0,64,0,0" HorizontalAlignment="Center" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <arc:SegmentedControl x:Name="Scenario" SelectedValue="coding" SelectionChanged="OnScenarioChanged">
+                <arc:SegmentedOption Value="coding" Label="Coding agent" />
+                <arc:SegmentedOption Value="research" Label="Research agent" />
+            </arc:SegmentedControl>
+            <arc:Button Variant="Secondary" Size="Small" Click="OnReplay" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" />
+                    <TextBlock Text="Replay" />
+                </StackPanel>
+            </arc:Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

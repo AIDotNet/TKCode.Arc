@@ -1,0 +1,341 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The model pill: 36 high, 12 left and 10 right, pill radius, 1px Border on the Surface. Mark (16), name (medium),
+        window (muted, tabular) and a chevron (15, 1.75) 8 apart; the chevron turns over on the CSS spring while the menu is
+        open. Hover and open: SurfaceMuted (120ms) with the strong border (160ms). Disabled while summarizing: 0.55.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ContextWindowModelPill}" TargetType="arc:ContextWindowModelPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Height" Value="{arc:ContextWindowTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:ContextWindowTokenResource PillPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ContextWindowModelPill">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:ContextWindowTokenResource PillGap}"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Mark"
+                                          Data="{TemplateBinding Mark}"
+                                          Size="{arc:ContextWindowTokenResource PillMarkSize}"
+                                          StrokeThickness="1.75"
+                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Name"
+                                       Text="{TemplateBinding ModelName}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                       LetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Window"
+                                       Text="{TemplateBinding WindowText}"
+                                       FontFeatures="tnum"
+                                       LineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                       LetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:ContextWindowTokenResource ChevronSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ContextWindowTokenResource PillDisabledOpacity}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A legend row: 34 high including a 1px BorderSubtle divider (Border under the conversation row, none under the
+        last); columns 10 / 1fr / auto / 47.6 with 10 between them. The swatch is 10 square with radius 3 (the reserve's is
+        an outline). Empty rows show their placeholder in muted text. While another row is hovered: 0.45 in 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ContextWindowLegendRow}" TargetType="arc:ContextWindowLegendRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:ContextWindowTokenResource LegendRowHeight}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ContextWindowLegendRow">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                          ColumnSpacing="{arc:ContextWindowTokenResource LegendColumnGap}"
+                          VerticalAlignment="Center">
+                        <Border Name="PART_Swatch"
+                                Width="{arc:ContextWindowTokenResource SwatchSize}"
+                                Height="{arc:ContextWindowTokenResource SwatchSize}"
+                                CornerRadius="{arc:ContextWindowTokenResource SwatchRadius}"
+                                Background="{TemplateBinding SwatchFill}"
+                                BorderBrush="{TemplateBinding SwatchOutline}"
+                                BorderThickness="1"
+                                VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Label"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding Label}"
+                                   TextTrimming="CharacterEllipsis"
+                                   LineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                   LetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   VerticalAlignment="Center" />
+                        <arc:ContextWindowNumber Name="PART_Tokens"
+                                                 Grid.Column="2"
+                                                 LineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                                 LetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}"
+                                                 VerticalAlignment="Center" />
+                        <arc:ContextWindowNumber Name="PART_Percent"
+                                                 Grid.Column="3"
+                                                 Mode="Percent"
+                                                 Width="{arc:ContextWindowTokenResource PercentColumnWidth}"
+                                                 LineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                                 LetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}"
+                                                 Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                 VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ContextWindowNumber#PART_Tokens">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|ContextWindowNumber#PART_Tokens">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:strong-divider">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:last">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:dimmed">
+            <Setter Property="Opacity" Value="{arc:ContextWindowTokenResource RowDimOpacity}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Context window: a Surface card (RadiusSurface, 1px Border, 24 padding, at most 744 wide) with the header (readout
+        and model pill), the body (the 200-cell grid with its caption beside a 260px legend, or the legend under the grid
+        from 640px of content width down), and the footer under a BorderSubtle hairline: the actions (Send message primary,
+        Attach file secondary, Compact now ghost on the right) and the status line. Below 420px of content the pill moves
+        under the readout.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ContextWindow}" TargetType="arc:ContextWindow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ContextWindowTokenResource CardMaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ContextWindow">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                            Padding="{arc:ContextWindowTokenResource CardPadding}">
+                        <StackPanel Spacing="{arc:ContextWindowTokenResource SectionGap}">
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <arc:ContextWindowReadout Name="PART_Readout"
+                                                          HorizontalAlignment="Left"
+                                                          VerticalAlignment="Top"
+                                                          DisplayFontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                          SecondaryInk="{arc:ArcDesignTokenResource TextSecondary}"
+                                                          MutedInk="{arc:ArcDesignTokenResource TextMuted}"
+                                                          NumberSize="{arc:ContextWindowTokenResource ReadoutNumberSize}"
+                                                          NumberLineHeight="{arc:ContextWindowTokenResource ReadoutNumberLineHeight}"
+                                                          NumberLetterSpacing="{arc:ContextWindowTokenResource ReadoutNumberLetterSpacing}"
+                                                          TextSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                          TextLineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                                          TextLetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}"
+                                                          LineGap="{arc:ContextWindowTokenResource ReadoutLineGap}" />
+                                <arc:ContextWindowModelPill Name="PART_ModelPill" Grid.Column="1" VerticalAlignment="Top" />
+                            </Grid>
+
+                            <arc:ContextWindowBodyPanel Name="PART_Body"
+                                                        SideWidth="{arc:ContextWindowTokenResource LegendWidth}"
+                                                        Gap="{arc:ContextWindowTokenResource BodyGap}"
+                                                        StackedGap="{arc:ContextWindowTokenResource StackedBodyGap}">
+                                <StackPanel Spacing="{arc:ContextWindowTokenResource GridCaptionGap}">
+                                    <arc:ContextWindowGrid Name="PART_Grid"
+                                                           ThresholdRowHeight="{arc:ContextWindowTokenResource ThresholdRowHeight}"
+                                                           DimOpacity="{arc:ContextWindowTokenResource CellDimOpacity}"
+                                                           SystemInk="{arc:ArcDesignTokenResource Series2}"
+                                                           ToolsInk="{arc:ArcDesignTokenResource Series3}"
+                                                           FilesInk="{arc:ArcDesignTokenResource Series4}"
+                                                           MessagesInk="{arc:ArcDesignTokenResource Series1}"
+                                                           SurfaceInk="{arc:ArcDesignTokenResource Surface}"
+                                                           FreeInk="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                           FreeAfterInk="{arc:ContextWindowTokenResource FreeAfterFill}"
+                                                           ReserveInk="{arc:ArcDesignTokenResource BorderStrong}"
+                                                           LineInk="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:ContextWindowFlowPanel ColumnGap="{arc:ContextWindowTokenResource CaptionColumnGap}"
+                                                                RowGap="{arc:ContextWindowTokenResource CaptionRowGap}"
+                                                                PushLastToEnd="True">
+                                        <TextBlock Name="PART_CellCaption"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:ContextWindowTokenResource SmallLineHeight}"
+                                                   LetterSpacing="{arc:ContextWindowTokenResource SmallLetterSpacing}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Line StartPoint="0,0.5"
+                                                  EndPoint="14,0.5"
+                                                  StrokeThickness="1"
+                                                  StrokeDashArray="3,2"
+                                                  Stroke="{arc:ArcDesignTokenResource TextMuted}"
+                                                  VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ThresholdCaption"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       LineHeight="{arc:ContextWindowTokenResource SmallLineHeight}"
+                                                       LetterSpacing="{arc:ContextWindowTokenResource SmallLetterSpacing}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </arc:ContextWindowFlowPanel>
+                                </StackPanel>
+                                <StackPanel Name="PART_Legend" />
+                            </arc:ContextWindowBodyPanel>
+
+                            <Border Name="PART_Footer"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    Padding="{arc:ContextWindowTokenResource FooterPadding}">
+                                <StackPanel Spacing="{arc:ContextWindowTokenResource FooterGap}">
+                                    <arc:ContextWindowFlowPanel ColumnGap="{arc:ContextWindowTokenResource ActionGap}"
+                                                                RowGap="{arc:ContextWindowTokenResource ActionGap}"
+                                                                PushLastToEnd="True">
+                                        <arc:Button Name="PART_SendButton" Variant="Primary" Size="Small">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Send}" Size="24" StrokeThickness="2" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_SendText" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                        <arc:Button Name="PART_AttachButton" Variant="Secondary" Size="Small">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <arc:ArcGlyph Name="PART_AttachIcon" Size="24" StrokeThickness="2" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_AttachText" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                        <arc:Button Name="PART_CompactButton" Variant="Ghost" Size="Small">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Shrink}" Size="24" StrokeThickness="2" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_CompactText" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                    </arc:ContextWindowFlowPanel>
+                                    <arc:ContextWindowStatusLine Name="PART_Status"
+                                                                 IconSize="{arc:ContextWindowTokenResource StatusIconSize}"
+                                                                 Gap="{arc:ContextWindowTokenResource StatusGap}"
+                                                                 LineHeight="{arc:ContextWindowTokenResource BodyLineHeight}"
+                                                                 LetterSpacing="{arc:ContextWindowTokenResource BodyLetterSpacing}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    <arc:ContextWindowFocusHolder Name="PART_FocusHolder" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with the breakpoints live in styles (a template value would win over them). -->
+        <Style Selector="^ /template/ arc|ContextWindowGrid#PART_Grid">
+            <Setter Property="CellGap" Value="{arc:ContextWindowTokenResource CellGap}" />
+            <Setter Property="CellRadius" Value="{arc:ContextWindowTokenResource CellRadius}" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|ContextWindowGrid#PART_Grid">
+            <Setter Property="CellGap" Value="{arc:ContextWindowTokenResource StackedCellGap}" />
+            <Setter Property="CellRadius" Value="{arc:ContextWindowTokenResource StackedCellRadius}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ContextWindowModelPill#PART_ModelPill">
+            <Setter Property="Margin" Value="{arc:ContextWindowTokenResource PillMargin}" />
+        </Style>
+        <Style Selector="^:compact-header /template/ arc|ContextWindowModelPill#PART_ModelPill">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Margin" Value="{arc:ContextWindowTokenResource StackedPillMargin}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

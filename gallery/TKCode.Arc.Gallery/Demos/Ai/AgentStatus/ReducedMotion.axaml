@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentStatusReducedMotionDemo">
+    <!-- Under reduced motion every state, text, focus and announcement stays: widths and the panel change at once, labels
+         fade in place, and the ring does not spin, ping or shimmer. -->
+    <Grid Height="400">
+        <arc:AgentStatus arc:ArcMotion.Level="Reduced" Margin="0,64,0,0" HorizontalAlignment="Center" />
+    </Grid>
+</UserControl>

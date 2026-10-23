@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolCallPreviewDemo">
+    <!-- A small transcript around a group driven by a ToolCallSimulation: the question, the agent's opening sentence, the
+         group, the streamed answer and Run again. The transcript is demo content; the group is the component. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <Border HorizontalAlignment="Right"
+                CornerRadius="18"
+                Padding="16,8"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock Text="What is holding up the March books close?" FontSize="16" />
+        </Border>
+        <StackPanel x:Name="Turn" Spacing="12">
+            <TextBlock x:Name="Intro" FontSize="16" Opacity="0" />
+            <arc:ToolCallGroup x:Name="Group" />
+            <TextBlock x:Name="Answer" FontSize="16" TextWrapping="Wrap" IsVisible="False" />
+            <arc:Button x:Name="Again"
+                        Variant="Ghost"
+                        Size="Small"
+                        HorizontalAlignment="Left"
+                        IsVisible="False"
+                        Click="OnRunAgain">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" VerticalAlignment="Center" />
+                    <TextBlock Text="Run again" VerticalAlignment="Center" />
+                </StackPanel>
+            </arc:Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

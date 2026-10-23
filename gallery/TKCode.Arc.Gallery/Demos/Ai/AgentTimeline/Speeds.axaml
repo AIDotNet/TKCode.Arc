@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentTimelineSpeedsDemo">
+    <!-- Four speeds to choose from, starting at double speed. -->
+    <arc:AgentTimeline x:Name="Timeline" Speed="2" Margin="0,12" />
+</UserControl>

@@ -1,0 +1,123 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The pill: an in-flow footprint (its width follows the content on a spring) that holds the surface while the panel is
+         closed; the open panel floats in the window's overlay layer so nothing clips it. -->
+    <ControlTheme x:Key="{x:Type arc:AgentStatus}" TargetType="arc:AgentStatus">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentStatus">
+                <Panel>
+                    <Border Name="PART_Slot" ClipToBounds="False" />
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The surface: 1px border, surface fill; the floating shadow comes in (and goes) over 240ms while the panel is open. -->
+    <ControlTheme x:Key="{x:Type arc:AgentStatusSurface}" TargetType="arc:AgentStatusSurface">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Style Selector="^:floating">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The head: transparent, a surface-muted hover fill (not while open), an inset keyboard ring that follows the 19px radius. -->
+    <ControlTheme x:Key="{x:Type arc:AgentStatusHead}" TargetType="arc:AgentStatusHead">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:AgentStatusTokenResource HeadCornerRadius}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentStatusHead">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover:not(:expanded)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed:not(:expanded)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The drawn face: orb, label and timer colors, and the label's type. -->
+    <ControlTheme x:Key="{x:Type arc:AgentStatusFace}" TargetType="arc:AgentStatusFace">
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="ShimmerBaseInk" Value="{arc:AgentStatusTokenResource ShimmerBaseColor}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+    </ControlTheme>
+
+    <!-- The step list: icon, label and time colors; 14px labels, 12px times. -->
+    <ControlTheme x:Key="{x:Type arc:AgentStatusStepList}" TargetType="arc:AgentStatusStepList">
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="ShimmerBaseInk" Value="{arc:AgentStatusTokenResource ShimmerBaseColor}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+    </ControlTheme>
+
+    <!-- The step segments: the border color for the rail, accent for done, danger for failed, muted for skipped. -->
+    <ControlTheme x:Key="{x:Type arc:AgentStatusSegments}" TargetType="arc:AgentStatusSegments">
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+    </ControlTheme>
+</ResourceDictionary>

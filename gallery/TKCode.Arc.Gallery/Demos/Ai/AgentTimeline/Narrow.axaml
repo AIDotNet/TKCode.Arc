@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentTimelineNarrowDemo">
+    <!-- Below 520px the label column narrows to dot and name; below a 300px plot the plot scrolls with the labels pinned. -->
+    <arc:AgentTimeline Width="400" HorizontalAlignment="Center" Margin="0,12" />
+</UserControl>

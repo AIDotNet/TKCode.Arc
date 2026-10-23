@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolCallOutputsDemo">
+    <!-- The four output kinds, each open: a list, a table, JSON that folds after ten lines, and text. -->
+    <StackPanel x:Name="Host" Spacing="12" MaxWidth="640" />
+</UserControl>

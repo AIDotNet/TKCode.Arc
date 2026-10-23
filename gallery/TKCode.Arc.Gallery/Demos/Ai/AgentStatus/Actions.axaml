@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentStatusActionsDemo">
+    <!-- Actions says which buttons this app can honor. Here the run can be approved or denied and opened, but not paused,
+         stopped or retried, so those buttons never show. -->
+    <StackPanel Spacing="14" HorizontalAlignment="Center" Margin="0,0,0,330">
+        <arc:AgentStatus Status="NeedsInput"
+                         Actions="Approve, Deny, OpenRun"
+                         Agent="{x:Static arc:AgentStatusSamples.CodingAgent}"
+                         Activity="{x:Static arc:AgentStatusSamples.ApprovalRequest}" />
+        <arc:AgentStatus Status="Working"
+                         Actions="OpenRun"
+                         Agent="{x:Static arc:AgentStatusSamples.ResearchAgent}"
+                         Activity="{x:Static arc:AgentStatusSamples.Reading}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentPlanNarrowDemo">
+    <!-- In a 360px column the padding tightens, long titles wrap and the draft's two buttons share the row. -->
+    <arc:AgentPlan Width="360" HorizontalAlignment="Center" />
+</UserControl>

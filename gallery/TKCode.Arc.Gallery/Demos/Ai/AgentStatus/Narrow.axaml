@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentStatusNarrowDemo">
+    <!-- In a 340px column (under 400) the inline buttons become icon buttons and the timer steps aside; a long label
+         fades at its right edge. Open the panel: it is as wide as the column and Open run is an icon button. -->
+    <StackPanel Width="340" HorizontalAlignment="Center" Margin="0,0,0,330">
+        <arc:AgentStatus x:Name="Pill" Status="NeedsInput" Actions="All" />
+    </StackPanel>
+</UserControl>

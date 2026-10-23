@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentStatusHostDrivenDemo">
+    <!-- Your code owns the run: it sets Status, Activity and Steps, and answers the events. The pill never changes its own
+         status when it has data. The log below shows each event the buttons raise. -->
+    <StackPanel Spacing="16" Height="420">
+        <arc:AgentStatus x:Name="Pill"
+                         HorizontalAlignment="Center"
+                         Margin="0,24,0,0"
+                         Agent="{x:Static arc:AgentStatusSamples.ResearchAgent}"
+                         PauseRequested="OnPause"
+                         ResumeRequested="OnResume"
+                         StopRequested="OnStop"
+                         ApproveRequested="OnApprove"
+                         DenyRequested="OnDeny"
+                         RetryRequested="OnRetry"
+                         OpenRunRequested="OnOpenRun"
+                         ExpandedChanged="OnExpandedChanged" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="8" LineSpacing="8" Margin="0,200,0,0">
+            <arc:Button Content="Start a run" Variant="Secondary" Size="Small" Click="OnStart" />
+            <arc:Button Content="Ask for approval" Variant="Secondary" Size="Small" Click="OnAsk" />
+            <arc:Button Content="Fail" Variant="Secondary" Size="Small" Click="OnFail" />
+            <arc:Button Content="Finish" Variant="Secondary" Size="Small" Click="OnFinish" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Start a run, then press a button in the pill."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

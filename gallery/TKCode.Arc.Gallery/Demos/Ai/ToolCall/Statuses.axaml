@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolCallStatusesDemo">
+    <!-- Every status as a lone call, each in its own frame. Tools are data: a name, a Lucide mark and the phrases. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:ToolCall>
+            <arc:ToolCallItem Id="r" ToolName="Warehouse" ToolMark="{x:Static arc:ArcIcons.Database}" Status="Running"
+                              Title="Read the export job log" RunningTitle="Reading the export job log" />
+        </arc:ToolCall>
+        <arc:ToolCall>
+            <arc:ToolCallItem Id="s" ToolName="Tracker" ToolMark="{x:Static arc:ArcIcons.Inbox}" Status="Success"
+                              Title="Searched tickets in finance/close" Summary="4 results" Duration="0:0:1.18" />
+        </arc:ToolCall>
+        <arc:ToolCall>
+            <arc:ToolCallItem Id="e" ToolName="Warehouse" ToolMark="{x:Static arc:ArcIcons.Database}" Status="Error"
+                              Title="Read the export job log" ErrorTitle="Could not read the export job log"
+                              Message="Connection to reporting_replica timed out after 5s" />
+        </arc:ToolCall>
+        <arc:ToolCall>
+            <arc:ToolCallItem Id="a" ToolName="Chat" ToolMark="{x:Static arc:ArcIcons.MessageCircle}" Status="Approval"
+                              Title="Posted to #finance-ops" ApprovalTitle="Post a status note to #finance-ops"
+                              Message="Sends as Ledger bot to 36 people in #finance-ops" />
+        </arc:ToolCall>
+        <arc:ToolCall>
+            <arc:ToolCallItem Id="d" ToolName="Chat" ToolMark="{x:Static arc:ArcIcons.MessageCircle}" Status="Denied"
+                              Title="Post a status note to #finance-ops" />
+        </arc:ToolCall>
+    </StackPanel>
+</UserControl>

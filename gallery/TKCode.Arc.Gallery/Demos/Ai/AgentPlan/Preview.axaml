@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentPlanPreviewDemo">
+    <!-- No steps and no status: the plan shows the invented sample draft and runs the built-in simulation. -->
+    <arc:AgentPlan MaxWidth="560" />
+</UserControl>

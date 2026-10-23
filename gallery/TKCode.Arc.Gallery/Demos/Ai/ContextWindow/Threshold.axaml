@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContextWindowThresholdDemo">
+    <!-- Compaction at 60% (the line moves up to row 6, sends warn from 51%) and the newest four messages kept. -->
+    <arc:ContextWindow Threshold="0.6" KeepRecentMessages="4" Margin="0,12" />
+</UserControl>

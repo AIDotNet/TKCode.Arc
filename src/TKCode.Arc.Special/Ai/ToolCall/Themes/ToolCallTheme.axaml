@@ -1,0 +1,364 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A tool call row. On its own it sits in a 1px Border frame (radius 16, Surface, 4px in); in a group it is flush.
+        The row: a 12px rounded call whose head is a full-row button under the laid-out parts (mark, title, reason, meta or
+        buttons, status, chevron), then the Input / Output panel. Approval lays Accent at 3% under the row and an inset 1px
+        Accent outline at 50% over it (240ms). The head height follows its content on the smooth spring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ToolCall}" TargetType="arc:ToolCall">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ToolCallTokenResource FrameCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ToolCallTokenResource FramePadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolCall">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        ClipToBounds="False">
+                    <Panel>
+                        <Border Name="PART_Tint"
+                                CornerRadius="{arc:ToolCallTokenResource RowCornerRadius}"
+                                Background="{arc:ArcDesignTokenResource Accent}"
+                                Opacity="0"
+                                IsHitTestVisible="False" />
+                        <StackPanel>
+                            <arc:SpringSizeDecorator Name="PART_HeadBox"
+                                                     Axis="Height"
+                                                     Spring="Smooth"
+                                                     CrossClipOverflow="0">
+                                <Panel>
+                                    <arc:ToolCallHeadButton Name="PART_Toggle"
+                                                            HorizontalAlignment="Stretch"
+                                                            VerticalAlignment="Stretch" />
+                                    <arc:ToolCallHeadPanel Name="PART_Head">
+                                        <arc:ArcGlyph Name="PART_Mark" Size="16" IsHitTestVisible="False" />
+                                        <arc:ToolCallText Name="PART_Title"
+                                                          LineHeight="{arc:ToolCallTokenResource TitleLineHeight}"
+                                                          LetterSpacing="{arc:ToolCallTokenResource TitleLetterSpacing}"
+                                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_Note"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:ToolCallTokenResource NoteLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   IsHitTestVisible="False" />
+                                        <StackPanel Name="PART_Meta"
+                                                    Orientation="Horizontal"
+                                                    Spacing="{arc:ToolCallTokenResource MetaGap}"
+                                                    IsHitTestVisible="False">
+                                            <TextBlock Name="PART_Summary"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       LineHeight="{arc:ToolCallTokenResource MetaLineHeight}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_MetaDot"
+                                                       Text="·"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       LineHeight="{arc:ToolCallTokenResource MetaLineHeight}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_Duration"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       LineHeight="{arc:ToolCallTokenResource MetaLineHeight}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_Actions"
+                                                    Orientation="Horizontal"
+                                                    Spacing="{arc:ToolCallTokenResource ActionGap}">
+                                            <arc:Button Name="PART_Retry"
+                                                        Classes="tool-call-action"
+                                                        Variant="Secondary"
+                                                        Size="Small">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                                  Size="{arc:ToolCallTokenResource ActionIconSize}"
+                                                                  VerticalAlignment="Center" />
+                                                    <TextBlock Name="PART_RetryLabel" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </arc:Button>
+                                            <arc:Button Name="PART_Deny"
+                                                        Classes="tool-call-action"
+                                                        Variant="Secondary"
+                                                        Size="Small" />
+                                            <arc:Button Name="PART_Allow"
+                                                        Classes="tool-call-action"
+                                                        Variant="Primary"
+                                                        Size="Small" />
+                                        </StackPanel>
+                                        <arc:ToolCallStatusGlyph Name="PART_Status"
+                                                                 MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                                 SuccessBrush="{arc:ArcDesignTokenResource Success}"
+                                                                 DangerBrush="{arc:ArcDesignTokenResource Danger}"
+                                                                 AccentBrush="{arc:ArcDesignTokenResource Accent}" />
+                                        <arc:ArcGlyph Name="PART_Chevron"
+                                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                      Size="16"
+                                                      IsHitTestVisible="False"
+                                                      RenderTransformOrigin="50%,50%" />
+                                    </arc:ToolCallHeadPanel>
+                                </Panel>
+                            </arc:SpringSizeDecorator>
+                            <arc:ToolCallCollapsible Name="PART_Body" />
+                        </StackPanel>
+                        <Border Name="PART_Outline"
+                                CornerRadius="{arc:ToolCallTokenResource RowCornerRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource Accent}"
+                                BorderThickness="1"
+                                Opacity="0"
+                                IsHitTestVisible="False" />
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.tool-call-action">
+            <Setter Property="Height" Value="{arc:ToolCallTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ToolCallTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ToolCallTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:flush">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ToolCallTokenResource RowCornerRadius}" />
+        </Style>
+
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:head-hover /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:denied /template/ arc|ToolCallText#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <Style Selector="^:approval /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="{arc:ToolCallTokenResource ApprovalTintOpacity}" />
+        </Style>
+        <Style Selector="^:approval /template/ Border#PART_Outline">
+            <Setter Property="Opacity" Value="{arc:ToolCallTokenResource ApprovalOutlineOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Outline">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The row and group header button: hover fill SurfaceMuted at 75% (160ms), keyboard ring 2px inside the edge. -->
+    <ControlTheme x:Key="{x:Type arc:ToolCallHeadButton}" TargetType="arc:ToolCallHeadButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ToolCallTokenResource RowCornerRadius}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolCallHeadButton">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            Opacity="0" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:ToolCallTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- "Show 25 more lines": 28px, radius 8, 6 / 8 in, a 14px chevron that turns over, 12px TextSecondary. -->
+    <ControlTheme x:Key="{x:Type arc:ToolCallFoldButton}" TargetType="arc:ToolCallFoldButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="6,0,8,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolCallFoldButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{TemplateBinding Background}" />
+                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="{TemplateBinding Padding}">
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="14"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="12"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^[IsExpanded=True] /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The icon-only copy button: 28 × 28, radius 9; hover SurfaceMuted and Foreground; keyboard ring 2px outside. -->
+    <ControlTheme x:Key="{x:Type arc:ToolCallCopyButton}" TargetType="arc:ToolCallCopyButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="9" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolCallCopyButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="Transparent"
+                            BorderThickness="1" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="13"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

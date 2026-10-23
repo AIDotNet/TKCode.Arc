@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentPlanControlledDemo">
+    <StackPanel Spacing="16">
+        <!-- Status is set, so the plan only reports: this demo plays the agent in its code-behind. -->
+        <arc:AgentPlan x:Name="Plan"
+                       MaxWidth="560"
+                       Status="Draft"
+                       Goal="Move the changelog to its own page"
+                       Approved="OnApproved"
+                       Changed="OnChanged"
+                       StepAction="OnStepAction"
+                       KeepPlanningRequested="OnKeepPlanning"
+                       PauseChanged="OnPauseChanged"
+                       StartOverRequested="OnStartOver" />
+        <TextBlock x:Name="Log"
+                   MaxWidth="560"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Every action of the plan is logged here." />
+    </StackPanel>
+</UserControl>

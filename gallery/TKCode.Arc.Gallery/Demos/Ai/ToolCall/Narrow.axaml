@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolCallNarrowDemo">
+    <!-- In a 390px column the meta keeps only the duration, the reason wraps, Retry moves under it and the panel drops its
+         indent. Under about 370px the meta goes. -->
+    <arc:ToolCallGroup x:Name="Group" Width="390" HorizontalAlignment="Center" IsExpanded="True" />
+</UserControl>

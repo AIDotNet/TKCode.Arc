@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentTimelineOwnRunDemo">
+    <!-- A finished run of your own opens complete, ready to replay. Click a span to pin it. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <arc:AgentTimeline x:Name="Timeline" SpanSelected="OnSpanSelected" Completed="OnCompleted">
+            <arc:AgentTimeline.Run>
+                <arc:AgentTimelineRun Title="Monthly refund summary">
+                    <arc:AgentTimelineRun.Agents>
+                        <arc:AgentTimelineAgent Id="planner" Name="Planner" Price="8">
+                            <arc:AgentTimelineAgent.Model>
+                                <arc:AgentModel Name="Nimbus Pro 3" Mark="{x:Static arc:ArcIcons.Sparkles}" />
+                            </arc:AgentTimelineAgent.Model>
+                        </arc:AgentTimelineAgent>
+                        <arc:AgentTimelineAgent Id="clerk" Name="Data clerk" Price="0.2">
+                            <arc:AgentTimelineAgent.Model>
+                                <arc:AgentModel Name="Nimbus Lite 3" Mark="{x:Static arc:ArcIcons.Sparkles}" />
+                            </arc:AgentTimelineAgent.Model>
+                        </arc:AgentTimelineAgent>
+                    </arc:AgentTimelineRun.Agents>
+                    <arc:AgentTimelineRun.Spans>
+                        <arc:AgentTimelineSpan AgentId="planner" Kind="Thinking" Start="0" End="1.2"
+                                               Label="Outlined the summary" Tokens="1100" />
+                        <arc:AgentTimelineSpan AgentId="planner" Kind="Waiting" Start="1.2" End="5.8"
+                                               Label="Waiting on the data clerk" />
+                        <arc:AgentTimelineSpan AgentId="clerk" Kind="Tool" Start="1.5" End="3.9"
+                                               Label="Exported last month's refunds" Tool="Ledger"
+                                               ToolMark="{x:Static arc:ArcIcons.Database}" Tokens="2200" />
+                        <arc:AgentTimelineSpan AgentId="clerk" Kind="Thinking" Start="3.9" End="5.5"
+                                               Label="Ranked the refund reasons" Tokens="800" />
+                    </arc:AgentTimelineRun.Spans>
+                    <arc:AgentTimelineRun.Handoffs>
+                        <arc:AgentTimelineHandoff From="planner" To="clerk" At="1.2" Label="Which refund reasons grew?" />
+                        <arc:AgentTimelineHandoff From="clerk" To="planner" At="5.8" Label="Damaged items lead the refunds" />
+                    </arc:AgentTimelineRun.Handoffs>
+                </arc:AgentTimelineRun>
+            </arc:AgentTimeline.Run>
+        </arc:AgentTimeline>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Click a span to pin it; the pin is logged here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

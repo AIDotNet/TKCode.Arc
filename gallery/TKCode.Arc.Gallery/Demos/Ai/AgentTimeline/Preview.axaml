@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentTimelinePreviewDemo">
+    <!-- With no run the timeline shows its invented sample and replays it the first time it scrolls into view. -->
+    <arc:AgentTimeline Margin="0,12" />
+</UserControl>

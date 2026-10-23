@@ -49,6 +49,24 @@ public static partial class GalleryCatalog
     /// </summary>
     public static readonly GalleryCategory[] Special =
     [
+        new("Ai", "AI", "AI",
+        [
+            new("AgentStatus", "Agent status", "agent-status", 0,
+                "A live status pill for a running agent: its mark in a spinning ring, the current step and a timer, opening into the recent steps with pause, stop and approval controls.",
+                IsArc: false),
+            new("ToolCall", "Tool call", "tool-call", 0,
+                "A tool call row for an agent transcript: the tool, what it did and how it went, opening into the call's input and output, with approval and retry in place.",
+                IsArc: false),
+            new("AgentPlan", "Agent plan", "agent-plan", 0,
+                "An agent's plan as an editable checklist: reorder, rename and add steps while it is a draft, then follow the run step by step once it is approved.",
+                IsArc: false),
+            new("AgentTimeline", "Agent timeline", "agent-timeline", 0,
+                "A replay of a multi-agent run on one time axis: each agent's thinking, tool calls and waiting, the handoffs between them, and the time, tokens and cost.",
+                IsArc: false),
+            new("ContextWindow", "Context window", "context-window", 0,
+                "A model's context window as a grid of 200 cells that fills part by part, with a compaction threshold, a legend and actions that show what still fits.",
+                IsArc: false),
+        ], IsArc: false),
         new("Illustrations", "Illustrations", "插图",
         [
             new("DataFlow", "Data flow", "data-flow", 0,

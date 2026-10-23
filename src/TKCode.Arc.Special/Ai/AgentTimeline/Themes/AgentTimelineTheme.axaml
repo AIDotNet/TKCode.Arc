@@ -1,0 +1,166 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The card: header (title, status line), the body (agent labels and the drawn plot in a horizontal scroller), the
+        footer (play, restart, speed, legend), and over it all the layer the span card moves in.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentTimeline}" TargetType="arc:AgentTimeline">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="744" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="NeutralInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="GridInk" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="FocusInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Series1Ink" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2Ink" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3Ink" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4Ink" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="ThinkingTint" Value="{arc:AgentTimelineTokenResource ThinkingTint}" />
+        <Setter Property="ThinkingHoverTint" Value="{arc:AgentTimelineTokenResource ThinkingHoverTint}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentTimeline">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{arc:AgentTimelineTokenResource SectionPadding}">
+                        <StackPanel Spacing="{arc:AgentTimelineTokenResource SectionGap}">
+                            <StackPanel Name="PART_Header"
+                                        Margin="{arc:AgentTimelineTokenResource EdgePadding}"
+                                        Spacing="{arc:AgentTimelineTokenResource HeaderGap}">
+                                <!-- Geist's glyphs sit 2px low in a 17.6 line here; the margin lifts them without changing the row. -->
+                                <TextBlock Name="PART_Title"
+                                           Margin="0,-2,0,2"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:AgentTimelineTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:AgentTimelineTokenResource TitleLetterSpacing}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:AgentTimelineStatusLine Name="PART_Status"
+                                                             TextBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                             SecondaryBrush="{arc:ArcDesignTokenResource TextSecondary}"
+                                                             MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                             SuccessBrush="{arc:ArcDesignTokenResource Success}" />
+                            </StackPanel>
+                            <Grid Name="PART_Body" ColumnDefinitions="Auto,*">
+                                <arc:AgentTimelineLabelColumn Name="PART_Labels"
+                                                              VerticalAlignment="Top"
+                                                              NameBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                              ModelBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                              MarkBrush="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <Border Name="PART_LabelsDivider"
+                                        Width="1"
+                                        HorizontalAlignment="Right"
+                                        IsHitTestVisible="False"
+                                        Opacity="0"
+                                        Background="{arc:ArcDesignTokenResource Border}" />
+                                <arc:ScrollArea Name="PART_Scroller"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                FadeLength="0"
+                                                Focusable="False"
+                                                IsTabStop="False">
+                                    <arc:AgentTimelinePlot Name="PART_Plot"
+                                                           HorizontalAlignment="Left"
+                                                           Margin="{arc:AgentTimelineTokenResource TrackPadding}" />
+                                </arc:ScrollArea>
+                            </Grid>
+                            <arc:AgentTimelineFooterPanel Name="PART_Footer" Margin="{arc:AgentTimelineTokenResource EdgePadding}">
+                                <StackPanel Name="PART_Controls"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:AgentTimelineTokenResource ControlGap}">
+                                    <arc:Button Name="PART_PlayButton"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                Width="36"
+                                                Height="36"
+                                                MinWidth="36"
+                                                Padding="0"
+                                                CornerRadius="18" />
+                                    <arc:Button Name="PART_RestartButton"
+                                                Variant="Ghost"
+                                                Size="Small"
+                                                Width="36"
+                                                Height="36"
+                                                MinWidth="36"
+                                                Padding="0"
+                                                CornerRadius="18">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" />
+                                    </arc:Button>
+                                    <arc:SegmentedControl Name="PART_Speed" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <WrapPanel Name="PART_Legend"
+                                           VerticalAlignment="Center"
+                                           ItemSpacing="{arc:AgentTimelineTokenResource LegendItemGap}"
+                                           LineSpacing="{arc:AgentTimelineTokenResource LegendLineGap}" />
+                            </arc:AgentTimelineFooterPanel>
+                        </StackPanel>
+                    </Border>
+                    <Canvas Name="PART_CardLayer" IsHitTestVisible="False" ClipToBounds="False">
+                        <arc:AgentTimelineCard Name="PART_HoverCard" />
+                    </Canvas>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:narrow /template/ StackPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:AgentTimelineTokenResource NarrowEdgePadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|AgentTimelineFooterPanel#PART_Footer">
+            <Setter Property="Margin" Value="{arc:AgentTimelineTokenResource NarrowEdgePadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|AgentTimelinePlot#PART_Plot">
+            <Setter Property="Margin" Value="{arc:AgentTimelineTokenResource NarrowTrackPadding}" />
+        </Style>
+        <Style Selector="^:live /template/ StackPanel#PART_Controls">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:scrolled /template/ Border#PART_LabelsDivider">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_LabelsDivider">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The span card: 280 wide, 1px border, 18 radius, the floating shadow; surface in light, raised surface in dark. -->
+    <ControlTheme x:Key="{x:Type arc:AgentTimelineCard}" TargetType="arc:AgentTimelineCard">
+        <Setter Property="Background" Value="{arc:AgentTimelineTokenResource HoverCardBackground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="CardWidth" Value="{arc:AgentTimelineTokenResource HoverCardWidth}" />
+        <Setter Property="CardPadding" Value="{arc:AgentTimelineTokenResource HoverCardPadding}" />
+        <Setter Property="RowGap" Value="{arc:AgentTimelineTokenResource HoverCardRowGap}" />
+    </ControlTheme>
+</ResourceDictionary>

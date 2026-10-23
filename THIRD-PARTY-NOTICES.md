@@ -9,7 +9,8 @@ TKCode.Arc reimplements the free (MIT) components of Arc for Avalonia, and `TKCo
 Arc's free (MIT) blocks (Page header, Command palette, Notification center, Empty states, Site header, Site footer, CTA section, Newsletter signup). The code,
 styles, text and assets of Arc Pro components and blocks are not used, copied or reconstructed. A few Pro
 counterparts (the data grid, the Sidebar and Search results blocks, the AI blocks, the Showpieces blocks, the Projects blocks and the
-five AI explainers in `TKCode.Arc.Special`) are
+five AI explainers and the five AI components (agent status, tool call, agent plan, agent timeline, context
+window) in `TKCode.Arc.Special`) are
 original TKCode designs that take the behavior and look Arc publishes as a design reference; their code, copy,
 sample data and images are written from scratch (the Showpieces' land outlines come from Natural Earth, below).
 

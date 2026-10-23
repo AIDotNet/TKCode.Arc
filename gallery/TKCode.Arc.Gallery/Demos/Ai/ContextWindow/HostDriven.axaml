@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ContextWindowHostDrivenDemo">
+    <StackPanel Spacing="16" Margin="0,12">
+        <!-- No turns or files: Send message and Attach file hide, and the app adds real items with AddItem. A summarizer
+             reports the summary's size, and the switch turns automatic compaction off. -->
+        <arc:ContextWindow x:Name="Card" Compacted="OnCompacted" />
+        <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Add a reply" Variant="Secondary" Size="Small" Click="OnAddReply" />
+            <arc:Button Content="Add a file" Variant="Secondary" Size="Small" Click="OnAddFile" />
+            <arc:Switch x:Name="AutoSwitch" Content="Compact on its own" IsChecked="True" IsCheckedChanged="OnAutoChanged"
+                        VerticalAlignment="Center" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Add replies until the window passes 80%."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

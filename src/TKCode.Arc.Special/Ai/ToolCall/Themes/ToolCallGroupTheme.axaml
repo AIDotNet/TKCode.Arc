@@ -1,0 +1,102 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A tool call group: the card (1px Border, radius 16, Surface) grows in with its first call; a 48px header (a 40px
+        button 4px in: the mark stack, the label, the meta and the chevron, 10px apart) over the list (4px around the rows,
+        under a 1px BorderSubtle line), which opens and closes on the smooth spring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ToolCallGroup}" TargetType="arc:ToolCallGroup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ToolCallGroupTokenResource CardCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToolCallGroup">
+                <arc:ToolCallCollapsible Name="PART_Slot">
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <StackPanel>
+                            <Border Padding="{arc:ToolCallGroupTokenResource HeadOuterPadding}">
+                                <arc:ToolCallHeadButton Name="PART_Header"
+                                                        Height="{arc:ToolCallGroupTokenResource HeadButtonHeight}"
+                                                        Padding="{arc:ToolCallGroupTokenResource HeadInlinePadding}">
+                                    <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                        <arc:ToolCallMarkStack Name="PART_Stack"
+                                                               Margin="-2,0,10,0"
+                                                               VerticalAlignment="Center"
+                                                               SurfaceBrush="{arc:ArcDesignTokenResource Surface}"
+                                                               RingBrush="{arc:ArcDesignTokenResource Border}"
+                                                               MarkBrush="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:ToolCallText Name="PART_Label"
+                                                          Grid.Column="1"
+                                                          VerticalAlignment="Center"
+                                                          LineHeight="{arc:ToolCallGroupTokenResource LabelLineHeight}"
+                                                          LetterSpacing="{arc:ToolCallGroupTokenResource LabelLetterSpacing}"
+                                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:ToolCallText Name="PART_Meta"
+                                                          Grid.Column="2"
+                                                          Swap="Fade"
+                                                          Margin="10,0,0,0"
+                                                          VerticalAlignment="Center"
+                                                          FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                          LineHeight="{arc:ToolCallGroupTokenResource MetaLineHeight}" />
+                                        <arc:ArcGlyph Name="PART_GroupChevron"
+                                                      Grid.Column="3"
+                                                      Margin="10,0,0,0"
+                                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                      Size="16"
+                                                      VerticalAlignment="Center"
+                                                      IsHitTestVisible="False"
+                                                      RenderTransformOrigin="50%,50%" />
+                                    </Grid>
+                                </arc:ToolCallHeadButton>
+                            </Border>
+                            <arc:ToolCallCollapsible Name="PART_List">
+                                <Border BorderThickness="0,1,0,0"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                        Padding="{arc:ToolCallGroupTokenResource ListPadding}">
+                                    <StackPanel Name="PART_Rows" />
+                                </Border>
+                            </arc:ToolCallCollapsible>
+                        </StackPanel>
+                    </Border>
+                </arc:ToolCallCollapsible>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:head-hover /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_GroupChevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

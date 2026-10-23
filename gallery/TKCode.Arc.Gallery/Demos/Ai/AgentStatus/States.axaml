@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentStatusStatesDemo">
+    <!-- Every state, driven by the host: nothing changes on its own. Press a pill to open its panel. -->
+    <StackPanel x:Name="Stack" Spacing="14" HorizontalAlignment="Center" Margin="0,0,0,330" />
+</UserControl>

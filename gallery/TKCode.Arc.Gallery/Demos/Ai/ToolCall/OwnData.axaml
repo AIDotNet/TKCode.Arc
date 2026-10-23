@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ToolCallOwnDataDemo">
+    <!-- A group driven by your own data: the app handles Allow, Deny and Retry itself and moves the calls on. -->
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:ToolCallGroup x:Name="Group"
+                           ApproveRequested="OnApprove"
+                           DenyRequested="OnDeny"
+                           RetryRequested="OnRetry"
+                           ExpandedChanged="OnExpanded" />
+        <WrapPanel HorizontalAlignment="Left" ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Add a call" Variant="Secondary" Size="Small" Click="OnAdd" />
+            <arc:Button Content="Start over" Variant="Ghost" Size="Small" Click="OnReset" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Text="Allow, Deny and Retry are logged here; the app decides what happens next."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

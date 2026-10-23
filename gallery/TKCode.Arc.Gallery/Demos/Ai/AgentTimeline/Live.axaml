@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentTimelineLiveDemo">
+    <!-- Live mode: events arrive while the run happens; open spans grow to now and the axis grows in steps. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <arc:AgentTimeline x:Name="Timeline" Completed="OnCompleted" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
+            <arc:Button Content="Start a live run" Variant="Secondary" Size="Small" Click="OnStartClick" />
+            <TextBlock x:Name="Log"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>
