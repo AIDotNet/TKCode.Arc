@@ -31,8 +31,8 @@ dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.1           # 可选
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.1    # 可选：完整的 Lucide 图标集
 ```
 
-`TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks` 与 `TKCode.Arc.AdvancedCharts` 目前只能从本仓库构建，
-尚未发布到 NuGet。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
+`TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`
+（Special components 区的 AI 动画讲解组件）目前只能从本仓库构建，尚未发布到 NuGet。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
 
 ## 快速开始
 
@@ -51,7 +51,7 @@ public partial class App : Application { }
 ```
 
 ```xml
-<Window xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+<Window xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
   <StackPanel Spacing="12">
     <arc:Button Content="Save changes" />
     <arc:Button Content="Cancel" Variant="Secondary" />
@@ -67,7 +67,7 @@ public partial class App : Application { }
 来自图标包：
 
 ```xml
-<Window xmlns:lucide="https://github.com/AtomUICommunity/TKCode.Arc/lucide">
+<Window xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide">
   <lucide:LucideIcon Kind="Sparkles" Size="20" />
 </Window>
 ```

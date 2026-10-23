@@ -19,7 +19,7 @@ Read `design/engineering/implementation-guide.md` before writing a component: fi
 ## Non-negotiable rules
 
 - Controls derive from Avalonia base types; only public AtomUI APIs are used (design/architecture/atomui-integration.md).
-- Class names have no prefix; flat namespace `TKCode.Arc`; xmlns `https://github.com/AtomUICommunity/TKCode.Arc`.
+- Class names have no prefix; flat namespace `TKCode.Arc`; xmlns `https://github.com/AIDotNet/TKCode.Arc`.
 - Every public control has a `[ControlDesignToken]` `<Control>Token` in the same namespace with at least one property (an empty token crashes at runtime) and no name from `design/engineering/reserved-token-names.md`; Semantic Part paths start with `arc.`.
 - Colors, radii, shadows and fonts come from `{arc:ArcDesignTokenResource ...}`; control tokens hold geometry and accent-independent derived colors only.
 - Themes live in `<Component>/Themes/<Component>Theme.axaml`; never create `*Themes.axaml` aggregates.

@@ -31,8 +31,9 @@ dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.1           # option
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.1    # optional: the full Lucide set
 ```
 
-`TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks` and `TKCode.Arc.AdvancedCharts` are built from this
-repository and are not published on NuGet yet. Versions carry a `-preview` suffix, so the API may still change between
+`TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
+(the animated AI explainers of the Special components section) are built from this repository and are not published on
+NuGet yet. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started
@@ -52,7 +53,7 @@ public partial class App : Application { }
 ```
 
 ```xml
-<Window xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+<Window xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
   <StackPanel Spacing="12">
     <arc:Button Content="Save changes" />
     <arc:Button Content="Cancel" Variant="Secondary" />
@@ -68,7 +69,7 @@ Icons: Arc's built-in glyphs (`{x:Static arc:ArcIcons.Check}`) cover every icon 
 comes from the icons package:
 
 ```xml
-<Window xmlns:lucide="https://github.com/AtomUICommunity/TKCode.Arc/lucide">
+<Window xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide">
   <lucide:LucideIcon Kind="Sparkles" Size="20" />
 </Window>
 ```

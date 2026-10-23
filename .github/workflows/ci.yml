@@ -5,7 +5,7 @@ name: CI
 # nuget:   pushes them to nuget.org (v* tag, or a manual run with "publish" on).
 #
 # Publishing uses nuget.org Trusted Publishing: the job exchanges its GitHub OIDC token for a short-lived API key,
-# so no key is stored. Policy on nuget.org: Owner AtomUICommunity, Repository TKCode.Arc, Workflow ci.yml,
+# so no key is stored. Policy on nuget.org: Owner AIDotNet, Repository TKCode.Arc, Workflow ci.yml,
 # Environment nuget. The nuget.org username (profile name of the policy creator, not an email) is the secret
 # NUGET_USER of the GitHub environment "nuget". nuget.org versions cannot be deleted, only unlisted: run a manual
 # pack without "publish" and check the packages first.
@@ -39,7 +39,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
   # Package metadata shown on nuget.org; passed on the command line so it also applies to tags cut before it was set.
-  REPOSITORY_URL: https://github.com/AtomUICommunity/TKCode.Arc
+  REPOSITORY_URL: https://github.com/AIDotNet/TKCode.Arc
 
 defaults:
   run:
