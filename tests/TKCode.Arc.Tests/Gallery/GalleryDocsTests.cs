@@ -108,7 +108,8 @@ public class GalleryDocsTests
     {
         // The rule for a new component: write Docs/<Category>/<Class>/en-US.md and its translations (design/engineering/gallery-app.md, 6).
         var entries = GalleryCatalog.Categories.SelectMany(c => c.Entries)
-            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "Illustrations" or "AdvancedCharts").SelectMany(c => c.Entries));
+            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "AdvancedCharts").SelectMany(c => c.Entries))
+            .Concat(GalleryCatalog.Special.SelectMany(c => c.Entries));
         foreach (var entry in entries)
         {
             GalleryDocs.Has(entry.ClassName).ShouldBeTrue($"{entry.ClassName} has no docs page");
@@ -183,7 +184,7 @@ public class GalleryDocsTests
         DocSnippets.ValidateXaml("<arc:NoSuchControl />").ShouldNotBeNull();
         DocSnippets.ValidateXaml("<arc:Input NoSuchProperty=\"1\" />").ShouldNotBeNull();
         DocSnippets.ValidateXaml("<arc:Input Size=\"Gigantic\" />").ShouldNotBeNull();
-        DocSnippets.ValidateXaml("<UserControl xmlns=\"https://github.com/avaloniaui\" xmlns:arc=\"https://github.com/AtomUICommunity/TKCode.Arc\"><arc:Input /></UserControl>").ShouldBeNull();
+        DocSnippets.ValidateXaml("<UserControl xmlns=\"https://github.com/avaloniaui\" xmlns:arc=\"https://github.com/AIDotNet/TKCode.Arc\"><arc:Input /></UserControl>").ShouldBeNull();
     }
 
     private static List<string> Headings(string markdown)

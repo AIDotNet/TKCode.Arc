@@ -106,7 +106,7 @@ public class GalleryLocalizationTests
     [AvaloniaFact]
     public void Every_Catalog_Category_Has_A_Title_That_Matches_The_Catalog()
     {
-        foreach (var category in GalleryCatalog.AllCategories)
+        foreach (var category in GalleryCatalog.AllCategories.Concat(GalleryCatalog.Special))
         {
             GalleryText.TryGetCategory(category.Code, out var kind).ShouldBeTrue(category.Code);
             GalleryText.Get(kind).ShouldBe(category.Title, category.Code);

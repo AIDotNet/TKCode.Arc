@@ -49,7 +49,7 @@ public class GalleryLlmsTests
 
         files["zh-CN/components/button.md"].ShouldContain("- 包：`TKCode.Arc`");
         files["zh-TW/blocks/sidebar.md"].ShouldContain("- 套件：`TKCode.Arc.Blocks`，尚未發佈到 NuGet");
-        files["components/data-grid.md"].ShouldContain("not on NuGet yet: reference the project from https://github.com/AtomUICommunity/TKCode.Arc and call `UseArcAdvancedCharts()`");
+        files["components/data-grid.md"].ShouldContain("not on NuGet yet: reference the project from https://github.com/AIDotNet/TKCode.Arc and call `UseArcAdvancedCharts()`");
     }
 
     [AvaloniaFact]
@@ -72,7 +72,10 @@ public class GalleryLlmsTests
     {
         var files = LlmsSite.Build(BaseUrl);
         LlmsSite.BrokenLinks(files, BaseUrl).ShouldBeEmpty();
-        files.Where(f => f.Text.Contains("{{", StringComparison.Ordinal)).Select(f => f.Path).ShouldBeEmpty("unfilled placeholders");
+        // The generator fills the {{name}} placeholders of its own hand-written text (llms.txt and the agent skill); the pages
+        // quote double braces on purpose (the prompt studio's variables), so they are not checked.
+        files.Where(f => (f.Path == "llms.txt" || f.Path.StartsWith("skills/", StringComparison.Ordinal)) && f.Text.Contains("{{", StringComparison.Ordinal))
+            .Select(f => f.Path).ShouldBeEmpty("unfilled placeholders");
 
         // The Browser host publishes the screenshots resources of TKCode.Arc.Gallery.Shots as files under shots/.
         var shots = files.SelectMany(f => Regex.Matches(f.Text, Regex.Escape(BaseUrl) + @"/shots/([^)\s]+\.webp)").Select(m => m.Groups[1].Value))
