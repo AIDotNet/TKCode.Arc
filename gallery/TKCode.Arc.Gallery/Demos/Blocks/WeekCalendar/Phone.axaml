@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WeekCalendarPhoneDemo">
+    <!-- Below 640 the calendar shows three days, a day or the agenda, and the toolbar takes two rows. -->
+    <arc:WeekCalendar x:Name="Calendar"
+                      Width="390"
+                      GridHeight="620"
+                      HorizontalAlignment="Center" />
+</UserControl>

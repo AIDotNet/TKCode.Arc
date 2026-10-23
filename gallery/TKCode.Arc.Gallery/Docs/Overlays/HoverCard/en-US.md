@@ -37,7 +37,7 @@ refers to without losing their place in a thread, a table or a list.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:HoverCard Placement="Bottom">
         <arc:HoverCard.Trigger>
             <arc:Button Variant="Ghost" Content="@maya" />
@@ -119,6 +119,9 @@ Widen the card only when the bios are long enough to wrap onto many lines at 296
 trigger where a preview matters more than a quiet page, such as an owner name on a deployment. A page-wide warm state
 also applies: while any card is open, and for 300 ms after the last one closed, the next card opens after 80 ms with
 a fade only, so a reader who moves across a roster does not wait 500 ms at each name.
+
+The card's padding is `CardPadding` (16 by default; a compact preview card can use `16,14`). It is set next to `CardWidth` so
+a preview of a source or a person can use the same surface in a tighter layout.
 
 ### Showing from code
 
@@ -204,6 +207,10 @@ A hover card opens from three inputs: the pointer, a Tab focus and a click. The 
 that a keyboard user and a mouse user both get a predictable card.
 
 - **Tab focus** opens the card at once. Focus that arrives by a pointer click does not open it; the click itself does.
+- **`OpensOnFocus`** makes keyboard focus follow the same timing as the pointer: with it on, Tab or arrow-key focus opens
+  the card after `OpenDelay` (zero opens it at once), and the card closes as soon as focus leaves, unless the pointer is
+  on the trigger or the card. Focus moving inside the trigger does not close or reopen it. A pointer-driven focus never
+  opens it. Leave it off to keep the default: Tab focus opens the card at once.
 - **Losing focus** starts the close grace. The card closes after `CloseDelay` unless the pointer is over the trigger or
   the card.
 - **Escape** closes an open card. The card then stays closed until the pointer or the focus leaves the trigger, so it
@@ -347,7 +354,8 @@ closes, so the reader hears the normal trigger description after that.
 - While the card is open, its summary is written to the trigger's help text. The card itself has no accessible name
   of its own unless one is set, so the trigger's text must name the person.
 - Focus never enters the card. Keep its content read-only and put actions on the trigger or in a `Popover`.
-- The card surface is exposed to assistive technology as a pane, not as a button or a link.
+- The card surface is exposed to assistive technology as a tooltip, not as a button or a link. When nothing else describes
+  it, the trigger's help text falls back to the card's visible text.
 - Tab focus opens the card at once, Enter skips the open delay, and Escape closes it. It stays closed while the pointer
   rests on the trigger.
 - On touch, a tap toggles the card. Only one card is open at a time, so a screen reader user never has two previews

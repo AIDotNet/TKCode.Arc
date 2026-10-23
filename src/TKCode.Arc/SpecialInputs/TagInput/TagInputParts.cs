@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Automation;
@@ -645,9 +646,7 @@ internal sealed class TagInputChip : Control
         _blurEffect ??= new BlurEffect();
         _blurEffect.Radius = radius;
         Effect = _blurEffect;
-        Fill.Blur ??= new BlurEffect();
-        Fill.Blur.Radius = radius;
-        Fill.Effect = Fill.Blur;
+        Fill.Effect = ArcBlur.Get(radius);
     }
 
     /// <summary>The tag reads as plain text; its remove button is the only control inside.</summary>

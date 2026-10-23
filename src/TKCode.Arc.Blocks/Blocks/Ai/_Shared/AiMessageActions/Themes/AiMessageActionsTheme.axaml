@@ -1,0 +1,147 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A reply's action bar: the pager (4px after it), then the four 30px actions with no gap. It sits 6px left and 2px up
+        so the glyphs line up with the text above. Hidden actions are transparent (their place kept); a streaming reply hides
+        the whole bar. Opacity eases over 160ms on the standard curve; reduced motion 120ms; Off at once.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiMessageActions}" TargetType="arc:AiMessageActions">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Margin" Value="-6,-2,0,0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiMessageActions">
+                <StackPanel Name="PART_Bar" Orientation="Horizontal" Spacing="4">
+                    <ContentPresenter Name="PART_Pager"
+                                      Content="{TemplateBinding VersionPager}"
+                                      Margin="0,0,4,0"
+                                      VerticalAlignment="Center"
+                                      IsVisible="{TemplateBinding VersionPager, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    <StackPanel Name="PART_Group" Orientation="Horizontal" Opacity="0">
+                        <arc:AiActionButton Name="PART_Copy" GlyphSize="16" />
+                        <arc:AiActionButton Name="PART_Retry" Glyph="{x:Static arc:ArcIcons.RotateCcw}" />
+                        <arc:AiRatingButton Name="PART_Good" Glyph="{x:Static arc:ArcIcons.ThumbsUp}" />
+                        <arc:AiRatingButton Name="PART_Bad" Glyph="{x:Static arc:ArcIcons.ThumbsDown}" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:shown /template/ StackPanel#PART_Group">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:streaming /template/ StackPanel#PART_Bar">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ StackPanel#PART_Group">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ StackPanel#PART_Bar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel#PART_Group">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel#PART_Bar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One action: 30 × 30, radius 10, the glyph (stroke 1.75) in TextMuted; hover SurfaceMuted with a Foreground glyph.
+        A press scales it to 0.92 and the release springs back on Arc's CSS spring (580ms), at full motion only. The
+        tooltip opens below.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiActionButton}" TargetType="arc:AiActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="arc:Tooltip.Side" Value="Bottom" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcContentSwap Name="PART_Glyph"
+                                        Mode="Crossfade"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- A chosen rating (AiRatingButton shares this theme): the glyph filled in Foreground, no fill behind it. -->
+        <Style Selector="^:on">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

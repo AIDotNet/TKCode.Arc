@@ -5,7 +5,7 @@ passes. Each line names what to look for in the code.
 
 ## Names and API
 
-- [ ] Every Arc element has the `arc:` prefix, and the file declares `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"`.
+- [ ] Every Arc element has the `arc:` prefix, and the file declares `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`.
 - [ ] Every property, event and enum value on an Arc control is in that component's API reference ({{base}}/components/<slug>.md).
 - [ ] C# files that use Arc and `Avalonia.Controls` together alias one of the clashing names (`using ArcButton = TKCode.Arc.Button;`).
 - [ ] No WPF or WinUI API: `Visibility`, `DataTemplateSelector`, `x:Array`, `Trigger`.

@@ -45,6 +45,15 @@ public class GalleryBlocksTests
     }
 
     [AvaloniaFact]
+    public void Showpieces_Follow_The_Sidebar_Order()
+    {
+        var order = new[] { "ActivityTerrain", "RevenueGlobe", "CustomerGalaxy", "SemanticZoom", "LayoutMorph", "ExplodedView" };
+        var listed = Blocks.Subcategories!.Single(s => s.Code == "Showpieces").Entries.Select(e => e.ClassName).ToArray();
+        listed.ShouldNotBeEmpty();
+        listed.ShouldBe(order.Where(listed.Contains).ToArray());
+    }
+
+    [AvaloniaFact]
     public void Every_Block_Has_Demos_And_An_Up_To_Date_Page_In_Every_Language()
     {
         foreach (var entry in Blocks.AllEntries)

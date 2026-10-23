@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentLoopReducedMotionDemo">
+    <!-- Under reduced motion the card opens on its finished run; Play again and Next step still work, in place. -->
+    <arc:AgentLoop arc:ArcMotion.Level="Reduced" />
+</UserControl>

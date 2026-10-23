@@ -1,7 +1,7 @@
 ---
 title: 搜尋結果
 summary: 工作區搜尋頁：附建議彈出視窗的搜尋欄位、數量隨查詢變化的篩選器、日期範圍、排序、可移除的篩選標籤、醒目提示的結果，以及結果詳情面板。
-source-hash: ac5dabc9b179
+source-hash: eb3de9ba7c69
 ---
 
 <Demo name="Preview" />
@@ -31,7 +31,7 @@ source-hash: ac5dabc9b179
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchResults Height="640" Query="發票" Label="搜尋財務資料">
         <arc:SearchResults.Filters>
             <arc:SearchValueFilter Key="kind" Title="類型" />
@@ -302,7 +302,7 @@ search.DetailActionInvoked += (_, e) =>
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchResults Label="搜尋說明中心"
                        PlaceholderText="搜尋文章"
                        ResultsFormat="{}{0} 篇文章"

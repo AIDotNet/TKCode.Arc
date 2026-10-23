@@ -80,7 +80,8 @@ public sealed record GalleryRoute(GalleryRouteKind Kind, GalleryEntry? Entry = n
         {
             index[(GalleryRouteKind.Blocks, entry.Slug)] = entry;
         }
-        foreach (var entry in GalleryCatalog.AllCategories.SelectMany(c => c.AllEntries))
+        // Special components live under /components/ too, as on uiarc.dev.
+        foreach (var entry in GalleryCatalog.AllCategories.Concat(GalleryCatalog.Special).SelectMany(c => c.AllEntries))
         {
             index[(GalleryRouteKind.Components, entry.Slug)] = entry;
         }

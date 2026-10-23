@@ -51,7 +51,7 @@ the snippet below, `file` is the `ContextMenu`.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ContextMenu Label="Actions for Q3 report.pdf">
         <Border Width="220" Height="120" Padding="16" CornerRadius="18" BorderThickness="1">
             <TextBlock Text="Q3 report.pdf" />

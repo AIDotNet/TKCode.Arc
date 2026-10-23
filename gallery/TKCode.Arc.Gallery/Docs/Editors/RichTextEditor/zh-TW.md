@@ -1,7 +1,7 @@
 ---
 title: 富文字編輯器
 summary: 輕量編輯器，支援 Markdown 快速輸入、浮動工具列、斜線選單，並可輸出 HTML 與 Markdown。
-source-hash: cebd50d380c7
+source-hash: f24f2d654941
 ---
 
 <Demo name="Shortcuts" />
@@ -30,7 +30,7 @@ source-hash: cebd50d380c7
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RichTextEditor Markdown="## 筆記&#10;&#10;邊寫邊輸入 **Markdown**，或輸入 `/` 插入區塊。" />
 </UserControl>
 ```

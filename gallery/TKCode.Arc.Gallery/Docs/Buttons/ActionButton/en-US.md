@@ -40,7 +40,7 @@ wherever the submit is the one action that matters.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ActionButton Label="Save" PendingLabel="Saving" SuccessLabel="Saved" />
 </UserControl>
 ```

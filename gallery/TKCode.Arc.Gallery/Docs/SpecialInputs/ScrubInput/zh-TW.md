@@ -1,7 +1,7 @@
 ---
 title: 拖曳數值
 summary: Figma 風格的數字欄位：拖曳標籤即可調整，也可以鍵入數值、單位與算術運算式。
-source-hash: d7a923eed603
+source-hash: d1376e8d8e40
 ---
 
 <Demo name="Inspector" />
@@ -28,7 +28,7 @@ source-hash: d7a923eed603
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ScrubInput Label="X" Value="120" Unit="px" />
 </UserControl>
 ```

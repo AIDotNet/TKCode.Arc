@@ -1,7 +1,7 @@
 ---
 title: 空状态
 summary: 暂无内容时，给出清晰的下一步操作。
-source-hash: ccdd76d93e30
+source-hash: 869a4eb7bc23
 ---
 
 <Demo name="FirstUse" />
@@ -30,7 +30,7 @@ source-hash: ccdd76d93e30
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:EmptyState Label="项目"
                     Title="暂无项目"
                     Description="项目会把你的文件、成员和讨论集中保存在一处。">

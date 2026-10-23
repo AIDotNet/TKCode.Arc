@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     x:ClassModifier="internal">
     <ControlTheme x:Key="{x:Type arc:Textarea}" TargetType="arc:Textarea">
         <Setter Property="Template">
@@ -13,7 +13,6 @@
                            Size="{TemplateBinding Size}">
                     <arc:FieldFrame Name="PART_Frame"
                                     Cursor="IBeam"
-                                    HasFocusRing="True"
                                     MinHeight="{arc:TextareaTokenResource FrameMinHeight}"
                                     Padding="{arc:TextareaTokenResource FramePadding}"
                                     Height="{TemplateBinding FrameHeight}"

@@ -1,0 +1,41 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Fills its space: padding 32 28, the greeting and the suggestions 22px apart, centered both ways. The greeting is
+        the display font at 22 / 24.2, regular, tracked −0.02em (−0.44px), in Foreground, centered and wrapping when narrow.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiChatEmptyState}" TargetType="arc:AiChatEmptyState">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="28,32" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiChatEmptyState">
+                <Border Name="PART_Root"
+                        Background="Transparent"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="22"
+                                VerticalAlignment="Center">
+                        <TextBlock Name="PART_Greeting"
+                                   Text="{TemplateBinding Greeting}"
+                                   IsVisible="{TemplateBinding Greeting, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                   LineHeight="24.2"
+                                   LetterSpacing="-0.44"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center" />
+                        <arc:AiChatSuggestionList Name="PART_Suggestions"
+                                                  ItemsSource="{TemplateBinding Suggestions}"
+                                                  MaxItems="{TemplateBinding MaxSuggestions}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

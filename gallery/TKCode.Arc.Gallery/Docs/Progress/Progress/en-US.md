@@ -39,7 +39,7 @@ Set `Value` and, when the total is not 100, `Maximum`. The bar is read-only and 
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Progress Label="Uploading 4 files"
                   IsValueVisible="True"
                   Value="35" />

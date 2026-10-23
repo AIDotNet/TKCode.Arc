@@ -1,4 +1,5 @@
 using AtomUI.Theme.DesignTokens;
+using Avalonia;
 
 namespace TKCode.Arc;
 
@@ -11,10 +12,14 @@ internal sealed class HoverCardToken : AbstractControlDesignToken
     /// <summary>Gap between the trigger and the card.</summary>
     public double SideOffset { get; set; }
 
+    /// <summary>Space inside the card border (Arc: 16).</summary>
+    public Thickness CardPadding { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
         CardWidth = 296;
         SideOffset = 8;
+        CardPadding = new Thickness(16);
     }
 }

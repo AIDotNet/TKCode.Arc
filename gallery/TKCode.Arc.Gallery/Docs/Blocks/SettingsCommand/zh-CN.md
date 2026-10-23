@@ -1,7 +1,7 @@
 ---
 title: 设置命令面板
 summary: 用一个搜索框找到任意设置并原地修改：开关翻转、选项轮换、链接打开，全部可用键盘完成。
-source-hash: 50bf1f3ffcbf
+source-hash: 1a7e720308b9
 ---
 
 <Demo name="Inline" />
@@ -30,7 +30,7 @@ source-hash: 50bf1f3ffcbf
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SettingsCommand MaxWidth="560">
         <arc:SettingsCommandChoice Group="外观" Header="主题" Options="浅色, 深色, 跟随系统" Keywords="深色 浅色" />
         <arc:SettingsCommandToggle Group="外观" Header="紧凑模式" Description="行距更紧凑，间距更小。" />

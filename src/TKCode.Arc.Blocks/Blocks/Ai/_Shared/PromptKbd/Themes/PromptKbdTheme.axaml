@@ -1,0 +1,57 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A key cap: 0 4 padding inside a 1px Border with radius 5, monospace 11 / 15.4 in TextSecondary (17.4 high).
+        Muted (on the Run button): no border or padding, the body font at 12 / 16.8 with 0.24 letter spacing, the color
+        the owner gives it (the button's text color) at 62%.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptKbd}" TargetType="arc:PromptKbd">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptKbd">
+                <Border Name="PART_Cap"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               Foreground="{TemplateBinding Foreground}"
+                               FontFamily="{TemplateBinding FontFamily}"
+                               FontSize="{TemplateBinding FontSize}"
+                               FontWeight="{TemplateBinding FontWeight}"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <!-- Non-trigger style so :muted can replace it (a template local would win). -->
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="LineHeight" Value="15.4" />
+        </Style>
+        <Style Selector="^:muted">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Opacity" Value="0.62" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Style Selector="^ /template/ TextBlock#PART_Text">
+                <Setter Property="LineHeight" Value="16.8" />
+                <Setter Property="LetterSpacing" Value="0.24" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

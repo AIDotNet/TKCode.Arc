@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The comparison table's region: 1px Border, radius 18, the table clipped to it and scrolling sideways when it is
+        wider than the column. A Tab stop (Arc: role=region with a name) with the keyboard ring 2px, 2px outside. The
+        cells' padding, header fill and row lines are the panel's (brushes from the document).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerTable}" TargetType="arc:AiAnswerTable">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerTable">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <ScrollViewer Name="PART_Scroll"
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <arc:AiAnswerTablePanel Name="PART_Cells" HorizontalAlignment="Left" />
+                        </ScrollViewer>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="22"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

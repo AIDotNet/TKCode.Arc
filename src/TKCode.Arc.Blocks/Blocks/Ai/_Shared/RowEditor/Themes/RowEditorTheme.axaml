@@ -1,0 +1,151 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The editor form: padding 1 8 10 1 (top 1, right 8, bottom 10, left 1), the box, 8px, then the bottom row
+        (36px: hint 11px in at the start, Cancel and Save 8px apart at the end). One line of text makes it 93 high.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RowEditor}" TargetType="arc:RowEditor">
+        <Setter Property="Padding" Value="1,1,8,10" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RowEditor">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="8">
+                        <arc:RowEditorTextBox Name="PART_TextBox" IsReadOnly="{TemplateBinding IsSaving}" />
+                        <arc:RowEditorFooter Name="PART_Footer" ColumnSpacing="12" RowSpacing="8">
+                            <arc:ArcContentSwap Name="PART_Hint"
+                                                Mode="Label"
+                                                Margin="11,0,0,0"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <arc:Button Name="PART_Cancel"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            Content="{TemplateBinding CancelText}"
+                                            IsEnabled="{TemplateBinding IsSaving, Converter={x:Static BoolConverters.Not}}" />
+                                <arc:Button Name="PART_Save"
+                                            Variant="Primary"
+                                            Size="Small"
+                                            Content="{TemplateBinding SaveText}"
+                                            IsLoading="{TemplateBinding IsSaving}" />
+                            </StackPanel>
+                        </arc:RowEditorFooter>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The box: 1px border, radius 10, padding 7 10, 14 / 22 on Surface; one line is 38 high, six lines 148, then it
+        scrolls. Border BorderStrong at rest, Accent while focused, Danger while invalid (focused or not); no focus ring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RowEditorTextBox}" TargetType="arc:RowEditorTextBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RowEditorTextBox">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  IsScrollChainingEnabled="True">
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}"
+                                       VerticalAlignment="Top" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="10,7" />
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="MaxHeight" Value="148" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LineHeight" Value="22" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One message under the box: 12 / 16 muted; an alert adds a 14px circle-alert 6px before danger-colored text. -->
+    <ControlTheme x:Key="{x:Type arc:RowEditorHintLine}" TargetType="arc:RowEditorHintLine">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RowEditorHintLine">
+                <DockPanel>
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  DockPanel.Dock="Left"
+                                  IsVisible="{TemplateBinding IsAlert}"
+                                  Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                  Size="14"
+                                  StrokeThickness="2"
+                                  Margin="0,1,6,0"
+                                  VerticalAlignment="Top" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16"
+                               LetterSpacing="-0.12"
+                               TextWrapping="Wrap" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:alert /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

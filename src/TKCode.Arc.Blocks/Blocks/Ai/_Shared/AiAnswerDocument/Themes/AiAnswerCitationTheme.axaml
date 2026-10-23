@@ -1,0 +1,81 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A citation pill in the answer text: 18 high, at least 18 wide, padding 0 5, 2px after the no-break space before
+        it; the number 12px TextSecondary with tabular digits on SurfaceMuted. Lit (pointed at, focused, or its source
+        card is active) the fill takes 18% of the accent (PART_Tint over PART_Fill: Arc's color-mix as a layer, so it
+        follows the theme) and the number turns Foreground, over 160 ms at full motion and at once otherwise (Arc drops
+        the transition at reduced motion). The keyboard ring is 2px, 1px outside the pill. Without a source: a plain
+        muted number.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerCitation}" TargetType="arc:AiAnswerCitation">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="MinWidth" Value="18" />
+        <Setter Property="Padding" Value="5,0" />
+        <Setter Property="Margin" Value="2,0,0,0" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerCitation">
+                <Panel>
+                    <Border Name="PART_Fill" CornerRadius="9" Background="{TemplateBinding Background}" />
+                    <Border Name="PART_Tint" CornerRadius="9" Opacity="0" Background="{arc:ArcDesignTokenResource Accent}" />
+                    <TextBlock Name="PART_Number"
+                               Text="{TemplateBinding Label}"
+                               Margin="{TemplateBinding Padding}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFeatures="tnum"
+                               Foreground="{TemplateBinding Foreground}" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="12"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:lit">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Opacity" Value="0.18" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

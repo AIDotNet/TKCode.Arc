@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -43,7 +44,6 @@ internal sealed class TagInputPanel : Panel
     private MotionValue<Vector>? _editorFlip;
     private MotionValue<double>? _placeholderPresence;
     private MotionValue<double>? _shake;
-    private BlurEffect? _placeholderBlur;
     private bool _placeholderShown;
     private bool _placeholderTravels;
     private Point? _editorLast;
@@ -319,9 +319,7 @@ internal sealed class TagInputPanel : Panel
         var blur = _placeholderTravels ? rest * TagInputMotion.SoftBlur : 0;
         if (TagInputMotion.IsBlurVisible(blur))
         {
-            _placeholderBlur ??= new BlurEffect();
-            _placeholderBlur.Radius = blur;
-            _placeholder.Effect = _placeholderBlur;
+            _placeholder.Effect = ArcBlur.Get(blur);
         }
         else
         {

@@ -40,7 +40,7 @@ settings screens, detail panels and toolbars, where a plain drop-down looks too 
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MorphSelect Label="Status" SelectedIndex="1">
         <arc:SelectItem Content="Backlog" />
         <arc:SelectItem Content="In progress" />

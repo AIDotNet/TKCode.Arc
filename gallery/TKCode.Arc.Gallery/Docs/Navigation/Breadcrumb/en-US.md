@@ -42,7 +42,7 @@ Each crumb is a `BreadcrumbItem`. The last crumb is the current page: it is plai
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Breadcrumb>
         <arc:BreadcrumbItem Content="Workspace" />
         <arc:BreadcrumbItem Content="Settings" />

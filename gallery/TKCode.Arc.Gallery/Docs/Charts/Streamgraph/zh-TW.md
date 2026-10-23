@@ -1,7 +1,7 @@
 ---
 title: 串流圖
 summary: 在擺動基線上堆疊的串流層，可在不同範圍之間變形；可單獨隔離某一層並逐週讀取。
-source-hash: d66fbacbb470
+source-hash: ba83187c6c3c
 ---
 
 <Demo name="TopicsOverTime" />
@@ -29,7 +29,7 @@ source-hash: d66fbacbb470
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Streamgraph Label="各主題的支援工單"
                      Unit="工單"
                      CategoryLabel="週"

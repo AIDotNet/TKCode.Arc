@@ -39,7 +39,7 @@ shape of a metric next to its current value without an axis or a legend.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Sparkline Label="Revenue"
                    Value="$48.2K"
                    Change="+4.1%"

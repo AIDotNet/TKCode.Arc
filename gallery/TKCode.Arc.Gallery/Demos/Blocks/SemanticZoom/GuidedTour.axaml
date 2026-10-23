@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SemanticZoomGuidedTourDemo">
+    <!-- Your own tour stops and buttons outside the map: commands, the scope and the zoom readout are bindable. -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Play the tour" Command="{Binding #Map.ToggleTourCommand}" />
+            <arc:Button x:Name="FleetButton" Variant="Secondary" Content="Go to Fleet" />
+            <arc:Button Variant="Ghost" Content="Show everything" Command="{Binding #Map.ResetViewCommand}" />
+            <TextBlock VerticalAlignment="Center" Text="{Binding #Map.ZoomText}" />
+        </StackPanel>
+        <arc:SemanticZoom x:Name="Map"
+                          Header="Network map"
+                          TourDwell="0:0:2"
+                          IsTourButtonVisible="False"
+                          DetailPanelPlacement="None" />
+        <TextBlock x:Name="Status" Text="Showing the whole organization." />
+    </StackPanel>
+</UserControl>

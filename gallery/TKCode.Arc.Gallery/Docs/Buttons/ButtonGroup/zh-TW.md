@@ -1,7 +1,7 @@
 ---
 title: 按鈕群組
 summary: 將相關操作合併到一個帶細分隔線的整體中：懸停高亮在各區段之間滑動，按下的區段就地回應，附加選單還可以收合整排按鈕。
-source-hash: 53a3e420abf7
+source-hash: a2540af58a90
 ---
 
 <Demo name="DocumentActions" />
@@ -30,7 +30,7 @@ source-hash: 53a3e420abf7
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ButtonGroup Label="文件操作">
         <arc:ButtonGroupItem Label="分享" />
         <arc:ButtonGroupItem Label="複製" />

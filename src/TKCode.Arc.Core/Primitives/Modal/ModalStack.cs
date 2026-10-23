@@ -21,7 +21,7 @@ internal sealed class ModalStack
 
     private readonly TopLevel _topLevel;
     private readonly List<ModalPresence> _items = new();
-    private BlurEffect? _blur;
+    private IEffect? _blur;
     private Visual? _blurTarget;
     private IEffect? _previousEffect;
     private bool _hooked;
@@ -122,14 +122,14 @@ internal sealed class ModalStack
             ClearBlur();
             _blurTarget = target;
             _previousEffect = target.Effect;
-            _blur ??= new BlurEffect();
-            _blur.Radius = radius;
-            target.Effect = _blur;
-            return;
         }
-        if (_blur is not null && Math.Abs(_blur.Radius - radius) >= 0.05)
+        // A cached immutable step per 0.25px: the scrim tween changes the radius on every frame, and a mutable effect
+        // would allocate a new compositor copy each time (a blur of the whole window content).
+        var effect = ArcBlur.Get(radius);
+        if (!ReferenceEquals(effect, _blur))
         {
-            _blur.Radius = radius;
+            _blur = effect;
+            target.Effect = effect;
         }
     }
 
@@ -144,6 +144,7 @@ internal sealed class ModalStack
             _blurTarget = null;
             _previousEffect = null;
         }
+        _blur = null;
     }
 
     /// <summary>Content root under the layer that hosts modals: the child of the owning visual layer manager.</summary>

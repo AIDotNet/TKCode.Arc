@@ -1,7 +1,7 @@
 ---
 title: 图标变形
 summary: 在不同状态之间变形的图标：菜单变关闭、播放变暂停、复制变勾选等。
-source-hash: 3289aa0bf5d6
+source-hash: dd129b66808b
 ---
 
 <Demo name="EightPairs" />
@@ -30,7 +30,7 @@ source-hash: 3289aa0bf5d6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Button Variant="Ghost" AutomationProperties.Name="打开菜单">
         <arc:IconMorph Kind="Menu" />
     </arc:Button>

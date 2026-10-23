@@ -1,7 +1,7 @@
 ---
 title: 確認變形
 summary: 一個破壞性按鈕，可變形為就地確認、載入指示與帶復原的結果。
-source-hash: 25d51b177954
+source-hash: b71b3d8e972f
 ---
 
 <Demo name="Press" />
@@ -30,7 +30,7 @@ source-hash: 25d51b177954
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ConfirmMorph Label="刪除專案" Prompt="刪除此專案？" />
 </UserControl>
 ```

@@ -128,7 +128,7 @@ internal abstract class DataGridColumnRow<TCell> : Control where TCell : Control
         {
             end++;
         }
-        var version = Grid.ColumnsVersion;
+        var version = HashCode.Combine(Grid.ColumnsVersion, Grid.WidthsVersion);
         var same = start == _windowStart && end == _windowEnd && version == _layoutVersion;
         _windowStep = step;
         _windowStart = start;

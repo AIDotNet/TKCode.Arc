@@ -1,7 +1,7 @@
 ---
 title: 用户菜单
 summary: 头像背后的账户、设置、主题与退出登录。在手机上以底部面板的形式打开。
-source-hash: 639cc7cc0bf1
+source-hash: 86d8f44034b9
 ---
 
 <Demo name="TopBar" />
@@ -32,7 +32,7 @@ source-hash: 639cc7cc0bf1
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:UserMenu DisplayName="Ada Lovelace"
                   Email="ada@analytical.dev"
                   Plan="Pro"

@@ -38,7 +38,7 @@ inline. Events can arrive in any order, and the newest shows first. Set `Now` to
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Timeline Label="Release history"
                   Now="2026-10-20T12:00:00+00:00">
         <arc:TimelineEvent Id="build-418"
@@ -211,7 +211,7 @@ shows that the page keeps earlier history. The title of each row is a full sente
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              Width="600">
     <Border Padding="16,12,16,4"
             CornerRadius="26"

@@ -1,0 +1,171 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The send button: a 36px circle. Empty and blocked: SurfaceMuted with a TextMuted arrow (disabled look, plain
+        cursor); ready: Accent with an AccentForeground arrow, AccentStrong on hover and press; generating: SurfaceMuted
+        with a Foreground stop square. The 20px mark morphs between the arrow and the square (AiSendGlyph).
+        The ring is Arc's 44px svg (inset -4) with r 20.5 and a 1.5 stroke: a 42.5px circle centred on the button, 1.75px
+        clear of its edge. Track Border, arc Accent, flat ends from 12 o'clock; layout rounding off so it stays 42.5.
+        The two rings fade separately (code: AiSendButton), so both start transparent.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSendButton}" TargetType="arc:AiSendButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Arrow" />
+        <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSendButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:AiSendGlyph Name="PART_Glyph"
+                                         Size="20"
+                                         Foreground="{TemplateBinding Foreground}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" />
+                    </Border>
+                    <arc:ArcRing Name="PART_Track"
+                                 Width="42.5"
+                                 Height="42.5"
+                                 Margin="-3.25"
+                                 UseLayoutRounding="False"
+                                 Thickness="1.5"
+                                 Opacity="0"
+                                 Value="0"
+                                 TrackBrush="{arc:ArcDesignTokenResource Border}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" />
+                    <arc:ArcRing Name="PART_Ring"
+                                 Width="42.5"
+                                 Height="42.5"
+                                 Margin="-3.25"
+                                 UseLayoutRounding="False"
+                                 Thickness="1.5"
+                                 IsRoundCap="False"
+                                 Opacity="0"
+                                 Foreground="{arc:ArcDesignTokenResource Accent}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:ready">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:ready:hover, ^:ready:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+
+        <Style Selector="^:generating">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <!-- Without the press scale (reduced motion, Off) a press needs a color: one step darker than SurfaceMuted. -->
+        <Style Selector="^:generating:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+
+        <!--
+            Keyboard focus only, 2px outside the circle. While generating it would cover the progress ring exactly (Arc's
+            outline does), so it moves just outside it (0.75px clear of the ring's outer edge).
+        -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:generating /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-6" />
+        </Style>
+
+        <!--
+            Colors in 160ms on the standard curve (background and mark alike, also between ready, empty and generating).
+            A press scales to 0.92 at once (Arc: no transition) when the press can act; at full motion only, where it
+            replaces the press color of the stop button.
+        -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:ready:pressed, ^:motion-full:generating:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:motion-full:generating:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!--
+            Solid (the AI chat's button): no ring parts at all, an 18px arrow (stroke 2 → 1.5px) that crossfades with a
+            10.5px square with 1.25px corners. Generating is the accent with an AccentForeground square, darker
+            (AccentStrong) under the pointer and pressed, like the ready button; the focus ring stays 2px outside the circle.
+        -->
+        <Style Selector="^:solid">
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:AiSendButton">
+                    <Panel>
+                        <Border Name="PART_Frame"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                            <arc:AiSendGlyph Name="PART_Glyph"
+                                             Size="18"
+                                             Swap="Crossfade"
+                                             Foreground="{TemplateBinding Foreground}"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center" />
+                        </Border>
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="-4"
+                                BorderThickness="2"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="^:solid:generating">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:solid:generating:hover, ^:solid:generating:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:solid /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-4" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

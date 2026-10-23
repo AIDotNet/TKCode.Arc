@@ -1,7 +1,7 @@
 ---
 title: 日期选择器
 summary: 选择日期，同时不丢失上下文。
-source-hash: 115d5de1a22e
+source-hash: a15b33e70908
 ---
 
 <Demo name="DateField" />
@@ -28,7 +28,7 @@ source-hash: 115d5de1a22e
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DatePicker Label="开始日期"
                     Description="输入日期，或按 Alt+Down 打开日历。"
                     SelectedDate="{Binding StartDate, Mode=TwoWay}" />

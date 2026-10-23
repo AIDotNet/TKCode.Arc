@@ -42,7 +42,7 @@ navigation, titles and actions, and where search is an occasional way to jump so
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandingSearch Label="Search projects and docs"
                          MaxResults="6"
                          ExpandedWidth="360" />

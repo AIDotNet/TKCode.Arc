@@ -1,0 +1,239 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The title pill: 34px, pill radius, padding 0 8 0 10, clear at rest. The title (14 / 19.6, medium, Foreground) sits
+        in a width spring (quick, capped by the room the pill has, so a long title ends in an ellipsis) and crossfades as a
+        label; ChevronDown 14 at stroke 1.75 in TextMuted follows 6px after it and turns over while the menu is open.
+        Hover and the open menu: SurfaceMuted. Colors and the chevron move in 160ms (standard).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiConversationMenuButton}" TargetType="arc:AiConversationMenuButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="10,0,8,0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiConversationMenuButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <DockPanel VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          DockPanel.Dock="Right"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="14"
+                                          StrokeThickness="1.75"
+                                          Margin="6,0,0,0"
+                                          VerticalAlignment="Center"
+                                          RenderTransformOrigin="50%,50%" />
+                            <!-- Clips at its (springing) width at rest too: a trimmed title never spills over the chevron. -->
+                            <arc:SpringSizeDecorator Name="PART_TextSize"
+                                                     Axis="Width"
+                                                     Spring="Quick"
+                                                     CapsToAvailable="True"
+                                                     ClipOverflow="0"
+                                                     ClipToBounds="True"
+                                                     HorizontalAlignment="Left"
+                                                     VerticalAlignment="Center">
+                                <arc:ArcContentSwap Name="PART_Text"
+                                                    Mode="Label"
+                                                    HorizontalAlignment="Left"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center" />
+                            </arc:SpringSizeDecorator>
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:hover, ^:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- Reduced: colors in 120ms, the chevron turns at once. -->
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A title layer: one line on a 19.6 line, tracked −0.01em, ellipsis when the pill has less room than the title. -->
+    <ControlTheme x:Key="{x:Type arc:AiConversationPillText}" TargetType="arc:AiConversationPillText">
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </ControlTheme>
+
+    <!-- 260 wide, 1px Border, radius 18, SurfaceRaised; 6px around the rows; at most 420 high, scrolling inside (thin
+         overlay scrollbar, no scroll chaining). Text 14 / 19.6 tracked −0.01em. -->
+    <ControlTheme x:Key="{x:Type arc:AiConversationMenuPanel}" TargetType="arc:AiConversationMenuPanel">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="260" />
+        <Setter Property="MaxHeight" Value="420" />
+        <Setter Property="Padding" Value="6" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiConversationMenuPanel">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <arc:ScrollArea Name="PART_Scroll"
+                                    Focusable="False"
+                                    FadeLength="0"
+                                    IsScrollChainingEnabled="False"
+                                    Padding="{TemplateBinding Padding}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- 36px rows, padding 0 10, radius 12: [SquarePen 15, 10px] text [10px, Check 15]. Highlight SurfaceMuted in 120ms. -->
+    <ControlTheme x:Key="{x:Type arc:AiConversationMenuRow}" TargetType="arc:AiConversationMenuRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiConversationMenuRow">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <DockPanel>
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      DockPanel.Dock="Left"
+                                      Data="{TemplateBinding Icon}"
+                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Size="15"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      Margin="0,0,10,0"
+                                      VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Check"
+                                      DockPanel.Dock="Right"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      IsVisible="{TemplateBinding IsChecked}"
+                                      Size="15"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                      Margin="10,0,0,0"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:highlighted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full, ^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Group heading: 12 / 16.8 in TextMuted, padding 10 10 4. -->
+    <ControlTheme x:Key="{x:Type arc:AiConversationMenuHeading}" TargetType="arc:AiConversationMenuHeading">
+        <Setter Property="Padding" Value="10,10,10,4" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiConversationMenuHeading">
+                <TextBlock Text="{TemplateBinding Text}"
+                           Margin="{TemplateBinding Padding}"
+                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           LineHeight="16.8"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- 1px BorderSubtle, margin 6 4. -->
+    <ControlTheme x:Key="{x:Type arc:AiConversationMenuSeparator}" TargetType="arc:AiConversationMenuSeparator">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Margin" Value="4,6" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiConversationMenuSeparator">
+                <Border Background="{TemplateBinding Background}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

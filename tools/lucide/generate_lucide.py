@@ -36,6 +36,9 @@ send-horizontal reply share-2 chart-line chart-bar chart-pie activity percent do
 calendar-range timer hourglass laptop smartphone wifi battery ban lock-open key fingerprint expand shrink move
 grip-horizontal panel-left panel-right columns-2 rows-2 table filter-x arrow-down-up arrow-down-wide-narrow
 arrow-up-narrow-wide list-filter
+gauge layers-3 brain file-code file-spreadsheet languages lightbulb wrench clipboard-paste square-pen pen-line bug
+trophy equal thumbs-down git-compare-arrows arrow-up-from-line scan-text text-select square-dashed-text
+panel-right-close shield-check cpu book-open list-todo layout-template
 """.split()
 
 

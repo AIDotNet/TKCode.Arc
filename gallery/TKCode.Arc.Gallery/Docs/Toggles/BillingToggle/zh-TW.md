@@ -1,7 +1,7 @@
 ---
 title: 計費切換
 summary: 按月與按年切換，帶有節省標章，價格會滾動至新金額。
-source-hash: 04b5ac308838
+source-hash: 7e0fd9ad8d5d
 ---
 
 <Demo name="Pricing" />
@@ -29,7 +29,7 @@ source-hash: 04b5ac308838
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:BillingToggle Value="yearly" />
 </UserControl>
 ```

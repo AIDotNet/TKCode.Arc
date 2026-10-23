@@ -38,7 +38,7 @@ room without leaving the list.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandableCard Header="Pro plan"
                         Description="$24 per month · billed yearly"
                         CollapsedWidth="420">

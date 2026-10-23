@@ -1,7 +1,7 @@
 ---
 title: 展开式搜索
 summary: 图标展开为搜索框，并在下方显示结果。
-source-hash: 6b82a4e2e6bc
+source-hash: a65b1d0f5fb6
 ---
 
 <Demo name="HeaderSearch" />
@@ -29,7 +29,7 @@ source-hash: 6b82a4e2e6bc
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandingSearch Label="搜索项目与文档"
                          MaxResults="6"
                          ExpandedWidth="360" />

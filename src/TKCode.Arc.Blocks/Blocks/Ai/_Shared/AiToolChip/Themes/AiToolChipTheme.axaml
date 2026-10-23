@@ -1,0 +1,181 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A tool chip: 30px, pill, 1px Border on Surface, 10px left and 12px right. Its face swaps in label mode inside a
+        width spring (Quick) that clips at the springing width, so a longer face is revealed as the width catches up and a
+        long name trims when the row has no room.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiToolChip}" TargetType="arc:AiToolChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="10,0,12,0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiToolChip">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:SpringSizeDecorator Name="PART_FaceSize"
+                                             Axis="Width"
+                                             Spring="Quick"
+                                             CapsToAvailable="True"
+                                             ClipOverflow="0"
+                                             Margin="{TemplateBinding Padding}"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center">
+                        <arc:ArcContentSwap Name="PART_Face"
+                                            Mode="Label"
+                                            HorizontalAlignment="Left"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Center" />
+                    </arc:SpringSizeDecorator>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Hover (mouse and pen): a stronger edge and Foreground text. -->
+        <Style Selector="^:hover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- Open: a muted fill, Foreground text, the plain edge. -->
+        <Style Selector="^:expanded">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- Running: disabled but drawn at full strength (Arc). -->
+        <Style Selector="^:running">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <!-- Keyboard focus only, 2px outside the pill. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Colors and edge 160ms on the standard curve; reduced motion: 120ms. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One state of a chip: the 14px icon cell, 8px, then the name, the site marks (13px, 3px apart) and the summary
+        (TextMuted, tabular figures), 6px apart. The name takes what is left and trims; the marks and the summary keep their
+        size. The name and the icon follow the chip's text color; the error glyph is Danger.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiToolChipFace}" TargetType="arc:AiToolChipFace">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiToolChipFace">
+                <DockPanel VerticalAlignment="Center">
+                    <Panel Name="PART_IconCell"
+                           DockPanel.Dock="Left"
+                           Width="14"
+                           Height="14"
+                           Margin="0,0,8,0"
+                           VerticalAlignment="Center">
+                        <arc:AiToolSpinner Name="PART_Spinner" Size="14" IsVisible="False" />
+                        <ContentPresenter Name="PART_Icon"
+                                          Content="{TemplateBinding Icon}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Alert"
+                                      Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                      Size="14"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource Danger}"
+                                      IsVisible="False" />
+                    </Panel>
+                    <TextBlock Name="PART_Summary"
+                               DockPanel.Dock="Right"
+                               Margin="6,0,0,0"
+                               Text="{TemplateBinding Summary}"
+                               IsVisible="{TemplateBinding Summary, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               FontFeatures="tnum"
+                               LineHeight="19.6"
+                               LetterSpacing="-0.14"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                    <StackPanel Name="PART_Marks"
+                                DockPanel.Dock="Right"
+                                Orientation="Horizontal"
+                                Spacing="3"
+                                Margin="6,0,0,0"
+                                VerticalAlignment="Center"
+                                IsVisible="False" />
+                    <Panel VerticalAlignment="Center">
+                        <arc:TextShimmer Name="PART_Shimmer"
+                                         Text="{TemplateBinding Label}"
+                                         IsActive="False"
+                                         IsVisible="False" />
+                        <TextBlock Name="PART_Name"
+                                   Text="{TemplateBinding Label}"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis" />
+                    </Panel>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Running: the turning loader and the shimmering name instead of the icon and the plain name. -->
+        <Style Selector="^:running /template/ arc|AiToolSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:running /template/ arc|TextShimmer#PART_Shimmer">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="IsActive" Value="True" />
+        </Style>
+        <Style Selector="^:running /template/ TextBlock#PART_Name">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ArcGlyph#PART_Alert">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

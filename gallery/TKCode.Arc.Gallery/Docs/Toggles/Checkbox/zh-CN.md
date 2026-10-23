@@ -1,7 +1,7 @@
 ---
 title: 复选框
 summary: 二元选择，状态精确且清晰易读。
-source-hash: 352309eb57b1
+source-hash: be62c2edeca3
 ---
 
 <Demo name="LabelAndDescription" />
@@ -30,7 +30,7 @@ source-hash: 352309eb57b1
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Checkbox Content="同意条款和条件"
                   Description="你同意我们的服务条款与隐私政策。" />
 </UserControl>

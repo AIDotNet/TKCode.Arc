@@ -45,4 +45,64 @@ public class GlidingIndicatorTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void FadeDuration_Sets_How_Fast_It_Appears_In_Place_And_Fades_Out()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var indicator = new GlidingIndicator { Width = 300, Height = 40, FadeDuration = TimeSpan.FromMilliseconds(80) };
+        var window = TestHelpers.Show(new StackPanel { Children = { indicator } }, ArcMotionLevel.Full);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var row = new Rect(0, 0, 120, 36);
+            indicator.MoveTo(row);
+            indicator.CurrentRect.ShouldBe(row); // lands in place, no glide from elsewhere
+            indicator.CurrentOpacity.ShouldBe(0, 0.001);
+            CoreFrames.Run(clock, 3); // 50ms
+            indicator.CurrentOpacity.ShouldBeGreaterThan(0.5);
+            indicator.CurrentOpacity.ShouldBeLessThan(1);
+            CoreFrames.Run(clock, 3); // 100ms > 80ms
+            indicator.CurrentOpacity.ShouldBe(1, 0.001);
+
+            indicator.Hide();
+            CoreFrames.Run(clock, 6);
+            indicator.CurrentOpacity.ShouldBe(0, 0.001);
+
+            // After a hide the next move lands where it is asked to, fading in again.
+            var next = new Rect(0, 40, 120, 36);
+            indicator.MoveTo(next);
+            indicator.CurrentRect.ShouldBe(next);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void MoveTo_With_A_Duration_Tweens_Instead_Of_Springing()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var indicator = new GlidingIndicator { Width = 300, Height = 40 };
+        var window = TestHelpers.Show(new StackPanel { Children = { indicator } }, ArcMotionLevel.Full);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var from = new Rect(0, 0, 100, 32);
+            var to = new Rect(110, 0, 100, 32);
+            indicator.MoveTo(from, animate: false);
+            indicator.MoveTo(to, TimeSpan.FromMilliseconds(220), new Avalonia.Animation.Easings.LinearEasing());
+            var t = CoreFrames.Run(clock, 6);
+            indicator.CurrentRect.X.ShouldBe(110 * t / 0.22, 0.5);
+            CoreFrames.Run(clock, 12);
+            indicator.CurrentRect.ShouldBe(to);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

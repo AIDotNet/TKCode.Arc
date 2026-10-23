@@ -1,7 +1,7 @@
 ---
 title: 指令面板
 summary: 完整的鍵盤操作面板，支援搜尋、分組結果與快速鍵。
-source-hash: 4d5b06beaaf2
+source-hash: fadb34de660a
 ---
 
 <Demo name="Preview" />
@@ -32,7 +32,7 @@ source-hash: 4d5b06beaaf2
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <Panel>
         <arc:Button Content="搜尋指令"
                     arc:CommandPaletteDialog.Opens="{Binding #Commands}" />
@@ -86,7 +86,7 @@ Commands.ItemSelected += (_, e) => Run(e.Item.Id);
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:generic="using:System.Collections.Generic"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:CommandPalette>
         <arc:CommandPaletteItem Id="theme" Label="切換主題" Group="設定" Shortcut="T">
             <arc:CommandPaletteItem.Keywords>

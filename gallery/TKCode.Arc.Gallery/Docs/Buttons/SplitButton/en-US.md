@@ -37,7 +37,7 @@ are one more click away, so the control fits a toolbar, a page header or a foote
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SplitButton Label="Merge pull request">
         <arc:MenuEntry Header="Squash and merge" />
         <arc:MenuEntry Header="Rebase and merge" />

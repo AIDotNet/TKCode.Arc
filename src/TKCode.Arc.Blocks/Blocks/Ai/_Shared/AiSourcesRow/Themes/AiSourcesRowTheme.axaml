@@ -1,0 +1,304 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The sources row: the disclosure button (34px), then 8px that are always there (Arc's list margin collapses through
+        the closed panel, so the closed row is 42 high), then the cards' body. Inside the body the cards start 2px down and
+        end 18px above what follows (Arc's list padding 2 / 4 and bottom margin 14), all inside the animated height. The
+        scroller and the panel's paddings are set by the row (they follow the mode and the bleed).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSourcesRow}" TargetType="arc:AiSourcesRow">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSourcesRow">
+                <StackPanel>
+                    <arc:AiSourcesToggle Name="PART_Toggle"
+                                         Sources="{TemplateBinding Sources}"
+                                         LabelText="{TemplateBinding LabelText}"
+                                         IsExpanded="{TemplateBinding IsExpanded}" />
+                    <arc:AiCollapsible Name="PART_Body" Margin="0,8,0,0">
+                        <ScrollViewer Name="PART_Scroller"
+                                      Focusable="False"
+                                      IsTabStop="False"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <arc:AiSourceCardPanel Name="PART_Cards" />
+                        </ScrollViewer>
+                    </arc:AiCollapsible>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The disclosure button: 34px pill, padding 0 8 0 10, 10px out on both sides (the marks line up with the text column),
+        the stack (2px after it), the label (14 / 19.6, tabular figures) and the 15px chevron (TextMuted, stroke 1.75), 8px
+        apart. Secondary text at rest; hover: SurfaceMuted fill and Foreground text, 160ms on the standard curve; the stack
+        fans on hover and keyboard focus and its ring follows the fill. Open: the chevron turns 180° on Arc's 580ms CSS
+        spring. Reduced: 120ms colors, no turn transition. Keyboard focus only: a 2px ring 2px outside the pill.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSourcesToggle}" TargetType="arc:AiSourcesToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="10,0,8,0" />
+        <Setter Property="Margin" Value="-10,0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSourcesToggle">
+                <Panel>
+                    <Border Name="PART_Frame" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center">
+                        <arc:AiSourceStack Name="PART_Stack"
+                                           Margin="0,0,2,0"
+                                           Sources="{TemplateBinding Sources}"
+                                           RingBrush="{TemplateBinding Background}" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding LabelText}"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   FontFeatures="tnum"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="15"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The fill is a style (not a template value) so the pressed state can replace it: SurfaceMuted and Border half and half. -->
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{TemplateBinding Background}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{TemplateBinding PressedFill}" />
+        </Style>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|AiSourceStack#PART_Stack">
+            <Setter Property="IsFanned" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ arc|AiSourceStack#PART_Stack">
+            <Setter Property="IsFanned" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A source card: 1px hairline (BorderSubtle; Border in dark), radius 14, Surface, padding 11 12 12. Top line: the
+        14px mark, 7px, the domain (12 / 16, TextMuted, trimmed) clear of the number by 28px; 6px under it the title
+        (14 / 19.6, medium, Foreground): one trimmed line in the grid, at most two in the narrow row. The number: an 18px
+        pill (padding 0 5) 10px in from the top right edge inside the border, SurfaceMuted, 12 / 12 TextSecondary, tabular.
+        Hover and lit: SurfaceMuted fill, a Border edge (BorderStrong in dark), the number on SurfaceMuted + 18% accent in
+        Foreground; 160ms on the standard curve at full motion, at once otherwise. Keyboard focus: the same look and a 2px
+        ring 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSourceCard}" TargetType="arc:AiSourceCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="12,11,12,12" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSourceCard">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                            <DockPanel Name="PART_Site" Grid.Row="0" Height="16" Margin="0,0,28,0">
+                                <arc:AiSourceMark Name="PART_Mark"
+                                                  DockPanel.Dock="Left"
+                                                  Source="{TemplateBinding Source}"
+                                                  Size="14"
+                                                  Margin="0,0,7,0" />
+                                <TextBlock Name="PART_Domain"
+                                           Text="{TemplateBinding DomainText}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </DockPanel>
+                            <TextBlock Name="PART_Title"
+                                       Grid.Row="1"
+                                       Text="{TemplateBinding TitleText}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       MaxLines="1"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_Number"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,11,11,0"
+                            MinWidth="18"
+                            Height="18"
+                            Padding="5,0"
+                            CornerRadius="9">
+                        <TextBlock Name="PART_NumberText"
+                                   Text="{TemplateBinding NumberText}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="12"
+                                   FontFeatures="tnum"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="18"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:dark">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Title">
+            <Setter Property="MaxLines" Value="2" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!-- Keyboard focus lights the card too (it is the active source, as when pointed at). -->
+        <Style Selector="^:hover, ^:lit, ^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:dark:hover, ^:dark:lit, ^:dark:focus-visible">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <!-- The number's colors are styles (not template values) so hover and lit can replace them. -->
+        <Style Selector="^ /template/ Border#PART_Number">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_NumberText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <!-- Two styles, not one with a comma: a template binding needs a single template scope. -->
+        <Style Selector="^:hover /template/ Border#PART_Number">
+            <Setter Property="Background" Value="{TemplateBinding LitNumberFill}" />
+        </Style>
+        <Style Selector="^:lit /template/ Border#PART_Number">
+            <Setter Property="Background" Value="{TemplateBinding LitNumberFill}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_Number">
+            <Setter Property="Background" Value="{TemplateBinding LitNumberFill}" />
+        </Style>
+        <Style Selector="^:hover /template/ TextBlock#PART_NumberText, ^:lit /template/ TextBlock#PART_NumberText, ^:focus-visible /template/ TextBlock#PART_NumberText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Number">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_NumberText">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

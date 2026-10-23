@@ -307,7 +307,7 @@ exports group by type, and two rows are selected, so the count line reads "2 sel
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="560">
     <arc:SortableDataTable Caption="Export history"

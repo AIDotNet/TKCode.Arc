@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: f81425634215
+source-hash: 57ace7aaa3ec
 ---
 
 # 安装
@@ -96,13 +96,13 @@ public partial class App : Application
 
 ## 3. 在 XAML 中使用控件
 
-Arc 的 XAML 命名空间是 `https://github.com/AtomUICommunity/TKCode.Arc`；所有控件、令牌资源与标记扩展都位于其中。
+Arc 的 XAML 命名空间是 `https://github.com/AIDotNet/TKCode.Arc`；所有控件、令牌资源与标记扩展都位于其中。
 
 ![A notification settings card built in the first minutes with Arc](images/FirstScreen.png)
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              Width="560">
     <arc:Card Title="Notifications" Description="Choose how Acme Analytics keeps your team informed.">
         <StackPanel Spacing="16" Margin="0,12,0,0">
@@ -141,7 +141,7 @@ Arc 自有的图标字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 个
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:lucide="https://github.com/AtomUICommunity/TKCode.Arc/lucide">
+             xmlns:lucide="https://github.com/AIDotNet/TKCode.Arc/lucide">
     <lucide:LucideIcon Kind="Sparkles" Size="20" />
 </UserControl>
 ```

@@ -41,7 +41,7 @@ The field has a search glass at the start. A clear button appears at the end whi
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchField Label="Search people"
                      Placeholder="Filter by name"
                      Width="360"

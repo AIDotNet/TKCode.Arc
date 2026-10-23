@@ -1,7 +1,7 @@
 ---
 title: 警告提示
 summary: 持續顯示的訊息，協助使用者復原或繼續操作。
-source-hash: 5d572d95a7b8
+source-hash: e9109aea0ed2
 ---
 
 <Demo name="Tones" />
@@ -30,7 +30,7 @@ source-hash: 5d572d95a7b8
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Alert Title="你的信用卡下個月到期"
                Content="更新付款方式，以維持方案有效。" />
 </UserControl>

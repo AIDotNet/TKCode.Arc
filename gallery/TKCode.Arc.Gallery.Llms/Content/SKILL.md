@@ -1,6 +1,6 @@
 ---
 name: {{skill-name}}
-description: Builds and reviews Avalonia interfaces with TKCode.Arc, the Arc design language (uiarc.dev) as native Avalonia controls on AtomUI. Picks the right Arc component or block, installs and registers the packages, wires only documented properties, and applies Arc's rules for design tokens, motion, copy, accessibility and layout. Use when a project references a TKCode.Arc package, uses the XAML namespace https://github.com/AtomUICommunity/TKCode.Arc or calls UseArc(), or when asked to build or polish an Avalonia screen such as a settings page, form, dashboard, data table, dialog or command palette with Arc.
+description: Builds and reviews Avalonia interfaces with TKCode.Arc, the Arc design language (uiarc.dev) as native Avalonia controls on AtomUI. Picks the right Arc component or block, installs and registers the packages, wires only documented properties, and applies Arc's rules for design tokens, motion, copy, accessibility and layout. Use when a project references a TKCode.Arc package, uses the XAML namespace https://github.com/AIDotNet/TKCode.Arc or calls UseArc(), or when asked to build or polish an Avalonia screen such as a settings page, form, dashboard, data table, dialog or command palette with Arc.
 ---
 
 # TKCode.Arc
@@ -58,7 +58,7 @@ AppBuilder.Configure<App>()
 public partial class App : Application { }   // partial: AtomUI's generator adds to it (ATOMUILOC008 otherwise)
 ```
 
-XAML uses `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"` for controls, token resources and markup
+XAML uses `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"` for controls, token resources and markup
 extensions. Blocks (`TKCode.Arc.Blocks`, `UseArcBlocks()`) and the DataGrid (`TKCode.Arc.AdvancedCharts`,
 `UseArcAdvancedCharts()`) are not on NuGet yet: reference the projects from {{repository}}. Full steps:
 {{base}}/docs/installation.md.

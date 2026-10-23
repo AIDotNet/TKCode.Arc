@@ -151,8 +151,10 @@ internal sealed class DataGridEditorLayer : Control
         _edit = edit;
         _column = _grid.ColumnOf(edit.Accessor);
         host.Background = _grid.Palette.CellBrush;
-        host.ContentTemplate = template;
+        // Set the template last: the presenter builds it as soon as it changes, so the content must already be the edit context.
+        host.ContentTemplate = null;
         host.Content = edit.Context;
+        host.ContentTemplate = template;
         AutomationProperties.SetName(host, label);
         host.IsVisible = true;
         InvalidateArrange();
@@ -257,6 +259,9 @@ internal sealed class DataGridEditorLayer : Control
         if (_host is { } host)
         {
             host.IsVisible = false;
+            // Drop the template first: the presenter builds a template that is still attached as soon as the content changes,
+            // and it would be built with null (a template reading context.Value crashed on the click that ended the edit).
+            host.ContentTemplate = null;
             host.Content = null;
         }
     }

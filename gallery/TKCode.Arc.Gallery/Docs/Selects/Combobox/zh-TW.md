@@ -1,7 +1,7 @@
 ---
 title: 組合方塊
 summary: 無需離開欄位即可搜尋並從清單中選取。
-source-hash: 1f5bd673d3ed
+source-hash: c6681c6f8080
 ---
 
 <Demo name="Searchable" />
@@ -28,7 +28,7 @@ source-hash: 1f5bd673d3ed
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Combobox Label="框架"
                   Width="280"
                   Description="輸入以搜尋。">

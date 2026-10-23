@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReleaseReadinessFlatDemo">
+    <!-- Laid flat on the page at the container's width: no card, no lines above the checks and the footer. -->
+    <arc:ReleaseReadiness x:Name="Gate"
+                          IsFramed="False"
+                          MaxWidth="720"
+                          Title="Version 5.3"
+                          Subtitle="Lumen mobile · goes live Tuesday"
+                          ChannelName="#launches" />
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 長按確認
 summary: 透過長按而不是點按來確認破壞性操作。
-source-hash: e58caccbebc8
+source-hash: 363e67ddb741
 ---
 
 <Demo name="Default" />
@@ -27,7 +27,7 @@ source-hash: e58caccbebc8
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:HoldToConfirm Label="長按刪除專案"
                        ConfirmedLabel="已刪除"
                        Command="{Binding DeleteProject}" />

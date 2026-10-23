@@ -46,7 +46,7 @@ in Avalonia. The Arc additions are the `CheckedState` enum, the description, the
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Checkbox Content="Accept terms and conditions"
                   Description="You agree to our Terms of Service and Privacy Policy." />
 </UserControl>

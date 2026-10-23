@@ -15,6 +15,10 @@
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <!-- Natural Earth 1:110m Land (public domain), rasterized by tools/geo/generate_land_mask.py: RevenueGlobe's land dots. -->
+        <EmbeddedResource Include="Blocks/Showpieces/RevenueGlobe/Resources/land-mask.bin" LogicalName="TKCode.Arc.Blocks.RevenueGlobe.LandMask" />
+    </ItemGroup>
+    <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
     </ItemGroup>
 </Project>

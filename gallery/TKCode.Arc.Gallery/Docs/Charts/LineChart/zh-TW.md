@@ -1,7 +1,7 @@
 ---
 title: 折線圖
 summary: 多系列折線圖，帶有平滑滑動的十字準線、圖例開關，以及在不同範圍之間變形的路徑。
-source-hash: 2489812ea69c
+source-hash: e7da8d76673e
 ---
 
 <Demo name="Ranges" />
@@ -31,7 +31,7 @@ source-hash: 2489812ea69c
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:LineChart Label="註冊數" CategoryLabel="日期" ItemsSource="{Binding Days}">
         <arc:LineChart.Series>
             <arc:ChartSeries Key="current" Name="本期" Values="{Binding Current}" />
@@ -218,7 +218,7 @@ Acme Analytics 的成長儀表板顯示最近十天的註冊數，並與上個�
 ```xml
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
         xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         Width="680"

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiComposerAttachmentsDemo">
+    <StackPanel Spacing="12" MaxWidth="720" Margin="0,12,0,140">
+        <TextBlock TextWrapping="Wrap" Opacity="0.7"
+                   Text="Press the plus, paste or drop files. Only PDF, CSV, text and images are accepted, up to 2 MB; a file whose name contains &#8220;fail&#8221; fails its upload." />
+        <arc:AiComposer x:Name="Composer" AcceptedFileTypes=".pdf,.csv,.txt,image/*" MaxFileSize="2097152" />
+    </StackPanel>
+</UserControl>

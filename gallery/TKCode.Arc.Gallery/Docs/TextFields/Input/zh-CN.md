@@ -1,7 +1,7 @@
 ---
 title: 输入框
 summary: 标签清晰、状态实用的单行输入框。
-source-hash: 92e9f7d582c4
+source-hash: ca2f6563c1a4
 ---
 
 <Demo name="Basic" />
@@ -28,7 +28,7 @@ source-hash: 92e9f7d582c4
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Input Label="邮箱"
                Placeholder="you@example.com"
                Description="我们不会公开你的邮箱。" />

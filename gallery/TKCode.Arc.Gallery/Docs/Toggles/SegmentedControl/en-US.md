@@ -42,7 +42,7 @@ Each `SegmentedOption` takes a value and a label. The control selects the segmen
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SegmentedControl AutomationProperties.Name="Range" SelectedValue="week">
         <arc:SegmentedOption Value="day" Label="Day" />
         <arc:SegmentedOption Value="week" Label="Week" />

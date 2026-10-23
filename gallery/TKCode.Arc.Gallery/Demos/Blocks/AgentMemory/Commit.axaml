@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentMemoryCommitDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:AgentMemory x:Name="Memory" AssistantName="Orbit" />
+        <TextBlock x:Name="Log" TextWrapping="Wrap" HorizontalAlignment="Center" MaxWidth="560"
+                   Text="Edit or add a memory. A save that contains the word fail is refused, as a server could." />
+    </StackPanel>
+</UserControl>

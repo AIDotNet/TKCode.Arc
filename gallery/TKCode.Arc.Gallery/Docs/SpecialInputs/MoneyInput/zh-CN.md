@@ -1,7 +1,7 @@
 ---
 title: 金额输入框
 summary: 带有实时分组、宽度稳定、数字滚动与最小单位输出的货币输入框。
-source-hash: 7549d1d74edd
+source-hash: 464ecb4deb4f
 ---
 
 <Demo name="Default" />
@@ -28,7 +28,7 @@ source-hash: 7549d1d74edd
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MoneyInput Label="金额"
                     Currency="USD"
                     Minimum="5"
@@ -178,7 +178,7 @@ public partial class RefundViewModel : ObservableValidator
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic">
     <StackPanel Width="620" Spacing="20">
         <TextBlock Text="Refund for payment ch_2026_0412"

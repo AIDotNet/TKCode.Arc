@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LayoutMorphTeamDemo">
+    <!-- A team page: only people, three views, the carousel first, with its own words. -->
+    <arc:LayoutMorph x:Name="Morph"
+                     Layout="Carousel"
+                     Title="The people behind the shelf"
+                     Lede="Ten designers, from Pune to Bergen. Turn the ring to meet each of them."
+                     DefaultPanelTitle="Designers"
+                     DefaultPanelSubtitle="Turn the ring or point at a portrait"
+                     ViewLabel="Team view"
+                     CarouselLabel="Ring"
+                     CarouselHint="Drag the ring; it stops on a face"
+                     HelixHint="Flick the spiral to browse the team"
+                     GridHint="Select a portrait to read more" />
+</UserControl>

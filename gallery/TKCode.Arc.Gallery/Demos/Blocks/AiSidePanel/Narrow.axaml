@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSidePanelNarrowDemo">
+    <!-- Below 640 the assistant is a bottom sheet over the page, and the page is inert while it is open. -->
+    <Border Width="480" Height="640" BorderThickness="1" CornerRadius="16" ClipToBounds="True" BorderBrush="#33808080" Margin="0,12">
+        <arc:AiSidePanel x:Name="Panel" AssistantName="Helper" IsOpen="False" />
+    </Border>
+</UserControl>

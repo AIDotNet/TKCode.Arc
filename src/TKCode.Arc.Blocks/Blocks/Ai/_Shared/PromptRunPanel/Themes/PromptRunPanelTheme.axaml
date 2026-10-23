@@ -1,0 +1,127 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The output panel: SurfaceMuted under a 1px Border top edge, bottom corners 33 (the card's 34 less its border),
+        content clipped, height on the smooth spring. Padding is the section's horizontal inset (16; 12 on a narrow card).
+        Idle: one 14 / 19.6 TextMuted line 12px in, 51 high with its padding (52 with the edge).
+        Run: 10 top / 12 bottom; a 36px head (status 12px in, Copy reply at the right), the body 4 12 0 (reply
+        paragraphs, the error box), the footer 8 12 0 (12 / 16.8 tabular TextMuted).
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptRunPanel}" TargetType="arc:PromptRunPanel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="CornerRadius" Value="0,0,33,33" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptRunPanel">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <arc:SpringSizeDecorator Name="PART_Size"
+                                             Axis="Height"
+                                             Spring="Smooth"
+                                             VerticalAlignment="Top">
+                        <Panel Margin="{TemplateBinding Padding}">
+                            <Border Name="PART_Idle" Padding="12,12,0,12">
+                                <Panel MinHeight="27">
+                                    <TextBlock Name="PART_IdleText"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               LineHeight="19.6"
+                                               LetterSpacing="-0.14"
+                                               TextWrapping="Wrap"
+                                               VerticalAlignment="Center" />
+                                </Panel>
+                            </Border>
+                            <StackPanel Name="PART_Run" Margin="0,10,0,12" IsVisible="False">
+                                <Grid Name="PART_Head" Height="36" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <arc:ArcContentSwap Name="PART_Status"
+                                                        Mode="Label"
+                                                        Margin="12,0,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center" />
+                                    <arc:CopyButton Name="PART_Copy"
+                                                    Grid.Column="1"
+                                                    Variant="Plain"
+                                                    IsIconOnly="True"
+                                                    VerticalAlignment="Center"
+                                                    Label="{TemplateBinding CopyText}"
+                                                    CopiedLabel="{TemplateBinding CopiedText}" />
+                                </Grid>
+                                <StackPanel Name="PART_Body" Margin="12,4,12,0">
+                                    <arc:ArcContentSwap Name="PART_Reply"
+                                                        Mode="Crossfade"
+                                                        HorizontalContentAlignment="Stretch"
+                                                        VerticalContentAlignment="Top" />
+                                    <Grid Name="PART_Error"
+                                          Margin="0,2,0,4"
+                                          ColumnDefinitions="*,Auto"
+                                          ColumnSpacing="16"
+                                          IsVisible="False">
+                                        <TextBlock Name="PART_ErrorText"
+                                                   Text="{TemplateBinding ErrorText}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   LineHeight="19.6"
+                                                   LetterSpacing="-0.14"
+                                                   TextWrapping="Wrap"
+                                                   VerticalAlignment="Center"
+                                                   AutomationProperties.LiveSetting="Assertive" />
+                                        <arc:Button Name="PART_Retry"
+                                                    Grid.Column="1"
+                                                    Variant="Secondary"
+                                                    Size="Small"
+                                                    VerticalAlignment="Center"
+                                                    Content="{TemplateBinding RetryText}" />
+                                    </Grid>
+                                </StackPanel>
+                                <arc:ArcContentSwap Name="PART_Footer"
+                                                    Mode="Label"
+                                                    Margin="12,8,12,0"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Top" />
+                            </StackPanel>
+                        </Panel>
+                    </arc:SpringSizeDecorator>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!--
+            Copy reply is there only for a finished (or stopped) reply: hidden (so out of the tab order) otherwise. The head
+            keeps its 36px height either way and the status is left-aligned, so nothing moves.
+        -->
+        <Style Selector="^ /template/ arc|CopyButton#PART_Copy">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:can-copy /template/ arc|CopyButton#PART_Copy">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A reply paragraph: 14 / 23.1 Foreground, wrapping, selectable. -->
+    <ControlTheme x:Key="{x:Type arc:PromptReplyParagraph}" TargetType="arc:PromptReplyParagraph">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="23.1" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+</ResourceDictionary>

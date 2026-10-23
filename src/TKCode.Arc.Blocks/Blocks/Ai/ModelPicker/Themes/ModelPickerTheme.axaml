@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The picker: the pill centered above the summary on a stage at most 440px wide. The menu and the live region are
+         added next to them in code (they take no space). -->
+    <ControlTheme x:Key="{x:Type arc:ModelPicker}" TargetType="arc:ModelPicker">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="MaxWidth" Value="{arc:ModelPickerTokenResource StageMaxWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelPicker">
+                <Panel Name="PART_Host">
+                    <StackPanel Spacing="{arc:ModelPickerTokenResource StageGap}">
+                        <arc:ModelPill Name="PART_Pill" HorizontalAlignment="Center" />
+                        <arc:ModelSummary Name="PART_Summary" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:summary-hidden /template/ arc|ModelSummary#PART_Summary">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

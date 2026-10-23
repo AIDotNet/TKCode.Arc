@@ -1,0 +1,720 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Customer galaxy (Arc Customer galaxy, design reference): a framed surface with a title, a toolbar of grouping
+        tabs and a legend, the self-drawn stage with its overlays (cluster labels, card, hint, "Show all", zoom bar) and a
+        totals panel (beside the stage from 880 px, under it otherwise).
+    -->
+    <ControlTheme x:Key="{x:Type arc:CustomerGalaxy}" TargetType="arc:CustomerGalaxy">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CustomerGalaxy">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <StackPanel Name="PART_Header"
+                                    Margin="{arc:CustomerGalaxyTokenResource HeaderInset}"
+                                    Spacing="{arc:CustomerGalaxyTokenResource HeaderGap}">
+                            <TextBlock Name="PART_Title"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LetterSpacing="{arc:CustomerGalaxyTokenResource TitleTracking}"
+                                       LineHeight="{arc:CustomerGalaxyTokenResource TitleLeading}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Subtitle"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       LineHeight="19.6"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <Border Name="PART_Toolbar"
+                                Grid.Row="1"
+                                Padding="{arc:CustomerGalaxyTokenResource ToolbarInset}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="0,0,0,1">
+                            <arc:GalaxyToolbarPanel ColumnGap="{arc:CustomerGalaxyTokenResource ToolbarColumnGap}"
+                                                    RowGap="{arc:CustomerGalaxyTokenResource ToolbarRowGap}">
+                                <arc:GalaxyTabStrip Name="PART_Tabs" HorizontalAlignment="Left" />
+                                <arc:GalaxyLegendPanel Name="PART_Legend"
+                                                       IsVisible="{TemplateBinding ShowLegend}"
+                                                       ItemGap="{arc:CustomerGalaxyTokenResource LegendGap}"
+                                                       LineGap="{arc:CustomerGalaxyTokenResource LegendLineGap}" />
+                            </arc:GalaxyToolbarPanel>
+                        </Border>
+                        <arc:GalaxyBodyPanel Name="PART_Body"
+                                             Grid.Row="2"
+                                             PanelWidth="{arc:CustomerGalaxyTokenResource SidePanelWidth}"
+                                             MinStageHeight="{arc:CustomerGalaxyTokenResource StageMinHeight}">
+                            <Panel Name="PART_StageHost" ClipToBounds="True">
+                                <arc:GalaxyStage Name="PART_Stage" Background="{arc:ArcDesignTokenResource Surface}" />
+                                <arc:GalaxyLabelLayer Name="PART_Labels" IsHitTestVisible="False" />
+                                <TextBlock Name="PART_Empty"
+                                           Text="{TemplateBinding EmptyText}"
+                                           IsVisible="False"
+                                           IsHitTestVisible="False"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Name="PART_Hint"
+                                           Text="{TemplateBinding HintText}"
+                                           IsVisible="{TemplateBinding ShowHint}"
+                                           IsHitTestVisible="False"
+                                           Margin="{arc:CustomerGalaxyTokenResource HintMargin}"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Bottom"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <Panel Name="PART_CardLayer" IsHitTestVisible="False">
+                                    <arc:ShowpieceHoverCard Name="PART_Card"
+                                                            MinWidth="{arc:CustomerGalaxyTokenResource CardMinWidth}" />
+                                </Panel>
+                                <arc:PresenceHost Name="PART_ShowAllHost"
+                                                  Mode="Fade"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Top"
+                                                  Margin="{arc:CustomerGalaxyTokenResource ChipMargin}">
+                                    <arc:GalaxyChipButton Name="PART_ShowAll"
+                                                          Content="{TemplateBinding ShowAllText}"
+                                                          Glyph="{x:Static arc:ArcIcons.ArrowLeft}" />
+                                </arc:PresenceHost>
+                                <arc:ShowpieceZoomControls Name="PART_Zoom"
+                                                           IsVisible="{TemplateBinding ShowZoomControls}"
+                                                           HorizontalAlignment="Right"
+                                                           VerticalAlignment="Bottom"
+                                                           Margin="{arc:CustomerGalaxyTokenResource ZoomMargin}" />
+                                <arc:ShowpieceLiveRegion Name="PART_Live" />
+                                <arc:GalaxyHiddenTable Name="PART_Table" />
+                            </Panel>
+                            <Border Name="PART_TotalsFrame"
+                                    IsVisible="{TemplateBinding ShowTotals}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="0,1,0,0">
+                            <arc:GalaxyTotalsPanel Name="PART_Totals"
+                                                   Padding="{arc:CustomerGalaxyTokenResource TotalsInset}"
+                                                   ColumnGap="{arc:CustomerGalaxyTokenResource TotalsColumnGap}"
+                                                   RowGap="{arc:CustomerGalaxyTokenResource TotalsRowGap}"
+                                                   SplitWidth="{arc:CustomerGalaxyTokenResource TotalsSplitWidth}">
+                                <StackPanel Name="PART_ScopeBlock" Spacing="{arc:CustomerGalaxyTokenResource TotalsRowGap}">
+                                    <arc:ArcContentSwap Name="PART_Scope"
+                                                        Mode="Lift"
+                                                        ExitDuration="0:0:0.12"
+                                                        EnterDuration="0:0:0.24"
+                                                        EnterOffset="4"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center"
+                                                        Height="20"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <StackPanel Margin="{arc:CustomerGalaxyTokenResource MrrCaptionMargin}">
+                                        <TextBlock Text="{TemplateBinding MrrCaptionText}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:ShowpieceNumber Name="PART_Mrr"
+                                                             HorizontalAlignment="Left"
+                                                             Height="33.6"
+                                                             FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </StackPanel>
+                                    <Border Name="PART_Subtotals"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            BorderThickness="0,0,0,1"
+                                            Padding="{arc:CustomerGalaxyTokenResource SubtotalInset}">
+                                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="{arc:CustomerGalaxyTokenResource SubtotalGap}">
+                                            <StackPanel Spacing="{arc:CustomerGalaxyTokenResource SubtotalLabelGap}">
+                                                <TextBlock Classes="subtotal-label" Text="{TemplateBinding AccountsText}" />
+                                                <arc:ShowpieceNumber Name="PART_Accounts" Classes="subtotal" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Spacing="{arc:CustomerGalaxyTokenResource SubtotalLabelGap}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Border Name="PART_GrowthDot" Classes="subtotal-dot" />
+                                                    <TextBlock Name="PART_GrowthLabel" Classes="subtotal-label" />
+                                                </StackPanel>
+                                                <arc:ShowpieceNumber Name="PART_Growth" Classes="subtotal" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2" Spacing="{arc:CustomerGalaxyTokenResource SubtotalLabelGap}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Border Name="PART_RiskDot" Classes="subtotal-dot" />
+                                                    <TextBlock Name="PART_RiskLabel" Classes="subtotal-label" />
+                                                </StackPanel>
+                                                <arc:ShowpieceNumber Name="PART_Risk" Classes="subtotal" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Name="PART_ListBlock" Spacing="{arc:CustomerGalaxyTokenResource ListGap}">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <TextBlock Name="PART_ListTitle"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LetterSpacing="{arc:CustomerGalaxyTokenResource ListTitleTracking}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <Border Grid.Column="1"
+                                                Margin="12,0,0,0"
+                                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                BorderThickness="1"
+                                                CornerRadius="{arc:CustomerGalaxyTokenResource SortTrackRadius}"
+                                                Padding="{arc:CustomerGalaxyTokenResource SortTrackInset}">
+                                            <StackPanel Orientation="Horizontal" Spacing="2">
+                                                <arc:GalaxySortButton Name="PART_SortMrr" />
+                                                <arc:GalaxySortButton Name="PART_SortAccounts" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <arc:GalaxyRowsPanel Name="PART_Rows" Margin="{arc:CustomerGalaxyTokenResource ListBleed}" />
+                                </StackPanel>
+                            </arc:GalaxyTotalsPanel>
+                            </Border>
+                        </arc:GalaxyBodyPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:CustomerGalaxyTokenResource FrameRadius}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ TextBlock.subtotal-label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|ShowpieceNumber.subtotal">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Height" Value="22.4" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ Border.subtotal-dot">
+            <Setter Property="Width" Value="{arc:CustomerGalaxyTokenResource SubtotalDot}" />
+            <Setter Property="Height" Value="{arc:CustomerGalaxyTokenResource SubtotalDot}" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <!-- The panel's 1px divider: on its left beside the stage, on top under it. -->
+        <Style Selector="^:side /template/ Border#PART_TotalsFrame">
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+        </Style>
+        <Style Selector="^:empty /template/ TextBlock#PART_Empty">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- The hint steps aside while a cluster is focused or a list row is hovered. -->
+        <Style Selector="^:cluster-focused /template/ TextBlock#PART_Hint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:row-hover /template/ TextBlock#PART_Hint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Hint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ TextBlock#PART_Hint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Grouping tabs: a muted track, a surface pill that glides to the chosen tab. -->
+    <ControlTheme x:Key="{x:Type arc:GalaxyTabStrip}" TargetType="arc:GalaxyTabStrip">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyTabStrip">
+                <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:CustomerGalaxyTokenResource TabTrackRadius}">
+                    <ScrollViewer Name="PART_Scroll"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <Panel Margin="{arc:CustomerGalaxyTokenResource TabTrackInset}">
+                            <arc:GlidingIndicator Name="PART_Pill"
+                                                  Spring="Snappy"
+                                                  StrokeThickness="1"
+                                                  Stroke="{arc:ArcDesignTokenResource Border}"
+                                                  Fill="{arc:ArcDesignTokenResource Surface}"
+                                                  BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                                  CornerRadius="{arc:CustomerGalaxyTokenResource TabRadius}" />
+                            <StackPanel Name="PART_Items"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:CustomerGalaxyTokenResource TabGap}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GalaxyTab}" TargetType="arc:GalaxyTab">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyTab">
+                <Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Background="Transparent"
+                                      CornerRadius="{TemplateBinding CornerRadius}"
+                                      VerticalContentAlignment="Center"
+                                      HorizontalContentAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:CustomerGalaxyTokenResource TabFocusRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:CustomerGalaxyTokenResource TabExtent}" />
+        <Setter Property="Padding" Value="{arc:CustomerGalaxyTokenResource TabInset}" />
+        <Setter Property="CornerRadius" Value="{arc:CustomerGalaxyTokenResource TabRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- MRR / Accounts: the chosen one on a surface with a resting shadow and a 1px border, no slider. -->
+    <ControlTheme x:Key="{x:Type arc:GalaxySortButton}" TargetType="arc:GalaxySortButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxySortButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:CustomerGalaxyTokenResource SortFocusRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:CustomerGalaxyTokenResource SortButtonExtent}" />
+        <Setter Property="Padding" Value="{arc:CustomerGalaxyTokenResource SortButtonInset}" />
+        <Setter Property="CornerRadius" Value="{arc:CustomerGalaxyTokenResource SortButtonRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A totals row: name and rolling value, the bar, the caption; muted fill on hover and while focused. -->
+    <ControlTheme x:Key="{x:Type arc:GalaxyGroupRow}" TargetType="arc:GalaxyGroupRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyGroupRow">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:CustomerGalaxyTokenResource RowRadius}"
+                            Padding="{arc:CustomerGalaxyTokenResource RowInset}">
+                        <StackPanel Spacing="{arc:CustomerGalaxyTokenResource RowLineGap}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Text="{TemplateBinding Label}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="19.6"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:ShowpieceNumber Name="PART_Value"
+                                                     Grid.Column="1"
+                                                     Margin="12,0,0,0"
+                                                     VerticalAlignment="Center"
+                                                     FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                     FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                     Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Grid>
+                            <arc:GalaxyBar Name="PART_Bar"
+                                           Height="{arc:CustomerGalaxyTokenResource BarExtent}"
+                                           SegmentGap="{arc:CustomerGalaxyTokenResource BarSegmentGap}"
+                                           TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                            <TextBlock Text="{TemplateBinding Caption}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextElement.FontFeatures="tnum" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:CustomerGalaxyTokenResource RowFocusRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A cluster's label: name over "MRR · accounts"; dims to 30% when another cluster is focused or hovered. -->
+    <ControlTheme x:Key="{x:Type arc:GalaxyClusterLabel}" TargetType="arc:GalaxyClusterLabel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyClusterLabel">
+                <StackPanel Name="PART_Inner" Spacing="{arc:CustomerGalaxyTokenResource LabelLineGap}">
+                    <TextBlock Text="{TemplateBinding Text}"
+                               HorizontalAlignment="Center"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="19.6"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <arc:ShowpieceNumber Name="PART_Mrr"
+                                             VerticalAlignment="Center"
+                                             Value="{TemplateBinding Mrr}"
+                                             Formatter="{TemplateBinding MrrFormatter}"
+                                             FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                             Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <TextBlock Text="{TemplateBinding Detail}"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="16.8"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   TextElement.FontFeatures="tnum" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Style Selector="^:dimmed">
+            <Setter Property="Opacity" Value="{arc:CustomerGalaxyTokenResource DimmedLabelOpacity}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The built-in account card (inside the Showpiece hover card's surface). -->
+    <ControlTheme x:Key="{x:Type arc:GalaxyAccountCard}" TargetType="arc:GalaxyAccountCard">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyAccountCard">
+                <StackPanel>
+                    <TextBlock Text="{TemplateBinding Title}"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="19.6"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="{TemplateBinding Subtitle}"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <Border Height="1"
+                            Margin="{arc:CustomerGalaxyTokenResource CardRuleMargin}"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <Grid ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto,Auto,Auto"
+                          ColumnSpacing="16"
+                          RowSpacing="{arc:CustomerGalaxyTokenResource CardRowGap}">
+                        <TextBlock Classes="card-label" Text="{TemplateBinding MrrLabel}" />
+                        <TextBlock Classes="card-value" Grid.Column="1" Text="{TemplateBinding MrrValue}" />
+                        <TextBlock Classes="card-label" Grid.Row="1" Text="{TemplateBinding OwnerLabel}" />
+                        <TextBlock Classes="card-value" Grid.Row="1" Grid.Column="1" Text="{TemplateBinding OwnerValue}" />
+                        <TextBlock Classes="card-label" Grid.Row="2" Text="{TemplateBinding HealthLabel}" />
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="6"
+                                    HorizontalAlignment="Right">
+                            <Ellipse Width="{arc:CustomerGalaxyTokenResource CardDot}"
+                                     Height="{arc:CustomerGalaxyTokenResource CardDot}"
+                                     VerticalAlignment="Center"
+                                     Fill="{TemplateBinding HealthBrush}" />
+                            <TextBlock Classes="card-value" Text="{TemplateBinding HealthValue}" />
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Name="PART_Note"
+                               Text="{TemplateBinding Note}"
+                               IsVisible="False"
+                               TextWrapping="Wrap"
+                               MaxWidth="260"
+                               HorizontalAlignment="Left"
+                               Margin="{arc:CustomerGalaxyTokenResource CardNoteMargin}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock.card-label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="19.6" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.card-value">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="19.6" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextElement.FontFeatures" Value="tnum" />
+        </Style>
+        <Style Selector="^:has-note /template/ TextBlock#PART_Note">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GalaxyLegendItem}" TargetType="arc:GalaxyLegendItem">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyLegendItem">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:CustomerGalaxyTokenResource LegendItemGap}">
+                    <Ellipse Width="{arc:CustomerGalaxyTokenResource LegendDot}"
+                             Height="{arc:CustomerGalaxyTokenResource LegendDot}"
+                             VerticalAlignment="Center"
+                             Fill="{TemplateBinding DotBrush}" />
+                    <TextBlock Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:GalaxySizeLegend}" TargetType="arc:GalaxySizeLegend">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxySizeLegend">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:CustomerGalaxyTokenResource LegendItemGap}">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Spacing="{arc:CustomerGalaxyTokenResource SizeDotGap}">
+                        <Ellipse Width="{arc:CustomerGalaxyTokenResource SizeDotSmall}"
+                                 Height="{arc:CustomerGalaxyTokenResource SizeDotSmall}"
+                                 VerticalAlignment="Center"
+                                 Fill="{TemplateBinding DotBrush}" />
+                        <Ellipse Width="{arc:CustomerGalaxyTokenResource SizeDotLarge}"
+                                 Height="{arc:CustomerGalaxyTokenResource SizeDotLarge}"
+                                 VerticalAlignment="Center"
+                                 Fill="{TemplateBinding DotBrush}" />
+                    </StackPanel>
+                    <TextBlock Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <!-- "Show all": a resting surface pill with a back arrow; muted on hover, a small press. -->
+    <ControlTheme x:Key="{x:Type arc:GalaxyChipButton}" TargetType="arc:GalaxyChipButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GalaxyChipButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Height="{arc:CustomerGalaxyTokenResource ChipExtent}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:CustomerGalaxyTokenResource ChipRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            Padding="{arc:CustomerGalaxyTokenResource ChipInset}">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:CustomerGalaxyTokenResource ChipGlyphGap}">
+                            <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                          Size="{arc:CustomerGalaxyTokenResource ChipGlyphSize}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:CustomerGalaxyTokenResource ChipFocusRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

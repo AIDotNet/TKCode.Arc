@@ -333,22 +333,31 @@ internal sealed class DataGridView
             var compare = spec.Culture.CompareInfo;
             const System.Globalization.CompareOptions options = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace |
                                                                 CompareOptions.IgnoreWidth | CompareOptions.IgnoreKanaType;
+            // A word has no whitespace, so it matches the row exactly when it matches one cell's display or raw text: no
+            // joined haystack per row, and a column that cannot match is not formatted again for the next word.
             tests.Add(row =>
             {
-                var haystack = string.Join(' ', columns.Select(c =>
-                {
-                    var value = c.Values[row];
-                    if (value is null)
-                    {
-                        return string.Empty;
-                    }
-                    var display = DataGridValueFormat.Format(value, c.Format, spec.Culture);
-                    var raw = DataGridSorting.TextOf(value);
-                    return display == raw ? raw : display + " " + raw;
-                }));
+                var display = new string?[columns.Length];
+                var raw = new string?[columns.Length];
                 foreach (var word in words)
                 {
-                    if (compare.IndexOf(haystack, word, options) < 0)
+                    var found = false;
+                    for (var i = 0; i < columns.Length && !found; i++)
+                    {
+                        var value = columns[i].Values[row];
+                        if (value is null)
+                        {
+                            continue;
+                        }
+                        raw[i] ??= DataGridSorting.TextOf(value);
+                        found = compare.IndexOf(raw[i]!, word, options) >= 0;
+                        if (!found)
+                        {
+                            display[i] ??= DataGridValueFormat.Format(value, columns[i].Format, spec.Culture);
+                            found = !ReferenceEquals(display[i], raw[i]) && display[i] != raw[i] && compare.IndexOf(display[i]!, word, options) >= 0;
+                        }
+                    }
+                    if (!found)
                     {
                         return false;
                     }

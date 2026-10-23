@@ -42,7 +42,7 @@ of chips costs one stop in the keyboard order.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ChipGroup Label="Topics" MaxWidth="560">
         <arc:SelectItem Content="Design" />
         <arc:SelectItem Content="Engineering" />
@@ -204,7 +204,7 @@ currently selected "Invoices" chip in view even though it sits past the limit.
 ```xml
 <StackPanel xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+            xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
             xmlns:generic="using:System.Collections.Generic"
             Width="680"
             Spacing="20">

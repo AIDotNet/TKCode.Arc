@@ -1,6 +1,6 @@
 ---
 title: AI 与 MCP
-source-hash: 2aba9c808c40
+source-hash: abfe18a713be
 ---
 
 # AI 与 MCP
@@ -14,7 +14,7 @@ AI 编程助手能很好地配合 TKCode.Arc 使用，因为它需要的一切�
 | 事实 | 重要原因 |
 |---|---|
 | 这是 Avalonia 12 与 AtomUI 6.2.8，而不是 WPF、WinUI 或 HTML。 | 否则助手会混入 WPF 属性（`Visibility`、`DataTemplateSelector`）或 CSS 的思路。 |
-| Arc 控件位于 `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"`。 | 没有该前缀时，`Button` 会解析为 Avalonia 自带的按钮，失去 Arc 的外观。 |
+| Arc 控件位于 `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`。 | 没有该前缀时，`Button` 会解析为 Avalonia 自带的按钮，失去 Arc 的外观。 |
 | 应用在 `UseAtomUI(...)` 中调用 `UseArc()`，并且 `Application` 类是 `partial`。 | 缺少其中任何一项，都会导致控件没有样式或构建错误。 |
 | 颜色、圆角与字体来自 `{arc:ArcDesignTokenResource ...}` 或 `ArcTokens`。 | 硬编码的十六进制值会破坏深色模式与强调色。 |
 | 动效声明在 `^:motion-full` 与 `^:motion-reduced` 之下，并遵循 `ArcMotion.Level`。 | 手写的动画会忽略减弱动效的设置。 |
@@ -86,7 +86,7 @@ Claude Code、Cursor 与 GitHub Copilot 等助手会读取仓库中的指令文�
 ## UI 库：TKCode.Arc
 
 - 界面使用 Avalonia 12.1.4 + AtomUI 6.2.8 + TKCode.Arc。不要使用 WPF 或 WinUI 的 API。
-- Arc 控件使用 xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"（arc:Button、arc:Input 等）。
+- Arc 控件使用 xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"（arc:Button、arc:Input 等）。
 - 只使用组件文档页面或 API 表格中列出的属性、事件与枚举值。
 - 颜色、圆角、间距与字体：XAML 中使用 {arc:ArcDesignTokenResource Name}，代码中使用 ArcTokens.Bind。
   永远不要硬编码颜色。

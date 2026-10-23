@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SemanticZoomSidePanelDemo">
+    <!-- The details panel beside the map (Auto does this by itself above 900 px inside); a fixed 460 px map. -->
+    <arc:SemanticZoom x:Name="Map"
+                      Header="Network map"
+                      DetailPanelPlacement="Side"
+                      StageHeight="460"
+                      MinWidth="760" />
+</UserControl>

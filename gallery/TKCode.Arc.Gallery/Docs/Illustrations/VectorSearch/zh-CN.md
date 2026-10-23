@@ -1,7 +1,7 @@
 ---
 title: 向量搜索
 summary: 问题被嵌入为向量，并通过余弦相似度找出最相近的文档作为答案。
-source-hash: 7ccc619c3c1b
+source-hash: c0d8885424dd
 ---
 
 <Demo name="HelpCentreSearch" />
@@ -29,7 +29,7 @@ source-hash: 7ccc619c3c1b
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:VectorSearch />
 </UserControl>
 ```

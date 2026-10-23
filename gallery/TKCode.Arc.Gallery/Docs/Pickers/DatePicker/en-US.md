@@ -42,7 +42,7 @@ made.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DatePicker Label="Start date"
                     Description="Type a date or press Alt+Down to open the calendar."
                     SelectedDate="{Binding StartDate, Mode=TwoWay}" />

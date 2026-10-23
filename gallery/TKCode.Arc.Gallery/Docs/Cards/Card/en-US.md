@@ -41,7 +41,7 @@ look, which grows the tile into a larger view of the same item without leaving t
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Card Title="Harbour redesign"
               Description="New booking flow and room pages."
               Width="280" />

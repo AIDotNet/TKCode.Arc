@@ -6,9 +6,12 @@ assets and libraries listed below.
 ## Arc (uiarc.dev) — free components and blocks
 
 TKCode.Arc reimplements the free (MIT) components of Arc for Avalonia, and `TKCode.Arc.Blocks` ports
-Arc's free (MIT) blocks (Page header, Command palette, Notification center, Empty states). Arc Pro
-components and blocks are not used, copied or reconstructed; blocks whose Arc counterpart is Pro
-(Sidebar, Search results) are original TKCode designs.
+Arc's free (MIT) blocks (Page header, Command palette, Notification center, Empty states). The code,
+styles, text and assets of Arc Pro components and blocks are not used, copied or reconstructed. A few Pro
+counterparts (the data grid, the Sidebar and Search results blocks, the AI blocks, the Showpieces blocks, the Projects blocks and the
+five AI explainers in `TKCode.Arc.Special`) are
+original TKCode designs that take the behavior and look Arc publishes as a design reference; their code, copy,
+sample data and images are written from scratch (the Showpieces' land outlines come from Natural Earth, below).
 
 ```
 MIT License
@@ -56,6 +59,13 @@ DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN AC
 CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 ```
+
+## Natural Earth — land outlines
+
+`TKCode.Arc.Blocks` embeds a 0.5° land mask made from **Natural Earth** 1:110m Physical Vectors, Land
+(`ne_110m_land`), for the `RevenueGlobe` block's dotted continents (`tools/geo/generate_land_mask.py` rasterizes the
+polygons; the mask is `Blocks/Showpieces/RevenueGlobe/Resources/land-mask.bin`, 32 KB). Natural Earth data is in
+the public domain. Made with Natural Earth. Free vector and raster map data at https://www.naturalearthdata.com.
 
 ## Fonts
 

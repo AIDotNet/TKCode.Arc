@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -43,7 +44,6 @@ internal sealed class PhoneInputSurface : Control
     private MotionValue<double>? _edge;
     private MotionValue<double>? _faceOpacity;
     private MotionValue<double>? _faceY;
-    private BlurEffect? _faceBlur;
     private double _w;
     private double _h;
     private double _r = ClosedRadius;
@@ -295,13 +295,10 @@ internal sealed class PhoneInputSurface : Control
         if (blur < 0.05)
         {
             _face.Effect = null;
-            _faceBlur = null;
         }
         else
         {
-            _faceBlur ??= new BlurEffect();
-            _faceBlur.Radius = blur;
-            _face.Effect = _faceBlur;
+            _face.Effect = ArcBlur.Get(blur);
         }
     }
 

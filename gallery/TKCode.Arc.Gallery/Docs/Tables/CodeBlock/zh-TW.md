@@ -1,7 +1,7 @@
 ---
 title: 程式碼區塊
 summary: 以清楚的層級呈現程式碼，並提供便捷的複製入口。
-source-hash: 59decc74ec12
+source-hash: 9560241e1e99
 ---
 
 <Demo name="Default" />
@@ -28,7 +28,7 @@ source-hash: 59decc74ec12
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:CodeBlock FileName="greeting.tsx"
                    Language="tsx"
                    Code="{Binding Source}" />

@@ -1,7 +1,7 @@
 ---
 title: 資料表格
 summary: 試算表式的表格：範圍選取、就地編輯、填滿控點、剪貼簿、復原、排序、篩選、分組、總計與匯出。
-source-hash: 336d02aee0c0
+source-hash: 8460a974ab30
 ---
 
 <Demo name="Renewals" />
@@ -30,7 +30,7 @@ source-hash: 336d02aee0c0
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DataGrid Label="續約" MaxViewportHeight="440" ExportFormats="All">
         <arc:DataGridColumn Key="account" Header="客戶" Width="188" IsPinned="True" />
         <arc:DataGridColumn Key="stage" Header="階段" Type="Select" />
@@ -230,6 +230,18 @@ if (DataGridLayoutState.FromJson(File.ReadAllText(path)) is { } state)
         <arc:DataGridMenuItem Label="Open account" />
     </arc:DataGrid.ContextMenuItems>
 </arc:DataGrid>
+```
+
+### 尋找與取代
+
+Ctrl+F 會在主體右上角開啟尋找列，Ctrl+H 會再加上取代列（也可以點箭頭）。它在使用者看到的文字中尋找，所以 `1,200` 能找到顯示為 `$1,200` 的儲存格。尋找列開啟時，所有相符的儲存格都會著色，尋找列會給出計數（「第 3 個，共 27 個」）。Enter 與 Shift+Enter，或 F3 與 Shift+F3，跳到下一個和上一個相符項目，到頭會循環；Escape 關閉尋找列。「區分大小寫」和「符合整個儲存格」可以縮小範圍。
+
+「取代」會取代目前相符項目中的文字並跳到下一個；「全部取代」把所有相符項目作為一步復原一次改完。新文字會依輸入的方式讀回，所以在貨幣或日期儲存格裡取代時，只要結果仍是有效值就能成功；會破壞儲存格的取代（不存在的選項、數字欄裡的文字）會被略過，並計入狀態列。唯讀儲存格也會被略過。使用 `DataSource` 時，Ctrl+F 改為聚焦工具列搜尋，因為只有檢視區內的區塊被載入。
+
+```csharp
+grid.FindText = "labs";
+grid.FindMatchCase = false;
+grid.ReplaceAll("Group");   // one undo step; cells whose new text does not parse are skipped
 ```
 
 ### 使用自有類別的列
@@ -528,6 +540,8 @@ public partial class RenewalsViewModel : ObservableObject
 | `Escape` | 將多儲存格選取範圍收合為作用中儲存格；否則清除列的勾選 |
 | `Delete` / `Backspace` | 清除選取範圍；唯讀儲存格會被略過 |
 | `Ctrl+D` | 從選取範圍的第一列向下填滿 |
+| `Ctrl+F` / `Ctrl+H` | 開啟尋找，或尋找與取代 |
+| `F3` / `Shift+F3` | 下一個或上一個相符項目 |
 | `Ctrl+C` / `Ctrl+X` / `Ctrl+V` | 複製、剪下和貼上 |
 | `Ctrl+Z` / `Ctrl+Shift+Z` 或 `Ctrl+Y` | 復原和重做 |
 | `Tab` / `Shift+Tab` | 離開表格 |

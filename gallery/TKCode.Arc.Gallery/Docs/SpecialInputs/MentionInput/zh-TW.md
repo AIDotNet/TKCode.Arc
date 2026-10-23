@@ -1,7 +1,7 @@
 ---
 title: 提及輸入框
 summary: 支援 @人員 與 #頻道 提及的多行文字方塊，提及作為整體權杖處理，並在插入點處顯示建議。
-source-hash: 4412b13eb7b5
+source-hash: 62bcca7dbf95
 ---
 
 <Demo name="CommentBox" />
@@ -27,7 +27,7 @@ source-hash: 4412b13eb7b5
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MentionInput Label="留言"
                       Placeholder="寫下留言。輸入 @ 提及，輸入 # 選擇頻道"
                       MinLines="1"
@@ -224,7 +224,7 @@ var stored = MentionSerializer.Serialize(comment.Value);
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic">
     <StackPanel Width="600" Spacing="14">
         <StackPanel Spacing="4">

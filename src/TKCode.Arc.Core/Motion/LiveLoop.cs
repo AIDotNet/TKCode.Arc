@@ -24,6 +24,8 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     private bool _running;
     private bool _inViewport = true;
     private bool _waitingForLayout;
+    private bool _viewportHooked;
+    private bool _attached;
     private bool _disposed;
 
     /// <param name="owner">The visual whose attachment, visibility, viewport and motion level gate the loop.</param>
@@ -35,8 +37,10 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     {
         _owner = owner;
         _step = step;
-        owner.AttachedToVisualTree += OnAttachmentChanged;
-        owner.DetachedFromVisualTree += OnAttachmentChanged;
+        // Walking up to the TopLevel on every gate check adds up (every Button owns a spinner), so attachment is tracked.
+        _attached = owner.IsAttachedToVisualTree();
+        owner.AttachedToVisualTree += OnAttached;
+        owner.DetachedFromVisualTree += OnDetached;
         owner.PropertyChanged += OnOwnerPropertyChanged;
         if (owner is StyledElement styled)
         {
@@ -74,17 +78,6 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
                 return;
             }
             _tracksViewport = value;
-            if (_owner is Layoutable layoutable)
-            {
-                if (value)
-                {
-                    layoutable.EffectiveViewportChanged += OnViewportChanged;
-                }
-                else
-                {
-                    layoutable.EffectiveViewportChanged -= OnViewportChanged;
-                }
-            }
             _inViewport = true;
             Refresh();
         }
@@ -108,7 +101,7 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     {
         get
         {
-            if (_disposed || !_owner.IsAttachedToVisualTree() || !_owner.IsVisible || !_owner.IsEffectivelyVisible)
+            if (_disposed || !_attached || !_owner.IsVisible || !_owner.IsEffectivelyVisible)
             {
                 return false;
             }
@@ -148,9 +141,11 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     /// </summary>
     public void Refresh()
     {
+        HookViewport(_tracksViewport && _active && !_disposed && _owner.IsVisible);
         var run = _active && CanRun;
         // Hidden by an ancestor: nothing on the owner says when that ends, but showing it always runs a layout pass.
-        WaitForLayout(_active && !run && !_disposed && _owner.IsAttachedToVisualTree() && !_owner.IsEffectivelyVisible);
+        // The owner's own IsVisible is watched through PropertyChanged, so it never needs the window-wide layout event.
+        WaitForLayout(_active && !run && !_disposed && _attached && _owner.IsVisible && !_owner.IsEffectivelyVisible);
         if (run == _running)
         {
             return;
@@ -160,6 +155,26 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
             return;
         }
         SetRunning(run);
+    }
+
+    // Every viewport listener costs an ancestor walk on each layout pass of the window, so a loop that is not asked for
+    // (or whose owner is hidden) listens to nothing. Avalonia reports the viewport again on the first pass after hooking.
+    private void HookViewport(bool hook)
+    {
+        if (hook == _viewportHooked || _owner is not Layoutable layoutable)
+        {
+            return;
+        }
+        _viewportHooked = hook;
+        if (hook)
+        {
+            layoutable.EffectiveViewportChanged += OnViewportChanged;
+        }
+        else
+        {
+            layoutable.EffectiveViewportChanged -= OnViewportChanged;
+            _inViewport = true;
+        }
     }
 
     private void WaitForLayout(bool wait)
@@ -212,11 +227,16 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
     void IMotionDriver.Snap()
     {
         SetRunning(false);
-        WaitForLayout(_active && !_disposed && _owner.IsAttachedToVisualTree() && !_owner.IsEffectivelyVisible);
+        WaitForLayout(_active && !_disposed && _attached && _owner.IsVisible && !_owner.IsEffectivelyVisible);
     }
 
-    private void OnAttachmentChanged(object? sender, VisualTreeAttachmentEventArgs e)
+    private void OnAttached(object? sender, VisualTreeAttachmentEventArgs e) => AttachmentChanged(true);
+
+    private void OnDetached(object? sender, VisualTreeAttachmentEventArgs e) => AttachmentChanged(false);
+
+    private void AttachmentChanged(bool attached)
     {
+        _attached = attached;
         // A detached owner learns its viewport again after the next layout; until then it counts as in view.
         _inViewport = true;
         Refresh();
@@ -254,17 +274,14 @@ public sealed class LiveLoop : IMotionDriver, IDisposable
         _active = false;
         SetRunning(false);
         WaitForLayout(false);
+        HookViewport(false);
         _disposed = true;
-        _owner.AttachedToVisualTree -= OnAttachmentChanged;
-        _owner.DetachedFromVisualTree -= OnAttachmentChanged;
+        _owner.AttachedToVisualTree -= OnAttached;
+        _owner.DetachedFromVisualTree -= OnDetached;
         _owner.PropertyChanged -= OnOwnerPropertyChanged;
         if (_owner is StyledElement styled)
         {
             styled.ResourcesChanged -= OnResourcesChanged;
-        }
-        if (_tracksViewport && _owner is Layoutable layoutable)
-        {
-            layoutable.EffectiveViewportChanged -= OnViewportChanged;
         }
     }
 }

@@ -1,0 +1,103 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A reply's end note. Inline: the lead (an 11px solid square for Stopped, a 16px CircleAlert for Error), 8px, the text
+        (14 / 19.6, TextMuted when stopped, TextSecondary for an error). Card: radius 16, padding 8 8 8 14, parts 10px apart
+        and centered. Arc mixes the error box's colors (Danger 5% into Surface, 26% into Border); here they are token layers
+        with an opacity, so they follow the theme: PART_Fill (Surface) under PART_Tint (Danger at 5%), PART_Edge (Border)
+        under PART_DangerEdge (Danger at 26%). A stopped card keeps the plain fill and edge.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiStatusNote}" TargetType="arc:AiStatusNote">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiStatusNote">
+                <arc:PresenceHost Name="PART_Presence" Mode="Fade" IsPresent="{TemplateBinding IsActive}">
+                    <Panel>
+                        <Border Name="PART_Fill" CornerRadius="16" IsVisible="False"
+                                Background="{arc:ArcDesignTokenResource Surface}" />
+                        <Border Name="PART_Tint" CornerRadius="16" IsVisible="False" Opacity="0.05"
+                                Background="{arc:ArcDesignTokenResource Danger}" />
+                        <Border Name="PART_Edge" CornerRadius="16" IsVisible="False" BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}" />
+                        <Border Name="PART_DangerEdge" CornerRadius="16" IsVisible="False" BorderThickness="1" Opacity="0.26"
+                                BorderBrush="{arc:ArcDesignTokenResource Danger}" />
+                        <DockPanel Name="PART_Row" VerticalAlignment="Center">
+                            <arc:Button Name="PART_Action"
+                                        DockPanel.Dock="Right"
+                                        Variant="Secondary"
+                                        Size="Small"
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        IsVisible="False" />
+                            <Panel Name="PART_Lead"
+                                   DockPanel.Dock="Left"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0">
+                                <Border Name="PART_Square"
+                                        Width="11"
+                                        Height="11"
+                                        CornerRadius="2"
+                                        IsVisible="False"
+                                        Background="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:ArcGlyph Name="PART_Alert"
+                                              Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="16"
+                                              StrokeThickness="1.75"
+                                              IsVisible="False"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            </Panel>
+                            <TextBlock Name="PART_Text"
+                                       TextWrapping="Wrap"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Panel>
+                </arc:PresenceHost>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:stopped /template/ Border#PART_Square">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ArcGlyph#PART_Alert">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error /template/ TextBlock#PART_Text">
+            <Setter Property="LineHeight" Value="20.3" />
+        </Style>
+        <Style Selector="^:action /template/ arc|Button#PART_Action">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- The box. -->
+        <Style Selector="^:card /template/ DockPanel#PART_Row">
+            <Setter Property="Margin" Value="14,8,8,8" />
+            <Setter Property="MinHeight" Value="36" />
+        </Style>
+        <Style Selector="^:card /template/ Panel#PART_Lead">
+            <Setter Property="Margin" Value="0,0,10,0" />
+        </Style>
+        <Style Selector="^:card /template/ Border#PART_Fill">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:card /template/ Border#PART_Edge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:card:error /template/ Border#PART_Tint">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:card:error /template/ Border#PART_DangerEdge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

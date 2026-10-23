@@ -41,7 +41,7 @@ Basic usage is a single value. `Value` is the position on the track, and `Minimu
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ElasticSlider Label="Volume"
                        Value="40"
                        Width="360"

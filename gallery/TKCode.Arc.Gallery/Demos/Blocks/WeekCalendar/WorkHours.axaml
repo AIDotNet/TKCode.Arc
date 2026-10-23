@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WeekCalendarWorkHoursDemo">
+    <!-- Office hours only: Monday to Friday, 7 AM to 8 PM, without the sidebar. -->
+    <arc:WeekCalendar x:Name="Calendar"
+                      View="WorkWeek"
+                      StartHour="7"
+                      EndHour="20"
+                      GridHeight="560"
+                      IsSidebarVisible="False"
+                      ShowWeekendShading="False" />
+</UserControl>

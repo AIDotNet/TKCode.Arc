@@ -1,7 +1,7 @@
 ---
 title: 活动热力图
 summary: 一眼看清一整年的活动，每天一个方块。
-source-hash: 5100b63c7993
+source-hash: 96bdcf76df9d
 ---
 
 <Demo name="Contributions" />
@@ -29,7 +29,7 @@ source-hash: 5100b63c7993
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ActivityHeatmap Label="2025 年的贡献"
                          Period="2025"
                          ItemsSource="{Binding Days}" />

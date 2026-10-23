@@ -1,7 +1,7 @@
 ---
 title: 輸入框
 summary: 標籤清楚、狀態實用的單行輸入框。
-source-hash: 92e9f7d582c4
+source-hash: ca2f6563c1a4
 ---
 
 <Demo name="Basic" />
@@ -28,7 +28,7 @@ source-hash: 92e9f7d582c4
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Input Label="電子郵件"
                Placeholder="you@example.com"
                Description="我們不會公開你的電子郵件。" />

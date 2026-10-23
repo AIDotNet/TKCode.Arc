@@ -25,6 +25,7 @@ public partial class DataGrid
     private double _layoutWidth = double.NaN;
     private int _layoutVersion;
     private int _columnsVersion;
+    private int _widthsVersion;
     private int _editVersion;
     private int _viewVersion;
     private decimal?[] _totals = [];
@@ -153,6 +154,9 @@ public partial class DataGrid
 
     internal int ColumnsVersion => _columnsVersion;
 
+    /// <summary>Changes whenever a column is resized (geometry only; see <see cref="ColumnsVersion"/>).</summary>
+    internal int WidthsVersion => _widthsVersion;
+
     internal DataGridColumn ColumnOf(int accessor) => _store.Accessors[accessor].Column;
 
     /// <summary>The visible column at a visible index.</summary>
@@ -210,10 +214,12 @@ public partial class DataGrid
         {
             _userWidths.Remove(column.Key);
         }
-        _columnsVersion++;
+        // Only the geometry changed: the cell texts stay valid (a text layout is made again only when its own column's
+        // width moves), so ColumnsVersion, which every cached text and the totals and find caches are keyed on, stays.
+        _widthsVersion++;
         _layoutWidth = double.NaN;
         Viewport.InvalidateMeasure();
-        Viewport.InvalidateText();
+        Viewport.InvalidateWidths();
         Viewport.SnapSelection();
         _syncingWidths = true;
         try

@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MixtureOfExpertsNarrowDemo">
+    <!-- Under 568 px the stage runs top to bottom; under 480 px the padding tightens and the readout wraps. -->
+    <arc:MixtureOfExperts Width="360" HorizontalAlignment="Center" />
+</UserControl>

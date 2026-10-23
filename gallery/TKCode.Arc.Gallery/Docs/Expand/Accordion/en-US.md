@@ -37,7 +37,7 @@ opens and the others stay closed.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Accordion>
         <arc:AccordionItem Header="What is included in the free plan?">
             Unlimited projects, three collaborators and a week of version history.

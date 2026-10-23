@@ -1,0 +1,163 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A reply head: the 22px lead cell (the model's mark), 6px, the reasoning button; the row is 28px high. Under it the
+        reasoning paragraph: 14 / 22.4 secondary text with a 1px Border rule on its left, 16px from the text, 2px above and
+        below; it sits 10px in (the rule runs under the mark's middle), 6px under the row and 2px over what follows. That
+        outer gap exists only while the paragraph is mounted and does not animate (Arc).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiReasoningDisclosure}" TargetType="arc:AiReasoningDisclosure">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiReasoningDisclosure">
+                <StackPanel>
+                    <StackPanel Name="PART_Head"
+                                Orientation="Horizontal"
+                                Spacing="6"
+                                Height="28"
+                                HorizontalAlignment="Left">
+                        <ContentPresenter Name="PART_Lead"
+                                          Width="22"
+                                          Height="22"
+                                          VerticalAlignment="Center"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center"
+                                          Content="{TemplateBinding Lead}"
+                                          IsVisible="{TemplateBinding Lead, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        <arc:AiReasoningButton Name="PART_Button"
+                                               IsThinking="{TemplateBinding IsThinking}"
+                                               ThinkingText="{TemplateBinding ThinkingText}"
+                                               ThoughtText="{TemplateBinding ThoughtText}"
+                                               VerticalAlignment="Center" />
+                    </StackPanel>
+                    <arc:AiCollapsible Name="PART_Body" ContentMargin="10,6,0,2">
+                        <Border Name="PART_Rule"
+                                BorderThickness="1,0,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Padding="16,2,0,2">
+                            <SelectableTextBlock Name="PART_Reasoning"
+                                                 Text="{TemplateBinding Reasoning}"
+                                                 FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                 LineHeight="22.4"
+                                                 LetterSpacing="-0.14"
+                                                 TextWrapping="Wrap"
+                                                 Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Border>
+                    </arc:AiCollapsible>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The reasoning button: 28px, pill, 6px sides, label then a 14px chevron (TextMuted, stroke 1.75) 2px after it.
+        Secondary text at rest, Foreground on hover and while open; never a fill. The label region springs to the label's
+        width (Quick) and clips at that width while it moves, so a longer label is revealed as the width catches up.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiReasoningButton}" TargetType="arc:AiReasoningButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="6,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiReasoningButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="2"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center">
+                        <arc:SpringSizeDecorator Name="PART_LabelSize"
+                                                 Axis="Width"
+                                                 Spring="Quick"
+                                                 ClipOverflow="0"
+                                                 VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_Label"
+                                                Mode="Label"
+                                                HorizontalAlignment="Left"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center" />
+                        </arc:SpringSizeDecorator>
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                      Size="14"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+
+        <Style Selector="^:hover, ^:expanded">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(90deg)" />
+        </Style>
+
+        <!-- Nothing to open: the label alone, at rest. -->
+        <Style Selector="^:static">
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:static /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Keyboard focus only, 2px outside the pill. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Text color 160ms on the standard curve; the chevron turns in 200ms. Reduced motion: 120ms color, no turn. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

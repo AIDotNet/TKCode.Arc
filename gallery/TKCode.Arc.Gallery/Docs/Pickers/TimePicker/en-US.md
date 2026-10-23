@@ -37,7 +37,7 @@ the format of the person's culture.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TimePicker Label="Meeting time"
                     Description="Times every 15 minutes."
                     SelectedTime="{Binding MeetingTime, Mode=TwoWay}" />

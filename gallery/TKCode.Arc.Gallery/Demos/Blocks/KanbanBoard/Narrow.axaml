@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KanbanBoardNarrowDemo">
+    <!-- At 560 and below the columns are 235 wide and the board snaps sideways from column to column. -->
+    <arc:KanbanBoard x:Name="Board"
+                     Title="Field app 4.2"
+                     Width="380"
+                     Height="720"
+                     HorizontalAlignment="Center" />
+</UserControl>

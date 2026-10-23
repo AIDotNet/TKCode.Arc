@@ -261,6 +261,8 @@ public sealed class ModalPresence : IDisposable
         _layer = layer;
         _topLevel = topLevel;
         _anchorInUse = anchor;
+        _reduceTransparency = null;
+        _blurTargetCache = null;
         _activeEntrance = Entrance;
         CaptureFocusOrigin(topLevel);
         if (Panel.Parent is null && anchor is StyledElement logicalAnchor)
@@ -486,6 +488,7 @@ public sealed class ModalPresence : IDisposable
             ((ISetLogicalParent)Panel).SetParent(null);
         }
         _layer = null;
+        _blurTargetCache = null;
         _topLevel = null;
         _anchorInUse = null;
         _restoreFocus = null;
@@ -552,6 +555,8 @@ public sealed class ModalPresence : IDisposable
 
     #region Visual application
 
+    private bool? _reduceTransparency;
+
     /// <summary>Current backdrop blur radius (blur × scrim progress; zero under ReduceTransparency).</summary>
     internal double CurrentBackdropBlur
     {
@@ -561,7 +566,10 @@ public sealed class ModalPresence : IDisposable
             {
                 return 0;
             }
-            if (_anchorInUse is Control control && control.TryFindResource(ArcDesignTokenKind.ReduceTransparency, out var reduce) && reduce is true)
+            // Read once per opening: this runs on every frame of the scrim tween.
+            _reduceTransparency ??= _anchorInUse is Control control
+                && control.TryFindResource(ArcDesignTokenKind.ReduceTransparency, out var reduce) && reduce is true;
+            if (_reduceTransparency is true)
             {
                 return 0;
             }
@@ -570,9 +578,11 @@ public sealed class ModalPresence : IDisposable
     }
 
     /// <summary>Window content under the overlay layer (null inside a scoped overlay panel).</summary>
-    internal Visual? BlurTarget => _layer is ScopeAwareOverlayLayer { LayerHost: ScopeAwareOverlayLayerPanel }
+    internal Visual? BlurTarget => _blurTargetCache ??= _layer is ScopeAwareOverlayLayer { LayerHost: ScopeAwareOverlayLayerPanel }
         ? null
         : _layer is null ? null : ModalStack.FindBlurTarget(_layer);
+
+    private Visual? _blurTargetCache;
 
     private void ApplyScrim()
     {

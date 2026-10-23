@@ -36,7 +36,7 @@ average.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Ridgeline Label="Daily highs in Zurich"
                    Unit="°C"
                    DomainMinimum="-5"
@@ -184,7 +184,7 @@ show the rank order, and the fixed domain keeps the axis still when the page is 
 ```xml
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
         xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         Width="680"

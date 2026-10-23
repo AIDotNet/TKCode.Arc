@@ -44,7 +44,7 @@ oldest to newest, and the list stays pinned to the newest one.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ChatThread Label="Support conversation"
                     Participants="{Binding Participants}"
                     CurrentUserId="me"
@@ -286,7 +286,7 @@ names the agent, which is clearer than the default "Message".
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="600">
     <Border Height="600"

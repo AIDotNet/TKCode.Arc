@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeculativeDecodingOwnAnswerDemo">
+    <!-- A support reply, token by token. Amounts and dates are hard to guess (low ease, with the draft's wrong guess);
+         short words and punctuation are easy. The models are invented, and the race is on from the start. -->
+    <arc:SpeculativeDecoding MaxWidth="720"
+                             Title="Refund reply"
+                             DraftLength="5"
+                             IsComparing="True"
+                             DraftLabel="Lark 1B"
+                             DraftDetail="1B, fast"
+                             TargetLabel="Orca 70B"
+                             TargetDetail="70B">
+        <arc:DecodeToken Text="Your" Ease="0.97" />
+        <arc:DecodeToken Text=" refund" Ease="0.7" Miss=" order" />
+        <arc:DecodeToken Text=" of" Ease="0.95" />
+        <arc:DecodeToken Text=" $" Ease="0.9" />
+        <arc:DecodeToken Text="48" Ease="0.1" Miss="40" />
+        <arc:DecodeToken Text="." Ease="0.95" />
+        <arc:DecodeToken Text="20" Ease="0.2" Miss="00" />
+        <arc:DecodeToken Text=" was" Ease="0.95" />
+        <arc:DecodeToken Text=" approved" Ease="0.8" Miss=" sent" />
+        <arc:DecodeToken Text=" and" Ease="0.9" />
+        <arc:DecodeToken Text=" should" Ease="0.75" Miss=" will" />
+        <arc:DecodeToken Text=" reach" Ease="0.8" Miss=" show" />
+        <arc:DecodeToken Text=" your" Ease="0.95" />
+        <arc:DecodeToken Text=" card" Ease="0.6" Miss=" account" />
+        <arc:DecodeToken Text=" within" Ease="0.85" Miss=" in" />
+        <arc:DecodeToken Text=" 5" Ease="0.3" Miss=" 3" />
+        <arc:DecodeToken Text=" business" Ease="0.9" />
+        <arc:DecodeToken Text=" days" Ease="0.97" />
+        <arc:DecodeToken Text="." Ease="0.99" />
+    </arc:SpeculativeDecoding>
+</UserControl>

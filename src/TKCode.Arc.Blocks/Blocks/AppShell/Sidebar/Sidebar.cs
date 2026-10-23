@@ -125,9 +125,9 @@ public class Sidebar : TemplatedControl
     public static readonly StyledProperty<string> ExpandButtonTextProperty =
         AvaloniaProperty.Register<Sidebar, string>(nameof(ExpandButtonText), "Expand sidebar");
 
-    /// <summary>How the width change between the open sidebar and the rail reaches the page next to it: <see cref="SidebarResizeMode.Push"/> (default) or <see cref="SidebarResizeMode.Overlay"/>.</summary>
+    /// <summary>How the width change between the open sidebar and the rail reaches the page next to it: <see cref="SidebarResizeMode.Overlay"/> (default) or <see cref="SidebarResizeMode.Push"/>.</summary>
     public static readonly StyledProperty<SidebarResizeMode> ResizeModeProperty =
-        AvaloniaProperty.Register<Sidebar, SidebarResizeMode>(nameof(ResizeMode));
+        AvaloniaProperty.Register<Sidebar, SidebarResizeMode>(nameof(ResizeMode), SidebarResizeMode.Overlay);
 
     /// <summary>Added to the accessible name of a page that has <see cref="SidebarItem.IsUnread"/> ("Inbox, unread").</summary>
     public static readonly StyledProperty<string> UnreadTextProperty =
@@ -340,6 +340,8 @@ public class Sidebar : TemplatedControl
             Wrap = false
         };
         Sections.CollectionChanged += OnSectionsChanged;
+        // The default mode raises no property change, so its pseudo-class is set here.
+        PseudoClasses.Set(OverlayPseudoClass, ResizeMode == SidebarResizeMode.Overlay);
         AutomationProperties.SetName(this, Label);
         AddHandler(KeyDownEvent, OnPreviewKeyDown, RoutingStrategies.Tunnel);
     }
@@ -353,20 +355,19 @@ public class Sidebar : TemplatedControl
     /// </summary>
     internal double PaneWidth => ResizeMode == SidebarResizeMode.Overlay && _paneWidth is { } motion ? motion.Value : Width;
 
-    /// <summary>How far the layout width falls short of the open width (what the rows are measured with).</summary>
-    internal double MeasureDeficit => DeficitOf(Width);
-
-    /// <summary>How far the pane's current width falls short of the open width (what the rows are arranged with).</summary>
-    internal double ArrangeDeficit => DeficitOf(PaneWidth);
-
-    private double DeficitOf(double width)
+    /// <summary>How far the layout width falls short of the open width (what the rows are measured and arranged with).</summary>
+    internal double MeasureDeficit
     {
-        var open = OpenWidth;
-        if (double.IsNaN(open) || double.IsNaN(width) || open <= 0)
+        get
         {
-            return 0;
+            var open = OpenWidth;
+            var width = Width;
+            if (double.IsNaN(open) || double.IsNaN(width) || open <= 0)
+            {
+                return 0;
+            }
+            return Math.Max(0, open - width);
         }
-        return Math.Max(0, open - width);
     }
 
     /// <summary>The rows the arrow keys move through, in order (tests).</summary>

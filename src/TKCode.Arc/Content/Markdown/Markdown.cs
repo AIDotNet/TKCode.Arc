@@ -78,6 +78,28 @@ public class Markdown : TemplatedControl
     public static readonly StyledProperty<bool> OpensLinksProperty =
         AvaloniaProperty.Register<Markdown, bool>(nameof(OpensLinks), true);
 
+    /// <summary>
+    /// How long each batch of text appended with <see cref="Append"/> fades in at full motion; null uses Arc's standard
+    /// duration. A host that paces the text itself usually sets 150 ms.
+    /// </summary>
+    public static readonly StyledProperty<TimeSpan?> RevealFadeDurationProperty =
+        AvaloniaProperty.Register<Markdown, TimeSpan?>(nameof(RevealFadeDuration));
+
+    /// <summary>
+    /// Whether appended text still fades in at reduced motion (a short opacity fade). False shows it at once, which suits
+    /// a reply that grows continuously: there is no whole to fade.
+    /// </summary>
+    public static readonly StyledProperty<bool> RevealFadeInReducedMotionProperty =
+        AvaloniaProperty.Register<Markdown, bool>(nameof(RevealFadeInReducedMotion), true);
+
+    /// <summary>
+    /// Whether <see cref="Append"/> paces the text (true, the default: it is released in small steps that follow the
+    /// arrival rate). False shows every appended piece as one batch at once: the host has already paced it, for example
+    /// in whole words on a fixed clock.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsPacedProperty =
+        AvaloniaProperty.Register<Markdown, bool>(nameof(IsPaced), true);
+
     /// <summary>Whether a stream is attached and has not completed yet.</summary>
     public static readonly DirectProperty<Markdown, bool> IsStreamingProperty =
         AvaloniaProperty.RegisterDirect<Markdown, bool>(nameof(IsStreaming), o => o.IsStreaming);
@@ -110,6 +132,15 @@ public class Markdown : TemplatedControl
         AvaloniaProperty.Register<Markdown, double>(nameof(Leading), 1.65);
 
     public string? Text { get => GetValue(TextProperty); set => SetValue(TextProperty, value); }
+
+    /// <inheritdoc cref="RevealFadeDurationProperty"/>
+    public TimeSpan? RevealFadeDuration { get => GetValue(RevealFadeDurationProperty); set => SetValue(RevealFadeDurationProperty, value); }
+
+    /// <inheritdoc cref="RevealFadeInReducedMotionProperty"/>
+    public bool RevealFadeInReducedMotion { get => GetValue(RevealFadeInReducedMotionProperty); set => SetValue(RevealFadeInReducedMotionProperty, value); }
+
+    /// <inheritdoc cref="IsPacedProperty"/>
+    public bool IsPaced { get => GetValue(IsPacedProperty); set => SetValue(IsPacedProperty, value); }
     public MarkdownStream? Stream { get => GetValue(StreamProperty); set => SetValue(StreamProperty, value); }
     public MarkdownServices? Services { get => GetValue(ServicesProperty); set => SetValue(ServicesProperty, value); }
     public double LineHeight { get => GetValue(LineHeightProperty); set => SetValue(LineHeightProperty, value); }
@@ -214,7 +245,7 @@ public class Markdown : TemplatedControl
         {
             // The reply replaces the static text (Text reads null while a reply is shown).
             SetCurrentValue(TextProperty, null);
-            _ownStream = new MarkdownStream(fadeDuration: FadeDuration(), profile: EffectiveServices().Profile);
+            _ownStream = new MarkdownStream(smooth: IsPaced, fadeDuration: FadeDuration(), profile: EffectiveServices().Profile);
             SetCurrentValue(StreamProperty, _ownStream);
         }
         Stream!.Push(text);
@@ -611,11 +642,14 @@ public class Markdown : TemplatedControl
         PseudoClasses.Set(StreamingPseudoClass, value);
     }
 
-    /// <summary>New text fades in over Arc's standard duration; Reduced keeps a shorter fade (opacity only), Off none.</summary>
+    /// <summary>
+    /// New text fades in over <see cref="RevealFadeDuration"/> (Arc's standard duration by default); Reduced keeps a
+    /// shorter fade (opacity only) unless <see cref="RevealFadeInReducedMotion"/> is off, Off none.
+    /// </summary>
     private TimeSpan FadeDuration() => ArcMotion.GetEffectiveLevel(this) switch
     {
-        ArcMotionLevel.Full => ArcMotionPresets.Standard,
-        ArcMotionLevel.Reduced => ArcMotionPresets.Fast,
+        ArcMotionLevel.Full => RevealFadeDuration ?? ArcMotionPresets.Standard,
+        ArcMotionLevel.Reduced => RevealFadeInReducedMotion ? ArcMotionPresets.Fast : TimeSpan.Zero,
         _ => TimeSpan.Zero
     };
 

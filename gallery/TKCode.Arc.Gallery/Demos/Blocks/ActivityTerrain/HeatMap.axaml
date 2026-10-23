@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityTerrainHeatMapDemo">
+    <!-- Starts flat, seen from above: every hour a square, darker when busier. The switch brings the bars back up. -->
+    <arc:ActivityTerrain x:Name="Terrain"
+                         ViewMode="Top"
+                         SelectedMetricKey="builds"
+                         Title="Build activity"
+                         Subtitle="When the team ships, Mar 2 to 8, 2026." />
+</UserControl>

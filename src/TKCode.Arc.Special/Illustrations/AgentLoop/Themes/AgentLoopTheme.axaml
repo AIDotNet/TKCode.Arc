@@ -1,0 +1,155 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The card: header (title, status, two-line caption), the stage, and the footer with playback and speed. -->
+    <ControlTheme x:Key="{x:Type arc:AgentLoop}" TargetType="arc:AgentLoop">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="744" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentLoop">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="False">
+                    <Grid RowDefinitions="Auto,Auto">
+                        <StackPanel Margin="{TemplateBinding BodyPadding}">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           MinHeight="{arc:AgentLoopTokenResource HeaderRowHeight}"
+                                           VerticalAlignment="Center"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:AgentLoopTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:AgentLoopTokenResource TitleLetterSpacing}"
+                                           Padding="0,2"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:ExplainerStatus Name="PART_Status"
+                                                     Grid.Column="1"
+                                                     Margin="12,0,0,0"
+                                                     VerticalAlignment="Center" />
+                                <arc:ArcContentSwap Name="PART_Caption"
+                                                    Grid.Row="1"
+                                                    Grid.ColumnSpan="2"
+                                                    Mode="Crossfade"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Top"
+                                                    Margin="{arc:AgentLoopTokenResource CaptionMargin}"
+                                                    MinHeight="{arc:AgentLoopTokenResource CaptionMinHeight}" />
+                                <arc:ExplainerAnnouncer Name="PART_Announcer" Grid.Row="1" />
+                            </Grid>
+                            <arc:AgentLoopStage Name="PART_Stage" Margin="0,20,0,0" />
+                        </StackPanel>
+                        <Border Name="PART_Footer"
+                                Grid.Row="1"
+                                Margin="0,20,0,0"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Padding="{TemplateBinding FooterPadding}"
+                                IsVisible="{TemplateBinding AreControlsVisible}">
+                            <arc:AgentLoopFooterPanel Name="PART_Controls">
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:AgentLoopTokenResource ButtonGap}" VerticalAlignment="Center">
+                                    <arc:ExplainerIconButton Name="PART_PlayButton" />
+                                    <arc:ExplainerIconButton Name="PART_StepButton" />
+                                    <arc:ExplainerIconButton Name="PART_RestartButton" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:AgentLoopTokenResource SpeedGap}" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_SpeedLabel"
+                                               VerticalAlignment="Center"
+                                               LineHeight="{arc:AgentLoopTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:SegmentedControl Name="PART_Speed" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:AgentLoopFooterPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The stage: colors for the mixed chip and block borders, and the divider before the context stack. -->
+    <ControlTheme x:Key="{x:Type arc:AgentLoopStage}" TargetType="arc:AgentLoopStage">
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+    </ControlTheme>
+
+    <!-- The drawn ring's inks. -->
+    <ControlTheme x:Key="{x:Type arc:AgentLoopRing}" TargetType="arc:AgentLoopRing">
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="TrackInk" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="ChevronInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="PinInk" Value="{arc:ArcDesignTokenResource Border}" />
+    </ControlTheme>
+
+    <!-- A station label: muted when idle, text color with an accent icon when active, secondary once visited. -->
+    <ControlTheme x:Key="{x:Type arc:AgentLoopStationLabel}" TargetType="arc:AgentLoopStationLabel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="IconBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="ShimmerBaseBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Style Selector="^:active">
+            <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="IconBrush" Value="{arc:ArcDesignTokenResource Series1}" />
+        </Style>
+        <Style Selector="^:visited">
+            <Setter Property="TextBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="IconBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="TextBrush" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="IconBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A chip: 1px border lit at its active station, dimmed to 62% while another station works (240ms). -->
+    <ControlTheme x:Key="{x:Type arc:AgentLoopChip}" TargetType="arc:AgentLoopChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:AgentLoopTokenResource ChipCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:AgentLoopTokenResource ChipPadding}" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A context block: an accent border while it is new, easing back over 480ms when Gather is left. -->
+    <ControlTheme x:Key="{x:Type arc:AgentLoopBlock}" TargetType="arc:AgentLoopBlock">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:AgentLoopTokenResource ChipCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:AgentLoopTokenResource ChipPadding}" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

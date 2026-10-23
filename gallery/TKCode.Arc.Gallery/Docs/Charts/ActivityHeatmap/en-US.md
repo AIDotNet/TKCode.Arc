@@ -41,7 +41,7 @@ weekdays are busy. It fits a dashboard panel or a profile page where the whole p
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ActivityHeatmap Label="Contributions in 2025"
                          Period="2025"
                          ItemsSource="{Binding Days}" />

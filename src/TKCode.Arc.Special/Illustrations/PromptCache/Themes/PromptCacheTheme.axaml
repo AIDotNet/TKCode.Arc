@@ -1,0 +1,356 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The change toggle: an Arc secondary button with a pen icon and a label (36 high, 12 to the sides, radius 18).
+        Armed it takes the accent's subtle fill with an AccentStrong outline and icon. Keyboard focus draws the 2px ring.
+    -->
+    <ControlTheme x:Key="PromptCacheToggleTheme" TargetType="ToggleButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Padding" Value="{arc:PromptCacheTokenResource TogglePadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ToggleButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="22"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Prompt cache: a Surface card (RadiusSurface, 1px Border, 24 padding, 20 between sections). Header: title (display
+        face, 16/500) over the model line (mark, name, a 3px dot, the time-to-live note), the playback buttons at the right.
+        Then the legend, the requests beside (or under) the cache panel, the caption (two lines reserved, three when
+        compact), and the footer under a hairline: two statistics and the change toggle. The flight layer spans the card.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptCache}" TargetType="arc:PromptCache">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="TrackInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="MessageInk" Value="{arc:PromptCacheTokenResource MessageFill}" />
+        <Setter Property="WarningInk" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="KeyInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Series1Ink" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2Ink" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3Ink" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4Ink" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptCache">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                            Padding="{arc:PromptCacheTokenResource CardPadding}">
+                        <StackPanel Spacing="{arc:PromptCacheTokenResource SectionGap}">
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Spacing="4" VerticalAlignment="Top">
+                                    <TextBlock Name="PART_Title"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:PromptCacheTokenResource TitleLineHeight}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <StackPanel Name="PART_ModelLine" Orientation="Horizontal" Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <arc:ArcGlyph Name="PART_ModelMark" Size="14" VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ModelName"
+                                                       LineHeight="{arc:PromptCacheTokenResource BodyLineHeight}"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <Ellipse Name="PART_Dot"
+                                                 Width="3"
+                                                 Height="3"
+                                                 VerticalAlignment="Center"
+                                                 Fill="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_Ttl"
+                                                   LineHeight="{arc:PromptCacheTokenResource BodyLineHeight}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Name="PART_Controls"
+                                            Grid.Column="1"
+                                            Margin="16,0,0,0"
+                                            Orientation="Horizontal"
+                                            Spacing="8"
+                                            VerticalAlignment="Top"
+                                            IsVisible="{TemplateBinding AreControlsVisible}">
+                                    <arc:ExplainerIconButton Name="PART_PlayButton" />
+                                    <arc:ExplainerIconButton Name="PART_StepButton" />
+                                    <arc:ExplainerIconButton Name="PART_RestartButton" />
+                                </StackPanel>
+                            </Grid>
+
+                            <WrapPanel Name="PART_Legend" Margin="0,0,-16,-6" />
+
+                            <arc:PromptCacheSplit Name="PART_Split"
+                                                  PanelWidth="{arc:PromptCacheTokenResource PanelWidth}"
+                                                  Gap="{arc:PromptCacheTokenResource PanelGap}"
+                                                  StackGap="{arc:PromptCacheTokenResource SectionGap}">
+                                <arc:PromptCacheTable Name="PART_Table" SeparatorBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                <arc:PromptCacheFrame Name="PART_CachePanel"
+                                                      Padding="{arc:PromptCacheTokenResource PanelPadding}"
+                                                      CornerRadius="{arc:PromptCacheTokenResource PanelRadius}">
+                                    <StackPanel Spacing="12">
+                                        <DockPanel Margin="0,0,0,4">
+                                            <arc:ArcRing Name="PART_Ring"
+                                                         DockPanel.Dock="Left"
+                                                         Width="33"
+                                                         Height="33"
+                                                         Margin="1.5,1.5,13.5,1.5"
+                                                         Thickness="{arc:PromptCacheTokenResource RingThickness}"
+                                                         ChaseRate="0"
+                                                         TrackBrush="{arc:ArcDesignTokenResource Border}" />
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Name="PART_CacheName"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           LineHeight="{arc:PromptCacheTokenResource BodyLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <arc:PromptCacheStatus Name="PART_CacheStatus" HorizontalAlignment="Left" />
+                                            </StackPanel>
+                                        </DockPanel>
+                                        <arc:PromptCacheBar Name="PART_CacheBar" />
+                                        <TextBlock Name="PART_CachedTokens"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:PromptCacheTokenResource SmallLineHeight}"
+                                                   FontFeatures="tnum"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                        <arc:PromptCachePrices Name="PART_Prices" />
+                                    </StackPanel>
+                                </arc:PromptCacheFrame>
+                            </arc:PromptCacheSplit>
+
+                            <arc:ArcContentSwap Name="PART_Caption"
+                                                Mode="Crossfade"
+                                                MinHeight="39.2"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Top" />
+
+                            <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+
+                            <arc:PromptCacheFooter Name="PART_Footer">
+                                <StackPanel Name="PART_Stats" Orientation="Horizontal" Spacing="24">
+                                    <StackPanel Name="PART_CostStat" Spacing="2">
+                                        <TextBlock Name="PART_CostValue"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:PromptCacheTokenResource StatLineHeight}"
+                                                   FontFeatures="tnum"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:ArcContentSwap Name="PART_CostLabel" Mode="Crossfade" HorizontalContentAlignment="Left" />
+                                        <TextBlock Name="PART_CostDetail"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:PromptCacheTokenResource SmallLineHeight}"
+                                                   FontFeatures="tnum"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_SpeedStat" Spacing="2">
+                                        <TextBlock Name="PART_SpeedValue"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:PromptCacheTokenResource StatLineHeight}"
+                                                   FontFeatures="tnum"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_SpeedLabel"
+                                                   LineHeight="{arc:PromptCacheTokenResource BodyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <TextBlock Name="PART_SpeedDetail"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:PromptCacheTokenResource SmallLineHeight}"
+                                                   FontFeatures="tnum"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <ToggleButton Name="PART_Toggle" Theme="{StaticResource PromptCacheToggleTheme}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.PenLine}"
+                                                      Size="{arc:PromptCacheTokenResource ToggleIconSize}"
+                                                      VerticalAlignment="Center"
+                                                      Foreground="{Binding $parent[ToggleButton].Foreground}" />
+                                        <TextBlock Name="PART_ToggleText"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:PromptCacheTokenResource BodyLineHeight}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </StackPanel>
+                                </ToggleButton>
+                            </arc:PromptCacheFooter>
+                        </StackPanel>
+                    </Border>
+                    <arc:PromptCacheFlight Name="PART_Flight" />
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_CostStat">
+            <Setter Property="Width" Value="{arc:PromptCacheTokenResource StatWidth}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_SpeedStat">
+            <Setter Property="Width" Value="{arc:PromptCacheTokenResource StatWidth}" />
+        </Style>
+
+        <!-- Breakpoints (the card's own content width). -->
+        <Style Selector="^:compact /template/ StackPanel#PART_ModelLine">
+            <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="Spacing" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ Ellipse#PART_Dot">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ArcContentSwap#PART_Caption">
+            <Setter Property="MinHeight" Value="58.8" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Stats">
+            <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="Spacing" Value="16" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_CostStat">
+            <Setter Property="Width" Value="NaN" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_SpeedStat">
+            <Setter Property="Width" Value="NaN" />
+        </Style>
+        <Style Selector="^:tiny /template/ StackPanel#PART_Controls">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <!-- The cache panel: a dashed strong outline while empty or expired; the ring hides then. -->
+        <Style Selector="^:empty /template/ arc|PromptCacheFrame#PART_CachePanel">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="IsDashed" Value="True" />
+        </Style>
+        <Style Selector="^:expired /template/ arc|PromptCacheFrame#PART_CachePanel">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="IsDashed" Value="True" />
+        </Style>
+        <!-- State-dependent values live in styles (a value set in the template would win over the state styles). -->
+        <Style Selector="^ /template/ arc|PromptCacheFrame#PART_CachePanel">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:expired /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:low /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|PromptCacheFrame#PART_CachePanel">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ arc|PromptCacheFrame#PART_CachePanel">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

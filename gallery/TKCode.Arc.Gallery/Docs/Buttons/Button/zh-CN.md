@@ -1,7 +1,7 @@
 ---
 title: 按钮
 summary: 清晰、响应迅速的操作按钮，次要状态保持低调。
-source-hash: e6fbe5c079c6
+source-hash: 2e7052f3cb01
 ---
 
 <Demo name="Variants" />
@@ -28,7 +28,7 @@ source-hash: e6fbe5c079c6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Button Content="保存更改" Variant="Primary" />
 </UserControl>
 ```

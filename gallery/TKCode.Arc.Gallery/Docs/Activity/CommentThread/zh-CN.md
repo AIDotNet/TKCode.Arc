@@ -1,7 +1,7 @@
 ---
 title: 评论线程
 summary: 支持回复、表情反应、提及、原位编辑与解决的嵌套评论。
-source-hash: 33ce25dcbea1
+source-hash: d0215cd8a3c4
 ---
 
 <Demo name="DesignReview" />
@@ -187,7 +187,7 @@ SaaS 营销页面中定价表的一次评审。第一条评论获得了当前用
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="600">
     <arc:CommentThread Title="Pricing table spacing"

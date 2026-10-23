@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.SettingsCommandInlineDemo">
     <arc:SettingsCommand MaxWidth="560" ItemInvoked="OnItemInvoked">
         <arc:SettingsCommandChoice Group="Appearance" Header="Theme" Icon="{x:Static arc:ArcIcons.Palette}"

@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -35,7 +36,6 @@ internal sealed class MorphSelectSurface : Control
     private MotionValue<double>? _lift;
     private MotionValue<double>? _faceOpacity;
     private MotionValue<double>? _faceY;
-    private BlurEffect? _faceBlur;
     private double _w;
     private double _h;
     private bool _atRest;
@@ -258,13 +258,10 @@ internal sealed class MorphSelectSurface : Control
         if (blur < 0.05)
         {
             _face.Effect = null;
-            _faceBlur = null;
         }
         else
         {
-            _faceBlur ??= new BlurEffect();
-            _faceBlur.Radius = blur;
-            _face.Effect = _faceBlur;
+            _face.Effect = ArcBlur.Get(blur);
         }
     }
 

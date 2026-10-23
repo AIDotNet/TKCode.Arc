@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelPickerPreviewDemo">
+    <!-- The picker is at most 440 wide and centers itself; the menu opens below the pill. -->
+    <arc:ModelPicker x:Name="Picker" Margin="0,12,0,160" />
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 空狀態集
 summary: 同一幅插圖中的四種空狀態，切換標籤頁時，圖形會在各場景之間變形。
-source-hash: cc06ac163e80
+source-hash: 68ea32edeae6
 ---
 
 <Demo name="Preview" />
@@ -27,7 +27,7 @@ source-hash: cc06ac163e80
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:EmptyStates Label="工作區" />
 </UserControl>
 ```

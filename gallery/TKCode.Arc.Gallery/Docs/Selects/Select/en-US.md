@@ -38,7 +38,7 @@ list from there, so the person can scan the options without leaving the form.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Select Label="Region"
                 Description="Where your workspace data is stored."
                 Width="280">

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -161,6 +162,33 @@ public class DataGridBehaviorTests
         grid.StatusBar!.MessageText.ShouldBe("ARR cannot be negative");
         grid.CancelEdit();
         rows[1]["arr"].ShouldBe(800m);
+    }
+
+    [AvaloniaFact]
+    public void An_Edit_Template_Is_Only_Built_With_The_Edit_Context()
+    {
+        // Closing the editor clears the presenter's content; a template still attached would be built with null (a template that
+        // reads context.Value crashed on the click that ended an edit).
+        var grid = Create();
+        var built = new List<DataGridEditContext?>();
+        grid.Columns[3].EditTemplate = new FuncDataTemplate<DataGridEditContext>((context, _) =>
+        {
+            built.Add(context);
+            return new Border { Width = 40, Height = 20 };
+        });
+        Show(grid);
+        grid.Select(new DataGridCellAddress(1, 3));
+        grid.BeginEdit();
+        grid.IsEditing.ShouldBeTrue();
+        grid.CancelEdit();
+        grid.IsEditing.ShouldBeFalse();
+        grid.Select(new DataGridCellAddress(2, 3));
+        grid.BeginEdit();
+        grid.IsEditing.ShouldBeTrue();
+        grid.CommitEdit(null, null).ShouldBeTrue();
+        grid.IsEditing.ShouldBeFalse();
+        built.Count.ShouldBe(2);
+        built.ShouldAllBe(context => context != null);
     }
 
     [AvaloniaFact]

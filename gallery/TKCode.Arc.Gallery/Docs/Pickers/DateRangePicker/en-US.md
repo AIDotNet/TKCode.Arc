@@ -37,7 +37,7 @@ with a preset rail and one or two months, so people can take a common period in 
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DateRangePicker Label="Date range" />
 </UserControl>
 ```

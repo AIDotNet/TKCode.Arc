@@ -1,0 +1,450 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Activity terrain (Arc Activity terrain, design reference): a card with a heading, a toolbar of two segmented
+        switches, the body (plot + legend, then the summary: under the plot below 880, in a 224px column from 880) and the
+        hidden live region and table for screen readers. The plot is self-drawn (ActivityTerrainCanvas); the hover card,
+        the "Reset view" button and the summary are regular controls. Values a state changes (grid placement, padding,
+        borders, colors) are set by styles, not in the template: template values are local and a state could not
+        override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ActivityTerrain}" TargetType="arc:ActivityTerrain">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ActivityTerrainTokenResource BlockRadius}" />
+        <Setter Property="Padding" Value="{arc:ActivityTerrainTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ActivityTerrainTokenResource BodyTextSize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActivityTerrain">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Sections">
+                            <StackPanel Name="PART_Header" Spacing="2">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           TextWrapping="Wrap"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ActivityTerrainTokenResource TitleSize}"
+                                           LineHeight="{arc:ActivityTerrainTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:ActivityTerrainTokenResource TitleTracking}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Text="{TemplateBinding Subtitle}"
+                                           IsVisible="{TemplateBinding Subtitle, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="{arc:ActivityTerrainTokenResource BodyLineHeight}"
+                                           LetterSpacing="-0.13"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+
+                            <Grid Name="PART_Toolbar" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                                <arc:SegmentedControl Name="PART_MetricSwitch" HorizontalAlignment="Left" />
+                                <arc:SegmentedControl Name="PART_ViewSwitch" />
+                            </Grid>
+
+                            <arc:ActivityTerrainBodyPanel Name="PART_Body"
+                                                          StatsWidth="{arc:ActivityTerrainTokenResource StatsColumnWidth}"
+                                                          Gap="{arc:ActivityTerrainTokenResource StatsGap}">
+                                <Grid Name="PART_StageColumn"
+                                      RowDefinitions="Auto,Auto"
+                                      RowSpacing="{arc:ActivityTerrainTokenResource LegendGap}">
+                                    <Panel Name="PART_Plot" Height="280" ClipToBounds="False">
+                                        <arc:ActivityTerrainCanvas Name="PART_Canvas"
+                                                                   FocusAdorner="{x:Null}"
+                                                                   CornerRadius="{arc:ActivityTerrainTokenResource PlotRadius}" />
+                                        <Panel Name="PART_CardLayer" IsHitTestVisible="False" ClipToBounds="False">
+                                            <arc:ShowpieceHoverCard Name="PART_Card"
+                                                                    Width="{arc:ActivityTerrainTokenResource CardWidth}"
+                                                                    Padding="{arc:ActivityTerrainTokenResource CardPadding}" />
+                                        </Panel>
+                                        <arc:PresenceHost Name="PART_ResetPresence"
+                                                          Mode="Drop"
+                                                          Offset="4"
+                                                          IsPresent="False"
+                                                          HorizontalAlignment="Right"
+                                                          VerticalAlignment="Top"
+                                                          Margin="{arc:ActivityTerrainTokenResource ResetMargin}">
+                                            <arc:ActivityTerrainResetButton Name="PART_Reset" />
+                                        </arc:PresenceHost>
+                                    </Panel>
+
+                                    <Grid Name="PART_Legend" Grid.Row="1" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <TextBlock Classes="legend-label" Text="{TemplateBinding LessText}" />
+                                            <StackPanel Name="PART_Swatches"
+                                                        Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        Spacing="{arc:ActivityTerrainTokenResource SwatchGap}">
+                                                <Border Classes="swatch" />
+                                                <Border Classes="swatch" />
+                                                <Border Classes="swatch" />
+                                                <Border Classes="swatch" />
+                                                <Border Classes="swatch" />
+                                                <Border Classes="swatch" />
+                                            </StackPanel>
+                                            <TextBlock Classes="legend-label" Text="{TemplateBinding MoreText}" />
+                                        </StackPanel>
+                                        <TextBlock Name="PART_Hint" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Grid>
+
+                                <Border Name="PART_StatsFrame" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <arc:ActivityTerrainStatsPanel Name="PART_Stats">
+                                        <Border Name="PART_TotalBlock" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                            <StackPanel>
+                                                <arc:ArcContentSwap Name="PART_SummaryTitle"
+                                                                    Classes="stat-title"
+                                                                    Mode="Lift"
+                                                                    ExitDuration="0:0:0.12"
+                                                                    EnterDuration="0:0:0.25"
+                                                                    HorizontalContentAlignment="Left" />
+                                                <arc:ShowpieceNumber Name="PART_Total"
+                                                                     Margin="0,2,0,0"
+                                                                     HorizontalAlignment="Left"
+                                                                     FontSize="{arc:ActivityTerrainTokenResource TotalSize}"
+                                                                     FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                     Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <StackPanel Name="PART_ChangeRow" Orientation="Horizontal" Spacing="4">
+                                                    <arc:ArcGlyph Name="PART_ChangeGlyph"
+                                                                  Size="14"
+                                                                  StrokeThickness="1.75"
+                                                                  VerticalAlignment="Center" />
+                                                    <arc:ShowpieceNumber Name="PART_Change"
+                                                                         Format="Percent"
+                                                                         Decimals="1"
+                                                                         IsSignShown="True"
+                                                                         VerticalAlignment="Center"
+                                                                         FontSize="{arc:ActivityTerrainTokenResource CaptionSize}"
+                                                                         FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                    <TextBlock Text="{TemplateBinding ChangeSuffixText}"
+                                                               VerticalAlignment="Center"
+                                                               FontSize="{arc:ActivityTerrainTokenResource CaptionSize}"
+                                                               LineHeight="{arc:ActivityTerrainTokenResource CaptionLineHeight}"
+                                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Name="PART_PeaksBlock" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                            <StackPanel>
+                                                <TextBlock Classes="stat-title" Text="{TemplateBinding PeakHoursTitle}" />
+                                                <StackPanel Name="PART_Peaks" Margin="{arc:ActivityTerrainTokenResource PeakListMargin}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Name="PART_BusiestBlock" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                            <StackPanel>
+                                                <TextBlock Classes="stat-title" Text="{TemplateBinding BusiestDayTitle}" />
+                                                <arc:ArcContentSwap Name="PART_BusiestDay"
+                                                                    Mode="Lift"
+                                                                    ExitDuration="0:0:0.12"
+                                                                    EnterDuration="0:0:0.25"
+                                                                    HorizontalContentAlignment="Left"
+                                                                    Margin="0,2,0,0"
+                                                                    TextElement.FontSize="{arc:ActivityTerrainTokenResource DayNameSize}"
+                                                                    TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                    TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <arc:ActivityTerrainCaption Name="PART_BusiestCaption"
+                                                                            TextElement.FontSize="{arc:ActivityTerrainTokenResource CaptionSize}"
+                                                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </arc:ActivityTerrainStatsPanel>
+                                </Border>
+                            </arc:ActivityTerrainBodyPanel>
+                        </StackPanel>
+                        <arc:ShowpieceLiveRegion Name="PART_LiveRegion" />
+                        <arc:ActivityTerrainDataTable Name="PART_DataTable" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:ActivityTerrainTokenResource NarrowBlockPadding}" />
+        </Style>
+
+        <Style Selector="^ /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:ActivityTerrainTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:ActivityTerrainTokenResource NarrowSectionGap}" />
+        </Style>
+
+        <!-- Toolbar: the two switches at either end; stacked (each on its own row) below 560. -->
+        <Style Selector="^ /template/ arc|SegmentedControl#PART_ViewSwitch">
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SegmentedControl#PART_ViewSwitch">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:narrow /template/ Grid#PART_Toolbar">
+            <Setter Property="RowSpacing" Value="{arc:ActivityTerrainTokenResource NarrowSectionGap}" />
+        </Style>
+
+        <!-- Legend: Less [six swatches] More on the left, the hint on the right (under it below 560). -->
+        <Style Selector="^ /template/ TextBlock.legend-label">
+            <Setter Property="FontSize" Value="{arc:ActivityTerrainTokenResource CaptionSize}" />
+            <Setter Property="LineHeight" Value="{arc:ActivityTerrainTokenResource CaptionLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Border.swatch">
+            <Setter Property="Width" Value="{arc:ActivityTerrainTokenResource SwatchWidth}" />
+            <Setter Property="Height" Value="{arc:ActivityTerrainTokenResource SwatchHeight}" />
+            <Setter Property="CornerRadius" Value="{arc:ActivityTerrainTokenResource SwatchRadius}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Hint">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Margin" Value="20,0,0,0" />
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="{arc:ActivityTerrainTokenResource CaptionSize}" />
+            <Setter Property="LineHeight" Value="{arc:ActivityTerrainTokenResource CaptionLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Hint">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="TextAlignment" Value="Left" />
+        </Style>
+
+        <!-- Summary: a row of three under the plot with a rule above; from 880 a column beside it with a rule on its left. -->
+        <Style Selector="^ /template/ Border#PART_StatsFrame">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="0,16,0,0" />
+        </Style>
+        <Style Selector="^:wide /template/ Border#PART_StatsFrame">
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="Padding" Value="20,0,0,0" />
+        </Style>
+        <Style Selector="^:wide /template/ Border#PART_TotalBlock">
+            <Setter Property="Padding" Value="0,0,0,16" />
+        </Style>
+        <Style Selector="^:wide /template/ Border#PART_PeaksBlock">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="0,16" />
+        </Style>
+        <Style Selector="^:wide /template/ Border#PART_BusiestBlock">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="0,16" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.stat-title">
+            <Setter Property="LineHeight" Value="{arc:ActivityTerrainTokenResource BodyLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap.stat-title">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:no-comparison /template/ StackPanel#PART_ChangeRow">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- The week's change: muted when flat, Success when good news, Danger when bad (240ms). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ChangeGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ShowpieceNumber#PART_Change">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:change-good /template/ arc|ArcGlyph#PART_ChangeGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:change-good /template/ arc|ShowpieceNumber#PART_Change">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:change-bad /template/ arc|ArcGlyph#PART_ChangeGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:change-bad /template/ arc|ShowpieceNumber#PART_Change">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border.swatch">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_ChangeGlyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ShowpieceNumber#PART_Change">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border.swatch">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A peak hour: 32px row, padding 7 / 8, radius 8; hover and pressed both SurfaceMuted (160ms); 2px ring 2px out. -->
+    <ControlTheme x:Key="{x:Type arc:ActivityTerrainPeakButton}" TargetType="arc:ActivityTerrainPeakButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:ActivityTerrainTokenResource PeakRowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ActivityTerrainTokenResource PeakRowRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActivityTerrainPeakButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       LineHeight="{arc:ActivityTerrainTokenResource BodyLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:ShowpieceNumber Grid.Column="1"
+                                                 Value="{TemplateBinding Value}"
+                                                 Formatter="{TemplateBinding Formatter}"
+                                                 VerticalAlignment="Center"
+                                                 Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="12"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- "Reset view": 32px, Surface with a 1px Border and ShadowResting, radius 10, rotate-ccw glyph, 13px medium. -->
+    <ControlTheme x:Key="{x:Type arc:ActivityTerrainResetButton}" TargetType="arc:ActivityTerrainResetButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ActivityTerrainTokenResource ResetRadius}" />
+        <Setter Property="Padding" Value="{arc:ActivityTerrainTokenResource ResetPadding}" />
+        <Setter Property="Height" Value="{arc:ActivityTerrainTokenResource ResetHeight}" />
+        <Setter Property="FontSize" Value="{arc:ActivityTerrainTokenResource BodyTextSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ActivityTerrainResetButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="14"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

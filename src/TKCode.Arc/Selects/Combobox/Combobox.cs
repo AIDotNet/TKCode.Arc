@@ -152,7 +152,6 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     private bool _syncingText;
     private MotionValue<double>? _settle;
     private TranslateTransform? _settleShift;
-    private BlurEffect? _settleBlur;
 
     static Combobox()
     {
@@ -642,13 +641,10 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         if (radius < 0.05)
         {
             _input.Effect = null;
-            _settleBlur = null;
         }
         else
         {
-            _settleBlur ??= new BlurEffect();
-            _settleBlur.Radius = radius;
-            _input.Effect = _settleBlur;
+            _input.Effect = ArcBlur.Get(radius);
         }
     }
 

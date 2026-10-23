@@ -1,7 +1,7 @@
 ---
 title: 支付流程
 summary: 一笔银行卡付款从结账开始，经过令牌化、授权和发卡行的决定，直至结算。
-source-hash: eb2f6d34d5e5
+source-hash: a00e83b2bc72
 ---
 
 <Demo name="CardPayment" />
@@ -30,7 +30,7 @@ source-hash: eb2f6d34d5e5
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PaymentFlow />
 </UserControl>
 ```

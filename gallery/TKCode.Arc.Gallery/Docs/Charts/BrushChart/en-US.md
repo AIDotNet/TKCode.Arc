@@ -37,7 +37,7 @@ body of an analytics or review page, where the series is the main content and ex
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:BrushChart Label="Daily active users"
                     Unit="users"
                     PlotHeight="240"

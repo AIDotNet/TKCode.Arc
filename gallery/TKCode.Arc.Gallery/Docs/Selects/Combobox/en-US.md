@@ -39,7 +39,7 @@ typing.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Combobox Label="Framework"
                   Width="280"
                   Description="Type to search.">

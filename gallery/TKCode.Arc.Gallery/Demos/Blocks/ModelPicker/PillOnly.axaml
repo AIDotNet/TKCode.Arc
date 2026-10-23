@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelPickerPillOnlyDemo">
+    <!-- Without the summary the picker is just the pill, for a toolbar or a header. -->
+    <Border MaxWidth="560"
+            Padding="16,12"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            Margin="0,0,0,160">
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Left"
+                       VerticalAlignment="Center"
+                       Text="Draft reply"
+                       FontSize="14"
+                       FontWeight="Medium"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <arc:ModelPicker x:Name="Picker"
+                             IsSummaryVisible="False"
+                             HorizontalAlignment="Right"
+                             MaxWidth="320" />
+        </DockPanel>
+    </Border>
+</UserControl>

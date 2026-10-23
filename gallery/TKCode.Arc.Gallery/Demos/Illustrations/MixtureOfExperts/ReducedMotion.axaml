@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MixtureOfExpertsReducedMotionDemo">
+    <!-- Reduced motion opens on the summary; Route again steps through the tokens without any travel and stops. -->
+    <arc:MixtureOfExperts MaxWidth="760" arc:ArcMotion.Level="Reduced" />
+</UserControl>

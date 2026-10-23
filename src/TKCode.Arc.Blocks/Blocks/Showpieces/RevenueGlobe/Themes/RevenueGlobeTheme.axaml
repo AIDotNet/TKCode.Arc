@@ -1,0 +1,545 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- Replay / Pause / Live: 32px tall, 1px Border, radius 10, Surface; hover SurfaceMuted, press scales to .97. -->
+    <ControlTheme x:Key="RevenueGlobeControlButtonTheme" TargetType="Button">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:RevenueGlobeTokenResource ButtonRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center"
+                                          Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:RevenueGlobeTokenResource ButtonHeight}" />
+        <Setter Property="MinWidth" Value="{arc:RevenueGlobeTokenResource ButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:RevenueGlobeTokenResource ButtonPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A region of the list: name, share of forecast and revenue over a 4px progress bar. -->
+    <ControlTheme x:Key="{x:Type arc:RevenueGlobeRegionRow}" TargetType="arc:RevenueGlobeRegionRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RevenueGlobeRegionRow">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:RevenueGlobeTokenResource RowRadius}"
+                            Padding="{arc:RevenueGlobeTokenResource RowPadding}">
+                        <StackPanel Spacing="{arc:RevenueGlobeTokenResource RegionRowGap}">
+                            <DockPanel>
+                                <arc:RevenueGlobeTicker DockPanel.Dock="Right"
+                                                        Value="{TemplateBinding Amount}"
+                                                        Formatter="{TemplateBinding AmountFormatter}"
+                                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        LineHeight="19.6"
+                                                        FontFeatures="tnum"
+                                                        VerticalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="{TemplateBinding RegionName}"
+                                               LineHeight="19.6"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding ShareText}"
+                                               LineHeight="19.6"
+                                               Margin="0,1,0,0"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               FontFeatures="tnum"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DockPanel>
+                            <arc:RevenueGlobeProgress Height="{arc:RevenueGlobeTokenResource ProgressHeight}"
+                                                      Value="{TemplateBinding Progress}"
+                                                      TrackBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                      FillBrush="{arc:ArcDesignTokenResource Accent}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A city of the top-cities list: name, country code and revenue on one 34px row. -->
+    <ControlTheme x:Key="{x:Type arc:RevenueGlobeCityRow}" TargetType="arc:RevenueGlobeCityRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RevenueGlobeCityRow">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:RevenueGlobeTokenResource RowRadius}"
+                            Padding="{arc:RevenueGlobeTokenResource RowPadding}"
+                            Height="{arc:RevenueGlobeTokenResource CityRowHeight}">
+                        <DockPanel>
+                            <arc:RevenueGlobeTicker DockPanel.Dock="Right"
+                                                    Margin="12,0,0,0"
+                                                    Value="{TemplateBinding Amount}"
+                                                    Formatter="{TemplateBinding AmountFormatter}"
+                                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                    FontFeatures="tnum"
+                                                    VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{TemplateBinding CityName}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="19.6"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <!-- The smaller code sits on the name's baseline. -->
+                                <TextBlock Text="{TemplateBinding CountryCode}"
+                                           LineHeight="19.6"
+                                           Margin="0,1,0,0"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           FontFeatures="tnum"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The hover card's content: city, region and local time, then Today / Payments / Share. -->
+    <ControlTheme x:Key="{x:Type arc:RevenueGlobeTip}" TargetType="arc:RevenueGlobeTip">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RevenueGlobeTip">
+                <StackPanel>
+                    <TextBlock Text="{TemplateBinding CityName}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="19.6"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{TemplateBinding Subtitle}"
+                               Margin="0,1,0,0"
+                               LineHeight="16.8"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               FontFeatures="tnum"
+                               TextTrimming="CharacterEllipsis" />
+                    <Grid Margin="{arc:RevenueGlobeTokenResource TipFiguresMargin}"
+                          ColumnDefinitions="Auto,Auto,Auto"
+                          ColumnSpacing="{arc:RevenueGlobeTokenResource TipColumnGap}"
+                          RowDefinitions="Auto,Auto">
+                        <TextBlock Grid.Column="0" Text="{TemplateBinding TodayLabel}" Classes="tip-label" />
+                        <TextBlock Grid.Column="1" Text="{TemplateBinding PaymentsLabel}" Classes="tip-label" />
+                        <TextBlock Grid.Column="2" Text="{TemplateBinding ShareLabel}" Classes="tip-label" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{TemplateBinding TodayText}" Classes="tip-value" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{TemplateBinding PaymentsText}" Classes="tip-value" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{TemplateBinding ShareText}" Classes="tip-value" />
+                    </Grid>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^ /template/ TextBlock.tip-label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.tip-value">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="19.6" />
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:RevenueGlobe}" TargetType="arc:RevenueGlobe">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RevenueGlobe">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <DockPanel>
+                        <!-- Header: title and description, the date at the right (under them when it does not fit). -->
+                        <Border Name="PART_Header"
+                                DockPanel.Dock="Top"
+                                Padding="{arc:RevenueGlobeTokenResource HeaderPadding}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="0,0,0,1">
+                            <arc:RevenueGlobeHeaderPanel>
+                                <StackPanel>
+                                    <ContentPresenter Name="PART_Title"
+                                                      Content="{TemplateBinding Title}"
+                                                      FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                      LineHeight="17.6"
+                                                      TextElement.LetterSpacing="-0.48" />
+                                    <ContentPresenter Name="PART_Description"
+                                                      Content="{TemplateBinding Description}"
+                                                      Margin="{arc:RevenueGlobeTokenResource DescriptionMargin}"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                      LineHeight="19.6"
+                                                      TextWrapping="Wrap" />
+                                </StackPanel>
+                                <TextBlock Name="PART_Date"
+                                           Text="{TemplateBinding DateText}"
+                                           LineHeight="16.8"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </arc:RevenueGlobeHeaderPanel>
+                        </Border>
+
+                        <arc:ShowpieceLiveRegion Name="PART_Announcer" DockPanel.Dock="Bottom" />
+                        <StackPanel Name="PART_Table" DockPanel.Dock="Bottom" Height="0" ClipToBounds="True" />
+
+                        <arc:RevenueGlobeStagePanel Name="PART_Stage" PanelWidth="{arc:RevenueGlobeTokenResource PanelWidth}">
+                            <!-- 1. The globe, with the hover card over it. -->
+                            <Panel Name="PART_GlobeHost" ClipToBounds="True">
+                                <arc:RevenueGlobeCanvas Name="PART_Canvas" />
+                                <Panel Name="PART_TipLayer" IsHitTestVisible="False">
+                                    <arc:ShowpieceHoverCard Name="PART_Tip"
+                                                            Width="{arc:RevenueGlobeTokenResource TipWidth}"
+                                                            Padding="{arc:RevenueGlobeTokenResource TipPadding}" />
+                                </Panel>
+                            </Panel>
+
+                            <!-- 2. The timeline: controls, the day's bars with the playhead, the hour marks. -->
+                            <Border Name="PART_TimelineArea">
+                                <StackPanel>
+                                    <arc:RevenueGlobeControlsPanel Name="PART_Controls" Margin="{arc:RevenueGlobeTokenResource ControlsMargin}">
+                                        <Button Name="PART_Replay" Theme="{StaticResource RevenueGlobeControlButtonTheme}">
+                                            <StackPanel Orientation="Horizontal" Spacing="{arc:RevenueGlobeTokenResource ButtonIconGap}">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                                              Size="16"
+                                                              StrokeThickness="1.75"
+                                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                              VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_ReplayText"
+                                                           Text="{Binding Labels.Replay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Name="PART_Pause" Theme="{StaticResource RevenueGlobeControlButtonTheme}" Padding="0" Width="{arc:RevenueGlobeTokenResource ButtonHeight}">
+                                            <Panel Width="16" Height="16">
+                                                <arc:ArcGlyph Name="PART_PauseGlyph"
+                                                              Classes="swap"
+                                                              Data="{x:Static arc:ArcIcons.Pause}"
+                                                              Size="16"
+                                                              StrokeThickness="1.75" />
+                                                <arc:ArcGlyph Name="PART_PlayGlyph"
+                                                              Classes="swap"
+                                                              Data="{x:Static arc:ArcIcons.Play}"
+                                                              Size="16"
+                                                              StrokeThickness="1.75"
+                                                              Opacity="0" />
+                                            </Panel>
+                                        </Button>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                            <TextBlock Name="PART_Clock"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       FontFeatures="tnum" />
+                                            <TextBlock Name="PART_Zone" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <Button Name="PART_Live" Theme="{StaticResource RevenueGlobeControlButtonTheme}">
+                                            <StackPanel Orientation="Horizontal" Spacing="{arc:RevenueGlobeTokenResource ButtonIconGap}">
+                                                <Ellipse Name="PART_LiveDot"
+                                                         Width="{arc:RevenueGlobeTokenResource LiveDotSize}"
+                                                         Height="{arc:RevenueGlobeTokenResource LiveDotSize}"
+                                                         VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_LiveText" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </arc:RevenueGlobeControlsPanel>
+                                    <arc:RevenueGlobeTimeline Name="PART_Timeline" />
+                                    <arc:RevenueGlobeSpreadPanel Name="PART_Hours" Margin="{arc:RevenueGlobeTokenResource HoursMargin}" />
+                                </StackPanel>
+                            </Border>
+
+                            <!-- 3. The panel: revenue, regions against forecast, top cities. -->
+                            <Border Name="PART_Aside"
+                                    Padding="{arc:RevenueGlobeTokenResource PanelPadding}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <arc:RevenueGlobePanelsLayout Name="PART_Panels" Gap="{arc:RevenueGlobeTokenResource PanelGap}">
+                                    <StackPanel Name="PART_Kpi" Margin="{arc:RevenueGlobeTokenResource PanelInset}">
+                                        <TextBlock Text="{Binding Labels.Revenue, RelativeSource={RelativeSource TemplatedParent}}"
+                                                   LineHeight="19.6"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <arc:RevenueGlobeTicker Name="PART_Revenue"
+                                                                Margin="0,2,0,0"
+                                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                LetterSpacing="-0.28"
+                                                                FontFeatures="tnum" />
+                                        <Grid Name="PART_Stats"
+                                              Margin="{arc:RevenueGlobeTokenResource StatsMargin}"
+                                              ColumnSpacing="{arc:RevenueGlobeTokenResource StatsGap}">
+                                            <!-- Two columns of at most 202px each (equal halves when narrow). -->
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" MaxWidth="202" />
+                                                <ColumnDefinition Width="*" MaxWidth="202" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0" Spacing="2">
+                                                <TextBlock Text="{Binding Labels.Payments, RelativeSource={RelativeSource TemplatedParent}}"
+                                                           LineHeight="19.6"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <arc:RevenueGlobeTicker Name="PART_Payments" Classes="stat" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Spacing="2">
+                                                <TextBlock Text="{Binding Labels.LastHour, RelativeSource={RelativeSource TemplatedParent}}"
+                                                           LineHeight="19.6"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <arc:RevenueGlobeTicker Name="PART_LastHour" Classes="stat" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel Name="PART_RegionsGroup">
+                                        <DockPanel Margin="{arc:RevenueGlobeTokenResource GroupHeaderMargin}">
+                                            <TextBlock DockPanel.Dock="Right"
+                                                       Text="{Binding Labels.RegionsNote, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       Classes="group-note" />
+                                            <TextBlock Text="{Binding Labels.Regions, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       Classes="group-title" />
+                                        </DockPanel>
+                                        <StackPanel Name="PART_RegionRows" Spacing="{arc:RevenueGlobeTokenResource RowGap}" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_CitiesGroup">
+                                        <DockPanel Margin="{arc:RevenueGlobeTokenResource GroupHeaderMargin}">
+                                            <TextBlock DockPanel.Dock="Right"
+                                                       Text="{Binding Labels.TopCitiesNote, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       Classes="group-note" />
+                                            <TextBlock Text="{Binding Labels.TopCities, RelativeSource={RelativeSource TemplatedParent}}"
+                                                       Classes="group-title" />
+                                        </DockPanel>
+                                        <StackPanel Name="PART_CityRows" Spacing="{arc:RevenueGlobeTokenResource RowGap}" />
+                                    </StackPanel>
+                                </arc:RevenueGlobePanelsLayout>
+                            </Border>
+                        </arc:RevenueGlobeStagePanel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:RevenueGlobeTokenResource BlockRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <!-- Tickers style as TextBlocks (their style key). -->
+        <Style Selector="^ /template/ TextBlock.stat">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="22.4" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.group-title">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LetterSpacing" Value="-0.42" />
+            <Setter Property="LineHeight" Value="15.4" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.group-note">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|RevenueGlobeSpreadPanel#PART_Hours > TextBlock">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+
+        <!-- Live pill: SurfaceMuted without a border and a Success dot while live; Surface, Border and a muted dot otherwise. -->
+        <Style Selector="^ /template/ Ellipse#PART_LiveDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:live /template/ Ellipse#PART_LiveDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:live /template/ Button#PART_Live">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+
+        <!-- Pause ↔ play: the two glyphs cross-fade. -->
+        <Style Selector="^ /template/ arc|ArcGlyph.swap">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:paused /template/ arc|ArcGlyph#PART_PauseGlyph">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:paused /template/ arc|ArcGlyph#PART_PlayGlyph">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!-- Reduced motion: a still picture; no replay or pause. -->
+        <Style Selector="^:reduced /template/ Button#PART_Replay">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:reduced /template/ Button#PART_Pause">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Values that change with the width live in styles (a value written on a template element would win). -->
+        <Style Selector="^ /template/ TextBlock#PART_Revenue">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="32.2" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_TimelineArea">
+            <Setter Property="Padding" Value="{arc:RevenueGlobeTokenResource TimelinePadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Aside">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+
+        <!-- Wide: the panel beside the globe with a left border. Narrow: tighter timeline, smaller revenue figure. -->
+        <Style Selector="^:wide /template/ Border#PART_Aside">
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_TimelineArea">
+            <Setter Property="Padding" Value="{arc:RevenueGlobeTokenResource NarrowTimelinePadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Revenue">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="LineHeight" Value="25.3" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Ellipse#PART_LiveDot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph.swap">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

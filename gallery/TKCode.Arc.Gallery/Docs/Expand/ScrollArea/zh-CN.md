@@ -1,7 +1,7 @@
 ---
 title: 滚动区域
 summary: 原生滚动容器，配有细长的浮层滚动条，仅在内容溢出时才显示边缘渐隐。
-source-hash: 693fd95041ac
+source-hash: 066258a5ccd4
 ---
 
 <Demo name="Vertical" />
@@ -30,7 +30,7 @@ source-hash: 693fd95041ac
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ScrollArea Width="360"
                     Height="260"
                     Label="发布说明"

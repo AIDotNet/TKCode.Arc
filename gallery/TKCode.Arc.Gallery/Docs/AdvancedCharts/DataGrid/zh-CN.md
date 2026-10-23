@@ -1,7 +1,7 @@
 ---
 title: 数据表格
 summary: 电子表格式的表格：范围选择、就地编辑、填充柄、剪贴板、撤销、排序、筛选、分组、合计与导出。
-source-hash: 336d02aee0c0
+source-hash: 8460a974ab30
 ---
 
 <Demo name="Renewals" />
@@ -30,7 +30,7 @@ source-hash: 336d02aee0c0
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DataGrid Label="续约" MaxViewportHeight="440" ExportFormats="All">
         <arc:DataGridColumn Key="account" Header="客户" Width="188" IsPinned="True" />
         <arc:DataGridColumn Key="stage" Header="阶段" Type="Select" />
@@ -230,6 +230,18 @@ if (DataGridLayoutState.FromJson(File.ReadAllText(path)) is { } state)
         <arc:DataGridMenuItem Label="Open account" />
     </arc:DataGrid.ContextMenuItems>
 </arc:DataGrid>
+```
+
+### 查找与替换
+
+Ctrl+F 会在主体右上角打开查找栏，Ctrl+H 会再加上替换行（也可以点箭头）。它在用户看到的文字中查找，所以 `1,200` 能找到显示为 `$1,200` 的单元格。查找栏打开时，所有匹配的单元格都会着色，查找栏会给出计数（“第 3 个，共 27 个”）。Enter 与 Shift+Enter，或 F3 与 Shift+F3，跳到下一个和上一个匹配，到头会循环；Escape 关闭查找栏。“区分大小写”和“匹配整个单元格”可以缩小范围。
+
+“替换”会替换当前匹配中的文字并跳到下一个；“全部替换”把所有匹配作为一步撤销一次改完。新文字会按键入的方式读回，所以在货币或日期单元格里替换时，只要结果仍是有效值就能成功；会破坏单元格的替换（不存在的选项、数字列里的文字）会被跳过，并计入状态栏。只读单元格也会被跳过。使用 `DataSource` 时，Ctrl+F 改为聚焦工具栏搜索，因为只有视口内的块被加载。
+
+```csharp
+grid.FindText = "labs";
+grid.FindMatchCase = false;
+grid.ReplaceAll("Group");   // one undo step; cells whose new text does not parse are skipped
 ```
 
 ### 使用自有类的行
@@ -528,6 +540,8 @@ public partial class RenewalsViewModel : ObservableObject
 | `Escape` | 将多单元格选区收缩为活动单元格；否则清除行的勾选 |
 | `Delete` / `Backspace` | 清除选区；只读单元格会被跳过 |
 | `Ctrl+D` | 从选区的第一行向下填充 |
+| `Ctrl+F` / `Ctrl+H` | 打开查找，或查找与替换 |
+| `F3` / `Shift+F3` | 下一个或上一个匹配 |
 | `Ctrl+C` / `Ctrl+X` / `Ctrl+V` | 复制、剪切和粘贴 |
 | `Ctrl+Z` / `Ctrl+Shift+Z` 或 `Ctrl+Y` | 撤销和重做 |
 | `Tab` / `Shift+Tab` | 离开网格 |

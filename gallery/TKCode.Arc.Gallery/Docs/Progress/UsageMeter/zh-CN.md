@@ -1,7 +1,7 @@
 ---
 title: 用量表
 summary: 显示什么占用了配额，以及距离上限还有多少。
-source-hash: dfff86c647a4
+source-hash: a48edc670892
 ---
 
 <Demo name="Storage" />
@@ -30,7 +30,7 @@ source-hash: dfff86c647a4
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:UsageMeter Label="Workspace storage" Limit="50" Unit="GB">
         <arc:UsageSegment Id="media" Label="Media" Value="14.2" />
         <arc:UsageSegment Id="docs" Label="Documents" Value="9.6" />

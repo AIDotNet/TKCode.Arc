@@ -1,7 +1,7 @@
 ---
 title: 指標卡
 summary: 為需要上下文說明的數字提供精簡的摘要。
-source-hash: 665f0b55a590
+source-hash: 33bd72a66c59
 ---
 
 <Demo name="Default" />
@@ -31,7 +31,7 @@ source-hash: 665f0b55a590
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MetricCard Label="可用率"
                     Value="99.98"
                     Decimals="2"
@@ -104,7 +104,7 @@ source-hash: 665f0b55a590
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic">
     <arc:MetricCard Label="訂單" Value="1204" Context="對比上週" Change="+12%" Width="280">
         <arc:MetricCard.Sparkline>

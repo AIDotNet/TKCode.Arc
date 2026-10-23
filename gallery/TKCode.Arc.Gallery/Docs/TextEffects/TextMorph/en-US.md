@@ -43,7 +43,7 @@ the text layout and draws the letters directly, so it creates no child control p
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TextMorph Text="Deploy" FontSize="28" />
 </UserControl>
 ```

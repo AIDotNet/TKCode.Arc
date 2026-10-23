@@ -1,7 +1,7 @@
 ---
 title: 使用者選單
 summary: 頭像背後的帳號、設定、主題與登出。在手機上以底部面板的形式開啟。
-source-hash: 639cc7cc0bf1
+source-hash: 86d8f44034b9
 ---
 
 <Demo name="TopBar" />
@@ -32,7 +32,7 @@ source-hash: 639cc7cc0bf1
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:UserMenu DisplayName="Ada Lovelace"
                   Email="ada@analytical.dev"
                   Plan="Pro"

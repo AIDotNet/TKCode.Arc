@@ -17,6 +17,22 @@ public class SpringTests
         spec.DampingRatio.ShouldBe(zeta, 0.005);
     }
 
+    [Fact]
+    public void Quick_And_Settle_Are_Critically_Damped_And_Sit_Between_Snappy_And_Smooth()
+    {
+        ArcMotionPresets.Get(ArcSpring.Quick).ShouldBe(SpringSpec.FromVisual(0.25, 0));
+        ArcMotionPresets.Get(ArcSpring.Settle).ShouldBe(SpringSpec.FromVisual(0.33, 0));
+        ArcMotionPresets.Quick.DampingRatio.ShouldBe(1, 1e-9);
+        ArcMotionPresets.Settle.DampingRatio.ShouldBe(1, 1e-9);
+        // Fitted to Arc's AI blocks: label widths about ω 21, collapsing heights and docks about ω 16, Smooth ω 13.
+        ArcMotionPresets.Quick.NaturalFrequency.ShouldBe(20.94, 0.01);
+        ArcMotionPresets.Settle.NaturalFrequency.ShouldBe(15.87, 0.01);
+        var quick = ArcMotionPresets.Quick.EstimateSettle();
+        var settle = ArcMotionPresets.Settle.EstimateSettle();
+        quick.ShouldBeLessThan(settle);
+        settle.ShouldBeLessThan(ArcMotionPresets.Smooth.EstimateSettle());
+    }
+
     [Theory]
     [InlineData(400, 40)]   // underdamped
     [InlineData(100, 20)]   // critical

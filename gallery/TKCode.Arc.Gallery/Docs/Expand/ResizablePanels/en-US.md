@@ -41,7 +41,7 @@ content region of a shell, not in an auto-sized row.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ResizablePanels Label="Mail layout" Height="320">
         <arc:ResizablePanel Id="folders"
                             Label="Folders"

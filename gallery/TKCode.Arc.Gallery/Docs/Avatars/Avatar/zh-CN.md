@@ -1,7 +1,7 @@
 ---
 title: 头像
 summary: 用于人员与账号的紧凑身份标识。
-source-hash: 55a45223fdca
+source-hash: ac97c0bbaae5
 ---
 
 <Demo name="Initials" />
@@ -29,7 +29,7 @@ source-hash: 55a45223fdca
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Avatar DisplayName="Ada Lovelace" />
 </UserControl>
 ```

@@ -1,7 +1,7 @@
 ---
 title: 留言串
 summary: 支援回覆、表情反應、提及、原地編輯與解決的巢狀留言。
-source-hash: 33ce25dcbea1
+source-hash: d0215cd8a3c4
 ---
 
 <Demo name="DesignReview" />
@@ -187,7 +187,7 @@ SaaS 行銷頁面中定價表的一次審閱。第一則留言獲得了目前使
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="600">
     <arc:CommentThread Title="Pricing table spacing"

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityTerrainPreviewDemo">
+    <!-- Three metrics of an invented week; the data is generated in the code-behind. -->
+    <arc:ActivityTerrain x:Name="Terrain"
+                         Title="Weekly rhythm"
+                         Subtitle="Hourly visits, builds and incidents for Mar 2 to 8, 2026, server time." />
+</UserControl>

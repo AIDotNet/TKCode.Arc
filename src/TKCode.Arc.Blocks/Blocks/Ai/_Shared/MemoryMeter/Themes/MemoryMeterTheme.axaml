@@ -1,0 +1,88 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The header meter: at least 96 wide, 4px from the top; a right-aligned 12 / 16 line ("62% full") 7px above the
+        4px track. The number sits right-aligned in a slot as wide as "100%" (tabular figures). Warning colors switch at
+        once: the meter declares no transitions.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MemoryMeter}" TargetType="arc:MemoryMeter">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MinWidth" Value="96" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Padding" Value="0,4,0,0" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MemoryMeter">
+                <StackPanel Margin="{TemplateBinding Padding}" Spacing="7">
+                    <StackPanel Name="PART_Line"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Height="16"
+                                Spacing="4">
+                        <arc:ArcGlyph Name="PART_Warning"
+                                      Data="{x:Static arc:ArcIcons.TriangleAlert}"
+                                      Size="13"
+                                      StrokeThickness="2"
+                                      IsVisible="False"
+                                      VerticalAlignment="Center" />
+                        <Panel Name="PART_ValueSlot">
+                            <TextBlock Name="PART_ValueReserve"
+                                       Opacity="0"
+                                       LineHeight="16"
+                                       LetterSpacing="-0.14"
+                                       FontFeatures="tnum"
+                                       TextWrapping="NoWrap" />
+                            <TextBlock Name="PART_Value"
+                                       HorizontalAlignment="Right"
+                                       LineHeight="16"
+                                       LetterSpacing="-0.14"
+                                       FontFeatures="tnum"
+                                       TextWrapping="NoWrap" />
+                        </Panel>
+                        <TextBlock Name="PART_Full"
+                                   Text="{TemplateBinding FullText}"
+                                   IsVisible="{TemplateBinding FullText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   LineHeight="16"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="NoWrap" />
+                    </StackPanel>
+                    <arc:MemoryMeterBar Name="PART_Bar" Height="4" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Rest colors are non-trigger styles so :warning can replace them (template locals would win). -->
+        <Style Selector="^ /template/ TextBlock#PART_Value">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Full">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MemoryMeterBar#PART_Bar">
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+
+        <Style Selector="^:warning">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Warning">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Value">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Full">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+            <Style Selector="^ /template/ arc|MemoryMeterBar#PART_Bar">
+                <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

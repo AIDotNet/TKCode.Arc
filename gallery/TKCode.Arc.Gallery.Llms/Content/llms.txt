@@ -28,7 +28,7 @@ AppBuilder.Configure<App>()
           });
 ```
 
-Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. `TKCode.Arc.Blocks` (`UseArcBlocks()`) and `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid) are not on NuGet yet: reference those projects from {{repository}}.
+Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. `TKCode.Arc.Blocks` (`UseArcBlocks()`) and `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid) are not on NuGet yet: reference those projects from {{repository}}.
 
 ## Rules for agents
 

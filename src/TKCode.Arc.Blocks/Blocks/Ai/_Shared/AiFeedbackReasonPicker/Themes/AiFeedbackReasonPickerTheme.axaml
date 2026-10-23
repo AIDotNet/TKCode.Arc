@@ -1,0 +1,172 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The popover of a down rating: 280 wide, padding 16, radius 26, 1px Border on the raised surface (the floating shadow
+        comes from the popup). The stage springs to its content's height on the smooth spring; the reasons fade out in
+        160ms while the thanks fade in over 240ms (enter curve) after 60ms, without moving. Reduced motion: a 120ms
+        crossfade and the height at once.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiFeedbackReasonPanel}" TargetType="arc:AiFeedbackReasonPanel">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="280" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFeedbackReasonPanel">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:SpringSizeDecorator Name="PART_Stage"
+                                             Axis="Height"
+                                             Spring="Smooth"
+                                             CrossClipOverflow="8"
+                                             VerticalAlignment="Top">
+                        <arc:ArcContentSwap Name="PART_Swap"
+                                            Mode="Label"
+                                            EnterOffset="0"
+                                            EnterDuration="0:0:0.24"
+                                            ExitDuration="0:0:0.16"
+                                            EnterDelay="0:0:0.06"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Top" />
+                    </arc:SpringSizeDecorator>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The question (14 / 19.6, medium) 10px above the reason pills, which wrap 6px apart. -->
+    <ControlTheme x:Key="{x:Type arc:AiFeedbackReasonsView}" TargetType="arc:AiFeedbackReasonsView">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFeedbackReasonsView">
+                <StackPanel Spacing="10">
+                    <TextBlock Name="PART_Title"
+                               Text="{TemplateBinding Title}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="19.6"
+                               TextWrapping="Wrap" />
+                    <ContentPresenter Name="PART_Reasons" ClipToBounds="False" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The thanks: a Check 18 in Success (20px cell), 10px, then two lines of 14 / 20.3; 4px above and below. -->
+    <ControlTheme x:Key="{x:Type arc:AiFeedbackThanksView}" TargetType="arc:AiFeedbackThanksView">
+        <Setter Property="Padding" Value="0,4" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFeedbackThanksView">
+                <DockPanel Margin="{TemplateBinding Padding}">
+                    <Panel DockPanel.Dock="Left" Width="20" Height="20" Margin="0,0,10,0" VerticalAlignment="Top">
+                        <arc:ArcGlyph Name="PART_Check"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="18"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource Success}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Panel>
+                    <StackPanel>
+                        <TextBlock Name="PART_Title"
+                                   Text="{TemplateBinding Title}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="20.3"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Name="PART_Description"
+                                   Text="{TemplateBinding Description}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   LineHeight="20.3"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A reason pill: 32px, padding 0 12, pill radius, 1px Border, Surface, 14px TextSecondary. Hover: SurfaceMuted,
+        BorderStrong, Foreground in 160ms (reduced 120ms). The keyboard ring is 2px, 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiFeedbackReasonButton}" TargetType="arc:AiFeedbackReasonButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFeedbackReasonButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Content}"
+                                   LineHeight="19.6"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

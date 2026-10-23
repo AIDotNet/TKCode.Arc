@@ -1,7 +1,7 @@
 ---
 title: 多區域容錯移轉
 summary: 全域負載平衡器將流量切換到備用區域，並在主區域故障時將其資料庫升格為主要資料庫。
-source-hash: 257f488cd958
+source-hash: 5a1c99bbadee
 ---
 
 <Demo name="AutomaticFailover" />
@@ -30,7 +30,7 @@ source-hash: 257f488cd958
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MultiRegionFailover />
 </UserControl>
 ```

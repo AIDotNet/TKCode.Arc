@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvailabilityPickerBoundDemo">
+    <!-- The selection is plain two-way state: the panel reads it, moves it and books it, and logs every event. -->
+    <Grid ColumnDefinitions="*,260" ColumnSpacing="24">
+        <arc:AvailabilityPicker x:Name="Picker"
+                                Title="Roadmap check-in"
+                                TimeZoneName="Lisbon time" />
+        <StackPanel Grid.Column="1" Spacing="12" VerticalAlignment="Top">
+            <TextBlock Text="State"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <TextBlock Text="{Binding #Picker.SelectedDay, StringFormat='SelectedDay: {0}'}"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+            <TextBlock Text="{Binding #Picker.SelectedSlot, StringFormat='SelectedSlot: {0}'}"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+            <arc:Checkbox Content="IsConfirmed" IsChecked="{Binding #Picker.IsConfirmed, Mode=TwoWay}" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <arc:Button x:Name="Previous" Content="Previous day" Variant="Secondary" Size="Small" />
+                <arc:Button x:Name="Next" Content="Next day" Variant="Secondary" Size="Small" />
+            </StackPanel>
+            <TextBlock Text="Events"
+                       Margin="0,8,0,0"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <TextBlock x:Name="Log"
+                       Text="Choose a day or a time, then book it."
+                       TextWrapping="Wrap"
+                       LineHeight="18"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

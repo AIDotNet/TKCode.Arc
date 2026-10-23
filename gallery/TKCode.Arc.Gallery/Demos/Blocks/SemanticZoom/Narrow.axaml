@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SemanticZoomNarrowDemo">
+    <!-- Under 600 px: a 420 px map, an icon-only tour button, a small minimap, the panel in one column. -->
+    <arc:SemanticZoom x:Name="Map"
+                      Header="Network map"
+                      Width="360"
+                      HorizontalAlignment="Center" />
+</UserControl>

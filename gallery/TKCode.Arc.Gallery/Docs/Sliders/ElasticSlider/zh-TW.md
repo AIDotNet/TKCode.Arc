@@ -1,7 +1,7 @@
 ---
 title: 彈性滑桿
 summary: 滑桿越過兩端時如橡皮筋般拉伸，附帶搖擺的數值標籤，以及滑桿會卡入的檔位。
-source-hash: 0d63d9545c7e
+source-hash: 39114c8ce7ba
 ---
 
 <Demo name="RubberBand" />
@@ -29,7 +29,7 @@ source-hash: 0d63d9545c7e
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ElasticSlider Label="音量"
                        Value="40"
                        Width="360"

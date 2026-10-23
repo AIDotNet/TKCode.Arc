@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PromptCacheCodeReviewDemo">
+    <!-- Your own prefix, questions, prices and model: a code review bot with an hour-long cache. -->
+    <arc:PromptCache MaxWidth="744"
+                     Title="Review bot cache"
+                     Ttl="3600"
+                     ChangeSegmentId="style">
+        <arc:PromptCache.Model>
+            <arc:ExplainerModel Name="Quill 2 Mini" />
+        </arc:PromptCache.Model>
+        <arc:PromptCache.Pricing>
+            <arc:PromptCachePricing InputPrice="1.20" CacheWritePrice="2.40" CacheReadPrice="0.12" />
+        </arc:PromptCache.Pricing>
+        <arc:PromptCache.Segments>
+            <arc:PromptCacheSegment Id="repo" Label="Repository map" Tokens="7400" />
+            <arc:PromptCacheSegment Id="style" Label="Style guide" Tokens="1800" />
+            <arc:PromptCacheSegment Id="diff" Label="Open diff" Tokens="21500" />
+        </arc:PromptCache.Segments>
+        <arc:PromptCache.Requests>
+            <arc:PromptCacheRequest Message="Flag any unchecked null returns in the parser" Tokens="140" />
+            <arc:PromptCacheRequest Message="Suggest a clearer name for the retry helper" Tokens="90" Gap="64" />
+            <arc:PromptCacheRequest Message="Does the new migration need a rollback step?" Tokens="210" Gap="118" />
+        </arc:PromptCache.Requests>
+    </arc:PromptCache>
+</UserControl>

@@ -42,7 +42,7 @@ chart for assistive technology.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:LineChart Label="Signups" CategoryLabel="Date" ItemsSource="{Binding Days}">
         <arc:LineChart.Series>
             <arc:ChartSeries Key="current" Name="This period" Values="{Binding Current}" />
@@ -260,7 +260,7 @@ caption states the period, the total and the change in words, so the headline re
 ```xml
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
         xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         Width="680"

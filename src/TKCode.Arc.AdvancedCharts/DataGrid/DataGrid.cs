@@ -713,6 +713,11 @@ public partial class DataGrid : TemplatedControl
         {
             InvalidateColumns();
         }
+        else if (property == IsFindOpenProperty || property == FindTextProperty || property == FindMatchCaseProperty ||
+                 property == FindMatchWholeCellProperty)
+        {
+            OnFindChanged();
+        }
         else if (property == ColumnWidthsProperty && !_syncingWidths)
         {
             ApplyColumnWidths();

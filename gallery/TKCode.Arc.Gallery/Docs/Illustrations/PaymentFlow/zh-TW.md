@@ -1,7 +1,7 @@
 ---
 title: 付款流程
 summary: 一筆信用卡付款從結帳開始，經過權杖化、授權和發卡機構的決定，直到結算。
-source-hash: eb2f6d34d5e5
+source-hash: a00e83b2bc72
 ---
 
 <Demo name="CardPayment" />
@@ -30,7 +30,7 @@ source-hash: eb2f6d34d5e5
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PaymentFlow />
 </UserControl>
 ```

@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentMemoryBindingsDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="Preferences" Variant="Secondary" Size="Small" Content="Show Preferences" />
+            <arc:Button x:Name="Everything" Variant="Secondary" Size="Small" Content="Show everything" />
+            <arc:Button x:Name="Search" Variant="Secondary" Size="Small" Content="Search &#8220;ai&#8221;" />
+        </StackPanel>
+        <arc:AgentMemory x:Name="Memory" AssistantName="Orbit" />
+        <TextBlock x:Name="State" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

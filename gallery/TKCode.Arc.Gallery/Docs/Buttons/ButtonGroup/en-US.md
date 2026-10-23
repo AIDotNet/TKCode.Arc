@@ -40,7 +40,7 @@ Each segment is a `ButtonGroupItem`. Give the group a `Label`, which is its acce
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ButtonGroup Label="Document actions">
         <arc:ButtonGroupItem Label="Share" />
         <arc:ButtonGroupItem Label="Duplicate" />

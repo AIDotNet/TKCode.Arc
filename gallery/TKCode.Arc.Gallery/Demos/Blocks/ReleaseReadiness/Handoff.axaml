@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReleaseReadinessHandoffDemo">
+    <!-- Six checks, two optional (they do not hold the button back); no notify switch, other words throughout. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:ReleaseReadiness x:Name="Gate"
+                              Title="Hand over: billing service"
+                              Subtitle="Platform team · Friday 16:00"
+                              ReleaseName="The billing service"
+                              IsNotifyVisible="False"
+                              ChecksLabel="Handover checks"
+                              ProgressLabel="Handover progress"
+                              RemainingFormat="{}{0} required left"
+                              RemainingOneText="1 required left"
+                              ReadyText="Ready to hand over"
+                              ReleasingText="Handing over"
+                              ReleaseText="Hand over"
+                              ReleasedText="Handed over"
+                              ResetText="Undo"
+                              SuccessFormat="{}{0} now belongs to the platform team." />
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="520" />
+    </StackPanel>
+</UserControl>

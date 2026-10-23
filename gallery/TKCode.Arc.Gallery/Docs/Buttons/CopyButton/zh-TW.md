@@ -1,7 +1,7 @@
 ---
 title: 複製按鈕
 summary: 複製一個值，並立即給出確認回饋。
-source-hash: 9aa09db6259f
+source-hash: 183750b71563
 ---
 
 <Demo name="Outline" />
@@ -30,7 +30,7 @@ source-hash: 9aa09db6259f
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:CopyButton Value="npx arc add copy-button" />
 </UserControl>
 ```

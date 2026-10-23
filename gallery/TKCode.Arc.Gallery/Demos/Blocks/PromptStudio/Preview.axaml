@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PromptStudioPreviewDemo">
+    <!-- Edit the template, type {{ to add a variable, pick a test case and press Run (Ctrl or Cmd + Enter). -->
+    <arc:PromptStudio x:Name="Studio" Title="Refund reply" MaxWidth="660" Margin="0,12" />
+</UserControl>

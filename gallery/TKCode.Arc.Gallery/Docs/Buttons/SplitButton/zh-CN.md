@@ -1,7 +1,7 @@
 ---
 title: 分割按钮
 summary: 一个主操作，加上一组相近备选项的菜单。
-source-hash: a0106aa99a5c
+source-hash: d7310f68fd72
 ---
 
 <Demo name="MergeStrategies" />
@@ -28,7 +28,7 @@ source-hash: a0106aa99a5c
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SplitButton Label="合并拉取请求">
         <arc:MenuEntry Header="压缩并合并" />
         <arc:MenuEntry Header="变基并合并" />

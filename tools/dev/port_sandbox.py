@@ -8,7 +8,7 @@ sandbox.sh merge; pipe them through xargs, since zsh does not split an unquoted 
 the new layout pass through unchanged.
 
 Renames: AtomUI.Arc -> TKCode.Arc (folders, namespaces, generated AtomUI.Generated.TKCodeArc*), the arc xmlns ->
-https://github.com/AtomUICommunity/TKCode.Arc, demo/AtomUI.Arc.Demo -> gallery/TKCode.Arc.Gallery,
+https://github.com/AIDotNet/TKCode.Arc, demo/AtomUI.Arc.Demo -> gallery/TKCode.Arc.Gallery,
 Demo<Name> -> Gallery<Name>, <X>Demo -> <X>Page, <Category>Demos -> <Category>Pages. Files that use AtomUI's
 root namespace (GetThemeManager, IAtomUIBuilder) get `using AtomUI;`, which TKCode.Arc no longer inherits.
 """
@@ -17,8 +17,8 @@ import os, re, sys
 TEXT_EXT = {".cs", ".axaml", ".md", ".csproj", ".json", ".xlf"}
 
 def convert_text(text, is_demo):
-    text = text.replace("https://atomui.net/arc/lucide", "https://github.com/AtomUICommunity/TKCode.Arc/lucide")
-    text = text.replace("https://atomui.net/arc", "https://github.com/AtomUICommunity/TKCode.Arc")
+    text = text.replace("https://atomui.net/arc/lucide", "https://github.com/AIDotNet/TKCode.Arc/lucide")
+    text = text.replace("https://atomui.net/arc", "https://github.com/AIDotNet/TKCode.Arc")
     text = text.replace("AtomUI.Arc.Demo", "TKCode.Arc.Gallery")
     text = text.replace("AtomUIArc", "TKCodeArc")
     text = text.replace("AtomUI.Arc", "TKCode.Arc")

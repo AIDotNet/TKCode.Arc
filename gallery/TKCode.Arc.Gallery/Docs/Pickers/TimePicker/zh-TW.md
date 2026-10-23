@@ -1,7 +1,7 @@
 ---
 title: 時間選擇器
 summary: 以合宜的鍵盤行為選取時間。
-source-hash: 950361bafedd
+source-hash: 1f9b0e384694
 ---
 
 <Demo name="TimeField" />
@@ -27,7 +27,7 @@ source-hash: 950361bafedd
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TimePicker Label="會議時間"
                     Description="每 15 分鐘一個時刻。"
                     SelectedTime="{Binding MeetingTime, Mode=TwoWay}" />

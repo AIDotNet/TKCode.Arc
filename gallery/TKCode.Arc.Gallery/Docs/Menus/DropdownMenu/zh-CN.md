@@ -1,7 +1,7 @@
 ---
 title: 下拉菜单
 summary: 锚定在触发器上的聚焦操作列表。
-source-hash: d3c1eea11a23
+source-hash: 48b9400790e1
 ---
 
 <Demo name="Actions" />
@@ -32,7 +32,7 @@ source-hash: d3c1eea11a23
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DropdownMenu Label="操作">
         <arc:MenuEntry Header="重命名" />
         <arc:MenuEntry Header="复制" />

@@ -1,7 +1,7 @@
 ---
 title: 可展開文字
 summary: 長文字截斷為幾行，底部帶柔和漸隱；點選「閱讀更多」平滑展開，點選「收合」折回。僅在文字溢出時顯示切換按鈕。
-source-hash: d6123beeacab
+source-hash: fa0e404de0a0
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: d6123beeacab
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandableText Text="我們在一個下午內就把整個設計團隊遷移到新的工作區。匯入過程保留了每一則留言與每個版本。"
                         MaxWidth="520"
                         HorizontalAlignment="Left" />

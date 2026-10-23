@@ -1,0 +1,530 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- One option of the view switch: icon and label, muted until hovered or chosen; the pill glides behind. -->
+    <ControlTheme x:Key="{x:Type arc:LayoutMorphViewOption}" TargetType="arc:LayoutMorphViewOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Height" Value="{arc:LayoutMorphTokenResource OptionHeight}" />
+        <Setter Property="Padding" Value="{arc:LayoutMorphTokenResource OptionPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LayoutMorphViewOption">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:LayoutMorphTokenResource OptionFocusMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:LayoutMorphTokenResource OptionFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                Spacing="{arc:LayoutMorphTokenResource OptionIconGap}"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="{arc:LayoutMorphTokenResource OptionIconSize}"
+                                      StrokeThickness="2"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Label">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The view switch: a muted rounded track with a white pill behind the chosen option. -->
+    <ControlTheme x:Key="{x:Type arc:LayoutMorphViewBar}" TargetType="arc:LayoutMorphViewBar">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LayoutMorphViewBar">
+                <Border Name="PART_Track"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                        Padding="{arc:LayoutMorphTokenResource BarPadding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Pill"
+                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="{arc:LayoutMorphTokenResource OptionRadius}"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                        <arc:LayoutMorphViewBarPanel Name="PART_Options" Spacing="{arc:LayoutMorphTokenResource OptionGap}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The detail's close button: a 32px circle with an X. -->
+    <ControlTheme x:Key="LayoutMorphCloseButtonTheme" TargetType="Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:LayoutMorphTokenResource CloseButtonSize}" />
+        <Setter Property="Height" Value="{arc:LayoutMorphTokenResource CloseButtonSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="{arc:LayoutMorphTokenResource CloseGlyphSize}"
+                                      StrokeThickness="2"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The detail's main button: Accent with a Plus; once active a quiet Border fill with a Check. -->
+    <ControlTheme x:Key="LayoutMorphActionButtonTheme" TargetType="ToggleButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:LayoutMorphTokenResource ActionHeight}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ToggleButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="22"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:LayoutMorphTokenResource ActionRadius}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:LayoutMorph}" TargetType="arc:LayoutMorph">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LayoutMorph">
+                <Grid Name="PART_Root" RowDefinitions="Auto,Auto,Auto,Auto">
+                    <!-- Heading and lede. -->
+                    <StackPanel Name="PART_Header"
+                                Grid.Row="0"
+                                Spacing="{arc:LayoutMorphTokenResource HeaderGap}"
+                                Margin="{arc:LayoutMorphTokenResource HeaderMargin}"
+                                MaxWidth="{arc:LayoutMorphTokenResource HeaderMaxWidth}"
+                                HorizontalAlignment="Left">
+                        <TextBlock Name="PART_Title"
+                                   Text="{TemplateBinding Title}"
+                                   IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:ArcDesignTokenResource Type4XL}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                   LineHeight="{arc:LayoutMorphTokenResource TitleLineHeight}"
+                                   LetterSpacing="{arc:LayoutMorphTokenResource TitleLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Name="PART_Lede"
+                                   Text="{TemplateBinding Lede}"
+                                   IsVisible="{TemplateBinding Lede, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   LineHeight="{arc:LayoutMorphTokenResource LedeLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <!-- View switch and hint (the hint wraps under the switch on narrow containers). -->
+                    <Grid Name="PART_Toolbar"
+                          Grid.Row="1"
+                          ColumnDefinitions="Auto,*"
+                          RowDefinitions="Auto,Auto"
+                          MinHeight="{arc:LayoutMorphTokenResource ToolbarMinHeight}"
+                          Margin="{arc:LayoutMorphTokenResource ToolbarMargin}">
+                        <arc:LayoutMorphViewBar Name="PART_ViewBar" Grid.Column="0" />
+                        <arc:ArcContentSwap Name="PART_Hint"
+                                            Grid.Column="1"
+                                            Margin="20,0,0,0"
+                                            IsVisible="{TemplateBinding IsHintVisible}"
+                                            Mode="Label"
+                                            ExitDuration="0:0:0"
+                                            EnterDuration="0:0:0.24"
+                                            EnterOffset="4"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            HorizontalContentAlignment="Right"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </Grid>
+
+                    <!-- The stage (inserted in code) under the floating tag and the detail's buttons. -->
+                    <Border Name="PART_StageFrame" Grid.Row="2" ClipToBounds="True">
+                        <Panel Name="PART_StageHost">
+                            <Panel Name="PART_Overlay">
+                                <arc:ShowpieceHoverCard Name="PART_Tag"
+                                                        IsHitTestVisible="False"
+                                                        Focusable="False"
+                                                        Padding="{arc:LayoutMorphTokenResource TagPadding}"
+                                                        CornerRadius="{arc:LayoutMorphTokenResource TagRadius}"
+                                                        Background="{arc:ArcDesignTokenResource Background}">
+                                    <StackPanel>
+                                        <TextBlock Name="PART_TagTitle"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:LayoutMorphTokenResource TagLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxWidth="260" />
+                                        <TextBlock Name="PART_TagLine"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:LayoutMorphTokenResource TagLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxWidth="260" />
+                                    </StackPanel>
+                                </arc:ShowpieceHoverCard>
+                                <arc:LayoutMorphDialog Name="PART_Dialog">
+                                    <Button Name="PART_Close"
+                                            Theme="{StaticResource LayoutMorphCloseButtonTheme}"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top"
+                                            Margin="{arc:LayoutMorphTokenResource CloseButtonMargin}" />
+                                    <ToggleButton Name="PART_Action"
+                                                  Theme="{StaticResource LayoutMorphActionButtonTheme}"
+                                                  VerticalAlignment="Bottom">
+                                        <arc:ArcContentSwap Name="PART_ActionSwap"
+                                                            Mode="Label"
+                                                            ExitDuration="0:0:0"
+                                                            EnterDuration="0:0:0.24"
+                                                            EnterOffset="4">
+                                            <arc:ArcContentSwap.ContentTemplate>
+                                                <DataTemplate x:DataType="arc:LayoutMorphActionContent">
+                                                    <StackPanel Orientation="Horizontal" Spacing="{arc:LayoutMorphTokenResource ActionGlyphGap}">
+                                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                                                      IsVisible="{Binding !IsActive}"
+                                                                      Size="{arc:LayoutMorphTokenResource ActionGlyphSize}"
+                                                                      StrokeThickness="2"
+                                                                      VerticalAlignment="Center" />
+                                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                                                      IsVisible="{Binding IsActive}"
+                                                                      Size="{arc:LayoutMorphTokenResource ActionGlyphSize}"
+                                                                      StrokeThickness="2"
+                                                                      VerticalAlignment="Center" />
+                                                        <TextBlock Text="{Binding Text}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </arc:ArcContentSwap.ContentTemplate>
+                                        </arc:ArcContentSwap>
+                                    </ToggleButton>
+                                </arc:LayoutMorphDialog>
+                            </Panel>
+                        </Panel>
+                    </Border>
+
+                    <!-- The described card (or the collection) and three statistics. -->
+                    <Border Name="PART_Panel"
+                            Grid.Row="3"
+                            Margin="{arc:LayoutMorphTokenResource PanelMargin}"
+                            IsVisible="{TemplateBinding IsPanelVisible}"
+                            ClipToBounds="True">
+                        <Grid Name="PART_PanelGrid" ColumnDefinitions="1.5*,*,*,*">
+                            <Border Name="PART_Who" Grid.Column="0" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <arc:ArcContentSwap Name="PART_WhoSwap"
+                                                    Mode="Label"
+                                                    ExitDuration="0:0:0"
+                                                    EnterDuration="0:0:0.24"
+                                                    EnterOffset="4"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left">
+                                    <arc:ArcContentSwap.ContentTemplate>
+                                        <DataTemplate x:DataType="arc:LayoutMorphHeading">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           LineHeight="{arc:LayoutMorphTokenResource PanelTitleLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Subtitle}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           LineHeight="{arc:LayoutMorphTokenResource PanelLineLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </arc:ArcContentSwap.ContentTemplate>
+                                </arc:ArcContentSwap>
+                            </Border>
+                            <Border Name="PART_Stat0" Grid.Column="1" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <StackPanel Spacing="{arc:LayoutMorphTokenResource StatGap}">
+                                    <arc:ArcContentSwap Name="PART_StatLabel0" Mode="Label" ExitDuration="0:0:0" EnterDuration="0:0:0.24" EnterOffset="4"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <Panel Height="{arc:LayoutMorphTokenResource StatValueLineHeight}">
+                                        <arc:ShowpieceNumber Name="PART_StatNumber0"
+                                                             Stagger="0:0:0"
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Center"
+                                                             FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_StatText0"
+                                                   IsVisible="False"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </Panel>
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_Stat1" Grid.Column="2" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <StackPanel Spacing="{arc:LayoutMorphTokenResource StatGap}">
+                                    <arc:ArcContentSwap Name="PART_StatLabel1" Mode="Label" ExitDuration="0:0:0" EnterDuration="0:0:0.24" EnterOffset="4"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <Panel Height="{arc:LayoutMorphTokenResource StatValueLineHeight}">
+                                        <arc:ShowpieceNumber Name="PART_StatNumber1"
+                                                             Stagger="0:0:0"
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Center"
+                                                             FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_StatText1"
+                                                   IsVisible="False"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </Panel>
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_Stat2" Grid.Column="3" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <StackPanel Spacing="{arc:LayoutMorphTokenResource StatGap}">
+                                    <arc:ArcContentSwap Name="PART_StatLabel2" Mode="Label" ExitDuration="0:0:0" EnterDuration="0:0:0.24" EnterOffset="4"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <Panel Height="{arc:LayoutMorphTokenResource StatValueLineHeight}">
+                                        <arc:ShowpieceNumber Name="PART_StatNumber2"
+                                                             Stagger="0:0:0"
+                                                             HorizontalAlignment="Left"
+                                                             VerticalAlignment="Center"
+                                                             FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_StatText2"
+                                                   IsVisible="False"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </Panel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <arc:ShowpieceLiveRegion Name="PART_Live" Grid.Row="0" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Framed: the stage and the panel are bordered surfaces. -->
+        <Style Selector="^:framed /template/ Border#PART_StageFrame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_Panel">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+
+        <!-- Narrow: the hint goes under the switch, left-aligned. -->
+        <Style Selector="^:narrow /template/ arc|LayoutMorphViewBar#PART_ViewBar">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_Hint">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="{arc:LayoutMorphTokenResource NarrowHintMargin}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+
+        <!-- Dense: a smaller heading. -->
+        <Style Selector="^:dense /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="{arc:LayoutMorphTokenResource DenseTitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:LayoutMorphTokenResource DenseTitleLetterSpacing}" />
+        </Style>
+        <Style Selector="^:dense /template/ TextBlock#PART_Lede">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:LayoutMorphTokenResource DenseLedeLineHeight}" />
+        </Style>
+
+        <!-- The detail's main button: bottom right; in the stacked (narrow) detail it spans the card. The dialog's own
+             :stacked state follows the stage's size class, so the button and the detail's layout always agree. -->
+        <Style Selector="^ /template/ ToggleButton#PART_Action">
+            <Setter Property="Width" Value="{arc:LayoutMorphTokenResource ActionWidth}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="{arc:LayoutMorphTokenResource ActionMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|LayoutMorphDialog:stacked ToggleButton#PART_Action">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="{arc:LayoutMorphTokenResource StackedActionMargin}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -26,7 +26,22 @@ public enum ContentSwapMode
     Pop,
 
     /// <summary>P25 title slide: the new content arrives 12px from the side of travel, the old one leaves the other way (no blur).</summary>
-    Slide
+    Slide,
+
+    /// <summary>
+    /// Label swap (Arc AI blocks: status words, pill text, counts): the old label fades out in 100ms while the new one
+    /// fades in over 160ms (enter curve) rising 2px, no blur. Pair it with a width spring (<see cref="ArcSpring.Quick"/>).
+    /// </summary>
+    Label,
+
+    /// <summary>Crossfade on Arc's standard curve: out 100ms, in 160ms, no movement (values and summaries replaced in place).</summary>
+    Crossfade,
+
+    /// <summary>
+    /// Sequential replacement of a whole view (a conversation, a panel): the old content fades out in 100ms, then the new
+    /// one fades in over 160ms rising 4px.
+    /// </summary>
+    Lift
 }
 
 /// <summary>
@@ -53,6 +68,29 @@ public class ArcContentSwap : Control
 
     public static readonly StyledProperty<Avalonia.Layout.HorizontalAlignment> HorizontalContentAlignmentProperty =
         ContentControl.HorizontalContentAlignmentProperty.AddOwner<ArcContentSwap>();
+
+    /// <summary>Enter duration for <see cref="ContentSwapMode.Label"/>, <see cref="ContentSwapMode.Crossfade"/> and <see cref="ContentSwapMode.Lift"/>; null uses the mode's own (160ms).</summary>
+    public static readonly StyledProperty<TimeSpan?> EnterDurationProperty =
+        AvaloniaProperty.Register<ArcContentSwap, TimeSpan?>(nameof(EnterDuration));
+
+    /// <summary>Exit duration for the Label, Crossfade and Lift modes; null uses the mode's own (100ms).</summary>
+    public static readonly StyledProperty<TimeSpan?> ExitDurationProperty =
+        AvaloniaProperty.Register<ArcContentSwap, TimeSpan?>(nameof(ExitDuration));
+
+    /// <summary>Delay before the new content starts to appear in the Label, Crossfade and Lift modes; null uses the mode's own (Lift waits for the exit).</summary>
+    public static readonly StyledProperty<TimeSpan?> EnterDelayProperty =
+        AvaloniaProperty.Register<ArcContentSwap, TimeSpan?>(nameof(EnterDelay));
+
+    /// <summary>How far the new content rises (px) in the Label, Crossfade and Lift modes; null uses the mode's own (2, 0, 4).</summary>
+    public static readonly StyledProperty<double?> EnterOffsetProperty =
+        AvaloniaProperty.Register<ArcContentSwap, double?>(nameof(EnterOffset));
+
+    /// <summary>
+    /// When true, outgoing content keeps counting toward the desired size until it is gone, so a surrounding
+    /// <see cref="SpringSizeDecorator"/> grows at once but shrinks only after the old content has faded out.
+    /// </summary>
+    public static readonly StyledProperty<bool> MeasuresExitingProperty =
+        AvaloniaProperty.Register<ArcContentSwap, bool>(nameof(MeasuresExiting));
 
     public static readonly StyledProperty<Avalonia.Layout.VerticalAlignment> VerticalContentAlignmentProperty =
         ContentControl.VerticalContentAlignmentProperty.AddOwner<ArcContentSwap>();
@@ -93,19 +131,56 @@ public class ArcContentSwap : Control
         set => SetValue(VerticalContentAlignmentProperty, value);
     }
 
+    /// <inheritdoc cref="EnterDurationProperty"/>
+    public TimeSpan? EnterDuration
+    {
+        get => GetValue(EnterDurationProperty);
+        set => SetValue(EnterDurationProperty, value);
+    }
+
+    /// <inheritdoc cref="ExitDurationProperty"/>
+    public TimeSpan? ExitDuration
+    {
+        get => GetValue(ExitDurationProperty);
+        set => SetValue(ExitDurationProperty, value);
+    }
+
+    /// <inheritdoc cref="EnterDelayProperty"/>
+    public TimeSpan? EnterDelay
+    {
+        get => GetValue(EnterDelayProperty);
+        set => SetValue(EnterDelayProperty, value);
+    }
+
+    /// <inheritdoc cref="EnterOffsetProperty"/>
+    public double? EnterOffset
+    {
+        get => GetValue(EnterOffsetProperty);
+        set => SetValue(EnterOffsetProperty, value);
+    }
+
+    /// <inheritdoc cref="MeasuresExitingProperty"/>
+    public bool MeasuresExiting
+    {
+        get => GetValue(MeasuresExitingProperty);
+        set => SetValue(MeasuresExitingProperty, value);
+    }
+
     private Layer? _current;
     private readonly List<Layer> _exiting = new();
 
     static ArcContentSwap()
     {
         AffectsArrange<ArcContentSwap>(HorizontalContentAlignmentProperty, VerticalContentAlignmentProperty);
+        AffectsMeasure<ArcContentSwap>(MeasuresExitingProperty);
     }
 
     private sealed class Layer
     {
         public required ContentPresenter Presenter { get; init; }
         public required TranslateTransform Translate { get; init; }
-        public BlurEffect? Blur { get; set; }
+        /// <summary>The layer blurs while it moves; the effect itself is a cached <see cref="ArcBlur"/> step set per frame.</summary>
+        public bool Blurs { get; set; }
         public MotionValue<double>? Progress { get; set; }
         public Rect LastRect { get; set; }
     }
@@ -119,7 +194,8 @@ public class ArcContentSwap : Control
         }
         else if (change.Property == ContentTemplateProperty && _current is not null)
         {
-            _current.Presenter.ContentTemplate = ContentTemplate;
+            // Only with content: a presenter builds a template it is given while its content is null (with null).
+            _current.Presenter.ContentTemplate = _current.Presenter.Content is null ? null : ContentTemplate;
         }
         else if (change.Property == HorizontalContentAlignmentProperty || change.Property == VerticalContentAlignmentProperty)
         {
@@ -142,7 +218,7 @@ public class ArcContentSwap : Control
         var presenter = new ContentPresenter
         {
             Content = content,
-            ContentTemplate = ContentTemplate,
+            ContentTemplate = content is null ? null : ContentTemplate,
             RenderTransform = translate,
             HorizontalContentAlignment = HorizontalContentAlignment,
             VerticalContentAlignment = VerticalContentAlignment
@@ -152,12 +228,39 @@ public class ArcContentSwap : Control
         return new Layer { Presenter = presenter, Translate = translate };
     }
 
+    /// <summary>
+    /// Changes a layer's content without ever building the content template for null. A presenter builds the template it has
+    /// whenever its content changes, and one that is attached while the content is null is built with null: a user's template that
+    /// reads its data would throw. So the template is dropped before the content is cleared, and put back after content arrives.
+    /// </summary>
+    private void SetContent(ContentPresenter presenter, object? content)
+    {
+        if (content is null)
+        {
+            presenter.ContentTemplate = null;
+            presenter.Content = null;
+        }
+        else if (ReferenceEquals(presenter.ContentTemplate, ContentTemplate))
+        {
+            presenter.Content = content;
+        }
+        else
+        {
+            presenter.Content = content;
+            presenter.ContentTemplate = ContentTemplate;
+        }
+    }
+
     private void RemoveLayer(Layer layer)
     {
         layer.Progress?.Dispose();
         LogicalChildren.Remove(layer.Presenter);
         VisualChildren.Remove(layer.Presenter);
         _exiting.Remove(layer);
+        if (MeasuresExiting)
+        {
+            InvalidateMeasure();
+        }
     }
 
     private void Swap(object? content)
@@ -171,7 +274,7 @@ public class ArcContentSwap : Control
         var level = ArcMotion.GetEffectiveLevel(this);
         if (!IsLoaded || Mode == ContentSwapMode.None || level == ArcMotionLevel.Off || !IsEffectivelyVisible)
         {
-            _current.Presenter.Content = content;
+            SetContent(_current.Presenter, content);
             return;
         }
         var outgoing = _current;
@@ -183,6 +286,12 @@ public class ArcContentSwap : Control
         {
             StartPopEnter(_current, full);
             StartPopExit(outgoing, full);
+            InvalidateMeasure();
+            return;
+        }
+        if (Mode is ContentSwapMode.Label or ContentSwapMode.Crossfade or ContentSwapMode.Lift)
+        {
+            StartQuietSwap(outgoing, _current, level == ArcMotionLevel.Full);
             InvalidateMeasure();
             return;
         }
@@ -199,7 +308,8 @@ public class ArcContentSwap : Control
         InvalidateMeasure();
     }
 
-    private void StartEnter(Layer layer, bool full, double fromOffset, bool horizontal = false, bool blur = true)
+    private void StartEnter(Layer layer, bool full, double fromOffset, bool horizontal = false, bool blur = true,
+        TimeSpan? duration = null, Avalonia.Animation.Easings.Easing? easing = null, TimeSpan delay = default)
     {
         layer.Presenter.Opacity = 0;
         var blurRadius = full && blur ? 4.0 : 0;
@@ -208,8 +318,8 @@ public class ArcContentSwap : Control
             SetOffset(layer, horizontal, fromOffset);
             if (blurRadius > 0)
             {
-                layer.Blur = new BlurEffect { Radius = blurRadius };
-                layer.Presenter.Effect = layer.Blur;
+                layer.Blurs = true;
+                layer.Presenter.Effect = ArcBlur.Get(blurRadius);
             }
         }
         var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
@@ -225,16 +335,39 @@ public class ArcContentSwap : Control
                 {
                     layer.Presenter.Effect = null;
                 }
-                else if (layer.Blur is not null)
+                else if (layer.Blurs)
                 {
-                    layer.Blur.Radius = radius;
+                    layer.Presenter.Effect = ArcBlur.Get(radius);
                 }
             }
         };
         var spec = full
-            ? MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter)
+            ? MotionSpec.Tween(duration ?? ArcMotionPresets.Standard, easing ?? ArcEasings.Enter, delay)
             : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing());
         _ = progress.AnimateTo(1, spec);
+    }
+
+    private static readonly TimeSpan QuietExit = TimeSpan.FromMilliseconds(100);
+
+    /// <summary>
+    /// Label, Crossfade and Lift: opacity only on the way out, opacity plus a small rise on the way in, no blur. Reduced
+    /// motion crossfades both at once (<see cref="ArcMotionPresets.Instant"/>, no rise, no delay).
+    /// </summary>
+    private void StartQuietSwap(Layer outgoing, Layer incoming, bool full)
+    {
+        var mode = Mode;
+        var exit = ExitDuration ?? QuietExit;
+        var enter = EnterDuration ?? ArcMotionPresets.Fast;
+        var delay = EnterDelay ?? (mode == ContentSwapMode.Lift ? exit : TimeSpan.Zero);
+        var rise = EnterOffset ?? mode switch
+        {
+            ContentSwapMode.Label => 2.0,
+            ContentSwapMode.Lift => 4.0,
+            _ => 0.0
+        };
+        var easing = mode == ContentSwapMode.Label ? ArcEasings.Enter : ArcEasings.Standard;
+        StartEnter(incoming, full, rise, blur: false, duration: enter, easing: easing, delay: delay);
+        StartExit(outgoing, full, outgoing.Translate.Y, blur: false, duration: exit);
     }
 
     private static void SetOffset(Layer layer, bool horizontal, double value)
@@ -259,15 +392,15 @@ public class ArcContentSwap : Control
         layer.Presenter.Opacity = 0;
         if (full)
         {
-            layer.Blur = new BlurEffect { Radius = 4 };
-            layer.Presenter.Effect = layer.Blur;
+            layer.Blurs = true;
+            layer.Presenter.Effect = ArcBlur.Get(4);
         }
         var fade = new MotionValue<double>(this, 0, MotionVectors.Double);
         layer.Progress = fade;
         fade.Changed += p =>
         {
             layer.Presenter.Opacity = p;
-            if (layer.Blur is not null)
+            if (layer.Blurs)
             {
                 var radius = 4 * (1 - p);
                 if (radius < 0.05)
@@ -276,7 +409,7 @@ public class ArcContentSwap : Control
                 }
                 else
                 {
-                    layer.Blur.Radius = radius;
+                    layer.Presenter.Effect = ArcBlur.Get(radius);
                 }
             }
         };
@@ -303,8 +436,7 @@ public class ArcContentSwap : Control
         layer.Presenter.RenderTransform = scale;
         if (full)
         {
-            layer.Blur ??= new BlurEffect { Radius = 0 };
-            layer.Presenter.Effect = layer.Blur;
+            layer.Blurs = true;
         }
         var startOpacity = layer.Presenter.Opacity;
         var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
@@ -317,9 +449,9 @@ public class ArcContentSwap : Control
                 var s = 1 - 0.4 * p;
                 scale.ScaleX = s;
                 scale.ScaleY = s;
-                if (layer.Blur is not null)
+                if (layer.Blurs)
                 {
-                    layer.Blur.Radius = 4 * p;
+                    layer.Presenter.Effect = ArcBlur.Get(4 * p);
                 }
             }
         };
@@ -335,8 +467,7 @@ public class ArcContentSwap : Control
         var startOpacity = layer.Presenter.Opacity;
         if (full && blur)
         {
-            layer.Blur ??= new BlurEffect { Radius = 0 };
-            layer.Presenter.Effect = layer.Blur;
+            layer.Blurs = true;
         }
         var start = horizontal ? layer.Translate.X : layer.Translate.Y;
         var progress = new MotionValue<double>(this, 0, MotionVectors.Double);
@@ -347,9 +478,9 @@ public class ArcContentSwap : Control
             if (full)
             {
                 SetOffset(layer, horizontal, start + (toOffset - start) * p);
-                if (blur && layer.Blur is not null)
+                if (blur && layer.Blurs)
                 {
-                    layer.Blur.Radius = 2 * p;
+                    layer.Presenter.Effect = ArcBlur.Get(2 * p);
                 }
             }
         };
@@ -371,7 +502,15 @@ public class ArcContentSwap : Control
             return default;
         }
         _current.Presenter.Measure(availableSize);
-        return _current.Presenter.DesiredSize;
+        var size = _current.Presenter.DesiredSize;
+        if (MeasuresExiting)
+        {
+            foreach (var layer in _exiting)
+            {
+                size = new Size(Math.Max(size.Width, layer.Presenter.DesiredSize.Width), Math.Max(size.Height, layer.Presenter.DesiredSize.Height));
+            }
+        }
+        return size;
     }
 
     protected override Size ArrangeOverride(Size finalSize)

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvailabilityPickerNarrowDemo">
+    <!-- 340 wide: one column of times, smaller day cards, no legend or counts, and a full-width button. -->
+    <arc:AvailabilityPicker x:Name="Picker"
+                            Width="340"
+                            HorizontalAlignment="Center"
+                            Title="Roadmap check-in"
+                            TimeZoneName="Lisbon time" />
+</UserControl>

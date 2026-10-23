@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KanbanBoardSwimlanesDemo">
+    <!-- One lane per person; drag a card into another lane to hand it over, or use Shift and the arrows after Space. -->
+    <arc:KanbanBoard x:Name="Board" Title="Field app 4.2" GroupBy="Assignee" Height="860" />
+</UserControl>

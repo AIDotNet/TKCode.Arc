@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiChatPreviewDemo">
+    <!-- The chat fills its container: give it a height. Ask about the build, or about ci-runner-7 for a failing tool. -->
+    <Border Height="680" BorderThickness="1" CornerRadius="16" ClipToBounds="True" BorderBrush="#33808080" Margin="0,12">
+        <arc:AiChat x:Name="Chat" />
+    </Border>
+</UserControl>

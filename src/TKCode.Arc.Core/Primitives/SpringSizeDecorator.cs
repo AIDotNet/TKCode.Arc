@@ -49,6 +49,21 @@ public class SpringSizeDecorator : Decorator
     public static readonly StyledProperty<double> CrossClipOverflowProperty =
         AvaloniaProperty.Register<SpringSizeDecorator, double>(nameof(CrossClipOverflow), double.NaN);
 
+    /// <summary>
+    /// While true the size stays where it is and content changes are only remembered (clipped meanwhile); when it turns
+    /// false the size springs to the latest content size. A panel that reruns keeps its old height until new content
+    /// arrives (Arc Prompt studio).
+    /// </summary>
+    public static readonly StyledProperty<bool> IsHeldProperty =
+        AvaloniaProperty.Register<SpringSizeDecorator, bool>(nameof(IsHeld));
+
+    /// <summary>
+    /// Width (and Both) axis: measure the child within the available width instead of an unbounded one, so a long label
+    /// trims instead of overflowing; the spring then targets the child's desired width, capped by the available width.
+    /// </summary>
+    public static readonly StyledProperty<bool> CapsToAvailableProperty =
+        AvaloniaProperty.Register<SpringSizeDecorator, bool>(nameof(CapsToAvailable));
+
     public SpringSizeAxis Axis
     {
         get => GetValue(AxisProperty);
@@ -86,12 +101,45 @@ public class SpringSizeDecorator : Decorator
         set => SetValue(CrossClipOverflowProperty, value);
     }
 
+    /// <inheritdoc cref="IsHeldProperty"/>
+    public bool IsHeld
+    {
+        get => GetValue(IsHeldProperty);
+        set => SetValue(IsHeldProperty, value);
+    }
+
+    /// <inheritdoc cref="CapsToAvailableProperty"/>
+    public bool CapsToAvailable
+    {
+        get => GetValue(CapsToAvailableProperty);
+        set => SetValue(CapsToAvailableProperty, value);
+    }
+
     /// <summary>True while the size is springing to a new content size.</summary>
     public bool IsMoving => _size?.IsAnimating == true;
 
     static SpringSizeDecorator()
     {
-        AffectsMeasure<SpringSizeDecorator>(AxisProperty, IsExpandedProperty);
+        AffectsMeasure<SpringSizeDecorator>(AxisProperty, IsExpandedProperty, IsHeldProperty, CapsToAvailableProperty);
+    }
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == IsHeldProperty && !change.GetNewValue<bool>() && _size is not null && !SameSize(_size.Target, _lastTarget))
+        {
+            // Released: catch up with the content that arrived while held.
+            if (!IsLoaded || !ArcMotion.IsFull(this))
+            {
+                _size.Jump(_lastTarget);
+            }
+            else
+            {
+                var shrinking = _lastTarget.Width < _size.Value.Width || _lastTarget.Height < _size.Value.Height;
+                var spring = shrinking && ShrinkSpring is { } shrink ? shrink : Spring;
+                _ = _size.AnimateTo(_lastTarget, MotionSpec.Spring(spring));
+            }
+        }
     }
 
     private MotionValue<Size>? _size;
@@ -108,11 +156,12 @@ public class SpringSizeDecorator : Decorator
             return default;
         }
         var axis = Axis;
+        var caps = CapsToAvailable;
         var measureSize = axis switch
         {
-            SpringSizeAxis.Width => availableSize.WithWidth(double.PositiveInfinity),
+            SpringSizeAxis.Width => caps ? availableSize : availableSize.WithWidth(double.PositiveInfinity),
             SpringSizeAxis.Height => availableSize.WithHeight(double.PositiveInfinity),
-            _ => new Size(double.PositiveInfinity, double.PositiveInfinity)
+            _ => caps ? availableSize : new Size(double.PositiveInfinity, double.PositiveInfinity)
         };
         child.Measure(measureSize);
         var target = child.DesiredSize;
@@ -127,14 +176,18 @@ public class SpringSizeDecorator : Decorator
         {
             var shrinking = target.Width < _lastTarget.Width || target.Height < _lastTarget.Height;
             _lastTarget = target;
-            if (!IsLoaded || passive || !ArcMotion.IsFull(this))
+            // While held the target is only remembered; releasing applies it (OnPropertyChanged).
+            if (!IsHeld)
             {
-                _size.Jump(target);
-            }
-            else
-            {
-                var spring = shrinking && ShrinkSpring is { } shrink ? shrink : Spring;
-                _ = _size.AnimateTo(target, MotionSpec.Spring(spring));
+                if (!IsLoaded || passive || !ArcMotion.IsFull(this))
+                {
+                    _size.Jump(target);
+                }
+                else
+                {
+                    var spring = shrinking && ShrinkSpring is { } shrink ? shrink : Spring;
+                    _ = _size.AnimateTo(target, MotionSpec.Spring(spring));
+                }
             }
         }
         var current = _size.Value;
@@ -186,13 +239,33 @@ public class SpringSizeDecorator : Decorator
     {
         _lastTarget = initial;
         var value = new MotionValue<Size>(this, initial, MotionVectors.Size);
-        value.Changed += _ => InvalidateMeasure();
+        value.Changed += v =>
+        {
+            // Layout snaps to device pixels, so frames that move the size by less than one pixel (the long tail of a spring)
+            // would measure the whole parent chain again for nothing. The settled size always lays out.
+            var snapped = new Size(Math.Round(v.Width * _scale), Math.Round(v.Height * _scale));
+            if (snapped != _laidOut || SameSize(v, value.Target))
+            {
+                _laidOut = snapped;
+                InvalidateMeasure();
+            }
+        };
         return value;
+    }
+
+    private Size _laidOut;
+    private double _scale = 1;
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _scale = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
     }
 
     private void UpdateClip(Size size)
     {
-        var animating = _size?.IsAnimating == true;
+        // Held content that no longer matches the held size is clipped like a moving one.
+        var animating = _size?.IsAnimating == true || (IsHeld && _size is not null && !SameSize(_size.Value, _lastTarget));
         var cross = CrossClipOverflow;
         Rect? clip;
         if (Axis == SpringSizeAxis.Width)

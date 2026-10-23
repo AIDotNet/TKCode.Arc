@@ -45,7 +45,7 @@ feeding a warehouse and a dashboard.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DataFlow Label="Event pipeline" />
 </UserControl>
 ```

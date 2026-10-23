@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSidePanelPreviewDemo">
+    <!-- The page on the left, the assistant on the right. Select some text on the page, or press a suggestion. -->
+    <Border Height="640" BorderThickness="1" CornerRadius="16" ClipToBounds="True" BorderBrush="#33808080" Margin="0,12">
+        <arc:AiSidePanel x:Name="Panel" AssistantName="Helper" ModelName="Model X1" />
+    </Border>
+</UserControl>

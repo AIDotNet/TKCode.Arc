@@ -40,7 +40,7 @@ state by itself, so the screen does not need a timer of its own to switch the wo
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Countdown Label="Launch in" />
 </UserControl>
 ```

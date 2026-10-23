@@ -1,0 +1,194 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The captured pill: 34px, pill radius, 1px border on the surface, padding 0 12 0 10. An invisible sizing layer and
+        the crossfading content layer share one cell, so the pill is as wide as its widest possible text. While paused
+        the frame gives way to the notice (circle-pause and a wrapped sentence) at once.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MemoryCapturedPill}" TargetType="arc:MemoryCapturedPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Padding" Value="10,0,12,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MemoryCapturedPill">
+                <Panel>
+                    <Panel Name="PART_Pill">
+                        <Border Name="PART_Frame"
+                                Height="34"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}">
+                            <Panel VerticalAlignment="Center">
+                                <Panel Name="PART_Sizer"
+                                       Opacity="0"
+                                       IsHitTestVisible="False"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                                <arc:ArcContentSwap Name="PART_Content"
+                                                    Mode="Lift"
+                                                    EnterOffset="2"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center" />
+                            </Panel>
+                        </Border>
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="-4"
+                                BorderThickness="2"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                    <DockPanel Name="PART_Paused" IsVisible="False">
+                        <arc:ArcGlyph Name="PART_PauseGlyph"
+                                      DockPanel.Dock="Left"
+                                      Data="{x:Static arc:MemoryCapturedPillGlyphs.CirclePause}"
+                                      Size="16"
+                                      StrokeThickness="2"
+                                      Margin="0,2,8,0"
+                                      VerticalAlignment="Top"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Name="PART_PausedText"
+                                   Text="{TemplateBinding PausedText}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </DockPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Hover (mouse and pen). -->
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <!-- Keyboard focus only: a pointer press focuses the pill without a ring. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Paused: the notice replaces the pill; plain text, out of the tab order. -->
+        <Style Selector="^:paused">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Arrow" />
+            <Style Selector="^ /template/ Panel#PART_Pill">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ DockPanel#PART_Paused">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <!-- Background and border 160ms on the standard curve. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Reduced: colors in 120ms. -->
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One state of the pill, 7px between the parts. Note: bookmark-plus 15 (secondary), title 14 / 19.6 medium, note
+        (secondary, ellipsis), arrow-down 15 (muted). Saved: check 15 (success) and the text (foreground, ellipsis).
+    -->
+    <ControlTheme x:Key="{x:Type arc:MemoryCapturedPillContent}" TargetType="arc:MemoryCapturedPillContent">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MemoryCapturedPillContent">
+                <Panel>
+                    <DockPanel Name="PART_NoteRow">
+                        <arc:ArcGlyph Name="PART_Bookmark"
+                                      DockPanel.Dock="Left"
+                                      Data="{x:Static arc:MemoryCapturedPillGlyphs.BookmarkPlus}"
+                                      Size="15"
+                                      StrokeThickness="2"
+                                      Margin="0,0,7,0"
+                                      VerticalAlignment="Center"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <TextBlock Name="PART_Title"
+                                   DockPanel.Dock="Left"
+                                   Text="{TemplateBinding Title}"
+                                   Margin="0,0,7,0"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:ArcGlyph Name="PART_Arrow"
+                                      DockPanel.Dock="Right"
+                                      Data="{x:Static arc:ArcIcons.ArrowDown}"
+                                      Size="15"
+                                      StrokeThickness="2"
+                                      Margin="7,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Name="PART_Note"
+                                   Text="{TemplateBinding Note}"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </DockPanel>
+                    <DockPanel Name="PART_SavedRow" IsVisible="False">
+                        <arc:ArcGlyph Name="PART_Check"
+                                      DockPanel.Dock="Left"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="15"
+                                      StrokeThickness="2"
+                                      Margin="0,0,7,0"
+                                      VerticalAlignment="Center"
+                                      Foreground="{arc:ArcDesignTokenResource Success}" />
+                        <TextBlock Name="PART_SavedText"
+                                   Text="{TemplateBinding SavedText}"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </DockPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:saved /template/ DockPanel#PART_NoteRow">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:saved /template/ DockPanel#PART_SavedRow">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

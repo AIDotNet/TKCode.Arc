@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProjectBoardNarrowDemo">
+    <!-- A 380-wide container: one column at a time with the next peeking in, swipe or scroll and it settles on a column;
+         touch-sized arrows; Add shows only its icon. A moved card's column scrolls into view. -->
+    <arc:ProjectBoard x:Name="Board" Width="380" IsFramed="True" HorizontalAlignment="Center" />
+</UserControl>

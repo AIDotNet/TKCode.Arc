@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueGlobeReducedMotionDemo">
+    <!-- Under reduced motion the globe holds still: the latest arcs drawn whole, no replay or pause, the pill reads
+         "Now". Dragging, selecting and the timeline keys still work, without animation. -->
+    <arc:RevenueGlobe x:Name="Globe"
+                      arc:ArcMotion.Level="Reduced"
+                      Title="Today's payments"
+                      Description="A still picture for people who turn motion down."
+                      DateText="Thursday, 22 October" />
+</UserControl>

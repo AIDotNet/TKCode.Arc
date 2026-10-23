@@ -1,7 +1,7 @@
 ---
 title: 標籤群組
 summary: 以幾組會隨選取而變形的標籤進行篩選。
-source-hash: 5fe203944409
+source-hash: 66ee08705340
 ---
 
 <Demo name="FilterChips" />
@@ -28,7 +28,7 @@ source-hash: 5fe203944409
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ChipGroup Label="主題" MaxWidth="560">
         <arc:SelectItem Content="設計" />
         <arc:SelectItem Content="工程" />
@@ -158,7 +158,7 @@ topicsGroup.ValueSelector = item => ((Topic)item!).Id;
 ```xml
 <StackPanel xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+            xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
             xmlns:generic="using:System.Collections.Generic"
             Width="680"
             Spacing="20">

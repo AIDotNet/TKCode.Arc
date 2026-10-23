@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PromptCacheEventLogDemo">
+    <StackPanel Spacing="16" MaxWidth="744">
+        <arc:PromptCache x:Name="Cache"
+                         IsLooping="False"
+                         RequestCompleted="OnRequestCompleted"
+                         Expired="OnExpired" />
+        <WrapPanel ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="0.5×" Variant="Secondary" Size="Small" Click="OnHalfSpeedClick" />
+            <arc:Button Content="1×" Variant="Secondary" Size="Small" Click="OnNormalSpeedClick" />
+            <arc:Button Content="2×" Variant="Secondary" Size="Small" Click="OnDoubleSpeedClick" />
+            <arc:Switch Content="Edit the instructions"
+                        IsChecked="{Binding #Cache.IsChangeArmed, Mode=TwoWay}"
+                        VerticalAlignment="Center" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   Text="Requests appear here as they finish."
+                   FontSize="13"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

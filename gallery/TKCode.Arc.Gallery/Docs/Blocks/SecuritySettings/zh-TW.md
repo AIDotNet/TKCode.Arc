@@ -1,7 +1,7 @@
 ---
 title: 安全性設定
 summary: 安全檢查、變更密碼、兩步驟驗證和登入工作階段，均可原地處理。
-source-hash: 5a5a25605e17
+source-hash: 53dd97448a3c
 ---
 
 <Demo name="Overview" />
@@ -30,7 +30,7 @@ source-hash: 5a5a25605e17
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SecuritySettings IsAuthenticatorEnabled="True"
                           PhoneNumber="+31 6 2045 4821"
                           PasskeyCount="2">

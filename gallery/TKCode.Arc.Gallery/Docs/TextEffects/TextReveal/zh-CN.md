@@ -1,7 +1,7 @@
 ---
 title: 文字呈现
 summary: 以克制的动效呈现一小段内容。
-source-hash: bafc90c5e93a
+source-hash: 8a7ac77d5ca5
 ---
 
 <Demo name="Hero" />
@@ -27,7 +27,7 @@ source-hash: bafc90c5e93a
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TextReveal Text="从第一帧起就显得周到的界面"
                     Level="H1" />
 </UserControl>

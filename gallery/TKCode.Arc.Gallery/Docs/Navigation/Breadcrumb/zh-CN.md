@@ -1,7 +1,7 @@
 ---
 title: 面包屑
 summary: 显示页面在层级结构中的位置。
-source-hash: c0cd6cdda7cd
+source-hash: b4c233743e1b
 ---
 
 <Demo name="Default" />
@@ -30,7 +30,7 @@ source-hash: c0cd6cdda7cd
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Breadcrumb>
         <arc:BreadcrumbItem Content="工作区" />
         <arc:BreadcrumbItem Content="设置" />

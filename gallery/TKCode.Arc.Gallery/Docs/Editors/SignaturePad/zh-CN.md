@@ -1,7 +1,7 @@
 ---
 title: 签名板
 summary: 笔迹平滑，速度越快越细；支持撤销、回放，并可导出 PNG 或 SVG。
-source-hash: 9430c6029c5c
+source-hash: 589b36028e3d
 ---
 
 <Demo name="Sign" />
@@ -28,7 +28,7 @@ source-hash: 9430c6029c5c
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SignaturePad Signer="张三"
                       Hint="请在此签名" />
 </UserControl>

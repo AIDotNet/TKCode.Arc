@@ -41,7 +41,7 @@ selected option's value.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:BillingToggle Value="yearly" />
 </UserControl>
 ```

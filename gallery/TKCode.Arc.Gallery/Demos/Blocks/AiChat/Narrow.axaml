@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiChatNarrowDemo">
+    <!-- The chat adapts to its own width: bubbles widen to 88% and source domains hide at 480 and below. -->
+    <Border Width="390" Height="560" BorderThickness="1" CornerRadius="16" ClipToBounds="True" BorderBrush="#33808080" Margin="0,12">
+        <arc:AiChat x:Name="Chat" />
+    </Border>
+</UserControl>

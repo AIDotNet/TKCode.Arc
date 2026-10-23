@@ -48,7 +48,7 @@ sorts the items itself, unless you turn that off and let a server do it.
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchResults Height="640" Query="invoice" Label="Search finance">
         <arc:SearchResults.Filters>
             <arc:SearchValueFilter Key="kind" Title="Type" />
@@ -411,7 +411,7 @@ kind, and `{1}` where a second value is named.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchResults Label="Search the help center"
                        PlaceholderText="Search articles"
                        ResultsFormat="{}{0} articles"

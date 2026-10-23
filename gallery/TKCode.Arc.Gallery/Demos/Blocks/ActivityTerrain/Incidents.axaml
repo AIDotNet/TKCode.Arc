@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityTerrainIncidentsDemo">
+    <!--
+        One metric (no metric switch) in the danger tone: a rise is bad news, so the change turns red. Working hours are
+        08:00 to 18:59 here, and the summary lists the five worst hours.
+    -->
+    <arc:ActivityTerrain x:Name="Terrain"
+                         PeakCount="5"
+                         Title="Incident load"
+                         Subtitle="Alerts that paged someone, per hour.">
+        <arc:ActivityTerrain.WorkingHours>
+            <arc:ActivityTerrainWorkingHours FirstHour="8" LastHour="18" />
+        </arc:ActivityTerrain.WorkingHours>
+    </arc:ActivityTerrain>
+</UserControl>

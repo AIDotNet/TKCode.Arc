@@ -110,6 +110,7 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
     private readonly double[] _target;
     private readonly double[] _segmentStart;
     private readonly double[] _segmentVelocity;
+    private readonly double[] _scratch;
     private MotionSpec _spec = MotionSpec.Instant;
     private double _elapsed;
     private double _delayRemaining;
@@ -127,6 +128,7 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
         _target = new double[n];
         _segmentStart = new double[n];
         _segmentVelocity = new double[n];
+        _scratch = new double[n];
         vector.Write(initial, _position);
         vector.Write(initial, _target);
     }
@@ -151,11 +153,25 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
     public Task<bool> AnimateTo(T target, MotionSpec spec, T? initialVelocity = null)
     {
         var owner = _owner.TryGetTarget(out var o) ? o : null;
-        if (owner is null || spec is MotionSpec.InstantSpec || ArcMotion.GetEffectiveLevel(owner) == ArcMotionLevel.Off
-            || (spec is MotionSpec.SpringMotion && ArcMotion.GetEffectiveLevel(owner) == ArcMotionLevel.Reduced))
+        if (owner is null || spec is MotionSpec.InstantSpec)
         {
             Jump(target);
             return s_completed;
+        }
+        var level = ArcMotion.GetEffectiveLevel(owner);
+        if (level == ArcMotionLevel.Off || (level == ArcMotionLevel.Reduced && spec is MotionSpec.SpringMotion))
+        {
+            Jump(target);
+            return s_completed;
+        }
+        // Pointer handlers retarget on every move: the same target with the same spec keeps the run going as it is.
+        if (_animating && initialVelocity is null && _completion is { } running && _spec.Equals(spec))
+        {
+            _vector.Write(target, _scratch);
+            if (_scratch.AsSpan().SequenceEqual(_target))
+            {
+                return running.Task;
+            }
         }
         _vector.Write(target, _target);
         if (initialVelocity is { } iv)
@@ -199,7 +215,15 @@ public sealed class MotionValue<T> : IMotionDriver, IDisposable where T : struct
         StopInternal(false);
     }
 
-    void IMotionDriver.Snap() => Jump(Target);
+    void IMotionDriver.Snap()
+    {
+        // A value that was stopped stays registered until the next frame; it has nothing left to finish, and jumping
+        // would fire Changed again with the stopped value (a layer that was reset on detach would turn half transparent).
+        if (_animating)
+        {
+            Jump(Target);
+        }
+    }
 
     bool IMotionDriver.Advance(double dt)
     {
@@ -281,7 +305,11 @@ public abstract record MotionSpec(TimeSpan Delay)
 {
     public static readonly MotionSpec Instant = new InstantSpec();
 
-    public static MotionSpec Spring(ArcSpring spring, TimeSpan delay = default) => new SpringMotion(ArcMotionPresets.Get(spring), delay);
+    // Presets without a delay are shared: callers build them on every pointer move.
+    private static readonly MotionSpec[] s_presets = Enum.GetValues<ArcSpring>().Select(s => (MotionSpec)new SpringMotion(ArcMotionPresets.Get(s), default)).ToArray();
+
+    public static MotionSpec Spring(ArcSpring spring, TimeSpan delay = default)
+        => delay == default && (int)spring >= 0 && (int)spring < s_presets.Length ? s_presets[(int)spring] : new SpringMotion(ArcMotionPresets.Get(spring), delay);
 
     public static MotionSpec Spring(SpringSpec spec, TimeSpan delay = default) => new SpringMotion(spec, delay);
 
@@ -331,7 +359,7 @@ public static class MotionScheduler
     private sealed class Batch
     {
         private readonly WeakReference<TopLevel> _topLevel;
-        private readonly List<IMotionDriver> _drivers = new();
+        private readonly HashSet<IMotionDriver> _drivers = new();
         private readonly List<IMotionDriver> _snapshot = new();
         private bool _requested;
         private TimeSpan? _last;
@@ -342,10 +370,7 @@ public static class MotionScheduler
 
         public void Add(IMotionDriver driver)
         {
-            if (!_drivers.Contains(driver))
-            {
-                _drivers.Add(driver);
-            }
+            _drivers.Add(driver);
             Request();
         }
 
@@ -387,15 +412,9 @@ public static class MotionScheduler
                     _drivers.Remove(driver);
                     continue;
                 }
-                var keep = true;
-                var remaining = Math.Min(dt, 0.25);
-                // Large gaps (window restored) advance in sub-steps for numerical safety.
-                while (remaining > 0 && keep)
-                {
-                    var step = Math.Min(remaining, 1.0 / 60.0);
-                    keep = driver.Advance(step);
-                    remaining -= step;
-                }
+                // Every driver solves its curve in closed form from the elapsed time, so a long gap (window restored)
+                // is one step: sub-stepping would only raise Changed again for the same frame.
+                var keep = driver.Advance(Math.Min(dt, 0.25));
                 if (!keep)
                 {
                     _drivers.Remove(driver);

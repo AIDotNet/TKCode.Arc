@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReasoningTreeReducedMotionDemo">
+    <!-- Reduced motion opens on the finished search; playing and stepping still work, with every change applied at once. -->
+    <arc:ReasoningTree arc:ArcMotion.Level="Reduced"
+                       BeamWidth="3"
+                       MaxWidth="744"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top" />
+</UserControl>

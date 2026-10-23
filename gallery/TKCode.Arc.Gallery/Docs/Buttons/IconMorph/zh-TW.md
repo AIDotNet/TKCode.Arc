@@ -1,7 +1,7 @@
 ---
 title: 圖示變形
 summary: 在不同狀態之間變形的圖示：選單變關閉、播放變暫停、複製變勾選等。
-source-hash: 3289aa0bf5d6
+source-hash: dd129b66808b
 ---
 
 <Demo name="EightPairs" />
@@ -30,7 +30,7 @@ source-hash: 3289aa0bf5d6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Button Variant="Ghost" AutomationProperties.Name="開啟選單">
         <arc:IconMorph Kind="Menu" />
     </arc:Button>

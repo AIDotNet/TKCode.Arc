@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExplodedViewNarrowDemo">
+    <!-- Below 560 px: one column, stop buttons above the caption, labels without notes, and a tall stage turns less. -->
+    <arc:ExplodedView x:Name="View"
+                      Width="390"
+                      Height="760"
+                      HorizontalAlignment="Center" />
+</UserControl>

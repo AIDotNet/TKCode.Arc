@@ -42,7 +42,7 @@ without reading a label twice.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Switch Content="Email notifications" IsChecked="True" />
 </UserControl>
 ```

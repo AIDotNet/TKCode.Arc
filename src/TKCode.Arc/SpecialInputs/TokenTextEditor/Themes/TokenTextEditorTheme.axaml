@@ -1,0 +1,109 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Arc composer text area: Inter 16/24, -0.01em, padding 8, no frame of its own (the owner draws the surface).
+        Tokens: Accent 12% fill (from code), AccentStrong text, radius 6 with a 2px outset (Arc's box-shadow spread).
+        The height is driven from code (160ms standard ease at full motion); nothing else animates here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TokenTextEditor}" TargetType="arc:TokenTextEditor">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TokenTextEditor">
+                <arc:TokenTextBox Name="PART_TextBox"
+                                  Background="{TemplateBinding Background}"
+                                  Padding="{TemplateBinding Padding}"
+                                  LineHeight="{TemplateBinding LineHeight}"
+                                  LetterSpacing="{TemplateBinding LetterSpacing}"
+                                  PlaceholderText="{TemplateBinding Placeholder}"
+                                  PlaceholderForeground="{TemplateBinding PlaceholderForeground}"
+                                  CaretBrush="{TemplateBinding CaretBrush}"
+                                  IsReadOnly="{TemplateBinding IsReadOnly}"
+                                  SelectionOpacity="{TemplateBinding SelectionOpacity}"
+                                  ScrollViewer.VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}" />
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="LineHeight" Value="{arc:TokenTextEditorTokenResource EditorLineHeight}" />
+        <Setter Property="LetterSpacing" Value="{arc:TokenTextEditorTokenResource EditorLetterSpacing}" />
+        <Setter Property="Padding" Value="{arc:TokenTextEditorTokenResource EditorPadding}" />
+        <Setter Property="TokenForeground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        <Setter Property="TokenCornerRadius" Value="{arc:TokenTextEditorTokenResource TokenCornerRadius}" />
+        <Setter Property="TokenPadding" Value="{arc:TokenTextEditorTokenResource TokenPadding}" />
+        <Setter Property="TokenOutset" Value="{arc:TokenTextEditorTokenResource TokenOutset}" />
+        <Setter Property="TokenFillOpacity" Value="{arc:TokenTextEditorTokenResource TokenFillOpacity}" />
+        <Setter Property="SelectionOpacity" Value="{arc:TokenTextEditorTokenResource SelectionOpacity}" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </ControlTheme>
+
+    <!--
+        The TextBox: its text is transparent (caret and selection from the editor) over the mirror that paints the same
+        text; the mirror is inserted into PART_TextLayers from code, between the placeholder and the presenter. The
+        padding sits inside the scroller, so text scrolls up to the edge as in a textarea.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TokenTextBox}" TargetType="arc:TokenTextBox">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TokenTextBox">
+                <Panel Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                                  IsScrollChainingEnabled="True"
+                                  BringIntoViewOnFocusChange="False">
+                        <Panel Name="PART_TextLayers" Margin="{TemplateBinding Padding}">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Top">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <arc:TokenTextPresenter Name="PART_TextPresenter"
+                                                    Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                    CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                    CaretIndex="{TemplateBinding CaretIndex}"
+                                                    SelectionStart="{TemplateBinding SelectionStart}"
+                                                    SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                    TextAlignment="{TemplateBinding TextAlignment}"
+                                                    TextWrapping="{TemplateBinding TextWrapping}"
+                                                    LineHeight="{TemplateBinding LineHeight}"
+                                                    LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                    PasswordChar="{TemplateBinding PasswordChar}"
+                                                    RevealPassword="{TemplateBinding RevealPassword}"
+                                                    SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                    CaretBrush="{TemplateBinding CaretBrush}"
+                                                    VerticalAlignment="Top" />
+                        </Panel>
+                    </ScrollViewer>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+    </ControlTheme>
+</ResourceDictionary>

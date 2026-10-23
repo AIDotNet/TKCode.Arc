@@ -1,7 +1,7 @@
 ---
 title: 密碼欄位
 summary: 附有可見顯示切換控制項的敏感文字輸入。
-source-hash: e6bab50fb7dc
+source-hash: 1dbe8b8e16ad
 ---
 
 <Demo name="SignIn" />
@@ -30,7 +30,7 @@ source-hash: e6bab50fb7dc
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PasswordField Label="密碼"
                        Placeholder="請輸入密碼"
                        Description="點選顯示按鈕可核對你輸入的內容。"

@@ -24,11 +24,11 @@ namespace TKCode.Arc;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The editor is a real multi-line <see cref="TextBox"/> (caret, selection, IME, undo, clipboard) whose own text is
-/// transparent; a mirror behind it paints the same text with identical metrics and tints the tokens. Choosing a
-/// suggestion types through the TextBox, so Ctrl/Cmd+Z undoes it. The caret never rests inside a token: arrow
-/// steps hop over it, a click lands on the nearest edge, selections grow to whole tokens, and one Backspace or
-/// Delete next to a token removes all of it.
+/// The editor is a <see cref="TokenTextEditor"/>: a real multi-line <see cref="TextBox"/> (caret, selection, IME, undo,
+/// clipboard) whose own text is transparent, with a mirror behind it that paints the same text with identical metrics
+/// and tints the tokens. Choosing a suggestion types through the TextBox, so Ctrl/Cmd+Z undoes it. The caret never
+/// rests inside a token: arrow steps hop over it, a click lands on the nearest edge, selections grow to whole tokens,
+/// and one Backspace or Delete next to a token removes all of it.
 /// </para>
 /// <para>
 /// Arc shows no visible label (the textarea is named by <c>aria-label</c>): <see cref="Label"/> only names the editor
@@ -36,15 +36,15 @@ namespace TKCode.Arc;
 /// </para>
 /// </remarks>
 [TemplatePart(ShellPart, typeof(Border))]
-[TemplatePart(EditorPart, typeof(TextBox))]
+[TemplatePart(EditorPart, typeof(TokenTextEditor))]
 [TemplatePart(LiveRegionPart, typeof(TextBlock))]
 [PseudoClasses(SuggestionsOpenPseudoClass)]
-public class MentionInput : TemplatedControl
+public class MentionInput : TemplatedControl, ITokenTextEditorHost
 {
     /// <summary>The field's border (Arc <c>.field</c>); its height springs with the text.</summary>
     public const string ShellPart = "PART_Shell";
 
-    /// <summary>The editor TextBox (Arc's textarea).</summary>
+    /// <summary>The editor (Arc's textarea), a <see cref="TokenTextEditor"/>.</summary>
     public const string EditorPart = "PART_TextBox";
 
     /// <summary>The hidden polite live region that announces the result count.</summary>
@@ -130,6 +130,14 @@ public class MentionInput : TemplatedControl
     internal static readonly StyledProperty<IBrush?> SuggestionHighlightProperty =
         AvaloniaProperty.Register<MentionInput, IBrush?>(nameof(SuggestionHighlight));
 
+    /// <summary>Background of channel tokens (theme: Foreground 7%).</summary>
+    internal static readonly StyledProperty<IBrush?> ChannelTokenFillProperty =
+        AvaloniaProperty.Register<MentionInput, IBrush?>("ChannelTokenFill");
+
+    /// <summary>Text of channel tokens (theme: Foreground).</summary>
+    internal static readonly StyledProperty<IBrush?> ChannelTokenForegroundProperty =
+        AvaloniaProperty.Register<MentionInput, IBrush?>("ChannelTokenForeground");
+
     /// <summary>Raised after <see cref="Value"/> changed (typing, choosing, programmatic).</summary>
     public static readonly RoutedEvent<MentionInputValueChangedEventArgs> ValueChangedEvent =
         RoutedEvent.Register<MentionInput, MentionInputValueChangedEventArgs>(nameof(ValueChanged), RoutingStrategies.Bubble);
@@ -142,35 +150,41 @@ public class MentionInput : TemplatedControl
     public static readonly RoutedEvent<MentionSubmittedEventArgs> SubmittedEvent =
         RoutedEvent.Register<MentionInput, MentionSubmittedEventArgs>(nameof(Submitted), RoutingStrategies.Bubble);
 
+    /// <summary>The editor's token kind for people.</summary>
+    internal const string PersonKind = "Person";
+
+    /// <summary>The editor's token kind for channels.</summary>
+    internal const string ChannelKind = "Channel";
+
     private const double PanelWidth = 272;
     private const double PanelOffsetX = 10;
     private static readonly SpringSpec s_grow = SpringSpec.FromVisual(0.4, 0);
 
+    // Arc's two triggers (MentionInputEngine.PersonRule / ChannelRule); IsEnabled follows People / Channels.
+    private readonly TokenTrigger _personTrigger = new('@', PersonKind)
+    {
+        AllowAfterOpeningBracket = true,
+        AllowSpacesInQuery = true,
+        MaxQuerySpaces = 1
+    };
+
+    private readonly TokenTrigger _channelTrigger = new('#', ChannelKind) { AllowAfterOpeningBracket = true };
+    private readonly TokenStyle _channelStyle = new() { Kind = ChannelKind };
     private Border? _shell;
-    private MentionInputTextBox? _box;
+    private TokenTextEditor? _editor;
     private SpecialInputsLiveRegion? _live;
     private MentionValue _value = MentionValue.Empty;
     private IReadOnlyList<Mention> _mentions = MentionValue.Empty.Mentions;
     private bool _committing;
-    private bool _syncingText;
+    private bool _syncing;
     private bool _quiet;
-    private int _lastCaret;
-    private int? _caret;
-    private int? _dismissed;
     private int _active;
     private string _lastQueryKey = string.Empty;
-    private Mention? _pending;
     private bool _pointerAway;
-    private int _operationDepth;
-    private bool _normalizing;
-    private bool _refreshPosted;
     private MentionInputTrigger? _trigger;
     private List<MentionInputSuggestion> _suggestions = new();
     private bool _isSuggestionsOpen;
     private string _announced = string.Empty;
-    private MotionValue<double>? _height;
-    private double _heightTarget = -1;
-    private bool _heightPlaced;
     private MentionInputSuggestionPopup? _popup;
     private Border? _surface;
     private MentionInputSuggestionList? _list;
@@ -182,7 +196,13 @@ public class MentionInput : TemplatedControl
         FocusableProperty.OverrideDefaultValue<MentionInput>(true);
         // Focus() lands on the editor; Tab goes straight to it.
         KeyboardNavigation.IsTabStopProperty.OverrideDefaultValue<MentionInput>(false);
-        AffectsMeasure<MentionInput>(MinLinesProperty, MaxLinesProperty);
+    }
+
+    /// <summary>Creates a mention input.</summary>
+    public MentionInput()
+    {
+        _channelStyle.Bind(TokenStyle.FillProperty, this.GetObservable(ChannelTokenFillProperty));
+        _channelStyle.Bind(TokenStyle.ForegroundProperty, this.GetObservable(ChannelTokenForegroundProperty));
     }
 
     /// <summary>The text and its mentions. Two-way bindable; typing and choosing suggestions write it.</summary>
@@ -335,15 +355,29 @@ public class MentionInput : TemplatedControl
         remove => RemoveHandler(SubmittedEvent, value);
     }
 
-    internal bool IsSuggestionListOpen => _isSuggestionsOpen;
-
     internal IBrush? SuggestionHighlight
     {
         get => GetValue(SuggestionHighlightProperty);
         set => SetValue(SuggestionHighlightProperty, value);
     }
 
-    internal MentionInputTextBox? Editor => _box;
+    internal IBrush? ChannelTokenFill
+    {
+        get => GetValue(ChannelTokenFillProperty);
+        set => SetValue(ChannelTokenFillProperty, value);
+    }
+
+    internal IBrush? ChannelTokenForeground
+    {
+        get => GetValue(ChannelTokenForegroundProperty);
+        set => SetValue(ChannelTokenForegroundProperty, value);
+    }
+
+    /// <summary>The TextBox inside the editor (tests).</summary>
+    internal TokenTextBox? Editor => _editor?.Box;
+
+    /// <summary>The shared editor this control is built on.</summary>
+    internal TokenTextEditor? TokenEditor => _editor;
 
     internal MentionInputSuggestionList? SuggestionList => _list;
 
@@ -355,8 +389,8 @@ public class MentionInput : TemplatedControl
 
     internal int ActiveSuggestion => Math.Min(_active, Math.Max(0, _suggestions.Count - 1));
 
-    /// <summary>The height the shell is springing to (content + padding, within the line limits).</summary>
-    internal double TargetFieldHeight => _heightTarget;
+    /// <summary>The height the editor is springing to (content + padding, within the line limits).</summary>
+    internal double TargetFieldHeight => _editor?.TargetHeight ?? -1;
 
     #region Public methods (Arc MentionInputHandle)
 
@@ -364,28 +398,34 @@ public class MentionInput : TemplatedControl
     public void Insert(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
-        TypeText(text, null, null);
+        if (_editor is { } editor)
+        {
+            editor.InsertText(text);
+        }
+        else
+        {
+            EditValue(text, _value.Text.Length);
+        }
     }
 
     /// <summary>Types a trigger at the caret so the suggestions open, adding a space first when needed.</summary>
     public void OpenSuggestions(MentionKind kind)
     {
+        if (_editor is { } editor)
+        {
+            editor.OpenTrigger(KindName(kind));
+            return;
+        }
         var text = _value.Text;
-        var focused = _box?.IsFocused == true;
-        var at = focused ? SelectionLow() : text.Length;
-        var to = focused ? SelectionHigh() : at;
-        var before = at > 0 && at <= text.Length ? text[at - 1] : (char?)null;
-        _dismissed = null;
         var symbol = MentionSerializer.Symbol(kind).ToString();
-        TypeText(before is { } c && !char.IsWhiteSpace(c) ? " " + symbol : symbol, at, to);
+        EditValue(text.Length > 0 && !char.IsWhiteSpace(text[^1]) ? " " + symbol : symbol, text.Length);
     }
 
     /// <summary>Empties the field.</summary>
     public void Clear()
     {
         SetCurrentValue(ValueProperty, MentionValue.Empty);
-        _caret = 0;
-        _box?.Select(0, 0);
+        _editor?.Select(0, 0);
     }
 
     #endregion
@@ -393,30 +433,45 @@ public class MentionInput : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_box is not null)
+        if (_editor is { } old)
         {
-            _box.Owner = null;
+            old.Host = null;
+            old.MirrorFactory = null;
+            old.RemoveHandler(KeyDownEvent, OnEditorKeyDown);
+            old.TextChanged -= OnEditorTextChanged;
+            old.TokenInserted -= OnEditorTokenInserted;
+            old.SubmitRequested -= OnEditorSubmitRequested;
+            old.CollapseRequested -= OnEditorCollapseRequested;
+            old.Triggers.Clear();
+            old.TokenStyles.Clear();
         }
         _shell = e.NameScope.Find<Border>(ShellPart);
-        _box = e.NameScope.Find<MentionInputTextBox>(EditorPart);
+        _editor = e.NameScope.Find<TokenTextEditor>(EditorPart);
         _live = e.NameScope.Find<SpecialInputsLiveRegion>(LiveRegionPart);
-        _heightPlaced = false;
-        _heightTarget = -1;
-        if (_box is not null)
+        if (_editor is { } editor)
         {
-            _box.Owner = this;
-            SyncEditorText(moveCaretToEnd: true);
-            UpdateEditorTokens();
+            editor.Host = this;
+            editor.MirrorFactory = static () => new MentionInputMirror();
+            editor.RestoresTokensOnUndo = false;
+            editor.HeightMotion = MotionSpec.Spring(s_grow);
+            editor.Triggers.Add(_personTrigger);
+            editor.Triggers.Add(_channelTrigger);
+            editor.TokenStyles.Add(_channelStyle);
+            // Tunnel, so the list keys run before the editor's own (token deletion, Enter) and the TextBox's.
+            editor.AddHandler(KeyDownEvent, OnEditorKeyDown, RoutingStrategies.Tunnel);
+            editor.TextChanged += OnEditorTextChanged;
+            editor.TokenInserted += OnEditorTokenInserted;
+            editor.SubmitRequested += OnEditorSubmitRequested;
+            editor.CollapseRequested += OnEditorCollapseRequested;
+            PushValueToEditor();
             UpdateAutomationName();
         }
     }
 
-    internal void OnEditorTemplateApplied() => UpdateEditorTokens();
-
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
-        if (ReferenceEquals(e.Source, this) && _box is { } box && box.IsEffectivelyEnabled)
+        if (ReferenceEquals(e.Source, this) && _editor?.Box is { } box && box.IsEffectivelyEnabled)
         {
             box.Focus(e.NavigationMethod, e.KeyModifiers);
         }
@@ -436,14 +491,13 @@ public class MentionInput : TemplatedControl
                 _quiet = true;
                 try
                 {
-                    SyncEditorText(moveCaretToEnd: true);
+                    PushValueToEditor();
                 }
                 finally
                 {
                     _quiet = false;
                 }
             }
-            UpdateEditorTokens();
             if (!oldValue.Equals(newValue))
             {
                 RaiseEvent(new MentionInputValueChangedEventArgs(oldValue, newValue));
@@ -494,192 +548,91 @@ public class MentionInput : TemplatedControl
         _list?.ResetPlacement();
         IsSuggestionsOpen = false;
         PseudoClasses.Set(SuggestionsOpenPseudoClass, false);
-        _heightPlaced = false;
-        _heightTarget = -1;
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new MentionInputAutomationPeer(this);
 
+    /// <summary>The editor forwards its accessible name to its TextBox.</summary>
     private void UpdateAutomationName()
     {
-        if (_box is null)
+        if (_editor is null)
         {
             return;
         }
         var name = Label ?? AutomationProperties.GetName(this);
         if (string.IsNullOrEmpty(name))
         {
-            _box.ClearValue(AutomationProperties.NameProperty);
+            _editor.ClearValue(AutomationProperties.NameProperty);
         }
         else
         {
-            AutomationProperties.SetName(_box, name);
+            AutomationProperties.SetName(_editor, name);
         }
     }
 
-    #region Autosize
+    #region Editor
 
-    /// <summary>
-    /// The shell's height follows the text between <see cref="MinLines"/> and <see cref="MaxLines"/> lines (24px each
-    /// plus 22px padding) on Arc's smooth spring (0.4s, no bounce); the first measure jumps. Only the shell's height
-    /// is animated, so one element relayouts per frame.
-    /// </summary>
-    protected override Size MeasureOverride(Size availableSize)
-    {
-        var size = base.MeasureOverride(availableSize);
-        UpdateFieldHeight();
-        return size;
-    }
+    internal static string KindName(MentionKind kind) => kind == MentionKind.Person ? PersonKind : ChannelKind;
 
-    /// <summary>The editor laid its text out again (typing, wrapping, a new width).</summary>
-    internal void OnEditorLayoutChanged()
-    {
-        UpdateFieldHeight();
-        if (_isSuggestionsOpen && !_placementPosted)
-        {
-            // The trigger may have moved (the query wrapped onto the next line); place the panel once layout settles.
-            _placementPosted = true;
-            Dispatcher.UIThread.Post(() =>
-            {
-                _placementPosted = false;
-                if (_isSuggestionsOpen)
-                {
-                    UpdatePopupPlacement();
-                }
-            }, DispatcherPriority.Loaded);
-        }
-    }
+    internal static MentionKind KindOf(string kind) =>
+        string.Equals(kind, ChannelKind, StringComparison.Ordinal) ? MentionKind.Channel : MentionKind.Person;
 
-    private void UpdateFieldHeight()
+    internal static TokenSpan ToSpan(Mention mention) =>
+        new(KindName(mention.Kind), mention.Id, mention.Label, mention.Start, mention.End);
+
+    internal static Mention ToMention(TokenSpan token) => new(KindOf(token.Kind), token.Id, token.Label, token.Start, token.End);
+
+    /// <summary>Shows <see cref="Value"/> in the editor (text and tokens); its echo is not a user edit.</summary>
+    private void PushValueToEditor()
     {
-        if (_box?.Presenter is not { } presenter || _shell is null)
+        if (_editor is not { } editor)
         {
             return;
         }
-        var padding = _box.Padding;
-        var line = double.IsNaN(_box.LineHeight) || _box.LineHeight <= 0 ? Math.Ceiling(_box.FontSize * 1.5) : _box.LineHeight;
-        var pad = padding.Top + padding.Bottom;
-        var text = presenter.TextLayout.Height;
-        var min = line * MinLines + pad;
-        var max = line * Math.Max(MinLines, MaxLines) + pad;
-        var target = Math.Clamp(text + pad, min, Math.Max(min, max));
-        if (_heightPlaced && Math.Abs(target - _heightTarget) <= 0.5)
+        var mentions = _value.Mentions;
+        var tokens = new TokenSpan[mentions.Count];
+        for (var i = 0; i < tokens.Length; i++)
+        {
+            tokens[i] = ToSpan(mentions[i]);
+        }
+        _syncing = true;
+        try
+        {
+            editor.SetContent(_value.Text, tokens, refresh: false);
+        }
+        finally
+        {
+            _syncing = false;
+        }
+    }
+
+    /// <summary>Arc <c>onInput</c>: the editor moved the tokens with the edit (and added a chosen one); commit them.</summary>
+    private void OnEditorTextChanged(object? sender, TokenTextChangedEventArgs e)
+    {
+        if (_syncing)
         {
             return;
         }
-        _heightTarget = target;
-        _height ??= CreateHeightMotion();
-        if (!_heightPlaced)
+        var mentions = new Mention[e.Tokens.Count];
+        for (var i = 0; i < mentions.Length; i++)
         {
-            _heightPlaced = true;
-            _height.Jump(target);
-            return;
+            mentions[i] = ToMention(e.Tokens[i]);
         }
-        _ = _height.AnimateTo(target, MotionSpec.Spring(s_grow));
+        Commit(new MentionValue(e.Text, mentions));
     }
 
-    private MotionValue<double> CreateHeightMotion()
+    private void OnEditorTokenInserted(object? sender, TokenInsertedEventArgs e) => RaiseEvent(new MentionAddedEventArgs(ToMention(e.Token)));
+
+    private void OnEditorSubmitRequested(object? sender, TokenTextSubmitRequestedEventArgs e)
     {
-        var motion = new MotionValue<double>(this, 0, MotionVectors.Double);
-        motion.Changed += value =>
+        e.Handled = true;
+        if (!string.IsNullOrWhiteSpace(_value.Text))
         {
-            if (_shell is { } shell)
-            {
-                shell.Height = Math.Max(0, value) + shell.BorderThickness.Top + shell.BorderThickness.Bottom;
-            }
-        };
-        return motion;
-    }
-
-    #endregion
-
-    #region Editor events
-
-    private int SelectionLow() => _box is null ? _value.Text.Length : Math.Min(_box.SelectionStart, _box.SelectionEnd);
-
-    private int SelectionHigh() => _box is null ? _value.Text.Length : Math.Max(_box.SelectionStart, _box.SelectionEnd);
-
-    /// <summary>Before a key, text input or pointer operation: remember the caret (the edit hint, Arc <c>lastCaret</c>).</summary>
-    internal void BeginEditorOperation(bool pointer = false)
-    {
-        _operationDepth++;
-        _pointerAway = false;
-        if (!pointer)
-        {
-            _lastCaret = SelectionLow();
+            Submit();
         }
     }
 
-    /// <summary>After the TextBox finished: keep the caret out of tokens (Arc <c>onSelect</c>) and refresh the list.</summary>
-    internal void EndEditorOperation()
-    {
-        _operationDepth = Math.Max(0, _operationDepth - 1);
-        if (_operationDepth > 0)
-        {
-            return;
-        }
-        NormalizeSelection();
-        Refresh();
-    }
-
-    internal void OnEditorSelectionChanged()
-    {
-        if (_operationDepth == 0 && !_normalizing && !_syncingText)
-        {
-            ScheduleRefresh();
-        }
-    }
-
-    internal void OnEditorFocusChanged(bool focused)
-    {
-        if (focused)
-        {
-            _pointerAway = false;
-        }
-        if (_operationDepth == 0)
-        {
-            Refresh();
-        }
-    }
-
-    internal void OnEditorScrolled()
-    {
-        if (_isSuggestionsOpen)
-        {
-            UpdatePopupPlacement();
-        }
-    }
-
-    /// <summary>Arc <c>onInput</c>: moves the mentions with the edit, adds the pending one and commits.</summary>
-    internal void OnEditorTextChanged()
-    {
-        if (_syncingText || _box is null)
-        {
-            return;
-        }
-        var text = _box.Text ?? string.Empty;
-        if (string.Equals(text, _value.Text, StringComparison.Ordinal))
-        {
-            return;
-        }
-        var mentions = MentionInputEngine.Reconcile(_value, text, _lastCaret);
-        var added = _pending;
-        _pending = null;
-        var accepted = added is not null && MentionInputEngine.Holds(text, added);
-        if (accepted)
-        {
-            mentions.Add(added!);
-        }
-        Commit(new MentionValue(text, mentions));
-        if (accepted)
-        {
-            RaiseEvent(new MentionAddedEventArgs(added!));
-        }
-        if (_operationDepth == 0)
-        {
-            ScheduleRefresh();
-        }
-    }
+    private void OnEditorCollapseRequested(object? sender, RoutedEventArgs e) => DismissSuggestions();
 
     private void Commit(MentionValue next)
     {
@@ -694,182 +647,44 @@ public class MentionInput : TemplatedControl
         }
     }
 
-    private void SyncEditorText(bool moveCaretToEnd)
+    /// <summary>Without an editor (not templated yet): replaces the end of the text directly.</summary>
+    private void EditValue(string text, int at)
     {
-        if (_box is not { } box || string.Equals(box.Text ?? string.Empty, _value.Text, StringComparison.Ordinal))
+        var current = _value;
+        at = Math.Clamp(at, 0, current.Text.Length);
+        var nextText = string.Concat(current.Text.AsSpan(0, at), text, current.Text.AsSpan(at));
+        SetCurrentValue(ValueProperty, new MentionValue(nextText, MentionInputEngine.Reconcile(current, nextText, at)));
+    }
+
+    /// <summary>Arc <c>onKeyDown</c> for the open list: arrows move, Enter / Tab choose, Escape dismisses.</summary>
+    private void OnEditorKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (_editor is not { } editor || editor.IsComposing || !_isSuggestionsOpen)
         {
             return;
         }
-        _syncingText = true;
-        try
-        {
-            box.Text = _value.Text;
-            if (moveCaretToEnd)
-            {
-                // A browser leaves the caret at the end of a programmatically set textarea value.
-                box.Select(_value.Text.Length, _value.Text.Length);
-            }
-        }
-        finally
-        {
-            _syncingText = false;
-        }
-        _lastCaret = SelectionLow();
-    }
-
-    private void UpdateEditorTokens()
-    {
-        if (_box is null)
-        {
-            return;
-        }
-        var mentions = _value.Mentions;
-        var tokens = new MentionInputTokenSpan[mentions.Count];
-        for (var i = 0; i < mentions.Count; i++)
-        {
-            var mention = mentions[i];
-            tokens[i] = new MentionInputTokenSpan(mention.Start, Math.Max(0, mention.End - mention.Start), mention.Kind);
-        }
-        _box.SetTokens(tokens);
-    }
-
-    /// <summary>Arc <c>onSelect</c>: the caret never rests inside a token; selections grow to whole tokens.</summary>
-    private void NormalizeSelection()
-    {
-        if (_box is not { } box || _normalizing)
-        {
-            return;
-        }
-        var anchor = box.SelectionStart;
-        var activeEnd = box.SelectionEnd;
-        var low = Math.Min(anchor, activeEnd);
-        var high = Math.Max(anchor, activeEnd);
-        var collapsed = low == high;
-        var start = low;
-        var end = high;
-        foreach (var mention in _value.Mentions)
-        {
-            if (collapsed && start > mention.Start && start < mention.End)
-            {
-                var stepped = Math.Abs(start - _lastCaret) == 1;
-                var forward = start > _lastCaret;
-                start = end = stepped
-                    ? forward ? mention.End : mention.Start
-                    : start - mention.Start < mention.End - start ? mention.Start : mention.End;
-            }
-            else if (!collapsed)
-            {
-                if (start > mention.Start && start < mention.End)
-                {
-                    start = mention.Start;
-                }
-                if (end > mention.Start && end < mention.End)
-                {
-                    end = mention.End;
-                }
-            }
-        }
-        if (start != low || end != high)
-        {
-            _normalizing = true;
-            try
-            {
-                if (collapsed)
-                {
-                    box.Select(start, start);
-                }
-                else if (anchor <= activeEnd)
-                {
-                    box.Select(start, end);
-                }
-                else
-                {
-                    box.Select(end, start);
-                }
-            }
-            finally
-            {
-                _normalizing = false;
-            }
-        }
-        _lastCaret = SelectionLow();
-    }
-
-    /// <summary>Arc <c>onKeyDown</c>. Returns true when the key was consumed before the TextBox saw it.</summary>
-    internal bool HandleEditorKeyDown(KeyEventArgs e)
-    {
-        if (_box is not { } box || box.IsComposing)
-        {
-            return false;
-        }
-        if (_refreshPosted)
-        {
-            Refresh();
-        }
-        _lastCaret = SelectionLow();
-        var shift = e.KeyModifiers.HasFlag(KeyModifiers.Shift);
-        if (_isSuggestionsOpen)
-        {
-            var count = _suggestions.Count;
-            if (e.Key is Key.Down or Key.Up)
-            {
-                e.Handled = true;
-                if (count > 0)
-                {
-                    var step = e.Key == Key.Down ? 1 : -1;
-                    ActivateSuggestion((ActiveSuggestion + step + count) % count);
-                }
-                return true;
-            }
-            if (e.Key is Key.Enter or Key.Tab && count > 0 && !shift)
-            {
-                e.Handled = true;
-                ChooseSuggestion(ActiveSuggestion);
-                return true;
-            }
-            if (e.Key == Key.Escape)
-            {
-                e.Handled = true;
-                DismissSuggestions();
-                return true;
-            }
-        }
-        var low = SelectionLow();
-        var high = SelectionHigh();
-        if (low == high && !e.KeyModifiers.HasFlag(KeyModifiers.Meta) && e.Key is Key.Back or Key.Delete)
-        {
-            // Select the whole token and let the TextBox delete it: one keystroke removes it and undo restores it.
-            foreach (var mention in _value.Mentions)
-            {
-                var hit = e.Key == Key.Back
-                    ? low > mention.Start && low <= mention.End
-                    : low >= mention.Start && low < mention.End;
-                if (hit)
-                {
-                    _operationDepth++;
-                    try
-                    {
-                        box.Select(mention.Start, mention.End);
-                    }
-                    finally
-                    {
-                        _operationDepth--;
-                    }
-                    break;
-                }
-            }
-            return false;
-        }
-        if (e.Key == Key.Enter && IsSubmitOnEnter && !shift)
+        var count = _suggestions.Count;
+        if (e.Key is Key.Down or Key.Up)
         {
             e.Handled = true;
-            if (!string.IsNullOrWhiteSpace(_value.Text))
+            if (count > 0)
             {
-                Submit();
+                var step = e.Key == Key.Down ? 1 : -1;
+                ActivateSuggestion((ActiveSuggestion + step + count) % count);
             }
-            return true;
+            return;
         }
-        return false;
+        if (e.Key is Key.Enter or Key.Tab && count > 0 && !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            ChooseSuggestion(ActiveSuggestion);
+            return;
+        }
+        if (e.Key == Key.Escape)
+        {
+            e.Handled = true;
+            DismissSuggestions();
+        }
     }
 
     private void Submit()
@@ -882,57 +697,48 @@ public class MentionInput : TemplatedControl
         }
     }
 
-    /// <summary>Arc <c>typeText</c>: types through the TextBox so the change joins its undo stack; falls back to a direct edit.</summary>
-    private void TypeText(string text, int? from, int? to)
+    void ITokenTextEditorHost.OnEditorOperationStarting() => _pointerAway = false;
+
+    void ITokenTextEditorHost.OnEditorFocusChanged(bool focused)
     {
-        if (_box is { } box && box.IsEffectivelyEnabled && !box.IsReadOnly)
+        if (focused)
         {
-            if (!box.IsFocused)
+            _pointerAway = false;
+        }
+    }
+
+    /// <summary>A kind without items opens nothing (read on every refresh: the collections may change in place).</summary>
+    void ITokenTextEditorHost.OnTriggerRefreshing()
+    {
+        _personTrigger.IsEnabled = People?.Any() == true;
+        _channelTrigger.IsEnabled = Channels?.Any() == true;
+    }
+
+    void ITokenTextEditorHost.OnTriggerRefreshed() => ApplyTrigger();
+
+    /// <summary>The editor laid its text out again: the trigger may have moved (the query wrapped onto the next line).</summary>
+    void ITokenTextEditorHost.OnEditorLayoutChanged()
+    {
+        if (_isSuggestionsOpen && !_placementPosted)
+        {
+            // Place the panel once layout settles.
+            _placementPosted = true;
+            Dispatcher.UIThread.Post(() =>
             {
-                box.Focus();
-            }
-            _operationDepth++;
-            try
-            {
-                if (from is { } start)
+                _placementPosted = false;
+                if (_isSuggestionsOpen)
                 {
-                    box.Select(start, to ?? start);
+                    UpdatePopupPlacement();
                 }
-                _lastCaret = SelectionLow();
-                var before = box.Text ?? string.Empty;
-                box.TypeText(text);
-                if (!string.Equals(before, box.Text ?? string.Empty, StringComparison.Ordinal) || text.Length == 0)
-                {
-                    return;
-                }
-            }
-            finally
-            {
-                EndEditorOperation();
-            }
+            }, DispatcherPriority.Loaded);
         }
-        // No editor (not templated yet, disabled or read-only): edit the value directly.
-        var current = _value;
-        var low = Math.Clamp(from ?? (_box is null ? current.Text.Length : SelectionLow()), 0, current.Text.Length);
-        var high = Math.Clamp(to ?? (from is null && _box is not null ? SelectionHigh() : low), low, current.Text.Length);
-        var nextText = string.Concat(current.Text.AsSpan(0, low), text, current.Text.AsSpan(high));
-        var mentions = MentionInputEngine.Reconcile(current, nextText, low);
-        var added = _pending;
-        _pending = null;
-        if (added is not null && MentionInputEngine.Holds(nextText, added))
+    }
+
+    void ITokenTextEditorHost.OnEditorScrolled()
+    {
+        if (_isSuggestionsOpen)
         {
-            mentions.Add(added);
-        }
-        else
-        {
-            added = null;
-        }
-        _lastCaret = low;
-        SetCurrentValue(ValueProperty, new MentionValue(nextText, mentions));
-        _box?.Select(low + text.Length, low + text.Length);
-        if (added is not null)
-        {
-            RaiseEvent(new MentionAddedEventArgs(added));
+            UpdatePopupPlacement();
         }
     }
 
@@ -951,66 +757,54 @@ public class MentionInput : TemplatedControl
         UpdateActiveDescendant();
     }
 
-    /// <summary>Arc <c>choose</c>: replaces the trigger and query with the token (plus a space unless one follows).</summary>
+    /// <summary>Arc <c>choose</c>: the editor replaces the trigger and query with the token (plus a space unless one follows).</summary>
     internal void ChooseSuggestion(int index)
     {
-        if (index < 0 || index >= _suggestions.Count || _trigger is not { } trigger || _caret is not { } caret)
+        if (index < 0 || index >= _suggestions.Count || _trigger is null || _editor is not { } editor)
         {
             return;
         }
         var suggestion = _suggestions[index];
-        var label = suggestion.Name;
-        var token = MentionSerializer.MentionText(suggestion.Kind, label);
-        _pending = new Mention(suggestion.Kind, suggestion.Id, label, trigger.Start, trigger.Start + token.Length);
-        var text = _value.Text;
-        var after = caret < text.Length ? text[caret] : (char?)null;
-        TypeText(after is { } c && char.IsWhiteSpace(c) ? token : token + " ", trigger.Start, caret);
+        editor.InsertToken(KindName(suggestion.Kind), suggestion.Id, suggestion.Name);
     }
 
     /// <summary>Escape: closes the list for this trigger only.</summary>
     internal void DismissSuggestions()
     {
-        if (_trigger is { } trigger)
+        if (_editor is { } editor)
         {
-            _dismissed = trigger.Start;
+            editor.CancelTrigger();
         }
-        Refresh();
+        else
+        {
+            ApplyTrigger();
+        }
     }
 
-    private void ScheduleRefresh()
-    {
-        if (_refreshPosted)
-        {
-            return;
-        }
-        _refreshPosted = true;
-        Dispatcher.UIThread.Post(() =>
-        {
-            if (_refreshPosted)
-            {
-                if (_operationDepth == 0)
-                {
-                    NormalizeSelection();
-                }
-                Refresh();
-            }
-        });
-    }
+    private void ScheduleRefresh() => _editor?.ScheduleRefresh();
 
-    /// <summary>Derives the trigger, the ranked suggestions and the open state from the text and caret (Arc's render).</summary>
+    /// <summary>Has the editor derive the trigger again; the list follows in <see cref="ApplyTrigger"/>.</summary>
     private void Refresh()
     {
-        _refreshPosted = false;
-        var box = _box;
-        var focused = box is { IsFocused: true };
-        _caret = focused && box!.SelectionStart == box.SelectionEnd ? box.CaretIndex : null;
+        if (_editor is { } editor)
+        {
+            editor.Refresh();
+        }
+        else
+        {
+            ApplyTrigger();
+        }
+    }
+
+    /// <summary>The ranked suggestions and the open state for the editor's trigger (Arc's render).</summary>
+    private void ApplyTrigger()
+    {
+        var focused = _editor?.Box is { IsFocused: true };
         var people = People;
         var channels = Channels;
-        var peopleOn = people?.Any() == true;
-        var channelsOn = channels?.Any() == true;
-        var trigger = _caret is { } caret
-            ? MentionInputEngine.FindTrigger(_value.Text, caret, _value.Mentions, peopleOn, channelsOn)
-            : null;
+        var trigger = _editor?.TriggerState is { } state
+            ? new MentionInputTrigger(KindOf(state.Kind), state.Start, state.Query)
+            : (MentionInputTrigger?)null;
         _suggestions = trigger is { } t
             ? MentionInputEngine.Suggest(t, people, channels, MaxSuggestions)
             : new List<MentionInputSuggestion>();
@@ -1020,13 +814,9 @@ public class MentionInput : TemplatedControl
             _lastQueryKey = queryKey;
             _active = 0;
         }
-        if (_dismissed is { } dismissed && trigger?.Start != dismissed)
-        {
-            _dismissed = null;
-        }
         _trigger = trigger;
         // A sentence that simply continues after an unmatched name closes the list instead of showing an empty state.
-        var open = focused && IsEffectivelyEnabled && trigger is { } tr && tr.Start != _dismissed && !_pointerAway &&
+        var open = focused && IsEffectivelyEnabled && trigger is { } tr && !_pointerAway &&
                    (_suggestions.Count > 0 || !tr.Query.Contains(' '));
         ApplyPopup(open);
         var label = open && trigger is { } shown
@@ -1043,26 +833,26 @@ public class MentionInput : TemplatedControl
         UpdateActiveDescendant();
     }
 
+    /// <summary>The active suggestion is the editor's item status (forwarded to its TextBox; Arc <c>aria-activedescendant</c>).</summary>
     private void UpdateActiveDescendant()
     {
-        if (_box is null)
+        if (_editor is null)
         {
             return;
         }
         if (_isSuggestionsOpen && _suggestions.Count > 0)
         {
             var item = _suggestions[ActiveSuggestion];
-            AutomationProperties.SetItemStatus(_box, string.IsNullOrEmpty(item.Meta) ? item.Name : $"{item.Name}, {item.Meta}");
+            AutomationProperties.SetItemStatus(_editor, string.IsNullOrEmpty(item.Meta) ? item.Name : $"{item.Name}, {item.Meta}");
         }
         else
         {
-            _box.ClearValue(AutomationProperties.ItemStatusProperty);
+            _editor.ClearValue(AutomationProperties.ItemStatusProperty);
         }
     }
 
     private void ApplyPopup(bool open)
     {
-        var wasOpen = _isSuggestionsOpen;
         if (!open || _trigger is not { } trigger)
         {
             if (_popup is { IsOpen: true } popup)
@@ -1090,10 +880,10 @@ public class MentionInput : TemplatedControl
             IsSuggestionsOpen = true;
         }
         PseudoClasses.Set(SuggestionsOpenPseudoClass, _isSuggestionsOpen);
-        if (wasOpen != _isSuggestionsOpen && _box is not null &&
-            ControlAutomationPeer.FromElement(_box) is MentionInputEditorAutomationPeer peer)
+        if (_editor is not null)
         {
-            peer.RaiseExpandChanged(_isSuggestionsOpen);
+            // The editor's TextBox reports it as its expanded state.
+            _editor.SuggestionsExpanded = _isSuggestionsOpen;
         }
     }
 
@@ -1131,14 +921,13 @@ public class MentionInput : TemplatedControl
     /// </summary>
     private void UpdatePopupPlacement()
     {
-        if (_popup is null || _surface is null || _trigger is not { } trigger || _box?.Presenter is not { } presenter)
+        if (_popup is null || _surface is null || _trigger is not { } trigger || _editor?.Box?.Presenter is null)
         {
             return;
         }
-        var layout = presenter.TextLayout;
-        var charRect = layout.HitTestTextPosition(Math.Clamp(trigger.Start, 0, (presenter.Text ?? string.Empty).Length));
-        var origin = presenter.TranslatePoint(charRect.Position, this) ?? default;
-        var line = charRect.Height > 0 ? charRect.Height : _box.LineHeight;
+        var charRect = _editor.CharacterRect(trigger.Start, this);
+        var origin = charRect.Position;
+        var line = charRect.Height;
         var fieldWidth = Bounds.Width;
         var panelWidth = Math.Min(PanelWidth, fieldWidth);
         _surface.Width = panelWidth;

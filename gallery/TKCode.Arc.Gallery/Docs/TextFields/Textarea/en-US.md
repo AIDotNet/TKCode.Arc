@@ -39,7 +39,7 @@ Enter adds a line. The field fills its column and is at least 110 px tall.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Textarea Label="Bio"
                   Placeholder="A sentence or two about you"
                   Description="160 characters left"

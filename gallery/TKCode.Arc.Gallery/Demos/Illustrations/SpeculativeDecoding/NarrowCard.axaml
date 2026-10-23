@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeculativeDecodingNarrowCardDemo">
+    <!-- Below 560 px the lane names become a legend and the line names sit above their text. -->
+    <arc:SpeculativeDecoding Width="380" HorizontalAlignment="Left" />
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 可調整大小的面板
 summary: 拖曳窗格之間的分隔線，在各窗格之間調配空間。
-source-hash: d4be2dc79fa5
+source-hash: 5582f18f23b0
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: d4be2dc79fa5
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ResizablePanels Label="郵件版面配置" Height="320">
         <arc:ResizablePanel Id="folders"
                             Label="資料夾"

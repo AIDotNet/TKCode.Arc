@@ -116,6 +116,11 @@
         <source>Cleared {0} cells</source>
       </segment>
     </unit>
+    <unit id="CloseFind">
+      <segment>
+        <source>Close find</source>
+      </segment>
+    </unit>
     <unit id="Collapse">
       <segment>
         <source>Collapse</source>
@@ -421,6 +426,41 @@
         <source>Filters cleared</source>
       </segment>
     </unit>
+    <unit id="FindCount">
+      <segment>
+        <source>{0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="FindMatchCase">
+      <segment>
+        <source>Match case</source>
+      </segment>
+    </unit>
+    <unit id="FindNext">
+      <segment>
+        <source>Next match</source>
+      </segment>
+    </unit>
+    <unit id="FindNoMatches">
+      <segment>
+        <source>No matches</source>
+      </segment>
+    </unit>
+    <unit id="FindPlaceholder">
+      <segment>
+        <source>Find</source>
+      </segment>
+    </unit>
+    <unit id="FindPrevious">
+      <segment>
+        <source>Previous match</source>
+      </segment>
+    </unit>
+    <unit id="FindWholeCell">
+      <segment>
+        <source>Match entire cell</source>
+      </segment>
+    </unit>
     <unit id="FitColumnWidth">
       <segment>
         <source>Fit column width</source>
@@ -531,6 +571,11 @@
         <source>Nothing to redo</source>
       </segment>
     </unit>
+    <unit id="NothingToReplace">
+      <segment>
+        <source>Nothing to replace</source>
+      </segment>
+    </unit>
     <unit id="NothingToUndo">
       <segment>
         <source>Nothing to undo</source>
@@ -594,6 +639,31 @@
     <unit id="Redone">
       <segment>
         <source>Redone</source>
+      </segment>
+    </unit>
+    <unit id="ReplaceAll">
+      <segment>
+        <source>Replace all</source>
+      </segment>
+    </unit>
+    <unit id="ReplaceOne">
+      <segment>
+        <source>Replace</source>
+      </segment>
+    </unit>
+    <unit id="ReplacePlaceholder">
+      <segment>
+        <source>Replace with</source>
+      </segment>
+    </unit>
+    <unit id="ReplacedCellsOne">
+      <segment>
+        <source>Replaced in {0} cell</source>
+      </segment>
+    </unit>
+    <unit id="ReplacedCellsOther">
+      <segment>
+        <source>Replaced in {0} cells</source>
       </segment>
     </unit>
     <unit id="ResizeHint">
@@ -809,6 +879,11 @@
     <unit id="StoppedGroupingBy">
       <segment>
         <source>Stopped grouping by {0}</source>
+      </segment>
+    </unit>
+    <unit id="ToggleReplace">
+      <segment>
+        <source>Show replace</source>
       </segment>
     </unit>
     <unit id="TotalCellLabel">

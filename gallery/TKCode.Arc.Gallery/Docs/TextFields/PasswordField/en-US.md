@@ -42,7 +42,7 @@ The eye toggle inside the field shows or hides the text. Its name is read by ass
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PasswordField Label="Password"
                        Placeholder="Your password"
                        Description="Use the reveal toggle to check what you typed."

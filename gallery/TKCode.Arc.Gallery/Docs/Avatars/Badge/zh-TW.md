@@ -1,7 +1,7 @@
 ---
 title: 徽章
 summary: 用於狀態、類別或中繼資料的小型標籤。
-source-hash: 3af91b4ba63d
+source-hash: 1c6cc3318c3c
 ---
 
 <Demo name="Tones" />
@@ -28,7 +28,7 @@ source-hash: 3af91b4ba63d
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Badge Content="草稿" />
 </UserControl>
 ```

@@ -1,7 +1,7 @@
 ---
 title: 密码强度
 summary: 在输入新密码时显示其强度。
-source-hash: 1f7f90a1ea7c
+source-hash: 03a81b19e445
 ---
 
 <Demo name="Create" />
@@ -30,7 +30,7 @@ source-hash: 1f7f90a1ea7c
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PasswordStrength Label="新密码"
                           Placeholder="请设置密码"
                           Width="400"

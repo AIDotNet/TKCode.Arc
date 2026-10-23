@@ -117,7 +117,19 @@ public enum ArcSpring
     Responsive,
 
     /// <summary>stiffness 340, damping 34.</summary>
-    Gentle
+    Gentle,
+
+    /// <summary>
+    /// visualDuration 0.25, bounce 0: labels and pills whose width follows their text, selection backgrounds that
+    /// glide across filters and tabs (fitted to Arc's AI blocks, where these springs settle in about 0.4s).
+    /// </summary>
+    Quick,
+
+    /// <summary>
+    /// visualDuration 0.33, bounce 0: disclosure heights, docked panels and sheets, rows that reflow or reorder
+    /// (fitted to Arc's AI blocks; between <see cref="Quick"/> and <see cref="Smooth"/>).
+    /// </summary>
+    Settle
 }
 
 /// <summary>Arc motion presets (values from Arc's motion-tokens.ts).</summary>
@@ -128,6 +140,8 @@ public static class ArcMotionPresets
     public static readonly SpringSpec Morph = SpringSpec.FromVisual(0.42, 0.16);
     public static readonly SpringSpec Responsive = SpringSpec.FromPhysical(520, 38);
     public static readonly SpringSpec Gentle = SpringSpec.FromPhysical(340, 34);
+    public static readonly SpringSpec Quick = SpringSpec.FromVisual(0.25, 0);
+    public static readonly SpringSpec Settle = SpringSpec.FromVisual(0.33, 0);
 
     public static readonly TimeSpan Instant = TimeSpan.FromMilliseconds(120);
     public static readonly TimeSpan Fast = TimeSpan.FromMilliseconds(160);
@@ -150,6 +164,8 @@ public static class ArcMotionPresets
         ArcSpring.Morph => Morph,
         ArcSpring.Responsive => Responsive,
         ArcSpring.Gentle => Gentle,
+        ArcSpring.Quick => Quick,
+        ArcSpring.Settle => Settle,
         _ => Smooth
     };
 }

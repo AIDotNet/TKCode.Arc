@@ -1,7 +1,7 @@
 ---
 title: 操作按钮
 summary: 用于高频工具栏操作的紧凑按钮。
-source-hash: c5a5043a2562
+source-hash: 8d860fb7127a
 ---
 
 <Demo name="Default" />
@@ -28,7 +28,7 @@ source-hash: c5a5043a2562
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ActionButton Label="保存" PendingLabel="保存中" SuccessLabel="已保存" />
 </UserControl>
 ```

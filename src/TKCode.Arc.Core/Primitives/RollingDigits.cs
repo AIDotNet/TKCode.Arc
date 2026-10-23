@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc.Primitives;
 
@@ -14,7 +15,13 @@ public enum RollingDigitsFalloff
     Linear,
 
     /// <summary>Arc's number-field wheel: stays solid longer, then fades (1 − 1.1·d^1.5).</summary>
-    Eased
+    Eased,
+
+    /// <summary>
+    /// No fade: glyphs stay solid and are only clipped to the line box, like a CSS digit strip with
+    /// <c>overflow: hidden</c> (Arc's Showpiece panel counters).
+    /// </summary>
+    None
 }
 
 /// <summary>
@@ -114,8 +121,11 @@ public class RollingDigits : Control
     }
 
     private readonly List<Column> _columns = new();
-    private readonly FormattedText?[] _digitGlyphs = new FormattedText?[10];
-    private readonly Dictionary<string, FormattedText> _textGlyphs = new(StringComparer.Ordinal);
+    // Glyphs are laid-out TextLayouts whose glyph runs are drawn in Foreground: Avalonia 12's FormattedText.Draw breaks
+    // and shapes its text again on every draw (1–2 KB of garbage per glyph, up to three glyphs per wheel per frame while
+    // a number rolls), a TextLayout keeps its lines.
+    private readonly TextLayout?[] _digitGlyphs = new TextLayout?[10];
+    private readonly Dictionary<string, TextLayout> _textGlyphs = new(StringComparer.Ordinal);
     private double _cellWidth;
     private double _lineHeight;
     private double _previousValue = double.NaN;
@@ -144,8 +154,9 @@ public class RollingDigits : Control
             DisplayText = $"{Prefix}{_formatted}{Suffix}";
         }
         else if (change.Property == FontFamilyProperty || change.Property == FontSizeProperty ||
-                 change.Property == FontWeightProperty || change.Property == ForegroundProperty)
+                 change.Property == FontWeightProperty)
         {
+            // Glyphs are drawn in the current Foreground, so only font changes lay them out again.
             Array.Clear(_digitGlyphs);
             _textGlyphs.Clear();
         }
@@ -218,8 +229,10 @@ public class RollingDigits : Control
             }
         }
 
-        var animate = IsLoaded && !IsInstant && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
-        var reduced = ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
+        var level = ArcMotion.GetEffectiveLevel(this);
+        var animate = IsLoaded && !IsInstant && level == ArcMotionLevel.Full;
+        var reduced = level != ArcMotionLevel.Full;
+        var structureChanged = false;
         var existing = _columns.Where(c => !c.Leaving).ToDictionary(c => c.Key);
         var next = new List<Column>(wanted.Count);
         foreach (var w in wanted)
@@ -236,6 +249,7 @@ public class RollingDigits : Control
             }
             else
             {
+                structureChanged = true;
                 w.Revealed = !IsArmed;
                 w.Target = IsArmed ? 0 : w.Digit;
                 w.Position = CreateValue(w.Target, invalidateMeasure: false);
@@ -250,6 +264,7 @@ public class RollingDigits : Control
         // Columns that disappeared shrink away, then are removed.
         foreach (var gone in existing.Values)
         {
+            structureChanged = true;
             gone.Leaving = true;
             var index = _columns.IndexOf(gone);
             next.Insert(Math.Min(index, next.Count), gone);
@@ -270,7 +285,11 @@ public class RollingDigits : Control
         }
         _columns.Clear();
         _columns.AddRange(next);
-        InvalidateMeasure();
+        // Digits are tabular: turning wheels never change the width, so only a change of columns needs a layout pass.
+        if (structureChanged)
+        {
+            InvalidateMeasure();
+        }
         InvalidateVisual();
     }
 
@@ -322,6 +341,21 @@ public class RollingDigits : Control
         }
     }
 
+    /// <summary>Opacity of a glyph <paramref name="distance"/> wheel steps (0–1) from the reading line.</summary>
+    internal static double GlyphOpacity(RollingDigitsFalloff falloff, double distance) => falloff switch
+    {
+        RollingDigitsFalloff.Eased => Math.Max(0, 1 - Math.Pow(distance, 1.5) * 1.1),
+        RollingDigitsFalloff.None => 1,
+        _ => 1 - distance
+    };
+
+    /// <summary>
+    /// How many wheel steps from the reading line a glyph can still be seen: one step when glyphs fade out; without
+    /// fade, as far as the line box shows (more than one step when the pitch is tighter than the line).
+    /// </summary>
+    internal static double GlyphReach(RollingDigitsFalloff falloff, double lineHeight, double pitch)
+        => falloff == RollingDigitsFalloff.None && pitch > 0 ? Math.Max(1, lineHeight / pitch) : 1;
+
     private MotionValue<double> CreateValue(double initial, bool invalidateMeasure)
     {
         var value = new MotionValue<double>(this, initial, MotionVectors.Double);
@@ -342,27 +376,56 @@ public class RollingDigits : Control
         {
             return;
         }
-        var brush = Foreground ?? Brushes.Black;
         var typeface = new Typeface(FontFamily, FontStyle.Normal, FontWeight);
         for (var d = 0; d < 10; d++)
         {
-            _digitGlyphs[d] = new FormattedText(d.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight, typeface, FontSize, brush);
+            _digitGlyphs[d] = new TextLayout(d.ToString(CultureInfo.InvariantCulture), typeface, FontSize, Brushes.Black);
         }
         // Tabular cells: every digit occupies the width of "0".
         _cellWidth = _digitGlyphs.Max(g => g!.WidthIncludingTrailingWhitespace);
         _lineHeight = _digitGlyphs[0]!.Height;
     }
 
-    private FormattedText TextGlyph(string text)
+    private TextLayout TextGlyph(string text)
     {
         if (!_textGlyphs.TryGetValue(text, out var glyph))
         {
-            glyph = new FormattedText(text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Foreground ?? Brushes.Black);
+            glyph = new TextLayout(text, new Typeface(FontFamily, FontStyle.Normal, FontWeight), FontSize, Brushes.Black);
             _textGlyphs[text] = glyph;
         }
         return glyph;
+    }
+
+    /// <summary>
+    /// Draws a glyph's runs in <paramref name="brush"/> with its top left at <paramref name="origin"/>: the calls
+    /// <see cref="TextLayout.Draw"/> makes, with the brush given here instead of the one the glyph was laid out with.
+    /// </summary>
+    private static void DrawGlyph(DrawingContext context, TextLayout glyph, IBrush brush, Point origin)
+    {
+        var y = origin.Y;
+        var lines = glyph.TextLines;
+        for (var l = 0; l < lines.Count; l++)
+        {
+            var line = lines[l];
+            var x = origin.X + line.Start;
+            var runs = line.TextRuns;
+            for (var r = 0; r < runs.Count; r++)
+            {
+                if (runs[r] is not DrawableTextRun drawable)
+                {
+                    continue;
+                }
+                if (drawable is ShapedTextRun shaped && shaped.GlyphRun.GlyphInfos.Count > 0)
+                {
+                    using (context.PushTransform(Matrix.CreateTranslation(x, y + (line.Baseline - shaped.Baseline))))
+                    {
+                        context.DrawGlyphRun(brush, shaped.GlyphRun);
+                    }
+                }
+                x += drawable.Size.Width;
+            }
+            y += line.Height;
+        }
     }
 
     private double ColumnWidth(Column column)
@@ -393,16 +456,18 @@ public class RollingDigits : Control
     public override void Render(DrawingContext context)
     {
         EnsureGlyphs();
+        var brush = Foreground ?? Brushes.Black;
         var x = 0.0;
         if (!string.IsNullOrEmpty(Prefix))
         {
             var prefix = TextGlyph(Prefix);
-            context.DrawText(prefix, new Point(x, 0));
+            DrawGlyph(context, prefix, brush, new Point(x, 0));
             x += prefix.WidthIncludingTrailingWhitespace;
         }
         var feather = FontSize * 0.16;
         var pitch = FontSize * GlyphPitch;
-        var eased = Falloff == RollingDigitsFalloff.Eased;
+        var falloff = Falloff;
+        var reach = GlyphReach(falloff, _lineHeight, pitch);
         foreach (var column in _columns)
         {
             var width = ColumnWidth(column);
@@ -411,7 +476,11 @@ public class RollingDigits : Control
             {
                 continue;
             }
-            using (context.PushClip(new Rect(x, -feather, width, _lineHeight + 2 * feather)))
+            // Fading wheels feather past the line box; a wheel without fade is cut at the line box (overflow: hidden).
+            var clip = falloff == RollingDigitsFalloff.None
+                ? new Rect(x, 0, width, _lineHeight)
+                : new Rect(x, -feather, width, _lineHeight + 2 * feather);
+            using (context.PushClip(clip))
             using (context.PushOpacity(Math.Clamp(presence, 0, 1)))
             {
                 if (column.IsDigit)
@@ -422,29 +491,29 @@ public class RollingDigits : Control
                     {
                         var offset = ((((d - position) % 10) + 15) % 10) - 5;
                         var abs = Math.Abs(offset);
-                        if (abs >= 1)
+                        if (abs >= reach)
                         {
                             continue;
                         }
                         var glyph = _digitGlyphs[d]!;
                         var gx = cellX + (_cellWidth - glyph.WidthIncludingTrailingWhitespace) / 2;
-                        var opacity = eased ? Math.Max(0, 1 - Math.Pow(abs, 1.5) * 1.1) : 1 - abs;
+                        var opacity = GlyphOpacity(falloff, abs);
                         using (context.PushOpacity(opacity))
                         {
-                            context.DrawText(glyph, new Point(gx, offset * pitch));
+                            DrawGlyph(context, glyph, brush, new Point(gx, offset * pitch));
                         }
                     }
                 }
                 else
                 {
-                    context.DrawText(TextGlyph(column.Text), new Point(x, 0));
+                    DrawGlyph(context, TextGlyph(column.Text), brush, new Point(x, 0));
                 }
             }
             x += width;
         }
         if (!string.IsNullOrEmpty(Suffix))
         {
-            context.DrawText(TextGlyph(Suffix), new Point(x, 0));
+            DrawGlyph(context, TextGlyph(Suffix), brush, new Point(x, 0));
         }
     }
 }

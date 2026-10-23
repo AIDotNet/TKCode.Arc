@@ -43,7 +43,7 @@ person must tune, not a choice from a short list.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ColorPicker Label="Accent"
                      Color="#2F6BFF"
                      Format="Hex" />

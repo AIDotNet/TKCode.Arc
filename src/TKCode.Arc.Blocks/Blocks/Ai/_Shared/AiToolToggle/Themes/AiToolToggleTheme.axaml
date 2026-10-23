@@ -1,0 +1,183 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A tool chip: 36px high, padding 0 12 0 10, a 16px icon (stroke 1.75) 6px before the label (14 / 19.6, tracked
+        -0.01em), 1px Border, pill radius, TextSecondary.
+        Arc's translucent fills are token colors on layers with an opacity, so they follow the theme and the accent:
+        PART_Wash is the hover / press tint (Foreground at 6% / 10%; Accent at 6% / 10% over AccentSubtle when on, Arc's
+        "about 17%"), PART_AccentEdge is the on border (Accent at 32%) while the plain border fades out.
+        Compact: icon only, 36 x 36, border and tint kept.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiToolToggle}" TargetType="arc:AiToolToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="MinWidth" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="10,0,12,0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiToolToggle">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Wash"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Edge"
+                            IsHitTestVisible="False"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_AccentEdge"
+                            IsHitTestVisible="False"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                Spacing="6"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="16"
+                                      StrokeThickness="1.75"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Layer colors live in styles (not on the template elements) so the states below can change them. -->
+        <Style Selector="^ /template/ Border#PART_Wash">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_AccentEdge">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <!-- Hover (mouse and pen): Foreground 6%, text Foreground, border unchanged; press 10%. -->
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hover /template/ Border#PART_Wash">
+            <Setter Property="Opacity" Value="0.06" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Wash">
+            <Setter Property="Opacity" Value="0.1" />
+        </Style>
+
+        <!-- On: AccentSubtle, the edge in Accent at 32%, AccentStrong text and icon; the tint turns to Accent. -->
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_AccentEdge">
+            <Setter Property="Opacity" Value="0.32" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Wash">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+
+        <!-- Compact: icon only in a 36px circle; the label switches at once (no width spring on a breakpoint). -->
+        <Style Selector="^:compact">
+            <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Label">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Keyboard focus only, 2px outside the border. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <!-- Background 120ms, text, icon and border 160ms, all on the standard curve; reduced motion: 120ms. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Wash">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_AccentEdge">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Wash">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_AccentEdge">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

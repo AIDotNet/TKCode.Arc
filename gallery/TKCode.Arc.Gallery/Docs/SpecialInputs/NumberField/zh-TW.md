@@ -1,7 +1,7 @@
 ---
 title: 數字輸入框
 summary: 透過清楚的增減控制項輸入有範圍限制的數字。
-source-hash: 0120ea6d8624
+source-hash: 16dfeb90daca
 ---
 
 <Demo name="Default" />
@@ -28,7 +28,7 @@ source-hash: 0120ea6d8624
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:NumberField Label="座位數"
                      Minimum="1"
                      Maximum="10"
@@ -190,7 +190,7 @@ public partial class SeatPlanViewModel : ObservableObject
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <StackPanel Width="620" Spacing="20">
         <TextBlock Text="Team plan: Acme Analytics"
                    FontSize="14"

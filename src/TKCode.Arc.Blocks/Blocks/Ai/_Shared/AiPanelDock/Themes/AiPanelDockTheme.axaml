@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The dock: the page, the reopen pill over its top right, the scrim (SurfaceMuted; its opacity is set in code, up to 72%)
+        and the panel host, placed by AiPanelDockLayout and clipped to the dock. Docked, the host is Surface with a 1px Border
+        line on its left. As a sheet it is SurfaceRaised (a raised surface for the controls in it) with a 1px Border on the top
+        and sides, top corners 20 and the floating shadow; its content is clipped to the corners.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelDock}" TargetType="arc:AiPanelDock">
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelDock">
+                <arc:AiPanelDockLayout Name="PART_Layout">
+                    <ContentPresenter Name="PART_Page"
+                                      Content="{TemplateBinding Page}"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalContentAlignment="Stretch" />
+                    <arc:AiPanelReopenButton Name="PART_Reopen"
+                                             Text="{TemplateBinding ReopenText}"
+                                             Mark="{TemplateBinding AssistantMark}" />
+                    <Border Name="PART_Scrim"
+                            Opacity="0"
+                            IsVisible="False"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                    <Border Name="PART_PanelHost"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1,0,0,0">
+                        <Border Name="PART_PanelClip" ClipToBounds="True">
+                            <ContentPresenter Name="PART_Panel"
+                                              Content="{TemplateBinding Panel}"
+                                              HorizontalContentAlignment="Stretch"
+                                              VerticalContentAlignment="Stretch" />
+                        </Border>
+                    </Border>
+                </arc:AiPanelDockLayout>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:sheet /template/ Border#PART_PanelHost">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderThickness" Value="1,1,1,0" />
+            <Setter Property="CornerRadius" Value="20,20,0,0" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+            <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        </Style>
+        <Style Selector="^:sheet /template/ Border#PART_PanelClip">
+            <Setter Property="CornerRadius" Value="19,19,0,0" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The reopen pill: 32 high, padding 0 12 0 10, a pill with a 1px Border on Surface; the 14px mark (Accent) and the text
+        (12 / 16.8, weight 500, Foreground) 7px apart. Hover (mouse and pen): SurfaceMuted in 160ms (standard). Keyboard focus:
+        the 2px ring, 2px out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelReopenButton}" TargetType="arc:AiPanelReopenButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="10,0,12,0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelReopenButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="7" VerticalAlignment="Center">
+                            <arc:ModelMark Name="PART_Mark"
+                                           Mark="{TemplateBinding ShownMark}"
+                                           Size="14"
+                                           MarkColor="{arc:ArcDesignTokenResource Accent}" />
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding Text}"
+                                       LineHeight="16.8"
+                                       LetterSpacing="-0.14"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

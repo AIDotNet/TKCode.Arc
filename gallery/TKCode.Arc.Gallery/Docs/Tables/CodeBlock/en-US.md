@@ -39,7 +39,7 @@ and know which file it belongs to, without giving them an editor.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:CodeBlock FileName="greeting.tsx"
                    Language="tsx"
                    Code="{Binding Source}" />

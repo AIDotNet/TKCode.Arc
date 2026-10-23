@@ -40,7 +40,7 @@ they open a table or a chart.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MetricCard Label="Uptime"
                     Value="99.98"
                     Decimals="2"
@@ -136,7 +136,7 @@ up change and danger for a down change.
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic">
     <arc:MetricCard Label="Orders" Value="1204" Context="vs last week" Change="+12%" Width="280">
         <arc:MetricCard.Sparkline>

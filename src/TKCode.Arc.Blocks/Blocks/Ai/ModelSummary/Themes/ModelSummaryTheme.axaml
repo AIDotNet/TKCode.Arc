@@ -1,0 +1,133 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The summary: description, facts table, optional note and the fixed-height change line, 12px apart. -->
+    <ControlTheme x:Key="{x:Type arc:ModelSummary}" TargetType="arc:ModelSummary">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="MaxWidth" Value="{arc:ModelSummaryTokenResource SummaryMaxWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:ModelSummaryTokenResource CompactWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelSummary">
+                <StackPanel Spacing="{arc:ModelSummaryTokenResource RowGap}">
+                    <arc:ArcContentSwap Name="PART_Description"
+                                        Mode="Crossfade"
+                                        ExitDuration="{arc:ModelSummaryTokenResource DescriptionExitDuration}"
+                                        EnterDuration="{arc:ModelSummaryTokenResource SwapEnterDuration}"
+                                        MinHeight="{arc:ModelSummaryTokenResource DescriptionMinHeight}"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Top" />
+                    <Border Name="PART_FactsFrame"
+                            Margin="{arc:ModelSummaryTokenResource FactsMargin}"
+                            BorderThickness="1"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
+                        <arc:ModelSummaryFacts Name="PART_Facts">
+                            <arc:ModelSummaryFact Name="PART_Context" />
+                            <arc:ModelSummaryFact Name="PART_Input" />
+                            <arc:ModelSummaryFact Name="PART_Output" />
+                            <arc:ModelSummaryFact Name="PART_Effort" />
+                        </arc:ModelSummaryFacts>
+                    </Border>
+                    <TextBlock Name="PART_Note"
+                               Text="{TemplateBinding Note}"
+                               IsVisible="{TemplateBinding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="{arc:ModelSummaryTokenResource SmallLineHeight}"
+                               LetterSpacing="{arc:ModelSummaryTokenResource SmallLetterSpacing}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" />
+                    <arc:ArcContentSwap Name="PART_Notice"
+                                        Mode="Crossfade"
+                                        ExitDuration="{arc:ModelSummaryTokenResource NoticeExitDuration}"
+                                        EnterDuration="{arc:ModelSummaryTokenResource SwapEnterDuration}"
+                                        Height="{arc:ModelSummaryTokenResource NoticeHeight}"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The description: 14 / 21, centered, at most 380 wide, lines balanced in code. -->
+    <ControlTheme x:Key="{x:Type arc:ModelSummaryText}" TargetType="arc:ModelSummaryText">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="MaxWidth" Value="{arc:ModelSummaryTokenResource DescriptionMaxWidth}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LineHeight" Value="{arc:ModelSummaryTokenResource DescriptionLineHeight}" />
+        <Setter Property="LetterSpacing" Value="{arc:ModelSummaryTokenResource BodyLetterSpacing}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </ControlTheme>
+
+    <!-- One fact: label 12 / 15.6 muted over the value 14 / 18.2 medium with tabular figures; dividers set by the table. -->
+    <ControlTheme x:Key="{x:Type arc:ModelSummaryFact}" TargetType="arc:ModelSummaryFact">
+        <Setter Property="Padding" Value="{arc:ModelSummaryTokenResource FactPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelSummaryFact">
+                <Border Name="PART_Frame"
+                        BorderThickness="{TemplateBinding Dividers}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:ModelSummaryTokenResource FactGap}" VerticalAlignment="Top">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:ModelSummaryTokenResource FactLabelLineHeight}"
+                                   LetterSpacing="{arc:ModelSummaryTokenResource SmallLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextAlignment="Center"
+                                   TextTrimming="CharacterEllipsis" />
+                        <arc:ArcContentSwap Name="PART_Value"
+                                            Content="{TemplateBinding Value}"
+                                            Mode="Crossfade"
+                                            ExitDuration="{arc:ModelSummaryTokenResource FactExitDuration}"
+                                            EnterDuration="{arc:ModelSummaryTokenResource SwapEnterDuration}"
+                                            HorizontalContentAlignment="Center"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                            TextElement.FontFeatures="tnum"
+                                            TextElement.LetterSpacing="{arc:ModelSummaryTokenResource BodyLetterSpacing}"
+                                            TextBlock.LineHeight="{arc:ModelSummaryTokenResource FactValueLineHeight}"
+                                            TextBlock.TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The change line: a 14px green check (stroke 2), 6px, then 12 / 16.8 secondary text; trimmed, never wrapped. -->
+    <ControlTheme x:Key="{x:Type arc:ModelSummaryNoticeLine}" TargetType="arc:ModelSummaryNoticeLine">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelSummaryNoticeLine">
+                <DockPanel>
+                    <arc:ArcGlyph Name="PART_Check"
+                                  DockPanel.Dock="Left"
+                                  Data="{x:Static arc:ArcIcons.Check}"
+                                  Size="{arc:ModelSummaryTokenResource NoticeGlyphSize}"
+                                  StrokeThickness="{arc:ModelSummaryTokenResource NoticeGlyphStroke}"
+                                  Foreground="{arc:ArcDesignTokenResource Success}"
+                                  Margin="{arc:ModelSummaryTokenResource NoticeGlyphMargin}"
+                                  VerticalAlignment="Center" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="{arc:ModelSummaryTokenResource SmallLineHeight}"
+                               LetterSpacing="{arc:ModelSummaryTokenResource SmallLetterSpacing}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

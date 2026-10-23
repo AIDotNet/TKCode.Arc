@@ -1,7 +1,7 @@
 ---
 title: 拖动数值
 summary: Figma 风格的数字字段：拖动标签即可调整，也可以键入数值、单位与算术表达式。
-source-hash: d7a923eed603
+source-hash: d1376e8d8e40
 ---
 
 <Demo name="Inspector" />
@@ -28,7 +28,7 @@ source-hash: d7a923eed603
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ScrubInput Label="X" Value="120" Unit="px" />
 </UserControl>
 ```

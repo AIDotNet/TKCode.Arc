@@ -1,0 +1,468 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Semantic zoom (Arc Semantic zoom, design reference): a framed surface with a heading, the self-drawn map with its
+        overlays (breadcrumbs and tour button on top, hover card, minimap, hint and zoom bar at the bottom) and the
+        details panel (beside the map above 900 px inside, under it otherwise).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SemanticZoom}" TargetType="arc:SemanticZoom">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SemanticZoom">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,Auto">
+                        <Border Name="PART_HeaderFrame"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="0,0,0,1">
+                            <StackPanel Margin="{arc:SemanticZoomTokenResource HeaderInset}"
+                                        Spacing="{arc:SemanticZoomTokenResource HeaderGap}">
+                                <ContentPresenter Name="PART_Title"
+                                                  Content="{TemplateBinding Header}"
+                                                  FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                  LetterSpacing="{arc:SemanticZoomTokenResource TitleTracking}"
+                                                  LineHeight="{arc:SemanticZoomTokenResource TitleLeading}"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:SemanticZoomTokenResource MapTextSize}"
+                                           LineHeight="18.2"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                        <arc:SemanticZoomBodyPanel Name="PART_Body" Grid.Row="1">
+                            <Panel Name="PART_StageHost" ClipToBounds="True">
+                                <arc:SemanticZoomStage Name="PART_Stage" Background="{arc:ArcDesignTokenResource Surface}" />
+                                <Grid Name="PART_TopBar"
+                                      ColumnDefinitions="*,Auto"
+                                      ColumnSpacing="{arc:SemanticZoomTokenResource TopBarGap}"
+                                      Margin="{arc:SemanticZoomTokenResource OverlayMargin}"
+                                      VerticalAlignment="Top">
+                                    <arc:SemanticZoomCrumbs Name="PART_Crumbs"
+                                                            HorizontalAlignment="Left"
+                                                            IsVisible="{TemplateBinding IsBreadcrumbVisible}" />
+                                    <arc:SemanticZoomTourButton Name="PART_Tour"
+                                                                Grid.Column="1"
+                                                                HorizontalAlignment="Right"
+                                                                IsVisible="{TemplateBinding IsTourButtonVisible}" />
+                                </Grid>
+                                <Panel Name="PART_CardLayer" IsHitTestVisible="False">
+                                    <arc:ShowpieceHoverCard Name="PART_Card"
+                                                            Width="{arc:SemanticZoomTokenResource CardWidth}"
+                                                            Padding="{arc:SemanticZoomTokenResource CardInset}">
+                                        <arc:SemanticZoomCard Name="PART_CardContent" />
+                                    </arc:ShowpieceHoverCard>
+                                </Panel>
+                                <Border Name="PART_MinimapFrame"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom"
+                                        Margin="{arc:SemanticZoomTokenResource OverlayMargin}"
+                                        Background="{arc:ArcDesignTokenResource Surface}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BorderThickness="1"
+                                        CornerRadius="{arc:SemanticZoomTokenResource OverlayRadius}"
+                                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                        IsVisible="{TemplateBinding IsMinimapVisible}">
+                                    <arc:SemanticZoomMinimap Name="PART_Minimap" />
+                                </Border>
+                                <TextBlock Name="PART_Hint"
+                                           IsVisible="{TemplateBinding IsHintVisible}"
+                                           IsHitTestVisible="False"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Bottom"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:ShowpieceZoomControls Name="PART_Zoom"
+                                                           ShowReadout="True"
+                                                           ZoomStep="1.6"
+                                                           IsVisible="{TemplateBinding IsZoomControlsVisible}"
+                                                           HorizontalAlignment="Right"
+                                                           VerticalAlignment="Bottom"
+                                                           Margin="{arc:SemanticZoomTokenResource OverlayMargin}" />
+                                <arc:ShowpieceLiveRegion Name="PART_Live" />
+                                <arc:SemanticZoomHiddenTable Name="PART_Table" />
+                            </Panel>
+                            <Border Name="PART_PanelFrame"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="0,1,0,0">
+                                <arc:SemanticZoomPanel Name="PART_Panel" />
+                            </Border>
+                        </arc:SemanticZoomBodyPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:SemanticZoomTokenResource FrameRadius}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:SemanticZoomTokenResource MapTextSize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <!-- The panel's 1px divider: on its left beside the map, on top under it. -->
+        <Style Selector="^:side-panel /template/ Border#PART_PanelFrame">
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+        </Style>
+
+        <!-- Minimap: hidden at fit, rises in elsewhere. -->
+        <Style Selector="^ /template/ Border#PART_MinimapFrame">
+            <Setter Property="Width" Value="{arc:SemanticZoomTokenResource MinimapWidth}" />
+            <Setter Property="Height" Value="{arc:SemanticZoomTokenResource MinimapHeight}" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_MinimapFrame">
+            <Setter Property="Width" Value="{arc:SemanticZoomTokenResource CompactMinimapWidth}" />
+            <Setter Property="Height" Value="{arc:SemanticZoomTokenResource CompactMinimapHeight}" />
+        </Style>
+        <Style Selector="^:fit /template/ Border#PART_MinimapFrame">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="RenderTransform" Value="translateY(6px)" />
+        </Style>
+
+        <!-- Hint: bottom left; above the zoom bar in compact containers; gone after the first interaction. -->
+        <Style Selector="^ /template/ TextBlock#PART_Hint">
+            <Setter Property="Margin" Value="{arc:SemanticZoomTokenResource HintMargin}" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Hint">
+            <Setter Property="Margin" Value="{arc:SemanticZoomTokenResource CompactHintMargin}" />
+        </Style>
+        <Style Selector="^:interacted /template/ TextBlock#PART_Hint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_MinimapFrame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Hint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Breadcrumbs: a floating surface (radius 10, resting shadow, 32 high); long paths are clipped. -->
+    <ControlTheme x:Key="{x:Type arc:SemanticZoomCrumbs}" TargetType="arc:SemanticZoomCrumbs">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SemanticZoomCrumbs">
+                <Border Background="{arc:ArcDesignTokenResource Surface}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:SemanticZoomTokenResource OverlayRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                        Height="{arc:SemanticZoomTokenResource OverlayExtent}">
+                    <Panel ClipToBounds="True" Margin="{arc:SemanticZoomTokenResource CrumbTrackInset}">
+                        <StackPanel Name="PART_Items" Orientation="Horizontal" VerticalAlignment="Center" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- One crumb: TextSecondary, muted fill and Foreground on hover; the current level in Foreground 500. -->
+    <ControlTheme x:Key="{x:Type arc:SemanticZoomCrumb}" TargetType="arc:SemanticZoomCrumb">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SemanticZoomCrumb">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:SemanticZoomTokenResource CrumbRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:SemanticZoomTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:SemanticZoomTokenResource CrumbFocusRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:SemanticZoomTokenResource CrumbExtent}" />
+        <Setter Property="Padding" Value="{arc:SemanticZoomTokenResource CrumbInset}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:SemanticZoomTokenResource MapTextSize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Tour button: play glyph + start label, or pause glyph + stop label; icon only (32 × 32) in compact containers. -->
+    <ControlTheme x:Key="{x:Type arc:SemanticZoomTourButton}" TargetType="arc:SemanticZoomTourButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SemanticZoomTourButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:SemanticZoomTokenResource OverlayRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:SemanticZoomTokenResource TourGlyphGap}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+                            <Panel VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Play"
+                                              Data="{x:Static arc:ArcIcons.Play}"
+                                              Size="{arc:SemanticZoomTokenResource TourGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:ArcGlyph Name="PART_Pause"
+                                              Data="{x:Static arc:ArcIcons.Pause}"
+                                              Size="{arc:SemanticZoomTokenResource TourGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Panel>
+                            <Panel Name="PART_Labels" VerticalAlignment="Center" ClipToBounds="False">
+                                <TextBlock Name="PART_Start" Text="{TemplateBinding StartText}" />
+                                <TextBlock Name="PART_Stop" Text="{TemplateBinding StopText}" />
+                            </Panel>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:SemanticZoomTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:SemanticZoomTokenResource TourFocusRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arc:SemanticZoomTokenResource OverlayExtent}" />
+        <Setter Property="Padding" Value="{arc:SemanticZoomTokenResource TourInset}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:SemanticZoomTokenResource MapTextSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Pause">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Play">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Pause">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Start">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Stop">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-5px)" />
+        </Style>
+        <Style Selector="^:checked /template/ TextBlock#PART_Start">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(5px)" />
+        </Style>
+        <Style Selector="^:checked /template/ TextBlock#PART_Stop">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Width" Value="{arc:SemanticZoomTokenResource OverlayExtent}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ Panel#PART_Labels">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Hover card content: name, a status or description line, four label–value rows, a closing hint. -->
+    <ControlTheme x:Key="{x:Type arc:SemanticZoomCard}" TargetType="arc:SemanticZoomCard">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SemanticZoomCard">
+                <StackPanel>
+                    <TextBlock Name="PART_Title"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="{arc:SemanticZoomTokenResource MapTextSize}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="18.2"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <DockPanel Margin="0,1,0,0">
+                        <Border Name="PART_Dot"
+                                DockPanel.Dock="Left"
+                                Width="{arc:SemanticZoomTokenResource CardDot}"
+                                Height="{arc:SemanticZoomTokenResource CardDot}"
+                                CornerRadius="3"
+                                Margin="0,0,6,0"
+                                VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Subtitle"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="16.8"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </DockPanel>
+                    <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="0,1,0,0"
+                            Margin="{arc:SemanticZoomTokenResource CardRuleMargin}"
+                            Padding="0,10,0,0">
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                              ColumnDefinitions="Auto,*"
+                              RowSpacing="{arc:SemanticZoomTokenResource CardRowGap}">
+                            <TextBlock Name="PART_Label0" Classes="card-label" />
+                            <StackPanel Grid.Column="1" Classes="card-value">
+                                <arc:SemanticZoomAvatar Name="PART_Face0" Classes="card-face" />
+                                <TextBlock Name="PART_Value0" Classes="card-value" />
+                                <TextBlock Name="PART_Note0" Classes="card-note" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Label1" Grid.Row="1" Classes="card-label" />
+                            <StackPanel Grid.Row="1" Grid.Column="1" Classes="card-value">
+                                <arc:SemanticZoomAvatar Name="PART_Face1" Classes="card-face" />
+                                <TextBlock Name="PART_Value1" Classes="card-value" />
+                                <TextBlock Name="PART_Note1" Classes="card-note" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Label2" Grid.Row="2" Classes="card-label" />
+                            <StackPanel Grid.Row="2" Grid.Column="1" Classes="card-value">
+                                <arc:SemanticZoomAvatar Name="PART_Face2" Classes="card-face" />
+                                <TextBlock Name="PART_Value2" Classes="card-value" />
+                                <TextBlock Name="PART_Note2" Classes="card-note" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Label3" Grid.Row="3" Classes="card-label" />
+                            <StackPanel Grid.Row="3" Grid.Column="1" Classes="card-value">
+                                <arc:SemanticZoomAvatar Name="PART_Face3" Classes="card-face" />
+                                <TextBlock Name="PART_Value3" Classes="card-value" />
+                                <TextBlock Name="PART_Note3" Classes="card-note" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <TextBlock Name="PART_Footer"
+                               Margin="0,10,0,0"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock.card-label">
+            <Setter Property="FontSize" Value="{arc:SemanticZoomTokenResource MapTextSize}" />
+            <Setter Property="LineHeight" Value="18.2" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.card-value">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Spacing" Value="7" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.card-value">
+            <Setter Property="FontSize" Value="{arc:SemanticZoomTokenResource MapTextSize}" />
+            <Setter Property="LineHeight" Value="18.2" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="TextElement.FontFeatures" Value="tnum" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.card-note">
+            <Setter Property="FontSize" Value="{arc:SemanticZoomTokenResource MapTextSize}" />
+            <Setter Property="LineHeight" Value="18.2" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="-3,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|SemanticZoomAvatar.card-face">
+            <Setter Property="Width" Value="{arc:SemanticZoomTokenResource CardAvatarSize}" />
+            <Setter Property="Height" Value="{arc:SemanticZoomTokenResource CardAvatarSize}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

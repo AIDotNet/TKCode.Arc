@@ -1,0 +1,301 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The release gate (Arc Release readiness, design reference): framed, a card at most 560 wide with a 1px Border,
+        radius 16, Surface and no shadow; flat, no frame at the container's width. From the top: the header (title,
+        subtitle, owners), the progress (text, count, 4px bar), the checks, the footer (notify switch, buttons) and the
+        status line, which opens on Smooth with a separate 160ms fade. Framed, lines in Border color sit above the checks
+        and the footer. At 388 wide or less (:compact) the side paddings tighten from 20 to 16.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReleaseReadiness}" TargetType="arc:ReleaseReadiness">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ReleaseReadinessTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ReleaseReadinessTokenResource CardRadius}" />
+        <Setter Property="CompactWidth" Value="{arc:ReleaseReadinessTokenResource CompactWidth}" />
+        <Setter Property="GlyphSize" Value="{arc:ReleaseReadinessTokenResource GlyphSize}" />
+        <Setter Property="GlyphStroke" Value="{arc:ReleaseReadinessTokenResource GlyphStroke}" />
+        <Setter Property="GlyphGap" Value="{arc:ReleaseReadinessTokenResource GlyphGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReleaseReadiness">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel>
+                        <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Spacing="{arc:ReleaseReadinessTokenResource SubtitleGap}">
+                                <TextBlock Name="PART_Title"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ReleaseReadinessTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:ReleaseReadinessTokenResource TitleLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           LineHeight="{arc:ReleaseReadinessTokenResource CopyLineHeight}"
+                                           LetterSpacing="{arc:ReleaseReadinessTokenResource CopyLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <arc:ReleaseReadinessOwners Name="PART_Owners"
+                                                        Grid.Column="1"
+                                                        Margin="{arc:ReleaseReadinessTokenResource OwnersMargin}"
+                                                        VerticalAlignment="Center">
+                                <arc:ProjectsAvatarStack Name="PART_Avatars"
+                                                         Diameter="{arc:ReleaseReadinessTokenResource AvatarDiameter}"
+                                                         Overlap="{arc:ReleaseReadinessTokenResource AvatarOverlap}"
+                                                         Ring="{arc:ReleaseReadinessTokenResource AvatarRing}"
+                                                         AutomationProperties.AccessibilityView="Raw" />
+                            </arc:ReleaseReadinessOwners>
+                        </Grid>
+                        <StackPanel Name="PART_Progress" Spacing="{arc:ReleaseReadinessTokenResource ProgressGap}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Name="PART_Remaining"
+                                           Grid.Column="0"
+                                           LineHeight="{arc:ReleaseReadinessTokenResource CopyLineHeight}"
+                                           LetterSpacing="{arc:ReleaseReadinessTokenResource CopyLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <TextBlock Name="PART_Count"
+                                           Grid.Column="1"
+                                           Margin="{arc:ReleaseReadinessTokenResource CountMargin}"
+                                           LineHeight="{arc:ReleaseReadinessTokenResource CopyLineHeight}"
+                                           LetterSpacing="{arc:ReleaseReadinessTokenResource CopyLetterSpacing}"
+                                           FontFeatures="tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Grid>
+                            <arc:ProjectsProgressLine Name="PART_Bar"
+                                                      Height="{arc:ReleaseReadinessTokenResource BarHeight}"
+                                                      Value="{TemplateBinding BarValue}"
+                                                      Maximum="{TemplateBinding BarMaximum}"
+                                                      FillMode="Slide"
+                                                      IsDecorative="False" />
+                        </StackPanel>
+                        <Border Name="PART_List">
+                            <StackPanel Name="PART_Rows" />
+                        </Border>
+                        <Border Name="PART_FooterFrame">
+                            <arc:ReleaseReadinessFooter Name="PART_Footer"
+                                                        ColumnGap="{arc:ReleaseReadinessTokenResource FooterColumnGap}"
+                                                        RowGap="{arc:ReleaseReadinessTokenResource FooterRowGap}">
+                                <arc:Switch Name="PART_Notify" />
+                                <StackPanel Name="PART_Actions"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:ReleaseReadinessTokenResource ActionsGap}">
+                                    <arc:Button Name="PART_Reset" Variant="Ghost" Size="Small" IsVisible="False" />
+                                    <arc:Button Name="PART_Release" Variant="Primary" Size="Small" />
+                                </StackPanel>
+                            </arc:ReleaseReadinessFooter>
+                        </Border>
+                        <arc:SpringSizeDecorator Name="PART_StatusHost"
+                                                 Axis="Height"
+                                                 Spring="Smooth"
+                                                 IsExpanded="False"
+                                                 CrossClipOverflow="4">
+                            <arc:ReleaseReadinessMessage Name="PART_Status" />
+                        </arc:SpringSizeDecorator>
+                        <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                        <arc:ProjectsAnnouncer Name="PART_Alert" IsAssertive="True" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with :framed, :compact or the state are styles, not template values (those would win). -->
+        <Style Selector="^:framed /template/ Border#PART_Card">
+            <Setter Property="MaxWidth" Value="{arc:ReleaseReadinessTokenResource CardWidth}" />
+        </Style>
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_List, ^:framed /template/ Border#PART_FooterFrame">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:ReleaseReadinessTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Progress">
+            <Setter Property="Margin" Value="{arc:ReleaseReadinessTokenResource ProgressPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FooterFrame">
+            <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource FooterPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ReleaseReadinessMessage#PART_Status">
+            <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource MessagePadding}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:status /template/ arc|ReleaseReadinessMessage#PART_Status">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Grid#PART_Header">
+                <Setter Property="Margin" Value="{arc:ReleaseReadinessTokenResource CompactHeaderPadding}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Progress">
+                <Setter Property="Margin" Value="{arc:ReleaseReadinessTokenResource CompactProgressPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FooterFrame">
+                <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource CompactFooterPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ReleaseReadinessMessage#PART_Status">
+                <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource CompactMessagePadding}" />
+            </Style>
+        </Style>
+
+        <!-- The bar: a muted track, the accent fill sliding in; every required check done turns it green (240ms fade). -->
+        <Style Selector="^ /template/ arc|ProjectsProgressLine#PART_Bar">
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:ready /template/ arc|ProjectsProgressLine#PART_Bar">
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <!-- While the action runs the button keeps the focus and looks disabled (Arc: aria-disabled at 0.52). -->
+        <Style Selector="^:releasing /template/ arc|Button#PART_Release">
+            <Setter Property="Opacity" Value="{arc:ReleaseReadinessTokenResource BusyOpacity}" />
+        </Style>
+
+        <!-- The notify switch's text is 14 on a 19.6 line like the buttons; the block's own text is 13. -->
+        <Style Selector="^ /template/ arc|Switch#PART_Notify">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ReleaseReadinessMessage#PART_Status">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One check: Padding 20 / 12 (16 / 12 compact) and a BorderSubtle line above every row but the first. The checkbox's
+        44px hit area spills 13 to the left and 12 up, so its 18px box sits on the padding edge; the title (13 / 18.2,
+        medium) and the description (12 / 16.8, TextMuted) start 55 from the edge. The whole row tints on hover (muted
+        surface mixed 55% into the surface, 160ms); a done check's title fades to TextSecondary (160ms).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReleaseReadinessRow}" TargetType="arc:ReleaseReadinessRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource RowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReleaseReadinessRow">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:Checkbox Name="PART_Checkbox"
+                                  Margin="{arc:ReleaseReadinessTokenResource CheckboxMargin}"
+                                  HorizontalAlignment="Stretch">
+                        <StackPanel Margin="{arc:ReleaseReadinessTokenResource RowCopyMargin}"
+                                    Spacing="{arc:ReleaseReadinessTokenResource RowCopyGap}">
+                            <TextBlock Name="PART_Title"
+                                       FontSize="{arc:ReleaseReadinessTokenResource CopySize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ReleaseReadinessTokenResource CopyLineHeight}"
+                                       LetterSpacing="{arc:ReleaseReadinessTokenResource CopyLetterSpacing}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Name="PART_Description"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                       LineHeight="{arc:ReleaseReadinessTokenResource DescriptionLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </arc:Checkbox>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:first">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource CompactRowPadding}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ReleaseReadinessTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:done /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The status line: 12 / 16.8 in TextSecondary (Danger for an error), wrapping. It can take the focus from code only;
+        a 2px ring then follows the text.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReleaseReadinessMessage}" TargetType="arc:ReleaseReadinessMessage">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReleaseReadinessMessage">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                    <Panel>
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="-4,-2"
+                                BorderThickness="2"
+                                CornerRadius="6"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:ReleaseReadinessTokenResource DescriptionLineHeight}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   TextWrapping="Wrap" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:error">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

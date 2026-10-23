@@ -90,7 +90,10 @@ public enum DataGridChangeReason
     Fill,
     FillDown,
     Undo,
-    Redo
+    Redo,
+
+    /// <summary>Find and replace.</summary>
+    Replace
 }
 
 /// <summary>One sort key: a column key and a direction.</summary>

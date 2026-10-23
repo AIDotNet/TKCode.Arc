@@ -43,7 +43,7 @@ A skeleton shows its placeholder while `Content` is null. Set `Lines` for the nu
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Skeleton IsAvatarVisible="True" Lines="3" />
 </UserControl>
 ```

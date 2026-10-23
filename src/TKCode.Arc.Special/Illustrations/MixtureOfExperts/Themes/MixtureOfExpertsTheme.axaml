@@ -1,0 +1,133 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The mixture-of-experts card: header (top-k switch, active parameters, play button), the drawn stage with the
+        expert tiles, the token sequence under a divider, and the footer (route text, load balance).
+    -->
+    <ControlTheme x:Key="{x:Type arc:MixtureOfExperts}" TargetType="arc:MixtureOfExperts">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:MixtureOfExpertsTokenResource CardPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextSecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="TextMutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderStrongInk" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SurfaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="SurfaceMutedInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="WarningInk" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="FocusRingInk" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Series1Ink" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2Ink" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MixtureOfExperts">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Layout" Spacing="{arc:MixtureOfExpertsTokenResource RowGap}">
+                            <Grid Name="PART_Header" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                                <arc:SegmentedControl Name="PART_TopK" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <StackPanel Name="PART_Parameters"
+                                            Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            Margin="16,0,12,0"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Name="PART_ParametersLabel"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               VerticalAlignment="Center" />
+                                    <arc:RollingDigits Name="PART_ParametersValue"
+                                                       Suffix="B"
+                                                       UseGrouping="False"
+                                                       Falloff="None"
+                                                       FontWeight="Medium"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                       VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ParametersTotal"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                                <arc:ExplainerIconButton Name="PART_PlayButton"
+                                                         Grid.Column="2"
+                                                         VerticalAlignment="Center"
+                                                         IsVisible="{TemplateBinding AreControlsVisible}" />
+                            </Grid>
+                            <arc:MixtureOfExpertsStage Name="PART_Stage" />
+                            <Border Name="PART_SequenceFrame"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="0,1,0,0"
+                                    Padding="{arc:MixtureOfExpertsTokenResource SequencePadding}">
+                                <arc:MixtureOfExpertsSequence Name="PART_Sequence" />
+                            </Border>
+                            <arc:MixtureOfExpertsFooterPanel Name="PART_Footer" LoadWidth="{arc:MixtureOfExpertsTokenResource LoadColumnWidth}">
+                                <StackPanel Name="PART_Inspector" Spacing="4">
+                                    <arc:ArcContentSwap Name="PART_RouteLine"
+                                                        Mode="Label"
+                                                        Height="28"
+                                                        ClipToBounds="False"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center" />
+                                    <arc:ArcContentSwap Name="PART_Note"
+                                                        Mode="Label"
+                                                        MeasuresExiting="True"
+                                                        ClipToBounds="False"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Top" />
+                                </StackPanel>
+                                <StackPanel Name="PART_Load" Spacing="10" Margin="0,4,0,0">
+                                    <Grid Name="PART_LoadHead" ColumnDefinitions="*,Auto">
+                                        <TextBlock Name="PART_LoadLabel"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   VerticalAlignment="Center" />
+                                        <arc:RollingDigits Name="PART_LoadValue"
+                                                           Grid.Column="1"
+                                                           Suffix="%"
+                                                           UseGrouping="False"
+                                                           Falloff="None"
+                                                           FontWeight="Medium"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                           HorizontalAlignment="Right"
+                                                           VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_LoadEmpty"
+                                                   Grid.Column="1"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center" />
+                                    </Grid>
+                                    <arc:MixtureOfExpertsLoadBar Name="PART_LoadBar" Height="8" />
+                                </StackPanel>
+                            </arc:MixtureOfExpertsFooterPanel>
+                        </StackPanel>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:MixtureOfExpertsTokenResource CompactCardPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Layout">
+            <Setter Property="Spacing" Value="{arc:MixtureOfExpertsTokenResource CompactRowGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Parameters">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

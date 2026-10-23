@@ -23,9 +23,10 @@ public class GallerySmokeTests
         GalleryCatalog.Categories.ShouldAllBe(c => c.IsArc && c.Entries.All(e => e.IsArc && e.ArcUrl != null));
         // Extras (TKCode components with no Arc original) are listed separately and not counted.
         GalleryCatalog.Extras.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
-        // Blocks are listed under their own section and not counted either.
+        GalleryCatalog.Special.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
+        // Blocks and Special components are listed under their own sections and not counted either.
         GalleryCatalog.AllEntries.Count().ShouldBe(110 + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length
-            + GalleryCatalog.Blocks.AllEntries.Count());
+            + GalleryCatalog.Blocks.AllEntries.Count() + GalleryCatalog.Special.Sum(c => c.Entries.Length));
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
     }
 

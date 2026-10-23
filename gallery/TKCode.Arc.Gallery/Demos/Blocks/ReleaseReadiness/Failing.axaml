@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReleaseReadinessFailingDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:ReleaseReadiness x:Name="Gate"
+                              Title="Version 5.3"
+                              Subtitle="Lumen mobile · goes live Tuesday"
+                              ChannelName="#launches" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="520"
+                   Text="Every second attempt fails, as a busy build server could. Tick the checks and start the rollout." />
+    </StackPanel>
+</UserControl>

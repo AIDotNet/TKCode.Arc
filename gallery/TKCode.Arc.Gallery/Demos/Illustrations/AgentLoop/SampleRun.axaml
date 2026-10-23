@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentLoopSampleRunDemo">
+    <!-- No iterations: the card plays its built-in sample run (three loops, an invented model and tools). -->
+    <arc:AgentLoop />
+</UserControl>

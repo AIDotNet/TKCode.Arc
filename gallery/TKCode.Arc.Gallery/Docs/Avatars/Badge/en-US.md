@@ -39,7 +39,7 @@ with a tone: it does not take focus, open anything or announce itself, and its l
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Badge Content="Draft" />
 </UserControl>
 ```

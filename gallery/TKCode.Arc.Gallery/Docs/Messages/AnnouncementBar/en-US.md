@@ -38,7 +38,7 @@ is 6 seconds by default.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:AnnouncementBar>
         <arc:AnnouncementBar.Messages>
             <arc:Announcement Id="launch"

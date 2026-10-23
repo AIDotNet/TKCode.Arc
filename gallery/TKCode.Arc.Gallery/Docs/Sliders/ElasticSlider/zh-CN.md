@@ -1,7 +1,7 @@
 ---
 title: 弹性滑块
 summary: 滑块越过两端时如橡皮筋般拉伸，附带摇摆的数值标签，以及滑块会卡入的档位。
-source-hash: 0d63d9545c7e
+source-hash: 39114c8ce7ba
 ---
 
 <Demo name="RubberBand" />
@@ -29,7 +29,7 @@ source-hash: 0d63d9545c7e
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ElasticSlider Label="音量"
                        Value="40"
                        Width="360"

@@ -1,7 +1,7 @@
 ---
 title: 颜色选择器
 summary: 色块展开为选择器，支持格式切换、吸管、已保存色块和对比度读数。
-source-hash: 7dccad862e49
+source-hash: 7d81791f9bc3
 ---
 
 <Demo name="ColorField" />
@@ -28,7 +28,7 @@ source-hash: 7dccad862e49
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ColorPicker Label="强调色"
                      Color="#2F6BFF"
                      Format="Hex" />

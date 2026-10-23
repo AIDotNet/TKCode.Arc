@@ -1,0 +1,107 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The undo pill: 30px high, pill radius, 1px Border on Surface. A 14px slot holds the ring (Arc's 16-unit svg with
+        r 6 and stroke 2 drawn at 14px: a 12.25px circle with a 1.75px stroke, square ends; layout rounding off so it stays 12.25), 6px to the word (14 / 19.6,
+        regular, like the reference shots), then the muted seconds with tabular figures. Measured from the reference shots, the seconds sit 11px
+        after the word and the pill ends 6px after them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:UndoCountdownButton}" TargetType="arc:UndoCountdownButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="10,0,6,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UndoCountdownButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Panel Width="14" Height="14" VerticalAlignment="Center">
+                                <arc:ArcRing Name="PART_Ring"
+                                             Width="12.25"
+                                             Height="12.25"
+                                             UseLayoutRounding="False"
+                                             Thickness="1.75"
+                                             IsRoundCap="False"
+                                             Value="1"
+                                             TrackBrush="{arc:ArcDesignTokenResource Border}"
+                                             Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center" />
+                            </Panel>
+                            <TextBlock Name="PART_Text"
+                                       Margin="6,0,0,0"
+                                       Text="{TemplateBinding Text}"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       TextWrapping="NoWrap"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Seconds"
+                                       Margin="11,0,0,0"
+                                       Text="{TemplateBinding SecondsLabel}"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       FontFeatures="tnum"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextWrapping="NoWrap"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Hover (mouse and pen) and press look the same: no scale. -->
+        <Style Selector="^:hover, ^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <!-- Keyboard focus only, 2px outside the border. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- After the window ran out the owner folds the bar away: no disabled look that would flash on the way out. -->
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <!-- Colors in 160ms on the standard curve; reduced motion changes them at once. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

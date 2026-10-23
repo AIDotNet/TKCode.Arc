@@ -1,7 +1,7 @@
 ---
 title: 斜率图
 summary: 两个坐标轴上的前后对比：线条逐条绘出，每个数值旁显示排名变化，切换数据集时每条线都会滑动到新的斜率。
-source-hash: 7297e003b7de
+source-hash: 9f597ae7dfcc
 ---
 
 <Demo name="BeforeAndAfter" />
@@ -30,7 +30,7 @@ source-hash: 7297e003b7de
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SlopeChart Label="各渠道转化率"
                     StartLabel="Q1"
                     EndLabel="Q2"
@@ -154,7 +154,7 @@ public partial class ChannelsViewModel : ObservableObject
 ```xml
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
         Width="680"
         Padding="24"
         CornerRadius="12"

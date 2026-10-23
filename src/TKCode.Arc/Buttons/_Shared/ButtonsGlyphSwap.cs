@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -130,9 +131,7 @@ internal sealed class ButtonsGlyphSwap : Control
         }
         else
         {
-            layer.Blur ??= new BlurEffect();
-            layer.Blur.Radius = pose.Blur;
-            layer.Host.Effect = layer.Blur;
+            layer.Host.Effect = ArcBlur.Get(pose.Blur);
         }
     }
 

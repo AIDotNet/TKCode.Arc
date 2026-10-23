@@ -350,7 +350,8 @@ public partial class DataGrid
         var changes = new List<DataGridCellChange>();
         _refusedWrites = 0;
         var checkRules = ValidationMode == DataGridValidationMode.Block &&
-                         reason is DataGridChangeReason.Edit or DataGridChangeReason.Paste or DataGridChangeReason.Fill or DataGridChangeReason.FillDown;
+                         reason is DataGridChangeReason.Edit or DataGridChangeReason.Paste or DataGridChangeReason.Fill or DataGridChangeReason.FillDown or
+                             DataGridChangeReason.Replace;
         _store.Quietly(() =>
         {
             foreach (var (source, accessor, value) in cells)

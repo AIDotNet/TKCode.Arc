@@ -39,7 +39,7 @@ bottom: a feature overview, a product tour, an annual report, a security or comp
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:InViewTitle Text="Blur sharpens word by word"
                      Variant="Blur" />
 </UserControl>

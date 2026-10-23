@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReasoningTreeBuildTimeDemo">
+    <!-- Scores written so that each beam width finds a different answer: 0.84, 0.89 and 0.95. -->
+    <arc:ReasoningTree MaxWidth="744"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Question="How do we halve the nightly build?"
+                       QuestionDetail="The nightly build takes 84 minutes. How do we get it under 40 without dropping a single test suite?"
+                       BeamWidth="1">
+        <arc:ReasoningThought Label="Cache dependencies" Score="0.78"
+                              Text="Restore packages and toolchains from a shared cache instead of downloading them every night.">
+            <arc:ReasoningThought Label="Pin lockfiles" Score="0.81"
+                                  Text="Pin every lockfile so the cache key only changes when a dependency really does.">
+                <arc:ReasoningThought Label="Weekly refresh" Score="0.84"
+                                      Text="Rebuild the cache once a week and whenever a lockfile changes." />
+                <arc:ReasoningThought Label="Per-branch caches" Score="0.66"
+                                      Text="Keep one cache per release branch so hotfix builds never start cold." />
+            </arc:ReasoningThought>
+            <arc:ReasoningThought Label="Warm the cache" Score="0.52"
+                                  Text="Run a small job before midnight that fills the cache for the nightly run.">
+                <arc:ReasoningThought Label="Prefetch images" Score="0.48"
+                                      Text="Pull the build container images onto every agent before the run starts." />
+                <arc:ReasoningThought Label="Mirror registries" Score="0.57"
+                                      Text="Serve packages from a registry mirror inside the build network." />
+            </arc:ReasoningThought>
+        </arc:ReasoningThought>
+        <arc:ReasoningThought Label="Split the tests" Score="0.71"
+                              Text="Run the slow integration suites on four agents in parallel instead of one.">
+            <arc:ReasoningThought Label="Shard by duration" Score="0.77"
+                                  Text="Balance the shards by last week's timings so no agent waits on another.">
+                <arc:ReasoningThought Label="Rebalance nightly" Score="0.89"
+                                      Text="Recompute the shard plan every night from the previous run's timings." />
+                <arc:ReasoningThought Label="Four fixed shards" Score="0.72"
+                                      Text="Split the suites into four shards once and keep that plan." />
+            </arc:ReasoningThought>
+            <arc:ReasoningThought Label="Shard by folder" Score="0.62"
+                                  Text="Give each agent a fixed set of test folders.">
+                <arc:ReasoningThought Label="Merge small folders" Score="0.58"
+                                      Text="Group the small folders so every shard runs about as long as the others." />
+                <arc:ReasoningThought Label="Split the big folder" Score="0.75"
+                                      Text="Break the one huge payments folder into four parts of its own." />
+            </arc:ReasoningThought>
+        </arc:ReasoningThought>
+        <arc:ReasoningThought Label="Build what changed" Score="0.66"
+                              Text="Skip the projects whose inputs did not change since the last green build.">
+            <arc:ReasoningThought Label="Hash the inputs" Score="0.79"
+                                  Text="Hash each project's sources and settings to decide what has to be rebuilt.">
+                <arc:ReasoningThought Label="Shared build cache" Score="0.95"
+                                      Text="Share build outputs across agents so unchanged projects come straight from the cache." />
+                <arc:ReasoningThought Label="Local cache only" Score="0.61"
+                                      Text="Keep build outputs on each agent's own disk between runs." />
+            </arc:ReasoningThought>
+            <arc:ReasoningThought Label="Trust timestamps" Score="0.35"
+                                  Text="Rebuild a project only when one of its files has a newer timestamp.">
+                <arc:ReasoningThought Label="Touch on checkout" Score="0.30"
+                                      Text="Reset every file's timestamp to its last commit time after checkout." />
+                <arc:ReasoningThought Label="Ignore generated files" Score="0.41"
+                                      Text="Leave generated sources out of the timestamp check." />
+            </arc:ReasoningThought>
+        </arc:ReasoningThought>
+    </arc:ReasoningTree>
+</UserControl>

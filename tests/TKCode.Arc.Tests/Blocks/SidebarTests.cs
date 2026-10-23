@@ -1192,10 +1192,57 @@ public class SidebarTests
         }
     }
 
+    // An overlay pane springs open while the layout already has the open width, so the rows, the header and the filter
+    // keep their size and are not arranged again when the spring ends: their content must not keep the width of the
+    // spring's first frame (pushed off the pane's right edge).
+    [AvaloniaTheory]
+    [InlineData(SidebarResizeMode.Overlay)]
+    [InlineData(SidebarResizeMode.Push)]
+    public void After_The_Rail_The_Open_Sidebar_Lays_Its_Content_Out_At_The_Open_Width_Again(SidebarResizeMode mode)
+    {
+        var s = new Sample();
+        s.Sidebar.ResizeMode = mode;
+        s.Sidebar.IsFilterVisible = true;
+        s.Sidebar.CollapseButtonPlacement = SidebarCollapseButtonPlacement.Filter;
+        s.Sidebar.Header = new Button
+        {
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+            Content = new Border { Width = 180, Height = 32 }
+        };
+        var (window, _) = ShowBeside(s.Sidebar, ArcMotionLevel.Full);
+        try
+        {
+            Pump(3);
+            IReadOnlyList<SidebarOpenWidthHost> Hosts() =>
+                s.Sidebar.GetVisualDescendants().OfType<SidebarOpenWidthHost>().Where(h => h.IsEffectivelyVisible).ToList();
+            var open = Hosts().ToDictionary(h => h, h => h.Bounds.Width);
+            open.Count.ShouldBeGreaterThan(8);
+
+            s.Sidebar.IsCollapsed = true;
+            Settle();
+            s.Sidebar.IsCollapsed = false;
+            Settle();
+
+            s.Sidebar.PaneWidth.ShouldBe(240, 0.5);
+            foreach (var host in Hosts())
+            {
+                var label = $"{host.Name ?? host.Child!.GetType().Name} in {(host.TemplatedParent as Control)?.GetType().Name}";
+                host.Bounds.Width.ShouldBe(open[host], 0.5, label);
+                host.Child!.Bounds.Width.ShouldBe(host.Bounds.Width, 0.5, label);
+                host.Clip.ShouldBeNull(label);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void A_Push_Sidebar_Lays_The_Page_Out_On_Every_Frame_Of_The_Width_Spring()
     {
         var s = new Sample();
+        s.Sidebar.ResizeMode = SidebarResizeMode.Push;
         var (window, page) = ShowBeside(s.Sidebar, ArcMotionLevel.Full);
         try
         {

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CustomerGalaxyNarrowDemo">
+    <!-- Under 620 px: a 380 px stage, the totals in one column, the legend wrapping under the tabs. -->
+    <arc:CustomerGalaxy x:Name="Galaxy"
+                        Width="360"
+                        HorizontalAlignment="Center"
+                        Title="Revenue by account" />
+</UserControl>

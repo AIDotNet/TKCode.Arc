@@ -47,7 +47,7 @@ your route. The sidebar takes its width from the theme (240 open, 64 as a rail),
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+           xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
            Height="420">
     <arc:Sidebar DockPanel.Dock="Left" SelectedKey="home" IsFilterVisible="True">
         <arc:SidebarSection>
@@ -185,7 +185,7 @@ commands, but `SelectedItem` stays where it was. Use it for "New project" or "Mo
 ```xml
 <arc:Sidebar xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SidebarSection Header="Projects">
         <arc:SidebarItem Key="projects/spring" Label="Spring launch">
             <arc:SidebarItem.Icon>
@@ -304,7 +304,7 @@ While the collapse button is visible, the header gives way to it on the rail.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <UserControl.Styles>
         <Style Selector="arc|Sidebar:collapsed TextBlock.rail-fade">
             <Setter Property="Opacity" Value="0" />
@@ -316,16 +316,16 @@ While the collapse button is visible, the header gives way to it on the rail.
 
 ### The page next to the sidebar
 
-By default (`ResizeMode="Push"`) the sidebar's layout width springs, so the page beside it is laid out again on every
-frame. That works in any host and is fine for light pages. For a page with a lot of text or many controls set
-`ResizeMode="Overlay"`: the layout width then changes at once, so the page is laid out one time, and only the pane
-springs, drawn above the page. Bind the `RenderTransform` of the page to `PageShift` and the page glides along with the
-pane's edge instead of jumping.
+By default (`ResizeMode="Overlay"`) the sidebar's layout width changes at once, so the page is laid out one time, and
+only the pane springs, drawn above the page. Bind the `RenderTransform` of the page to `PageShift` and the page glides
+along with the pane's edge instead of jumping; without the binding the page still lays out correctly and jumps to its
+new place. Set `ResizeMode="Push"` and the layout width springs instead, so the page beside it is laid out again on every
+frame. That works in any host without a binding and is fine for light pages.
 
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+           xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
            ClipToBounds="True">
     <arc:Sidebar x:Name="Nav" DockPanel.Dock="Left" ResizeMode="Overlay" />
     <Grid RenderTransform="{Binding #Nav.PageShift}">
@@ -543,8 +543,8 @@ navigation data has loaded.
 **Can an action row be selected?** No. An `IsAction` row raises `ItemInvoked` and runs its commands, but `SelectedItem`
 and `SelectedKey` stay where they were, so the page the person is on keeps its marker.
 
-**Why does the page next to the sidebar stutter while it collapses?** In the default `Push` mode the page is laid out
-on every frame of the width spring. Set `ResizeMode="Overlay"` and bind the page's `RenderTransform` to `PageShift`.
+**Why does the page next to the sidebar stutter while it collapses?** In `Push` mode the page is laid out
+on every frame of the width spring. Use the default `ResizeMode="Overlay"` and bind the page's `RenderTransform` to `PageShift`.
 
 **Why does Cmd+B or Ctrl+B not collapse the sidebar?** The shortcut works only while focus is inside the sidebar, on
 one of its rows or in its filter. Click a row first, or bind `IsCollapsed` to a toggle button elsewhere in the window.

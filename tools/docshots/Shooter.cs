@@ -29,8 +29,8 @@ internal static partial class Scene
     // The same namespaces as DocSnippets, so a block that passes the check loads here as well.
     private const string Wrapper =
         "<StackPanel xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" " +
-        "xmlns:arc=\"https://github.com/AtomUICommunity/TKCode.Arc\" " +
-        "xmlns:ill=\"https://github.com/AtomUICommunity/TKCode.Arc/illustrations\">{0}</StackPanel>";
+        "xmlns:arc=\"https://github.com/AIDotNet/TKCode.Arc\" " +
+        "xmlns:ill=\"https://github.com/AIDotNet/TKCode.Arc/illustrations\">{0}</StackPanel>";
 
     /// <summary>The <c>Width</c> on the block's first element, or <see cref="DefaultWidth"/>.</summary>
     public static double WidthOf(string xaml)

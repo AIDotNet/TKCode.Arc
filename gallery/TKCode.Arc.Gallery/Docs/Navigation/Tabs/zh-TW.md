@@ -1,7 +1,7 @@
 ---
 title: 標籤頁
 summary: 在同一脈絡中切換相關內容。
-source-hash: d1602006c5ed
+source-hash: 52ba60a93a4c
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: d1602006c5ed
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Tabs AutomationProperties.Name="工作區">
         <arc:TabItem Header="概覽">
             <TextBlock Text="本季營收成長 12%。" />

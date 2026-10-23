@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvailabilityPickerTrickyDataDemo">
+    <!--
+        Monday has no time that suits everyone (the first time is picked and the footer names who has to move), Tuesday
+        has times two and three people are busy for, Wednesday has only two times (the list changes height), Thursday has
+        none and Friday has a time that is already taken.
+    -->
+    <arc:AvailabilityPicker x:Name="Picker"
+                            MaxWidth="680"
+                            Title="Quarterly planning"
+                            Duration="1:00:00"
+                            TimeZoneName="Lisbon time" />
+</UserControl>

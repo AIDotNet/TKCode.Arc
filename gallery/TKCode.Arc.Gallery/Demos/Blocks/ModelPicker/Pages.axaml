@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelPickerPagesDemo">
+    <!-- A window at most this wide shows the effort levels and the other models as pages inside the menu. -->
+    <arc:ModelPicker x:Name="Picker" PagedMenuWidth="4000" Margin="0,12,0,160" />
+</UserControl>

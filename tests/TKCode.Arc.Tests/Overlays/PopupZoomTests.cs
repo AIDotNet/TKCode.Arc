@@ -1,6 +1,7 @@
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -68,6 +69,49 @@ public class PopupZoomTests
             window.Close();
         }
     }
+
+    // AtomUI's popup takes the shadow's corner radius from its direct child (the zoom host): a square shadow shows past
+    // the surface's rounded corners.
+    [AvaloniaTheory]
+    [InlineData(1.0)]
+    [InlineData(2.0)]
+    public void Shadow_Follows_The_Surface_Corner_Radius_At_The_Scale(double scale)
+    {
+        var (window, _, popover, _) = Open(scale);
+        try
+        {
+            var surface = (TemplatedControl)popover.Popup!.Surface!;
+            surface.CornerRadius.TopLeft.ShouldBeGreaterThan(0);
+            var shadowRadius = ShadowContainerRadius(surface);
+            shadowRadius.TopLeft.ShouldBe(surface.CornerRadius.TopLeft * scale, 0.01);
+            shadowRadius.BottomRight.ShouldBe(surface.CornerRadius.BottomRight * scale, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Shadow_Radius_Tracks_A_Surface_Radius_Change()
+    {
+        var (window, _, popover, _) = Open(1.0);
+        try
+        {
+            var surface = (TemplatedControl)popover.Popup!.Surface!;
+            surface.CornerRadius = new CornerRadius(3);
+            ShadowContainerRadius(surface).ShouldBe(new CornerRadius(3));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    private static CornerRadius ShadowContainerRadius(Control surface) =>
+        surface.GetVisualAncestors().OfType<AvaloniaObject>()
+               .First(v => v.GetType().Name == "ShadowsAwareContainer")
+               .GetValue(Border.CornerRadiusProperty);
 
     [AvaloniaFact]
     public void Surface_Returns_The_Assigned_Child_And_Reassigning_Releases_It()

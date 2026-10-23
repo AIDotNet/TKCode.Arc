@@ -39,7 +39,7 @@ value outside the limits it shows.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:NumberField Label="Seats"
                      Minimum="1"
                      Maximum="10"
@@ -232,7 +232,7 @@ rejects, so it carries an `ErrorMessage` that states the rule. The primary actio
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <StackPanel Width="620" Spacing="20">
         <TextBlock Text="Team plan: Acme Analytics"
                    FontSize="14"

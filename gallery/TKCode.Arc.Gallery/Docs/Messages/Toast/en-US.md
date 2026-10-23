@@ -39,7 +39,7 @@ after `Duration` (4.5 seconds by default).
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Toast Title="Changes saved"
                Description="Synced to all your devices."
                VerticalAlignment="Bottom" />

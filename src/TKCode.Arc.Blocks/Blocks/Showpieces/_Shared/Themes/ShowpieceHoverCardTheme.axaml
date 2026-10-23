@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The Showpiece hover card: a floating surface (SurfaceRaised, 1px Border, radius 12, ShadowFloating) around the
+        content template. Position, fade and scale are code-driven (ShowpieceHoverCard), so no transitions here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ShowpieceHoverCard}" TargetType="arc:ShowpieceHoverCard">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShowpieceHoverCard">
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ShowpieceHoverCardTokenResource CardRadius}" />
+        <Setter Property="Padding" Value="{arc:ShowpieceHoverCardTokenResource CardPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

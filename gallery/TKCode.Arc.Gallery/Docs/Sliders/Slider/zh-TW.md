@@ -1,7 +1,7 @@
 ---
 title: 滑桿
 summary: 在軌道上選取一個值或一個範圍，跟隨指標移動。
-source-hash: 64820fbf7f0d
+source-hash: 8edf5e790ada
 ---
 
 <Demo name="SingleValue" />
@@ -31,7 +31,7 @@ source-hash: 64820fbf7f0d
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Slider Label="音量"
                 Value="64"
                 Width="360" />

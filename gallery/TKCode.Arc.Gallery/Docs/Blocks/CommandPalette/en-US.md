@@ -47,7 +47,7 @@ window, or click a button that points at it. Add `CommandPaletteItem` children o
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <Panel>
         <arc:Button Content="Search commands"
                     arc:CommandPaletteDialog.Opens="{Binding #Commands}" />
@@ -129,7 +129,7 @@ The demo uses an inline palette, so that every command stays on screen. The dial
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:generic="using:System.Collections.Generic"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:CommandPalette>
         <arc:CommandPaletteItem Id="theme" Label="Switch theme" Group="Settings" Shortcut="T">
             <arc:CommandPaletteItem.Keywords>

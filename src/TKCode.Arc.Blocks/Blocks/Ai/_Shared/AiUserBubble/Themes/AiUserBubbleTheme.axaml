@@ -1,0 +1,248 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The person's row: the whole column wide (a transparent fill so hovering anywhere on it counts). The height sits in
+        a sizer that springs only when the bubble and the editor swap, and the swap crossfades them (out 100, in 160).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiUserBubble}" TargetType="arc:AiUserBubble">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiUserBubble">
+                <Border Background="{TemplateBinding Background}">
+                    <arc:AiUserBubbleSizer Name="PART_Sizer">
+                        <arc:ArcContentSwap Name="PART_Swap"
+                                            Mode="Crossfade"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Bottom" />
+                    </arc:AiUserBubbleSizer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        Copy and Edit (30 × 30, no gap between them, 4px above the bubble's bottom edge, 4px left of it), then the bubble:
+        padding 10 16, radius 20, SurfaceMuted; the files above the text (6px apart, margins 2 0 8) and the text 16 / 24.
+        The buttons fade in and out (160ms standard; 120ms at reduced motion).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiUserBubbleRow}" TargetType="arc:AiUserBubbleRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiUserBubbleRow">
+                <arc:AiUserBubbleLane Name="PART_Lane" Gap="4" IsNarrow="{TemplateBinding IsNarrow}">
+                    <StackPanel Name="PART_Actions" Orientation="Horizontal" Margin="0,0,0,4">
+                        <arc:AiUserBubbleActionButton Name="PART_Copy" GlyphSize="16" />
+                        <arc:AiUserBubbleActionButton Name="PART_Edit" GlyphSize="15" Glyph="{x:Static arc:ArcIcons.Pencil}" />
+                    </StackPanel>
+                    <Border Name="PART_Bubble"
+                            Padding="16,10"
+                            CornerRadius="20"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                        <StackPanel>
+                            <WrapPanel Name="PART_Attachments" ItemSpacing="6" LineSpacing="4" />
+                            <arc:AiUserBubbleText Name="PART_Text" />
+                        </StackPanel>
+                    </Border>
+                </arc:AiUserBubbleLane>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Actions">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:revealed /template/ StackPanel#PART_Actions">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <Style Selector="^ /template/ WrapPanel#PART_Attachments">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Margin" Value="0,2,0,2" />
+        </Style>
+        <Style Selector="^:has-attachments /template/ WrapPanel#PART_Attachments">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-text /template/ WrapPanel#PART_Attachments">
+            <Setter Property="Margin" Value="0,2,0,8" />
+        </Style>
+        <Style Selector="^ /template/ arc|AiUserBubbleText#PART_Text">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:has-text /template/ arc|AiUserBubbleText#PART_Text">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ StackPanel#PART_Actions">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel#PART_Actions">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The text of the bubble: Inter 16 / 24, -0.01em, Foreground; inline code in the mono family (chips from code). -->
+    <ControlTheme x:Key="{x:Type arc:AiUserBubbleText}" TargetType="arc:AiUserBubbleText">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="CodeFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LineHeight" Value="24" />
+        <Setter Property="LetterSpacing" Value="-0.16" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </ControlTheme>
+
+    <!-- One attached file: FileText 14 and the name 14 / 21 in TextSecondary, 6px apart; a long name ends in an ellipsis. -->
+    <ControlTheme x:Key="{x:Type arc:AiUserBubbleAttachment}" TargetType="arc:AiUserBubbleAttachment">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiUserBubbleAttachment">
+                <DockPanel>
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  DockPanel.Dock="Left"
+                                  Data="{TemplateBinding Icon}"
+                                  Size="14"
+                                  StrokeThickness="1.75"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center" />
+                    <TextBlock Name="PART_Name"
+                               Text="{TemplateBinding FileName}"
+                               LineHeight="21"
+                               LetterSpacing="-0.14"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        Copy / Edit: 30 × 30, radius 10, glyph TextMuted (stroke 1.75); hover SurfaceMuted + Foreground (160ms); pressing
+        scales to 0.92 on the CSS spring; the keyboard ring is 2px, 2px outside (radius 14).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiUserBubbleActionButton}" TargetType="arc:AiUserBubbleActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiUserBubbleActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            RenderTransformOrigin="50%,50%">
+                        <arc:ArcContentSwap Name="PART_Glyph"
+                                            Mode="Crossfade"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full:pressed /template/ Border#PART_Frame">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The edit form: as wide as the widest bubble, padding 10, 1px BorderStrong, radius 20, Surface; the text area
+        (16 / 24, padding 2 6, grows by lines, then scrolls past 12 lines), 8px, then Cancel (ghost) and Send (primary),
+        both small, right-aligned 6px apart. One line of text makes the form 94 high, two 118, three 142 (Arc).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiMessageEditor}" TargetType="arc:AiMessageEditor">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiMessageEditor">
+                <arc:AiUserBubbleLane Name="PART_Lane" FillsBubble="True" IsNarrow="{TemplateBinding IsNarrow}">
+                    <Border Name="PART_Form"
+                            Padding="10"
+                            BorderThickness="1"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                            CornerRadius="20"
+                            Background="{arc:ArcDesignTokenResource Surface}">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Bottom"
+                                        Orientation="Horizontal"
+                                        Spacing="6"
+                                        Margin="0,8,0,0"
+                                        HorizontalAlignment="Right">
+                                <arc:Button Name="PART_Cancel" Variant="Ghost" Size="Small" Content="{TemplateBinding CancelText}" />
+                                <arc:Button Name="PART_Send" Variant="Primary" Size="Small" Content="{TemplateBinding SendText}" />
+                            </StackPanel>
+                            <arc:TokenTextEditor Name="PART_TextArea"
+                                                 Padding="6,2"
+                                                 MinLines="1"
+                                                 MaxLines="12"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                        </DockPanel>
+                    </Border>
+                </arc:AiUserBubbleLane>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

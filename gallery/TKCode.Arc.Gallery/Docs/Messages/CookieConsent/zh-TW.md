@@ -1,7 +1,7 @@
 ---
 title: Cookie 同意
 summary: 同意列可展開為偏好設定，並收合為重新開啟按鈕。
-source-hash: 73606997b510
+source-hash: 71df8065065e
 ---
 
 <Demo name="ConsentBar" />
@@ -28,7 +28,7 @@ source-hash: 73606997b510
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <Grid>
         <!-- 頁面內容放在這裡。 -->
         <arc:CookieConsent StorageKey="site-consent" Version="1" />

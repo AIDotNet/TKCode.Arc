@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MixtureOfExpertsRoutingDemo">
+    <!-- The default story: eight experts, fifteen tokens, top 2. Point at a token or an expert to hold the story on it. -->
+    <arc:MixtureOfExperts MaxWidth="760" />
+</UserControl>

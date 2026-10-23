@@ -40,7 +40,7 @@ Each button is a `FloatingButtonGroupItem`. Give the tray a `Label`, which becom
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:FloatingButtonGroup Label="Board actions">
         <arc:FloatingButtonGroupItem Label="Undo" Shortcut="⌘Z" IsIconOnly="True" />
         <arc:FloatingButtonGroupItem Label="Redo" Shortcut="⇧⌘Z" IsIconOnly="True" />

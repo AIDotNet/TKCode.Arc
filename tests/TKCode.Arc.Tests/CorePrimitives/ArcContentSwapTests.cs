@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -112,6 +113,198 @@ public class ArcContentSwapTests
             var presenter = swap.GetVisualChildren().OfType<ContentPresenter>().Single();
             presenter.HorizontalContentAlignment.ShouldBe(HorizontalAlignment.Right);
             presenter.VerticalContentAlignment.ShouldBe(VerticalAlignment.Top);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    /// <summary>The removal of an outgoing copy is posted from a thread-pool continuation; pump until it lands.</summary>
+    private static int PresenterCountAfterRemoval(ArcContentSwap swap, int expected)
+    {
+        var count = 0;
+        for (var i = 0; i < 100; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            count = swap.GetVisualChildren().OfType<ContentPresenter>().Count();
+            if (count == expected)
+            {
+                break;
+            }
+            Thread.Sleep(5);
+        }
+        return count;
+    }
+
+    private static double RiseOf(ContentPresenter presenter) => ((TranslateTransform)presenter.RenderTransform!).Y;
+
+    [AvaloniaFact]
+    public void Label_Mode_Fades_The_Old_Label_In_100ms_And_Raises_The_New_One_2px_Over_160ms()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.Label, Content = "Thinking" };
+        var window = Show(swap);
+        try
+        {
+            var (outgoing, incoming) = Swap(swap, window, "Thought for 3s");
+            incoming.Opacity.ShouldBe(0, 0.001);
+            RiseOf(incoming).ShouldBe(2, 0.001);
+            outgoing.Effect.ShouldBeNull();
+
+            CoreFrames.Run(clock, 4); // ≈ 67ms: both still moving
+            outgoing.Opacity.ShouldBeGreaterThan(0);
+            outgoing.Opacity.ShouldBeLessThan(1);
+            incoming.Opacity.ShouldBeGreaterThan(0.5);
+            RiseOf(incoming).ShouldBeLessThan(2);
+
+            CoreFrames.Run(clock, 4); // ≈ 133ms: the old label is gone, the new one is still settling
+            PresenterCountAfterRemoval(swap, 1).ShouldBe(1);
+            incoming.Opacity.ShouldBeLessThan(1);
+
+            CoreFrames.Run(clock, 4); // past 160ms
+            incoming.Opacity.ShouldBe(1, 0.001);
+            RiseOf(incoming).ShouldBe(0, 0.001);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Lift_Mode_Waits_For_The_Old_Content_Before_The_New_One_Rises_4px()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.Lift, Content = "Conversation A" };
+        var window = Show(swap);
+        try
+        {
+            var (_, incoming) = Swap(swap, window, "Conversation B");
+            RiseOf(incoming).ShouldBe(4, 0.001);
+            CoreFrames.Run(clock, 5); // ≈ 83ms, inside the 100ms exit
+            incoming.Opacity.ShouldBe(0, 0.001);
+            CoreFrames.Run(clock, 18); // ≈ 383ms: exit 100 + enter 160 are over
+            incoming.Opacity.ShouldBe(1, 0.001);
+            RiseOf(incoming).ShouldBe(0, 0.001);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Quiet_Modes_Take_Duration_Delay_And_Offset_Overrides()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var swap = new ArcContentSwap
+        {
+            Mode = ContentSwapMode.Crossfade,
+            EnterDuration = TimeSpan.FromMilliseconds(180),
+            EnterDelay = TimeSpan.FromMilliseconds(80),
+            EnterOffset = 3,
+            Content = "Before"
+        };
+        var window = Show(swap);
+        try
+        {
+            var (_, incoming) = Swap(swap, window, "After");
+            RiseOf(incoming).ShouldBe(3, 0.001);
+            CoreFrames.Run(clock, 4); // ≈ 67ms, inside the delay
+            incoming.Opacity.ShouldBe(0, 0.001);
+            CoreFrames.Run(clock, 12); // ≈ 267ms > 80 + 180
+            incoming.Opacity.ShouldBe(1, 0.001);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Reduced_Motion_Crossfades_A_Label_Without_Rising()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.Label, Content = "Writing" };
+        var window = TestHelpers.Show(new StackPanel { Children = { swap } }, ArcMotionLevel.Reduced);
+        try
+        {
+            var (_, incoming) = Swap(swap, window, "Done");
+            RiseOf(incoming).ShouldBe(0, 0.001);
+            CoreFrames.Run(clock, 9); // 150ms > 120ms
+            incoming.Opacity.ShouldBe(1, 0.001);
+            PresenterCountAfterRemoval(swap, 1).ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Measures_Exiting_Keeps_The_Old_Size_Until_The_Old_Content_Is_Gone()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var swap = new ArcContentSwap
+        {
+            Mode = ContentSwapMode.Crossfade,
+            MeasuresExiting = true,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Content = "A much longer status line"
+        };
+        var window = Show(swap);
+        try
+        {
+            var wide = swap.Bounds.Width;
+            Swap(swap, window, "Short");
+            swap.Bounds.Width.ShouldBe(wide, 0.5);
+            CoreFrames.Run(clock, 9);
+            PresenterCountAfterRemoval(swap, 1).ShouldBe(1);
+            window.UpdateLayout();
+            swap.Bounds.Width.ShouldBeLessThan(wide - 10);
+
+            // Growing is immediate: the larger content wins at once.
+            Swap(swap, window, "A much longer status line again");
+            swap.Bounds.Width.ShouldBeGreaterThan(wide);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Swap_Detached_In_The_Middle_Of_A_Fade_Comes_Back_Fully_Opaque()
+    {
+        // Detaching stops the running fade and resets the layer, but the stopped value used to stay in the scheduler's
+        // batch; the next frame saw a detached owner and snapped it back to the half-way value it had stopped at.
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.Label, Content = "Before" };
+        var panel = new StackPanel { Children = { swap } };
+        var window = TestHelpers.Show(panel, ArcMotionLevel.Full);
+        try
+        {
+            Swap(swap, window, "After");
+            CoreFrames.Run(clock, 2);
+            swap.GetVisualChildren().OfType<ContentPresenter>().Single(p => Equals(p.Content, "After")).Opacity.ShouldBeLessThan(1);
+
+            panel.Children.Remove(swap);
+            Dispatcher.UIThread.RunJobs();
+            CoreFrames.Run(clock, 30);
+            panel.Children.Add(swap);
+            window.UpdateLayout();
+            Dispatcher.UIThread.RunJobs();
+            CoreFrames.Run(clock, 30);
+
+            var shown = swap.GetVisualChildren().OfType<ContentPresenter>().Single(p => Equals(p.Content, "After"));
+            shown.Opacity.ShouldBe(1, 0.001);
         }
         finally
         {

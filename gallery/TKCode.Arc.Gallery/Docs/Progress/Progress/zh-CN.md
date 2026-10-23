@@ -1,7 +1,7 @@
 ---
 title: 进度
 summary: 展示已知总量任务的完成进度。
-source-hash: 4595b351fb84
+source-hash: e6c9fd282c09
 ---
 
 <Demo name="CountedValue" />
@@ -30,7 +30,7 @@ source-hash: 4595b351fb84
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Progress Label="正在上传 4 个文件"
                   IsValueVisible="True"
                   Value="35" />

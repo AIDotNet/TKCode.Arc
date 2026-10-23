@@ -1,7 +1,7 @@
 ---
 title: 刷选图表
 summary: 带概览条的密集时间序列：拖动窗口即可缩放，通过手柄调整大小，并在原处查看事件。
-source-hash: e7a4445fb8ad
+source-hash: 09686434a9f1
 ---
 
 <Demo name="OverviewAndDetail" />
@@ -27,7 +27,7 @@ source-hash: e7a4445fb8ad
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:BrushChart Label="每日活跃用户"
                     Unit="用户"
                     PlotHeight="240"

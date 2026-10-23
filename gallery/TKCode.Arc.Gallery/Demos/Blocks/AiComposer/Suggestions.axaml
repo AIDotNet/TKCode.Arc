@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiComposerSuggestionsDemo">
+    <StackPanel Spacing="12" MaxWidth="720" Margin="0,12,0,140">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="First" Variant="Secondary" Size="Small" Content="Compare the last two sprint reviews" />
+            <arc:Button x:Name="Second" Variant="Secondary" Size="Small" Content="Tidy up the welcome email" />
+            <arc:Button x:Name="Third" Variant="Secondary" Size="Small" Content="Find why big exports stall" />
+        </StackPanel>
+        <arc:AiComposer x:Name="Composer" />
+    </StackPanel>
+</UserControl>

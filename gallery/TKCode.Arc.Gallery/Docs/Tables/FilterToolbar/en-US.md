@@ -278,7 +278,7 @@ both chips, and the team clears the chips in one step when it starts a new revie
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:collections="using:System.Collections.ObjectModel">
     <StackPanel Width="600">
         <arc:FilterToolbar>

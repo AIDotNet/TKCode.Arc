@@ -1,7 +1,7 @@
 ---
 title: 页头
 summary: 项目页头会随滚动收拢为紧凑栏，标签页的数量会滚动更新。
-source-hash: e9422f86e511
+source-hash: a7ba8b1b618a
 ---
 
 <Demo name="Preview" />
@@ -203,7 +203,7 @@ public partial class BillingPageViewModel : ObservableObject
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="720">
     <arc:PageHeader Height="440"

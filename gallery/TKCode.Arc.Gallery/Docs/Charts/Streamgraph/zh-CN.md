@@ -1,7 +1,7 @@
 ---
 title: 河流图
 summary: 在摆动基线上堆叠的流层，可在不同范围之间变形；可单独隔离某一层并逐周读取。
-source-hash: d66fbacbb470
+source-hash: ba83187c6c3c
 ---
 
 <Demo name="TopicsOverTime" />
@@ -29,7 +29,7 @@ source-hash: d66fbacbb470
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Streamgraph Label="各主题的支持工单"
                      Unit="工单"
                      CategoryLabel="周"

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityTerrainLiveDataDemo">
+    <!--
+        Your own numbers: a support desk's chats and tickets with German day names. "Next week" replaces the values and
+        the bars rise to them in a wave; the line under the block follows the highlighted and focused hours.
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="NextWeek" Content="Next week" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="FlyBusiest" Content="Busiest hour" Variant="Ghost" Size="Small" />
+        </StackPanel>
+        <arc:ActivityTerrain x:Name="Terrain"
+                             Title="Support desk"
+                             Subtitle="Chats and tickets opened per hour, Berlin time." />
+        <TextBlock x:Name="Status" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

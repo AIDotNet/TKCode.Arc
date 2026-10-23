@@ -1,7 +1,7 @@
 ---
 title: 聊天会话
 summary: 带分组消息、表情回应、已读回执、输入状态以及带附件输入区的聊天会话。
-source-hash: 2d352d6afccd
+source-hash: 52bcaa28f16a
 ---
 
 <Demo name="SupportConversation" />
@@ -30,7 +30,7 @@ source-hash: 2d352d6afccd
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ChatThread Label="支持会话"
                     Participants="{Binding Participants}"
                     CurrentUserId="me"
@@ -244,7 +244,7 @@ SaaS 产品账单页面上的一个支持面板。面板有固定高度，因此
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="600">
     <Border Height="600"

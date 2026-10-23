@@ -4,9 +4,17 @@
         <AssemblyName>TKCode.Arc.Special</AssemblyName>
         <RootNamespace>TKCode.Arc</RootNamespace>
         <PackageId>TKCode.Arc.Special</PackageId>
-        <Description>Special components for TKCode.Arc, the uiarc.dev "Special components" section.</Description>
+        <Description>Special components for TKCode.Arc, the uiarc.dev "Special components" section: animated AI explainers (prompt cache, reasoning tree, speculative decoding, mixture of experts, agent loop).</Description>
+        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
+        <AtomUIThemeControlCatalog>TKCode.Arc.Special</AtomUIThemeControlCatalog>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
     </ItemGroup>
 </Project>
