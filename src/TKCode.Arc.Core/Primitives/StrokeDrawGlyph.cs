@@ -72,6 +72,9 @@ public class StrokeDrawGlyph : Control
         return value;
     }
 
+    private Pen? _pen;
+    private IBrush? _penBrush;
+
     protected override Size MeasureOverride(Size availableSize) => new(Size, Size);
 
     public override void Render(DrawingContext context)
@@ -84,7 +87,12 @@ public class StrokeDrawGlyph : Control
             return;
         }
         var scale = Math.Min(Bounds.Width, Bounds.Height) / 24.0;
-        var pen = new Pen(brush, StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+        if (_pen is null || !ReferenceEquals(_penBrush, brush) || _pen.Thickness != StrokeThickness)
+        {
+            _pen = new Pen(brush, StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+            _penBrush = brush;
+        }
+        var pen = _pen;
         using (context.PushTransform(Matrix.CreateScale(scale, scale)))
         {
             if (progress >= 1)

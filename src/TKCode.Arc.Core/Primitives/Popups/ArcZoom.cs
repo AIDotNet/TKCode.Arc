@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 
 namespace TKCode.Arc.Primitives;
@@ -33,21 +34,25 @@ public sealed class ArcZoom
 /// not attached yet cannot) before the popup measures the surface. At scale 1 there is no transform.
 /// </summary>
 /// <remarks>
+/// AtomUI's popup draws the floating shadow with the corner radius of the popup's direct child when that child is a
+/// <see cref="Border"/> or templated control, and square otherwise (a square shadow shows past the surface's rounded
+/// corners). The host is that child, so it is a Border that draws nothing and carries the surface's corner radius,
+/// scaled with the surface.
 /// <see cref="LayoutTransformControl"/> draws its transform through its child's <c>RenderTransform</c>, and Arc surfaces
 /// animate their own <c>RenderTransform</c> (enter, press), so the surface sits in a plain slot panel that nothing else
 /// touches.
 /// </remarks>
-internal sealed class ArcZoomHost : LayoutTransformControl
+internal sealed class ArcZoomHost : Border
 {
+    private readonly LayoutTransformControl _transform;
     private readonly Panel _slot = new();
     private double _scale = 1.0;
 
     public ArcZoomHost()
     {
-        Child = _slot;
+        _transform = new LayoutTransformControl { Child = _slot };
+        Child = _transform;
     }
-
-    protected override Type StyleKeyOverride => typeof(LayoutTransformControl);
 
     /// <summary>The popup surface this host scales.</summary>
     public Control? Surface
@@ -55,11 +60,17 @@ internal sealed class ArcZoomHost : LayoutTransformControl
         get => _slot.Children.Count > 0 ? _slot.Children[0] : null;
         set
         {
+            if (Surface is { } previous)
+            {
+                previous.PropertyChanged -= HandleSurfacePropertyChanged;
+            }
             _slot.Children.Clear();
             if (value is not null)
             {
                 _slot.Children.Add(value);
+                value.PropertyChanged += HandleSurfacePropertyChanged;
             }
+            SyncCornerRadius();
         }
     }
 
@@ -73,7 +84,28 @@ internal sealed class ArcZoomHost : LayoutTransformControl
                 return;
             }
             _scale = value;
-            LayoutTransform = value == 1.0 ? null : new ScaleTransform(value, value);
+            _transform.LayoutTransform = value == 1.0 ? null : new ScaleTransform(value, value);
+            SyncCornerRadius();
         }
+    }
+
+    private void HandleSurfacePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == Border.CornerRadiusProperty || e.Property == TemplatedControl.CornerRadiusProperty)
+        {
+            SyncCornerRadius();
+        }
+    }
+
+    private void SyncCornerRadius()
+    {
+        var radius = Surface switch
+        {
+            Border border => border.CornerRadius,
+            TemplatedControl templated => templated.CornerRadius,
+            _ => default
+        };
+        CornerRadius = new CornerRadius(radius.TopLeft * _scale, radius.TopRight * _scale,
+            radius.BottomRight * _scale, radius.BottomLeft * _scale);
     }
 }

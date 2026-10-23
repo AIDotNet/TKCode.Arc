@@ -30,12 +30,22 @@ public class GlidingIndicator : Control
     public static readonly StyledProperty<ArcSpring> SpringProperty =
         AvaloniaProperty.Register<GlidingIndicator, ArcSpring>(nameof(Spring), ArcSpring.Morph);
 
+    /// <summary>
+    /// How long the indicator takes to fade in where it lands (after <see cref="Hide"/> or at first) and to fade out on
+    /// <see cref="Hide"/>. Defaults to <see cref="ArcMotionPresets.Fast"/>; Arc's AI menus use 80ms.
+    /// </summary>
+    public static readonly StyledProperty<TimeSpan> FadeDurationProperty =
+        AvaloniaProperty.Register<GlidingIndicator, TimeSpan>(nameof(FadeDuration), ArcMotionPresets.Fast);
+
     public IBrush? Fill { get => GetValue(FillProperty); set => SetValue(FillProperty, value); }
     public IBrush? Stroke { get => GetValue(StrokeProperty); set => SetValue(StrokeProperty, value); }
     public double StrokeThickness { get => GetValue(StrokeThicknessProperty); set => SetValue(StrokeThicknessProperty, value); }
     public CornerRadius CornerRadius { get => GetValue(CornerRadiusProperty); set => SetValue(CornerRadiusProperty, value); }
     public BoxShadows BoxShadow { get => GetValue(BoxShadowProperty); set => SetValue(BoxShadowProperty, value); }
     public ArcSpring Spring { get => GetValue(SpringProperty); set => SetValue(SpringProperty, value); }
+
+    /// <inheritdoc cref="FadeDurationProperty"/>
+    public TimeSpan FadeDuration { get => GetValue(FadeDurationProperty); set => SetValue(FadeDurationProperty, value); }
 
     private MotionValue<Rect>? _rect;
     private MotionValue<double>? _opacity;
@@ -51,6 +61,9 @@ public class GlidingIndicator : Control
 
     /// <summary>Current (animated) rectangle in the indicator's coordinates.</summary>
     public Rect CurrentRect => _rect?.Value ?? default;
+
+    /// <summary>Current (animated) opacity: 0 before the first move and after a hide has finished.</summary>
+    public double CurrentOpacity => _opacity?.Value ?? 0;
 
     /// <summary>
     /// Moves to <paramref name="target"/>. With <paramref name="animate"/> false it snaps (keyboard moves,
@@ -70,7 +83,20 @@ public class GlidingIndicator : Control
     /// <param name="target">The new rectangle in the indicator's coordinates.</param>
     /// <param name="spring">The spring for this move (position and size).</param>
     /// <param name="animate">False snaps there.</param>
-    public void MoveTo(Rect target, SpringSpec spring, bool animate = true)
+    public void MoveTo(Rect target, SpringSpec spring, bool animate = true) => Move(target, MotionSpec.Spring(spring), animate);
+
+    /// <summary>
+    /// Moves to <paramref name="target"/> on a timed curve instead of a spring (an indicator whose Arc source tweens it,
+    /// for example a 220ms tab highlight). Otherwise behaves like <see cref="MoveTo(Rect, bool, ArcSpring?)"/>.
+    /// </summary>
+    /// <param name="target">The new rectangle in the indicator's coordinates.</param>
+    /// <param name="duration">How long the move takes.</param>
+    /// <param name="easing">The curve of the move.</param>
+    /// <param name="animate">False snaps there.</param>
+    public void MoveTo(Rect target, TimeSpan duration, Avalonia.Animation.Easings.Easing easing, bool animate = true)
+        => Move(target, MotionSpec.Tween(duration, easing), animate);
+
+    private void Move(Rect target, MotionSpec spec, bool animate)
     {
         _rect ??= Create(target);
         _opacity ??= CreateOpacity();
@@ -82,7 +108,7 @@ public class GlidingIndicator : Control
             if (full)
             {
                 _opacity.Jump(0);
-                _ = _opacity.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
+                _ = _opacity.AnimateTo(1, MotionSpec.Tween(FadeDuration, ArcEasings.Standard));
             }
             else
             {
@@ -92,7 +118,7 @@ public class GlidingIndicator : Control
         }
         if (_opacity.Target < 1)
         {
-            _ = full ? _opacity.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard)) : Task.CompletedTask;
+            _ = full ? _opacity.AnimateTo(1, MotionSpec.Tween(FadeDuration, ArcEasings.Standard)) : Task.CompletedTask;
             if (!full)
             {
                 _opacity.Jump(1);
@@ -100,7 +126,7 @@ public class GlidingIndicator : Control
         }
         if (full)
         {
-            _ = _rect.AnimateTo(target, MotionSpec.Spring(spring));
+            _ = _rect.AnimateTo(target, spec);
         }
         else
         {
@@ -118,7 +144,7 @@ public class GlidingIndicator : Control
         _hasTarget = false;
         if (animate && IsLoaded && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full)
         {
-            _ = _opacity.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
+            _ = _opacity.AnimateTo(0, MotionSpec.Tween(FadeDuration, ArcEasings.Standard));
         }
         else
         {

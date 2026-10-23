@@ -73,11 +73,42 @@ public sealed class ArcMotion
         }
         else
         {
-            tokenLevel = visual is Control c && c.TryFindResource(ArcDesignTokenKind.MotionMode, out var mode)
-                ? Parse(mode as string)
-                : ArcMotionLevel.Full;
+            tokenLevel = visual is Control c ? ThemeLevel(c) : ArcMotionLevel.Full;
         }
         return (ArcMotionLevel)Math.Min((int)level, (int)tokenLevel);
+    }
+
+    // MotionMode is an application-wide token, so the walk up the resource scopes it needs is done once per TopLevel and
+    // kept until the resources or the theme variant change. Code-driven motion asks for the level on every retarget.
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<TopLevel, ThemeLevelCache> s_themeLevels = new();
+
+    private sealed class ThemeLevelCache
+    {
+        public ArcMotionLevel Level;
+        public bool Valid;
+
+        public void Invalidate() => Valid = false;
+    }
+
+    private static ArcMotionLevel ThemeLevel(Control control)
+    {
+        if (TopLevel.GetTopLevel(control) is not { } top)
+        {
+            return control.TryFindResource(ArcDesignTokenKind.MotionMode, out var detached) ? Parse(detached as string) : ArcMotionLevel.Full;
+        }
+        if (!s_themeLevels.TryGetValue(top, out var cache))
+        {
+            cache = new ThemeLevelCache();
+            s_themeLevels.Add(top, cache);
+            top.ResourcesChanged += (_, _) => cache.Invalidate();
+            top.ActualThemeVariantChanged += (_, _) => cache.Invalidate();
+        }
+        if (!cache.Valid)
+        {
+            cache.Level = top.TryFindResource(ArcDesignTokenKind.MotionMode, out var mode) ? Parse(mode as string) : ArcMotionLevel.Full;
+            cache.Valid = true;
+        }
+        return cache.Level;
     }
 
     /// <summary>True when spatial motion (springs, travel, scale) should run.</summary>

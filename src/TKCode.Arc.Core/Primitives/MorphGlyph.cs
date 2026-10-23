@@ -98,6 +98,7 @@ public class MorphGlyph : Control
         if (string.IsNullOrWhiteSpace(data))
         {
             _geometry = null;
+            _geometryStale = false;
             InvalidateVisual();
             return;
         }
@@ -121,14 +122,22 @@ public class MorphGlyph : Control
 
     private void OnMorphChanged()
     {
-        _geometry = _morph?.BuildGeometry();
+        // Built in Render: the scheduler may report several changes before a frame is drawn.
+        _geometryStale = true;
         InvalidateVisual();
     }
+
+    private bool _geometryStale;
 
     protected override Size MeasureOverride(Size availableSize) => new(Size, Size);
 
     public override void Render(DrawingContext context)
     {
+        if (_geometryStale)
+        {
+            _geometryStale = false;
+            _geometry = _morph?.BuildGeometry();
+        }
         var geometry = _geometry;
         var brush = Foreground;
         if (geometry is null || brush is null)
