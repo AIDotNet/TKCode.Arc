@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NewsletterSignupFormOnlyDemo">
+    <!-- No stack and no readers: the copy and the form alone, in one column. -->
+    <arc:NewsletterSignup IsPublicationVisible="False"
+                          IsReadersVisible="False"
+                          Title="Product notes, once a month"
+                          Description="What shipped, what changed and what is next. No marketing." />
+</UserControl>

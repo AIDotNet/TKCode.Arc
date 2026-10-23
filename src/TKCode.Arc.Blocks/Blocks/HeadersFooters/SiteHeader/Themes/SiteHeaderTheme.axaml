@@ -1,0 +1,676 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Ported from Arc's free site-header block (MIT, Copyright (c) 2026 Elia Kuratli): site-header.module.css.
+        The header paints outside its own bounds (panel, sheet, scrim): AtomUI clips templated controls by default, so
+        ClipToBounds is False here and on the template's panels. The panel and the sheet are built in code (they are
+        added and removed with their own motion); the bar's parts are static.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SiteHeader}" TargetType="arc:SiteHeader">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="ZIndex" Value="20" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteHeader">
+                <Border Name="PART_Surface"
+                        BorderThickness="0,0,0,1"
+                        ClipToBounds="False">
+                    <Panel Name="PART_Root" ClipToBounds="False">
+                        <Panel Name="PART_Inner"
+                               ClipToBounds="False"
+                               MaxWidth="{arc:SiteHeaderTokenResource InnerMaxWidth}">
+                            <arc:SiteHeaderBar Name="PART_Bar"
+                                               Height="{arc:SiteHeaderTokenResource BarHeight}"
+                                               Gap="{arc:SiteHeaderTokenResource BarGap}"
+                                               NavInset="{arc:SiteHeaderTokenResource NavInset}"
+                                               Variant="{TemplateBinding Variant}">
+                                <Panel Name="PART_BrandSlot">
+                                    <arc:SiteBrandButton Name="PART_Brand" VerticalAlignment="Center" />
+                                </Panel>
+                                <Border Name="PART_NavList" VerticalAlignment="Center">
+                                    <Panel Name="PART_NavHost" ClipToBounds="False">
+                                        <!-- The hover block, the current underline and the current capsule glide behind the items. -->
+                                        <arc:GlidingIndicator Name="PART_Hover"
+                                                              FadeDuration="0"
+                                                              Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                              CornerRadius="{arc:SiteHeaderTokenResource NavItemRadius}" />
+                                        <arc:GlidingIndicator Name="PART_Underline"
+                                                              FadeDuration="0"
+                                                              Fill="{arc:ArcDesignTokenResource Accent}"
+                                                              CornerRadius="2" />
+                                        <arc:GlidingIndicator Name="PART_Capsule"
+                                                              FadeDuration="0"
+                                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                                              StrokeThickness="1"
+                                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                        <StackPanel Name="PART_NavItems"
+                                                    Orientation="Horizontal"
+                                                    Spacing="{arc:SiteHeaderTokenResource NavItemGap}" />
+                                    </Panel>
+                                </Border>
+                                <StackPanel Name="PART_Actions"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:SiteHeaderTokenResource ActionGap}">
+                                    <ContentPresenter Name="PART_Trailing"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding TrailingContent}" />
+                                    <arc:SiteActionButton Name="PART_Secondary" />
+                                    <arc:SiteActionButton Name="PART_Primary" IsPrimary="True" />
+                                    <arc:SiteMenuButton Name="PART_MenuButton" IsExpandable="True" />
+                                </StackPanel>
+                            </arc:SiteHeaderBar>
+                            <arc:SiteHeaderFloatLayer Name="PART_PanelLayer"
+                                                      ClipToBounds="False"
+                                                      PanelTop="{arc:SiteHeaderTokenResource PanelTop}"
+                                                      PanelInset="{arc:SiteHeaderTokenResource PanelInset}" />
+                        </Panel>
+                        <arc:SiteHeaderFloatLayer Name="PART_SheetLayer"
+                                                  ClipToBounds="False"
+                                                  SheetTop="{arc:SiteHeaderTokenResource BarHeight}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Surface">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^ /template/ arc|SiteHeaderBar#PART_Bar">
+            <Setter Property="Margin" Value="{arc:SiteHeaderTokenResource InnerPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SiteHeaderBar#PART_Bar">
+            <Setter Property="Margin" Value="{arc:SiteHeaderTokenResource InnerPaddingNarrow}" />
+        </Style>
+        <!-- Solid: the bar turns opaque once the page scrolls, the menu sheet is open or a panel is open. -->
+        <Style Selector="^:solid /template/ Border#PART_Surface">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <!-- The centered layout's quiet capsule around the links. -->
+        <Style Selector="^:centered /template/ Border#PART_NavList">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource CapsulePadding}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A navigation item: 36 high (32 pill in the centered layout), secondary text that turns primary when current, open or hovered. -->
+    <ControlTheme x:Key="{x:Type arc:SiteNavButton}" TargetType="arc:SiteNavButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:SiteHeaderTokenResource NavItemHeight}" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource NavItemPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:SiteHeaderTokenResource NavItemRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteNavButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="Transparent"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:SiteHeaderTokenResource NavItemContentGap}">
+                            <TextBlock Name="PART_Label"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding Label}"
+                                       LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          IsVisible="False"
+                                          VerticalAlignment="Center"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:SiteHeaderTokenResource ChevronSize}"
+                                          StrokeThickness="{arc:SiteHeaderTokenResource ChevronStroke}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          RenderTransformOrigin="50%,50%" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:capsule">
+            <Setter Property="Height" Value="{arc:SiteHeaderTokenResource NavItemHeightCentered}" />
+            <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource NavItemPaddingCentered}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:capsule /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:expanded">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:chevron /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:SiteBrandButton}" TargetType="arc:SiteBrandButton">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource BrandPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:SiteHeaderTokenResource BrandRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteBrandButton">
+                <Panel>
+                    <Border Background="Transparent"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The bar's and the sheet's actions: 36 high (44 in the sheet), pressed scale .97. -->
+    <ControlTheme x:Key="{x:Type arc:SiteActionButton}" TargetType="arc:SiteActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:SiteHeaderTokenResource ActionHeight}" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource ActionPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="{TemplateBinding Label}"
+                                   LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="20"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:primary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:secondary:fine-hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:primary:fine-hover">
+            <Setter Property="Opacity" Value="0.9" />
+        </Style>
+        <Style Selector="^:sheet">
+            <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:sheet:secondary">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The menu button of narrow layouts: 40 square, radius 12, tinted while pressed. -->
+    <ControlTheme x:Key="{x:Type arc:SiteMenuButton}" TargetType="arc:SiteMenuButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:SiteHeaderTokenResource MenuButtonSize}" />
+        <Setter Property="Height" Value="{arc:SiteHeaderTokenResource MenuButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:SiteHeaderTokenResource MenuButtonRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteMenuButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:SiteMenuIcon Name="PART_Icon"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          IsOpen="{TemplateBinding IsExpanded}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          Size="{arc:SiteHeaderTokenResource MenuGlyphSize}"
+                                          Stroke="{arc:SiteHeaderTokenResource MenuGlyphStroke}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-2"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A mega panel link: icon, title, description; the background tints on hover and keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:SitePanelLink}" TargetType="arc:SitePanelLink">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource PanelLinkPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:SiteHeaderTokenResource PanelLinkRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SitePanelLink">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      IsVisible="False"
+                                      VerticalAlignment="Top"
+                                      Margin="0,2,12,0"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="{arc:SiteHeaderTokenResource LinkIconSize}"
+                                      StrokeThickness="{arc:SiteHeaderTokenResource LinkIconStroke}"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <StackPanel Grid.Column="1" Spacing="{arc:SiteHeaderTokenResource PanelLinkTextGap}">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:SiteHeaderTokenResource BodyLineHeight}"
+                                       LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Name="PART_Description"
+                                       IsVisible="False"
+                                       Text="{TemplateBinding Description}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       LineHeight="{arc:SiteHeaderTokenResource BodyLineHeight}"
+                                       LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:has-icon /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:fine-hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The feature card: a 16:10 picture that grows on hover, a title with an arrow that nudges right, a muted sentence. -->
+    <ControlTheme x:Key="{x:Type arc:SiteFeatureCard}" TargetType="arc:SiteFeatureCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource FeaturePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:SiteHeaderTokenResource FeatureRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFeatureCard">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Spacing="{arc:SiteHeaderTokenResource FeatureGap}" VerticalAlignment="Top">
+                            <arc:SiteHeaderRatioBox Name="PART_ImageBox"
+                                                    IsVisible="False"
+                                                    Ratio="{arc:SiteHeaderTokenResource FeatureImageRatio}"
+                                                    Margin="0,0,0,4">
+                                <Border Background="{arc:ArcDesignTokenResource Border}"
+                                        CornerRadius="{arc:SiteHeaderTokenResource FeatureImageRadius}"
+                                        ClipToBounds="True">
+                                    <Image Name="PART_Image"
+                                           Source="{TemplateBinding Image}"
+                                           Stretch="UniformToFill"
+                                           RenderTransformOrigin="50%,50%" />
+                                </Border>
+                            </arc:SiteHeaderRatioBox>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="{arc:SiteHeaderTokenResource FeatureTextPadding}"
+                                        Spacing="{arc:SiteHeaderTokenResource FeatureArrowGap}">
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{TemplateBinding Title}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}" />
+                                <arc:ArcGlyph Name="PART_Arrow"
+                                              VerticalAlignment="Center"
+                                              Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                              Size="{arc:SiteHeaderTokenResource ChevronSize}"
+                                              StrokeThickness="{arc:SiteHeaderTokenResource ChevronStroke}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Description"
+                                       IsVisible="False"
+                                       Margin="{arc:SiteHeaderTokenResource FeatureTextPadding}"
+                                       Text="{TemplateBinding Description}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       LineHeight="{arc:SiteHeaderTokenResource BodyLineHeight}"
+                                       LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:has-image /template/ arc|SiteHeaderRatioBox#PART_ImageBox">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-description /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ Image#PART_Image">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="none" />
+        </Style>
+        <Style Selector="^:fine-hover /template/ Image#PART_Image">
+            <Setter Property="RenderTransform" Value="scale(1.03)" />
+        </Style>
+        <Style Selector="^:fine-hover /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="translateX(2px)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Image#PART_Image">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A sheet row: 52 high, bottom rule drawn by the list; a group shows a chevron, the current page a dot. -->
+    <ControlTheme x:Key="{x:Type arc:SiteSheetRow}" TargetType="arc:SiteSheetRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource SheetRowPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteSheetRow">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            MinHeight="{arc:SiteHeaderTokenResource SheetRowMinHeight}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{TemplateBinding Label}"
+                                       LetterSpacing="{arc:SiteHeaderTokenResource BrandLetterSpacing}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Grid.Column="1"
+                                          IsVisible="False"
+                                          VerticalAlignment="Center"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:SiteHeaderTokenResource SheetChevronSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          RenderTransformOrigin="50%,50%" />
+                            <Ellipse Name="PART_Dot"
+                                     Grid.Column="1"
+                                     IsVisible="False"
+                                     VerticalAlignment="Center"
+                                     Width="{arc:SiteHeaderTokenResource SheetDotSize}"
+                                     Height="{arc:SiteHeaderTokenResource SheetDotSize}"
+                                     Fill="{arc:ArcDesignTokenResource Accent}" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:group /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:current:not(:group) /template/ Ellipse#PART_Dot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A link of a sheet group: 44 high, secondary text, tinted while pressed. -->
+    <ControlTheme x:Key="{x:Type arc:SiteSheetLink}" TargetType="arc:SiteSheetLink">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource SheetLinkPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:SiteHeaderTokenResource SheetLinkRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteSheetLink">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            MinHeight="{arc:SiteHeaderTokenResource SheetLinkMinHeight}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:SiteHeaderTokenResource SheetLinkGap}">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          IsVisible="False"
+                                          VerticalAlignment="Center"
+                                          Data="{TemplateBinding Icon}"
+                                          Size="{arc:SiteHeaderTokenResource LinkIconSize}"
+                                          StrokeThickness="{arc:SiteHeaderTokenResource LinkIconStroke}"
+                                          Foreground="{TemplateBinding Foreground}" />
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{TemplateBinding Label}"
+                                       LetterSpacing="{arc:SiteHeaderTokenResource LabelLetterSpacing}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:has-icon /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

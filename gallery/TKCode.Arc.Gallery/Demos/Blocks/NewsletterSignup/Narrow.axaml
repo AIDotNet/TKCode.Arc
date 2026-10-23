@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NewsletterSignupNarrowDemo">
+    <!-- A 320 wide block: the form is narrower than 300, so the field and the button stack, both full width. -->
+    <Border Width="320" HorizontalAlignment="Center">
+        <arc:NewsletterSignup x:Name="Signup" IsPublicationVisible="False" />
+    </Border>
+</UserControl>

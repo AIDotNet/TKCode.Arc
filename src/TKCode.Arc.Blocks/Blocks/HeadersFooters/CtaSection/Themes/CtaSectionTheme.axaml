@@ -1,0 +1,590 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Ported from Arc's free cta-section block (MIT, Copyright (c) 2026 Elia Kuratli): cta-section.module.css.
+        One template holds the three shapes (centered, split, banner); the pseudo-class of the Variant shows one of them.
+        Paddings, radii and the stacking of rows follow the block's own width (Arc's container queries) through :stacked
+        (at most 860) and :narrow (at most 560). Values that change with those are set in styles, never on the elements,
+        so the pseudo-class styles can override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CtaSection}" TargetType="arc:CtaSection">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CtaSection">
+                <Panel Background="{TemplateBinding Background}">
+                    <!-- Centered: a closing section on one quiet surface. -->
+                    <Border Name="PART_CenteredSection"
+                            IsVisible="False"
+                            VerticalAlignment="Top"
+                            MaxWidth="{arc:CtaSectionTokenResource ContentMaxWidth}">
+                        <Border Name="PART_CenteredCard"
+                                BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Background="{arc:CtaSectionTokenResource CenteredBackground}">
+                            <StackPanel Spacing="{arc:ArcDesignTokenResource Space4}">
+                                <arc:CtaBalancedText Name="PART_CenteredTitle"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingDisplay}" Tracking="{arc:ArcDesignTokenResource TrackingDisplay}"
+                                                     Classes="title"
+                                                     Text="{TemplateBinding DisplayTitle}"
+                                                     FontSize="{TemplateBinding TitleFontSize}"
+                                                     MaxChars="20"
+                                                     IsBalanced="True"
+                                                     HorizontalAlignment="Center"
+                                                     TextAlignment="Center"
+                                                     TextWrapping="Wrap" />
+                                <arc:CtaBalancedText Name="PART_CenteredDescription"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                                     Classes="description"
+                                                     Text="{TemplateBinding DisplayDescription}"
+                                                     MaxWidth="{arc:CtaSectionTokenResource DescriptionMaxWidth}"
+                                                     HorizontalAlignment="Center"
+                                                     TextAlignment="Center"
+                                                     TextWrapping="Wrap" />
+                                <arc:CtaFlowPanel Name="PART_CenteredActions"
+                                                  Classes="actions"
+                                                  Margin="0,16,0,0"
+                                                  HorizontalAlignment="Center"
+                                                  ContentAlignment="Center" />
+                                <arc:CtaFlowPanel Name="PART_Note"
+                                                  IsVisible="{TemplateBinding HasNoteRow}"
+                                                  Margin="0,12,0,0"
+                                                  HorizontalAlignment="Center"
+                                                  ContentAlignment="Center">
+                                    <arc:SiteFaceStack Name="PART_NoteFaces"
+                                                       IsVisible="{TemplateBinding HasFaces}"
+                                                       MaxCount="4"
+                                                       Diameter="{arc:CtaSectionTokenResource NoteFaceSize}"
+                                                       RingBrush="{arc:ArcDesignTokenResource Surface}"
+                                                       PlaceholderBrush="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                                    <TextBlock Name="PART_NoteText"
+                                               IsVisible="{TemplateBinding HasNoteText}"
+                                               Text="{TemplateBinding DisplayNote}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               VerticalAlignment="Center" />
+                                </arc:CtaFlowPanel>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+
+                    <!-- Split: copy beside the stage. -->
+                    <Border Name="PART_SplitSection"
+                            IsVisible="False"
+                            VerticalAlignment="Top"
+                            MaxWidth="{arc:CtaSectionTokenResource ContentMaxWidth}">
+                        <arc:CtaSplitPanel Name="PART_SplitPanel">
+                            <StackPanel Name="PART_SplitCopy" Spacing="{arc:ArcDesignTokenResource Space4}">
+                                <arc:CtaBalancedText Name="PART_SplitTitle"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingDisplay}" Tracking="{arc:ArcDesignTokenResource TrackingDisplay}"
+                                                     Classes="title"
+                                                     Text="{TemplateBinding DisplayTitle}"
+                                                     FontSize="{TemplateBinding TitleFontSize}"
+                                                     IsBalanced="True"
+                                                     HorizontalAlignment="Left"
+                                                     TextWrapping="Wrap" />
+                                <arc:CtaBalancedText Name="PART_SplitDescription"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                                     Classes="description"
+                                                     Text="{TemplateBinding DisplayDescription}"
+                                                     HorizontalAlignment="Left"
+                                                     TextWrapping="Wrap" />
+                                <StackPanel Name="PART_Points"
+                                            Margin="0,8,0,0"
+                                            Spacing="{arc:ArcDesignTokenResource Space2}" />
+                                <arc:CtaFlowPanel Name="PART_SplitActions"
+                                                  Classes="actions"
+                                                  Margin="0,16,0,0"
+                                                  HorizontalAlignment="Left" />
+                            </StackPanel>
+                            <Border Name="PART_Stage"
+                                    BorderThickness="1"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Background="{arc:CtaSectionTokenResource StageBackground}">
+                                <ContentPresenter Name="PART_StageContent"
+                                                  HorizontalContentAlignment="Center"
+                                                  VerticalContentAlignment="Center" />
+                            </Border>
+                        </arc:CtaSplitPanel>
+                    </Border>
+
+                    <!-- Banner: one line that closes its gap when dismissed. -->
+                    <arc:CtaBannerHost Name="PART_BannerHost" IsVisible="False" VerticalAlignment="Top">
+                        <Border Name="PART_BannerPad" MaxWidth="{arc:CtaSectionTokenResource BannerMaxWidth}">
+                            <Border Name="PART_Banner"
+                                    BorderThickness="1"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Background="{arc:ArcDesignTokenResource Surface}">
+                                <arc:CtaBannerPanel Name="PART_BannerPanel">
+                                    <WrapPanel Name="PART_BannerText"
+                                               Orientation="Horizontal"
+                                               ItemSpacing="8"
+                                               LineSpacing="2"
+                                               VerticalAlignment="Center">
+                                        <arc:CtaBalancedText Name="PART_BannerTitle"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                                             Classes="banner-text"
+                                                             Text="{TemplateBinding DisplayTitle}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                             TextWrapping="Wrap" />
+                                        <arc:CtaBalancedText Name="PART_BannerDescription"
+                                                     Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                                             Classes="banner-text"
+                                                             Text="{TemplateBinding DisplayDescription}"
+                                                             Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                             TextWrapping="Wrap" />
+                                    </WrapPanel>
+                                    <DockPanel Name="PART_BannerActions" LastChildFill="False">
+                                        <arc:CtaDismissButton Name="PART_Dismiss"
+                                                              DockPanel.Dock="Right"
+                                                              Margin="4,0,0,0"
+                                                              IsVisible="False" />
+                                    </DockPanel>
+                                </arc:CtaBannerPanel>
+                            </Border>
+                        </Border>
+                    </arc:CtaBannerHost>
+
+                    <!-- The polite status line: out of the layout, so it takes no space. -->
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+
+        <!-- Which shape shows. -->
+        <Style Selector="^:centered /template/ Border#PART_CenteredSection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:split /template/ Border#PART_SplitSection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:banner /template/ arc|CtaBannerHost#PART_BannerHost">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Type (CtaBalancedText reports TextBlock as its style key, so the selectors name TextBlock). The headline: display font, 500, display tracking and leading. -->
+        <Style Selector="^ /template/ TextBlock.title">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.description">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.banner-text">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock.description">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        </Style>
+
+        <!-- Centered geometry. -->
+        <Style Selector="^ /template/ Border#PART_CenteredSection">
+            <Setter Property="Padding" Value="32,64" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_CenteredCard">
+            <Setter Property="Padding" Value="32,96" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        </Style>
+
+        <!-- Split geometry. -->
+        <Style Selector="^ /template/ Border#PART_SplitSection">
+            <Setter Property="Padding" Value="32,96" />
+        </Style>
+        <Style Selector="^ /template/ arc|CtaSplitPanel#PART_SplitPanel">
+            <Setter Property="Gap" Value="64" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Stage">
+            <Setter Property="MinHeight" Value="{arc:CtaSectionTokenResource StageMinHeight}" />
+            <Setter Property="Padding" Value="32" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(24px)" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Stage.revealed">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+
+        <!-- Banner geometry. -->
+        <Style Selector="^ /template/ Border#PART_BannerPad">
+            <Setter Property="Padding" Value="32,24" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Banner">
+            <Setter Property="Padding" Value="{arc:CtaSectionTokenResource BannerPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:CtaSectionTokenResource BannerRadius}" />
+        </Style>
+
+        <!-- At most 860 wide: the split is one column. -->
+        <Style Selector="^:stacked /template/ Border#PART_SplitSection">
+            <Setter Property="Padding" Value="32,64" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|CtaSplitPanel#PART_SplitPanel">
+            <Setter Property="IsStacked" Value="True" />
+            <Setter Property="Gap" Value="40" />
+        </Style>
+        <Style Selector="^:stacked /template/ Border#PART_Stage">
+            <Setter Property="MinHeight" Value="320" />
+        </Style>
+
+        <!-- At most 560 wide: tighter padding, rounder cards, full-width stacked actions, a stacked banner. -->
+        <Style Selector="^:narrow /template/ Border#PART_CenteredSection">
+            <Setter Property="Padding" Value="16,40" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_CenteredCard">
+            <Setter Property="Padding" Value="20,64" />
+            <Setter Property="CornerRadius" Value="{arc:CtaSectionTokenResource NarrowCardRadius}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_SplitSection">
+            <Setter Property="Padding" Value="16,48" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Stage">
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="CornerRadius" Value="{arc:CtaSectionTokenResource NarrowCardRadius}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|CtaFlowPanel.actions">
+            <Setter Property="IsStacked" Value="True" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_BannerPad">
+            <Setter Property="Padding" Value="16" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Banner">
+            <Setter Property="Padding" Value="16" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|CtaBannerPanel#PART_BannerPanel">
+            <Setter Property="IsStacked" Value="True" />
+        </Style>
+
+        <!-- Motion: the stage rises in once, 480 ms on the enter curve (opacity and travel together). -->
+        <Style Selector="^:motion-full /template/ Border#PART_Stage">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Considered" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- An action's content: the label, then the arrow that leans 3 px forward on hover (160 ms), or a check first once confirmed. -->
+    <ControlTheme x:Key="{x:Type arc:CtaActionContent}" TargetType="arc:CtaActionContent">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CtaActionContent">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <arc:ArcGlyph Name="PART_Check"
+                                  IsVisible="{TemplateBinding HasCheck}"
+                                  Data="{x:Static arc:ArcIcons.Check}"
+                                  Size="16"
+                                  StrokeThickness="2.25"
+                                  VerticalAlignment="Center" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                    <arc:ArcGlyph Name="PART_Arrow"
+                                  IsVisible="{TemplateBinding HasArrow}"
+                                  Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                  Size="16"
+                                  StrokeThickness="2"
+                                  VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="translateX(0px)" />
+        </Style>
+        <Style Selector="^:lean /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="translateX(3px)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The banner's dismiss button: 36 round, a 16 px X in TextMuted, Surface-muted fill on hover, .94 press. -->
+    <ControlTheme x:Key="{x:Type arc:CtaDismissButton}" TargetType="arc:CtaDismissButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CtaDismissButton">
+                <Panel>
+                    <Border Name="PART_Circle"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="18" />
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                  Size="16"
+                                  StrokeThickness="1.75"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:CtaSectionTokenResource DismissFocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="20"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.94)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A benefit line of the split shape: a 16 px Success check and the text in TextSecondary, 12 apart. -->
+    <ControlTheme x:Key="{x:Type arc:CtaPoint}" TargetType="arc:CtaPoint">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CtaPoint">
+                <Grid ColumnDefinitions="Auto,12,*">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                  Size="16"
+                                  StrokeThickness="2"
+                                  Foreground="{arc:ArcDesignTokenResource Success}"
+                                  VerticalAlignment="Center" />
+                    <arc:CtaBalancedText Grid.Column="2"
+                                         Text="{TemplateBinding Text}"
+                                         Leading="{arc:ArcDesignTokenResource LeadingBody}"
+                                         FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                         Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                         TextWrapping="Wrap"
+                                         VerticalAlignment="Center" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The setup card: a raised 1px card (radius 26, clipped) with the header, the 2 px progress line and the steps. -->
+    <ControlTheme x:Key="{x:Type arc:CtaSetupCard}" TargetType="arc:CtaSetupCard">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="MaxWidth" Value="{arc:CtaSectionTokenResource SetupMaxWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CtaSetupCard">
+                <Border Name="PART_Card"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
+                    <Border CornerRadius="25" ClipToBounds="True">
+                        <StackPanel>
+                            <Grid ColumnDefinitions="Auto,10,*,Auto" Margin="18,16,18,14">
+                                <Border Width="28"
+                                        Height="28"
+                                        CornerRadius="8"
+                                        Background="{arc:ArcDesignTokenResource Foreground}">
+                                    <TextBlock Text="{TemplateBinding Initial}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Background}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+                                <TextBlock Grid.Column="2"
+                                           Text="{TemplateBinding Workspace}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                                <Grid Grid.Column="3" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Setting" Classes="status shown" Text="Setting up" />
+                                    <TextBlock Name="PART_Ready" Classes="status" Text="Ready" />
+                                </Grid>
+                            </Grid>
+                            <arc:CtaProgressLine Margin="18,0" Value="{TemplateBinding Progress}" />
+                            <StackPanel Name="PART_Steps" Margin="8,10,8,12" Spacing="2" />
+                        </StackPanel>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+
+        <!-- "Setting up" / "Ready": the shown one is opaque, the other sits 4 px low, blurred 2 px and transparent. -->
+        <Style Selector="^ /template/ TextBlock.status">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(4px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^ /template/ TextBlock.status.shown">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^:done /template/ TextBlock#PART_Ready">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CtaProgressLine">
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <!-- Motion: status words 160 / 240 / 160 ms, the line 480 ms in-out. Reduced and Off jump. -->
+        <Style Selector="^:motion-full /template/ TextBlock.status">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Enter" />
+                    <arc:ArcEffectTransition Property="Effect" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|CtaProgressLine">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Value" Tween="Considered">
+                        <arc:ArcDoubleTransition.Easing>
+                            <SplineEasing X1="0.65" Y1="0" X2="0.35" Y2="1" />
+                        </arc:ArcDoubleTransition.Easing>
+                    </arc:ArcDoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A setup step: 44 high, radius 14, the mark, the one-line name and (last step) the faces. -->
+    <ControlTheme x:Key="{x:Type arc:CtaSetupStep}" TargetType="arc:CtaSetupStep">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CtaSetupStep">
+                <Border Name="PART_Frame"
+                        MinHeight="{arc:CtaSectionTokenResource StepHeight}"
+                        CornerRadius="{arc:CtaSectionTokenResource StepRadius}"
+                        Padding="10,0">
+                    <Grid ColumnDefinitions="Auto,12,*,Auto" VerticalAlignment="Center">
+                        <arc:CtaStepMark Name="PART_Mark" />
+                        <TextBlock Name="PART_Label"
+                                   Grid.Column="2"
+                                   Text="{TemplateBinding Label}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" />
+                        <arc:SiteFaceStack Name="PART_Faces"
+                                           Grid.Column="3"
+                                           IsVisible="False"
+                                           Margin="12,0,0,0"
+                                           Diameter="{arc:CtaSectionTokenResource SetupFaceSize}"
+                                           RingBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                           PlaceholderBrush="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CtaStepMark#PART_Mark">
+            <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="FillBrush" Value="Transparent" />
+            <Setter Property="CheckBrush" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="IsDashed" Value="True" />
+            <Setter Property="CheckScale" Value="0.5" />
+            <Setter Property="CheckOpacity" Value="0" />
+        </Style>
+        <!-- The current step: a muted fill, a solid TextMuted ring. -->
+        <Style Selector="^:active /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:active /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:active /template/ arc|CtaStepMark#PART_Mark">
+            <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="IsDashed" Value="False" />
+        </Style>
+        <!-- A finished step: Foreground text, a Success disc with a check that springs in. -->
+        <Style Selector="^:done /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:done /template/ arc|CtaStepMark#PART_Mark">
+            <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="IsDashed" Value="False" />
+            <Setter Property="CheckScale" Value="1" />
+            <Setter Property="CheckOpacity" Value="1" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_Frame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Label">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|CtaStepMark#PART_Mark">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="RingBrush" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="FillBrush" Tween="Standard" />
+                    <arc:ArcDoubleTransition Property="CheckScale" Tween="Spring" />
+                    <arc:ArcDoubleTransition Property="CheckOpacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

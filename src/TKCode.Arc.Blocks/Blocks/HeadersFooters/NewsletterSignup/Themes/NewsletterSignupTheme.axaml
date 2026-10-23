@@ -1,0 +1,793 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Ported from Arc's free newsletter-signup block (MIT, Copyright (c) 2026 Elia Kuratli): newsletter-signup.module.css.
+
+        Inline: at most 1120 wide and centered, padding 96 32, two columns (the copy at most 540, the stack at most 440, 64
+        apart, centered on each other); neither the stack nor the readers: one column at most 720. Card (:card): the padding
+        80 24, a clipped card at most 460 wide with a tray (248 high) for the stack above the body. The breakpoints follow the
+        block's own width: :compact (860) one column, :narrow (520) tighter, :tiny (400), :micro (360). Values that change with
+        those pseudo-classes are styles, not template values (a template value would win over them).
+    -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterSignup}" TargetType="arc:NewsletterSignup">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterSignup">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_Section">
+                        <Grid Name="PART_Grid" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                            <arc:NewsletterColumn Name="PART_Intro" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <StackPanel>
+                                    <arc:NewsletterBalancedText Name="PART_Title"
+                                               HorizontalAlignment="Left"
+                                               Text="{TemplateBinding DisplayTitle}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontSize="{TemplateBinding TitleFontSize}"
+                                               LineHeight="{TemplateBinding TitleLineHeight}"
+                                               LetterSpacing="{TemplateBinding TitleLetterSpacing}"
+                                               TextWrapping="Wrap"
+                                               AutomationProperties.HeadingLevel="2" />
+                                    <TextBlock Name="PART_Description"
+                                               Text="{TemplateBinding DisplayDescription}"
+                                               TextWrapping="Wrap" />
+                                    <arc:NewsletterForm Name="PART_Form" />
+                                </StackPanel>
+                            </arc:NewsletterColumn>
+                            <StackPanel Name="PART_Aside" Grid.Column="1" VerticalAlignment="Center">
+                                <arc:NewsletterIssueStack Name="PART_Stack"
+                                                          MaxWidth="{arc:NewsletterSignupTokenResource StackMaxWidth}"
+                                                          TopInset="{arc:NewsletterSignupTokenResource StackTopInset}"
+                                                          Step="{arc:NewsletterSignupTokenResource StackStep}"
+                                                          Shrink="{arc:NewsletterSignupTokenResource StackShrink}" />
+                                <arc:NewsletterReaders Name="PART_Readers"
+                                                       HorizontalAlignment="Center"
+                                                       RingBrush="{arc:ArcDesignTokenResource Background}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                    <arc:SiteAnnouncer Name="PART_Alert" IsAssertive="True" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Section">
+            <Setter Property="MaxWidth" Value="{arc:NewsletterSignupTokenResource InlineMaxWidth}" />
+            <Setter Property="Padding" Value="32,96" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Grid">
+            <Setter Property="ColumnSpacing" Value="64" />
+            <Setter Property="RowSpacing" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|NewsletterColumn#PART_Intro">
+            <Setter Property="MaxColumnWidth" Value="{arc:NewsletterSignupTokenResource IntroMaxWidth}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Description">
+            <Setter Property="Margin" Value="0,16,0,0" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="LineHeight" Value="25.2" />
+            <Setter Property="LetterSpacing" Value="-0.18" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|NewsletterForm#PART_Form">
+            <Setter Property="Margin" Value="0,40,0,0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Aside">
+            <Setter Property="Spacing" Value="24" />
+        </Style>
+
+        <!-- One column up to 860: the stack and the readers go under the copy. -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Border#PART_Section">
+                <Setter Property="Padding" Value="32,64" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_Grid">
+                <Setter Property="ColumnSpacing" Value="0" />
+                <Setter Property="RowSpacing" Value="48" />
+            </Style>
+            <Style Selector="^ /template/ arc|NewsletterColumn#PART_Intro">
+                <Setter Property="MaxColumnWidth" Value="{arc:NewsletterSignupTokenResource IntroMaxWidthCompact}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Aside">
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.Row" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ Border#PART_Section">
+                <Setter Property="Padding" Value="16,48" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_Grid">
+                <Setter Property="RowSpacing" Value="40" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Description">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+                <Setter Property="LineHeight" Value="22.4" />
+                <Setter Property="LetterSpacing" Value="-0.16" />
+            </Style>
+            <Style Selector="^ /template/ arc|NewsletterForm#PART_Form">
+                <Setter Property="Margin" Value="0,32,0,0" />
+            </Style>
+        </Style>
+        <!-- Without the stack and the readers: the copy and form alone, at most 720. -->
+        <Style Selector="^:no-aside">
+            <Style Selector="^ /template/ Border#PART_Section">
+                <Setter Property="MaxWidth" Value="{arc:NewsletterSignupTokenResource InlineMaxWidthSingle}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Aside">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_Grid">
+                <Setter Property="RowSpacing" Value="0" />
+                <Setter Property="ColumnSpacing" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^:no-publication /template/ arc|NewsletterIssueStack#PART_Stack">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-readers /template/ arc|NewsletterReaders#PART_Readers">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Card: a self-contained card whose top is a tray holding the stack, cropped where the card body begins. -->
+        <Style Selector="^:card">
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:NewsletterSignup">
+                    <Panel Background="{TemplateBinding Background}">
+                        <Border Name="PART_Section">
+                            <!-- The shadow is the outer border's; the inner one clips the tray and the body to the rounded card. -->
+                            <Border Name="PART_Card"
+                                    BorderThickness="1"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Background="{arc:ArcDesignTokenResource Surface}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                                <Border Name="PART_CardClip" ClipToBounds="True">
+                                    <StackPanel>
+                                        <Border Name="PART_Tray"
+                                                ClipToBounds="True"
+                                                BorderThickness="0,0,0,1"
+                                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                Background="{arc:NewsletterSignupTokenResource TrayBackground}">
+                                            <arc:NewsletterIssueStack Name="PART_Stack"
+                                                                      FillHeight="True"
+                                                                      MaxWidth="{arc:NewsletterSignupTokenResource StackMaxWidth}"
+                                                                      TopInset="{arc:NewsletterSignupTokenResource StackTopInset}"
+                                                                      Step="{arc:NewsletterSignupTokenResource StackStep}"
+                                                                      Shrink="{arc:NewsletterSignupTokenResource StackShrink}" />
+                                        </Border>
+                                        <Border Name="PART_Body">
+                                            <StackPanel>
+                                                <arc:NewsletterBalancedText Name="PART_Title"
+                                               HorizontalAlignment="Left"
+                                                           Text="{TemplateBinding DisplayTitle}"
+                                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           FontSize="{TemplateBinding TitleFontSize}"
+                                                           LineHeight="{TemplateBinding TitleLineHeight}"
+                                                           LetterSpacing="{TemplateBinding TitleLetterSpacing}"
+                                                           TextWrapping="Wrap"
+                                                           AutomationProperties.HeadingLevel="2" />
+                                                <TextBlock Name="PART_Description"
+                                                           Text="{TemplateBinding DisplayDescription}"
+                                                           TextWrapping="Wrap" />
+                                                <arc:NewsletterForm Name="PART_Form" />
+                                                <Border Name="PART_ReadersRow"
+                                                        BorderThickness="0,1,0,0"
+                                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                                    <arc:NewsletterReaders Name="PART_Readers"
+                                                                           RingBrush="{arc:ArcDesignTokenResource Surface}" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </Border>
+                        </Border>
+                        <arc:SiteAnnouncer Name="PART_Announcer" />
+                        <arc:SiteAnnouncer Name="PART_Alert" IsAssertive="True" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Section">
+                <Setter Property="MaxWidth" Value="{x:Static x:Double.PositiveInfinity}" />
+                <Setter Property="Padding" Value="24,80" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Card">
+                <Setter Property="MaxWidth" Value="{arc:NewsletterSignupTokenResource CardMaxWidth}" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_CardClip">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Tray">
+                <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource TrayHeight}" />
+                <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource TrayInset}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Body">
+                <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource CardBodyInset}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Description">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+                <Setter Property="LineHeight" Value="22.4" />
+                <Setter Property="LetterSpacing" Value="-0.16" />
+            </Style>
+            <Style Selector="^ /template/ arc|NewsletterForm#PART_Form">
+                <Setter Property="Margin" Value="0,24,0,0" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ReadersRow">
+                <Setter Property="Margin" Value="0,20,0,0" />
+                <Setter Property="Padding" Value="0,20,0,0" />
+            </Style>
+            <Style Selector="^:narrow">
+                <Style Selector="^ /template/ Border#PART_Section">
+                    <Setter Property="Padding" Value="16,40" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_Card">
+                    <Setter Property="CornerRadius" Value="28" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_CardClip">
+                    <Setter Property="CornerRadius" Value="28" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_Tray">
+                    <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource TrayHeightNarrow}" />
+                    <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource TrayInsetNarrow}" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_Body">
+                    <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource CardBodyInsetNarrow}" />
+                </Style>
+                <Style Selector="^ /template/ arc|NewsletterForm#PART_Form">
+                    <Setter Property="Margin" Value="0,24,0,0" />
+                </Style>
+            </Style>
+            <Style Selector="^:no-publication /template/ Border#PART_Tray">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^:no-readers /template/ Border#PART_ReadersRow">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The form: the pill over the message line, 12 apart. The pill follows the state and its own width (below 300 it stacks). -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterForm}" TargetType="arc:NewsletterForm">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterForm">
+                <StackPanel Spacing="12">
+                    <arc:NewsletterPill Name="PART_Pill" arc:ArcMotion.Tracks="True">
+                        <Grid Name="PART_Row" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                            <arc:NewsletterEmailBox Name="PART_Input" Grid.Column="0" />
+                            <arc:NewsletterSubmitButton Name="PART_Submit" Grid.Column="1" />
+                        </Grid>
+                    </arc:NewsletterPill>
+                    <arc:NewsletterMessageLine Name="PART_Message" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The pill: 58 high, 1px strong border, pill radius, padding 5 5 5 22 on the surface. -->
+        <Style Selector="^ /template/ arc|NewsletterPill#PART_Pill">
+            <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource PillHeight}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource PillInset}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Style Selector="^:pointerover:not(:done)">
+                <Setter Property="BorderBrush" Value="{arc:NewsletterSignupTokenResource PillHoverBorder}" />
+            </Style>
+            <Style Selector="^:focus-within">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^:invalid">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^:done">
+                <Setter Property="BorderBrush" Value="{arc:NewsletterSignupTokenResource PillDoneBorder}" />
+            </Style>
+            <Style Selector="^:stacked">
+                <Setter Property="Height" Value="NaN" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style Selector="^:motion-full">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Row > arc|NewsletterSubmitButton">
+            <Setter Property="Margin" Value="6,0,0,0" />
+        </Style>
+        <Style Selector="^:stacked /template/ Grid#PART_Row">
+            <Setter Property="RowSpacing" Value="8" />
+        </Style>
+        <Style Selector="^:stacked /template/ Grid#PART_Row > arc|NewsletterEmailBox">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+        <Style Selector="^:stacked /template/ Grid#PART_Row > arc|NewsletterSubmitButton">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource StackedButtonHeight}" />
+        </Style>
+
+        <!-- The note under the pill starts 22 in; 4 in a narrow block or a stacked form. -->
+        <Style Selector="^ /template/ arc|NewsletterMessageLine#PART_Message">
+            <Setter Property="Margin" Value="{arc:NewsletterSignupTokenResource MessageInset}" />
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|NewsletterMessageLine#PART_Message">
+            <Setter Property="Margin" Value="{arc:NewsletterSignupTokenResource MessageInsetNarrow}" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|NewsletterMessageLine#PART_Message">
+            <Setter Property="Margin" Value="{arc:NewsletterSignupTokenResource MessageInsetNarrow}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The email field: base 16, no frame of its own (the pill has it) and a muted placeholder; stacked, it is a 52 high pill. -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterEmailBox}" TargetType="arc:NewsletterEmailBox">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterEmailBox">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="Center">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="LineHeight" Value="22.4" />
+        <Setter Property="LetterSpacing" Value="-0.16" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Style Selector="^:done">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <!-- Below 300 the field is a 52 high pill of its own and the border colors move onto it. -->
+        <Style Selector="^:stacked">
+            <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource StackedInputHeight}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Padding" Value="20,0" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:stacked:focus">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:stacked:invalid">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:stacked:done">
+            <Setter Property="BorderBrush" Value="{arc:NewsletterSignupTokenResource PillDoneBorder}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The submit button: the foreground color as its fill with the background color as text, 14 medium, 44 high at least,
+        pill radius, padding 0 20. Hovering (idle or retry) mixes 16% toward the background; done is a faint success fill with
+        success text. Pressing scales to .97 on the Snappy spring {.26, 0}, except while sending or done.
+    -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterSubmitButton}" TargetType="arc:NewsletterSubmitButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterSubmitButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Name="PART_Labels" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <arc:SiteSwap Name="PART_Swap"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Style Selector="^:idle:pointerover /template/ Border#PART_Surface, ^:retry:pointerover /template/ Border#PART_Surface">
+            <Setter Property="Background" Value="{arc:NewsletterSignupTokenResource SubmitHoverBackground}" />
+        </Style>
+        <Style Selector="^:sending">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^:done">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:done /template/ Border#PART_Surface">
+            <Setter Property="Background" Value="{arc:NewsletterSignupTokenResource SubmitDoneBackground}" />
+        </Style>
+        <Style Selector="^:pressed:not(:sending):not(:done)">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A text button: the foreground color, a 1px underline 3px below in the strong border color that turns to the text color on hover. -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterLink}" TargetType="arc:NewsletterLink">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterLink">
+                <Panel Background="Transparent">
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Content}"
+                               LineHeight="19.6"
+                               LetterSpacing="-0.14"
+                               TextWrapping="NoWrap" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="6"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One issue: 1px Border, radius 22, padding 22 22 22 18 on the paper with its shadow; behind the front one the paper
+        fades to the back and far colors (480 ms) and the shadow goes. In the tray (:tray) there is no shadow; narrow (:narrow)
+        the radius is 20 and the padding 18 18 16, and the subject is smaller. At 400 and less an addressed issue shows only
+        its recipient.
+    -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterIssueCard}" TargetType="arc:NewsletterIssueCard">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterIssueCard">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{TemplateBinding PaperShadow}">
+                    <StackPanel>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Name="PART_Masthead"
+                                       Grid.Column="0"
+                                       Text="{TemplateBinding PublicationName}"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="24.2"
+                                       LetterSpacing="-0.66"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Name="PART_Number"
+                                       Grid.Column="1"
+                                       Margin="12,0,0,0"
+                                       VerticalAlignment="Bottom"
+                                       Text="{TemplateBinding IssueLabel}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       LetterSpacing="-0.12"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Grid>
+                        <Grid Name="PART_Meta" Margin="0,2,0,0" ColumnDefinitions="Auto,*">
+                            <TextBlock Name="PART_Date"
+                                       Grid.Column="0"
+                                       Text="{TemplateBinding IssueDate}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       LetterSpacing="-0.12"
+                                       TextWrapping="NoWrap"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <Grid Name="PART_Addressed"
+                                  Grid.Column="1"
+                                  Margin="6,0,0,0"
+                                  ColumnDefinitions="Auto,*"
+                                  IsVisible="{TemplateBinding HasRecipient}">
+                                <TextBlock Name="PART_Dot"
+                                           Grid.Column="0"
+                                           Margin="0,0,6,0"
+                                           Text="·"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                                <TextBlock Name="PART_Recipient"
+                                           Grid.Column="1"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           LetterSpacing="-0.12"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Grid>
+                        </Grid>
+                        <Border Name="PART_SubjectBox"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="0,1,0,0">
+                            <arc:NewsletterBalancedText Name="PART_Subject"
+                                       HorizontalAlignment="Left"
+                                       Text="{TemplateBinding IssueSubject}"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextWrapping="Wrap" />
+                        </Border>
+                        <StackPanel Name="PART_Stories" Spacing="10" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:NewsletterSignupTokenResource PaperBackground}" />
+        <Setter Property="PaperShadow" Value="{arc:NewsletterSignupTokenResource PaperShadow}" />
+        <Setter Property="CornerRadius" Value="{arc:NewsletterSignupTokenResource IssueRadius}" />
+        <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource IssueInset}" />
+        <Style Selector="^ /template/ Border#PART_SubjectBox">
+            <Setter Property="Margin" Value="0,20,0,16" />
+            <Setter Property="Padding" Value="0,20,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|NewsletterBalancedText#PART_Subject">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="30.8" />
+            <Setter Property="LetterSpacing" Value="-0.84" />
+            <Setter Property="MinHeight" Value="61.6" />
+        </Style>
+        <Style Selector="^:depth1">
+            <Setter Property="Background" Value="{arc:NewsletterSignupTokenResource PaperBackBackground}" />
+            <Setter Property="PaperShadow" Value="0 0 0 0 #00000000" />
+        </Style>
+        <Style Selector="^:depth2">
+            <Setter Property="Background" Value="{arc:NewsletterSignupTokenResource PaperFarBackground}" />
+            <Setter Property="PaperShadow" Value="0 0 0 0 #00000000" />
+        </Style>
+        <Style Selector="^:sizer, ^:tray">
+            <Setter Property="PaperShadow" Value="0 0 0 0 #00000000" />
+        </Style>
+        <Style Selector="^:tray /template/ arc|NewsletterBalancedText#PART_Subject, ^:narrow /template/ arc|NewsletterBalancedText#PART_Subject">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="LineHeight" Value="24.2" />
+            <Setter Property="LetterSpacing" Value="-0.66" />
+            <Setter Property="MinHeight" Value="48.4" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="CornerRadius" Value="{arc:NewsletterSignupTokenResource IssueRadiusNarrow}" />
+            <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource IssueInsetNarrow}" />
+        </Style>
+        <Style Selector="^:tiny:addressed /template/ TextBlock#PART_Date">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:tiny:addressed /template/ TextBlock#PART_Dot">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:tiny:addressed /template/ Grid#PART_Addressed">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Considered" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A story: the 44 thumbnail, the title (two lines at most, small and secondary) and the reading time (extra small and muted). -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterStoryRow}" TargetType="arc:NewsletterStoryRow">
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterStoryRow">
+                <Grid ColumnDefinitions="Auto,*,Auto" MinHeight="44">
+                    <arc:NewsletterThumb Name="PART_Thumb"
+                                         Grid.Column="0"
+                                         Margin="0,0,12,0"
+                                         Edge="{arc:NewsletterSignupTokenResource ThumbEdge}"
+                                         CornerRadius="{arc:NewsletterSignupTokenResource ThumbRadius}"
+                                         Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                    <TextBlock Name="PART_Title"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="19.6"
+                               LetterSpacing="-0.14"
+                               MaxLines="2"
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <TextBlock Name="PART_Minutes"
+                               Grid.Column="2"
+                               Margin="12,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               LetterSpacing="-0.12"
+                               TextWrapping="NoWrap"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:tiny /template/ TextBlock#PART_Minutes">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The readers row: faces (28, 24 from 400 down), 12 apart (8) from "12,480 readers" in small secondary text with a medium foreground number. -->
+    <ControlTheme x:Key="{x:Type arc:NewsletterReaders}" TargetType="arc:NewsletterReaders">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:NewsletterReaders">
+                <StackPanel Name="PART_Row" Orientation="Horizontal">
+                    <arc:SiteFaceStack Name="PART_Faces"
+                                       Margin="0,0,12,0"
+                                       VerticalAlignment="Center"
+                                       MaxCount="3"
+                                       Diameter="28"
+                                       Overlap="6"
+                                       Ring="2"
+                                       RingBrush="{TemplateBinding RingBrush}"
+                                       PlaceholderBrush="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                    <WrapPanel Name="PART_Line" VerticalAlignment="Center">
+                        <arc:AnimatedCounter Name="PART_Counter"
+                                             Value="{TemplateBinding DisplayCount}"
+                                             VerticalAlignment="Bottom"
+                                             FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                             FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Name="PART_Word"
+                                   Text="{TemplateBinding WordText}"
+                                   VerticalAlignment="Bottom"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="NoWrap" />
+                        <arc:SpringSizeDecorator Name="PART_YouHost"
+                                                 Axis="Width"
+                                                 Spring="Smooth"
+                                                 VerticalAlignment="Bottom">
+                            <TextBlock Name="PART_You"
+                                       Text="{TemplateBinding IncludingYou}"
+                                       Opacity="0"
+                                       LineHeight="19.6"
+                                       LetterSpacing="-0.14"
+                                       TextWrapping="NoWrap" />
+                        </arc:SpringSizeDecorator>
+                    </WrapPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:no-faces /template/ arc|SiteFaceStack#PART_Faces">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:tiny /template/ arc|SiteFaceStack#PART_Faces">
+            <Setter Property="Diameter" Value="24" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <!-- 360 and less: the line may wrap onto two lines and the faces sit at the top. -->
+        <Style Selector="^:micro /template/ StackPanel#PART_Row">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:micro /template/ WrapPanel#PART_Line">
+            <Setter Property="MinHeight" Value="39.2" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:micro /template/ arc|SiteFaceStack#PART_Faces">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

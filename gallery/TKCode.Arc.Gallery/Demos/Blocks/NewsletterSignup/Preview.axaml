@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NewsletterSignupPreviewDemo">
+    <!-- Arc's preview: a layout switch, a switch that makes the next send fail, and the block in a rounded frame. -->
+    <StackPanel Spacing="16">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="24">
+            <arc:SegmentedControl x:Name="Layout"
+                                  SelectedValue="inline"
+                                  SelectionChanged="OnLayoutChanged"
+                                  AutomationProperties.Name="Newsletter layout">
+                <arc:SegmentedOption Value="inline" Label="Inline" />
+                <arc:SegmentedOption Value="card" Label="Card" />
+            </arc:SegmentedControl>
+            <arc:Switch x:Name="Fail" Content="Fail the next send" VerticalAlignment="Center" />
+        </StackPanel>
+        <Border BorderThickness="1"
+                CornerRadius="20"
+                ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                Background="{arc:ArcDesignTokenResource Background}">
+            <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" ClipOverflow="0">
+                <arc:ArcContentSwap x:Name="Host" Mode="Fade" />
+            </arc:SpringSizeDecorator>
+        </Border>
+        <TextBlock Text="Subscribing is simulated in this preview. Nothing is sent."
+                   HorizontalAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

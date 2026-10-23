@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CtaSectionPreviewDemo">
+    <!-- Arc's preview: a layout switch above a framed section. The frame springs to its content's height after a switch. -->
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="Layouts"
+                              AutomationProperties.Name="Call to action layout"
+                              HorizontalAlignment="Center"
+                              SelectedValue="centered">
+            <arc:SegmentedOption Value="centered" Label="Centered" />
+            <arc:SegmentedOption Value="split" Label="Split" />
+            <arc:SegmentedOption Value="banner" Label="Banner" />
+        </arc:SegmentedControl>
+        <Border x:Name="Frame"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                Background="{arc:ArcDesignTokenResource Background}"
+                CornerRadius="20"
+                ClipToBounds="True">
+            <Panel x:Name="Body" VerticalAlignment="Top">
+                <arc:CtaSection x:Name="Section" IsDismissible="True" />
+                <!-- After the banner is dismissed: one way back. -->
+                <Border x:Name="Restore" IsVisible="False" MinHeight="104" Padding="24">
+                    <arc:Button x:Name="RestoreButton"
+                                Variant="Secondary"
+                                Size="Small"
+                                Content="Show the banner again"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                </Border>
+            </Panel>
+        </Border>
+    </StackPanel>
+</UserControl>

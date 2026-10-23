@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:collections="using:Avalonia.Collections"
+             x:Class="TKCode.Arc.Gallery.Demos.CtaSectionCustomVisualDemo">
+    <!-- Visual replaces the setup card; Points and the actions are set as well. Any control or content works. -->
+    <arc:CtaSection Variant="Split"
+                    Title="See every release at a glance"
+                    Description="Replace the setup card with your own product visual, and keep the copy, points and actions.">
+        <arc:CtaSection.PrimaryAction>
+            <arc:CtaAction Label="Open the dashboard" ConfirmedLabel="Dashboard opened" />
+        </arc:CtaSection.PrimaryAction>
+        <arc:CtaSection.SecondaryAction>
+            <arc:CtaAction Label="Read the changelog" ConfirmedLabel="Opened" />
+        </arc:CtaSection.SecondaryAction>
+        <arc:CtaSection.Visual>
+            <Border Width="320"
+                    Padding="20"
+                    CornerRadius="26"
+                    BorderThickness="1"
+                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                    Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                    BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Release 4.2"
+                               FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                    <TextBlock Text="12 changes shipped this week"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <Border Height="6" CornerRadius="3" Background="{arc:ArcDesignTokenResource Border}">
+                        <Border Width="210" HorizontalAlignment="Left" CornerRadius="3" Background="{arc:ArcDesignTokenResource Success}" />
+                    </Border>
+                    <TextBlock Text="70% of checks passed"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </Border>
+        </arc:CtaSection.Visual>
+        <arc:CtaSection.Points>
+            <collections:AvaloniaList x:TypeArguments="x:String">
+                <x:String>Release notes written as you merge</x:String>
+                <x:String>One view for every environment</x:String>
+            </collections:AvaloniaList>
+        </arc:CtaSection.Points>
+    </arc:CtaSection>
+</UserControl>

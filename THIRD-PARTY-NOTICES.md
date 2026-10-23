@@ -6,7 +6,7 @@ assets and libraries listed below.
 ## Arc (uiarc.dev) — free components and blocks
 
 TKCode.Arc reimplements the free (MIT) components of Arc for Avalonia, and `TKCode.Arc.Blocks` ports
-Arc's free (MIT) blocks (Page header, Command palette, Notification center, Empty states). The code,
+Arc's free (MIT) blocks (Page header, Command palette, Notification center, Empty states, Site header, Site footer, CTA section, Newsletter signup). The code,
 styles, text and assets of Arc Pro components and blocks are not used, copied or reconstructed. A few Pro
 counterparts (the data grid, the Sidebar and Search results blocks, the AI blocks, the Showpieces blocks, the Projects blocks and the
 five AI explainers in `TKCode.Arc.Special`) are

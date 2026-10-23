@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteHeaderNarrowDemo">
+    <!-- The header follows its own width: in a 360 wide frame the links fold into the menu sheet. -->
+    <Border x:Name="FrameHost" Width="360" HorizontalAlignment="Center">
+        <arc:SiteHeader x:Name="Header" />
+    </Border>
+</UserControl>

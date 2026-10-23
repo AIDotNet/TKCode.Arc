@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteHeaderPreviewDemo">
+    <!-- Arc's preview: the header inside a small scrolling page, with a switch between its three layouts. -->
+    <StackPanel x:Name="Host" Spacing="16">
+        <arc:SegmentedControl HorizontalAlignment="Center"
+                              SelectedValue="mega"
+                              SelectionChanged="OnLayoutChanged"
+                              AutomationProperties.Name="Header layout">
+            <arc:SegmentedOption Value="mega" Label="Mega menu" />
+            <arc:SegmentedOption Value="simple" Label="Simple" />
+            <arc:SegmentedOption Value="centered" Label="Centered" />
+        </arc:SegmentedControl>
+    </StackPanel>
+</UserControl>

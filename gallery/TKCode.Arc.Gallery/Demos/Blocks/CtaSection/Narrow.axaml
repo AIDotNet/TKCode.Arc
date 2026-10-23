@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CtaSectionNarrowDemo">
+    <!-- 360 wide: the block follows its own width, so the paddings tighten, the actions stack at full width and the split is one column. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:CtaSection Width="360" Variant="Centered" />
+        <arc:CtaSection Width="360" Variant="Split" />
+        <arc:CtaSection Width="360" Variant="Banner" IsDismissible="True" />
+    </StackPanel>
+</UserControl>

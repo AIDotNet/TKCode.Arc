@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteHeaderSimpleDemo">
+    <!-- Your own brand name and three plain links; the links have addresses, so a click opens them when nothing handles Navigate. -->
+    <Border x:Name="FrameHost">
+        <arc:SiteHeader x:Name="Header"
+                        Variant="Simple"
+                        BrandName="Northwind Docs"
+                        BrandHref="https://example.com"
+                        Current="guides"
+                        PrimaryActionLabel="Open the app"
+                        PrimaryActionHref="https://example.com/app"
+                        IsSecondaryActionVisible="False" />
+    </Border>
+</UserControl>

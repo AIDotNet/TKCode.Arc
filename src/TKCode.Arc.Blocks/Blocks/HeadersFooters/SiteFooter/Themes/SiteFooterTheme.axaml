@@ -1,0 +1,503 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Ported from Arc's free site-footer block (MIT, Copyright (c) 2026 Elia Kuratli): site-footer.module.css.
+        A footer with a 1px top border (Border), clipped. Columns and Logo: the intro (brand, tagline, newsletter) beside three
+        link columns (1fr : 1.25fr, 48 apart), then the legal row under a hairline; Minimal: two quiet rows; Logo ends in the
+        big arch. The breakpoints (760 stacked, 520 narrow) follow the control's own width: the control sets IsStacked and
+        IsNarrow and the pseudo-classes. The link lists are filled by the control, one SiteFooterLinkButton per link.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooter}" TargetType="arc:SiteFooter">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="{arc:SiteFooterTokenResource FooterPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFooter">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <!-- Columns and Logo: the intro and the link columns. -->
+                        <Grid Name="PART_Top"
+                              IsVisible="{TemplateBinding HasTop}"
+                              ColumnDefinitions="*,1.25*"
+                              RowDefinitions="Auto,Auto">
+                            <StackPanel Name="PART_Intro" Spacing="{arc:SiteFooterTokenResource IntroGap}">
+                                <arc:SiteFooterBrand Mark="{TemplateBinding BrandMark}"
+                                                     BrandLink="{TemplateBinding BrandLink}" />
+                                <arc:SiteFooterLabel Kind="Tagline"
+                                                     Text="{TemplateBinding Tagline}"
+                                                     IsVisible="{TemplateBinding HasTagline}" />
+                                <arc:SiteFooterNewsletter Name="PART_Newsletter"
+                                                          IsVisible="{TemplateBinding HasNewsletter}"
+                                                          IsUnbounded="{TemplateBinding IsNarrow}"
+                                                          Title="{TemplateBinding NewsletterTitle}"
+                                                          Description="{TemplateBinding NewsletterDescription}"
+                                                          Placeholder="{TemplateBinding NewsletterPlaceholder}"
+                                                          EmailLabel="{TemplateBinding NewsletterEmailLabel}"
+                                                          SubscribeLabel="{TemplateBinding NewsletterSubscribeLabel}"
+                                                          SubscribedLabel="{TemplateBinding NewsletterSubscribedLabel}"
+                                                          EmptyEmailMessage="{TemplateBinding NewsletterEmptyEmailMessage}"
+                                                          InvalidEmailMessage="{TemplateBinding NewsletterInvalidEmailMessage}"
+                                                          FailedMessage="{TemplateBinding NewsletterFailedMessage}"
+                                                          ConfirmFormat="{TemplateBinding NewsletterConfirmFormat}"
+                                                          SubscribeHandler="{TemplateBinding SubscribeAsync}" />
+                            </StackPanel>
+                            <arc:SiteFooterColumnGrid Name="PART_Columns"
+                                                      Columns="{TemplateBinding ColumnCount}"
+                                                      AutomationProperties.Name="{TemplateBinding NavigationLabel}" />
+                        </Grid>
+
+                        <!-- Columns and Logo: the legal row under a hairline. -->
+                        <Border Name="PART_Bottom"
+                                IsVisible="{TemplateBinding HasTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="0,1,0,0">
+                            <arc:SiteFooterSplitRow IsStacked="{TemplateBinding IsNarrow}">
+                                <WrapPanel Name="PART_BottomStart" VerticalAlignment="Center">
+                                    <arc:SiteFooterLabel Kind="Copyright"
+                                                         Text="{TemplateBinding Copyright}"
+                                                         VerticalAlignment="Center" />
+                                    <WrapPanel Name="PART_Legal"
+                                               IsVisible="{TemplateBinding HasLegal}"
+                                               VerticalAlignment="Center" />
+                                </WrapPanel>
+                                <WrapPanel Name="PART_BottomEnd" VerticalAlignment="Center">
+                                    <arc:SiteFooterLinkButton Kind="Status"
+                                                              Link="{TemplateBinding StatusLink}"
+                                                              Tone="{TemplateBinding StatusTone}"
+                                                              IsVisible="{TemplateBinding IsStatusVisible}"
+                                                              VerticalAlignment="Center" />
+                                    <WrapPanel Name="PART_Social"
+                                               IsVisible="{TemplateBinding HasSocial}"
+                                               VerticalAlignment="Center" />
+                                </WrapPanel>
+                            </arc:SiteFooterSplitRow>
+                        </Border>
+
+                        <!-- Minimal: two quiet rows. -->
+                        <StackPanel Name="PART_Minimal" IsVisible="{TemplateBinding IsMinimal}">
+                            <arc:SiteFooterSplitRow Name="PART_MinimalTop" IsStacked="{TemplateBinding IsNarrow}">
+                                <arc:SiteFooterBrand Mark="{TemplateBinding BrandMark}"
+                                                     BrandLink="{TemplateBinding BrandLink}"
+                                                     VerticalAlignment="Center" />
+                                <WrapPanel Name="PART_MinimalLinks" VerticalAlignment="Center" />
+                            </arc:SiteFooterSplitRow>
+                            <Border Name="PART_MinimalBottom"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="0,1,0,0">
+                                <arc:SiteFooterSplitRow IsStacked="{TemplateBinding IsNarrow}">
+                                    <arc:SiteFooterLabel Kind="Copyright"
+                                                         Text="{TemplateBinding MinimalCopyright}"
+                                                         VerticalAlignment="Center" />
+                                    <WrapPanel Name="PART_MinimalEnd" VerticalAlignment="Center">
+                                        <arc:SiteFooterLinkButton Kind="Status"
+                                                                  Link="{TemplateBinding StatusLink}"
+                                                                  Tone="{TemplateBinding StatusTone}"
+                                                                  IsVisible="{TemplateBinding IsStatusVisible}"
+                                                                  VerticalAlignment="Center" />
+                                        <WrapPanel Name="PART_MinimalSocial"
+                                                   IsVisible="{TemplateBinding HasSocial}"
+                                                   VerticalAlignment="Center" />
+                                    </WrapPanel>
+                                </arc:SiteFooterSplitRow>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Logo: the arch closes the page, cropped by the bottom edge and fading out. -->
+                        <arc:SiteFooterMark Name="PART_Mark"
+                                            IsVisible="{TemplateBinding IsLogo}"
+                                            Margin="{arc:SiteFooterTokenResource MarkMargin}"
+                                            StrokeWidth="{arc:SiteFooterTokenResource MarkStroke}"
+                                            FromBrush="{arc:SiteFooterTokenResource MarkFrom}"
+                                            ToBrush="{arc:SiteFooterTokenResource MarkTo}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:minimal">
+            <Setter Property="Padding" Value="{arc:SiteFooterTokenResource FooterPaddingMinimal}" />
+        </Style>
+        <Style Selector="^:logo">
+            <Setter Property="Padding" Value="{arc:SiteFooterTokenResource FooterPaddingLogo}" />
+        </Style>
+
+        <!-- The top grid: intro left, columns right; stacked (at most 760): intro over columns. -->
+        <Style Selector="^ /template/ Grid#PART_Top">
+            <Setter Property="ColumnSpacing" Value="{arc:SiteFooterTokenResource TopGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Intro">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|SiteFooterColumnGrid#PART_Columns">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="ColumnGap" Value="{arc:SiteFooterTokenResource ColumnGap}" />
+            <Setter Property="RowGap" Value="{arc:SiteFooterTokenResource ColumnGap}" />
+        </Style>
+        <Style Selector="^:stacked">
+            <Style Selector="^ /template/ Grid#PART_Top">
+                <Setter Property="RowSpacing" Value="{arc:SiteFooterTokenResource TopGapStacked}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Intro">
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+            </Style>
+            <Style Selector="^ /template/ arc|SiteFooterColumnGrid#PART_Columns">
+                <Setter Property="Grid.Column" Value="0" />
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Grid.ColumnSpan" Value="2" />
+            </Style>
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SiteFooterColumnGrid#PART_Columns">
+            <Setter Property="ColumnGap" Value="{arc:SiteFooterTokenResource ColumnColumnGapNarrow}" />
+            <Setter Property="RowGap" Value="{arc:SiteFooterTokenResource ColumnRowGapNarrow}" />
+        </Style>
+
+        <!-- The legal row: 48 below the columns, a hairline, 20 of padding. -->
+        <Style Selector="^ /template/ Border#PART_Bottom">
+            <Setter Property="Margin" Value="0,48,0,0" />
+            <Setter Property="Padding" Value="0,20,0,0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Bottom > arc|SiteFooterSplitRow">
+            <Setter Property="MinimumGap" Value="{arc:SiteFooterTokenResource BottomColumnGap}" />
+            <Setter Property="LineGap" Value="{arc:SiteFooterTokenResource BottomRowGap}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_BottomStart, ^ /template/ WrapPanel#PART_BottomEnd, ^ /template/ WrapPanel#PART_MinimalEnd">
+            <Setter Property="ItemSpacing" Value="{arc:SiteFooterTokenResource GroupItemGap}" />
+            <Setter Property="LineSpacing" Value="{arc:SiteFooterTokenResource GroupLineGap}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_Legal, ^ /template/ WrapPanel#PART_Social, ^ /template/ WrapPanel#PART_MinimalLinks, ^ /template/ WrapPanel#PART_MinimalSocial">
+            <Setter Property="ItemSpacing" Value="{arc:SiteFooterTokenResource InlineItemGap}" />
+            <Setter Property="LineSpacing" Value="{arc:SiteFooterTokenResource InlineLineGap}" />
+        </Style>
+
+        <!-- Minimal: 24 between the rows, then a hairline and 20 of padding. -->
+        <Style Selector="^ /template/ arc|SiteFooterSplitRow#PART_MinimalTop">
+            <Setter Property="MinimumGap" Value="{arc:SiteFooterTokenResource BottomColumnGap}" />
+            <Setter Property="LineGap" Value="{arc:SiteFooterTokenResource BottomRowGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_MinimalBottom">
+            <Setter Property="Margin" Value="0,24,0,0" />
+            <Setter Property="Padding" Value="0,20,0,0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_MinimalBottom > arc|SiteFooterSplitRow">
+            <Setter Property="MinimumGap" Value="{arc:SiteFooterTokenResource BottomColumnGap}" />
+            <Setter Property="LineGap" Value="{arc:SiteFooterTokenResource BottomRowGap}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The brand: the mark and the name, 8 apart. -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooterBrand}" TargetType="arc:SiteFooterBrand">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFooterBrand">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:SiteFooterTokenResource BrandGap}">
+                    <arc:SiteArcMark Width="{arc:SiteFooterTokenResource BrandMarkSize}"
+                                     Height="{arc:SiteFooterTokenResource BrandMarkSize}"
+                                     Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                     IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNull}}"
+                                     VerticalAlignment="Center" />
+                    <ContentControl Content="{TemplateBinding Mark}"
+                                    IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    IsTabStop="False"
+                                    VerticalAlignment="Center" />
+                    <arc:SiteFooterLinkButton Kind="Brand"
+                                              Link="{TemplateBinding BrandLink}"
+                                              VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- One column: the title (display face, 14 / 1.1) 12 above its links, which are 8 apart. -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooterColumnView}" TargetType="arc:SiteFooterColumnView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFooterColumnView">
+                <StackPanel>
+                    <arc:SiteFooterLabel Kind="Heading"
+                                         Text="{TemplateBinding Title}"
+                                         Margin="0,0,0,12" />
+                    <StackPanel Name="PART_Links" Spacing="{arc:SiteFooterTokenResource ColumnLinkGap}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A text of the footer. -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooterLabel}" TargetType="arc:SiteFooterLabel">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource LineHeightSM}" />
+        <Setter Property="LetterSpacing" Value="{arc:SiteFooterTokenResource BodyLetterSpacing}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Style Selector="^[Kind=Heading]">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource HeadingLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SiteFooterTokenResource HeadingLetterSpacing}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[Kind=Tagline]">
+            <Setter Property="MaxWidth" Value="{arc:SiteFooterTokenResource TaglineMaxWidth}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^[Kind=Copyright]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^[Kind=Message]">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource MessageHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Style Selector="^[Tone=Error]">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^[Tone=Success]">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A link: text, optionally an outward arrow (13, stroke 2, muted, 3 from the text; it moves (1, -1) on hover) or, for
+        the status, a 7px dot with a 3px halo at 18%. Hover, press and keyboard focus turn the text to Foreground (160ms).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooterLinkButton}" TargetType="arc:SiteFooterLinkButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Padding" Value="{arc:SiteFooterTokenResource LinkPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFooterLinkButton">
+                <Panel>
+                    <Border Name="PART_Frame" Background="Transparent" Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Panel Name="PART_Dot"
+                                   IsVisible="False"
+                                   Width="{arc:SiteFooterTokenResource StatusDotSize}"
+                                   Height="{arc:SiteFooterTokenResource StatusDotSize}"
+                                   Margin="0,0,8,0"
+                                   VerticalAlignment="Center">
+                                <Ellipse Name="PART_Halo"
+                                         Classes="tone"
+                                         Margin="-3"
+                                         Opacity="{arc:SiteFooterTokenResource StatusHaloOpacity}" />
+                                <Ellipse Name="PART_DotFill" Classes="tone" />
+                            </Panel>
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding Label}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontWeight="{TemplateBinding FontWeight}"
+                                       VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Arrow"
+                                          IsVisible="{TemplateBinding IsExternal}"
+                                          Data="{x:Static arc:ArcIcons.ArrowUpRight}"
+                                          Size="{arc:SiteFooterTokenResource ExternalArrowSize}"
+                                          StrokeThickness="2"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          Margin="3,0,0,0"
+                                          RenderTransform="none"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="6"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource LineHeightSM}" />
+            <Setter Property="LetterSpacing" Value="{arc:SiteFooterTokenResource BodyLetterSpacing}" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse.tone">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^[Tone=Warning] /template/ Ellipse.tone">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^[Tone=Danger] /template/ Ellipse.tone">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^[Kind=Status] /template/ Panel#PART_Dot">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^[Kind=Brand]">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Style Selector="^ /template/ TextBlock#PART_Text">
+                <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource LineHeightBase}" />
+            </Style>
+        </Style>
+        <Style Selector="^:hover, ^:pressed, ^:focus-visible">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="translate(1px, -1px)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Arrow">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The newsletter: title, the input row (border carries the state) and the message slot. -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooterNewsletter}" TargetType="arc:SiteFooterNewsletter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="MaximumWidth" Value="{arc:SiteFooterTokenResource NewsletterMaxWidth}" />
+        <Setter Property="Margin" Value="0,8,0,0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFooterNewsletter">
+                <StackPanel Spacing="{arc:SiteFooterTokenResource NewsletterGap}">
+                    <arc:SiteFooterLabel Kind="Heading"
+                                         Text="{TemplateBinding Title}"
+                                         IsVisible="{TemplateBinding HasTitle}" />
+                    <Border Name="PART_Row"
+                            Height="{arc:ArcDesignTokenResource ControlSizeMD}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            Padding="{arc:SiteFooterTokenResource NewsletterRowPadding}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:SiteFooterTokenResource NewsletterRowGap}">
+                            <arc:SiteFooterInput Name="PART_Input"
+                                                 Grid.Column="0"
+                                                 Text="{TemplateBinding Email, Mode=TwoWay}"
+                                                 PlaceholderText="{TemplateBinding Placeholder}"
+                                                 VerticalAlignment="Center" />
+                            <arc:Button Name="PART_Submit"
+                                        Grid.Column="1"
+                                        Size="Small"
+                                        Variant="Primary"
+                                        CornerRadius="{arc:SiteFooterTokenResource NewsletterButtonRadius}"
+                                        VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Panel Name="PART_MessageSlot" MinHeight="{arc:SiteFooterTokenResource MessageHeight}">
+                        <arc:SiteSwap Name="PART_Message" />
+                        <!-- Inside the slot: a stack child would add its own 8px gap. -->
+                        <arc:SiteAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Row">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:focus-within /template/ Border#PART_Row">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:invalid /template/ Border#PART_Row">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Row">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The borderless one-line input of the newsletter: 14 / 19.6, the placeholder muted. -->
+    <ControlTheme x:Key="{x:Type arc:SiteFooterInput}" TargetType="arc:SiteFooterInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SiteFooterInput">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="Center">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:SiteFooterTokenResource LineHeightSM}" />
+        <Setter Property="LetterSpacing" Value="{arc:SiteFooterTokenResource BodyLetterSpacing}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="^[IsDone=True]">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

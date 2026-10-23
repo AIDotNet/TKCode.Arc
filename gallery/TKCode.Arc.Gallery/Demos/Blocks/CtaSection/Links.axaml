@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CtaSectionLinksDemo">
+    <!-- Actions with an Href are link-style: the press raises ActionInvoked, then opens the address unless a handler marks it handled. -->
+    <StackPanel Spacing="12">
+        <arc:CtaSection x:Name="Section"
+                        Title="Read the guide, then start"
+                        Description="The guide opens in your browser; the second action is handled in code and only writes to the log."
+                        Note="Opens uiarc.dev in your browser"
+                        ActionInvoked="OnActionInvoked">
+            <arc:CtaSection.PrimaryAction>
+                <arc:CtaAction Label="Open the guide" Href="https://uiarc.dev/docs" />
+            </arc:CtaSection.PrimaryAction>
+            <arc:CtaSection.SecondaryAction>
+                <arc:CtaAction Label="Email us" Href="mailto:hello@example.com" />
+            </arc:CtaSection.SecondaryAction>
+        </arc:CtaSection>
+        <TextBlock x:Name="Log"
+                   Text="No action pressed yet."
+                   HorizontalAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

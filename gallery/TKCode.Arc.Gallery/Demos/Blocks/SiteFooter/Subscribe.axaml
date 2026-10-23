@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteFooterSubscribeDemo">
+    <!-- SubscribeAsync fails on the first send and succeeds on the second, so both endings show; the log lists the Subscribed event. -->
+    <StackPanel Spacing="12">
+        <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                CornerRadius="20"
+                Background="{arc:ArcDesignTokenResource Background}"
+                ClipToBounds="True">
+            <arc:SiteFooter x:Name="Footer" BorderThickness="0" />
+        </Border>
+        <TextBlock x:Name="Log"
+                   Text="Enter an address and press Subscribe. The first send fails, so press it again to see the confirmation."
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

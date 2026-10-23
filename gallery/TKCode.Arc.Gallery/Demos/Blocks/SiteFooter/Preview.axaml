@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteFooterPreviewDemo">
+    <!-- Arc's preview: a layout switch above a rounded frame. The frame springs between the layouts' heights while the new layout fades in. -->
+    <StackPanel Spacing="16">
+        <arc:SegmentedControl x:Name="Layouts"
+                              HorizontalAlignment="Center"
+                              AutomationProperties.Name="Footer layout"
+                              SelectedValue="columns"
+                              SelectionChanged="OnLayoutChanged">
+            <arc:SegmentedOption Value="columns" Label="Columns" />
+            <arc:SegmentedOption Value="minimal" Label="Minimal" />
+            <arc:SegmentedOption Value="logo" Label="Logo" />
+        </arc:SegmentedControl>
+        <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                CornerRadius="20"
+                Background="{arc:ArcDesignTokenResource Background}"
+                ClipToBounds="True">
+            <arc:SpringSizeDecorator Axis="Height" Spring="Smooth">
+                <arc:ArcContentSwap x:Name="Frame"
+                                    Mode="Fade"
+                                    EnterDuration="0:0:0.24"
+                                    ExitDuration="0:0:0" />
+            </arc:SpringSizeDecorator>
+        </Border>
+        <!-- Says which link was pressed, for screen readers (Arc's visually hidden live paragraph). -->
+        <TextBlock x:Name="Note"
+                   Height="0"
+                   AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+</UserControl>

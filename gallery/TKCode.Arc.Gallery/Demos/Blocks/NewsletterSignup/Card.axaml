@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.NewsletterSignupCardDemo">
+    <!-- The card variant on its own: the stack in a tray above the copy, the form and the readers. -->
+    <arc:NewsletterSignup x:Name="Signup" Variant="Card" Subscribed="OnSubscribed" />
+</UserControl>

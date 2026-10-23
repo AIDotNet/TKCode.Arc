@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteFooterNarrowDemo">
+    <!-- 420 wide, inside the 520 breakpoint: two link columns, a full-width newsletter and a stacked legal row. -->
+    <Border Width="420"
+            HorizontalAlignment="Center"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1"
+            CornerRadius="20"
+            Background="{arc:ArcDesignTokenResource Background}"
+            ClipToBounds="True">
+        <arc:SiteFooter BorderThickness="0" />
+    </Border>
+</UserControl>

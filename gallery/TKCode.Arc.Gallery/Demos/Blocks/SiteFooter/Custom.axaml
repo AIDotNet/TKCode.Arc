@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SiteFooterCustomDemo">
+    <!-- Own brand, two columns, real addresses, a degraded status, and a log of what was pressed. -->
+    <StackPanel Spacing="12">
+        <Border BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1"
+                CornerRadius="20"
+                Background="{arc:ArcDesignTokenResource Background}"
+                ClipToBounds="True">
+            <arc:SiteFooter x:Name="Footer"
+                            BorderThickness="0"
+                            BrandName="Northwind"
+                            BrandHref="https://northwind.example"
+                            Tagline="Freight tracking for small fleets."
+                            IsNewsletterVisible="False"
+                            StatusLabel="Delays in EU routing"
+                            StatusTone="Warning"
+                            StatusHref="https://status.northwind.example"
+                            Year="2026">
+                <arc:SiteFooterColumn Title="Platform">
+                    <arc:SiteFooterLink Label="Tracking" Href="https://northwind.example/tracking" />
+                    <arc:SiteFooterLink Label="Routes" Href="https://northwind.example/routes" />
+                    <arc:SiteFooterLink Label="API" Href="https://developers.northwind.example" IsExternal="True" />
+                </arc:SiteFooterColumn>
+                <arc:SiteFooterColumn Title="Company">
+                    <arc:SiteFooterLink Label="About" />
+                    <arc:SiteFooterLink Label="Careers" />
+                    <arc:SiteFooterLink Label="Contact" Href="mailto:hello@northwind.example" />
+                </arc:SiteFooterColumn>
+            </arc:SiteFooter>
+        </Border>
+        <TextBlock x:Name="Log"
+                   Text="Press a link to see the event."
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

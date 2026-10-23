@@ -38,6 +38,7 @@ public static class BlockCatalog
         new("Features", "Features", "功能"),
         new("SocialProof", "Social proof", "社会证明"),
         new("Content", "Content", "内容"),
+        new("HeadersFooters", "Headers and footers", "页眉与页脚"),
         new("Showpieces", "Showpieces", "展示"),
     ];
 
@@ -140,5 +141,17 @@ public static class BlockCatalog
         new("KanbanBoard", "Kanban board", "kanban-board", "Projects",
             "A team board whose cards lift, tilt with the pointer and spring into the slot that opens for them, with swimlanes by person, live work-in-progress limits, quick add and a details drawer.",
             IsArcPort: false),
+        new("SiteHeader", "Site header", "site-header", "HeadersFooters",
+            "A sticky website header that turns solid on scroll, with a gliding active link, mega menu panels, and a mobile sheet.",
+            IsArcPort: true),
+        new("SiteFooter", "Site footer", "site-footer", "HeadersFooters",
+            "A website footer with link columns and newsletter, a minimal layout, and a large fading Arc mark.",
+            IsArcPort: true),
+        new("CtaSection", "CTA section", "cta-section", "HeadersFooters",
+            "A call to action as a centered closing section, a split beside a setup card that completes itself, or a dismissible banner.",
+            IsArcPort: true),
+        new("NewsletterSignup", "Newsletter signup", "newsletter-signup", "HeadersFooters",
+            "An email signup framed by a stack of past issues; subscribing drops the next issue, addressed to you, onto the front.",
+            IsArcPort: true),
     ];
 }
