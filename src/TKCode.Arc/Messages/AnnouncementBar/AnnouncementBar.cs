@@ -61,6 +61,10 @@ public class AnnouncementBar : TemplatedControl
     public static readonly StyledProperty<string?> DismissalKeyProperty =
         AvaloniaProperty.Register<AnnouncementBar, string?>(nameof(DismissalKey));
 
+    /// <summary>How long a remembered dismissal keeps the bar hidden; null (default) keeps it hidden for good.</summary>
+    public static readonly StyledProperty<TimeSpan?> DismissalDurationProperty =
+        AvaloniaProperty.Register<AnnouncementBar, TimeSpan?>(nameof(DismissalDuration));
+
     /// <summary>Whether the bar is shown (two-way). A remembered dismissal keeps it hidden.</summary>
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<AnnouncementBar, bool>(nameof(IsOpen), true, defaultBindingMode: BindingMode.TwoWay);
@@ -133,6 +137,9 @@ public class AnnouncementBar : TemplatedControl
 
     /// <summary>Remembers the dismissal under this key; change the key to show a new campaign to everyone again.</summary>
     public string? DismissalKey { get => GetValue(DismissalKeyProperty); set => SetValue(DismissalKeyProperty, value); }
+    /// <inheritdoc cref="DismissalDurationProperty"/>
+    public TimeSpan? DismissalDuration { get => GetValue(DismissalDurationProperty); set => SetValue(DismissalDurationProperty, value); }
+
     /// <summary>Whether the bar is shown (two-way). A remembered dismissal keeps it hidden.</summary>
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
     /// <summary>Index of the visible message (two-way).</summary>
@@ -273,7 +280,7 @@ public class AnnouncementBar : TemplatedControl
     {
         if (DismissalKey is { Length: > 0 } key)
         {
-            (Storage ?? MessageStorage.Default).Write(StorageKeyFor(key), "dismissed");
+            (Storage ?? MessageStorage.Default).Write(StorageKeyFor(key), DismissalDuration is null ? "dismissed" : $"dismissed:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}");
         }
         SetCurrentValue(IsOpenProperty, false);
         RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
@@ -393,10 +400,27 @@ public class AnnouncementBar : TemplatedControl
         }
     }
 
+    /// <summary>A stored dismissal holds while <see cref="DismissalDuration"/> has not passed since it was written (always, without a duration).</summary>
+    private bool IsDismissalValid(string? stored)
+    {
+        if (stored is null || !stored.StartsWith("dismissed", StringComparison.Ordinal))
+        {
+            return false;
+        }
+        if (DismissalDuration is not { } duration)
+        {
+            return true;
+        }
+        // A record without a time (written before durations existed) counts as expired.
+        return stored.StartsWith("dismissed:", StringComparison.Ordinal)
+               && long.TryParse(stored.AsSpan("dismissed:".Length), out var seconds)
+               && DateTimeOffset.UtcNow < DateTimeOffset.FromUnixTimeSeconds(seconds) + duration;
+    }
+
     private void ReadDismissal()
     {
         _remembered = DismissalKey is { Length: > 0 } key &&
-                      (Storage ?? MessageStorage.Default).Read(StorageKeyFor(key)) == "dismissed";
+                      IsDismissalValid((Storage ?? MessageStorage.Default).Read(StorageKeyFor(key)));
         IsShown = IsOpen && !_remembered;
     }
 
@@ -408,7 +432,7 @@ public class AnnouncementBar : TemplatedControl
             IsShown = IsOpen && !_remembered;
             UpdateRunning();
         }
-        else if (change.Property == DismissalKeyProperty || change.Property == StorageProperty)
+        else if (change.Property == DismissalKeyProperty || change.Property == DismissalDurationProperty || change.Property == StorageProperty)
         {
             if (IsAttached)
             {

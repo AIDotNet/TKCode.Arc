@@ -183,6 +183,47 @@ public class AnnouncementBarTests
     }
 
     [AvaloniaFact]
+    public void A_Timed_Dismissal_Expires()
+    {
+        var storage = new InMemoryMessageStorage();
+        var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var bar = CreateBar();
+        bar.Storage = storage;
+        bar.DismissalKey = "timed";
+        bar.DismissalDuration = TimeSpan.FromDays(1);
+
+        // Closed an hour ago: still hidden. Closed two days ago, or before durations existed: shown again.
+        storage.Write("arc-announcement:timed", $"dismissed:{now - 3600}");
+        var (window, _) = Show(bar);
+        try
+        {
+            bar.Bounds.Height.ShouldBe(0, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        foreach (var stored in new[] { $"dismissed:{now - 2 * 86400}", "dismissed" })
+        {
+            storage.Write("arc-announcement:timed", stored);
+            var again = CreateBar();
+            again.Storage = storage;
+            again.DismissalKey = "timed";
+            again.DismissalDuration = TimeSpan.FromDays(1);
+            var (second, _) = Show(again);
+            try
+            {
+                again.Bounds.Height.ShouldBeGreaterThan(0, stored);
+            }
+            finally
+            {
+                second.Close();
+            }
+        }
+    }
+
+    [AvaloniaFact]
     public void Countdown_And_Action_Raise_Events()
     {
         var bar = new AnnouncementBar { Storage = new InMemoryMessageStorage() };
