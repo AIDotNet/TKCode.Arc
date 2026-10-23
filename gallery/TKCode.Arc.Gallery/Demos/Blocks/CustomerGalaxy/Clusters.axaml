@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CustomerGalaxyClustersDemo">
+    <!-- Opens grouped by industry, the list ordered by number of accounts. -->
+    <arc:CustomerGalaxy x:Name="Galaxy"
+                        Title="Accounts by industry"
+                        SelectedGroupingKey="industry"
+                        GroupSort="Accounts" />
+</UserControl>

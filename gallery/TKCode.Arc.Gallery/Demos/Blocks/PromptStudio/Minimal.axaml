@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PromptStudioMinimalDemo">
+    <!-- No versions, models or run handler: just a template, its variables and the built-in simulator. -->
+    <arc:PromptStudio x:Name="Studio" Title="Greeting" MaxWidth="660" Margin="0,12" />
+</UserControl>

@@ -1,0 +1,124 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        "‹ 2 / 2 ›": the two 26 × 28 buttons around the count (14px, TextSecondary, tabular figures). The numbers are
+        rolling digits on the snappy spring, 0.6em apart, fading with the distance; a count wording that is not "number,
+        separator, number" shows as plain text instead. The count is hidden from automation: the group's name says it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiVersionPager}" TargetType="arc:AiVersionPager">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiVersionPager">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <arc:AiVersionPagerButton Name="PART_Previous" Glyph="{x:Static arc:ArcIcons.ChevronLeft}" />
+                    <Panel Name="PART_Count"
+                           Margin="2,0"
+                           VerticalAlignment="Center"
+                           AutomationProperties.AccessibilityView="Raw">
+                        <StackPanel Name="PART_Rolling" Orientation="Horizontal" VerticalAlignment="Center">
+                            <arc:RollingDigits Name="PART_Number"
+                                               UseGrouping="False"
+                                               WheelSpring="Snappy"
+                                               GlyphPitch="0.6"
+                                               Falloff="Linear"
+                                               VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Separator"
+                                       LineHeight="19.6"
+                                       VerticalAlignment="Center" />
+                            <arc:RollingDigits Name="PART_Total"
+                                               UseGrouping="False"
+                                               WheelSpring="Snappy"
+                                               GlyphPitch="0.6"
+                                               Falloff="Linear"
+                                               VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Name="PART_CountText"
+                                   IsVisible="False"
+                                   FontFeatures="tnum"
+                                   LineHeight="19.6"
+                                   VerticalAlignment="Center" />
+                    </Panel>
+                    <arc:AiVersionPagerButton Name="PART_Next" Glyph="{x:Static arc:ArcIcons.ChevronRight}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:text-count /template/ StackPanel#PART_Rolling">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:text-count /template/ TextBlock#PART_CountText">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:AiVersionPagerButton}" TargetType="arc:AiVersionPagerButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="26" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiVersionPagerButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="15"
+                                  StrokeThickness="1.75"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.35" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

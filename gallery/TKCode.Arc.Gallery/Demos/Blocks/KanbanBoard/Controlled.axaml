@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KanbanBoardControlledDemo">
+    <!-- The board edits a list the page owns; every change is logged with its reason and the order that results. -->
+    <Grid RowDefinitions="560,Auto" RowSpacing="16">
+        <arc:KanbanBoard x:Name="Board" Title="Field app 4.2" />
+        <Border Grid.Row="1"
+                Padding="16"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                BorderThickness="1"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="24">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Changes" FontWeight="SemiBold" />
+                    <TextBlock x:Name="Log"
+                               Text="Move, edit or add a card."
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Spacing="6">
+                    <TextBlock Text="Saved order" FontWeight="SemiBold" />
+                    <TextBlock x:Name="Order"
+                               TextWrapping="Wrap"
+                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                               FontSize="12"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

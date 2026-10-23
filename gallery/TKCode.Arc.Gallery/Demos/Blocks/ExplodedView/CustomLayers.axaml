@@ -1,0 +1,94 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExplodedViewCustomLayersDemo">
+    <!-- Any controls can be layers: here a plan card in three layers at 320 × 420. -->
+    <arc:ExplodedView Height="720"
+                      LayerSize="320,420"
+                      LayerCornerRadius="26"
+                      Title="Anatomy of a plan card"
+                      Description="Three layers: a surface, the words that sell the plan, and the one action.">
+        <arc:ExplodedView.StartCaption>
+            <arc:ExplodedCaption Title="One card" Body="Scroll to see what it is made of." />
+        </arc:ExplodedView.StartCaption>
+        <arc:ExplodedView.EndCaption>
+            <arc:ExplodedCaption Title="Back to one card" Body="Each layer has a single job, so the card stays easy to read." />
+        </arc:ExplodedView.EndCaption>
+
+        <arc:ExplodedLayer Name="Surface"
+                           Note="Fill and a 1px border"
+                           Body="The plate the rest sits on: the page background and a quiet border."
+                           Kind="Plate"
+                           AnchorFromBottom="36">
+            <Panel />
+        </arc:ExplodedLayer>
+
+        <arc:ExplodedLayer Name="Copy"
+                           Note="Plan, price, features"
+                           Body="The name, the price per seat and three short lines on what the plan includes."
+                           AnchorFromBottom="36">
+            <StackPanel Margin="28,28,28,0" Spacing="6">
+                <TextBlock Text="Team"
+                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                           FontWeight="Medium"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="$24"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontSize="44"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="per seat, per month"
+                               VerticalAlignment="Bottom"
+                               Margin="0,0,0,9"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+                <StackPanel Margin="0,18,0,0" Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}" Size="16" StrokeThickness="2"
+                                      Foreground="{arc:ArcDesignTokenResource Success}" />
+                        <TextBlock Text="Unlimited projects" FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}" Size="16" StrokeThickness="2"
+                                      Foreground="{arc:ArcDesignTokenResource Success}" />
+                        <TextBlock Text="Shared templates" FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}" Size="16" StrokeThickness="2"
+                                      Foreground="{arc:ArcDesignTokenResource Success}" />
+                        <TextBlock Text="Priority support" FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </arc:ExplodedLayer>
+
+        <arc:ExplodedLayer Name="Action"
+                           Note="One primary button"
+                           Body="A single button at the bottom and the badge that marks the plan most teams pick."
+                           AnchorFromBottom="36">
+            <Panel>
+                <Border Margin="0,26,26,0"
+                        Padding="10,4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                    <TextBlock Text="Popular"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               FontWeight="Medium"
+                               Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                </Border>
+                <arc:Button Content="Start a trial"
+                            Variant="Primary"
+                            Margin="28"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom" />
+            </Panel>
+        </arc:ExplodedLayer>
+    </arc:ExplodedView>
+</UserControl>

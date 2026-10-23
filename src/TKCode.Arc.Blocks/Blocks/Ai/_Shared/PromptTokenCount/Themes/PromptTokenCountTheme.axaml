@@ -1,0 +1,44 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The editor's token estimate: 12 / 16.8 TextMuted, 12px from the right edge. The number is a row of digit wheels
+        (equal cells, cut at the line box) with the words 4px after it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptTokenCount}" TargetType="arc:PromptTokenCount">
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="0,0,12,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptTokenCount">
+                <StackPanel Orientation="Horizontal"
+                            Height="16.8"
+                            Margin="{TemplateBinding Padding}">
+                    <TextBlock Name="PART_Prefix"
+                               IsVisible="False"
+                               LineHeight="16.8"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                    <arc:RollingDigits Name="PART_Digits"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       FontWeight="{TemplateBinding FontWeight}"
+                                       VerticalAlignment="Center" />
+                    <TextBlock Name="PART_Words"
+                               IsVisible="False"
+                               LineHeight="16.8"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

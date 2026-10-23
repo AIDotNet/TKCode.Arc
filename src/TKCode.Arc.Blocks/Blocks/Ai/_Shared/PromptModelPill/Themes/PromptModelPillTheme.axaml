@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The model pill: 32px, pill radius, 1px Border on the Surface, padding 0 9. Mark (14, 6px after it), short name
+        (medium) and effort (regular, secondary, 6px before it) sit in one width spring (quick), each in its own swap; the
+        chevron (ChevronDown 14 at 1.75 in TextMuted, never turning) follows 6px after. Hover and the open popover:
+        SurfaceMuted with the strong border.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptModelPill}" TargetType="arc:PromptModelPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="9,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptModelPill">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <DockPanel VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          DockPanel.Dock="Right"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="14"
+                                          StrokeThickness="1.75"
+                                          Margin="6,0,0,0"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center" />
+                            <arc:SpringSizeDecorator Name="PART_TextSize"
+                                                     Axis="Width"
+                                                     Spring="Quick"
+                                                     ClipOverflow="0"
+                                                     ClipToBounds="True"
+                                                     HorizontalAlignment="Left"
+                                                     VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <arc:ArcContentSwap Name="PART_Mark"
+                                                        Mode="Crossfade"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center" />
+                                    <arc:ArcContentSwap Name="PART_Name"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center" />
+                                    <arc:ArcContentSwap Name="PART_Effort"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center" />
+                                </StackPanel>
+                            </arc:SpringSizeDecorator>
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover, ^:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

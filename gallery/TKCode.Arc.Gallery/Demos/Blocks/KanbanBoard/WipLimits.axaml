@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KanbanBoardWipLimitsDemo">
+    <!-- Building allows 3 cards and Testing 2. Limits warn by default; turn on strict limits to refuse such drops. -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="16">
+            <arc:Switch x:Name="Strict" Content="Strict limits" />
+            <TextBlock x:Name="Status"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="Drag a card into Building or Testing." />
+        </StackPanel>
+        <arc:KanbanBoard x:Name="Board" Title="Field app 4.2" Height="620" />
+    </StackPanel>
+</UserControl>

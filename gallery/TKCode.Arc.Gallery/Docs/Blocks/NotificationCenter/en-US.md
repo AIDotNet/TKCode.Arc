@@ -45,7 +45,7 @@ an optional `Description`, a `Time` label and an `IsRead` state. An update from 
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:NotificationCenter>
         <arc:NotificationItem Id="deploy" Title="Deploy finished" Description="Version 2.4.1 is live." Time="18m" Tone="Success" />
         <arc:NotificationItem Id="mention" Title="Mia Chen mentioned you" Time="2m" ActorName="Mia Chen" />

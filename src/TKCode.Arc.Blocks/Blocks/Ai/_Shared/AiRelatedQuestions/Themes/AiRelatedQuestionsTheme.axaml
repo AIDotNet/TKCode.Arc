@@ -1,0 +1,148 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        "Related": the heading (display font 14 / 15.4, medium, tracked −0.03em, Foreground) 6px above a hairline, then the
+        rows, each with a hairline under it. The plain appearance drops the hairlines.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiRelatedQuestions}" TargetType="arc:AiRelatedQuestions">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiRelatedQuestions">
+                <StackPanel>
+                    <TextBlock Name="PART_Heading"
+                               Text="{TemplateBinding Heading}"
+                               IsVisible="False"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="15.4"
+                               LetterSpacing="-0.42"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                               Margin="0,0,0,6"
+                               TextTrimming="CharacterEllipsis" />
+                    <arc:AiActionsHairline Name="PART_TopLine" />
+                    <StackPanel Name="PART_List" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:heading /template/ TextBlock#PART_Heading">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:plain /template/ arc|AiActionsHairline#PART_TopLine">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A row: at least 48 high, padding 12 2, radius 10, no fill: the question (16 / 22.4, TextSecondary, wrapping) and an
+        ArrowRight 16 (TextMuted) 16px after it at the right edge, a hairline under the row. Hover: both Foreground (160ms)
+        and the arrow 3px right on Arc's CSS spring; reduced motion keeps the arrow still and changes colors in 120ms. The
+        keyboard ring is 2px, inside the row.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiRelatedQuestionRow}" TargetType="arc:AiRelatedQuestionRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="Padding" Value="2,12" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiRelatedQuestionRow">
+                <DockPanel>
+                    <arc:AiActionsHairline Name="PART_Line" DockPanel.Dock="Bottom" IsVisible="False" />
+                    <Panel>
+                        <Border Name="PART_Frame"
+                                MinHeight="{TemplateBinding MinHeight}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}">
+                            <DockPanel VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Arrow"
+                                              DockPanel.Dock="Right"
+                                              Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                              Size="16"
+                                              StrokeThickness="1.75"
+                                              Margin="16,0,0,0"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Text"
+                                           Text="{TemplateBinding Question}"
+                                           LineHeight="22.4"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center" />
+                            </DockPanel>
+                        </Border>
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                BorderThickness="2"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:line /template/ arc|AiActionsHairline#PART_Line">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="translateX(0px)" />
+        </Style>
+        <Style Selector="^:hover /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="translateX(3px)" />
+        </Style>
+        <Style Selector="^:motion-reduced:hover /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="RenderTransform" Value="translateX(0px)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Text">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ TextBlock#PART_Text">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

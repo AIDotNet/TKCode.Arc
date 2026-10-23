@@ -1,0 +1,873 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The block: the toolbar over the framed calendar (sidebar + grid / agenda); the grid parts are built in code. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendar}" TargetType="arc:WeekCalendar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendar">
+                <Grid RowDefinitions="Auto,Auto">
+                    <arc:WeekCalendarToolbar Name="PART_Toolbar"
+                                             Gap="{arc:WeekCalendarTokenResource ToolbarGap}"
+                                             RowGap="{arc:WeekCalendarTokenResource ToolbarRowGap}"
+                                             Margin="0 0 0 14">
+                        <arc:Button Name="PART_Today"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    Padding="{arc:WeekCalendarTokenResource PillPadding}" />
+                        <arc:Button Name="PART_Previous"
+                                    Variant="Ghost"
+                                    Padding="0"
+                                    MinHeight="0"
+                                    Width="{arc:WeekCalendarTokenResource StepButtonSize}"
+                                    Height="{arc:WeekCalendarTokenResource StepButtonSize}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                          Size="{arc:WeekCalendarTokenResource StepGlyphSize}"
+                                          StrokeThickness="1.75" />
+                        </arc:Button>
+                        <arc:Button Name="PART_Next"
+                                    Variant="Ghost"
+                                    Padding="0"
+                                    MinHeight="0"
+                                    Width="{arc:WeekCalendarTokenResource StepButtonSize}"
+                                    Height="{arc:WeekCalendarTokenResource StepButtonSize}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                          Size="{arc:WeekCalendarTokenResource StepGlyphSize}"
+                                          StrokeThickness="1.75" />
+                        </arc:Button>
+                        <TextBlock Name="PART_Title"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:WeekCalendarTokenResource TitleFontSize}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LetterSpacing="{arc:WeekCalendarTokenResource TitleLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <arc:SegmentedControl Name="PART_Views" VerticalAlignment="Center" />
+                        <arc:Popover Name="PART_CalendarsPopover"
+                                     Placement="Bottom"
+                                     Alignment="End"
+                                     Offset="{arc:WeekCalendarTokenResource PopoverOffset}">
+                            <arc:Popover.Trigger>
+                                <arc:Button Name="PART_CalendarsButton"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            Padding="{arc:WeekCalendarTokenResource PillPadding}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:WeekCalendarTokenResource ButtonContentGap}">
+                                        <arc:WeekCalendarSwatches Name="PART_Swatches" />
+                                        <TextBlock Name="PART_CalendarsLabel" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </arc:Popover.Trigger>
+                            <arc:WeekCalendarSourceList Name="PART_PopoverList" Width="{arc:WeekCalendarTokenResource PopoverListWidth}" />
+                        </arc:Popover>
+                        <arc:Button Name="PART_NewEvent"
+                                    Variant="Primary"
+                                    Size="Small"
+                                    Padding="{arc:WeekCalendarTokenResource PillPadding}">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:WeekCalendarTokenResource ButtonContentGap}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                              Size="{arc:WeekCalendarTokenResource PlusGlyphSize}"
+                                              StrokeThickness="1.75"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_NewEventLabel" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:Button>
+                    </arc:WeekCalendarToolbar>
+                    <Border Name="PART_Frame"
+                            Grid.Row="1"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            ClipToBounds="True">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Border Name="PART_Sidebar"
+                                    Width="{arc:WeekCalendarTokenResource SidebarWidth}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="0 0 1 0"
+                                    Padding="{arc:WeekCalendarTokenResource SidebarPadding}"
+                                    IsVisible="False">
+                                <StackPanel Spacing="{arc:WeekCalendarTokenResource SidebarGap}">
+                                    <arc:WeekCalendarMiniMonth Name="PART_MiniMonth" />
+                                    <StackPanel Name="PART_CalendarsSection">
+                                        <TextBlock Name="PART_CalendarsHeading"
+                                                   Margin="{arc:WeekCalendarTokenResource CalendarsHeadingMargin}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <arc:WeekCalendarSourceList Name="PART_SidebarList" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Panel Name="PART_Main" Grid.Column="1" />
+                        </Grid>
+                    </Border>
+                    <arc:ProjectsAnnouncer Name="PART_Announcer" Grid.Row="1" />
+                    <!-- Popovers and the undo toast live inside the block (Arc), placed relative to it. -->
+                    <arc:WeekCalendarEditorLayer Name="PART_EditorLayer" Grid.RowSpan="2" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Below 900 the title, the header dates and the New event button tighten. -->
+        <Style Selector="^:tight /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:WeekCalendarTokenResource TightTitleFontSize}" />
+            <Setter Property="LetterSpacing" Value="-0.48" />
+        </Style>
+        <Style Selector="^:tight /template/ TextBlock#PART_NewEventLabel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:tight /template/ arc|Button#PART_NewEvent">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StepButtonSize}" />
+        </Style>
+        <Style Selector="^:swatch-only /template/ TextBlock#PART_CalendarsLabel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <!-- Two toolbar rows: 40px controls. -->
+        <Style Selector="^:stacked /template/ arc|Button#PART_Today">
+            <Setter Property="MinHeight" Value="{arc:WeekCalendarTokenResource StackedItemHeight}" />
+            <Setter Property="Padding" Value="{arc:WeekCalendarTokenResource StackedPillPadding}" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|Button#PART_Previous">
+            <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
+            <Setter Property="Height" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
+            <Setter Property="CornerRadius" Value="20" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|Button#PART_Next">
+            <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
+            <Setter Property="Height" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
+            <Setter Property="CornerRadius" Value="20" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|Button#PART_CalendarsButton">
+            <Setter Property="MinHeight" Value="{arc:WeekCalendarTokenResource StackedItemHeight}" />
+            <Setter Property="Padding" Value="11 0" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|Button#PART_NewEvent">
+            <Setter Property="MinHeight" Value="{arc:WeekCalendarTokenResource StackedItemHeight}" />
+            <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
+            <Setter Property="CornerRadius" Value="20" />
+        </Style>
+        <!-- Today stays on the surface when there is nothing to do; only its label dims (Arc). -->
+        <Style Selector="^ /template/ arc|Button#PART_Today:disabled">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Event blocks: self-drawn; the hover (and keyboard focus) fill fades in 160ms, the resize grip too (not on focus). -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarEventPresenter}" TargetType="arc:WeekCalendarEventPresenter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+            <Setter Property="GripAmount" Value="1" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="GripAmount" Value="1" />
+        </Style>
+        <Style Selector="^:dragging">
+            <Setter Property="GripAmount" Value="1" />
+            <Setter Property="Cursor" Value="DragMove" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="GripAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="GripAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Day cells: the half-hour slot under the pointer fades in 160ms. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarDayCell}" TargetType="arc:WeekCalendarDayCell">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarHeadDay}" TargetType="arc:WeekCalendarHeadDay">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarAllDayBar}" TargetType="arc:WeekCalendarAllDayBar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarMoreChip}" TargetType="arc:WeekCalendarMoreChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarMiniDay}" TargetType="arc:WeekCalendarMiniDay">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarAgendaRow}" TargetType="arc:WeekCalendarAgendaRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style Selector="^:pointerover">
+            <Setter Property="HoverAmount" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="HoverAmount" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A calendar toggle row: the box in the calendar's color fills with a check when its events are shown. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarSourceToggle}" TargetType="arc:WeekCalendarSourceToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Height" Value="{arc:WeekCalendarTokenResource CalendarRowHeight}" />
+        <Setter Property="Padding" Value="{arc:WeekCalendarTokenResource CalendarRowPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:WeekCalendarTokenResource CalendarRowRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarSourceToggle">
+                <Panel>
+                    <Border Name="PART_Row"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                            <Panel Width="{arc:WeekCalendarTokenResource CheckboxSize}"
+                                   Height="{arc:WeekCalendarTokenResource CheckboxSize}"
+                                   VerticalAlignment="Center">
+                                <Border Name="PART_Fill"
+                                        Background="{TemplateBinding SwatchBrush}"
+                                        CornerRadius="{arc:WeekCalendarTokenResource CheckboxRadius}"
+                                        Opacity="0" />
+                                <Border BorderBrush="{TemplateBinding SwatchBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="{arc:WeekCalendarTokenResource CheckboxRadius}" />
+                                <arc:ArcGlyph Name="PART_Check"
+                                              Data="{x:Static arc:ArcIcons.Check}"
+                                              Size="{arc:WeekCalendarTokenResource CheckGlyphSize}"
+                                              StrokeThickness="2.5"
+                                              Foreground="{arc:ArcDesignTokenResource Surface}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Opacity="0" />
+                            </Panel>
+                            <TextBlock Grid.Column="1"
+                                       Margin="10 0 0 0"
+                                       Text="{TemplateBinding Label}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       LineHeight="19.6"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:WeekCalendarTokenResource CalendarRowFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+    <!-- Editing (notes B §3.5–3.7) ================================================================================== -->
+
+    <!-- The borderless title / place box of the popovers: muted only while focused. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarTitleBox}" TargetType="arc:WeekCalendarTitleBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarTitleBox">
+                <Border Name="PART_Box"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:WeekCalendarTokenResource TitleBoxRadius}"
+                        Padding="{arc:WeekCalendarTokenResource TitleBoxPadding}"
+                        MinHeight="{TemplateBinding MinHeight}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="Center">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="LineHeight" Value="22.4" />
+        <Setter Property="MinHeight" Value="{arc:WeekCalendarTokenResource TitleBoxHeight}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Style Selector="^:focus">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.place">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="LineHeight" Value="19.6" />
+            <Setter Property="MinHeight" Value="28" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A calendar pill: dot + name; the chosen one takes its calendar's tint (colors set in code, animated here). -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarCalendarChip}" TargetType="arc:WeekCalendarCalendarChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:WeekCalendarTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:WeekCalendarTokenResource ChipPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:WeekCalendarTokenResource ChipRadius}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarCalendarChip">
+                <Panel>
+                    <Border Name="PART_Chip"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Ellipse Width="{arc:WeekCalendarTokenResource ChipDotSize}"
+                                     Height="{arc:WeekCalendarTokenResource ChipDotSize}"
+                                     Fill="{TemplateBinding DotBrush}"
+                                     VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       LineHeight="16.8"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="19"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The quick create popover: title, day and time, calendar, "Enter to save", Cancel and Save. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarQuickCreate}" TargetType="arc:WeekCalendarQuickCreate">
+        <Setter Property="Width" Value="{arc:WeekCalendarTokenResource QuickCreateWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarQuickCreate">
+                <Border Name="PART_Surface"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:WeekCalendarTokenResource EditorRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                        Padding="{arc:WeekCalendarTokenResource EditorPadding}">
+                    <StackPanel Spacing="{arc:WeekCalendarTokenResource EditorRowGap}">
+                        <arc:WeekCalendarTitleBox Name="PART_Title" Margin="-8 0 0 0" />
+                        <DockPanel>
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:ArcIcons.Clock}"
+                                          Size="{arc:WeekCalendarTokenResource EditorIconSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Top"
+                                          Margin="0 2 10 0" />
+                            <TextBlock Name="PART_When"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       LineHeight="19.6"
+                                       TextWrapping="Wrap" />
+                        </DockPanel>
+                        <arc:WeekCalendarCalendarChoice Name="PART_Calendars" Margin="{arc:WeekCalendarTokenResource EditorIndent}" />
+                        <DockPanel Margin="0 2 0 0">
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" Margin="36 0 0 0">
+                                <arc:Button Name="PART_Cancel" Variant="Ghost" Size="Small" Padding="12 0" />
+                                <arc:Button Name="PART_Save" Variant="Primary" Size="Small" Padding="14 0" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Hint"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The details popover: bar, title and close; date, start to end, length; place; people; calendar; Delete and Done. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarDetails}" TargetType="arc:WeekCalendarDetails">
+        <Setter Property="Width" Value="{arc:WeekCalendarTokenResource DetailsWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarDetails">
+                <Border Name="PART_Surface"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:WeekCalendarTokenResource EditorRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                        Padding="{arc:WeekCalendarTokenResource EditorPadding}">
+                    <StackPanel Spacing="{arc:WeekCalendarTokenResource EditorRowGap}">
+                        <DockPanel Margin="0 0 -4 0">
+                            <Border Name="PART_Bar"
+                                    DockPanel.Dock="Left"
+                                    Width="{arc:WeekCalendarTokenResource CalendarBarWidth}"
+                                    Height="{arc:WeekCalendarTokenResource CalendarBarHeight}"
+                                    CornerRadius="2"
+                                    Margin="0 0 6 0"
+                                    VerticalAlignment="Center" />
+                            <arc:Button Name="PART_Close"
+                                        DockPanel.Dock="Right"
+                                        Variant="Ghost"
+                                        Padding="0"
+                                        MinHeight="0"
+                                        Margin="6 0 0 0"
+                                        Width="{arc:WeekCalendarTokenResource CloseButtonSize}"
+                                        Height="{arc:WeekCalendarTokenResource CloseButtonSize}">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                              Size="{arc:WeekCalendarTokenResource CloseGlyphSize}"
+                                              StrokeThickness="1.75" />
+                            </arc:Button>
+                            <arc:WeekCalendarTitleBox Name="PART_Title" Margin="0 0 0 0" />
+                        </DockPanel>
+                        <DockPanel Name="PART_Schedule" Margin="0 -6 0 0">
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:ArcIcons.Clock}"
+                                          Size="{arc:WeekCalendarTokenResource EditorIconSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Top"
+                                          Margin="0 8 10 0" />
+                            <StackPanel Spacing="{arc:WeekCalendarTokenResource FieldGap}">
+                                <arc:DatePicker Name="PART_Date" Size="Small" />
+                                <Grid ColumnDefinitions="*,Auto,*">
+                                    <arc:Select Name="PART_Start" MinWidth="0" />
+                                    <TextBlock Name="PART_Separator"
+                                               Grid.Column="1"
+                                               Margin="6 0"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               VerticalAlignment="Center" />
+                                    <arc:Select Name="PART_End" Grid.Column="2" MinWidth="0" />
+                                </Grid>
+                                <TextBlock Name="PART_Duration"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </DockPanel>
+                        <DockPanel Name="PART_SummaryRow" IsVisible="False">
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:ArcIcons.Clock}"
+                                          Size="{arc:WeekCalendarTokenResource EditorIconSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Top"
+                                          Margin="0 2 10 0" />
+                            <TextBlock Name="PART_Summary"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       LineHeight="19.6"
+                                       TextWrapping="Wrap" />
+                        </DockPanel>
+                        <DockPanel Name="PART_LocationRow" IsVisible="False" Margin="0 -4">
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:WeekCalendarGlyphs.MapPin}"
+                                          Size="{arc:WeekCalendarTokenResource EditorIconSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Center"
+                                          Margin="0 0 2 0" />
+                            <arc:WeekCalendarTitleBox Name="PART_Location" Classes="place" />
+                        </DockPanel>
+                        <DockPanel Name="PART_PeopleRow" IsVisible="False">
+                            <arc:ArcGlyph DockPanel.Dock="Left"
+                                          Data="{x:Static arc:ArcIcons.Users}"
+                                          Size="{arc:WeekCalendarTokenResource EditorIconSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Top"
+                                          Margin="0 4 10 0" />
+                            <StackPanel Spacing="6">
+                                <arc:ProjectsAvatarStack Name="PART_People"
+                                                         Diameter="24"
+                                                         Overlap="5"
+                                                         Ring="2"
+                                                         MaxVisible="5"
+                                                         HorizontalAlignment="Left" />
+                                <TextBlock Name="PART_PeopleText"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="19.6"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </DockPanel>
+                        <arc:WeekCalendarCalendarChoice Name="PART_Calendars" Margin="{arc:WeekCalendarTokenResource EditorIndent}" />
+                        <DockPanel>
+                            <arc:Button Name="PART_Done" DockPanel.Dock="Right" Variant="Primary" Size="Small" Padding="14 0" />
+                            <arc:Button Name="PART_Delete"
+                                        DockPanel.Dock="Left"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        Padding="10 0"
+                                        HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Trash2}"
+                                                  Size="16"
+                                                  StrokeThickness="1.75"
+                                                  Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_DeleteText"
+                                               Foreground="{arc:ArcDesignTokenResource Danger}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The undo toast: an inverted pill with the change, Undo and ×. -->
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarUndoToast}" TargetType="arc:WeekCalendarUndoToast">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarUndoToast">
+                <Border Background="{arc:ArcDesignTokenResource Foreground}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                        Padding="{arc:WeekCalendarTokenResource ToastPadding}"
+                        Height="{arc:WeekCalendarTokenResource ToastHeight}">
+                    <DockPanel>
+                        <arc:WeekCalendarToastButton Name="PART_Dismiss"
+                                                     DockPanel.Dock="Right"
+                                                     Width="{arc:WeekCalendarTokenResource ToastDismissSize}"
+                                                     Height="{arc:WeekCalendarTokenResource ToastDismissSize}"
+                                                     CornerRadius="{arc:WeekCalendarTokenResource ToastDismissRadius}"
+                                                     Margin="4 0 0 0">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:WeekCalendarTokenResource ToastDismissForeground}" />
+                        </arc:WeekCalendarToastButton>
+                        <arc:WeekCalendarToastButton Name="PART_Undo"
+                                                     DockPanel.Dock="Right"
+                                                     Height="{arc:WeekCalendarTokenResource ToastActionHeight}"
+                                                     Padding="{arc:WeekCalendarTokenResource ToastActionPadding}"
+                                                     CornerRadius="15"
+                                                     Background="{arc:WeekCalendarTokenResource ToastActionFill}"
+                                                     Foreground="{arc:ArcDesignTokenResource Background}"
+                                                     FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <TextBlock Name="PART_Text"
+                                   Foreground="{arc:ArcDesignTokenResource Background}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   LineHeight="19.6"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center"
+                                   Margin="0 0 6 0" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:WeekCalendarToastButton}" TargetType="arc:WeekCalendarToastButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WeekCalendarToastButton">
+                <Panel>
+                    <Border Name="PART_Chrome"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource Background}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Chrome">
+            <Setter Property="Opacity" Value="0.82" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

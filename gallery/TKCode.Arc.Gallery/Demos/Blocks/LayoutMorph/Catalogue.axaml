@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LayoutMorphCatalogueDemo">
+    <!-- Your own items through ItemsSource; Layout bound to a switch outside the block; the bag counts saved pieces. -->
+    <StackPanel Spacing="16">
+        <StackPanel Orientation="Horizontal" Spacing="16">
+            <arc:SegmentedControl SelectedValue="{Binding #Morph.Layout, Mode=TwoWay}">
+                <arc:SegmentedOption Value="{x:Static arc:LayoutMorphMode.Grid}" Label="Grid" />
+                <arc:SegmentedOption Value="{x:Static arc:LayoutMorphMode.List}" Label="List" />
+                <arc:SegmentedOption Value="{x:Static arc:LayoutMorphMode.Carousel}" Label="Carousel" />
+            </arc:SegmentedControl>
+            <TextBlock x:Name="Bag"
+                       Text="Your bag is empty"
+                       VerticalAlignment="Center"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <arc:LayoutMorph x:Name="Morph"
+                         StageHeight="520"
+                         DefaultPanelTitle="Desk pieces"
+                         DefaultPanelSubtitle="Point at a piece for its price and stock" />
+    </StackPanel>
+</UserControl>

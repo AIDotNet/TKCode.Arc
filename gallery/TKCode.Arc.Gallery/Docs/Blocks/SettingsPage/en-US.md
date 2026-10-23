@@ -44,7 +44,7 @@ account card.
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SettingsPage Height="480">
         <arc:SettingsSection Header="Profile" Icon="{x:Static arc:ArcIcons.User}" Description="How you appear to others.">
             <arc:Input Label="Full name" Text="Noor Haddad" />

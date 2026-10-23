@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiComposerLimitDemo">
+    <StackPanel Spacing="12" MaxWidth="720" Margin="0,12,0,24">
+        <!-- A short limit so the counter shows: it appears from 80 percent, warns from 95 and blocks sending when passed. -->
+        <arc:AiComposer x:Name="Composer" MaxLength="120"
+                        Text="Summarize the sprint review in three bullet points and name the owner of each open question" />
+    </StackPanel>
+</UserControl>

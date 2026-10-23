@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LayoutMorphNarrowDemo">
+    <!-- Below 720 the switch shows icons only and the hint moves under it; below 520 the cards tighten up. -->
+    <arc:LayoutMorph x:Name="Morph"
+                     Width="380"
+                     HorizontalAlignment="Center"
+                     Title="One shelf, six ways"
+                     Lede="Fourteen desk pieces and the ten designers behind them."
+                     DefaultPanelTitle="Spring edit" />
+</UserControl>

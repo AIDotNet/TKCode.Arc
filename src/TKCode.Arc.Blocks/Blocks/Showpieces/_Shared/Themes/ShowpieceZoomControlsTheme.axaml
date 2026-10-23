@@ -1,0 +1,126 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The Showpiece zoom bar (Arc Customer galaxy / Semantic zoom, design reference): Surface, 1px Border, radius 10,
+        ShadowResting, 2px padding and gaps; − / readout / + / Fit.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ShowpieceZoomControls}" TargetType="arc:ShowpieceZoomControls">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShowpieceZoomControls">
+                <Border Name="PART_Bar"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:ShowpieceZoomControlsTokenResource ItemGap}">
+                        <arc:ShowpieceZoomButton Name="PART_ZoomOut" Glyph="{x:Static arc:ArcIcons.Minus}" />
+                        <TextBlock Name="PART_Readout"
+                                   Text="{TemplateBinding ReadoutText}"
+                                   IsVisible="{TemplateBinding ShowReadout}"
+                                   AutomationProperties.AccessibilityView="Raw"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   TextElement.FontFeatures="tnum" />
+                        <arc:ShowpieceZoomButton Name="PART_ZoomIn" Glyph="{x:Static arc:ArcIcons.Plus}" />
+                        <arc:ShowpieceZoomButton Name="PART_Fit" Glyph="{x:Static arc:ArcIcons.Maximize2}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ShowpieceZoomControlsTokenResource BarRadius}" />
+        <Setter Property="Padding" Value="{arc:ShowpieceZoomControlsTokenResource BarPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+
+        <Style Selector="^ /template/ TextBlock#PART_Readout">
+            <Setter Property="Width" Value="{arc:ShowpieceZoomControlsTokenResource ReadoutWidth}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Readout">
+            <Setter Property="Width" Value="{arc:ShowpieceZoomControlsTokenResource CompactReadoutWidth}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- 28px icon button: TextSecondary glyph; hover / press SurfaceMuted + Foreground; disabled 35%; 2px ring 2px out. -->
+    <ControlTheme x:Key="{x:Type arc:ShowpieceZoomButton}" TargetType="arc:ShowpieceZoomButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ShowpieceZoomButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      Data="{TemplateBinding Glyph}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Size="{arc:ShowpieceZoomControlsTokenResource ButtonGlyphSize}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ShowpieceZoomControlsTokenResource FocusRingMargin}"
+                            CornerRadius="{arc:ShowpieceZoomControlsTokenResource FocusRingRadius}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Width" Value="{arc:ShowpieceZoomControlsTokenResource ButtonExtent}" />
+        <Setter Property="Height" Value="{arc:ShowpieceZoomControlsTokenResource ButtonExtent}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ShowpieceZoomControlsTokenResource ButtonRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ShowpieceZoomControlsTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- color / background / opacity on Arc's 160ms standard curve. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

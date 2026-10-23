@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueGlobePreviewDemo">
+    <!-- An invented SaaS day: 40 cities paying into Denver. The code-behind generates the payments (seeded) and starts
+         the clock at 14:30 UTC; the globe then plays the day out in real time. -->
+    <arc:RevenueGlobe x:Name="Globe"
+                      Title="Today's payments"
+                      Description="40 cities paying into Denver. Drag the globe, or pick a city to fly there."
+                      DateText="Thursday, 22 October" />
+</UserControl>

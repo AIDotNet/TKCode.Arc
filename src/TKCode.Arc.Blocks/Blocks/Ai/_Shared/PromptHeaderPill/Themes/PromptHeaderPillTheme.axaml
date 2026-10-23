@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A text layer of the studio's header pills: 14px on a 19.6 line (the pill is 32 high, so the line only keeps the
+        glyphs from being clipped by the width spring), tracked −0.01em, one line. Medium in the text color (the version
+        label, the model name), or regular in the secondary color (:secondary, the effort).
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptPillText}" TargetType="arc:PromptPillText">
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^:secondary">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

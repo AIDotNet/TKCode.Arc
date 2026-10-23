@@ -18,8 +18,10 @@ namespace TKCode.Arc;
 /// <summary>
 /// Lays its child out at the width it has while the <see cref="Sidebar"/> is open, whatever width it gets now. While the
 /// sidebar springs to the icon rail (and back) the rows, the header and the footer therefore never reflow or re-ellipsize:
-/// their content stays put and the pane's edge clips it, so icons hold still while the labels fade. The measure uses the
-/// sidebar's layout width, the arrange the width the pane shows now (they differ while an overlay pane springs).
+/// their content stays put and the pane's edge clips it, so icons hold still while the labels fade. The open width comes
+/// from the measure (the sidebar's layout width); the arrange uses only that and the host's own size. It must not read
+/// the width the pane shows now: an overlay pane springs while the layout keeps the host's size, so the host is not
+/// arranged again when the spring ends and would keep the width of its first frame.
 /// </summary>
 internal sealed class SidebarOpenWidthHost : Decorator
 {
@@ -35,6 +37,7 @@ internal sealed class SidebarOpenWidthHost : Decorator
     private const double ClipRoom = 8;
     private readonly RectangleGeometry _clip = new();
     private Sidebar? _owner;
+    private double _openWidth;
 
     private Sidebar? Owner => _owner ??= this.FindAncestorOfType<Sidebar>();
 
@@ -45,16 +48,23 @@ internal sealed class SidebarOpenWidthHost : Decorator
             return default;
         }
         // The constraint is the open width at every step of the width spring, so the child is not even re-measured.
-        child.Measure(availableSize.WithWidth(availableSize.Width + (Owner?.MeasureDeficit ?? 0)));
+        var openWidth = availableSize.Width + (Owner?.MeasureDeficit ?? 0);
+        if (openWidth != _openWidth)
+        {
+            // A new constraint with the same final rectangle would otherwise skip the arrange.
+            _openWidth = openWidth;
+            InvalidateArrange();
+        }
+        child.Measure(availableSize.WithWidth(openWidth));
         var desired = child.DesiredSize;
         return new Size(Math.Min(desired.Width, availableSize.Width), desired.Height);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var deficit = Owner?.ArrangeDeficit ?? 0;
-        Child?.Arrange(new Rect(0, 0, finalSize.Width + deficit, finalSize.Height));
-        if (ClipsWhenNarrow && deficit > 0.5)
+        var width = double.IsFinite(_openWidth) ? Math.Max(finalSize.Width, _openWidth) : finalSize.Width;
+        Child?.Arrange(new Rect(0, 0, width, finalSize.Height));
+        if (ClipsWhenNarrow && width - finalSize.Width > 0.5)
         {
             // One geometry, updated in place: the clip moves with the width spring without allocating.
             var rect = new Rect(-ClipRoom, -ClipRoom, finalSize.Width + ClipRoom, finalSize.Height + 2 * ClipRoom);

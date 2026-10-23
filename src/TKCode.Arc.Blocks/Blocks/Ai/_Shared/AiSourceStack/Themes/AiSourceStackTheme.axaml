@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A disc of the sources row's mark stack: a 20px Surface disc with a 1px BorderSubtle hairline just inside its edge;
+        in a dark theme SurfaceRaised with a Border hairline (Arc's hairline maps to different tokens per theme). The fan
+        moves it with Arc's 580ms CSS spring at full motion; the stack never fans at Reduced or Off.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSourceStackDisc}" TargetType="arc:AiSourceStackDisc">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Hairline" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+
+        <Style Selector="^:dark">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="Hairline" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,7 +1,7 @@
 ---
 title: 設定命令面板
 summary: 用一個搜尋欄找到任一設定並直接修改：開關翻轉、選項輪替、連結開啟，全程可用鍵盤操作。
-source-hash: 50bf1f3ffcbf
+source-hash: 1a7e720308b9
 ---
 
 <Demo name="Inline" />
@@ -30,7 +30,7 @@ source-hash: 50bf1f3ffcbf
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SettingsCommand MaxWidth="560">
         <arc:SettingsCommandChoice Group="外觀" Header="主題" Options="淺色, 深色, 跟隨系統" Keywords="深色 淺色" />
         <arc:SettingsCommandToggle Group="外觀" Header="精簡模式" Description="列距更緊密，間距更小。" />

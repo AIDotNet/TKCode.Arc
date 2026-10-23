@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReleaseReadinessPreviewDemo">
+    <!-- Four checks, the first done; the rollout takes 1.2 seconds so the busy button shows. Data: ReleaseReadinessDemoData. -->
+    <arc:ReleaseReadiness x:Name="Gate"
+                          Margin="0,12"
+                          Title="Version 5.3"
+                          Subtitle="Lumen mobile · goes live Tuesday"
+                          ChannelName="#launches" />
+</UserControl>

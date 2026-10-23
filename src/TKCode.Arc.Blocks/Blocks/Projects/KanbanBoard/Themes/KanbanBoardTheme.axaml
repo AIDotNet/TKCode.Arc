@@ -1,0 +1,1044 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Kanban board (Arc Kanban board, design reference). Text fields first (the composer and the drawer use them by key):
+        a framed field (Surface fill, 1px Border, a 2px FocusRing outside while focused) and the drawer's borderless title.
+    -->
+    <ControlTheme x:Key="KanbanFieldBoxTheme" TargetType="TextBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:KanbanBoardTokenResource StepFieldRadius}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="TextBox">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="18"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      IsScrollChainingEnabled="True">
+                            <Panel>
+                                <TextBlock Name="PART_Placeholder"
+                                           Foreground="{TemplateBinding PlaceholderForeground}"
+                                           Text="{TemplateBinding PlaceholderText}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           IsHitTestVisible="False"
+                                           IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="{TemplateBinding TextWrapping}"
+                                               LineHeight="{TemplateBinding LineHeight}"
+                                               LetterSpacing="{TemplateBinding LetterSpacing}"
+                                               PasswordChar="{TemplateBinding PasswordChar}"
+                                               RevealPassword="{TemplateBinding RevealPassword}"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}" />
+                            </Panel>
+                        </ScrollViewer>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <!-- The notes box: three lines, radius 16, 12 inside, text from the top. -->
+        <Style Selector="^.notes">
+            <Setter Property="CornerRadius" Value="{arc:KanbanBoardTokenResource NotesRadius}" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="Height" Value="{arc:KanbanBoardTokenResource NotesHeight}" />
+        </Style>
+        <Style Selector="^.notes /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="20" />
+        </Style>
+        <!-- The composer's box: two lines, BorderStrong whether focused or not, no ring (Arc). -->
+        <Style Selector="^.composer">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="CornerRadius" Value="{arc:KanbanBoardTokenResource ComposerBoxRadius}" />
+            <Setter Property="Padding" Value="{arc:KanbanBoardTokenResource ComposerBoxPadding}" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="Height" Value="{arc:KanbanBoardTokenResource ComposerBoxHeight}" />
+        </Style>
+        <Style Selector="^.composer:focus /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^.step">
+            <Setter Property="Height" Value="{arc:KanbanBoardTokenResource StepFieldHeight}" />
+        </Style>
+        <!-- The drawer's title: no frame, 22/30.8 display type, grows with its text. -->
+        <Style Selector="^.title">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="LineHeight" Value="{arc:KanbanBoardTokenResource DrawerTitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="-0.66" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^.title /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="10" />
+        </Style>
+        <Style Selector="^.title /template/ ScrollViewer#PART_ScrollViewer">
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The round icon button of the column heads ("+") and the drawer (X): muted glyph, a soft fill on hover. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanIconButton}" TargetType="arc:KanbanIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:KanbanBoardTokenResource HeadButtonDiameter}" />
+        <Setter Property="Height" Value="{arc:KanbanBoardTokenResource HeadButtonDiameter}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanIconButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{TemplateBinding GlyphSize}"
+                                      StrokeThickness="2"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:KanbanBoardTokenResource HoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:KanbanBoardTokenResource HoverFill}" />
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Pills of the composer and the drawer: .primary is Accent with AccentForeground; the default is quiet text. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanPillButton}" TargetType="arc:KanbanPillButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:KanbanBoardTokenResource ComposerButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:KanbanBoardTokenResource ComposerButtonPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanPillButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.primary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.primary:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A card: SurfaceRaised, 1px frame (state color set in code), radius 16, 12 inside, rows 8 apart. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanCardView}" TargetType="arc:KanbanCardView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanCardView">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:KanbanBoardTokenResource CardFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding FrameBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:KanbanBoardTokenResource CardRadius}"
+                            BoxShadow="{TemplateBinding FrameShadow}"
+                            Padding="{arc:KanbanBoardTokenResource CardInset}">
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="{arc:KanbanBoardTokenResource CardRowGap}">
+                            <DockPanel Grid.Row="0">
+                                <StackPanel DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:KanbanBoardTokenResource LabelDotGap}"
+                                            IsVisible="{TemplateBinding HasLabel}"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center">
+                                    <Ellipse Width="{arc:KanbanBoardTokenResource LabelDotDiameter}"
+                                             Height="{arc:KanbanBoardTokenResource LabelDotDiameter}"
+                                             Fill="{TemplateBinding LabelBrush}"
+                                             VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding LabelText}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <TextBlock Text="{TemplateBinding KeyText}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </DockPanel>
+                            <TextBlock Name="PART_Title"
+                                       Grid.Row="1"
+                                       Text="{TemplateBinding TitleText}"
+                                       TextWrapping="Wrap"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:KanbanBoardTokenResource BodyLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <DockPanel Grid.Row="2" MinHeight="{arc:KanbanBoardTokenResource CardMetaHeight}">
+                                <arc:ProjectsAvatar DockPanel.Dock="Right"
+                                                    Width="{arc:KanbanBoardTokenResource CardAvatarDiameter}"
+                                                    Height="{arc:KanbanBoardTokenResource CardAvatarDiameter}"
+                                                    Margin="8,0,0,0"
+                                                    Person="{TemplateBinding Assignee}"
+                                                    IsVisible="{TemplateBinding HasAssignee}"
+                                                    IsDecorative="True"
+                                                    VerticalAlignment="Center" />
+                                <WrapPanel Orientation="Horizontal"
+                                           ItemSpacing="{arc:KanbanBoardTokenResource MetaItemGap}"
+                                           LineSpacing="4"
+                                           VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="{arc:KanbanBoardTokenResource MetaGlyphGap}"
+                                                IsVisible="{TemplateBinding HasDue}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CalendarDays}"
+                                                      Size="{arc:KanbanBoardTokenResource MetaGlyphSize}"
+                                                      StrokeThickness="2"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Text="{TemplateBinding DueText}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="{arc:KanbanBoardTokenResource MetaGlyphGap}"
+                                                IsVisible="{TemplateBinding HasChecklist}">
+                                        <arc:ArcGlyph Name="PART_ChecklistGlyph"
+                                                      Data="{x:Static arc:ArcIcons.ListChecks}"
+                                                      Size="{arc:KanbanBoardTokenResource MetaGlyphSize}"
+                                                      StrokeThickness="2"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_ChecklistText"
+                                                   Text="{TemplateBinding ChecklistText}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <TextBlock Text="{TemplateBinding PointsText}"
+                                               IsVisible="{TemplateBinding HasPoints}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </WrapPanel>
+                            </DockPanel>
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-ring /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:untitled /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:checklist-complete /template/ arc|ArcGlyph#PART_ChecklistGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:checklist-complete /template/ TextBlock#PART_ChecklistText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="FrameBorderBrush" Tween="Fast" />
+                    <arc:ArcBoxShadowsTransition Property="FrameShadow" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="FrameBorderBrush" Tween="Instant" />
+                    <arc:ArcBoxShadowsTransition Property="FrameShadow" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A cell: radius 22, a 1px border (transparent at rest); fill and border are mixed in code and eased here. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanCellView}" TargetType="arc:KanbanCellView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="CornerRadius" Value="{arc:KanbanBoardTokenResource CellRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A column head: the name (500, ellipsis), the rolling count and limit, the over-limit chip, the "+". -->
+    <ControlTheme x:Key="{x:Type arc:KanbanColumnHead}" TargetType="arc:KanbanColumnHead">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanColumnHead">
+                <arc:KanbanHeadPanel Margin="{arc:KanbanBoardTokenResource ColumnHeadPadding}"
+                                     Gap="{arc:KanbanBoardTokenResource ColumnHeadGap}">
+                    <TextBlock Name="PART_Name"
+                               Text="{TemplateBinding ColumnName}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="{arc:KanbanBoardTokenResource BodyLineHeight}"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <StackPanel Name="PART_Count" Orientation="Horizontal">
+                        <arc:RollingDigits Name="PART_Digits"
+                                           FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           WheelSpring="Quick"
+                                           VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Limit"
+                                   LineHeight="{arc:KanbanBoardTokenResource BodyLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <arc:PresenceHost Name="PART_ChipHost"
+                                      Mode="Pop"
+                                      EnterScale="0.9"
+                                      Spring="Quick"
+                                      Collapse="Width"
+                                      IsPresent="{TemplateBinding IsOverLimit}"
+                                      ClipToBounds="True">
+                        <Border CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                Background="{arc:KanbanBoardTokenResource ChipFill}"
+                                Padding="{arc:KanbanBoardTokenResource ChipPadding}">
+                            <TextBlock Text="{TemplateBinding ChipText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Warning}" />
+                        </Border>
+                    </arc:PresenceHost>
+                    <arc:KanbanIconButton Name="PART_Add"
+                                          Glyph="{x:Static arc:ArcIcons.Plus}"
+                                          GlyphSize="{arc:KanbanBoardTokenResource HeadGlyphSize}"
+                                          IsVisible="{TemplateBinding CanAdd}" />
+                </arc:KanbanHeadPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:over-limit /template/ arc|RollingDigits#PART_Digits">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:over-limit /template/ TextBlock#PART_Limit">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|RollingDigits#PART_Digits">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Limit">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A swimlane head: the 24px avatar, the name (500) and the rolling count; nobody's lane shows a person glyph. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanLaneHead}" TargetType="arc:KanbanLaneHead">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanLaneHead">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="{arc:KanbanBoardTokenResource LaneHeadGap}"
+                            Margin="{arc:KanbanBoardTokenResource LaneHeadPadding}">
+                    <Panel Width="{arc:KanbanBoardTokenResource LaneAvatarDiameter}"
+                           Height="{arc:KanbanBoardTokenResource LaneAvatarDiameter}"
+                           VerticalAlignment="Center">
+                        <arc:ProjectsAvatar Name="PART_Avatar" Person="{TemplateBinding Person}" IsDecorative="True" />
+                        <Border Name="PART_Nobody"
+                                IsVisible="False"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderStrong}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.User}"
+                                          Size="14"
+                                          StrokeThickness="2"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                    </Panel>
+                    <TextBlock Text="{TemplateBinding PersonName}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="{arc:KanbanBoardTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                               VerticalAlignment="Center" />
+                    <arc:RollingDigits Name="PART_Digits"
+                                       FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       WheelSpring="Quick"
+                                       VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:unassigned /template/ arc|ProjectsAvatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:unassigned /template/ Border#PART_Nobody">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The Add card row: 34 high, radius 12, muted plus and text; a soft fill on hover. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanAddRow}" TargetType="arc:KanbanAddRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Padding" Value="{arc:KanbanBoardTokenResource AddRowPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanAddRow">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="16"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:KanbanBoardTokenResource AddRowRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:KanbanBoardTokenResource AddRowGap}"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                          Size="{arc:KanbanBoardTokenResource AddRowGlyphSize}"
+                                          StrokeThickness="2"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:KanbanBoardTokenResource HoverFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The composer: the two-line box, then Add card (Accent) and Cancel, 8 apart. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanComposer}" TargetType="arc:KanbanComposer">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanComposer">
+                <StackPanel VerticalAlignment="Top">
+                    <TextBox Name="PART_Box"
+                             Theme="{StaticResource KanbanFieldBoxTheme}"
+                             Classes="composer"
+                             Text="{TemplateBinding Text, Mode=TwoWay}"
+                             PlaceholderText="{TemplateBinding Placeholder}"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:KanbanBoardTokenResource ComposerButtonGap}"
+                                Margin="0,8,0,0">
+                        <arc:KanbanPillButton Name="PART_Submit"
+                                              Classes="primary"
+                                              Content="{TemplateBinding SubmitText}"
+                                              IsEnabled="{TemplateBinding CanSubmit}" />
+                        <arc:KanbanPillButton Name="PART_Cancel" Content="{TemplateBinding CancelText}" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A checklist step: 7 above and below, an 18px box (radius 6, BorderStrong; ControlOn once done) 12 from the text. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanStepBox}" TargetType="arc:KanbanStepBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="0,7" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanStepBox">
+                <Panel Background="Transparent">
+                    <DockPanel Margin="{TemplateBinding Padding}">
+                        <Panel DockPanel.Dock="Left"
+                               Width="18"
+                               Height="18"
+                               Margin="0,0.8,12,0"
+                               VerticalAlignment="Top">
+                            <Border Name="PART_FocusRing"
+                                    IsVisible="False"
+                                    IsHitTestVisible="False"
+                                    Margin="-4"
+                                    BorderThickness="2"
+                                    CornerRadius="10"
+                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                            <Border Name="PART_Square"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6" />
+                            <arc:ArcGlyph Name="PART_Check"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="14"
+                                          StrokeThickness="2.6"
+                                          Foreground="{arc:ArcDesignTokenResource ControlGlyph}"
+                                          Opacity="0"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Panel>
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                    </DockPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One option of a segmented switch: 12/16.8, TextSecondary; AccentStrong when chosen; a pill focus ring. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanSegmentOption}" TargetType="arc:KanbanSegmentOption">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Padding" Value="{arc:KanbanBoardTokenResource SwitchOptionPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanSegmentOption">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <ContentPresenter Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Margin="{TemplateBinding Padding}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A segmented switch: SurfaceMuted track, 1px Border, 3 inside; the chosen option sits on a raised pill. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanSegmented}" TargetType="arc:KanbanSegmented">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanSegmented">
+                <Border Name="PART_Track"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        Padding="{arc:KanbanBoardTokenResource SwitchInset}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Pill"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                        <arc:KanbanSegmentedPanel Name="PART_Options"
+                                                  Columns="{TemplateBinding Columns}"
+                                                  Gap="{TemplateBinding Gap}"
+                                                  Fill="{TemplateBinding Fill}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.status /template/ Border#PART_Track">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The owner trigger in the drawer: 36 high, Surface, 1px Border, a pill; avatar, name and chevron. -->
+    <ControlTheme x:Key="KanbanTriggerTheme" TargetType="Button">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:KanbanBoardTokenResource TriggerHeight}" />
+        <Setter Property="Padding" Value="{arc:KanbanBoardTokenResource TriggerPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Button">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The details drawer: SurfaceRaised, 1px Border, RadiusPanel, floating shadow, 20 inside, sections 16 apart. -->
+    <ControlTheme x:Key="{x:Type arc:KanbanDrawer}" TargetType="arc:KanbanDrawer">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanDrawer">
+                <Border Name="PART_Surface"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="{arc:KanbanBoardTokenResource DrawerPadding}"
+                                    Spacing="{arc:KanbanBoardTokenResource DrawerGap}">
+                            <DockPanel Height="30">
+                                <arc:KanbanIconButton Name="PART_Close"
+                                                      DockPanel.Dock="Right"
+                                                      Glyph="{x:Static arc:ArcIcons.X}"
+                                                      GlyphSize="16" />
+                                <TextBlock Name="PART_Key"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:KanbanBoardTokenResource SmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           VerticalAlignment="Center" />
+                            </DockPanel>
+                            <TextBox Name="PART_Title" Theme="{StaticResource KanbanFieldBoxTheme}" Classes="title" />
+                            <arc:KanbanSegmented Name="PART_Status"
+                                                 Classes="status"
+                                                 OptionHeight="{arc:KanbanBoardTokenResource DrawerSwitchOptionHeight}"
+                                                 Gap="2"
+                                                 Fill="True" />
+                            <Grid ColumnDefinitions="96,*" RowDefinitions="36,34,34,34" RowSpacing="2">
+                                <TextBlock Name="PART_OwnerField" Foreground="{arc:ArcDesignTokenResource TextSecondary}" VerticalAlignment="Center" />
+                                <Button Name="PART_Owner"
+                                        Grid.Column="1"
+                                        Theme="{StaticResource KanbanTriggerTheme}"
+                                        HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ProjectsAvatar Name="PART_OwnerAvatar"
+                                                            Width="{arc:KanbanBoardTokenResource MenuAvatarDiameter}"
+                                                            Height="{arc:KanbanBoardTokenResource MenuAvatarDiameter}"
+                                                            IsDecorative="True"
+                                                            VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_OwnerName" LineHeight="19.6" VerticalAlignment="Center" />
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                      Size="15"
+                                                      StrokeThickness="2"
+                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                                <TextBlock Name="PART_LabelField" Grid.Row="1" Foreground="{arc:ArcDesignTokenResource TextSecondary}" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Label" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_DueField" Grid.Row="2" Foreground="{arc:ArcDesignTokenResource TextSecondary}" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Due" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_EstimateField" Grid.Row="3" Foreground="{arc:ArcDesignTokenResource TextSecondary}" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Estimate" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" />
+                            </Grid>
+                            <StackPanel Spacing="8">
+                                <TextBlock Name="PART_NotesField"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <TextBox Name="PART_Notes"
+                                         Theme="{StaticResource KanbanFieldBoxTheme}"
+                                         Classes="notes"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Spacing="8">
+                                <DockPanel>
+                                    <TextBlock Name="PART_StepsCount"
+                                               DockPanel.Dock="Right"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_StepsField"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </DockPanel>
+                                <arc:ProjectsProgressLine Name="PART_Progress"
+                                                          Height="{arc:KanbanBoardTokenResource ProgressHeight}"
+                                                          Radius="2"
+                                                          FillMode="Scale"
+                                                          IsDecorative="True" />
+                                <StackPanel Name="PART_Steps" />
+                                <DockPanel>
+                                    <arc:KanbanPillButton Name="PART_AddStep"
+                                                          DockPanel.Dock="Right"
+                                                          Margin="8,0,0,0"
+                                                          Height="{arc:KanbanBoardTokenResource StepFieldHeight}"
+                                                          IsEnabled="False" />
+                                    <TextBox Name="PART_StepField" Theme="{StaticResource KanbanFieldBoxTheme}" Classes="step" />
+                                </DockPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The board: a toolbar (title, rolling total, the view switch) over one two-axis scroll viewer holding the board
+        panel; the scrim and the details drawer cover the board inside the control; two hidden live regions.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KanbanBoard}" TargetType="arc:KanbanBoard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MinColumnWidth" Value="{arc:KanbanBoardTokenResource MinColumnWidth}" />
+        <Setter Property="CompactColumnWidth" Value="{arc:KanbanBoardTokenResource CompactColumnWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:KanbanBoardTokenResource CompactWidth}" />
+        <Setter Property="DrawerMaxWidth" Value="{arc:KanbanBoardTokenResource DrawerMaxWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KanbanBoard">
+                <Panel Background="{TemplateBinding Background}">
+                    <Grid RowDefinitions="Auto,*">
+                        <Border Name="PART_Toolbar" Padding="{arc:KanbanBoardTokenResource ToolbarPadding}">
+                            <DockPanel>
+                                <arc:KanbanSegmented Name="PART_ViewSwitch"
+                                                     DockPanel.Dock="Right"
+                                                     Margin="12,0,0,0"
+                                                     VerticalAlignment="Center"
+                                                     OptionHeight="{arc:KanbanBoardTokenResource SwitchOptionHeight}" />
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{arc:KanbanBoardTokenResource ToolbarGap}"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Title"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:KanbanBoardTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:KanbanBoardTokenResource TitleLetterSpacing}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextTrimming="CharacterEllipsis"
+                                               AutomationProperties.HeadingLevel="2"
+                                               VerticalAlignment="Bottom" />
+                                    <StackPanel Name="PART_Total"
+                                                Orientation="Horizontal"
+                                                Spacing="{arc:KanbanBoardTokenResource CountGap}"
+                                                VerticalAlignment="Bottom">
+                                        <arc:RollingDigits Name="PART_TotalDigits"
+                                                           FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           WheelSpring="Quick"
+                                                           VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_TotalWord"
+                                                   LineHeight="{arc:KanbanBoardTokenResource BodyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                        <arc:ScrollArea Name="PART_Scroller"
+                                        Grid.Row="1"
+                                        Orientation="Both"
+                                        FadeLength="0">
+                            <arc:KanbanPanel Name="PART_Panel" />
+                        </arc:ScrollArea>
+                    </Grid>
+                    <!-- The lifted card is drawn here, above the scroller and its sticky heads, inside the block. -->
+                    <Canvas Name="PART_DragLayer" ClipToBounds="True" IsHitTestVisible="False" />
+                    <Border Name="PART_Scrim"
+                            Background="{arc:KanbanBoardTokenResource ScrimFill}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <arc:KanbanDrawer Name="PART_Drawer"
+                                      HorizontalAlignment="Right"
+                                      Margin="{arc:KanbanBoardTokenResource DrawerInset}" />
+                    <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                    <arc:ProjectsAnnouncer Name="PART_DragAnnouncer" IsAssertive="True" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact /template/ Border#PART_Toolbar">
+            <Setter Property="Padding" Value="{arc:KanbanBoardTokenResource CompactToolbarPadding}" />
+        </Style>
+        <Style Selector="^:wrap /template/ arc|KanbanSegmented#PART_ViewSwitch">
+            <Setter Property="DockPanel.Dock" Value="Bottom" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^:details-open /template/ Border#PART_Scrim">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Scrim">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Scrim">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

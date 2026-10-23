@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExplodedViewPageScrollDemo">
+    <!-- Page mode: the section is a tall track in the page's scroll viewer and its stage stays pinned while it passes. -->
+    <Border Height="560"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            ClipToBounds="True">
+        <ScrollViewer x:Name="Page">
+            <StackPanel>
+                <TextBlock Margin="32,48,32,24"
+                           TextWrapping="Wrap"
+                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="Stride Ledger keeps a calm record of every run. Scroll on: the next section takes its week page apart." />
+                <arc:ExplodedView x:Name="View"
+                                  ScrollMode="Page"
+                                  IsFramed="False"
+                                  Length="3" />
+                <TextBlock Margin="32,24,32,64"
+                           TextWrapping="Wrap"
+                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                           Text="After the section the page simply scrolls on." />
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</UserControl>

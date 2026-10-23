@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueGlobeNarrowDemo">
+    <!-- Below 600 the panel is one column and the revenue figure is smaller; below 400 the clock takes its own row. -->
+    <arc:RevenueGlobe x:Name="Globe"
+                      Width="380"
+                      HorizontalAlignment="Center"
+                      Title="Today's payments"
+                      Description="40 cities paying into Denver. Drag the globe, or pick a city to fly there."
+                      DateText="Thursday, 22 October" />
+</UserControl>

@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActivityTerrainNarrowDemo">
+    <!--
+        Below 560 the switches stack, the plot is 280 high and turned to 50°, hours read "09" instead of "09:00", and the
+        summary takes two columns.
+    -->
+    <arc:ActivityTerrain x:Name="Terrain"
+                         Width="380"
+                         HorizontalAlignment="Center"
+                         Title="Weekly rhythm"
+                         Subtitle="Hourly visits, builds and incidents for Mar 2 to 8, 2026." />
+</UserControl>

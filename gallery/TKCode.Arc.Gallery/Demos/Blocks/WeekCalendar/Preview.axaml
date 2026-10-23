@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WeekCalendarPreviewDemo">
+    <!-- A designer's week around today: six calendars (Health hidden), the sidebar from 1100 wide. Drag across empty
+         time to add an event, drag events to move them or their bottom edge to resize, click one to edit it. -->
+    <arc:WeekCalendar x:Name="Calendar" />
+</UserControl>

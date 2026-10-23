@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The Projects progress line (Arc Project board sprint line / Release readiness bar, design reference): a 2px
+        BorderSubtle track with a Success fill by default; blocks set the height, brushes and fill mode. The fill color
+        crossfades in 240ms (Arc: Accent → Success when every check is done).
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProjectsProgressLine}" TargetType="arc:ProjectsProgressLine">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="2" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="FillBrush" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="TrackBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

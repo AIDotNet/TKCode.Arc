@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiChatEmptyDemo">
+    <Border Height="560" BorderThickness="1" CornerRadius="16" ClipToBounds="True" BorderBrush="#33808080" Margin="0,12">
+        <arc:AiChat x:Name="Chat" GreetingText="What should we look at today?" />
+    </Border>
+</UserControl>

@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     x:ClassModifier="internal">
     <!--
         Billing overview: three cards 16 apart. The plan card has a label, the plan name with a status badge, a line of

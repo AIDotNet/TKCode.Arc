@@ -1,0 +1,241 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The standalone pill: 40px, pill radius, 1px border on the surface. Mark, text and chevron sit in a dock: the mark
+        and the chevron keep their size, the text region takes what is left, follows its text on the quick spring and
+        clips hard (no ellipsis) when the slot is too narrow. Appearance=Toolbar is the composer chip (36px, no border, clear
+        at rest); :compact (ShowText false) keeps only the mark and the chevron. The parts' geometry is set in styles, not
+        in the template, so the appearance can change it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ModelPill}" TargetType="arc:ModelPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="{arc:ModelPillTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:ModelPillTokenResource PillPadding}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="MarkSize" Value="{arc:ModelPillTokenResource MarkSize}" />
+        <Setter Property="EffortGap" Value="{arc:ModelPillTokenResource EffortGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelPill">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <DockPanel VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_Mark"
+                                                DockPanel.Dock="Left"
+                                                Mode="Crossfade"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          DockPanel.Dock="Right"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center"
+                                          RenderTransformOrigin="50%,50%" />
+                            <!-- Clips at its (springing) width at rest too: Arc's text region is overflow hidden. -->
+                            <arc:ModelPillTextSize Name="PART_TextSize"
+                                                     Axis="Width"
+                                                     Spring="Quick"
+                                                     CapsToAvailable="True"
+                                                     ClipOverflow="0"
+                                                     ClipToBounds="True"
+                                                     HorizontalAlignment="Left"
+                                                     VerticalAlignment="Center">
+                                <arc:ArcContentSwap Name="PART_Text"
+                                                    Mode="Crossfade"
+                                                    HorizontalAlignment="Left"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center" />
+                            </arc:ModelPillTextSize>
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ModelPillTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Mark">
+            <Setter Property="Margin" Value="{arc:ModelPillTokenResource MarkMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+            <Setter Property="Size" Value="{arc:ModelPillTokenResource ChevronSize}" />
+            <Setter Property="StrokeThickness" Value="{arc:ModelPillTokenResource ChevronStroke}" />
+            <Setter Property="Margin" Value="{arc:ModelPillTokenResource ChevronMargin}" />
+        </Style>
+
+        <!-- Hover (mouse and pen) and the open menu look the same. -->
+        <Style Selector="^:hover, ^:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+
+        <!-- The composer chip: 36px, no border, clear at rest; hover tints with the text color at 6%, open at 10%. -->
+        <Style Selector="^[Appearance=Toolbar]">
+            <Setter Property="Height" Value="{arc:ModelPillTokenResource ToolbarHeight}" />
+            <Setter Property="Padding" Value="{arc:ModelPillTokenResource ToolbarPadding}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="EffortGap" Value="{arc:ModelPillTokenResource ToolbarEffortGap}" />
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Mark">
+                <Setter Property="Margin" Value="{arc:ModelPillTokenResource ToolbarMarkMargin}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Size" Value="{arc:ModelPillTokenResource ToolbarChevronSize}" />
+                <Setter Property="StrokeThickness" Value="{arc:ModelPillTokenResource ToolbarChevronStroke}" />
+                <Setter Property="Margin" Value="{arc:ModelPillTokenResource ToolbarChevronMargin}" />
+            </Style>
+            <Style Selector="^:hover">
+                <Setter Property="Background" Value="{arc:ModelPillTokenResource ToolbarHoverBackground}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <Style Selector="^:open">
+                <Setter Property="Background" Value="{arc:ModelPillTokenResource ToolbarOpenBackground}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+        </Style>
+
+        <!--
+            The chat header's button: the toolbar chip's spacing at 34px, the full name in regular weight beside a 15px mark,
+            a 1.75 chevron; SurfaceMuted under the pointer and while open (as the chat's title pill).
+        -->
+        <Style Selector="^[Appearance=Header]">
+            <Setter Property="Height" Value="{arc:ModelPillTokenResource HeaderHeight}" />
+            <Setter Property="Padding" Value="{arc:ModelPillTokenResource ToolbarPadding}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="MarkSize" Value="{arc:ModelPillTokenResource HeaderMarkSize}" />
+            <Setter Property="EffortGap" Value="{arc:ModelPillTokenResource ToolbarEffortGap}" />
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Mark">
+                <Setter Property="Margin" Value="{arc:ModelPillTokenResource ToolbarMarkMargin}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Size" Value="{arc:ModelPillTokenResource ToolbarChevronSize}" />
+                <Setter Property="StrokeThickness" Value="{arc:ModelPillTokenResource HeaderChevronStroke}" />
+                <Setter Property="Margin" Value="{arc:ModelPillTokenResource ToolbarChevronMargin}" />
+            </Style>
+            <Style Selector="^:hover, ^:open">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+        </Style>
+
+        <!-- Only the mark and the chevron, 4px apart. -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ arc|SpringSizeDecorator#PART_TextSize">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcContentSwap#PART_Mark">
+                <Setter Property="Margin" Value="{arc:ModelPillTokenResource CompactMarkMargin}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Margin" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^[Appearance=Toolbar]:compact">
+            <Setter Property="Padding" Value="{arc:ModelPillTokenResource ToolbarCompactPadding}" />
+        </Style>
+
+        <!-- Keyboard focus only: a pointer press focuses the pill without a ring. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ModelPillTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <!-- Background 120ms, border 160ms (standard); the chevron turns on Arc's CSS spring (580ms). -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- Reduced: colors in 120ms, the chevron turns at once. -->
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One text layer: name (medium, foreground) and effort (regular, muted) on one baseline; or the muted empty text. -->
+    <ControlTheme x:Key="{x:Type arc:ModelPillText}" TargetType="arc:ModelPillText">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelPillText">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="{TemplateBinding Gap}">
+                    <TextBlock Name="PART_Name"
+                               Text="{TemplateBinding Text}"
+                               TextWrapping="NoWrap"
+                               LineHeight="{arc:ModelPillTokenResource LabelLineHeight}"
+                               LetterSpacing="{arc:ModelPillTokenResource LabelLetterSpacing}" />
+                    <TextBlock Name="PART_Effort"
+                               Text="{TemplateBinding Effort}"
+                               IsVisible="{TemplateBinding Effort, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               TextWrapping="NoWrap"
+                               LineHeight="{arc:ModelPillTokenResource LabelLineHeight}"
+                               LetterSpacing="{arc:ModelPillTokenResource LabelLetterSpacing}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightRegular}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:regular /template/ TextBlock#PART_Name">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^:placeholder /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

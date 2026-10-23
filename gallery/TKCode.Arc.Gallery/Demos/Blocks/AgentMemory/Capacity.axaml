@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentMemoryCapacityDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:AgentMemory x:Name="Memory" AssistantName="Orbit" ListMaxHeight="260" />
+        <TextBlock HorizontalAlignment="Center" MaxWidth="560" TextWrapping="Wrap"
+                   Text="The meter turns to the warning color from 90 percent. Add a few memories: once the capacity is used up, adding is refused and the text stays." />
+    </StackPanel>
+</UserControl>

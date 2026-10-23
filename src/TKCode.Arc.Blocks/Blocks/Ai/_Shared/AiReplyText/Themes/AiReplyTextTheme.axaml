@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The reply body of the AI chat: 16/25.6 Markdown with 12 between blocks, unpaced (the control paces it in whole
+        words) and fading each batch in over 150 ms at full motion only. Citation pills are painted by the control from
+        the brushes below: muted fill with secondary digits at rest, Foreground fill with Background digits when hovered
+        or previewed, the focus ring for the keyboard. Code blocks: 70 % SurfaceMuted + 30 % Surface, BorderSubtle,
+        radius 16 (set on the Markdown's own resources by the control). The canvas holds the citations' keyboard stops.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiReplyText}" TargetType="arc:AiReplyText">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="CitationBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CitationForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CitationActiveBackground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CitationActiveForeground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="CitationFocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="CitationFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="CodeSurfaceMuted" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CodeSurface" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="CodeCornerRadius" Value="16" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiReplyText">
+                <Panel>
+                    <arc:Markdown Name="PART_Markdown"
+                                  FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                  LineHeight="25.6"
+                                  BlockSpacing="12"
+                                  IsPaced="False"
+                                  RevealFadeDuration="0:0:0.15"
+                                  RevealFadeInReducedMotion="False" />
+                    <Canvas Name="PART_Citations" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

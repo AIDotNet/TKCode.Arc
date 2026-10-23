@@ -1,0 +1,57 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The "/" and "@" list: a raised surface 300 wide and at most 280 high (1px border, radius 20, the floating shadow
+        from the popup), its height following the rows on the settle spring. The padding (5) sits inside the scroll area,
+        so it scrolls with the rows as in Arc; the scroll area never takes focus (the prompt keeps it). Rows: title 14 /
+        19.6 in Foreground, hint 12 / 16.8 in TextMuted, icon TextSecondary; the active row is SurfaceMuted, without a
+        transition; headings 12 / 16.8 in TextMuted.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiSuggestionPop}" TargetType="arc:AiSuggestionPop">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="SurfaceWidth" Value="300" />
+        <Setter Property="Width" Value="300" />
+        <Setter Property="SurfaceMaxHeight" Value="280" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiSuggestionPop">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <arc:SpringSizeDecorator Name="PART_Size" Axis="Height" Spring="Settle">
+                        <arc:ScrollArea Name="PART_Scroll"
+                                        Focusable="False"
+                                        FadeLength="0"
+                                        IsScrollChainingEnabled="False">
+                            <arc:AiSuggestionList Name="PART_List"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  ActiveBackground="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                  TitleForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                  HintForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                  IconForeground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  HeadingForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                  TitleFontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                  HintFontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                        </arc:ScrollArea>
+                    </arc:SpringSizeDecorator>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,95 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A code block of the answer: 1px Border, radius 18, the fill from the document (55% SurfaceMuted over the page).
+        Header 38 high, padding 0 3 0 14, a hairline under it: the file name 12 / 19.2 TextSecondary and the language 12
+        TextMuted 8 apart, and a plain Copy button (30 high, radius 18, padding 0 10). The code 13 / 21.45 in the
+        monospace family, padding 13 16 15, scrolling sideways in a focusable area whose ring is 2px, 2px inside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerCodeBlock}" TargetType="arc:AiAnswerCodeBlock">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerCodeBlock">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <DockPanel>
+                        <Border Name="PART_Header"
+                                DockPanel.Dock="Top"
+                                Height="38"
+                                Padding="14,0,3,0"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{TemplateBinding HairlineBrush}">
+                            <DockPanel VerticalAlignment="Center">
+                                <arc:CopyButton Name="PART_Copy"
+                                                DockPanel.Dock="Right"
+                                                Variant="Plain"
+                                                VerticalAlignment="Center"
+                                                Value="{TemplateBinding Code}"
+                                                Label="{TemplateBinding CopyLabel}"
+                                                CopiedLabel="{TemplateBinding CopiedLabel}"
+                                                FailedLabel="{TemplateBinding FailedLabel}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_File"
+                                               Text="{TemplateBinding FileLabel}"
+                                               LineHeight="19.2"
+                                               VerticalAlignment="Center"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Name="PART_Language"
+                                               Text="{TemplateBinding LanguageLabel}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Border>
+                        <Panel>
+                            <ScrollViewer Name="PART_Scroll"
+                                          Focusable="True"
+                                          FocusAdorner="{x:Null}"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Disabled">
+                                <arc:AiAnswerCodeText Name="PART_Text"
+                                                      Padding="16,13,16,15"
+                                                      TextWrapping="NoWrap"
+                                                      FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                      FontSize="13"
+                                                      LineHeight="21.45"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                      SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                      SelectionForegroundBrush="{x:Null}" />
+                            </ScrollViewer>
+                            <Border Name="PART_CodeRing"
+                                    Margin="2"
+                                    CornerRadius="0,0,15,15"
+                                    BorderThickness="2"
+                                    BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                    IsVisible="False"
+                                    IsHitTestVisible="False" />
+                        </Panel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|CopyButton#PART_Copy">
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="CornerRadius" Value="18" />
+        </Style>
+        <Style Selector="^:code-focus-visible /template/ Border#PART_CodeRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

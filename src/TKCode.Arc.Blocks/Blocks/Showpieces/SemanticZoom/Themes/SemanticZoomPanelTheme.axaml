@@ -1,0 +1,111 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Semantic zoom details panel (Arc Semantic zoom, design reference): kind and name, three numbers (open, blocked in
+        the danger color, next due), progress as a 28px percentage over a 4px bar, and the people with their count, avatar
+        stack and a note. Two columns under a wide map, one column beside it or in narrow containers.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SemanticZoomPanel}" TargetType="arc:SemanticZoomPanel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SemanticZoomPanel">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <arc:SemanticZoomPanelGrid Name="PART_Layout"
+                                               ColumnGap="{arc:SemanticZoomPanelTokenResource PanelColumnGap}"
+                                               RowGap="{arc:SemanticZoomPanelTokenResource PanelRowGap}"
+                                               MaxGridWidth="{arc:SemanticZoomPanelTokenResource GridMaxWidth}">
+                        <arc:ArcContentSwap Name="PART_Scope"
+                                            Mode="Crossfade"
+                                            ExitDuration="0:0:0.12"
+                                            EnterDuration="0:0:0.24"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalContentAlignment="Top"
+                                            MinHeight="40.2" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="{arc:SemanticZoomPanelTokenResource NumberGap}">
+                            <StackPanel>
+                                <TextBlock Name="PART_OpenLabel" Classes="panel-label" />
+                                <arc:ShowpieceNumber Name="PART_Open" Classes="panel-number" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Name="PART_BlockedLabel" Classes="panel-label" />
+                                <arc:ShowpieceNumber Name="PART_Blocked" Classes="panel-number danger" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Name="PART_DueLabel" Classes="panel-label" />
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Name="PART_DueMonth" Classes="panel-value" />
+                                    <arc:ShowpieceNumber Name="PART_DueDay" Classes="panel-number" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel>
+                            <TextBlock Name="PART_ProgressLabel" Classes="panel-label" />
+                            <arc:ShowpieceNumber Name="PART_Progress"
+                                                 Format="Percent"
+                                                 HorizontalAlignment="Left"
+                                                 Height="{arc:SemanticZoomPanelTokenResource ProgressLeading}"
+                                                 FontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                                 FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                 Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:SemanticZoomBar Name="PART_Bar"
+                                                 Height="{arc:SemanticZoomPanelTokenResource BarExtent}"
+                                                 Margin="0,4,0,0" />
+                        </StackPanel>
+                        <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="0,1,0,0"
+                                Padding="0,18,0,0">
+                            <arc:SemanticZoomPeoplePanel Name="PART_People"
+                                                         LabelWidth="{arc:SemanticZoomPanelTokenResource PeopleLabelWidth}"
+                                                         ColumnGap="{arc:SemanticZoomPanelTokenResource PeopleColumnGap}"
+                                                         RowGap="{arc:SemanticZoomPanelTokenResource PeopleRowGap}">
+                                <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_PeopleLabel" Classes="panel-label" VerticalAlignment="Center" />
+                                    <arc:ShowpieceNumber Name="PART_PeopleCount"
+                                                         Grid.Column="1"
+                                                         VerticalAlignment="Center"
+                                                         Height="{arc:SemanticZoomPanelTokenResource LabelLeading}"
+                                                         FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                         FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                         Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Grid>
+                                <StackPanel Name="PART_Faces"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:SemanticZoomPanelTokenResource AvatarOverlap}" />
+                                <TextBlock Name="PART_Note" Classes="panel-label" TextWrapping="Wrap" />
+                            </arc:SemanticZoomPeoplePanel>
+                        </Border>
+                    </arc:SemanticZoomPanelGrid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arc:SemanticZoomPanelTokenResource PanelInset}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Focusable" Value="False" />
+
+        <Style Selector="^ /template/ TextBlock.panel-label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SemanticZoomPanelTokenResource LabelLeading}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.panel-value">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="{arc:SemanticZoomPanelTokenResource NumberLeading}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|ShowpieceNumber.panel-number">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Height" Value="{arc:SemanticZoomPanelTokenResource NumberLeading}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ShowpieceNumber.danger">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,214 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The chat fills its container (Arc 3.1): Background, clipped. From the top: the 52px header (title pill on the left;
+        the model pill and the 34px new chat button on the right, 2px apart; a 1px BorderSubtle edge below), the body (the
+        thread in the follow scroller, or the greeting and suggestions centered), the composer dock (the chat's single-row
+        composer), and the hidden live region. The thread is centered, at most ColumnWidth plus its side paddings wide, its
+        turns 28 apart (24 when narrow); the side paddings, the turn gap and the compact model pill's padding follow the
+        chat's width in code (the thread is the scroller's content, out of reach of template styles).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiChat}" TargetType="arc:AiChat">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="NarrowWidth" Value="{arc:AiChatTokenResource NarrowWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:AiChatTokenResource CompactWidth}" />
+        <Setter Property="ThreadSideRatio" Value="{arc:AiChatTokenResource ThreadSideRatio}" />
+        <Setter Property="ThreadSideMin" Value="{arc:AiChatTokenResource ThreadSideMin}" />
+        <Setter Property="ThreadSideMax" Value="{arc:AiChatTokenResource ThreadSideMax}" />
+        <Setter Property="ThreadTopPadding" Value="{arc:AiChatTokenResource ThreadTopPadding}" />
+        <Setter Property="NarrowThreadTopPadding" Value="{arc:AiChatTokenResource NarrowThreadTopPadding}" />
+        <Setter Property="ThreadBottomPadding" Value="{arc:AiChatTokenResource ThreadBottomPadding}" />
+        <Setter Property="HeaderSideOffset" Value="{arc:AiChatTokenResource HeaderSideOffset}" />
+        <Setter Property="HeaderSideMin" Value="{arc:AiChatTokenResource HeaderSideMin}" />
+        <Setter Property="HeaderEndPadding" Value="{arc:AiChatTokenResource HeaderEndPadding}" />
+        <Setter Property="DockSideOffset" Value="{arc:AiChatTokenResource DockSideOffset}" />
+        <Setter Property="DockSideMin" Value="{arc:AiChatTokenResource DockSideMin}" />
+        <Setter Property="DockTopPadding" Value="{arc:AiChatTokenResource DockTopPadding}" />
+        <Setter Property="DockBottomPadding" Value="{arc:AiChatTokenResource DockBottomPadding}" />
+        <Setter Property="PaneEnterRise" Value="{arc:AiChatTokenResource PaneEnterRise}" />
+        <Setter Property="InitialTurns" Value="{arc:AiChatTokenResource InitialTurns}" />
+        <Setter Property="EarlierTurns" Value="{arc:AiChatTokenResource EarlierTurns}" />
+        <Setter Property="TurnGap" Value="{arc:AiChatTokenResource TurnGap}" />
+        <Setter Property="NarrowTurnGap" Value="{arc:AiChatTokenResource NarrowTurnGap}" />
+        <Setter Property="CompactModelPillPadding" Value="{arc:AiChatTokenResource CompactModelPillPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiChat">
+                <Panel>
+                    <Border Name="PART_Root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <Border Name="PART_Header"
+                                    Height="{arc:AiChatTokenResource HeaderHeight}"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <Grid ColumnDefinitions="*,Auto,Auto" VerticalAlignment="Center">
+                                    <arc:AiConversationMenuButton Name="PART_TitlePill"
+                                                                  HorizontalAlignment="Left"
+                                                                  VerticalAlignment="Center" />
+                                    <Panel Grid.Column="1" Margin="{arc:AiChatTokenResource HeaderControlMargin}" VerticalAlignment="Center">
+                                        <arc:ModelPill Name="PART_ModelPill" Appearance="Header" ShowEffort="False" />
+                                        <arc:ModelMenu Name="PART_ModelMenu"
+                                                       EffortLayout="Submenu"
+                                                       Layout="Simple"
+                                                       ShowMoreModels="False"
+                                                       Placement="BottomEdgeAlignedRight"
+                                                       AnchorGap="6" />
+                                    </Panel>
+                                    <arc:AiChatIconButton Name="PART_NewChat"
+                                                          Grid.Column="2"
+                                                          Margin="{arc:AiChatTokenResource HeaderControlMargin}"
+                                                          Glyph="{x:Static arc:ArcIcons.SquarePen}"
+                                                          arc:Tooltip.Side="Bottom"
+                                                          VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <Panel Name="PART_Body" Grid.Row="1">
+                                <Panel Name="PART_Pane">
+                                    <arc:AiFollowScroller Name="PART_Scroller">
+                                        <Border Name="PART_Thread" HorizontalAlignment="Stretch">
+                                            <arc:AiChatThreadPanel Name="PART_Turns" />
+                                        </Border>
+                                    </arc:AiFollowScroller>
+                                </Panel>
+                                <arc:AiChatEmptyState Name="PART_Empty" />
+                            </Panel>
+                            <Border Name="PART_Dock" Grid.Row="2" HorizontalAlignment="Stretch">
+                                <arc:AiComposer Name="PART_Composer" Layout="Inline" MaxLength="{x:Null}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <arc:AiAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+    </ControlTheme>
+
+    <!--
+        A turn (Arc's article): the person's row, 14px, the reply. Transparent so a pointer anywhere over the turn reveals
+        the reply's actions. The height follows the content at once except right after a version switch (in code).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiChatTurnView}" TargetType="arc:AiChatTurnView">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiChatTurnView">
+                <Border Background="{TemplateBinding Background}">
+                    <arc:AiChatTurnSizer Name="PART_Sizer">
+                        <StackPanel Name="PART_Body" Spacing="{arc:AiChatTokenResource TurnBodyGap}">
+                            <arc:AiUserBubble Name="PART_User" />
+                            <arc:AiChatReplyView Name="PART_Reply" />
+                        </StackPanel>
+                    </arc:AiChatTurnSizer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A reply, 10px between its parts: the head (mark and reasoning), the tool chips (6px apart, wrapping) with their
+        detail panels under them, the text, the stopped line or error box, the action bar. Parts without content are hidden
+        and leave no gap.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiChatReplyView}" TargetType="arc:AiChatReplyView">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiChatReplyView">
+                <StackPanel Spacing="{arc:AiChatTokenResource ReplyGap}">
+                    <arc:AiReasoningDisclosure Name="PART_Reasoning" />
+                    <StackPanel Name="PART_Tools" IsVisible="False">
+                        <WrapPanel Name="PART_Chips"
+                                   ItemSpacing="{arc:AiChatTokenResource ToolGap}"
+                                   LineSpacing="{arc:AiChatTokenResource ToolGap}" />
+                        <StackPanel Name="PART_Details" />
+                    </StackPanel>
+                    <arc:AiReplyText Name="PART_Text" IsVisible="False" />
+                    <arc:AiStatusNote Name="PART_Status" IsVisible="False" IsActive="False" />
+                    <arc:AiMessageActions Name="PART_Actions" HorizontalAlignment="Left" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The header's new chat button (Arc 3.2): 34px round, SquarePen 18 at stroke 1.75 in TextSecondary; under a mouse or
+        pen SurfaceMuted with the glyph in Foreground (160ms); the keyboard focus ring 2px outside; the tooltip below.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiChatIconButton}" TargetType="arc:AiChatIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:AiChatTokenResource HeaderControlHeight}" />
+        <Setter Property="Height" Value="{arc:AiChatTokenResource HeaderControlHeight}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiChatIconButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Name="PART_Icon"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="{arc:AiChatTokenResource IconGlyphSize}"
+                                  StrokeThickness="{arc:AiChatTokenResource GlyphStroke}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

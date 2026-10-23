@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProjectBoardFramedDemo">
+    <!-- Framed: a bordered card with a 24px radius, for a board that sits among other content on a page. -->
+    <arc:ProjectBoard x:Name="Board" IsFramed="True" MaxWidth="760" HorizontalAlignment="Center" />
+</UserControl>

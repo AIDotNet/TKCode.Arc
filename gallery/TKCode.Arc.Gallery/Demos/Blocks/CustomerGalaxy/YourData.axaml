@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CustomerGalaxyYourDataDemo">
+    <StackPanel Spacing="12">
+        <!-- Your own accounts, groupings, health states and wording; amounts in euros. -->
+        <arc:CustomerGalaxy x:Name="Galaxy"
+                            Title="Workspace subscriptions"
+                            Subtitle="Every workspace on a paid tier, sized by monthly revenue."
+                            CurrencySymbol="€"
+                            AllText="Everything"
+                            AllAccountsText="All workspaces"
+                            AccountCountFormat="{}{0} workspaces"
+                            OneAccountFormat="{}{0} workspace"
+                            SizeLegendText="Size is revenue"
+                            ShowHint="False">
+            <arc:GalaxyGrouping Key="tier" Header="Tier">
+                <arc:GalaxyGroupDefinition Key="hobby" Label="Hobby" />
+                <arc:GalaxyGroupDefinition Key="pro" Label="Pro" />
+                <arc:GalaxyGroupDefinition Key="scale" Label="Scale" />
+            </arc:GalaxyGrouping>
+            <arc:GalaxyGrouping Key="cloud" Header="Hosting" ListTitle="By hosting" />
+            <arc:GalaxyGrouping Key="health" Header="Status" />
+        </arc:CustomerGalaxy>
+        <TextBlock x:Name="Log" Foreground="{arc:ArcDesignTokenResource TextSecondary}" Text="Click a dot to select a workspace." />
+    </StackPanel>
+</UserControl>

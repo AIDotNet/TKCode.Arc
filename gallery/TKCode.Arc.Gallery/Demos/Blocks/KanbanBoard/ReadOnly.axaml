@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KanbanBoardReadOnlyDemo">
+    <!-- A shared status view: no dragging, no quick add; a card still opens to show its details. -->
+    <arc:KanbanBoard x:Name="Board" Title="Field app 4.2 (shared view)" IsReadOnly="True" Height="600" />
+</UserControl>

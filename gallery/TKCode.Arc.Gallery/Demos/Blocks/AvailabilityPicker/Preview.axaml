@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvailabilityPickerPreviewDemo">
+    <!-- A 30-minute check-in for three people over one week; the days and times come from AvailabilityPickerDemoData. -->
+    <arc:AvailabilityPicker x:Name="Picker"
+                            MaxWidth="680"
+                            Title="Roadmap check-in"
+                            Duration="0:30:00"
+                            TimeZoneName="Lisbon time" />
+</UserControl>

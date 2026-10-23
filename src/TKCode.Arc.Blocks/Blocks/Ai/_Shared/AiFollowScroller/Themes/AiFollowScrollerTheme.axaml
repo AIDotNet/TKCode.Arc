@@ -1,0 +1,95 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The thread's scroller: the main package's scroll area (native wheel, touch and keys, thin overlay scrollbar, no edge
+        fades) and, over its bottom edge, the scroll-to-latest button centered 10px up. The scroll area takes keys after a
+        click in the thread but is not a tab stop (Arc's thread is not in the tab order).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiFollowScroller}" TargetType="arc:AiFollowScroller">
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFollowScroller">
+                <Panel>
+                    <arc:ScrollArea Name="PART_Scroll"
+                                    FadeLength="0"
+                                    IsTabStop="False"
+                                    FocusAdorner="{x:Null}" />
+                    <arc:AiFollowJumpButton Name="PART_Jump"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom"
+                                            Margin="0,0,0,10" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- 34px round, 1px Border on Surface with ShadowRaised; ArrowDown 16 at stroke 1.75 in TextSecondary. Hover (not
+         measured in Arc) tints like the other quiet buttons: SurfaceMuted, the arrow in Foreground. -->
+    <ControlTheme x:Key="{x:Type arc:AiFollowJumpButton}" TargetType="arc:AiFollowJumpButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="34" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiFollowJumpButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{x:Static arc:ArcIcons.ArrowDown}"
+                                      Size="16"
+                                      StrokeThickness="1.75"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AvailabilityPickerFlatDemo">
+    <!-- Laid flat on the page: no border, no dividers, no muted footer. Starts on Wednesday's first free time. -->
+    <arc:AvailabilityPicker x:Name="Picker"
+                            IsFramed="False"
+                            Title="Design review"
+                            Duration="0:45:00"
+                            TimeZoneName="Lisbon time" />
+</UserControl>

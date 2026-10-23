@@ -1,7 +1,7 @@
 ---
 title: 設定頁面
 summary: 完整的設定頁面：導覽區帶有帳戶卡片，旁邊顯示所選區段，並提供未儲存變更的儲存列。
-source-hash: df99365834f4
+source-hash: 1fae687d1a34
 ---
 
 <Demo name="Overview" />
@@ -31,7 +31,7 @@ source-hash: df99365834f4
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SettingsPage Height="480">
         <arc:SettingsSection Header="個人資料" Icon="{x:Static arc:ArcIcons.User}" Description="他人如何看到你。">
             <arc:Input Label="全名" Text="Noor Haddad" />

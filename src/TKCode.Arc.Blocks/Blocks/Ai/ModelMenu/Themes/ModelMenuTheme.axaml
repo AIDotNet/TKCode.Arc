@@ -1,0 +1,520 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!-- The menu renders nothing in place; its surfaces are shown in popups on the window's overlay layer. -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenu}" TargetType="arc:ModelMenu">
+        <Setter Property="SurfaceWidth" Value="{arc:ModelMenuTokenResource SurfaceWidth}" />
+        <Setter Property="InlineSurfaceWidth" Value="{arc:ModelMenuTokenResource InlineSurfaceWidth}" />
+        <Setter Property="SimpleMinWidth" Value="{arc:ModelMenuTokenResource SimpleMinWidth}" />
+        <Setter Property="EffortMenuWidth" Value="{arc:ModelMenuTokenResource EffortMenuWidth}" />
+        <Setter Property="MoreMenuWidth" Value="{arc:ModelMenuTokenResource MoreMenuWidth}" />
+        <Setter Property="ViewportInset" Value="{arc:ModelMenuTokenResource ViewportInset}" />
+        <Setter Property="SubmenuOffset" Value="{arc:ModelMenuTokenResource SubmenuOffset}" />
+        <Setter Property="SubmenuGap" Value="{arc:ModelMenuTokenResource SubmenuGap}" />
+    </ControlTheme>
+
+    <!-- A surface: 1px border, panel radius, raised fill; the list scrolls past 420 (thin overlay scrollbar, no scroll
+         chaining) and owns the single highlight. The inline (composer) layout pads the list by 5 and rounds the highlight
+         to 20 (set in styles, so IsInline can change them). -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuPanel}" TargetType="arc:ModelMenuPanel">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="PageTravel" Value="{arc:ModelMenuTokenResource PageTravel}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuPanel">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <arc:SpringSizeDecorator Name="PART_Size" Axis="Height" Spring="Smooth">
+                        <arc:ScrollArea Name="PART_Scroll"
+                                        MaxHeight="{arc:ModelMenuTokenResource ListMaxHeight}"
+                                        FadeLength="0"
+                                        IsScrollChainingEnabled="False">
+                            <Panel Name="PART_List">
+                                <arc:GlidingIndicator Name="PART_Highlight"
+                                                      Spring="Snappy"
+                                                      FadeDuration="0:0:0.08"
+                                                      Fill="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                                <Decorator Name="PART_Page" />
+                            </Panel>
+                        </arc:ScrollArea>
+                    </arc:SpringSizeDecorator>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Panel#PART_List">
+            <Setter Property="Margin" Value="{arc:ModelMenuTokenResource ListPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        </Style>
+        <Style Selector="^[IsInline=True] /template/ Panel#PART_List">
+            <Setter Property="Margin" Value="{arc:ModelMenuTokenResource InlineListPadding}" />
+        </Style>
+        <Style Selector="^[IsInline=True] /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource InlineHighlightRadius}" />
+        </Style>
+        <!-- The simple layout (the chat's menu): the control radius, a 12px highlight. -->
+        <Style Selector="^[IsSimple=True]">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        </Style>
+        <Style Selector="^[IsSimple=True] /template/ arc|GlidingIndicator#PART_Highlight">
+            <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource SimpleHighlightRadius}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A model: featured (54, mark 18, name and blurb) or compact (38, mark 16, name and tag); a check only on the selected one.
+         Inline (the composer): 48, padding 6 10 6 11, mark 16, a regular name and a muted line, the check in the text color. -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuModelRow}" TargetType="arc:ModelMenuModelRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ModelMenuTokenResource FeaturedRowHeight}" />
+        <Setter Property="Padding" Value="{arc:ModelMenuTokenResource RowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuModelRow">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <DockPanel>
+                        <arc:ModelMark DockPanel.Dock="Left"
+                                       Mark="{TemplateBinding Mark}"
+                                       MarkColor="{TemplateBinding MarkColor}"
+                                       Size="{arc:ModelMenuTokenResource FeaturedMarkSize}"
+                                       Margin="{arc:ModelMenuTokenResource LeadingGap}" />
+                        <arc:ArcGlyph DockPanel.Dock="Right"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="{arc:ModelMenuTokenResource CheckGlyphSize}"
+                                      StrokeThickness="{arc:ModelMenuTokenResource CheckStroke}"
+                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                      Margin="{arc:ModelMenuTokenResource TrailingGap}"
+                                      VerticalAlignment="Center"
+                                      IsVisible="{TemplateBinding IsChecked}" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding ModelName}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ModelMenuTokenResource NameLineHeight}"
+                                       LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap" />
+                            <TextBlock Text="{TemplateBinding Blurb}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ModelMenuTokenResource BlurbLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       IsVisible="{TemplateBinding Blurb, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[IsCompact=True]">
+            <Setter Property="Height" Value="{arc:ModelMenuTokenResource CompactRowHeight}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:ModelMenuModelRow">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <DockPanel>
+                            <arc:ModelMark DockPanel.Dock="Left"
+                                           Mark="{TemplateBinding Mark}"
+                                           MarkColor="{TemplateBinding MarkColor}"
+                                           Size="{arc:ModelMenuTokenResource CompactMarkSize}"
+                                           Margin="{arc:ModelMenuTokenResource CompactLeadingGap}" />
+                            <arc:ArcGlyph DockPanel.Dock="Right"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:ModelMenuTokenResource CheckGlyphSize}"
+                                          StrokeThickness="{arc:ModelMenuTokenResource CheckStroke}"
+                                          Foreground="{arc:ArcDesignTokenResource Accent}"
+                                          Margin="{arc:ModelMenuTokenResource CompactTrailingGap}"
+                                          VerticalAlignment="Center"
+                                          IsVisible="{TemplateBinding IsChecked}" />
+                            <TextBlock DockPanel.Dock="Right"
+                                       Text="{TemplateBinding TagText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ModelMenuTokenResource TagLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       Margin="{arc:ModelMenuTokenResource CompactTrailingGap}"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="NoWrap"
+                                       IsVisible="{TemplateBinding TagText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <TextBlock Text="{TemplateBinding ModelName}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:ModelMenuTokenResource LabelLineHeight}"
+                                       LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <!-- Simple (the chat): 36, padding 0 10, mark 16 and 10px, the regular name, the muted note at the end, a 15px
+             check in the text color 10px after it. -->
+        <Style Selector="^[IsSimple=True]">
+            <Setter Property="Height" Value="{arc:ModelMenuTokenResource SimpleRowHeight}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:ModelMenuModelRow">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <DockPanel>
+                            <arc:ModelMark DockPanel.Dock="Left"
+                                           Mark="{TemplateBinding Mark}"
+                                           MarkColor="{TemplateBinding MarkColor}"
+                                           Size="{arc:ModelMenuTokenResource CompactMarkSize}"
+                                           Margin="{arc:ModelMenuTokenResource CompactLeadingGap}" />
+                            <!-- The check keeps its place on every row, so the notes line up. -->
+                            <arc:ArcGlyph Name="PART_SimpleCheck"
+                                          DockPanel.Dock="Right"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:ModelMenuTokenResource SimpleCheckSize}"
+                                          StrokeThickness="{arc:ModelMenuTokenResource GlyphStroke}"
+                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                          Margin="{arc:ModelMenuTokenResource CompactTrailingGap}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock DockPanel.Dock="Right"
+                                       Text="{TemplateBinding NoteText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ModelMenuTokenResource TagLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       Margin="{arc:ModelMenuTokenResource CompactTrailingGap}"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="NoWrap"
+                                       IsVisible="{TemplateBinding NoteText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <TextBlock Text="{TemplateBinding ModelName}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       LineHeight="{arc:ModelMenuTokenResource LabelLineHeight}"
+                                       LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap" />
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="^[IsSimple=True][IsChecked=False] /template/ arc|ArcGlyph#PART_SimpleCheck">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^[IsInline=True]">
+            <Setter Property="Height" Value="{arc:ModelMenuTokenResource InlineRowHeight}" />
+            <Setter Property="Padding" Value="{arc:ModelMenuTokenResource InlineRowPadding}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:ModelMenuModelRow">
+                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <DockPanel>
+                            <arc:ModelMark DockPanel.Dock="Left"
+                                           Mark="{TemplateBinding Mark}"
+                                           MarkColor="{TemplateBinding MarkColor}"
+                                           Size="{arc:ModelMenuTokenResource InlineMarkSize}"
+                                           Margin="{arc:ModelMenuTokenResource InlineLeadingGap}" />
+                            <arc:ArcGlyph DockPanel.Dock="Right"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:ModelMenuTokenResource CheckGlyphSize}"
+                                          StrokeThickness="{arc:ModelMenuTokenResource CheckStroke}"
+                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                          Margin="{arc:ModelMenuTokenResource InlineTrailingGap}"
+                                          VerticalAlignment="Center"
+                                          IsVisible="{TemplateBinding IsChecked}" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding ModelName}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           LineHeight="{arc:ModelMenuTokenResource LabelLineHeight}"
+                                           LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap" />
+                                <TextBlock Text="{TemplateBinding Blurb}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:ModelMenuTokenResource InlineCaptionLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap"
+                                           IsVisible="{TemplateBinding Blurb, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- An effort level (50): name, "Default" after the model's default level, description; a check on the current level. -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuEffortRow}" TargetType="arc:ModelMenuEffortRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ModelMenuTokenResource EffortRowHeight}" />
+        <Setter Property="Padding" Value="{arc:ModelMenuTokenResource EffortRowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuEffortRow">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <DockPanel>
+                        <arc:ArcGlyph DockPanel.Dock="Right"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="{arc:ModelMenuTokenResource CheckGlyphSize}"
+                                      StrokeThickness="{arc:ModelMenuTokenResource CheckStroke}"
+                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                      Margin="{arc:ModelMenuTokenResource TrailingGap}"
+                                      VerticalAlignment="Center"
+                                      IsVisible="{TemplateBinding IsChecked}" />
+                        <StackPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{TemplateBinding LevelName}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ModelMenuTokenResource NameLineHeight}"
+                                           LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                           VerticalAlignment="Bottom"
+                                           TextWrapping="NoWrap" />
+                                <TextBlock Text="{TemplateBinding DefaultText}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:ModelMenuTokenResource NoteLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           Margin="{arc:ModelMenuTokenResource DefaultNoteMargin}"
+                                           VerticalAlignment="Bottom"
+                                           TextWrapping="NoWrap"
+                                           IsVisible="{TemplateBinding IsDefault}" />
+                            </StackPanel>
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ModelMenuTokenResource BlurbLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Effort / More models (40): icon, label, value (muted, at most 132, ellipsis), chevron. The back row: chevron left and the page title. -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuActionRow}" TargetType="arc:ModelMenuActionRow">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ModelMenuTokenResource ActionRowHeight}" />
+        <Setter Property="Padding" Value="{arc:ModelMenuTokenResource RowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuActionRow">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <DockPanel>
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      DockPanel.Dock="Left"
+                                      Data="{TemplateBinding Glyph}"
+                                      Size="{arc:ModelMenuTokenResource ActionGlyphSize}"
+                                      StrokeThickness="{arc:ModelMenuTokenResource GlyphStroke}"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      Margin="{arc:ModelMenuTokenResource LeadingGap}"
+                                      VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      DockPanel.Dock="Right"
+                                      Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                      Size="{arc:ModelMenuTokenResource ChevronGlyphSize}"
+                                      StrokeThickness="{arc:ModelMenuTokenResource GlyphStroke}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      Margin="{arc:ModelMenuTokenResource ChevronMargin}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Value"
+                                   DockPanel.Dock="Right"
+                                   Text="{TemplateBinding Value}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   MaxWidth="{arc:ModelMenuTokenResource ValueMaxWidth}"
+                                   LineHeight="{arc:ModelMenuTokenResource LabelLineHeight}"
+                                   LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                   Margin="{arc:ModelMenuTokenResource TrailingGap}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   IsVisible="{TemplateBinding Value, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   LineHeight="{arc:ModelMenuTokenResource LabelLineHeight}"
+                                   LetterSpacing="{arc:ModelMenuTokenResource NameLetterSpacing}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^.back /template/ TextBlock#PART_Label">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^.back /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- 1px BorderSubtle, 6 around it; inline: 5 above and below, reaching the panel's edges (−5 at the sides). -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuSeparator}" TargetType="arc:ModelMenuSeparator">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuSeparator">
+                <Border Name="PART_Line"
+                        Height="1"
+                        Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Line">
+            <Setter Property="Margin" Value="{arc:ModelMenuTokenResource SeparatorMargin}" />
+        </Style>
+        <Style Selector="^[IsInline=True] /template/ Border#PART_Line">
+            <Setter Property="Margin" Value="{arc:ModelMenuTokenResource InlineSeparatorMargin}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The inline layout's "Effort" header: the title (secondary) and, at the right, the current level's description (muted). -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuEffortHeader}" TargetType="arc:ModelMenuEffortHeader">
+        <Setter Property="Padding" Value="{arc:ModelMenuTokenResource EffortHeaderPadding}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuEffortHeader">
+                <DockPanel Margin="{TemplateBinding Padding}">
+                    <TextBlock Name="PART_Title"
+                               DockPanel.Dock="Left"
+                               Text="{TemplateBinding Title}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               LineHeight="{arc:ModelMenuTokenResource InlineCaptionLineHeight}"
+                               TextWrapping="NoWrap" />
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               LineHeight="{arc:ModelMenuTokenResource InlineCaptionLineHeight}"
+                               Margin="{arc:ModelMenuTokenResource EffortHeaderGap}"
+                               HorizontalAlignment="Right"
+                               TextAlignment="Right"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="NoWrap" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The inline layout's segmented row: a muted track (1px border, radius 17, padding 3; margin 0 2 2) with the levels in
+        equal 30px cells 2 apart. The thumb (1px border, surface fill, resting shadow, radius 13) lies under the selected
+        cell; with keyboard focus a 2px ring hugs it. Both are drawn (Core GlidingIndicator) and glide on the token spring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuEffortStrip}" TargetType="arc:ModelMenuEffortStrip">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Margin" Value="{arc:ModelMenuTokenResource EffortTrackMargin}" />
+        <Setter Property="Padding" Value="{arc:ModelMenuTokenResource EffortTrackPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource EffortTrackRadius}" />
+        <Setter Property="ThumbSpringDuration" Value="{arc:ModelMenuTokenResource EffortThumbSpringDuration}" />
+        <Setter Property="ThumbSpringBounce" Value="{arc:ModelMenuTokenResource EffortThumbSpringBounce}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuEffortStrip">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Thumb"
+                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                              CornerRadius="{arc:ModelMenuTokenResource EffortThumbRadius}" />
+                        <arc:ModelMenuEqualColumns Name="PART_Cells" Spacing="{arc:ModelMenuTokenResource EffortCellGap}" />
+                        <arc:GlidingIndicator Name="PART_Ring"
+                                              IsVisible="False"
+                                              Stroke="{arc:ArcDesignTokenResource FocusRing}"
+                                              StrokeThickness="2"
+                                              CornerRadius="{arc:ModelMenuTokenResource EffortRingRadius}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ arc|GlidingIndicator#PART_Ring">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A level: its word centered (12/16.8), secondary; the text color when selected or under the pointer (160ms). -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuEffortCell}" TargetType="arc:ModelMenuEffortCell">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ModelMenuTokenResource EffortCellHeight}" />
+        <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource EffortCellRadius}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuEffortCell">
+                <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                    <TextBlock Text="{TemplateBinding Text}"
+                               LineHeight="{arc:ModelMenuTokenResource InlineCaptionLineHeight}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               TextWrapping="NoWrap" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover, ^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A provider heading (12/15.6, muted): 6 10 4 for the first, 10 10 4 after. Class "empty": the note of a menu without models. -->
+    <ControlTheme x:Key="{x:Type arc:ModelMenuGroupHeader}" TargetType="arc:ModelMenuGroupHeader">
+        <Setter Property="Padding" Value="{arc:ModelMenuTokenResource GroupHeaderPaddingNext}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelMenuGroupHeader">
+                <Border Padding="{TemplateBinding Padding}">
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="NoWrap" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:ModelMenuTokenResource NoteLineHeight}" />
+        </Style>
+        <Style Selector="^[IsFirst=True]">
+            <Setter Property="Padding" Value="{arc:ModelMenuTokenResource GroupHeaderPadding}" />
+        </Style>
+        <Style Selector="^.empty">
+            <Setter Property="Padding" Value="{arc:ModelMenuTokenResource RowPadding}" />
+            <Setter Property="Height" Value="{arc:ModelMenuTokenResource ActionRowHeight}" />
+        </Style>
+        <Style Selector="^.empty /template/ TextBlock#PART_Text">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:ModelMenuTokenResource LabelLineHeight}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

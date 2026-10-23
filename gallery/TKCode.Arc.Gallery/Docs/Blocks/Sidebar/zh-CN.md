@@ -1,7 +1,7 @@
 ---
 title: 侧边栏
 summary: 工作区导航，包含分组、嵌套页面、数量和滑动的选中标记；可收起为图标窄栏。
-source-hash: a20d494c815d
+source-hash: 5a9d0d12ca5b
 ---
 
 <Demo name="Preview" />
@@ -32,7 +32,7 @@ source-hash: a20d494c815d
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+           xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
            Height="420">
     <arc:Sidebar DockPanel.Dock="Left" SelectedKey="home" IsFilterVisible="True">
         <arc:SidebarSection>
@@ -122,7 +122,7 @@ source-hash: a20d494c815d
 ```xml
 <arc:Sidebar xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SidebarSection Header="项目">
         <arc:SidebarItem Key="projects/spring" Label="春季发布">
             <arc:SidebarItem.Icon>
@@ -216,7 +216,7 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <UserControl.Styles>
         <Style Selector="arc|Sidebar:collapsed TextBlock.rail-fade">
             <Setter Property="Opacity" Value="0" />
@@ -228,12 +228,12 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 ### 侧边栏旁边的页面
 
-默认情况下（`ResizeMode="Push"`），侧边栏的布局宽度做弹簧动画，因此它旁边的页面每一帧都会重新布局。这在任何宿主中都能工作，对轻量页面也没有问题。对于文字或控件很多的页面，请设置 `ResizeMode="Overlay"`：布局宽度会立即改变，页面只布局一次，只有窗格做弹簧动画，并绘制在页面上方。再把页面的 `RenderTransform` 绑定到 `PageShift`，页面就会随窗格边缘一起滑动，而不是跳变。
+默认情况下（`ResizeMode="Overlay"`），侧边栏的布局宽度会立即改变，页面只布局一次，只有窗格做弹簧动画，并绘制在页面上方。把页面的 `RenderTransform` 绑定到 `PageShift`，页面就会随窗格边缘一起滑动，而不是跳变；不绑定时页面仍然布局正确，只是会跳到新位置。设置 `ResizeMode="Push"` 则让布局宽度做弹簧动画，因此它旁边的页面每一帧都会重新布局。这在任何宿主中都不需要绑定就能工作，对轻量页面也没有问题。
 
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+           xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
            ClipToBounds="True">
     <arc:Sidebar x:Name="Nav" DockPanel.Dock="Left" ResizeMode="Overlay" />
     <Grid RenderTransform="{Binding #Nav.PageShift}">
@@ -409,7 +409,7 @@ pinned.Items.RemoveAt(0);
 
 **操作行可以被选中吗？** 不可以。`IsAction` 行会触发 `ItemInvoked` 并执行其命令，但 `SelectedItem` 和 `SelectedKey` 保持不变，因此用户当前所在的页面仍保留其标记。
 
-**为什么侧边栏旁边的页面在收起时会卡顿？** 在默认的 `Push` 模式下，宽度弹簧的每一帧都会让页面重新布局。请设置 `ResizeMode="Overlay"`，并把页面的 `RenderTransform` 绑定到 `PageShift`。
+**为什么侧边栏旁边的页面在收起时会卡顿？** 在 `Push` 模式下，宽度弹簧的每一帧都会让页面重新布局。请使用默认的 `ResizeMode="Overlay"`，并把页面的 `RenderTransform` 绑定到 `PageShift`。
 
 **为什么 Cmd+B 或 Ctrl+B 不能收起侧边栏？** 该快捷键只在焦点位于侧边栏内部时生效，即焦点在其某一行或筛选框中。请先点击一行，或将 `IsCollapsed` 绑定到窗口其他位置的切换按钮。
 

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CustomerGalaxyFocusedClusterDemo">
+    <StackPanel Spacing="12">
+        <!-- The Corporate cluster is focused and its largest account selected; Escape steps back. -->
+        <arc:CustomerGalaxy x:Name="Galaxy"
+                            SelectedGroupingKey="plan"
+                            FocusedGroupKey="corporate" />
+        <TextBlock x:Name="Status" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

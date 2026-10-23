@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelPickerBindingsDemo">
+    <StackPanel Spacing="16" MaxWidth="440" Margin="0,0,0,160">
+        <arc:ModelPicker x:Name="Picker"
+                         SelectedModelId="cobalt-atlas-2"
+                         ModelChanged="OnModelChanged"
+                         EffortChanged="OnEffortChanged" />
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button Content="Use Aurora Swift 3" Variant="Secondary" Size="Small" Click="OnUseSwift" />
+            <arc:Button Content="Set effort to Max" Variant="Secondary" Size="Small" Click="OnMaxEffort" />
+        </StackPanel>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="14"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

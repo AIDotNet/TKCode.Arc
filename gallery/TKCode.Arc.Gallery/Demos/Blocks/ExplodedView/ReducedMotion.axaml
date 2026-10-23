@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExplodedViewReducedMotionDemo">
+    <!-- Reduced motion: the flat screen at the two ends, the whole stack apart at every layer, nothing in between. -->
+    <arc:ExplodedView x:Name="View"
+                      Height="720"
+                      arc:ArcMotion.Level="Reduced" />
+</UserControl>

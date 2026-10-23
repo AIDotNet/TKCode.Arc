@@ -1,0 +1,83 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The studio's template editor (Arc's .editable): Inter 14 / 23.8 (1.7), -0.14 letter spacing, padding 2 12 6, the
+        caret in Foreground and no focus frame at all (only the caret shows focus). Enter adds a line; Ctrl/Cmd+Enter is
+        the owner's. The chips are painted from code in the series colors below (mixed with Foreground for their text).
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptTemplateEditor}" TargetType="arc:PromptTemplateEditor">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Padding" Value="12,2,12,6" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptTemplateEditor">
+                <arc:TokenTextEditor Name="PART_Editor"
+                                     Background="Transparent"
+                                     Foreground="{TemplateBinding Foreground}"
+                                     CaretBrush="{TemplateBinding Foreground}"
+                                     PlaceholderForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     FontSize="{TemplateBinding FontSize}"
+                                     LineHeight="23.8"
+                                     LetterSpacing="-0.14"
+                                     Padding="{TemplateBinding Padding}"
+                                     Placeholder="{TemplateBinding Placeholder}"
+                                     IsReadOnly="{TemplateBinding IsReadOnly}"
+                                     MinLines="{TemplateBinding MinLines}"
+                                     MaxLines="{TemplateBinding MaxLines}"
+                                     SubmitOnEnter="False"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The "{{" list: 240 wide, padding 4, 1px Border, radius 16, Surface (the floating shadow comes from the popup). Rows
+        34 high, padding 0 10, gap 8, radius 12; the active one SurfaceMuted. The padding scrolls with the rows; nothing in
+        the list takes focus.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptVariablePop}" TargetType="arc:PromptVariablePop">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="240" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ActiveBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="IconForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptVariablePop">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <ScrollViewer Name="PART_Scroll"
+                                  Focusable="False"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  IsScrollChainingEnabled="False">
+                        <StackPanel Name="PART_Rows" Margin="{TemplateBinding Padding}" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

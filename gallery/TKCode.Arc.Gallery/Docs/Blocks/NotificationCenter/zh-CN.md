@@ -1,7 +1,7 @@
 ---
 title: 通知中心
 summary: 集中查看通知，支持已读状态、分组信息和带动画的展开与收起。
-source-hash: b28ba02579ed
+source-hash: fb27fb8a344d
 ---
 
 <Demo name="Preview" />
@@ -30,7 +30,7 @@ source-hash: b28ba02579ed
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:NotificationCenter>
         <arc:NotificationItem Id="deploy" Title="部署已完成" Description="2.4.1 版本已上线。" Time="18m" Tone="Success" />
         <arc:NotificationItem Id="mention" Title="Mia Chen 提到了你" Time="2m" ActorName="Mia Chen" />

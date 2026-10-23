@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SemanticZoomYourDataDemo">
+    <UserControl.Resources>
+        <arc:SemanticZoomPerson x:Key="Ada" Name="Ada Moreno" Role="Head chef" />
+        <arc:SemanticZoomPerson x:Key="Bo" Name="Bo Lindgren" Role="Pastry chef" />
+        <arc:SemanticZoomPerson x:Key="Cyd" Name="Cyd Okonkwo" Role="Front of house" />
+    </UserControl.Resources>
+    <!-- The whole map written in XAML: teams hold projects, projects hold tasks, tasks hold checklist items. -->
+    <arc:SemanticZoom Header="Spring menu launch" StageHeight="400">
+        <arc:SemanticZoomOrganization Title="Little Fig Bistro">
+            <arc:SemanticZoomTeam Title="Kitchen" Description="Recipes, suppliers and the line." Lead="{StaticResource Ada}">
+                <arc:SemanticZoomProject Title="New menu" Lead="{StaticResource Ada}" Health="AtRisk" Due="2026-10-30">
+                    <arc:SemanticZoomTask Title="Test the soups" Status="Done" Assignee="{StaticResource Ada}" Due="2026-09-12" Points="3">
+                        <arc:SemanticZoomChecklistItem Text="Leek and potato" IsDone="True" />
+                        <arc:SemanticZoomChecklistItem Text="Tomato and fennel" IsDone="True" />
+                    </arc:SemanticZoomTask>
+                    <arc:SemanticZoomTask Title="Price the mains" Status="InProgress" Assignee="{StaticResource Ada}" Due="2026-10-08" Points="2">
+                        <arc:SemanticZoomChecklistItem Text="Supplier quotes" IsDone="True" />
+                        <arc:SemanticZoomChecklistItem Text="Portion sizes" />
+                        <arc:SemanticZoomChecklistItem Text="Margins" />
+                    </arc:SemanticZoomTask>
+                    <arc:SemanticZoomTask Title="Find a cheese supplier" Status="Blocked" Assignee="{StaticResource Bo}" Due="2026-10-02" Points="1"
+                                          Summary="Blocked: the dairy has stopped deliveries for a month. Bo is asking two others." />
+                </arc:SemanticZoomProject>
+                <arc:SemanticZoomProject Title="Desserts" Lead="{StaticResource Bo}" Due="2026-10-20">
+                    <arc:SemanticZoomTask Title="Plum tart" Status="InReview" Assignee="{StaticResource Bo}" Due="2026-10-05" Points="2">
+                        <arc:SemanticZoomChecklistItem Text="Bake three versions" IsDone="True" />
+                        <arc:SemanticZoomChecklistItem Text="Tasting with the team" />
+                    </arc:SemanticZoomTask>
+                    <arc:SemanticZoomTask Title="Sorbet machine" Status="Todo" Assignee="{StaticResource Bo}" Due="2026-10-18" Points="5" />
+                </arc:SemanticZoomProject>
+            </arc:SemanticZoomTeam>
+            <arc:SemanticZoomTeam Title="Dining room" Description="Guests, bookings and the room." Lead="{StaticResource Cyd}">
+                <arc:SemanticZoomProject Title="Launch evening" Lead="{StaticResource Cyd}" Due="2026-11-01">
+                    <arc:SemanticZoomTask Title="Guest list" Status="Done" Assignee="{StaticResource Cyd}" Due="2026-09-15" Points="1" />
+                    <arc:SemanticZoomTask Title="Print the menus" Status="Todo" Assignee="{StaticResource Cyd}" Due="2026-10-28" Points="2" />
+                </arc:SemanticZoomProject>
+            </arc:SemanticZoomTeam>
+        </arc:SemanticZoomOrganization>
+    </arc:SemanticZoom>
+</UserControl>

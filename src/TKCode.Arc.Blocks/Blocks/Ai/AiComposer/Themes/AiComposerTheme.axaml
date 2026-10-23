@@ -1,0 +1,340 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The prompt box: a SurfaceRaised panel with a 1px Border, RadiusPanel (26), padding 10 (8 when tiny), no shadow and
+        no focus ring of its own: under a mouse the border darkens to BorderStrong mixed 45% into Border, with the focus
+        inside it turns BorderStrong (160ms standard). From the top: the attachment chips (folded away while empty), the
+        text area (16 / 24, padding 8, 1 to 8 lines, then it scrolls) and the 36px toolbar 2px below it: the plus button
+        and the tool toggles at the start; the counter, the model pill and the send button at the end. The left group
+        clips (with room for focus rings) instead of running under the right one in a very narrow composer.
+        While files are dragged over the box, a dashed cover says "Drop to attach". The model menu and the live region
+        sit next to the surface and take no space.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiComposer}" TargetType="arc:AiComposer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:AiComposerTokenResource SurfacePadding}" />
+        <Setter Property="CompactWidth" Value="{arc:AiComposerTokenResource CompactWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:AiComposerTokenResource NarrowWidth}" />
+        <Setter Property="TinyWidth" Value="{arc:AiComposerTokenResource TinyWidth}" />
+        <Setter Property="SuggestionShift" Value="{arc:AiComposerTokenResource SuggestionShift}" />
+        <Setter Property="MenuGap" Value="{arc:AiComposerTokenResource MenuGap}" />
+        <Setter Property="UploadDoneHold" Value="{arc:AiComposerTokenResource UploadDoneHold}" />
+        <Setter Property="InlineMaxLines" Value="{arc:AiComposerTokenResource InlineMaxLines}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiComposer">
+                <Panel Name="PART_Host">
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            Cursor="IBeam">
+                        <StackPanel>
+                            <arc:AiAttachmentTray Name="PART_Tray" Cursor="Arrow" />
+                            <arc:TokenTextEditor Name="PART_Editor" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                            <Grid Name="PART_Toolbar"
+                                  ColumnDefinitions="*,Auto"
+                                  Height="{arc:AiComposerTokenResource ToolbarHeight}"
+                                  Margin="{arc:AiComposerTokenResource ToolbarMargin}"
+                                  Background="Transparent"
+                                  Cursor="Arrow">
+                                <!-- -6 / 6: the clip leaves room for the focus rings (2px, 2px out). -->
+                                <Border Name="PART_LeftClip"
+                                        Grid.Column="0"
+                                        Margin="-6"
+                                        Padding="6"
+                                        ClipToBounds="True"
+                                        HorizontalAlignment="Left">
+                                    <StackPanel Name="PART_LeftGroup" Orientation="Horizontal">
+                                        <arc:AiComposerIconButton Name="PART_Plus" Icon="{x:Static arc:ArcIcons.Plus}" />
+                                        <StackPanel Name="PART_Tools" Orientation="Horizontal" />
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Name="PART_RightGroup" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <arc:AiCounter Name="PART_Counter" VerticalAlignment="Center" />
+                                    <arc:ModelPill Name="PART_ModelPill" Appearance="Toolbar" VerticalAlignment="Center" />
+                                    <arc:AiSendButton Name="PART_Send" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <arc:PresenceHost Name="PART_DropHost" Mode="Fade" IsPresent="False" IsHitTestVisible="False">
+                        <Panel Margin="{arc:AiComposerTokenResource DropCoverMargin}">
+                            <Rectangle Name="PART_DropFrame"
+                                       StrokeThickness="1"
+                                       StrokeDashArray="3,2"
+                                       Stroke="{arc:ArcDesignTokenResource BorderStrong}"
+                                       Fill="{arc:AiComposerTokenResource DropCoverBackground}"
+                                       RadiusX="{arc:AiComposerTokenResource DropCoverRadius}"
+                                       RadiusY="{arc:AiComposerTokenResource DropCoverRadius}" />
+                            <StackPanel Name="PART_DropContent"
+                                        Spacing="0"
+                                        Margin="16,6"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Upload}"
+                                              Size="{arc:AiComposerTokenResource DropGlyphSize}"
+                                              StrokeThickness="{arc:AiComposerTokenResource GlyphStroke}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              HorizontalAlignment="Center"
+                                              Margin="0,0,0,10" />
+                                <TextBlock Name="PART_DropTitle"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="22.4"
+                                           LetterSpacing="-0.16"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_DropHint"
+                                           Margin="0,6,0,0"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           LineHeight="19.6"
+                                           LetterSpacing="-0.14"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Panel>
+                    </arc:PresenceHost>
+                    <arc:AiAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_LeftGroup">
+            <Setter Property="Spacing" Value="{arc:AiComposerTokenResource ToolbarGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Tools">
+            <Setter Property="Spacing" Value="{arc:AiComposerTokenResource ToolbarGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_RightGroup">
+            <Setter Property="Spacing" Value="{arc:AiComposerTokenResource ToolbarGap}" />
+        </Style>
+
+        <!-- Under the pointer the border darkens a little; with the focus inside it turns BorderStrong. -->
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:AiComposerTokenResource SurfaceHoverBorder}" />
+        </Style>
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <!-- Tiny: padding 8, toolbar gap 2. -->
+        <Style Selector="^:tiny">
+            <Setter Property="Padding" Value="{arc:AiComposerTokenResource TinySurfacePadding}" />
+        </Style>
+        <Style Selector="^:tiny /template/ StackPanel#PART_LeftGroup">
+            <Setter Property="Spacing" Value="{arc:AiComposerTokenResource TinyToolbarGap}" />
+        </Style>
+        <Style Selector="^:tiny /template/ StackPanel#PART_Tools">
+            <Setter Property="Spacing" Value="{arc:AiComposerTokenResource TinyToolbarGap}" />
+        </Style>
+        <Style Selector="^:tiny /template/ StackPanel#PART_RightGroup">
+            <Setter Property="Spacing" Value="{arc:AiComposerTokenResource TinyToolbarGap}" />
+        </Style>
+
+        <!--
+            Inline (the AI chat's input, spec ai-chat 3.16): a Surface frame with a 1px Border, 24 corners and padding 7
+            (no hover change, BorderStrong with the focus inside). Inside, compact chips above one bottom-aligned row: the
+            34px paperclip (18px icon, tooltip above), 4, the text area (16 / 24, padding 6 4: 36 to 180 high, then it
+            scrolls), 4, the 36px solid send button. Without attachments the frame is 52 high. The drag cover is a single
+            line. No toolbar, tools, model pill or counter exist in this template.
+        -->
+        <Style Selector="^:inline">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:AiComposerTokenResource InlineCornerRadius}" />
+            <Setter Property="Padding" Value="{arc:AiComposerTokenResource InlineSurfacePadding}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:AiComposer">
+                    <Panel Name="PART_Host">
+                        <Border Name="PART_Surface"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}"
+                                Cursor="IBeam">
+                            <StackPanel>
+                                <arc:AiAttachmentTray Name="PART_Tray" ChipAppearance="Compact" Cursor="Arrow" />
+                                <Grid Name="PART_Row" ColumnDefinitions="Auto,*,Auto">
+                                    <arc:AiComposerIconButton Name="PART_Plus"
+                                                              Classes="inline"
+                                                              Icon="{x:Static arc:ArcIcons.Paperclip}"
+                                                              ClickMode="Release"
+                                                              Width="{arc:AiComposerTokenResource InlineButtonDiameter}"
+                                                              Height="{arc:AiComposerTokenResource InlineButtonDiameter}"
+                                                              IconSize="{arc:AiComposerTokenResource InlineButtonGlyphSize}"
+                                                              Margin="{arc:AiComposerTokenResource InlineAttachMargin}"
+                                                              VerticalAlignment="Bottom" />
+                                    <arc:TokenTextEditor Name="PART_Editor"
+                                                         Grid.Column="1"
+                                                         Padding="{arc:AiComposerTokenResource InlineEditorPadding}"
+                                                         VerticalAlignment="Bottom"
+                                                         ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                    <arc:AiSendButton Name="PART_Send"
+                                                      Grid.Column="2"
+                                                      Appearance="Solid"
+                                                      Margin="{arc:AiComposerTokenResource InlineSendMargin}"
+                                                      VerticalAlignment="Bottom" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <arc:PresenceHost Name="PART_DropHost" Mode="Fade" IsPresent="False" IsHitTestVisible="False">
+                            <Panel Margin="{arc:AiComposerTokenResource DropCoverMargin}">
+                                <Rectangle Name="PART_DropFrame"
+                                           StrokeThickness="1"
+                                           StrokeDashArray="3,2"
+                                           Stroke="{arc:ArcDesignTokenResource BorderStrong}"
+                                           Fill="{arc:AiComposerTokenResource DropCoverBackground}"
+                                           RadiusX="{arc:AiComposerTokenResource InlineDropCoverRadius}"
+                                           RadiusY="{arc:AiComposerTokenResource InlineDropCoverRadius}" />
+                                <StackPanel Name="PART_DropContent"
+                                            Orientation="Horizontal"
+                                            Spacing="8"
+                                            Margin="16,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Upload}"
+                                                  Size="{arc:AiComposerTokenResource InlineButtonGlyphSize}"
+                                                  StrokeThickness="{arc:AiComposerTokenResource GlyphStroke}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_DropTitle"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="19.6"
+                                               LetterSpacing="-0.14"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </StackPanel>
+                            </Panel>
+                        </arc:PresenceHost>
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="^:inline:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+
+        <!-- Border color 160ms standard; reduced motion 120ms. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The plus button: a 36px circle, a 20px icon (stroke 1.75) in TextSecondary. Mouse or pen: Foreground 6% under a
+        Foreground icon; pressed or with its menu open: 10%. Background 120ms, icon 160ms (standard). Keyboard focus only:
+        the 2px ring 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiComposerIconButton}" TargetType="arc:AiComposerIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClickMode" Value="Press" />
+        <Setter Property="Width" Value="{arc:AiComposerTokenResource ButtonDiameter}" />
+        <Setter Property="Height" Value="{arc:AiComposerTokenResource ButtonDiameter}" />
+        <Setter Property="IconSize" Value="{arc:AiComposerTokenResource ButtonGlyphSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiComposerIconButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Name="PART_Icon"
+                                  Data="{TemplateBinding Icon}"
+                                  Size="{TemplateBinding IconSize}"
+                                  StrokeThickness="{arc:AiComposerTokenResource GlyphStroke}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:AiComposerTokenResource ButtonHoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:AiComposerTokenResource ButtonPressedBackground}" />
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Background" Value="{arc:AiComposerTokenResource ButtonPressedBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <!-- The chat's paperclip: SurfaceMuted under the pointer and pressed (the chat's icon buttons), the icon Foreground. -->
+        <Style Selector="^.inline:hover, ^.inline:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

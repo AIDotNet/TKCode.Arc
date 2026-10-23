@@ -235,7 +235,7 @@ public enum SidebarResizeMode
     Push,
 
     /// <summary>
-    /// The layout width jumps at once (the page is laid out once) and only the pane springs, drawn above the page.
+    /// The default. The layout width jumps at once (the page is laid out once) and only the pane springs, drawn above the page.
     /// Bind the page's <c>RenderTransform</c> to <see cref="Sidebar.PageShift"/> so the page slides along; this is much
     /// cheaper than <see cref="Push"/> for pages with a lot of text or controls.
     /// </summary>

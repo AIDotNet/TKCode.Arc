@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LayoutMorphPreviewDemo">
+    <!-- 14 desk pieces and 10 designers; the cards and their pictures come from LayoutMorphDemoData. -->
+    <arc:LayoutMorph x:Name="Morph"
+                     Title="One shelf, six ways to look"
+                     Lede="The Harbor Lane spring edit: 14 desk pieces from 10 designers. Choose a view and every card glides to its new spot."
+                     DefaultPanelTitle="Spring edit" />
+</UserControl>

@@ -1,0 +1,320 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The attachment chip: 212 × 52, 1px Border on Surface, 16 corners, padding 6 8 6 12, 10 between the parts; no hover
+        look of its own. Lead: a 20px type icon (stroke 1.75, TextSecondary) or a 38px picture 6px further left (10 corners,
+        a 1px Border drawn inside it, cover). Text: the name 14 / 18.2 Foreground (ellipsis) over the meta line. Action: the
+        28px round button. In error the border is Danger 35% mixed into Border (computed, it follows the theme).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAttachmentChip}" TargetType="arc:AiAttachmentChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Width" Value="212" />
+        <Setter Property="Height" Value="52" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Padding" Value="12,6,8,6" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAttachmentChip">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                            <Panel Name="PART_Lead" VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Size="20"
+                                              StrokeThickness="1.75"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              VerticalAlignment="Center" />
+                                <!-- Arc's inset 1px Border is a box-shadow under the picture: it shows only through transparent pixels. -->
+                                <Border Name="PART_ThumbnailEdge"
+                                        IsVisible="False"
+                                        IsHitTestVisible="False"
+                                        Width="38"
+                                        Height="38"
+                                        Margin="-6,0,0,0"
+                                        CornerRadius="10"
+                                        BorderThickness="1"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}" />
+                                <Border Name="PART_Thumbnail"
+                                        IsVisible="False"
+                                        Width="38"
+                                        Height="38"
+                                        Margin="-6,0,0,0"
+                                        CornerRadius="10"
+                                        ClipToBounds="True">
+                                    <Image Stretch="UniformToFill" />
+                                </Border>
+                            </Panel>
+                            <!-- Placed by the reference: the name's glyphs start 12px and the meta line's 30px below the chip's top edge. -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="0,1,0,0">
+                                <TextBlock Name="PART_Name"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="18.2"
+                                           LetterSpacing="-0.14"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{TemplateBinding Foreground}" />
+                                <arc:ArcContentSwap Name="PART_Meta"
+                                                    Mode="Crossfade"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Top" />
+                            </StackPanel>
+                            <arc:AiAttachmentChipButton Name="PART_Action" Grid.Column="2">
+                                <arc:AiAttachmentStatusGlyph Name="PART_Glyph"
+                                                             RingBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                             TrackBrush="{arc:ArcDesignTokenResource Border}" />
+                            </arc:AiAttachmentChipButton>
+                        </Grid>
+                    </Border>
+                    <!-- The error border lies over the frame's own, so the swap needs no brush transition. -->
+                    <Border Name="PART_ErrorEdge"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{TemplateBinding ErrorBorderBrush}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:thumbnail">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Thumbnail">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ThumbnailEdge">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:error /template/ Border#PART_ErrorEdge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!--
+            Compact (the AI chat's chip, spec ai-chat 3.16): 32px high, 12 corners, SurfaceMuted without a border, padding
+            0 4 0 10, 6 between the parts on one line: FileText 14 (stroke 1.75, TextSecondary), the name 14 Foreground
+            (ellipsis past 200), the size 12 TextMuted with tabular figures, and the 24px button (8 corners, a 13px X in
+            TextMuted, Foreground under the pointer). In error a 1px Danger-mixed border lies over it, as on the card.
+        -->
+        <Style Selector="^:compact">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="10,0,4,0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:AiAttachmentChip">
+                    <Panel>
+                        <Border Name="PART_Frame"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Size="14"
+                                              StrokeThickness="1.75"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Name"
+                                           MaxWidth="200"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="19.6"
+                                           LetterSpacing="-0.14"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{TemplateBinding Foreground}" />
+                                <arc:ArcContentSwap Name="PART_Meta"
+                                                    Mode="Crossfade"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center" />
+                                <arc:AiAttachmentChipButton Name="PART_Action"
+                                                            Width="24"
+                                                            Height="24"
+                                                            CornerRadius="8"
+                                                            RingCornerRadius="12">
+                                    <arc:AiAttachmentStatusGlyph Name="PART_Glyph"
+                                                                 IsCompact="True"
+                                                                 Width="16"
+                                                                 Height="16"
+                                                                 RingBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                                 TrackBrush="{arc:ArcDesignTokenResource Border}" />
+                                </arc:AiAttachmentChipButton>
+                            </StackPanel>
+                        </Border>
+                        <Border Name="PART_ErrorEdge"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                BorderThickness="1"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{TemplateBinding ErrorBorderBrush}" />
+                    </Panel>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="^:compact /template/ arc|AiAttachmentChipButton#PART_Action">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AiAttachmentChipButton#PART_Action:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The chip's action: 28px round, a transparent face that fills with Foreground at 6% under a mouse or pen (10% while
+        pressed); the glyph is TextSecondary, Foreground under the pointer. Fill 120ms, glyph color 160ms, standard curve.
+        Keyboard focus: the 2px ring 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAttachmentChipButton}" TargetType="arc:AiAttachmentChipButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="RingCornerRadius" Value="18" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAttachmentChipButton">
+                <Panel>
+                    <Border Name="PART_Face" Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Fill"
+                            Opacity="0"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Background="{arc:ArcDesignTokenResource Foreground}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding RingCornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ Border#PART_Fill">
+                <Setter Property="Opacity" Value="0.06" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Fill">
+            <Setter Property="Opacity" Value="0.1" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Fill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The meta line: 12 / 15.6 TextMuted; tabular figures while counting; an error is a 12px circle-alert and the reason in Danger, 4 apart. -->
+    <ControlTheme x:Key="{x:Type arc:AiAttachmentChipMeta}" TargetType="arc:AiAttachmentChipMeta">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAttachmentChipMeta">
+                <DockPanel>
+                    <arc:ArcGlyph Name="PART_Alert"
+                                  DockPanel.Dock="Left"
+                                  IsVisible="False"
+                                  Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                  Size="12"
+                                  StrokeThickness="2"
+                                  Margin="0,0,4,0"
+                                  VerticalAlignment="Center"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               LineHeight="15.6"
+                               LetterSpacing="-0.12"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{TemplateBinding Foreground}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:progress /template/ TextBlock#PART_Text">
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+        <Style Selector="^:tabular /template/ TextBlock#PART_Text">
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+        <Style Selector="^:error">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Alert">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The ring / check / X inside the button: no look of its own, the brushes come from the chip's template. -->
+    <ControlTheme x:Key="{x:Type arc:AiAttachmentStatusGlyph}" TargetType="arc:AiAttachmentStatusGlyph">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="ClipToBounds" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiComposerPreviewDemo">
+    <StackPanel Spacing="12" MaxWidth="720" Margin="0,12,0,140">
+        <TextBlock x:Name="Reply" MinHeight="40" TextWrapping="Wrap" Opacity="0.85" Text="Send a message to see a simulated reply." />
+        <!-- Type / at the start of a line for a command, @ for a file, paste or drop files, press the plus for more. -->
+        <arc:AiComposer x:Name="Composer" />
+    </StackPanel>
+</UserControl>

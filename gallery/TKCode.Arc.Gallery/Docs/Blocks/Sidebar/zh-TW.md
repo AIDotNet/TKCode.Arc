@@ -1,7 +1,7 @@
 ---
 title: 側邊欄
 summary: 工作區導覽，包含群組、巢狀頁面、數量與滑動的選取標記；可收合為圖示窄欄。
-source-hash: a20d494c815d
+source-hash: 5a9d0d12ca5b
 ---
 
 <Demo name="Preview" />
@@ -32,7 +32,7 @@ source-hash: a20d494c815d
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+           xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
            Height="420">
     <arc:Sidebar DockPanel.Dock="Left" SelectedKey="home" IsFilterVisible="True">
         <arc:SidebarSection>
@@ -122,7 +122,7 @@ source-hash: a20d494c815d
 ```xml
 <arc:Sidebar xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SidebarSection Header="專案">
         <arc:SidebarItem Key="projects/spring" Label="春季發表">
             <arc:SidebarItem.Icon>
@@ -216,7 +216,7 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <UserControl.Styles>
         <Style Selector="arc|Sidebar:collapsed TextBlock.rail-fade">
             <Setter Property="Opacity" Value="0" />
@@ -228,12 +228,12 @@ inbox.Badge = unreadCount > 0 ? unreadCount.ToString(CultureInfo.InvariantCultur
 
 ### 側邊欄旁邊的頁面
 
-預設情況下（`ResizeMode="Push"`），側邊欄的配置寬度會做彈簧動畫，因此它旁邊的頁面每一個影格都會重新配置。這在任何主機中都能運作，對輕量頁面也沒有問題。對於文字或控制項很多的頁面，請設定 `ResizeMode="Overlay"`：配置寬度會立即改變，頁面只配置一次，只有窗格做彈簧動畫，並繪製在頁面上方。再把頁面的 `RenderTransform` 繫結到 `PageShift`，頁面就會隨窗格邊緣一起滑動，而不是跳動。
+預設情況下（`ResizeMode="Overlay"`），側邊欄的配置寬度會立即改變，頁面只配置一次，只有窗格做彈簧動畫，並繪製在頁面上方。把頁面的 `RenderTransform` 繫結到 `PageShift`，頁面就會隨窗格邊緣一起滑動，而不是跳動；不繫結時頁面仍然配置正確，只是會跳到新位置。設定 `ResizeMode="Push"` 則讓配置寬度做彈簧動畫，因此它旁邊的頁面每一個影格都會重新配置。這在任何主機中都不需要繫結就能運作，對輕量頁面也沒有問題。
 
 ```xml
 <DockPanel xmlns="https://github.com/avaloniaui"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+           xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
            ClipToBounds="True">
     <arc:Sidebar x:Name="Nav" DockPanel.Dock="Left" ResizeMode="Overlay" />
     <Grid RenderTransform="{Binding #Nav.PageShift}">
@@ -409,7 +409,7 @@ pinned.Items.RemoveAt(0);
 
 **動作列可以被選取嗎？** 不可以。`IsAction` 列會引發 `ItemInvoked` 並執行其命令，但 `SelectedItem` 與 `SelectedKey` 保持不變，因此使用者目前所在的頁面仍保留其標記。
 
-**為什麼側邊欄旁邊的頁面在收合時會卡頓？** 在預設的 `Push` 模式下，寬度彈簧的每一個影格都會讓頁面重新配置。請設定 `ResizeMode="Overlay"`，並把頁面的 `RenderTransform` 繫結到 `PageShift`。
+**為什麼側邊欄旁邊的頁面在收合時會卡頓？** 在 `Push` 模式下，寬度彈簧的每一個影格都會讓頁面重新配置。請使用預設的 `ResizeMode="Overlay"`，並把頁面的 `RenderTransform` 繫結到 `PageShift`。
 
 **為什麼 Cmd+B 或 Ctrl+B 不能收合側邊欄？** 該快速鍵只在焦點位於側邊欄內部時生效，即焦點在其某一列或篩選欄位中。請先點選一列，或將 `IsCollapsed` 繫結到視窗其他位置的切換按鈕。
 

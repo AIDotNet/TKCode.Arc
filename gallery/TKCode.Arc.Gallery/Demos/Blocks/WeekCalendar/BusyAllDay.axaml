@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WeekCalendarBusyAllDayDemo">
+    <!-- Five all-day events on Wednesday: the row shows three lanes and "+3 more" until the chevron opens it. -->
+    <StackPanel Spacing="12">
+        <arc:WeekCalendar x:Name="Calendar"
+                          GridHeight="520"
+                          IsSidebarVisible="False" />
+        <TextBlock x:Name="Log" Foreground="{arc:ArcDesignTokenResource TextSecondary}" FontSize="12" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

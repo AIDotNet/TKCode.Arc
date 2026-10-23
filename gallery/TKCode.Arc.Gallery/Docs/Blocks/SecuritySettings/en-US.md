@@ -44,7 +44,7 @@ handle.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SecuritySettings IsAuthenticatorEnabled="True"
                           PhoneNumber="+31 6 2045 4821"
                           PasskeyCount="2">

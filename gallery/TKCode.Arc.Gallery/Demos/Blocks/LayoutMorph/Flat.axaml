@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LayoutMorphFlatDemo">
+    <!-- Laid flat on the page: no frame around the stage or the panel, no heading, starting in the masonry view. -->
+    <arc:LayoutMorph x:Name="Morph"
+                     IsFramed="False"
+                     Layout="Masonry"
+                     DefaultPanelTitle="Spring edit" />
+</UserControl>

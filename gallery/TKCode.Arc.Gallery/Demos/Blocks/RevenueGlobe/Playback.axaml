@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueGlobePlaybackDemo">
+    <StackPanel Spacing="12">
+        <!-- Your own buttons can drive the timeline through the commands, and TimeChanged reports the playhead. -->
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Replay at 3000×" Size="Small" Click="OnFastReplay" />
+            <arc:Button Content="Pause or play" Size="Small" Command="{Binding #Globe.TogglePauseCommand}" />
+            <arc:Button Content="Jump to 09:00" Size="Small" Click="OnNine" />
+            <arc:Button Content="Go live" Size="Small" Variant="Ghost" Command="{Binding #Globe.GoLiveCommand}" />
+        </StackPanel>
+        <arc:RevenueGlobe x:Name="Globe"
+                          Title="Today's payments"
+                          Description="Replay the day, pause it, or drag the playhead anywhere."
+                          DateText="Thursday, 22 October"
+                          TimeChanged="OnTimeChanged" />
+        <TextBlock x:Name="Status" Opacity="0.7" FontFeatures="tnum" />
+    </StackPanel>
+</UserControl>

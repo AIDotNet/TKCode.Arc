@@ -1,0 +1,21 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A memory's sentence by default: Inter 14 / 22 regular in Foreground, wrapped. The marks are tinted from the
+        Accent token (14%, computed in code) so they follow the theme and the accent color.
+    -->
+    <ControlTheme x:Key="{x:Type arc:HighlightedText}" TargetType="arc:HighlightedText">
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LineHeight" Value="22" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </ControlTheme>
+</ResourceDictionary>

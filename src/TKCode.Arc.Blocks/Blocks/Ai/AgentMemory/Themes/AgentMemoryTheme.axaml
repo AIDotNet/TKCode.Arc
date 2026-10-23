@@ -1,0 +1,800 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The card: at most 640 wide and centered, 1px Border, RadiusPanel (26), Surface, no shadow. From the top: the
+        header (title, subtitle, meter), the two switches, the section (toolbar with the filters and the search, the
+        captured pill's row, the list), the add field and the hidden live region. Below 440 (:compact) the paddings
+        tighten. While saved memories are paused the list dims to half (240ms).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemory}" TargetType="arc:AgentMemory">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="CompactWidth" Value="{arc:AgentMemoryTokenResource CompactWidth}" />
+        <Setter Property="CapturedHold" Value="{arc:AgentMemoryTokenResource CapturedHold}" />
+        <Setter Property="AddedHold" Value="{arc:AgentMemoryTokenResource AddedHold}" />
+        <Setter Property="ArrivalDuration" Value="{arc:AgentMemoryTokenResource ArrivalDuration}" />
+        <Setter Property="SimulatedSave" Value="{arc:AgentMemoryTokenResource SimulatedSave}" />
+        <Setter Property="SimulatedSort" Value="{arc:AgentMemoryTokenResource SimulatedSort}" />
+        <Setter Property="ListFadeTop" Value="{arc:AgentMemoryTokenResource ListFadeTop}" />
+        <Setter Property="ListFadeBottom" Value="{arc:AgentMemoryTokenResource ListFadeBottom}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemory">
+                <Border Name="PART_Card"
+                        MaxWidth="{arc:AgentMemoryTokenResource CardMaxWidth}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel>
+                        <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Name="PART_Title"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="17.6"
+                                           LetterSpacing="-0.176"
+                                           TextWrapping="Wrap"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Margin="0,2,0,0"
+                                           LineHeight="20"
+                                           LetterSpacing="-0.14"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <arc:MemoryMeter Name="PART_Meter" Grid.Column="1" Margin="16,0,0,0" />
+                        </Grid>
+                        <StackPanel Name="PART_Settings">
+                            <arc:AgentMemorySettingRow Name="PART_SavedSetting" />
+                            <arc:AgentMemorySettingRow Name="PART_HistorySetting"
+                                                       BorderThickness="0,1,0,0"
+                                                       BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        </StackPanel>
+                        <Border Name="PART_Section" BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <StackPanel>
+                                <arc:AgentMemoryToolbar Name="PART_Toolbar" Height="{arc:AgentMemoryTokenResource ToolbarHeight}">
+                                    <arc:PillFilterBar Name="PART_Filters" />
+                                    <arc:AgentMemorySearchBox Name="PART_Search" Duration="{arc:AgentMemoryTokenResource SearchDuration}" />
+                                </arc:AgentMemoryToolbar>
+                                <arc:AgentMemoryPresence Name="PART_PillHost">
+                                    <arc:SpringSizeDecorator Axis="Height" Spring="Smooth">
+                                        <Border Name="PART_PillRow">
+                                            <arc:MemoryCapturedPill Name="PART_Pill" />
+                                        </Border>
+                                    </arc:SpringSizeDecorator>
+                                </arc:AgentMemoryPresence>
+                                <Border Name="PART_ListHost">
+                                    <arc:ScrollArea Name="PART_List"
+                                                    Focusable="False"
+                                                    FadeLength="0"
+                                                    MaxHeight="{TemplateBinding ListMaxHeight}">
+                                        <StackPanel Name="PART_ListContent">
+                                            <StackPanel Name="PART_Groups" />
+                                            <arc:AgentMemoryPresence Name="PART_EmptySearch">
+                                                <StackPanel Margin="16,28,16,22" Spacing="6" HorizontalAlignment="Center">
+                                                    <arc:ArcGlyph Data="{x:Static arc:AgentMemoryGlyphs.SearchX}"
+                                                                  Size="20"
+                                                                  StrokeThickness="2"
+                                                                  HorizontalAlignment="Center"
+                                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                    <TextBlock Name="PART_NoMatches"
+                                                               HorizontalAlignment="Center"
+                                                               TextAlignment="Center"
+                                                               TextWrapping="Wrap"
+                                                               LineHeight="19.6"
+                                                               LetterSpacing="-0.14"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                    <arc:AgentMemoryButton Name="PART_ClearSearch" Kind="Link" HorizontalAlignment="Center" />
+                                                </StackPanel>
+                                            </arc:AgentMemoryPresence>
+                                        </StackPanel>
+                                    </arc:ScrollArea>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                        <arc:AgentMemoryAddField Name="PART_AddField"
+                                                 BorderThickness="0,1,0,0"
+                                                 BorderBrush="{arc:ArcDesignTokenResource Border}" />
+                        <arc:AiAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with :compact or :paused are styles, not template values (those would win). -->
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:AgentMemoryTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Settings">
+            <Setter Property="Margin" Value="{arc:AgentMemoryTokenResource SettingsPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AgentMemoryToolbar#PART_Toolbar">
+            <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource ToolbarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_PillRow">
+            <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource PillRowPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_ListContent">
+            <Setter Property="Margin" Value="{arc:AgentMemoryTokenResource ListPadding}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ Grid#PART_Header">
+                <Setter Property="Margin" Value="{arc:AgentMemoryTokenResource CompactHeaderPadding}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Settings">
+                <Setter Property="Margin" Value="{arc:AgentMemoryTokenResource CompactSettingsPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|AgentMemoryToolbar#PART_Toolbar">
+                <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource CompactToolbarPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_PillRow">
+                <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource CompactPillRowPadding}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_ListContent">
+                <Setter Property="Margin" Value="{arc:AgentMemoryTokenResource CompactListPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|AgentMemoryAddField#PART_AddField">
+                <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource CompactAddFieldPadding}" />
+            </Style>
+        </Style>
+        <Style Selector="^:paused">
+            <Style Selector="^ /template/ Border#PART_PillRow">
+                <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource PausedRowPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ListHost">
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+        </Style>
+        <Style Selector="^:paused:compact /template/ Border#PART_PillRow">
+            <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource CompactPausedRowPadding}" />
+        </Style>
+        <Style Selector="^:no-meter /template/ arc|MemoryMeter#PART_Meter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-add /template/ arc|AgentMemoryAddField#PART_AddField">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_ListHost">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_ListHost">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A switch row: 8 above and below; the title (14 / 20, regular) over the 12 / 16 muted explanation 1px lower (it
+        crossfades and wraps), the switch at the end 16px away. The second row has a BorderSubtle line on top.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemorySettingRow}" TargetType="arc:AgentMemorySettingRow">
+        <Setter Property="Padding" Value="0,8" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemorySettingRow">
+                <Border BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       Cursor="Hand"
+                                       LineHeight="20"
+                                       LetterSpacing="-0.14"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:ArcContentSwap Name="PART_Explanation"
+                                                Mode="Label"
+                                                Margin="0,1,0,0"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Top"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                TextBlock.LineHeight="16"
+                                                TextBlock.TextWrapping="Wrap" />
+                        </StackPanel>
+                        <arc:Switch Name="PART_Switch" Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The small buttons. Row actions: 28px, radius 8, 15px glyph in TextMuted; hover Foreground on a 7% foreground
+        tint (never red); the focus ring 2px outside. Search toggle and close: 30px round, 16px glyph in TextSecondary;
+        hover SurfaceMuted and Foreground; the focus ring inside. Link: 14px TextSecondary with a BorderStrong underline
+        3px under the baseline; hover Foreground. Source: the 12px muted source text, underlined.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryButton}" TargetType="arc:AgentMemoryButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Panel HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <arc:ArcGlyph Name="PART_Glyph"
+                                          Data="{TemplateBinding Glyph}"
+                                          Size="{TemplateBinding GlyphSize}"
+                                          StrokeThickness="2"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                            <Panel Name="PART_TextHost"
+                                   IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <ContentPresenter Name="PART_Content"
+                                                  Content="{TemplateBinding Content}"
+                                                  Foreground="{TemplateBinding Foreground}" />
+                                <Border Name="PART_Underline"
+                                        IsVisible="False"
+                                        Height="1"
+                                        VerticalAlignment="Top"
+                                        Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                            </Panel>
+                        </Panel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^[Kind=RowAction]">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="GlyphSize" Value="15" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="Margin" Value="-4" />
+                <Setter Property="CornerRadius" Value="12" />
+            </Style>
+            <Style Selector="^:hover, ^:pressed">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                <Setter Property="Background" Value="{arc:AgentMemoryTokenResource ActionHoverBackground}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=Search]">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="GlyphSize" Value="16" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            </Style>
+            <Style Selector="^:hover, ^:pressed">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=Link]">
+            <Setter Property="Padding" Value="6,4" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Style Selector="^ /template/ ContentPresenter#PART_Content">
+                <Setter Property="TextBlock.LineHeight" Value="19.6" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Underline">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Margin" Value="0,17.5,0,0" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="Margin" Value="-4" />
+                <Setter Property="CornerRadius" Value="10" />
+            </Style>
+            <Style Selector="^:hover, ^:pressed">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^[Kind=Source]">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Style Selector="^ /template/ ContentPresenter#PART_Content">
+                <Setter Property="TextBlock.LineHeight" Value="16" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Underline">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Margin" Value="0,14.5,0,0" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="Margin" Value="-4" />
+                <Setter Property="CornerRadius" Value="8" />
+            </Style>
+            <Style Selector="^:hover, ^:pressed">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            </Style>
+        </Style>
+
+        <!-- Keyboard focus only: a pointer press focuses the button without a ring. -->
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The borderless one-line input of the search and the add field: 14 / 19.6, the placeholder muted. -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryInput}" TargetType="arc:AgentMemoryInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryInput">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="Center">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </ControlTheme>
+
+    <!--
+        The search box: a pill with a 1px border that is transparent while closed; open, BorderStrong while it has the
+        focus and Border otherwise (160ms). The magnifier leads, the input (padding 0 2) fills, the close button ends.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemorySearchBox}" TargetType="arc:AgentMemorySearchBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemorySearchBox">
+                <Border Name="PART_Frame"
+                        BorderThickness="1"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        ClipToBounds="True">
+                    <Grid ColumnDefinitions="30,*,Auto">
+                        <arc:AgentMemoryButton Name="PART_Toggle"
+                                               Grid.Column="0"
+                                               Kind="Search"
+                                               Expanded="False"
+                                               Glyph="{x:Static arc:ArcIcons.Search}"
+                                               VerticalAlignment="Center" />
+                        <arc:AgentMemoryInput Name="PART_Input"
+                                              Grid.Column="1"
+                                              Padding="2,0"
+                                              Height="30"
+                                              Opacity="0"
+                                              IsVisible="False"
+                                              Text="{TemplateBinding Text, Mode=TwoWay}"
+                                              PlaceholderText="{TemplateBinding PlaceholderText}"
+                                              VerticalAlignment="Center" />
+                        <arc:AgentMemoryButton Name="PART_Close"
+                                               Grid.Column="2"
+                                               Kind="Search"
+                                               Opacity="0"
+                                               IsVisible="False"
+                                               Glyph="{x:Static arc:ArcIcons.X}"
+                                               VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:open">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <!-- Open, the magnifier only leads the box. -->
+            <Style Selector="^ /template/ arc|AgentMemoryButton#PART_Toggle">
+                <Setter Property="IsHitTestVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:open:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A group: the heading (8 12 4 for the first group, 14 12 4 for the others; Geist 12 / 13.2 medium in
+        TextSecondary, the count regular and muted, 6 apart) above the rows; an empty group's sentence (10 12 12,
+        14 / 19.6 muted) under them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryGroupView}" TargetType="arc:AgentMemoryGroupView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryGroupView">
+                <StackPanel>
+                    <arc:AgentMemoryPresence Name="PART_HeadingHost">
+                        <StackPanel Name="PART_Heading"
+                                    Orientation="Horizontal"
+                                    Spacing="6"
+                                    Margin="12,14,12,4"
+                                    AutomationProperties.HeadingLevel="3">
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="13.2"
+                                       LetterSpacing="-0.36"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Name="PART_Count"
+                                       Text="{TemplateBinding CountText}"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="13.2"
+                                       FontFeatures="tnum"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </arc:AgentMemoryPresence>
+                    <StackPanel Name="PART_Rows" />
+                    <arc:AgentMemoryPresence Name="PART_EmptyHost">
+                        <TextBlock Name="PART_Empty"
+                                   Text="{TemplateBinding EmptyText}"
+                                   Margin="12,10,12,12"
+                                   LineHeight="19.6"
+                                   LetterSpacing="-0.14"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </arc:AgentMemoryPresence>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:first /template/ StackPanel#PART_Heading">
+            <Setter Property="Margin" Value="12,8,12,4" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The reading row: padding 8 8 8 12, radius 12, 10 between the parts, top aligned; 54 high with one line (the
+        source line always takes its place). The tint (muted surface at 70%), the source line and the buttons show on
+        hover, with keyboard focus inside, and always on touch (:reveal); 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryRowView}" TargetType="arc:AgentMemoryRowView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryRowView">
+                <Panel>
+                    <Border Name="PART_Tint"
+                            Opacity="0"
+                            CornerRadius="12"
+                            IsHitTestVisible="False"
+                            Background="{arc:AgentMemoryTokenResource RowHoverBackground}" />
+                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,8,8,8" Background="Transparent">
+                        <Panel Name="PART_AvatarSlot"
+                               Grid.Column="0"
+                               Width="22"
+                               Height="22"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Top"
+                               IsVisible="{TemplateBinding PersonName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                            <arc:Avatar Name="PART_Avatar"
+                                        Width="22"
+                                        Height="22"
+                                        FontSize="9"
+                                        DisplayName="{TemplateBinding PersonName}" />
+                            <Border Name="PART_Photo"
+                                    Margin="1"
+                                    ClipToBounds="True"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    IsHitTestVisible="False"
+                                    IsVisible="{TemplateBinding PersonImage, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <Image Source="{TemplateBinding PersonImage}" Stretch="UniformToFill" />
+                            </Border>
+                        </Panel>
+                        <StackPanel Grid.Column="1">
+                            <arc:HighlightedText Name="PART_Text"
+                                                 Text="{TemplateBinding Text}"
+                                                 Query="{TemplateBinding Query}" />
+                            <StackPanel Name="PART_Meta"
+                                        Orientation="Horizontal"
+                                        Spacing="5"
+                                        Height="16"
+                                        Opacity="0"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <arc:AgentMemoryButton Name="PART_Source"
+                                                       Kind="Source"
+                                                       Content="{TemplateBinding SourceText}"
+                                                       IsVisible="{TemplateBinding IsSourceLink}"
+                                                       VerticalAlignment="Center" />
+                                <TextBlock Name="PART_SourceText"
+                                           Text="{TemplateBinding SourceText}"
+                                           LineHeight="16"
+                                           LetterSpacing="-0.12"
+                                           IsVisible="{TemplateBinding IsSourceLink, Converter={x:Static BoolConverters.Not}}"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Dot"
+                                           Text="·"
+                                           LineHeight="16"
+                                           IsVisible="{TemplateBinding DateText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Date"
+                                           Text="{TemplateBinding DateText}"
+                                           LineHeight="16"
+                                           LetterSpacing="-0.12"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Name="PART_Actions"
+                                    Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    Spacing="2"
+                                    Margin="10,-3,0,0"
+                                    VerticalAlignment="Top"
+                                    Opacity="0">
+                            <!-- Hover waits about 600ms for the tooltip; keyboard focus opens it at once (in code). -->
+                            <arc:AgentMemoryButton Name="PART_Edit"
+                                                   Kind="RowAction"
+                                                   Glyph="{x:Static arc:ArcIcons.PenLine}"
+                                                   arc:Tooltip.ShowDelay="0:0:0.6" />
+                            <arc:AgentMemoryButton Name="PART_Forget"
+                                                   Kind="RowAction"
+                                                   Glyph="{x:Static arc:ArcIcons.Trash2}"
+                                                   arc:Tooltip.ShowDelay="0:0:0.6" />
+                        </StackPanel>
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover, ^:focus-within, ^:reveal">
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Meta">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Actions">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Tint">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Meta">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Actions">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The undo bar: padding 6 6 6 12, 46 high, 12 between the text and the button. "Forgot" in TextSecondary, the
+        quoted sentence muted, on one line cut with an ellipsis.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryUndoBar}" TargetType="arc:AgentMemoryUndoBar">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryUndoBar">
+                <Grid ColumnDefinitions="*,Auto" Margin="12,6,6,6" MinHeight="34">
+                    <TextBlock Name="PART_Text"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               TextWrapping="NoWrap"
+                               TextTrimming="CharacterEllipsis"
+                               LineHeight="19.6"
+                               LetterSpacing="-0.14">
+                        <Run Text="{TemplateBinding Prefix}" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <Run Text="{TemplateBinding Quote}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </TextBlock>
+                    <ContentPresenter Name="PART_UndoHost" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The add field: 56 high, padding 8 12 8 20 (20 at the start), 10 between the parts; the plus (16, muted) turns
+        Foreground and the whole row takes the muted surface at 55% while the focus is inside. Its bottom corners follow
+        the card (25). The status slot at the end crossfades (Label).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryAddField}" TargetType="arc:AgentMemoryAddField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:AgentMemoryTokenResource AddFieldHeight}" />
+        <Setter Property="Padding" Value="{arc:AgentMemoryTokenResource AddFieldPadding}" />
+        <Setter Property="CornerRadius" Value="0,0,25,25" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryAddField">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Plus"
+                                      Grid.Column="0"
+                                      Data="{x:Static arc:ArcIcons.Plus}"
+                                      Size="16"
+                                      StrokeThickness="2"
+                                      Margin="0,0,10,0"
+                                      VerticalAlignment="Center" />
+                        <arc:AgentMemoryInput Name="PART_Input"
+                                              Grid.Column="1"
+                                              Height="36"
+                                              Text="{TemplateBinding Text, Mode=TwoWay}"
+                                              PlaceholderText="{TemplateBinding PlaceholderText}"
+                                              IsReadOnly="{TemplateBinding IsBusy}"
+                                              VerticalAlignment="Center" />
+                        <arc:ArcContentSwap Name="PART_Status"
+                                            Grid.Column="2"
+                                            Mode="Label"
+                                            Margin="10,0,0,0"
+                                            MinHeight="36"
+                                            HorizontalContentAlignment="Right"
+                                            VerticalContentAlignment="Center"
+                                            VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Plus">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-within">
+            <Setter Property="Background" Value="{arc:AgentMemoryTokenResource AddFocusBackground}" />
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Plus">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A status of the add field: check 15 (Success) and Foreground text, or circle-alert 14 and Danger text; 7 apart. -->
+    <ControlTheme x:Key="{x:Type arc:AgentMemoryStatusLine}" TargetType="arc:AgentMemoryStatusLine">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentMemoryStatusLine">
+                <StackPanel Orientation="Horizontal" Spacing="7" Margin="0,0,6,0">
+                    <arc:ArcGlyph Name="PART_Check"
+                                  Data="{x:Static arc:ArcIcons.Check}"
+                                  Size="15"
+                                  StrokeThickness="2"
+                                  VerticalAlignment="Center"
+                                  Foreground="{arc:ArcDesignTokenResource Success}" />
+                    <arc:ArcGlyph Name="PART_Alert"
+                                  IsVisible="False"
+                                  Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                  Size="14"
+                                  StrokeThickness="2"
+                                  VerticalAlignment="Center"
+                                  Foreground="{arc:ArcDesignTokenResource Danger}" />
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               LineHeight="19.6"
+                               LetterSpacing="-0.14"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:alert">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Alert">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Text">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

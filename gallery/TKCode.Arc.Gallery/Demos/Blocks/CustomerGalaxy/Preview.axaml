@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CustomerGalaxyPreviewDemo">
+    <!-- 2,400 invented accounts (CustomerGalaxyDemoData); each tab regroups them. -->
+    <arc:CustomerGalaxy x:Name="Galaxy" Title="Where the revenue sits">
+        <arc:GalaxyGrouping Key="plan" Header="Plan">
+            <arc:GalaxyGroupDefinition Key="solo" Label="Solo" />
+            <arc:GalaxyGroupDefinition Key="team" Label="Team" />
+            <arc:GalaxyGroupDefinition Key="business" Label="Business" />
+            <arc:GalaxyGroupDefinition Key="corporate" Label="Corporate" />
+        </arc:GalaxyGrouping>
+        <arc:GalaxyGrouping Key="region" Header="Region">
+            <arc:GalaxyGroupDefinition Key="aurora" Label="Aurora" />
+            <arc:GalaxyGroupDefinition Key="meridian" Label="Meridian" />
+            <arc:GalaxyGroupDefinition Key="harbor" Label="Harbor" />
+            <arc:GalaxyGroupDefinition Key="highlands" Label="Highlands" />
+        </arc:GalaxyGrouping>
+        <arc:GalaxyGrouping Key="health" Header="Health" />
+        <arc:GalaxyGrouping Key="industry" Header="Industry">
+            <arc:GalaxyGroupDefinition Key="analytics" Label="Analytics" />
+            <arc:GalaxyGroupDefinition Key="banking" Label="Banking" />
+            <arc:GalaxyGroupDefinition Key="biotech" Label="Biotech" />
+            <arc:GalaxyGroupDefinition Key="commerce" Label="Commerce" />
+            <arc:GalaxyGroupDefinition Key="gaming" Label="Gaming" />
+            <arc:GalaxyGroupDefinition Key="shipping" Label="Shipping" />
+        </arc:GalaxyGrouping>
+    </arc:CustomerGalaxy>
+</UserControl>

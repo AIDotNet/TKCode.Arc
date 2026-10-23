@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The attachments row: chips 8 apart in a sideways scroller with no scrollbar. Arc's clip box sits 4px outside the
+        chips on the left, top and right (margin −4 −4 0, padding 4 4 8), so the viewport here reaches 4px past the tray
+        and the chips sit 4px in: the tray takes 52 + 8 = 60px. With no chips the height folds to 0 and the row fades, both
+        on the smooth spring (Arc: about 650ms); reduced motion jumps the height and fades in 120ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAttachmentTray}" TargetType="arc:AiAttachmentTray">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAttachmentTray">
+                <arc:SpringSizeDecorator Name="PART_Size"
+                                         Axis="Height"
+                                         Spring="Smooth"
+                                         CrossClipOverflow="4"
+                                         IsExpanded="{TemplateBinding HasItems}">
+                    <ScrollViewer Name="PART_Scroller"
+                                  Margin="-4,-4,-4,0"
+                                  Focusable="False"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <arc:AiAttachmentTrayPanel Name="PART_Panel" Margin="4,4,4,8" Spacing="8" />
+                    </ScrollViewer>
+                </arc:SpringSizeDecorator>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Compact (the chat's row): chips 2px in from the top and sides, 6 apart, 6 below; the settle spring. -->
+        <Style Selector="^:compact /template/ arc|SpringSizeDecorator#PART_Size">
+            <Setter Property="Spring" Value="Settle" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AiAttachmentTrayPanel#PART_Panel">
+            <Setter Property="Margin" Value="6,6,6,6" />
+            <Setter Property="Spacing" Value="6" />
+        </Style>
+
+        <Style Selector="^:empty /template/ ScrollViewer#PART_Scroller">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ ScrollViewer#PART_Scroller">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringDoubleTransition Property="Opacity" Spring="Smooth" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ ScrollViewer#PART_Scroller">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

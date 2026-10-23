@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProjectBoardPersistedDemo">
+    <!-- Every move and add is "saved" as it happens: TaskMoved fires as the card starts to fly. Review needs a reason:
+         TaskMoving cancels moves into Review for tasks without comments. -->
+    <StackPanel Spacing="16">
+        <arc:ProjectBoard x:Name="Board" IsFramed="True" />
+        <Border Padding="16,12"
+                CornerRadius="16"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Saved changes"
+                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock x:Name="Log"
+                           Text="Move a card or add a task."
+                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                           LineHeight="18"
+                           TextWrapping="Wrap"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

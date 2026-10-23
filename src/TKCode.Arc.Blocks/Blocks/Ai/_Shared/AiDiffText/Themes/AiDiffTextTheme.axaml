@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        A word diff. Card (the side panel's change card): 13 / 20.8, kept words TextSecondary, deleted words TextMuted with a
+        strikethrough of TextMuted at 70%, inserted words Foreground on Accent at 13% (radius 4, 2px padding). Studio (the
+        prompt studio's compare view): 14 / 23.8 like the editor, kept words Foreground, inserted runs on Success at 14% and
+        deleted runs on Danger at 11% in TextSecondary with a Danger 55% strikethrough (radius 4, padding 1 3), each run
+        starting with its sign. Tints are computed in code from these token colors and opacities, so they follow the theme
+        and the accent; chips use the Series tokens. The drawn text is hidden from screen readers: AiDiffText speaks for it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiDiffText}" TargetType="arc:AiDiffText">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="LineHeight" Value="20.8" />
+        <Setter Property="LetterSpacing" Value="-0.13" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="InsertForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="DeleteForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="InsertTint" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="InsertTintOpacity" Value="0.13" />
+        <Setter Property="DeleteTint" Value="{x:Null}" />
+        <Setter Property="StrikeColor" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="StrikeOpacity" Value="0.7" />
+        <Setter Property="Series1" Value="{arc:ArcDesignTokenResource Series1}" />
+        <Setter Property="Series2" Value="{arc:ArcDesignTokenResource Series2}" />
+        <Setter Property="Series3" Value="{arc:ArcDesignTokenResource Series3}" />
+        <Setter Property="Series4" Value="{arc:ArcDesignTokenResource Series4}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiDiffText">
+                <arc:AiDiffTextBlock Name="PART_Text"
+                                     Padding="{TemplateBinding Padding}"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     FontSize="{TemplateBinding FontSize}"
+                                     FontWeight="{TemplateBinding FontWeight}"
+                                     LineHeight="{TemplateBinding LineHeight}"
+                                     LetterSpacing="{TemplateBinding LetterSpacing}"
+                                     TextWrapping="Wrap"
+                                     SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                     AutomationProperties.AccessibilityView="Raw" />
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:studio">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="23.8" />
+            <Setter Property="LetterSpacing" Value="-0.14" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="DeleteForeground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="InsertTint" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="InsertTintOpacity" Value="0.14" />
+            <Setter Property="DeleteTint" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="DeleteTintOpacity" Value="0.11" />
+            <Setter Property="StrikeColor" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="StrikeOpacity" Value="0.55" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

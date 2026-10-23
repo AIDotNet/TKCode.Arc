@@ -52,7 +52,7 @@ Enter acts on the highlighted row, and the left and right keys step a choice. Th
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SettingsCommand MaxWidth="560">
         <arc:SettingsCommandChoice Group="Appearance" Header="Theme" Options="Light, Dark, System" Keywords="dark light" />
         <arc:SettingsCommandToggle Group="Appearance" Header="Compact mode" Description="Tighter rows and smaller gaps." />

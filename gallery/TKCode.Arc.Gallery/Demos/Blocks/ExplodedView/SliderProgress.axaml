@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ExplodedViewSliderProgressDemo">
+    <StackPanel Spacing="16">
+        <arc:ExplodedView x:Name="View"
+                          Height="640"
+                          ScrollMode="External"
+                          IsFramed="False" />
+        <arc:Slider x:Name="Scrub"
+                    Label="Progress"
+                    Minimum="0"
+                    Maximum="100"
+                    Width="360"
+                    HorizontalAlignment="Center" />
+        <TextBlock x:Name="Status"
+                   HorizontalAlignment="Center"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

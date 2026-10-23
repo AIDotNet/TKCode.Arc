@@ -1,0 +1,193 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The answer's action bar: the toolbar (set 10px left so the glyphs line up with the text, 36px round buttons 2px
+        apart, then the version pager) and the model line on the right of the same row, or under the toolbar 4px below when
+        both do not fit. At least 36 high, so a busy bar (nothing shown) keeps the footer's place. The menus render nothing
+        in place.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerActions}" TargetType="arc:AiAnswerActions">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerActions">
+                <Panel>
+                    <arc:AiAnswerActionsLayout Name="PART_Layout" ColumnGap="16" RowGap="4" VerticalAlignment="Center">
+                        <arc:AiAnswerToolbar Name="PART_Toolbar" Orientation="Horizontal" Spacing="2" Margin="-10,0,0,0">
+                            <arc:AiAnswerActionButton Name="PART_Copy" Glyph="{x:Static arc:ArcIcons.Copy}" />
+                            <arc:AiAnswerActionButton Name="PART_Regenerate"
+                                                      Glyph="{x:Static arc:ArcIcons.RotateCcw}"
+                                                      HasPopup="True"
+                                                      ClickMode="Press" />
+                            <arc:AiAnswerRatingButton Name="PART_Good" Glyph="{x:Static arc:ArcIcons.ThumbsUp}" />
+                            <arc:AiAnswerRatingButton Name="PART_Bad" Glyph="{x:Static arc:ArcIcons.ThumbsDown}" HasPopup="True" />
+                            <arc:AiAnswerActionButton Name="PART_Link" Glyph="{x:Static arc:ArcIcons.Link2}" />
+                            <arc:AiAnswerVersionPager Name="PART_Pager" />
+                        </arc:AiAnswerToolbar>
+                        <ContentPresenter Name="PART_ModelLine"
+                                          Content="{TemplateBinding ModelLine}"
+                                          IsVisible="{TemplateBinding ModelLine, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                    </arc:AiAnswerActionsLayout>
+                    <arc:AiRegenerateMenu Name="PART_Menu" />
+                    <arc:AiFeedbackReasonPicker Name="PART_Reasons" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        One action: a 36px circle, the glyph 16 (stroke 1.75) in TextSecondary. Hover: SurfaceMuted with a Foreground glyph
+        (160ms); pressed: the fill turns half SurfaceMuted, half Border; an open menu or popover keeps the hover look.
+        Disabled: half opacity, TextMuted glyph, arrow cursor. The keyboard ring is 2px, 2px outside. Tooltips open above.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerActionButton}" TargetType="arc:AiAnswerActionButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="arc:Tooltip.Side" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerActionButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Press"
+                            Opacity="0"
+                            Background="{arc:ArcDesignTokenResource Border}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:AiAnswerGlyphSwap Name="PART_Glyph" Size="{TemplateBinding GlyphSize}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:hover, ^:expanded, ^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Press">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <!-- A chosen rating (AiAnswerRatingButton shares this theme): the glyph filled in Foreground, no fill behind it. -->
+        <Style Selector="^:on">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Press">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The answer's version pager: a 1 × 16 Border line (8px after the actions, 6px before the arrows), then 30px round
+        arrows with 16px chevrons around the count (14 / 19.6, TextSecondary, tabular figures, 2px in from the arrows) whose
+        numbers roll on the snappy spring. The count is hidden from automation: the group's name says it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerVersionPager}" TargetType="arc:AiAnswerVersionPager">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerVersionPager">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Name="PART_Divider"
+                            Width="1"
+                            Height="16"
+                            Margin="8,0,6,0"
+                            VerticalAlignment="Center"
+                            Background="{arc:ArcDesignTokenResource Border}" />
+                    <arc:AiAnswerActionButton Name="PART_Previous"
+                                              Width="30"
+                                              Height="30"
+                                              Glyph="{x:Static arc:ArcIcons.ChevronLeft}" />
+                    <Panel Name="PART_Count"
+                           Margin="2,0"
+                           VerticalAlignment="Center"
+                           AutomationProperties.AccessibilityView="Raw">
+                        <StackPanel Name="PART_Rolling" Orientation="Horizontal" VerticalAlignment="Center">
+                            <arc:RollingDigits Name="PART_Number"
+                                               UseGrouping="False"
+                                               WheelSpring="Snappy"
+                                               GlyphPitch="0.6"
+                                               Falloff="Linear"
+                                               VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Separator"
+                                       LineHeight="19.6"
+                                       VerticalAlignment="Center" />
+                            <arc:RollingDigits Name="PART_Total"
+                                               UseGrouping="False"
+                                               WheelSpring="Snappy"
+                                               GlyphPitch="0.6"
+                                               Falloff="Linear"
+                                               VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Name="PART_CountText"
+                                   IsVisible="False"
+                                   FontFeatures="tnum"
+                                   LineHeight="19.6"
+                                   VerticalAlignment="Center" />
+                    </Panel>
+                    <arc:AiAnswerActionButton Name="PART_Next"
+                                              Width="30"
+                                              Height="30"
+                                              Glyph="{x:Static arc:ArcIcons.ChevronRight}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:text-count /template/ StackPanel#PART_Rolling">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:text-count /template/ TextBlock#PART_CountText">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -521,7 +521,7 @@ public class SettingsCommandTests
     {
         var palette = (SettingsCommand)AvaloniaRuntimeXamlLoader.Load(
             """
-            <arc:SettingsCommand xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+            <arc:SettingsCommand xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
                 <arc:SettingsCommandChoice Header="Theme" Options="Light, Dark, System" />
                 <arc:SettingsCommandToggle Header="Compact mode" IsChecked="True" />
             </arc:SettingsCommand>

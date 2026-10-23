@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WeekCalendarEditingDemo">
+    <!-- Draw, drag, resize, edit and delete: every change is logged with what it was before. -->
+    <StackPanel Spacing="16">
+        <arc:WeekCalendar x:Name="Calendar" GridHeight="560" InitialScrollTime="08:00" />
+        <Border Padding="24,16"
+                TextElement.FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                Background="{arc:ArcDesignTokenResource Surface}"
+                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                BorderThickness="1">
+            <StackPanel Spacing="10">
+                <DockPanel>
+                    <arc:Checkbox x:Name="ReadOnly" DockPanel.Dock="Right" Content="Read only" />
+                    <TextBlock Text="Event log"
+                               VerticalAlignment="Center"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </DockPanel>
+                <TextBlock x:Name="Log"
+                           Text="Drag across empty time, move or stretch an event, or press N."
+                           TextWrapping="Wrap"
+                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

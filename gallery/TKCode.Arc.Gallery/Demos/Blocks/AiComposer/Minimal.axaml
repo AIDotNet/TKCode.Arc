@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiComposerMinimalDemo">
+    <StackPanel Spacing="12" MaxWidth="560" Margin="0,12,0,24">
+        <!-- No models, tools or commands, and no attachments: a prompt box and a send button. -->
+        <arc:AiComposer x:Name="Composer" Placeholder="Ask anything" IsAttachmentEnabled="False" MaxLength="{x:Null}" />
+        <TextBlock x:Name="Sent" HorizontalAlignment="Center" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

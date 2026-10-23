@@ -1,0 +1,508 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The answer's reasoning button (Arc answer 3.2; the chat's AiReasoningButton look is 28px without a fill): a 34px
+        pill, padding 0 8 0 10, set 10px out on both sides so its text lines up with the column, the label ("Thinking" with
+        the shimmer, then "Thought for 9s") and a 15px chevron-down (TextMuted, stroke 1.75) 8px apart. Secondary text at
+        rest; hover: SurfaceMuted fill and Foreground text (160ms); pressed: the fill turns half SurfaceMuted, half Border.
+        Open: the chevron turns 180° on Arc's 580ms CSS spring. Nothing to open: the label alone, no chevron, no hover.
+        The label region springs to the label's width (Quick) and clips while it moves.
+    -->
+    <ControlTheme x:Key="AiAnswerReasoningButtonTheme" TargetType="arc:AiReasoningButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="10,0,8,0" />
+        <Setter Property="Margin" Value="-10,0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiReasoningButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Press"
+                            Opacity="0"
+                            Background="{arc:ArcDesignTokenResource Border}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center">
+                        <arc:SpringSizeDecorator Name="PART_LabelSize"
+                                                 Axis="Width"
+                                                 Spring="Quick"
+                                                 ClipOverflow="0"
+                                                 VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_Label"
+                                                Mode="Label"
+                                                HorizontalAlignment="Left"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Center" />
+                        </arc:SpringSizeDecorator>
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="15"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:hover, ^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Press">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+
+        <!-- Nothing to open: the label alone, at rest. -->
+        <Style Selector="^:static">
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:static /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The answer's reasoning row (Arc answer 3.2): the 34px button, 6px that are always there (the closed row is 40
+        high), then the summary that opens under it: 12px of space below it while it is mounted, a 1px Border rule on its
+        left, the paragraphs 14px from the rule (14 / 22.4, secondary text, 8px apart).
+    -->
+    <ControlTheme x:Key="AiAnswerReasoningTheme" TargetType="arc:AiReasoningDisclosure">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiReasoningDisclosure">
+                <StackPanel>
+                    <arc:AiReasoningButton Name="PART_Button"
+                                           Theme="{StaticResource AiAnswerReasoningButtonTheme}"
+                                           IsThinking="{TemplateBinding IsThinking}"
+                                           ThinkingText="{TemplateBinding ThinkingText}"
+                                           ThoughtText="{TemplateBinding ThoughtText}" />
+                    <arc:AiCollapsible Name="PART_Body"
+                                       Margin="{arc:AiAnswerTokenResource ReasoningGap}"
+                                       ContentMargin="{arc:AiAnswerTokenResource ReasoningPanelMargin}">
+                        <Border Name="PART_Rule"
+                                BorderThickness="1,0,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Padding="14,0,0,0">
+                            <arc:AiAnswerReasoningText Name="PART_Reasoning"
+                                                       Spacing="8"
+                                                       Text="{TemplateBinding Reasoning}" />
+                        </Border>
+                    </arc:AiCollapsible>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A paragraph of the reasoning summary: 14 / 22.4, secondary text, tracked −0.01em, wrapped and selectable. -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerReasoningParagraph}" TargetType="arc:AiAnswerReasoningParagraph">
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="22.4" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:AiAnswerReasoningText}" TargetType="arc:AiAnswerReasoningText" />
+
+    <!--
+        The note under a stopped or failed answer (Arc answer 3.2): radius 18, a 1px Border edge, padding 8 8 8 14 inside it,
+        parts 12px apart: the lead (a 10px solid square in a 12px cell, TextMuted, for a stop; a 16px Danger CircleAlert
+        and a faint Danger tint for a failure), the text (14 / 20.3, secondary), and on the right "Try again" as a pill with RotateCcw. It fades
+        in and out (PresenceHost: 240ms in, 160ms out; reduced 120ms; Off at once).
+    -->
+    <ControlTheme x:Key="AiAnswerNoteTheme" TargetType="arc:AiStatusNote">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiStatusNote">
+                <arc:PresenceHost Name="PART_Presence" Mode="Fade" IsPresent="{TemplateBinding IsActive}">
+                    <Panel>
+                        <Border Name="PART_Tint" CornerRadius="18" IsVisible="False" Opacity="0.05"
+                                Background="{arc:ArcDesignTokenResource Danger}" />
+                        <Border Name="PART_Edge" CornerRadius="18" BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}" />
+                        <Border Name="PART_DangerEdge" CornerRadius="18" IsVisible="False" BorderThickness="1" Opacity="0.26"
+                                BorderBrush="{arc:ArcDesignTokenResource Danger}" />
+                        <!-- Arc's padding 8 8 8 14 sits inside the 1px edge. -->
+                        <DockPanel Name="PART_Row" Margin="15,9,9,9" MinHeight="32" VerticalAlignment="Center">
+                            <arc:AiAnswerPillButton Name="PART_Action"
+                                                    DockPanel.Dock="Right"
+                                                    Glyph="{x:Static arc:ArcIcons.RotateCcw}"
+                                                    Padding="12,0"
+                                                    Margin="12,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    IsVisible="False" />
+                            <Panel Name="PART_Lead"
+                                   DockPanel.Dock="Left"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,12,0">
+                                <Border Name="PART_Square"
+                                        Width="10"
+                                        Height="10"
+                                        Margin="1"
+                                        CornerRadius="2"
+                                        IsVisible="False"
+                                        Background="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:ArcGlyph Name="PART_Alert"
+                                              Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="16"
+                                              StrokeThickness="1.75"
+                                              IsVisible="False"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            </Panel>
+                            <TextBlock Name="PART_Text"
+                                       TextWrapping="Wrap"
+                                       LineHeight="20.3"
+                                       LetterSpacing="-0.14"
+                                       VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Panel>
+                </arc:PresenceHost>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:stopped /template/ Border#PART_Square">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ArcGlyph#PART_Alert">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error /template/ Border#PART_Tint">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error /template/ Border#PART_DangerEdge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:action /template/ arc|AiAnswerPillButton#PART_Action">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The question (Arc's h2): the display font at 400, Foreground, tracked −0.02em, line height 1.1; the size follows the
+        block's width (set in code, 22 to 28). Focusable from code, never a tab stop, no ring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerHeading}" TargetType="arc:AiAnswerHeading">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </ControlTheme>
+
+    <!--
+        A quiet pill (the top bar's Share, the note's Try again): 32px, padding 0 12 0 10, a 1px Border edge on Surface,
+        the 14px glyph and the label (14, weight 500, Foreground) 6px apart. Hover: SurfaceMuted and a BorderStrong edge
+        (160ms); pressed: half SurfaceMuted, half Border; disabled: 60% with muted text. The keyboard ring is 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswerPillButton}" TargetType="arc:AiAnswerPillButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:AiAnswerTokenResource ShareHeight}" />
+        <Setter Property="Padding" Value="{arc:AiAnswerTokenResource SharePadding}" />
+        <Setter Property="GlyphSize" Value="{arc:AiAnswerTokenResource ShareGlyphSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswerPillButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:AiAnswerTokenResource ShareGap}"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center">
+                        <arc:AiAnswerGlyphSwap Name="PART_Glyph"
+                                               Data="{TemplateBinding Glyph}"
+                                               Size="{TemplateBinding GlyphSize}"
+                                               IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        <ContentPresenter Name="PART_Content"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The fill is a style (not a template value) so the pressed state can replace it. -->
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{TemplateBinding Background}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{TemplateBinding PressedFill}" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.6" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The answer page (Arc 3.1): Background, clipped, filling its container. From the top: the 52px top bar (the round new
+        thread button, the title, the share pill; a 1px hairline below), the scroller over the column (at most 768 wide with
+        its paddings, centered; the paddings follow the block's width in code) holding either the question page (the
+        question, the reasoning and sources rows, the answer area with its note, the footer with the action bar and the
+        model line, the related questions) or the empty page (heading, line, suggestions); then the dock with the follow-up
+        box. Two hidden live regions: the status, and what an action did.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiAnswer}" TargetType="arc:AiAnswer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="SubtleBorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ColumnMaxWidth" Value="{arc:AiAnswerTokenResource ColumnMaxWidth}" />
+        <Setter Property="SideRatio" Value="{arc:AiAnswerTokenResource SideRatio}" />
+        <Setter Property="SideMin" Value="{arc:AiAnswerTokenResource SideMin}" />
+        <Setter Property="SideMax" Value="{arc:AiAnswerTokenResource SideMax}" />
+        <Setter Property="TopRatio" Value="{arc:AiAnswerTokenResource TopRatio}" />
+        <Setter Property="TopMin" Value="{arc:AiAnswerTokenResource TopMin}" />
+        <Setter Property="ColumnBottomPadding" Value="{arc:AiAnswerTokenResource ColumnBottomPadding}" />
+        <Setter Property="EmptyTopRatio" Value="{arc:AiAnswerTokenResource EmptyTopRatio}" />
+        <Setter Property="QuestionFontBase" Value="{arc:AiAnswerTokenResource QuestionFontBase}" />
+        <Setter Property="QuestionFontRatio" Value="{arc:AiAnswerTokenResource QuestionFontRatio}" />
+        <Setter Property="QuestionFontMin" Value="{arc:AiAnswerTokenResource QuestionFontMin}" />
+        <Setter Property="QuestionFontMax" Value="{arc:AiAnswerTokenResource QuestionFontMax}" />
+        <Setter Property="QuestionLeading" Value="{arc:AiAnswerTokenResource QuestionLeading}" />
+        <Setter Property="QuestionTracking" Value="{arc:AiAnswerTokenResource QuestionTracking}" />
+        <Setter Property="DockTopPadding" Value="{arc:AiAnswerTokenResource DockTopPadding}" />
+        <Setter Property="DockBottomPadding" Value="{arc:AiAnswerTokenResource DockBottomPadding}" />
+        <Setter Property="CopiedDuration" Value="{arc:AiAnswerTokenResource CopiedDuration}" />
+        <Setter Property="ComposerPadding" Value="{arc:AiAnswerTokenResource ComposerPadding}" />
+        <Setter Property="ComposerCornerRadius" Value="{arc:AiAnswerTokenResource ComposerCornerRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiAnswer">
+                <Panel>
+                    <Border Name="PART_Root"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <Border Name="PART_TopBar"
+                                    Height="{arc:AiAnswerTokenResource TopBarHeight}"
+                                    Padding="{arc:AiAnswerTokenResource TopBarPadding}"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{TemplateBinding HairlineBrush}">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      ColumnSpacing="{arc:AiAnswerTokenResource TopBarGap}"
+                                      VerticalAlignment="Center">
+                                    <arc:AiAnswerActionButton Name="PART_NewThread"
+                                                              Glyph="{x:Static arc:ArcIcons.SquarePen}"
+                                                              arc:Tooltip.Side="Bottom"
+                                                              VerticalAlignment="Center" />
+                                    <arc:ArcContentSwap Name="PART_Title"
+                                                        Grid.Column="1"
+                                                        Mode="Crossfade"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center"
+                                                        VerticalAlignment="Center" />
+                                    <arc:AiAnswerPillButton Name="PART_Share"
+                                                            Grid.Column="2"
+                                                            Glyph="{x:Static arc:ArcIcons.Link2}"
+                                                            arc:Tooltip.Side="Bottom">
+                                        <Panel>
+                                            <TextBlock Name="PART_ShareWidthIdle" Opacity="0" LineHeight="19.6" IsHitTestVisible="False" />
+                                            <TextBlock Name="PART_ShareWidthCopied" Opacity="0" LineHeight="19.6" IsHitTestVisible="False" />
+                                            <TextBlock Name="PART_ShareWidthFailed" Opacity="0" LineHeight="19.6" IsHitTestVisible="False" />
+                                            <arc:ArcContentSwap Name="PART_ShareLabel"
+                                                                Mode="Label"
+                                                                EnterOffset="3"
+                                                                HorizontalContentAlignment="Left"
+                                                                VerticalContentAlignment="Center" />
+                                        </Panel>
+                                    </arc:AiAnswerPillButton>
+                                </Grid>
+                            </Border>
+                            <arc:ScrollArea Name="PART_Scroller"
+                                            Grid.Row="1"
+                                            FadeLength="0"
+                                            IsTabStop="False"
+                                            FocusAdorner="{x:Null}"
+                                            HorizontalScrollBarVisibility="Disabled">
+                                <Border Name="PART_Column" HorizontalAlignment="Stretch">
+                                    <Panel>
+                                        <StackPanel Name="PART_Article">
+                                            <arc:ArcContentSwap Name="PART_Question"
+                                                                Mode="Crossfade"
+                                                                HorizontalContentAlignment="Left"
+                                                                VerticalContentAlignment="Top" />
+                                            <StackPanel Name="PART_Steps" Margin="{arc:AiAnswerTokenResource StepsMargin}">
+                                                <arc:AiReasoningDisclosure Name="PART_Reasoning"
+                                                                           Theme="{StaticResource AiAnswerReasoningTheme}" />
+                                                <arc:AiSourcesRow Name="PART_Sources" />
+                                            </StackPanel>
+                                            <arc:AiAnswerStage Name="PART_Stage" Margin="{arc:AiAnswerTokenResource AnswerMargin}">
+                                                <StackPanel Name="PART_Body" Spacing="{arc:AiAnswerTokenResource NoteMargin}">
+                                                    <arc:AiAnswerDocument Name="PART_Document" />
+                                                    <arc:AiStatusNote Name="PART_Note"
+                                                                      Theme="{StaticResource AiAnswerNoteTheme}"
+                                                                      Layout="Card"
+                                                                      IsVisible="False"
+                                                                      IsActive="False" />
+                                                </StackPanel>
+                                            </arc:AiAnswerStage>
+                                            <Border Name="PART_Footer"
+                                                    Margin="{arc:AiAnswerTokenResource FooterMargin}"
+                                                    MinHeight="{arc:AiAnswerTokenResource FooterHeight}">
+                                                <arc:AiAnswerActions Name="PART_Actions">
+                                                    <arc:AiAnswerActions.ModelLine>
+                                                        <arc:AiModelLine Name="PART_ModelLine" />
+                                                    </arc:AiAnswerActions.ModelLine>
+                                                </arc:AiAnswerActions>
+                                            </Border>
+                                            <arc:AiRelatedQuestions Name="PART_Related" Margin="{arc:AiAnswerTokenResource RelatedMargin}" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_Empty" IsVisible="False">
+                                            <TextBlock Name="PART_EmptyTitle"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                       TextWrapping="Wrap" />
+                                            <TextBlock Name="PART_EmptyDescription"
+                                                       Margin="{arc:AiAnswerTokenResource EmptyDescriptionMargin}"
+                                                       MaxWidth="{arc:AiAnswerTokenResource EmptyDescriptionMaxWidth}"
+                                                       HorizontalAlignment="Left"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                       LineHeight="22.4"
+                                                       LetterSpacing="-0.16"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                       TextWrapping="Wrap" />
+                                            <arc:AiRelatedQuestions Name="PART_Suggestions" Margin="{arc:AiAnswerTokenResource EmptyListMargin}" />
+                                        </StackPanel>
+                                    </Panel>
+                                </Border>
+                            </arc:ScrollArea>
+                            <Border Name="PART_Dock" Grid.Row="2" HorizontalAlignment="Stretch">
+                                <arc:AiComposer Name="PART_Composer"
+                                                Layout="Inline"
+                                                MaxLength="{x:Null}"
+                                                IsAttachmentEnabled="False" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <arc:AiAnnouncer Name="PART_Status" />
+                    <arc:AiAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

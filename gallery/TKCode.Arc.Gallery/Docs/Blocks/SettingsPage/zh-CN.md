@@ -1,7 +1,7 @@
 ---
 title: 设置页
 summary: 完整的设置页：导航区带有账户卡片，旁边显示所选分区，并提供未保存修改的保存条。
-source-hash: df99365834f4
+source-hash: 1fae687d1a34
 ---
 
 <Demo name="Overview" />
@@ -31,7 +31,7 @@ source-hash: df99365834f4
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SettingsPage Height="480">
         <arc:SettingsSection Header="个人资料" Icon="{x:Static arc:ArcIcons.User}" Description="他人如何看到你。">
             <arc:Input Label="全名" Text="Noor Haddad" />

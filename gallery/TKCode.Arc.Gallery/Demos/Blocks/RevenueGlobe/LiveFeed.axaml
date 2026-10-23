@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueGlobeLiveFeedDemo">
+    <!-- Your own data, streamed: an ebook shop in Dublin. ClockMode External means the app moves Now; the code-behind
+         plays a server here, appending orders and moving Now every 400 ms. -->
+    <arc:RevenueGlobe x:Name="Globe"
+                      ClockMode="External"
+                      CurrencySymbol="€"
+                      DriftCenterOffset="20"
+                      Title="Ebook orders"
+                      Description="14 cities buying from Dublin, as the orders come in."
+                      DateText="Thursday, 22 October">
+        <arc:RevenueGlobe.Regions>
+            <arc:RevenueRegion Key="eu" Name="Europe" Forecast="61000" />
+            <arc:RevenueRegion Key="am" Name="Americas" Forecast="38000" />
+            <arc:RevenueRegion Key="ap" Name="Asia Pacific" Forecast="21000" />
+        </arc:RevenueGlobe.Regions>
+        <arc:RevenueCity Key="dub" Name="Dublin" CountryCode="IE" RegionKey="eu" Latitude="53.35" Longitude="-6.26" Weight="3" />
+        <arc:RevenueCity Key="edi" Name="Edinburgh" CountryCode="GB" RegionKey="eu" Latitude="55.95" Longitude="-3.19" Weight="2" />
+        <arc:RevenueCity Key="ams" Name="Amsterdam" CountryCode="NL" RegionKey="eu" Latitude="52.37" Longitude="4.90" UtcOffsetHours="1" Weight="3" />
+        <arc:RevenueCity Key="ham" Name="Hamburg" CountryCode="DE" RegionKey="eu" Latitude="53.55" Longitude="9.99" UtcOffsetHours="1" Weight="3" />
+        <arc:RevenueCity Key="sto" Name="Stockholm" CountryCode="SE" RegionKey="eu" Latitude="59.33" Longitude="18.07" UtcOffsetHours="1" Weight="2" />
+        <arc:RevenueCity Key="por" Name="Porto" CountryCode="PT" RegionKey="eu" Latitude="41.15" Longitude="-8.61" Weight="1" />
+        <arc:RevenueCity Key="mil" Name="Milan" CountryCode="IT" RegionKey="eu" Latitude="45.46" Longitude="9.19" UtcOffsetHours="1" Weight="2" />
+        <arc:RevenueCity Key="tor" Name="Toronto" CountryCode="CA" RegionKey="am" Latitude="43.65" Longitude="-79.38" UtcOffsetHours="-4" Weight="3" />
+        <arc:RevenueCity Key="chi" Name="Chicago" CountryCode="US" RegionKey="am" Latitude="41.88" Longitude="-87.63" UtcOffsetHours="-5" Weight="3" />
+        <arc:RevenueCity Key="sea" Name="Seattle" CountryCode="US" RegionKey="am" Latitude="47.61" Longitude="-122.33" UtcOffsetHours="-7" Weight="2" />
+        <arc:RevenueCity Key="bue" Name="Buenos Aires" CountryCode="AR" RegionKey="am" Latitude="-34.60" Longitude="-58.38" UtcOffsetHours="-3" Weight="1" />
+        <arc:RevenueCity Key="mel" Name="Melbourne" CountryCode="AU" RegionKey="ap" Latitude="-37.81" Longitude="144.96" UtcOffsetHours="11" Weight="2" />
+        <arc:RevenueCity Key="sin" Name="Singapore" CountryCode="SG" RegionKey="ap" Latitude="1.35" Longitude="103.82" UtcOffsetHours="8" Weight="2" />
+        <arc:RevenueCity Key="tok" Name="Sapporo" CountryCode="JP" RegionKey="ap" Latitude="43.06" Longitude="141.35" UtcOffsetHours="9" Weight="1" />
+    </arc:RevenueGlobe>
+</UserControl>

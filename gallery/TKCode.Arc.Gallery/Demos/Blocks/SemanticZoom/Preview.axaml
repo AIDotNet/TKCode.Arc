@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SemanticZoomPreviewDemo">
+    <!-- An invented transit operator (SemanticZoomDemoData): 5 teams, 22 projects, about 150 tasks. -->
+    <arc:SemanticZoom x:Name="Map" Header="Network map" />
+</UserControl>

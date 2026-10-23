@@ -1,0 +1,159 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The fields: the grid inside a height spring (smooth) so added and removed fields move the rows below gently. -->
+    <ControlTheme x:Key="{x:Type arc:PromptVariableFields}" TargetType="arc:PromptVariableFields">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptVariableFields">
+                <arc:SpringSizeDecorator Name="PART_Size"
+                                         Axis="Height"
+                                         Spring="Smooth"
+                                         CrossClipOverflow="4"
+                                         Margin="{TemplateBinding Padding}">
+                    <arc:PromptVariableFieldsPanel Name="PART_Panel"
+                                                   ColumnSpacing="10"
+                                                   RowSpacing="12" />
+                </arc:SpringSizeDecorator>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A field: the label row (16.8 high, 12px in: a 6 x 6 dot and the name, 6 apart, 12 / 16.8 in the chip text color)
+        5px above the 36px frame (radius 18, 1px border, Surface, 0 12 padding). The value is 14 Foreground; the placeholder
+        TextMuted. Away from focus the value is shown trimmed with an ellipsis. Border changes take 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PromptVariableField}" TargetType="arc:PromptVariableField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="RestBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="HoverBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PromptVariableField">
+                <StackPanel Spacing="5" Background="Transparent">
+                    <StackPanel Name="PART_LabelRow"
+                                Orientation="Horizontal"
+                                Spacing="6"
+                                Height="16.8"
+                                Margin="12,0,0,0">
+                        <Ellipse Name="PART_Dot"
+                                 Width="6"
+                                 Height="6"
+                                 Fill="{TemplateBinding DotBrush}"
+                                 VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding VariableName}"
+                                   Foreground="{TemplateBinding LabelBrush}"
+                                   FontSize="12"
+                                   LineHeight="16.8"
+                                   LetterSpacing="0"
+                                   TextWrapping="NoWrap"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_Frame"
+                            Height="36"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="19.6"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextBlock Name="PART_Display"
+                                       Text="{TemplateBinding Text}"
+                                       LineHeight="19.6"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False" />
+                            <ScrollViewer Name="PART_ScrollViewer"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Disabled"
+                                          BringIntoViewOnFocusChange="False">
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextAlignment="{TemplateBinding TextAlignment}"
+                                               TextWrapping="NoWrap"
+                                               LineHeight="19.6"
+                                               LetterSpacing="{TemplateBinding LetterSpacing}"
+                                               PasswordChar="{TemplateBinding PasswordChar}"
+                                               RevealPassword="{TemplateBinding RevealPassword}"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}"
+                                               VerticalAlignment="Center" />
+                            </ScrollViewer>
+                        </Panel>
+                    </Border>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Away from focus the trimmed copy shows the value; the editable text takes over while focused. -->
+        <Style Selector="^ /template/ ScrollViewer#PART_ScrollViewer">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:focus /template/ ScrollViewer#PART_ScrollViewer">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus /template/ TextBlock#PART_Display">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.52" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

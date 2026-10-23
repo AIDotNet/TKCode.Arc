@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiAnswerPreviewDemo">
+    <!-- A finished answer, with a responder behind it: point at a citation or a source card, rate it, answer again or ask a follow-up. -->
+    <Border Height="720" BorderThickness="1" CornerRadius="16" ClipToBounds="True" BorderBrush="#33808080" Margin="0,12">
+        <arc:AiAnswer x:Name="Answer" />
+    </Border>
+</UserControl>

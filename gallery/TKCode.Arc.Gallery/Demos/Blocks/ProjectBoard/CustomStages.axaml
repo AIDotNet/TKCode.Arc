@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProjectBoardCustomStagesDemo">
+    <!-- Five stages written in XAML, with their own empty texts; new tasks go to "Inbox", "Shipped" finishes them. -->
+    <arc:ProjectBoard x:Name="Board"
+                      Title="Mobile release 4.2"
+                      IsFramed="True"
+                      AddStageKey="inbox"
+                      ProgressFormat="{}{0} of {1} live in the store build">
+        <arc:ProjectBoard.Stages>
+            <arc:ProjectBoardStage Key="inbox" Header="Inbox" EmptyText="Inbox zero" />
+            <arc:ProjectBoardStage Key="scoped" Header="Scoped" />
+            <arc:ProjectBoardStage Key="building" Header="Building" />
+            <arc:ProjectBoardStage Key="testing" Header="Testing" EmptyText="Nothing waiting for QA" />
+            <arc:ProjectBoardStage Key="shipped" Header="Shipped" IsDone="True" />
+        </arc:ProjectBoard.Stages>
+    </arc:ProjectBoard>
+</UserControl>

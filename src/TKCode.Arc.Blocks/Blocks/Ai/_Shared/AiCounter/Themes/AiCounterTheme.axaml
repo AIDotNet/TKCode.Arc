@@ -1,0 +1,130 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The counter: 36px high, padding 0 6 0 2, an 18px slot with the ring, 6px, then 12 / 16.8 text with tabular figures.
+        The ring is Arc's 18px svg with viewBox 20, r 8 and stroke 2: a 16.2px circle with a 1.8px stroke, track Border,
+        flat ends from 12 o'clock. Calm: text TextMuted, arc TextSecondary; near: both Warning; over: CircleAlert 16
+        (stroke 2) and the text in Danger.
+        Folded below the threshold: PresenceHost collapses the width to 0 and fades (opening on a springy width, Arc's
+        "about (0.39, 0.2)" = Morph); the text width follows the count on the Quick spring. Tiny drops the text at once.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiCounter}" TargetType="arc:AiCounter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiCounter">
+                <arc:PresenceHost Name="PART_Presence"
+                                  Collapse="Width"
+                                  Mode="Fade"
+                                  Spring="Morph"
+                                  ClipToBounds="True"
+                                  IsPresent="{TemplateBinding IsShown}">
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                Height="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                Background="Transparent">
+                        <Panel Width="18" Height="18" Margin="2,0,0,0" VerticalAlignment="Center">
+                            <arc:ArcRing Name="PART_Ring"
+                                         Width="16.2"
+                                         Height="16.2"
+                                         UseLayoutRounding="False"
+                                         Thickness="1.8"
+                                         IsRoundCap="False"
+                                         TrackBrush="{arc:ArcDesignTokenResource Border}"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Alert"
+                                          Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                          Size="16"
+                                          StrokeThickness="2"
+                                          IsVisible="False"
+                                          Foreground="{arc:ArcDesignTokenResource Danger}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Panel>
+                        <arc:SpringSizeDecorator Name="PART_TextSize"
+                                                 Axis="Width"
+                                                 Spring="Quick"
+                                                 Margin="6,0,0,0"
+                                                 VerticalAlignment="Center">
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding Text}"
+                                       LineHeight="16.8"
+                                       LetterSpacing="-0.12"
+                                       FontFeatures="tnum"
+                                       TextWrapping="NoWrap"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center" />
+                        </arc:SpringSizeDecorator>
+                        <Border Width="6" />
+                    </StackPanel>
+                </arc:PresenceHost>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:near">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:near /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <Style Selector="^:over">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:over /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:over /template/ arc|ArcGlyph#PART_Alert">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:tiny /template/ arc|SpringSizeDecorator#PART_TextSize">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- The arc and its color move in 160ms on the standard curve (Arc's dashoffset and stroke); reduced motion: the
+             value at once, colors in 120ms. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Value" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|ArcRing#PART_Ring">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

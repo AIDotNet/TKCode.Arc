@@ -1,0 +1,305 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The block: a rounded frame that scrolls an empty track under a pinned stage. -->
+    <ControlTheme x:Key="{x:Type arc:ExplodedView}" TargetType="arc:ExplodedView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExplodedView">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame" ClipToBounds="True">
+                        <arc:ExplodedViewScrollViewer Name="PART_Scroll"
+                                                      FocusAdorner="{x:Null}"
+                                                      Background="Transparent">
+                            <arc:ExplodedViewTrack Name="PART_Track">
+                                <arc:ExplodedViewLayoutPanel Name="PART_Layout">
+                                    <StackPanel Name="PART_Intro" Spacing="{arc:ExplodedViewTokenResource IntroGap}">
+                                        <TextBlock Name="PART_Title" TextWrapping="Wrap" />
+                                        <TextBlock Name="PART_Description" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <arc:ExplodedViewStage Name="PART_Stage" />
+                                    <arc:ExplodedViewCaptions Name="PART_Captions" />
+                                    <arc:ExplodedViewStops Name="PART_Stops" />
+                                </arc:ExplodedViewLayoutPanel>
+                            </arc:ExplodedViewTrack>
+                        </arc:ExplodedViewScrollViewer>
+                    </Border>
+                    <arc:ShowpieceLiveRegion Name="PART_LiveRegion" />
+                    <StackPanel Name="PART_LayerList"
+                                Height="0"
+                                ClipToBounds="True"
+                                VerticalAlignment="Top"
+                                IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-4" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="{arc:ExplodedViewTokenResource FrameFocusRingMargin}" />
+            <Setter Property="CornerRadius" Value="{arc:ExplodedViewTokenResource FrameFocusRingRadius}" />
+        </Style>
+        <Style Selector="^:region-focus /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ExplodedViewTokenResource FrameBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        </Style>
+
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Description">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="{arc:ExplodedViewTokenResource DescriptionLeading}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Description">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:ExplodedViewTokenResource CompactDescriptionLeading}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- One layer: content at the layer size; a plate is opaque with a border, a sheet draws a dashed outline under its content.
+         PART_Outline and PART_Cache take a bitmap cache while the stage moves (the rounded clip sits inside the cache). -->
+    <ControlTheme x:Key="{x:Type arc:ExplodedViewLayerHost}" TargetType="arc:ExplodedViewLayerHost">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="OutlineBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExplodedViewLayerHost">
+                <Panel>
+                    <arc:ExplodedViewLayerOutline Name="PART_Outline" />
+                    <Panel Name="PART_Cache">
+                        <Border Name="PART_Plate"
+                                ClipToBounds="True"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </Border>
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:sheet /template/ Border#PART_Plate">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+        <Style Selector="^:plate /template/ Border#PART_Plate">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <!-- The plate's border and the outline's dash switch at once; the outline's color eases. -->
+        <Style Selector="^:plate:active /template/ Border#PART_Plate">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:active">
+            <Setter Property="OutlineBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="IsOutlineDashed" Value="False" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" Duration="0:0:0.48" />
+                    <arc:ArcBrushTransition Property="OutlineBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A floating label: dot on the anchor, a leader that draws out, the name and a note. -->
+    <ControlTheme x:Key="{x:Type arc:ExplodedViewLabel}" TargetType="arc:ExplodedViewLabel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExplodedViewLabel">
+                <Panel>
+                    <Border Name="PART_Dot"
+                            Width="{arc:ExplodedViewTokenResource LabelDotSize}"
+                            Height="{arc:ExplodedViewTokenResource LabelDotSize}"
+                            CornerRadius="{arc:ExplodedViewTokenResource LabelDotRadius}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    <Border Name="PART_Leader"
+                            Width="{arc:ExplodedViewTokenResource LeaderLength}"
+                            Height="1"
+                            Margin="{arc:ExplodedViewTokenResource LeaderMargin}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    <StackPanel Margin="{arc:ExplodedViewTokenResource LabelTextMargin}" VerticalAlignment="Center">
+                        <TextBlock Name="PART_Name" Text="{TemplateBinding LabelName}" />
+                        <TextBlock Name="PART_Note"
+                                   Text="{TemplateBinding Note}"
+                                   IsVisible="{TemplateBinding IsNoteVisible}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Dot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="BorderThickness" Value="{arc:ExplodedViewTokenResource LabelDotStroke}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Leader">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="LineHeight" Value="{arc:ExplodedViewTokenResource LabelNameLeading}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Note">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:ExplodedViewTokenResource LabelNoteLeading}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:active /template/ Border#PART_Dot">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderThickness" Value="{arc:ExplodedViewTokenResource LabelDotActiveStroke}" />
+        </Style>
+        <Style Selector="^:active /template/ Border#PART_Leader">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:active /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Dot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcThicknessTransition Property="BorderThickness" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Leader">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Name">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A stop button: transparent 36 × 44 target with a tick; hover and keyboard focus fill it. -->
+    <ControlTheme x:Key="{x:Type arc:ExplodedViewStopButton}" TargetType="arc:ExplodedViewStopButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExplodedViewStopButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ExplodedViewTokenResource StopFocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ExplodedViewTokenResource StopFocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ExplodedViewTokenResource StopButtonRadius}" />
+                    <Border Name="PART_Tick"
+                            Height="{arc:ExplodedViewTokenResource TickThickness}"
+                            CornerRadius="{arc:ExplodedViewTokenResource TickRadius}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RenderTransformOrigin="50%,50%" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Tick">
+            <Setter Property="Width" Value="{arc:ExplodedViewTokenResource TickLength}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="RenderTransform" Value="scaleY(1)" />
+        </Style>
+        <Style Selector="^:end /template/ Border#PART_Tick">
+            <Setter Property="Width" Value="{arc:ExplodedViewTokenResource EndTickLength}" />
+        </Style>
+        <Style Selector="^:current /template/ Border#PART_Tick">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="RenderTransform" Value="scaleY(1.34)" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Tick">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A caption: display-face title over one or two sentences. -->
+    <ControlTheme x:Key="{x:Type arc:ExplodedViewCaptionView}" TargetType="arc:ExplodedViewCaptionView">
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ExplodedViewCaptionView">
+                <StackPanel Spacing="{arc:ExplodedViewTokenResource CaptionGap}">
+                    <TextBlock Name="PART_CaptionTitle"
+                               Text="{TemplateBinding CaptionTitle}"
+                               TextWrapping="Wrap"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontSize="{arc:ExplodedViewTokenResource CaptionTitleFontSize}"
+                               FontWeight="Medium"
+                               LineHeight="{arc:ExplodedViewTokenResource CaptionTitleLeading}"
+                               LetterSpacing="{arc:ExplodedViewTokenResource CaptionTitleTracking}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Name="PART_CaptionBody"
+                               Text="{TemplateBinding CaptionBody}"
+                               IsVisible="{TemplateBinding HasBody}"
+                               TextWrapping="Wrap"
+                               FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="{arc:ExplodedViewTokenResource CaptionBodyLeading}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

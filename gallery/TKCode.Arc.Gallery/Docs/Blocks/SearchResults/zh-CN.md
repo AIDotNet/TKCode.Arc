@@ -1,7 +1,7 @@
 ---
 title: 搜索结果
 summary: 工作区搜索页：带建议弹层的搜索框、数量随查询变化的筛选器、日期范围、排序、可移除的筛选标签、高亮的结果，以及结果详情面板。
-source-hash: ac5dabc9b179
+source-hash: eb3de9ba7c69
 ---
 
 <Demo name="Preview" />
@@ -31,7 +31,7 @@ source-hash: ac5dabc9b179
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchResults Height="640" Query="发票" Label="搜索财务资料">
         <arc:SearchResults.Filters>
             <arc:SearchValueFilter Key="kind" Title="类型" />
@@ -302,7 +302,7 @@ search.DetailActionInvoked += (_, e) =>
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchResults Label="搜索帮助中心"
                        PlaceholderText="搜索文章"
                        ResultsFormat="{}{0} 篇文章"

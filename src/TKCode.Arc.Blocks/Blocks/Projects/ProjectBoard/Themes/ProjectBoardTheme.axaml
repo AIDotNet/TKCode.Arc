@@ -1,0 +1,557 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The columns' scroller: sideways (snapping is code), no visible scrollbars (Arc hides them), never a tab stop. -->
+    <ControlTheme x:Key="ProjectBoardScrollTheme" TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="IsScrollChainingEnabled" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ScrollViewer">
+                <ScrollContentPresenter Name="PART_ContentPresenter"
+                                        Background="{TemplateBinding Background}"
+                                        Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        Padding="{TemplateBinding Padding}"
+                                        IsScrollChainingEnabled="{TemplateBinding IsScrollChainingEnabled}"
+                                        ScrollViewer.IsScrollInertiaEnabled="{TemplateBinding IsScrollInertiaEnabled}">
+                    <ScrollContentPresenter.GestureRecognizers>
+                        <ScrollGestureRecognizer CanHorizontallyScroll="{Binding CanHorizontallyScroll, ElementName=PART_ContentPresenter}"
+                                                 CanVerticallyScroll="{Binding CanVerticallyScroll, ElementName=PART_ContentPresenter}"
+                                                 IsScrollInertiaEnabled="{Binding (ScrollViewer.IsScrollInertiaEnabled), ElementName=PART_ContentPresenter}" />
+                    </ScrollContentPresenter.GestureRecognizers>
+                </ScrollContentPresenter>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Add task: a Foreground pill with a Plus and the label; hover dims to .88 (mouse only), press scales to .97. -->
+    <ControlTheme x:Key="ProjectBoardAddButtonTheme" TargetType="arc:ProjectBoardButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:ProjectBoardTokenResource AddHeight}" />
+        <Setter Property="Padding" Value="{arc:ProjectBoardTokenResource AddPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoardButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ProjectBoardTokenResource AddFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ProjectBoardTokenResource AddRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:mouse-over">
+            <Setter Property="Opacity" Value="{arc:ProjectBoardTokenResource AddHoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A card's arrow: a quiet 26px square (40 on narrow boards); hover fills SurfaceMuted (mouse only); disabled .3. -->
+    <ControlTheme x:Key="ProjectBoardMoveButtonTheme" TargetType="arc:ProjectBoardButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:ProjectBoardTokenResource MoveButtonSize}" />
+        <Setter Property="Height" Value="{arc:ProjectBoardTokenResource MoveButtonSize}" />
+        <Setter Property="CornerRadius" Value="{arc:ProjectBoardTokenResource MoveButtonRadius}" />
+        <Setter Property="FocusRadius" Value="{arc:ProjectBoardTokenResource MoveFocusRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoardButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding FocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:mouse-over:not(:disabled)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:ProjectBoardTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.92)" />
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A filter button: muted text that turns Foreground when chosen or hovered (mouse only), over the gliding highlight. -->
+    <ControlTheme x:Key="{x:Type arc:ProjectBoardFilterButton}" TargetType="arc:ProjectBoardFilterButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Height" Value="{arc:ProjectBoardTokenResource FilterButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:ProjectBoardTokenResource FilterButtonPadding}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoardFilterButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ProjectBoardTokenResource FilterFocusRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <TextBlock Name="PART_Label"
+                               Text="{TemplateBinding Content}"
+                               Margin="{TemplateBinding Padding}"
+                               Foreground="{TemplateBinding Foreground}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:mouse-over">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- All work / My work: a muted track, a raised highlight that glides (400/40) behind the chosen button. -->
+    <ControlTheme x:Key="{x:Type arc:ProjectBoardFilterBar}" TargetType="arc:ProjectBoardFilterBar">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoardFilterBar">
+                <Border Name="PART_Track"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        CornerRadius="{arc:ProjectBoardTokenResource FilterRadius}"
+                        Padding="{arc:ProjectBoardTokenResource FilterPadding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                              Stroke="{arc:ArcDesignTokenResource BorderSubtle}"
+                                              StrokeThickness="1"
+                                              CornerRadius="{arc:ProjectBoardTokenResource FilterButtonRadius}"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                        <StackPanel Orientation="Horizontal">
+                            <arc:ProjectBoardFilterButton Name="PART_All" Filter="All" Content="{TemplateBinding AllText}" />
+                            <arc:ProjectBoardFilterButton Name="PART_Mine" Filter="Mine" Content="{TemplateBinding MineText}" />
+                        </StackPanel>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:narrow /template/ arc|ProjectBoardFilterButton">
+            <Setter Property="Height" Value="{arc:ProjectBoardTokenResource NarrowFilterButtonHeight}" />
+            <Setter Property="Padding" Value="{arc:ProjectBoardTokenResource NarrowFilterButtonPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A column: heading and count, the muted slot (drawn in code, its height follows the cards), the empty text. -->
+    <ControlTheme x:Key="{x:Type arc:ProjectBoardColumn}" TargetType="arc:ProjectBoardColumn">
+        <Setter Property="SlotBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoardColumn">
+                <Panel>
+                    <StackPanel Name="PART_Heading"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Top"
+                                Height="{arc:ProjectBoardTokenResource ColumnHeadingHeight}"
+                                Margin="{arc:ProjectBoardTokenResource ColumnHeadingMargin}"
+                                Spacing="{arc:ProjectBoardTokenResource ColumnHeadingGap}">
+                        <TextBlock Name="PART_Header"
+                                   Text="{TemplateBinding Header}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:ProjectBoardTokenResource ColumnHeadingLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Count"
+                                   Text="{TemplateBinding CountText}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:ProjectBoardTokenResource CardSmallLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock Name="PART_Empty"
+                               Text="{TemplateBinding EmptyText}"
+                               IsVisible="{TemplateBinding EmptyText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                               Margin="{arc:ProjectBoardTokenResource EmptyMargin}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="{arc:ProjectBoardTokenResource CardSmallLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A card: area and due, title, owner, comments and the two arrows; hover lifts a faint shadow (mouse only). -->
+    <ControlTheme x:Key="{x:Type arc:ProjectBoardCard}" TargetType="arc:ProjectBoardCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="Padding" Value="{arc:ProjectBoardTokenResource CardPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoardCard">
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{arc:ProjectBoardTokenResource CardRadius}"
+                        BoxShadow="{arc:ProjectBoardTokenResource CardRestShadow}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <Grid Name="PART_Top" ColumnDefinitions="*,Auto">
+                            <TextBlock Name="PART_Area"
+                                       Text="{TemplateBinding Area}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ProjectBoardTokenResource CardSmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                            <TextBlock Name="PART_Due"
+                                       Grid.Column="1"
+                                       Margin="{arc:ProjectBoardTokenResource DueMargin}"
+                                       Text="{TemplateBinding DueText}"
+                                       IsVisible="{TemplateBinding DueText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ProjectBoardTokenResource CardSmallLineHeight}"
+                                       VerticalAlignment="Center"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                        </Grid>
+                        <TextBlock Name="PART_Title"
+                                   Grid.Row="1"
+                                   Margin="{arc:ProjectBoardTokenResource CardTitleMargin}"
+                                   Text="{TemplateBinding Title}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:ProjectBoardTokenResource CardTitleLineHeight}"
+                                   TextWrapping="Wrap"
+                                   AutomationProperties.AccessibilityView="Raw" />
+                        <Grid Name="PART_Footer"
+                              Grid.Row="2"
+                              ColumnDefinitions="Auto,Auto,*,Auto">
+                            <arc:ProjectsAvatar Name="PART_Owner"
+                                                Person="{TemplateBinding Owner}"
+                                                IsDecorative="True"
+                                                IsVisible="{TemplateBinding Owner, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                Width="{arc:ProjectBoardTokenResource OwnerDiameter}"
+                                                Height="{arc:ProjectBoardTokenResource OwnerDiameter}"
+                                                Margin="{arc:ProjectBoardTokenResource OwnerMargin}"
+                                                VerticalAlignment="Center" />
+                            <StackPanel Name="PART_Comments"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:ProjectBoardTokenResource CommentGap}"
+                                        IsVisible="{TemplateBinding CommentText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                        VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.MessageCircle}"
+                                              Size="{arc:ProjectBoardTokenResource CommentGlyphSize}"
+                                              StrokeThickness="{arc:ProjectBoardTokenResource GlyphStroke}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Name="PART_CommentCount"
+                                           Text="{TemplateBinding CommentText}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:ProjectBoardTokenResource CardSmallLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           VerticalAlignment="Center"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Moves"
+                                        Grid.Column="3"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:ProjectBoardTokenResource MoveGap}"
+                                        VerticalAlignment="Center">
+                                <arc:ProjectBoardButton Name="PART_Previous"
+                                                        Theme="{StaticResource ProjectBoardMoveButtonTheme}"
+                                                        IsEnabled="{TemplateBinding CanMovePrevious}"
+                                                        AutomationProperties.Name="{TemplateBinding PreviousName}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowLeft}"
+                                                  Size="{arc:ProjectBoardTokenResource MoveGlyphSize}"
+                                                  StrokeThickness="{arc:ProjectBoardTokenResource GlyphStroke}" />
+                                </arc:ProjectBoardButton>
+                                <arc:ProjectBoardButton Name="PART_Next"
+                                                        Theme="{StaticResource ProjectBoardMoveButtonTheme}"
+                                                        IsEnabled="{TemplateBinding CanMoveNext}"
+                                                        AutomationProperties.Name="{TemplateBinding NextName}">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                                  Size="{arc:ProjectBoardTokenResource MoveGlyphSize}"
+                                                  StrokeThickness="{arc:ProjectBoardTokenResource GlyphStroke}" />
+                                </arc:ProjectBoardButton>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:mouse-over /template/ Border#PART_Surface">
+            <Setter Property="BoxShadow" Value="{arc:ProjectBoardTokenResource CardHoverShadow}" />
+        </Style>
+        <!-- State colors live in styles: a value written on a template element could not be overridden by a state. -->
+        <Style Selector="^ /template/ TextBlock#PART_Due">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:due-soon /template/ TextBlock#PART_Due">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:done /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Footer">
+            <Setter Property="Height" Value="{arc:ProjectBoardTokenResource CardFooterHeight}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Grid#PART_Footer">
+            <Setter Property="Height" Value="{arc:ProjectBoardTokenResource NarrowCardFooterHeight}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ProjectBoardButton">
+            <Setter Property="Width" Value="{arc:ProjectBoardTokenResource NarrowMoveButtonSize}" />
+            <Setter Property="Height" Value="{arc:ProjectBoardTokenResource NarrowMoveButtonSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ProjectBoardTokenResource NarrowMoveButtonRadius}" />
+            <Setter Property="FocusRadius" Value="{arc:ProjectBoardTokenResource NarrowMoveFocusRadius}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Moves">
+            <Setter Property="Margin" Value="{arc:ProjectBoardTokenResource NarrowMovesMargin}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ProjectBoard}" TargetType="arc:ProjectBoard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProjectBoard">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        TextElement.LetterSpacing="{arc:ProjectBoardTokenResource TextTracking}">
+                    <Grid RowDefinitions="Auto,Auto,*">
+                        <arc:ProjectBoardHeaderPanel Name="PART_Header"
+                                                     ColumnGap="{arc:ProjectBoardTokenResource HeaderColumnGap}"
+                                                     RowGap="{arc:ProjectBoardTokenResource HeaderRowGap}">
+                            <StackPanel Name="PART_TitleBlock">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ProjectBoardTokenResource TitleLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Name="PART_Subtitle"
+                                           IsVisible="{TemplateBinding IsProgressVisible}"
+                                           Margin="{arc:ProjectBoardTokenResource SubtitleMargin}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="{arc:ProjectBoardTokenResource SubtitleLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <Grid Name="PART_Actions" ColumnDefinitions="Auto,Auto,*,Auto" VerticalAlignment="Center">
+                                <arc:ProjectsAvatarStack Name="PART_Team"
+                                                         Grid.Column="0"
+                                                         Diameter="{arc:ProjectBoardTokenResource TeamAvatarDiameter}"
+                                                         Ring="{arc:ProjectBoardTokenResource TeamAvatarRing}"
+                                                         Overlap="{arc:ProjectBoardTokenResource TeamAvatarOverlap}"
+                                                         Margin="{arc:ProjectBoardTokenResource TeamMargin}"
+                                                         VerticalAlignment="Center" />
+                                <arc:ProjectBoardFilterBar Name="PART_Filter" Grid.Column="1" VerticalAlignment="Center" />
+                                <arc:ProjectBoardButton Name="PART_Add"
+                                                        Grid.Column="3"
+                                                        Theme="{StaticResource ProjectBoardAddButtonTheme}"
+                                                        Margin="{arc:ProjectBoardTokenResource AddMargin}"
+                                                        VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:ProjectBoardTokenResource AddGap}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                                      Size="{arc:ProjectBoardTokenResource AddGlyphSize}"
+                                                      StrokeThickness="{arc:ProjectBoardTokenResource GlyphStroke}"
+                                                      VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_AddLabel"
+                                                   Text="{TemplateBinding AddText}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:ProjectBoardButton>
+                            </Grid>
+                        </arc:ProjectBoardHeaderPanel>
+
+                        <arc:ProjectsProgressLine Name="PART_Progress"
+                                                  Grid.Row="1"
+                                                  IsVisible="{TemplateBinding IsProgressVisible}"
+                                                  FillMode="Scale"
+                                                  Radius="2" />
+
+                        <ScrollViewer Name="PART_Scroll"
+                                      Grid.Row="2"
+                                      Theme="{StaticResource ProjectBoardScrollTheme}">
+                            <arc:ProjectBoardPanel Name="PART_Panel" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </ScrollViewer>
+
+                        <arc:ProjectsAnnouncer Name="PART_Announcer" Grid.Row="0" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Framed: Arc's docs preview, a 1px Border card with radius 24 that clips its content. -->
+        <Style Selector="^:framed /template/ Border#PART_Frame">
+            <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:ProjectBoardTokenResource FramedRadius}" />
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+
+        <!-- Margins that change with the width are styles (a value written on a template element could not be overridden). -->
+        <Style Selector="^ /template/ arc|ProjectBoardHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:ProjectBoardTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProjectsProgressLine#PART_Progress">
+            <Setter Property="Margin" Value="{arc:ProjectBoardTokenResource ProgressMargin}" />
+        </Style>
+
+        <!-- Narrow (≤ 700): tighter padding, no team row, touch-sized buttons. -->
+        <Style Selector="^:narrow /template/ arc|ProjectBoardHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:ProjectBoardTokenResource NarrowHeaderPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ProjectsProgressLine#PART_Progress">
+            <Setter Property="Margin" Value="{arc:ProjectBoardTokenResource NarrowProgressMargin}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ProjectBoardButton#PART_Add">
+            <Setter Property="Height" Value="{arc:ProjectBoardTokenResource NarrowAddHeight}" />
+        </Style>
+
+        <!-- Compact (≤ 400): Add is a 40px square with only the Plus. -->
+        <Style Selector="^:compact /template/ arc|ProjectBoardButton#PART_Add">
+            <Setter Property="Width" Value="{arc:ProjectBoardTokenResource NarrowAddHeight}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_AddLabel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

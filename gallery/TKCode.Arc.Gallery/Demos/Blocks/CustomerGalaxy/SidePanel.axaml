@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CustomerGalaxySidePanelDemo">
+    <!-- From 880 px the totals sit beside the stage on their own; End keeps them there in any width. -->
+    <arc:CustomerGalaxy x:Name="Galaxy"
+                        Title="Customer health"
+                        TotalsPlacement="End"
+                        SelectedGroupingKey="health" />
+</UserControl>

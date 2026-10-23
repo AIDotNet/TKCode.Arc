@@ -1,0 +1,204 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The page: a scroll area (no edge fades, not a tab stop) over a centered article column at most 680 wide with the
+        padding inside it (72 36 48; compact, under a bottom sheet, 56 22 40). The article lays out without rounding, like
+        the browser: rounding every line box up (24.2 → 25, 3 × 22.4 → 68) would push each block half a pixel further down. The head: the title in the display font
+        22 / 24.2, weight 500, tracked −0.44, Foreground; the meta line 6px under it, 12 / 16.8 in TextMuted; 18px to the first
+        block (the article's HeadSpacing). Blocks and the ask buttons are added in code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelPageView}" TargetType="arc:AiPanelPageView">
+        <Setter Property="ColumnPadding" Value="36,72,36,48" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelPageView">
+                <arc:ScrollArea Name="PART_Scroll"
+                                FadeLength="0"
+                                IsTabStop="False"
+                                FocusAdorner="{x:Null}"
+                                Background="Transparent"
+                                HorizontalScrollBarVisibility="Disabled">
+                    <arc:AiPanelArticle Name="PART_Article"
+                                        UseLayoutRounding="False"
+                                        Padding="{TemplateBinding ColumnPadding}"
+                                        MaxWidth="{TemplateBinding MaxColumnWidth}"
+                                        HorizontalAlignment="Center">
+                        <TextBlock Name="PART_Title"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="24.2"
+                                   LetterSpacing="-0.44"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextWrapping="Wrap"
+                                   ClipToBounds="False" />
+                        <TextBlock Name="PART_Meta"
+                                   Margin="0,6,0,0"
+                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="16.8"
+                                   LetterSpacing="-0.14"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextWrapping="Wrap"
+                                   ClipToBounds="False" />
+                    </arc:AiPanelArticle>
+                </arc:ScrollArea>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="ColumnPadding" Value="22,56,22,40" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Page text. Body 14 / 19.6 tracked −0.14 in TextSecondary; paragraphs 14 / 22.4; headings in the display font 14 / 15.4,
+        weight 500, tracked −0.42, Foreground; table header cells 12 / 16.8 TextMuted; row header cells weight 500 Foreground;
+        right-aligned columns use tabular figures. The selection is SurfaceMuted under Foreground text (Arc's ::selection).
+        Glyphs may reach past a tight line box, so nothing clips.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelText}" TargetType="arc:AiPanelText">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="LetterSpacing" Value="-0.14" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Style Selector="^:paragraph">
+            <Setter Property="LineHeight" Value="22.4" />
+        </Style>
+        <Style Selector="^:heading">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="15.4" />
+            <Setter Property="LetterSpacing" Value="-0.42" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:columnheader">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:rowheader">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:numeric">
+            <Setter Property="FontFeatures" Value="tnum" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The table's row lines: BorderSubtle. -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelTableView}" TargetType="arc:AiPanelTableView">
+        <Setter Property="LineBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+    </ControlTheme>
+
+    <!-- The marker line: Accent; its opacity changes in 160ms (standard), 120ms at reduced motion. -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelBlockMarker}" TargetType="arc:AiPanelBlockMarker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Opacity" Value="0" />
+        <Style Selector="^:on">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The apply sweep's tint: Accent (drawn at 13%). -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelSweep}" TargetType="arc:AiPanelSweep">
+        <Setter Property="Tint" Value="{arc:ArcDesignTokenResource Accent}" />
+    </ControlTheme>
+
+    <!--
+        "Ask about selection": 30 high, padding 0 12 0 10, a pill with a 1px Border on SurfaceRaised and ShadowRaised; the
+        14px mark (Accent) and the text (12 / 16.8, weight 500, Foreground) 6px apart. Hover (mouse and pen): SurfaceMuted
+        in 160ms (standard). Keyboard focus: the 2px ring, 2px out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiPanelAskButton}" TargetType="arc:AiPanelAskButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- The page places it on whole pixels; its frame keeps crisp edges. -->
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="10,0,12,0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiPanelAskButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <arc:ModelMark Name="PART_Mark"
+                                           Mark="{TemplateBinding ShownMark}"
+                                           Size="14"
+                                           MarkColor="{arc:ArcDesignTokenResource Accent}" />
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding Text}"
+                                       LineHeight="16.8"
+                                       LetterSpacing="-0.14"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
