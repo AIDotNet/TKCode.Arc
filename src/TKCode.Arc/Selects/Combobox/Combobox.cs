@@ -455,7 +455,9 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
 
     private void Announce(string text)
     {
-        if (_announcer is not null)
+        // An empty live region makes Avalonia.Native raise a macOS accessibility notification with a nil value, which
+        // terminates the app (NSInvalidArgumentException), so a clear leaves the last message in place.
+        if (_announcer is not null && text.Length > 0)
         {
             _announcer.Text = text;
         }

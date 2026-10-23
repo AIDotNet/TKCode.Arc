@@ -241,4 +241,24 @@ public class ComboboxTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Opening_The_List_Never_Writes_An_Empty_Live_Region_Text()
+    {
+        var combobox = Zones();
+        var window = Show(combobox);
+        try
+        {
+            combobox.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            // Avalonia.Native raises a macOS accessibility notification with a nil value for an empty live region
+            // and the app terminates, so the announcer only ever holds a message.
+            var announcer = combobox.GetVisualDescendants().OfType<TextBlock>().First(t => t.Name == Combobox.AnnouncerPart);
+            announcer.Text.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

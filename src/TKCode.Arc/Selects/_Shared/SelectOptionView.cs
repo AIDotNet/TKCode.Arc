@@ -177,6 +177,8 @@ internal sealed class SelectOptionView : Control
         VisualChildren.Add(_highlight);
         VisualChildren.Add(_rows);
         LogicalChildren.Add(_highlight);
+        // A theme that sets the default radius raises no change, so the highlight would stay square.
+        _highlight.CornerRadius = RowCornerRadius;
         EffectiveViewportChanged += (_, e) =>
         {
             _viewport = e.EffectiveViewport;

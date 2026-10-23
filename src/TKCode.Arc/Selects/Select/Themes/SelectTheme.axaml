@@ -60,6 +60,7 @@
                                       MarginToAnchor="4"
                                       EnterOffset="6"
                                       EnterScale="0.97"
+                                      IsExitInstant="True"
                                       IsLightDismissEnabled="True"
                                       TakesFocusFromNativeControl="False"
                                       WindowManagerAddShadowHint="False">

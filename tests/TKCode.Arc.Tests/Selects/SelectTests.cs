@@ -5,6 +5,8 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc.Tests.Selects;
 
@@ -225,6 +227,45 @@ public class SelectTests
             options.Bounds.Height.ShouldBe(5000 * 36);
             var scroll = options.FindAncestorOfType<ScrollViewer>()!;
             scroll.Viewport.Height.ShouldBeLessThanOrEqualTo(320);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Hover_Highlight_Takes_The_Option_Corner_Radius_Of_The_Theme()
+    {
+        var select = Regions();
+        var window = Show(select);
+        try
+        {
+            select.Open();
+            Dispatcher.UIThread.RunJobs();
+            var options = TestHelpers.Descendant<SelectOptionView>(window);
+            options.Highlight.CornerRadius.ShouldBe(new CornerRadius(14));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(ArcMotionLevel.Full, false)]
+    [InlineData(ArcMotionLevel.Reduced, true)]
+    public void The_Menu_Closes_Without_An_Exit_Motion_Only_At_The_Full_Level(ArcMotionLevel level, bool fades)
+    {
+        var select = Regions();
+        ArcMotion.SetLevel(select, level);
+        var window = Show(select);
+        try
+        {
+            select.Open();
+            Dispatcher.UIThread.RunJobs();
+            var popup = TestHelpers.Descendant<ArcPopup>(select);
+            (popup.CloseMotion is not null).ShouldBe(fades);
         }
         finally
         {

@@ -26,6 +26,13 @@ public class ArcPopup : AtomPopup
     public static readonly StyledProperty<bool> IsInstantProperty =
         AvaloniaProperty.Register<ArcPopup, bool>(nameof(IsInstant));
 
+    /// <summary>
+    /// When true the popup closes without an exit motion at the Full motion level (a select's list vanishes as the
+    /// value is committed); Reduced still fades out.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsExitInstantProperty =
+        AvaloniaProperty.Register<ArcPopup, bool>(nameof(IsExitInstant));
+
     public double EnterOffset
     {
         get => GetValue(EnterOffsetProperty);
@@ -42,6 +49,13 @@ public class ArcPopup : AtomPopup
     {
         get => GetValue(IsInstantProperty);
         set => SetValue(IsInstantProperty, value);
+    }
+
+    /// <inheritdoc cref="IsExitInstantProperty"/>
+    public bool IsExitInstant
+    {
+        get => GetValue(IsExitInstantProperty);
+        set => SetValue(IsExitInstantProperty, value);
     }
 
     static ArcPopup()
@@ -204,7 +218,7 @@ public class ArcPopup : AtomPopup
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         if (change.Property == PlacementProperty || change.Property == RequestedPlacementProperty || change.Property == EnterOffsetProperty ||
-            change.Property == EnterScaleProperty || change.Property == IsInstantProperty ||
+            change.Property == EnterScaleProperty || change.Property == IsInstantProperty || change.Property == IsExitInstantProperty ||
             change.Property == ArcMotion.LevelProperty || change.Property == PlacementTargetProperty)
         {
             UpdateMotions();
@@ -233,7 +247,9 @@ public class ArcPopup : AtomPopup
         var offset = direction * EnterOffset;
         OpenMotion = new ArcPopupEnterMotion(origin, offset, EnterScale, fadeOnly,
             duration: fadeOnly ? ArcMotionPresets.Instant : ArcMotionPresets.Fast);
-        CloseMotion = new ArcPopupExitMotion(origin, 0.98, level == ArcMotionLevel.Reduced);
+        CloseMotion = IsExitInstant && level == ArcMotionLevel.Full
+            ? null
+            : new ArcPopupExitMotion(origin, 0.98, level == ArcMotionLevel.Reduced);
     }
 
     /// <summary>Transform origin on the anchor side and the direction the surface travels from.</summary>
