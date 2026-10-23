@@ -6,6 +6,15 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
+## Unreleased
+
+### Fixed
+
+- **Combobox**: a focused field drew a dark 3px ring around a dark border. Arc's focused combobox only turns its border
+  to `BorderStrong`; its halo is transparent, so the ring is gone.
+- **Gallery**: the examples stage no longer clips a view to its bounds, which cut off the left side of the inline edit
+  frame and of the focus rings that sit a few pixels outside a control.
+
 ## 0.3.0-preview.3 - 2026-10-23
 
 ### Fixed

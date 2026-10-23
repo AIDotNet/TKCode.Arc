@@ -261,4 +261,23 @@ public class ComboboxTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Focused_Field_Only_Strengthens_Its_Border()
+    {
+        var combobox = Zones();
+        var window = Show(combobox);
+        try
+        {
+            combobox.FocusInput();
+            Dispatcher.UIThread.RunJobs();
+            // Arc's focus halo is transparent: no ring is drawn around the field.
+            var ring = combobox.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_FocusRing");
+            ring.IsVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

@@ -160,7 +160,11 @@ public sealed class GalleryDemoView : StackPanel
     {
         if (_demo is not null)
         {
-            return _demo.Create();
+            var view = _demo.Create();
+            // A UserControl clips to its bounds, which cut off whatever a control draws outside its own box (the
+            // inline edit's frame and the focus rings sit a few pixels past it); the stage has room around the view.
+            view.ClipToBounds = false;
+            return view;
         }
         // The generator rejects unknown demos (GDOC010), so this only shows for a page edited while the app runs.
         var missing = GalleryUi.Mono(DemoId, ArcDesignTokenKind.TextMuted);

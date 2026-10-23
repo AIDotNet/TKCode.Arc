@@ -346,7 +346,7 @@ highlighted option and closes it, and `Tab` closes it and moves focus on.
 - The clear button is named "Clear selection". The status row under the options is a polite live region, so a change
   in the result count or the empty message is announced without moving focus.
 - Caret, selection, IME composition and clipboard shortcuts are the native `TextBox` behavior.
-- The focus ring is drawn around the field, 3 px outside its edge.
+- A focused field only strengthens its border (`BorderStrong`); there is no focus ring around it.
 
 ### Keyboard
 

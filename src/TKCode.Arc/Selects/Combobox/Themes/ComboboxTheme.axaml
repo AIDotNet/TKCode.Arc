@@ -154,11 +154,9 @@
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>
+        <!-- Arc's focused combobox only strengthens its border (BorderStrong); its 3px halo is transparent. -->
         <Style Selector="^:focus-within /template/ Border#PART_Frame">
-            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
-        </Style>
-        <Style Selector="^:focus-within /template/ Border#PART_FocusRing">
-            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
         <Style Selector="^:open /template/ Border#PART_Frame">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
