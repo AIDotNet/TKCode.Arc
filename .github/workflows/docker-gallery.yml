@@ -1,7 +1,7 @@
 name: Docker gallery
 
 # Builds the Gallery WebAssembly host (Dockerfile) on every push and pushes the image to GHCR.
-# Pull requests are built but not pushed. Image: ghcr.io/atomuicommunity/tkcode-arc-gallery.
+# Pull requests are built but not pushed. Image: ghcr.io/aidotnet/tkcode-arc-gallery.
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/atomuicommunity/tkcode-arc-gallery
+          images: ghcr.io/aidotnet/tkcode-arc-gallery
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -88,7 +88,7 @@ jobs:
 
       - name: Run the image
         run: |
-          IMAGE="ghcr.io/atomuicommunity/tkcode-arc-gallery:sha-${GITHUB_SHA::7}"
+          IMAGE="ghcr.io/aidotnet/tkcode-arc-gallery:sha-${GITHUB_SHA::7}"
           docker pull "$IMAGE"
           docker run -d --name gallery -p 8080:80 "$IMAGE"
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ > /dev/null && break; sleep 1; done
