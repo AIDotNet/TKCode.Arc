@@ -43,7 +43,7 @@ assistive technology. The default icon is a folder.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:EmptyState Label="Projects"
                     Title="No projects yet"
                     Description="Projects keep your files, people and conversations in one place.">

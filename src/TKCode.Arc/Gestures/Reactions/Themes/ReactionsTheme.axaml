@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     x:ClassModifier="internal">
     <!-- The bar wraps (row gap space-2, column gap 6px); pills and the add button are 32px pills. -->
     <ControlTheme x:Key="{x:Type arc:Reactions}" TargetType="arc:Reactions">

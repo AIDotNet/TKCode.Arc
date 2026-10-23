@@ -1,7 +1,7 @@
 ---
 title: 日曆
 summary: 以清楚緊湊的月檢視瀏覽日期。
-source-hash: 5c56dc9a7fd5
+source-hash: 63a0570276ad
 ---
 
 <Demo name="SingleDate" />
@@ -28,7 +28,7 @@ source-hash: 5c56dc9a7fd5
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Calendar ShowToday="True" />
 </UserControl>
 ```

@@ -52,7 +52,6 @@ public class TagInputTests
         try
         {
             var frame = Frame(input);
-            frame.HasFocusRing.ShouldBeTrue();
             frame.Bounds.Height.ShouldBe(44, 0.5);
             var panel = Panel(input);
             panel.Bounds.Height.ShouldBe(42, 0.5);
@@ -235,6 +234,27 @@ public class TagInputTests
             Dispatcher.UIThread.RunJobs();
             input.PickedTag.ShouldBeNull();
             input.Value.ShouldBe(["a", "b"]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Focus_Darkens_The_Border_And_Draws_No_Halo()
+    {
+        var input = new TagInput { Label = "Tags", Width = 420 };
+        var window = TestHelpers.Show(input);
+        try
+        {
+            var frame = Frame(input);
+            input.FocusEditor().ShouldBeTrue();
+            Dispatcher.UIThread.RunJobs();
+            frame.Classes.ShouldContain(FieldFrame.FocusActivePseudoClass);
+            TestHelpers.ColorOf(frame.BorderBrush).ShouldBe(ArcTokens.GetColor(input, DesignTokens.ArcDesignTokenKind.Foreground));
+            // Arc's 3px halo is a transparent focus-ring colour: focus is the border colour alone.
+            frame.GetVisualDescendants().OfType<Border>().ShouldNotContain(b => b.Name == "PART_FocusRing");
         }
         finally
         {

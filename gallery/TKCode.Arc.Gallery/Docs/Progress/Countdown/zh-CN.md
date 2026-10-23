@@ -1,7 +1,7 @@
 ---
 title: 倒计时
 summary: 发布倒计时，数字逐位滚动，归零时转为实时状态。
-source-hash: ff9aa97fdedb
+source-hash: 368fdfb00407
 ---
 
 <Demo name="Launch" />
@@ -28,7 +28,7 @@ source-hash: ff9aa97fdedb
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Countdown Label="距离发布" />
 </UserControl>
 ```

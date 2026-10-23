@@ -41,7 +41,7 @@ set in code or bound from a view model.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Reactions Label="Reactions">
         <arc:ReactionOption Id="like" Label="Like" />
         <arc:ReactionOption Id="love" Label="Love" />

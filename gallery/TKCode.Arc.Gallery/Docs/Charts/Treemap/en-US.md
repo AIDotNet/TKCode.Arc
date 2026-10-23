@@ -40,7 +40,7 @@ and it lets the reader drill into a branch and back out without leaving the scre
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Treemap Label="Revenue"
                  ColorLabel="Growth"
                  ItemsSource="{Binding Regions}"

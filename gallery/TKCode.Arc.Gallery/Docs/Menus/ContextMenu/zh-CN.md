@@ -1,7 +1,7 @@
 ---
 title: 上下文菜单
 summary: 将次要操作放在所选对象附近。
-source-hash: 118edf57bbce
+source-hash: d5bb9535fbfa
 ---
 
 <Demo name="FileTile" />
@@ -33,7 +33,7 @@ source-hash: 118edf57bbce
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ContextMenu Label="Q3 report.pdf 的操作">
         <Border Width="220" Height="120" Padding="16" CornerRadius="18" BorderThickness="1">
             <TextBlock Text="Q3 report.pdf" />

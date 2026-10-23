@@ -1,7 +1,7 @@
 ---
 title: 矩形樹狀圖
 summary: 方形化的矩形樹狀圖：點擊即可下鑽，色塊放大填滿檢視，麵包屑可返回，指標變化時每個色塊平順過渡。
-source-hash: d8e4665db708
+source-hash: 129ff89e181a
 ---
 
 <Demo name="RevenueByRegion" />
@@ -28,7 +28,7 @@ source-hash: d8e4665db708
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Treemap Label="營收"
                  ColorLabel="成長率"
                  ItemsSource="{Binding Regions}"

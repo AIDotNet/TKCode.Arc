@@ -42,7 +42,7 @@ changes. Values that are zero or less are ignored.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DonutChart Label="Visits by source"
                     Unit="visits"
                     TotalLabel="Total"

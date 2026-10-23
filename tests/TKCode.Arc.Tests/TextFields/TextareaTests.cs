@@ -20,7 +20,6 @@ public class TextareaTests
             textarea.TextWrapping.ShouldBe(Avalonia.Media.TextWrapping.Wrap);
             var frame = textarea.GetVisualDescendants().OfType<FieldFrame>().First();
             frame.Bounds.Height.ShouldBe(110, 0.5);
-            frame.HasFocusRing.ShouldBeTrue();
             frame.Padding.Top.ShouldBe(12);
         }
         finally
@@ -90,18 +89,19 @@ public class TextareaTests
     }
 
     [AvaloniaFact]
-    public void Focus_Shows_The_Focus_Ring()
+    public void Focus_Darkens_The_Border_And_Draws_No_Halo()
     {
         var textarea = new Textarea { Label = "Notes", Width = 360 };
         var window = TestHelpers.Show(textarea);
         try
         {
-            var ring = textarea.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_FocusRing");
-            ring.Opacity.ShouldBe(0);
+            var frame = textarea.GetVisualDescendants().OfType<FieldFrame>().First();
             textarea.Focus();
             Dispatcher.UIThread.RunJobs();
-            ring.Opacity.ShouldBe(1);
-            ring.BorderThickness.Left.ShouldBe(3);
+            frame.Classes.ShouldContain(FieldFrame.FocusActivePseudoClass);
+            TestHelpers.ColorOf(frame.BorderBrush).ShouldBe(ArcTokens.GetColor(frame, DesignTokens.ArcDesignTokenKind.Foreground));
+            // Arc's 3px halo is a transparent focus-ring colour: focus is the border colour alone.
+            frame.GetVisualDescendants().OfType<Border>().ShouldNotContain(b => b.Name == "PART_FocusRing");
         }
         finally
         {

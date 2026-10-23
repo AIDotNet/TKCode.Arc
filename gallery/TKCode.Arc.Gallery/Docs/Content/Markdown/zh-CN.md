@@ -1,7 +1,7 @@
 ---
 title: Markdown
 summary: 以 Arc 的风格渲染 Markdown 文档与流式回复，代码块使用 Arc 的语法配色高亮。
-source-hash: 996fd7825241
+source-hash: a32d466da5e0
 ---
 
 <Demo name="Document" />
@@ -30,7 +30,7 @@ source-hash: 996fd7825241
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Markdown Text="## 发布说明&#10;&#10;Arc **0.4** 新增 `Markdown`。" />
 </UserControl>
 ```
@@ -92,6 +92,8 @@ public sealed partial class ReleaseNotesViewModel : ObservableObject
 markdown.Append(chunk);   // 词元到达时调用，在 UI 线程上执行
 markdown.Complete();      // 回复结束时调用
 ```
+
+三个属性调整追加文字的显示方式。`RevealFadeDuration` 设定每批新文字在完整动效下的淡入时长（为 null 时使用 Arc 的标准时长）；`RevealFadeInReducedMotion` 可在减少动效下关闭淡入，适合持续增长的回复；`IsPaced` 设为 false 时，每次追加的内容会作为一批立即显示，适用于宿主已自行控制节奏的情况，例如按固定时钟逐个整词放出。
 
 `Complete` 之后再调用 `Append` 会开始新的回复，并替换当前显示的内容：此后 `Text` 读取为 `null`。你自己创建的流可以改为设置到 `Stream` 上，例如由工作线程通过 `MarkdownStream.Push` 写入、并以 `Complete` 结束的流。控件在 UI 线程上应用快照，因此工作线程只推送文字，从不触碰控件。
 

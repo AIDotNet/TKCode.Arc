@@ -1,7 +1,7 @@
 ---
 title: 确认变形
 summary: 一个破坏性按钮，可变形为就地确认、加载指示与带撤销的结果。
-source-hash: 25d51b177954
+source-hash: b71b3d8e972f
 ---
 
 <Demo name="Press" />
@@ -30,7 +30,7 @@ source-hash: 25d51b177954
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ConfirmMorph Label="删除项目" Prompt="删除此项目？" />
 </UserControl>
 ```

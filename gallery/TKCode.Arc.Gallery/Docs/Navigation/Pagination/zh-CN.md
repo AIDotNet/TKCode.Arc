@@ -1,7 +1,7 @@
 ---
 title: 分页
 summary: 在有明确边界的长集合中翻页。
-source-hash: 091b6d902eee
+source-hash: b2a74f41b993
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: 091b6d902eee
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Pagination PageCount="{Binding PageCount}"
                     CurrentPage="{Binding CurrentPage, Mode=TwoWay}" />
 </UserControl>

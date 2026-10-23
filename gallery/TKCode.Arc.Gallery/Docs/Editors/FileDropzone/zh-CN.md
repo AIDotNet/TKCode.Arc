@@ -1,7 +1,7 @@
 ---
 title: 文件拖放区
 summary: 面向拖放一个或多个文件的大面积投放区域。
-source-hash: 7ddba2d27df4
+source-hash: aefec8c96f7a
 ---
 
 <Demo name="Upload" />
@@ -28,7 +28,7 @@ source-hash: 7ddba2d27df4
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:FileDropzone Label="添加文件"
                       Description="将文件拖放到此处，或从设备中选择"
                       Accept=".pdf,image/*"

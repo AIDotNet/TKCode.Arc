@@ -515,6 +515,13 @@ public abstract class ChartBase : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _paletteDirty = true;
+        if (_itemsUnsubscribed && _observedItems is not null)
+        {
+            // The collection may have changed while the chart was away: listen again and rebuild once.
+            _itemsUnsubscribed = false;
+            _observedItems.CollectionChanged += OnItemsCollectionChanged;
+            InvalidateData();
+        }
         if (!_revealed)
         {
             _visibility?.Dispose();
@@ -533,7 +540,15 @@ public abstract class ChartBase : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         _visibility?.Dispose();
         _visibility = null;
+        // A view-model collection that outlives the page would keep this chart alive and rebuild its data while it is not shown.
+        if (_observedItems is not null && !_itemsUnsubscribed)
+        {
+            _observedItems.CollectionChanged -= OnItemsCollectionChanged;
+            _itemsUnsubscribed = true;
+        }
     }
+
+    private bool _itemsUnsubscribed;
 
     private void OnVisibilityChanged(object? sender, bool visible)
     {
@@ -1022,6 +1037,7 @@ public abstract class ChartBase : TemplatedControl
                 _observedItems.CollectionChanged -= OnItemsCollectionChanged;
             }
             _observedItems = change.NewValue as INotifyCollectionChanged;
+            _itemsUnsubscribed = false;
             if (_observedItems is not null)
             {
                 _observedItems.CollectionChanged += OnItemsCollectionChanged;

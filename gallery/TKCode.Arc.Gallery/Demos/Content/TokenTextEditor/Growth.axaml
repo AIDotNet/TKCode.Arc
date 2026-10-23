@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TokenTextEditorGrowthDemo">
+    <StackPanel Spacing="8" MaxWidth="480" Margin="0,12">
+        <!-- One line to start, up to four lines, then it scrolls. Enter submits; Shift+Enter adds a line. -->
+        <Border BorderThickness="1" CornerRadius="12" Padding="12,8" BorderBrush="#40808080">
+            <arc:TokenTextEditor x:Name="Editor" Placeholder="Write a few lines, then press Enter" MinLines="1" MaxLines="4" />
+        </Border>
+        <TextBlock x:Name="Result" FontSize="12" Opacity="0.7" TextWrapping="Wrap" Text="Nothing submitted yet." />
+    </StackPanel>
+</UserControl>

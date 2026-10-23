@@ -1,7 +1,7 @@
 ---
 title: 麵包屑
 summary: 顯示頁面在階層結構中的位置。
-source-hash: c0cd6cdda7cd
+source-hash: b4c233743e1b
 ---
 
 <Demo name="Default" />
@@ -30,7 +30,7 @@ source-hash: c0cd6cdda7cd
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Breadcrumb>
         <arc:BreadcrumbItem Content="工作區" />
         <arc:BreadcrumbItem Content="設定" />

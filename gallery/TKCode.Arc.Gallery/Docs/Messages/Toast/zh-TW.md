@@ -1,7 +1,7 @@
 ---
 title: 輕提示
 summary: 已完成背景操作的簡短確認。
-source-hash: 3d48d524faf8
+source-hash: 77303346d233
 ---
 
 <Demo name="LocalToast" />
@@ -28,7 +28,7 @@ source-hash: 3d48d524faf8
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Toast Title="變更已儲存"
                Description="已同步到你的所有裝置。"
                VerticalAlignment="Bottom" />

@@ -39,7 +39,7 @@ see that a figure moved and by roughly how much, without the page flashing or th
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:AnimatedCounter Label="Revenue"
                          Prefix="$"
                          Value="{Binding Revenue}" />

@@ -1,7 +1,7 @@
 ---
 title: 分段控制項
 summary: 在一組相關的檢視之間切換。
-source-hash: 3c08999d73b0
+source-hash: 29d83a4e5cfa
 ---
 
 <Demo name="ViewSwitcher" />
@@ -30,7 +30,7 @@ source-hash: 3c08999d73b0
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SegmentedControl AutomationProperties.Name="範圍" SelectedValue="week">
         <arc:SegmentedOption Value="day" Label="日" />
         <arc:SegmentedOption Value="week" Label="週" />

@@ -1,7 +1,7 @@
 ---
 title: 可排序数据表格
 summary: 通过可排序的列比较结构化记录。
-source-hash: 70402f6954a3
+source-hash: 8cb87c974275
 ---
 
 <Demo name="Projects" />
@@ -262,7 +262,7 @@ public partial class InvoicesViewModel : ObservableObject
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="560">
     <arc:SortableDataTable Caption="Export history"

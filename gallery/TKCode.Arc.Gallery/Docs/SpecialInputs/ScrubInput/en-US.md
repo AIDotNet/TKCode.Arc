@@ -37,7 +37,7 @@ design tool's inspector, so it suits any screen where a row of numbers is adjust
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ScrubInput Label="X" Value="120" Unit="px" />
 </UserControl>
 ```

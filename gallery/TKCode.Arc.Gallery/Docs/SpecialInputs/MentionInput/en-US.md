@@ -38,7 +38,7 @@ mentions must still point at records the application can notify or link.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MentionInput Label="Comment"
                       Placeholder="Leave a comment. Use @ to mention, # for a channel"
                       MinLines="1"
@@ -275,7 +275,7 @@ answered sits above it for context. The reply mentions two people and one channe
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic">
     <StackPanel Width="600" Spacing="14">
         <StackPanel Spacing="4">

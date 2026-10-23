@@ -35,7 +35,7 @@ Each action is an `ExpandingButtonGroupItem`. The group needs a `Label`, which i
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandingButtonGroup Label="Message actions">
         <arc:ExpandingButtonGroupItem Label="Reply" />
         <arc:ExpandingButtonGroupItem Label="Send" DoneLabel="Sent" />

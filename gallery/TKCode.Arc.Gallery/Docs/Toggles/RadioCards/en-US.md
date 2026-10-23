@@ -41,7 +41,7 @@ text, which is shown at the end of the card.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RadioCards SelectedValue="pro">
         <arc:RadioCardOption Value="starter" Label="Starter" Description="For individuals getting started." Meta="$0" />
         <arc:RadioCardOption Value="pro" Label="Pro" Description="Unlimited projects and priority support." Meta="$12" />

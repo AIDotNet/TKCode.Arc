@@ -268,4 +268,79 @@ public class MarkdownHostTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Appended_Text_Fades_In_Over_The_Reveal_Duration_At_Full_Motion()
+    {
+        var markdown = new Markdown { RevealFadeDuration = TimeSpan.FromMilliseconds(150) };
+        var window = TestHelpers.Show(markdown, Motion.ArcMotionLevel.Full);
+        try
+        {
+            markdown.Append("Hello");
+            markdown.Stream!.State.FadeDuration.ShouldBe(TimeSpan.FromMilliseconds(150));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Fade_Defaults_To_The_Standard_Duration_And_Can_Be_Turned_Off_At_Reduced_Motion()
+    {
+        var markdown = new Markdown();
+        var window = TestHelpers.Show(markdown, Motion.ArcMotionLevel.Full);
+        try
+        {
+            markdown.Append("One");
+            markdown.Stream!.State.FadeDuration.ShouldBe(Motion.ArcMotionPresets.Standard);
+        }
+        finally
+        {
+            window.Close();
+        }
+
+        var reduced = new Markdown { RevealFadeInReducedMotion = false };
+        var reducedWindow = TestHelpers.Show(reduced, Motion.ArcMotionLevel.Reduced);
+        try
+        {
+            reduced.Append("Two");
+            reduced.Stream!.State.FadeDuration.ShouldBe(TimeSpan.Zero);
+        }
+        finally
+        {
+            reducedWindow.Close();
+        }
+
+        var kept = new Markdown();
+        var keptWindow = TestHelpers.Show(kept, Motion.ArcMotionLevel.Reduced);
+        try
+        {
+            kept.Append("Three");
+            kept.Stream!.State.FadeDuration.ShouldBe(Motion.ArcMotionPresets.Fast);
+        }
+        finally
+        {
+            keptWindow.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task An_Unpaced_Markdown_Shows_Each_Appended_Piece_At_Once()
+    {
+        var markdown = new Markdown { IsPaced = false };
+        var window = Show(markdown);
+        try
+        {
+            markdown.Append("# Title\n\n");
+            markdown.Append("Body text");
+            markdown.Complete();
+            await Ready(markdown);
+            markdown.GetOutline().Select(o => o.Text).ShouldBe(["Title"]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

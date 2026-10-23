@@ -41,7 +41,7 @@ inside a button and name the button.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Button Variant="Ghost" AutomationProperties.Name="Open menu">
         <arc:IconMorph Kind="Menu" />
     </arc:Button>

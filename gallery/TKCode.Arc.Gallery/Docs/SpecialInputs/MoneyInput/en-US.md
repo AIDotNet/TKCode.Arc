@@ -38,7 +38,7 @@ will be charged, refunded, budgeted or transferred, and where the currency may n
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MoneyInput Label="Amount"
                     Currency="USD"
                     Minimum="5"
@@ -223,7 +223,7 @@ days"), which is the reason a person needs to read the field.
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic">
     <StackPanel Width="620" Spacing="20">
         <TextBlock Text="Refund for payment ch_2026_0412"

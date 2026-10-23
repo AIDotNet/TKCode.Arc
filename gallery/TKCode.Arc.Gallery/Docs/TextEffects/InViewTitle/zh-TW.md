@@ -1,7 +1,7 @@
 ---
 title: 可視範圍內標題
 summary: 標題隨捲動進入可視範圍時逐步呈現。
-source-hash: 40e209892575
+source-hash: 1f2c42a25b38
 ---
 
 <Demo name="Variants" />
@@ -27,7 +27,7 @@ source-hash: 40e209892575
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:InViewTitle Text="模糊效果逐字變清晰"
                      Variant="Blur" />
 </UserControl>

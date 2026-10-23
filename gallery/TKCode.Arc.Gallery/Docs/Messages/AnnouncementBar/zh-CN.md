@@ -1,7 +1,7 @@
 ---
 title: 公告栏
 summary: 顶部横幅，轮播消息、倒计时，关闭时平滑收起。
-source-hash: dc63d15d468c
+source-hash: 2a3b2be4f862
 ---
 
 <Demo name="RotatingMessages" />
@@ -29,7 +29,7 @@ source-hash: dc63d15d468c
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:AnnouncementBar>
         <arc:AnnouncementBar.Messages>
             <arc:Announcement Id="launch"

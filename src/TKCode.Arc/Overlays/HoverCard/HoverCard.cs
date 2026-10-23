@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -8,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -38,7 +40,10 @@ public class HoverCard : ContentControl
         AvaloniaProperty.Register<HoverCard, Control?>(nameof(Trigger));
 
     public static readonly StyledProperty<bool> IsOpenProperty =
-        AvaloniaProperty.Register<HoverCard, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<HoverCard, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay, coerce: CoerceIsOpen);
+
+    public static readonly StyledProperty<bool> OpensOnFocusProperty =
+        AvaloniaProperty.Register<HoverCard, bool>(nameof(OpensOnFocus));
 
     public static readonly StyledProperty<PopoverPlacement> PlacementProperty =
         AvaloniaProperty.Register<HoverCard, PopoverPlacement>(nameof(Placement), PopoverPlacement.Bottom);
@@ -58,6 +63,9 @@ public class HoverCard : ContentControl
     public static readonly StyledProperty<double> OffsetProperty =
         AvaloniaProperty.Register<HoverCard, double>(nameof(Offset), 8);
 
+    public static readonly StyledProperty<Thickness> CardPaddingProperty =
+        AvaloniaProperty.Register<HoverCard, Thickness>(nameof(CardPadding), new Thickness(16));
+
     /// <summary>Attaches a hover card to any control.</summary>
     public static readonly AttachedProperty<HoverCard?> AttachProperty =
         AvaloniaProperty.RegisterAttached<HoverCard, Control, HoverCard?>("Attach");
@@ -69,8 +77,19 @@ public class HoverCard : ContentControl
     /// <summary>The focusable trigger shown in place of the card (a mention, an avatar, a link).</summary>
     public Control? Trigger { get => GetValue(TriggerProperty); set => SetValue(TriggerProperty, value); }
 
-    /// <summary>Open state (two-way); setting it opens at once without the delay.</summary>
+    /// <summary>
+    /// Open state (two-way): it follows the card when hover, focus, a click or Escape opens or closes it, and setting it
+    /// opens or closes the card at once without the delay; any write cancels a pending open or close.
+    /// </summary>
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
+
+    /// <summary>
+    /// Opens the card when keyboard focus (Tab or the arrow keys) lands on the trigger or inside it, after
+    /// <see cref="OpenDelay"/> (zero opens at once), and closes it as soon as focus leaves unless the pointer rests on the
+    /// trigger or the card; focus from a click or from code does not open it. Off by default, where Tab focus opens
+    /// the card at once and losing focus starts the <see cref="CloseDelay"/> grace.
+    /// </summary>
+    public bool OpensOnFocus { get => GetValue(OpensOnFocusProperty); set => SetValue(OpensOnFocusProperty, value); }
 
     /// <summary>Preferred side (default Bottom).</summary>
     public PopoverPlacement Placement { get => GetValue(PlacementProperty); set => SetValue(PlacementProperty, value); }
@@ -78,7 +97,7 @@ public class HoverCard : ContentControl
     /// <summary>Alignment along the trigger edge (default Start).</summary>
     public PopoverAlignment Alignment { get => GetValue(AlignmentProperty); set => SetValue(AlignmentProperty, value); }
 
-    /// <summary>Hover time before the first card opens (default 500ms).</summary>
+    /// <summary>Hover time before the first card opens (default 500ms); with <see cref="OpensOnFocus"/> also the wait after keyboard focus.</summary>
     public TimeSpan OpenDelay { get => GetValue(OpenDelayProperty); set => SetValue(OpenDelayProperty, value); }
 
     /// <summary>Grace after the pointer leaves, so it can travel into the card (default 140ms).</summary>
@@ -89,6 +108,9 @@ public class HoverCard : ContentControl
 
     /// <summary>Gap to the trigger (Arc: 8).</summary>
     public double Offset { get => GetValue(OffsetProperty); set => SetValue(OffsetProperty, value); }
+
+    /// <summary>Space inside the card border (Arc: 16; a chat's citation preview uses 14 16).</summary>
+    public Thickness CardPadding { get => GetValue(CardPaddingProperty); set => SetValue(CardPaddingProperty, value); }
 
     #endregion
 
@@ -122,12 +144,26 @@ public class HoverCard : ContentControl
     private bool _parentedToTarget;
     private PointerType _lastPointer = PointerType.Mouse;
     private string? _previousHelpText;
+    private bool _described;
     private DismissReason _pendingReason = DismissReason.Programmatic;
 
     static HoverCard()
     {
         AttachProperty.Changed.AddClassHandler<Control>(OnAttachChanged);
         FocusableProperty.OverrideDefaultValue<HoverCard>(false);
+    }
+
+    /// <summary>
+    /// Every write of <see cref="IsOpen"/>, even of the value it already has (which raises no change), cancels a pending
+    /// delayed open or close; the coerce callback is the one hook that sees such writes.
+    /// </summary>
+    private static bool CoerceIsOpen(AvaloniaObject sender, bool value)
+    {
+        if (sender is HoverCard card)
+        {
+            card.StopTimers();
+        }
+        return value;
     }
 
     /// <summary>True while any card is open or one closed less than 300ms ago.</summary>
@@ -277,17 +313,46 @@ public class HoverCard : ContentControl
         {
             OpenNow();
         }
-        else if (e.Key == Key.Escape && IsOpen)
+        else if (e.Key == Key.Escape)
         {
-            e.Handled = true;
-            _dismissed = true;
-            _pendingReason = DismissReason.Escape;
-            Hide();
+            if (IsOpen)
+            {
+                // Focus stays on the trigger; only a key that closed the card is handled, so the next Escape reaches the host.
+                e.Handled = true;
+                _dismissed = true;
+                _pendingReason = DismissReason.Escape;
+                Hide();
+            }
+            else if (IsOpenScheduled)
+            {
+                // Nothing is open yet: the wait is cancelled and the card stays closed, but the key goes on to the host.
+                _openTimer!.Stop();
+                _dismissed = true;
+            }
         }
     }
 
     private void OnTriggerGotFocus(object? sender, FocusChangedEventArgs e)
     {
+        if (OpensOnFocus)
+        {
+            // Focus-visible rule: Tab and arrow-key focus open after the delay; a click or code focus does not.
+            if (e.NavigationMethod is not (NavigationMethod.Tab or NavigationMethod.Directional) || _focusInside)
+            {
+                return;
+            }
+            _focusInside = true;
+            _dismissed = false;
+            if (OpenDelay <= TimeSpan.Zero)
+            {
+                OpenNow();
+            }
+            else
+            {
+                ScheduleOpen();
+            }
+            return;
+        }
         // Keyboard focus opens at once; pointer focus does not.
         if (e.NavigationMethod != NavigationMethod.Tab)
         {
@@ -299,13 +364,44 @@ public class HoverCard : ContentControl
 
     private void OnTriggerLostFocus(object? sender, FocusChangedEventArgs e)
     {
+        if (OpensOnFocus)
+        {
+            OnFocusLeft(e);
+            return;
+        }
         _focusInside = false;
         _dismissed = false;
         ScheduleClose();
     }
 
+    private void OnFocusLeft(FocusChangedEventArgs e)
+    {
+        // Focus moving between parts of the trigger (or into the card) has not left.
+        if (e.NewFocusedElement is Visual next && (Contains(_hookedTrigger, next) || Contains(_surface, next)))
+        {
+            return;
+        }
+        _focusInside = false;
+        _dismissed = false;
+        if (_insideTrigger || _insideCard)
+        {
+            // The pointer keeps the card (and a pending hover open); leaving with the pointer closes it as usual.
+            return;
+        }
+        // Keyboard focus has no travel into the card to wait for: a pending open is dropped and an open card closes now.
+        StopTimers();
+        if (IsOpen)
+        {
+            Hide();
+        }
+    }
+
+    private static bool Contains(Visual? root, Visual element) =>
+        root is not null && (ReferenceEquals(root, element) || root.IsVisualAncestorOf(element));
+
     private void OnTriggerDetached(object? sender, VisualTreeAttachmentEventArgs e)
     {
+        _focusInside = false;
         StopTimers();
         if (IsOpen)
         {
@@ -437,12 +533,16 @@ public class HoverCard : ContentControl
         {
             return;
         }
-        _surface = new PopoverSurface { Focusable = false, MinWidth = 0, MaxWidth = double.PositiveInfinity };
+        _surface = new HoverCardSurface { Focusable = false, MinWidth = 0, MaxWidth = double.PositiveInfinity };
+        // Focus never enters the card: Tab passes over anything focusable inside it.
+        KeyboardNavigation.SetTabNavigation(_surface, KeyboardNavigationMode.None);
         _surface.Bind(WidthProperty, this.GetObservable(CardWidthProperty));
+        _surface.Bind(PaddingProperty, this.GetObservable(CardPaddingProperty));
         _surface.Bind(ContentProperty, this.GetObservable(ContentProperty));
         _surface.Bind(ContentTemplateProperty, this.GetObservable(ContentTemplateProperty));
         _surface.PointerEntered += OnCardEntered;
         _surface.PointerExited += OnCardExited;
+        _surface.Loaded += (_, _) => DescribeLate();
         _presence = new OverlayAnchoredPresence(_surface, OverlayAnchoredMotion.HoverCard);
         _presence.Popup.TakesFocusFromNativeControl = false;
         LogicalChildren.Add(_presence.Popup);
@@ -494,9 +594,11 @@ public class HoverCard : ContentControl
         }, (OverlayAnchorAlign)(int)Alignment, Offset, _instant);
         // No aria-describedby in Avalonia: the card summary rides on the trigger's help text while open.
         _previousHelpText = AutomationProperties.GetHelpText(anchor);
+        _described = false;
         if (Summary() is { Length: > 0 } summary)
         {
             AutomationProperties.SetHelpText(anchor, summary);
+            _described = true;
         }
         Opened?.Invoke(this, EventArgs.Empty);
     }
@@ -505,8 +607,58 @@ public class HoverCard : ContentControl
     {
         string text => text,
         HoverCardProfile profile => string.IsNullOrEmpty(profile.Role) ? profile.DisplayName : $"{profile.DisplayName}, {profile.Role}",
-        _ => AutomationProperties.GetName(this)
+        _ => AutomationProperties.GetName(this) is { Length: > 0 } name ? name : ContentText()
     };
+
+    /// <summary>
+    /// Other content describes itself: its own help text or name, else the text its text blocks show (a templated card
+    /// has those only once laid out, so <see cref="DescribeLate"/> asks again when the surface loads).
+    /// </summary>
+    private string? ContentText()
+    {
+        if (Content is Control content)
+        {
+            if (AutomationProperties.GetHelpText(content) is { Length: > 0 } help)
+            {
+                return help;
+            }
+            if (AutomationProperties.GetName(content) is { Length: > 0 } name)
+            {
+                return name;
+            }
+            return CollectText(content);
+        }
+        return Content is null || _surface is null ? null : CollectText(_surface);
+    }
+
+    private static string? CollectText(Visual root)
+    {
+        StringBuilder? text = null;
+        foreach (var visual in root.GetSelfAndVisualDescendants())
+        {
+            if (visual is TextBlock { IsVisible: true } block && (block.Text ?? block.Inlines?.Text)?.Trim() is { Length: > 0 } part)
+            {
+                text ??= new StringBuilder();
+                if (text.Length > 0)
+                {
+                    text.Append(", ");
+                }
+                text.Append(part);
+            }
+        }
+        return text?.ToString();
+    }
+
+    /// <summary>Fills in a summary that only the laid-out card could give (the surface loads after the card opens).</summary>
+    private void DescribeLate()
+    {
+        if (!IsOpen || _described || Anchor is not { } anchor || Summary() is not { Length: > 0 } summary)
+        {
+            return;
+        }
+        AutomationProperties.SetHelpText(anchor, summary);
+        _described = true;
+    }
 
     private void CloseCore()
     {

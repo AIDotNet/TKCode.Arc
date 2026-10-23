@@ -41,7 +41,7 @@ belong: under the field that owns them, inside a card or a settings section.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:FileDropzone Label="Add files"
                       Description="Drop files here or choose from your device"
                       Accept=".pdf,image/*"

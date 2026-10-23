@@ -1,7 +1,7 @@
 ---
 title: 多选
 summary: 选择多个值，同时保持字段清晰易读。
-source-hash: 612daa4d75a6
+source-hash: 9432ee952782
 ---
 
 <Demo name="Chips" />
@@ -28,7 +28,7 @@ source-hash: 612daa4d75a6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MultiSelect Label="标签"
                      Description="显示在问题卡片上。"
                      Width="320">

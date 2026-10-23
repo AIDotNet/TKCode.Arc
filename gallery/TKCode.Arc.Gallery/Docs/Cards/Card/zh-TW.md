@@ -1,7 +1,7 @@
 ---
 title: 卡片
 summary: 承載一組相關內容與操作的封閉式容器。
-source-hash: 01e3fd1fef02
+source-hash: 5bf71f07b70d
 ---
 
 <Demo name="QuickLook" />
@@ -29,7 +29,7 @@ source-hash: 01e3fd1fef02
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Card Title="港口改版"
               Description="全新的預訂流程與房間頁面。"
               Width="280" />

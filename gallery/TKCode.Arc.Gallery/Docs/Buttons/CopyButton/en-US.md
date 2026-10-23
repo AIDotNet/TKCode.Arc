@@ -41,7 +41,7 @@ Set `Value` to the text that goes to the clipboard. `Label` is the visible text 
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:CopyButton Value="npx arc add copy-button" />
 </UserControl>
 ```

@@ -43,7 +43,7 @@ Use it when the change of appearance should feel deliberate, not abrupt.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ThemeSwitcher Variant="Reveal" />
 </UserControl>
 ```

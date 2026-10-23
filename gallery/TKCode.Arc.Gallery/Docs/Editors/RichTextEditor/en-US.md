@@ -39,7 +39,7 @@ editor, and both follow every edit.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RichTextEditor Markdown="## Notes&#10;&#10;Type **Markdown** as you go, or `/` for blocks." />
 </UserControl>
 ```

@@ -1,7 +1,7 @@
 ---
 title: 時間軸
 summary: 依日期分組、最新在前，追蹤事件的發生經過。
-source-hash: b232d9751747
+source-hash: e3a2c343dc69
 ---
 
 <Demo name="LiveStream" />
@@ -29,7 +29,7 @@ source-hash: b232d9751747
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Timeline Label="發布歷程"
                   Now="2026-10-20T12:00:00+00:00">
         <arc:TimelineEvent Id="build-418"
@@ -182,7 +182,7 @@ timeline.Expand("t2");
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              Width="600">
     <Border Padding="16,12,16,4"
             CornerRadius="26"

@@ -40,7 +40,7 @@ the control shows exactly how far the action has progressed before it commits.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:HoldToConfirm Label="Hold to delete project"
                        ConfirmedLabel="Deleted"
                        Command="{Binding DeleteProject}" />

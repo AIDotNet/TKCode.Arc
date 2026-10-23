@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -195,9 +196,7 @@ internal sealed class CookieConsentSurface : Control, ICustomHitTest
                 control.Effect = null;
                 return;
             }
-            face.Effect ??= new BlurEffect();
-            face.Effect.Radius = v;
-            control.Effect = face.Effect;
+            control.Effect = ArcBlur.Get(v);
         };
         _faces.Add(face);
     }

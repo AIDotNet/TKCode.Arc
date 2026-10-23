@@ -37,7 +37,7 @@ Basic usage sets a `Title` and `Content`. The default `Tone` is `Info`.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Alert Title="Your card expires next month"
                Content="Update your payment method to keep your plan active." />
 </UserControl>

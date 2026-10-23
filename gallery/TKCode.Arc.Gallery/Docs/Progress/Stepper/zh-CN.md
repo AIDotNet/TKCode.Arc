@@ -1,7 +1,7 @@
 ---
 title: 步骤条
 summary: 显示用户在多步骤流程中的位置以及已完成的步骤。
-source-hash: d461c289e033
+source-hash: 8ff6646e8303
 ---
 
 <Demo name="Checkout" />
@@ -30,7 +30,7 @@ source-hash: d461c289e033
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Stepper CurrentIndex="1">
         <arc:Stepper.Steps>
             <arc:StepperStep Label="账号" Description="创建登录信息" />

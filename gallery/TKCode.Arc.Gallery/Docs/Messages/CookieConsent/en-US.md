@@ -36,7 +36,7 @@ Strictly necessary, Preferences, Analytics and Marketing.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <Grid>
         <!-- Page content goes here. -->
         <arc:CookieConsent StorageKey="site-consent" Version="1" />

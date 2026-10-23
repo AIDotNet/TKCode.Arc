@@ -656,12 +656,60 @@ public class SortableDataTable : TemplatedControl
         if (newValue is INotifyCollectionChanged observable)
         {
             _observedSource = observable;
-            observable.CollectionChanged += OnSourceCollectionChanged;
+            if (!_sourcesDetached)
+            {
+                observable.CollectionChanged += OnSourceCollectionChanged;
+            }
         }
         RebuildItems(animate: IsLoaded);
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildItems(animate: IsLoaded);
+
+    private bool _sourcesDetached;
+
+    // A view-model collection that outlives the page would keep the table alive and re-sort it on every change while it
+    // is not shown: the table listens only while attached and catches up once when it comes back.
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        if (_sourcesDetached)
+        {
+            return;
+        }
+        _sourcesDetached = true;
+        if (_observedSource is not null)
+        {
+            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
+        }
+        if (_observedSelection is not null)
+        {
+            _observedSelection.CollectionChanged -= OnSelectedCollectionChanged;
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        if (!_sourcesDetached)
+        {
+            return;
+        }
+        _sourcesDetached = false;
+        if (_observedSelection is not null)
+        {
+            _observedSelection.CollectionChanged += OnSelectedCollectionChanged;
+        }
+        if (_observedSource is not null)
+        {
+            _observedSource.CollectionChanged += OnSourceCollectionChanged;
+            RebuildItems(animate: false);
+        }
+        if (_observedSelection is not null && !_syncingSelection)
+        {
+            SyncSelectedItemsIn();
+        }
+    }
 
     private void RebuildItems(bool animate)
     {
@@ -1052,7 +1100,10 @@ public class SortableDataTable : TemplatedControl
         if (value is INotifyCollectionChanged observable)
         {
             _observedSelection = observable;
-            observable.CollectionChanged += OnSelectedCollectionChanged;
+            if (!_sourcesDetached)
+            {
+                observable.CollectionChanged += OnSelectedCollectionChanged;
+            }
         }
         if (!_syncingSelection)
         {

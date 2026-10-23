@@ -1,7 +1,7 @@
 ---
 title: 輕提示堆疊
 summary: 將簡短結果堆疊在邊緣，直到你需要檢視時再展開。
-source-hash: 34f8d540e9d9
+source-hash: c4993f77de27
 ---
 
 <Demo name="Stack" />
@@ -28,7 +28,7 @@ source-hash: 34f8d540e9d9
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <Grid>
         <!-- 頁面內容放在這裡。 -->
         <arc:ToastStack Label="通知" />

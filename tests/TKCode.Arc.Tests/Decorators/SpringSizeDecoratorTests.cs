@@ -129,4 +129,68 @@ public class SpringSizeDecoratorTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Held_Size_Ignores_New_Content_Until_Released_Then_Springs_To_It()
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var text = new TextBlock { Text = "One line", Width = 200, TextWrapping = Avalonia.Media.TextWrapping.Wrap };
+        var decorator = new SpringSizeDecorator { Axis = SpringSizeAxis.Height, Child = text };
+        var window = TestHelpers.Show(new StackPanel { Children = { decorator } }, ArcMotionLevel.Full);
+        try
+        {
+            var before = decorator.Bounds.Height;
+            decorator.IsHeld = true;
+            text.Text = "A reply that wraps onto several lines once it arrives, so the panel must grow to fit it.";
+            window.UpdateLayout();
+            clock.Advance(TimeSpan.FromSeconds(1));
+            window.UpdateLayout();
+            decorator.Bounds.Height.ShouldBe(before, 0.5);
+            decorator.Clip.ShouldNotBeNull(); // the new, taller content is clipped while held
+
+            decorator.IsHeld = false;
+            window.UpdateLayout();
+            clock.Advance(TimeSpan.FromMilliseconds(50));
+            window.UpdateLayout();
+            decorator.IsMoving.ShouldBeTrue();
+            decorator.Bounds.Height.ShouldBeGreaterThan(before);
+            decorator.Bounds.Height.ShouldBeLessThan(text.DesiredSize.Height);
+            clock.Advance(TimeSpan.FromSeconds(2));
+            window.UpdateLayout();
+            decorator.IsMoving.ShouldBeFalse();
+            decorator.Bounds.Height.ShouldBe(text.DesiredSize.Height, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Caps_To_Available_Measures_A_Long_Label_Within_The_Slot()
+    {
+        var capped = new TextBlock { Text = "Quarterly planning notes for the logistics team", TextTrimming = Avalonia.Media.TextTrimming.CharacterEllipsis };
+        var free = new TextBlock { Text = "Quarterly planning notes for the logistics team" };
+        var cappedDecorator = new SpringSizeDecorator { Axis = SpringSizeAxis.Width, CapsToAvailable = true, Child = capped };
+        var freeDecorator = new SpringSizeDecorator { Axis = SpringSizeAxis.Width, Child = free };
+        var window = TestHelpers.Show(new StackPanel
+        {
+            Children =
+            {
+                new Border { Width = 120, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left, Child = cappedDecorator },
+                new Border { Width = 120, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left, Child = freeDecorator }
+            }
+        }, ArcMotionLevel.Full);
+        try
+        {
+            capped.Bounds.Width.ShouldBeLessThanOrEqualTo(120.5);
+            cappedDecorator.Bounds.Width.ShouldBeLessThanOrEqualTo(120.5);
+            free.Bounds.Width.ShouldBeGreaterThan(120); // without the cap the label overflows its slot
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

@@ -1,7 +1,7 @@
 ---
 title: 環圈圖
 summary: 一個環圈圖，扇形在資料集之間平滑變形，目前數值滾動顯示在中心。
-source-hash: 20c10af277e9
+source-hash: 0b6a0d97b37b
 ---
 
 <Demo name="ToggleSegments" />
@@ -29,7 +29,7 @@ source-hash: 20c10af277e9
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DonutChart Label="依來源統計造訪量"
                     Unit="次造訪"
                     TotalLabel="總計"

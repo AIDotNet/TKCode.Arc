@@ -1,7 +1,7 @@
 ---
 title: 开关
 summary: 用于即时生效设置的触感式开关。
-source-hash: 04692a5a319a
+source-hash: 57c51b4e68a2
 ---
 
 <Demo name="SettingsList" />
@@ -30,7 +30,7 @@ source-hash: 04692a5a319a
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Switch Content="邮件通知" IsChecked="True" />
 </UserControl>
 ```

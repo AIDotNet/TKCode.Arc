@@ -1,7 +1,7 @@
 ---
 title: 山脊圖
 summary: 重疊的分布，每組一條山脊：懸停可抬起山脊並讀取其四分位數，切換資料集時每條曲線都會變形。
-source-hash: 056f2991c113
+source-hash: af053f192692
 ---
 
 <Demo name="DistributionsByMonth" />
@@ -29,7 +29,7 @@ source-hash: 056f2991c113
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Ridgeline Label="蘇黎世每日最高氣溫"
                    Unit="°C"
                    DomainMinimum="-5"
@@ -145,7 +145,7 @@ Acme Analytics 的營運頁面展示了一週內三個地區回應時間的差�
 ```xml
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
         xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         Width="680"

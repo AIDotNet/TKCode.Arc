@@ -1,7 +1,7 @@
 ---
 title: 捲動區域
 summary: 原生捲動容器，配有細長的浮層捲軸與僅在內容溢出時才出現的邊緣漸隱。
-source-hash: 693fd95041ac
+source-hash: 066258a5ccd4
 ---
 
 <Demo name="Vertical" />
@@ -30,7 +30,7 @@ source-hash: 693fd95041ac
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ScrollArea Width="360"
                     Height="260"
                     Label="發佈說明"

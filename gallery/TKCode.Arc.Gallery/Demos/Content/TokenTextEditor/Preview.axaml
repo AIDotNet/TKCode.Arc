@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TokenTextEditorPreviewDemo">
+    <StackPanel Spacing="8" MaxWidth="480" Margin="0,12">
+        <!-- "/" is a command only at the start of a line; "@" starts a mention at the start or after a space. -->
+        <Border BorderThickness="1" CornerRadius="12" Padding="12,8" BorderBrush="#40808080">
+            <arc:TokenTextEditor x:Name="Editor" Placeholder="Type / for a command or @ for a file" MinLines="2" MaxLines="5">
+                <arc:TokenTextEditor.Triggers>
+                    <arc:TokenTrigger Symbol="/" Kind="command" Position="LineStart" />
+                    <arc:TokenTrigger Symbol="@" Kind="mention" Position="AfterWhitespaceOrLineStart" />
+                </arc:TokenTextEditor.Triggers>
+            </arc:TokenTextEditor>
+        </Border>
+        <ListBox x:Name="Suggestions" IsVisible="False" MaxHeight="160" />
+        <TextBlock x:Name="Summary" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

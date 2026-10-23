@@ -1,7 +1,7 @@
 ---
 title: 操作按鈕
 summary: 用於高頻工具列操作的精簡按鈕。
-source-hash: c5a5043a2562
+source-hash: 8d860fb7127a
 ---
 
 <Demo name="Default" />
@@ -28,7 +28,7 @@ source-hash: c5a5043a2562
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ActionButton Label="儲存" PendingLabel="儲存中" SuccessLabel="已儲存" />
 </UserControl>
 ```

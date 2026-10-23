@@ -12,7 +12,8 @@ namespace TKCode.Arc;
 /// suffix slots, and the Arc state language. Hover and focus answer with the border colour alone
 /// (<c>Foreground</c>), an invalid field shows a <c>Danger</c> border, a disabled one fades to 0.5 on
 /// <c>SurfaceMuted</c>, and a read-only one ignores hover. Colours tween on fast + standard ease; the frame
-/// never changes size. <see cref="HasFocusRing"/> adds Arc's 3px focus halo (Textarea, TagInput, Combobox).
+/// never changes size. Arc's 3px focus halo is <c>--focus-ring: transparent</c>, so the border colour is the whole
+/// focus indicator.
 /// </summary>
 /// <remarks>
 /// Focus is <see cref="IsFocusActive"/> or keyboard focus anywhere inside the frame. A control whose editor is
@@ -60,10 +61,6 @@ public class FieldFrame : ContentControl
     /// <summary>Marks the field as focused when its editor is outside the frame (the templated parent).</summary>
     public static readonly StyledProperty<bool> IsFocusActiveProperty =
         AvaloniaProperty.Register<FieldFrame, bool>(nameof(IsFocusActive));
-
-    /// <summary>Shows Arc's 3px focus halo around the border while focused (it contracts from 6px as it fades in).</summary>
-    public static readonly StyledProperty<bool> HasFocusRingProperty =
-        AvaloniaProperty.Register<FieldFrame, bool>(nameof(HasFocusRing));
 
     /// <summary>Gap between the prefix / suffix and the editor (Arc: <c>gap: var(--space-2)</c>, 8px).</summary>
     public static readonly StyledProperty<double> SpacingProperty =
@@ -119,13 +116,6 @@ public class FieldFrame : ContentControl
     {
         get => GetValue(IsFocusActiveProperty);
         set => SetValue(IsFocusActiveProperty, value);
-    }
-
-    /// <summary>Shows the 3px focus halo while focused.</summary>
-    public bool HasFocusRing
-    {
-        get => GetValue(HasFocusRingProperty);
-        set => SetValue(HasFocusRingProperty, value);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

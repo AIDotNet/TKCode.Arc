@@ -38,7 +38,7 @@ the text overflows the clamp.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandableText Text="We moved our whole design team onto the new workspace in a single afternoon. The import kept every comment and version."
                         MaxWidth="520"
                         HorizontalAlignment="Left" />

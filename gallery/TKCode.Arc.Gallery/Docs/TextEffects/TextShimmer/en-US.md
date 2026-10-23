@@ -48,7 +48,7 @@ small: one or two busy lines are readable, a row of six competes for attention.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TextShimmer Text="Thinking" />
 </UserControl>
 ```

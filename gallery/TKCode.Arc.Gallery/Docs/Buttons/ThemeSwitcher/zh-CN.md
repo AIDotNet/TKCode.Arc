@@ -1,7 +1,7 @@
 ---
 title: 主题切换
 summary: 在亮色与暗色外观之间切换的四种平滑方式。
-source-hash: ba6acbbfdbff
+source-hash: 07f56514c77f
 ---
 
 <Demo name="Variants" />
@@ -29,7 +29,7 @@ source-hash: ba6acbbfdbff
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ThemeSwitcher Variant="Reveal" />
 </UserControl>
 ```

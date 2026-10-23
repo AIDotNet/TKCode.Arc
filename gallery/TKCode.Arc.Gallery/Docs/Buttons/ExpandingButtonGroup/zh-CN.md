@@ -1,7 +1,7 @@
 ---
 title: 展开式按钮组
 summary: 紧凑排列的图标按钮组：指向或聚焦的按钮会展开显示文字，相邻按钮让位，操作会在原位确认。
-source-hash: 5e2e4c9b37d6
+source-hash: 626e9599af5b
 ---
 
 <Demo name="MessageActions" />
@@ -28,7 +28,7 @@ source-hash: 5e2e4c9b37d6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandingButtonGroup Label="消息操作">
         <arc:ExpandingButtonGroupItem Label="回复" />
         <arc:ExpandingButtonGroupItem Label="发送" DoneLabel="已发送" />

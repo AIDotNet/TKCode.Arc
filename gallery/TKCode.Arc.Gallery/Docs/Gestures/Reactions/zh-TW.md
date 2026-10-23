@@ -1,7 +1,7 @@
 ---
 title: 表情回應
 summary: 一鍵回應一則內容，計數會滾動變化。
-source-hash: 3d9ea606c47a
+source-hash: cc5e43d20f00
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: 3d9ea606c47a
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Reactions Label="表情回應">
         <arc:ReactionOption Id="like" Label="讚" />
         <arc:ReactionOption Id="love" Label="愛心" />

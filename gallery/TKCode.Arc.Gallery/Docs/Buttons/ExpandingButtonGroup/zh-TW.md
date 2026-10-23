@@ -1,7 +1,7 @@
 ---
 title: 展開式按鈕群組
 summary: 緊湊排列的圖示按鈕群組：指向或聚焦的按鈕會展開顯示文字，相鄰按鈕讓位，動作會在原地確認。
-source-hash: 5e2e4c9b37d6
+source-hash: 626e9599af5b
 ---
 
 <Demo name="MessageActions" />
@@ -28,7 +28,7 @@ source-hash: 5e2e4c9b37d6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandingButtonGroup Label="訊息動作">
         <arc:ExpandingButtonGroupItem Label="回覆" />
         <arc:ExpandingButtonGroupItem Label="傳送" DoneLabel="已傳送" />

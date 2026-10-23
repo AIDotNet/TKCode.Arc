@@ -38,7 +38,7 @@ name the two moments; they default to "Before" and "After".
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SlopeChart Label="Conversion rate by channel"
                     StartLabel="Q1"
                     EndLabel="Q2"
@@ -182,7 +182,7 @@ both quarters, which the slope shows without a label. The caption states the fin
 ```xml
 <Border xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+        xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
         Width="680"
         Padding="24"
         CornerRadius="12"

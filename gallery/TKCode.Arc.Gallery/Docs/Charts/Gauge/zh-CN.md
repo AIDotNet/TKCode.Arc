@@ -1,7 +1,7 @@
 ---
 title: 仪表盘
 summary: 在已知范围内展示一个数值。
-source-hash: 9e6018797779
+source-hash: 3dae9af72c9b
 ---
 
 <Demo name="Thresholds" />
@@ -29,7 +29,7 @@ source-hash: 9e6018797779
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Gauge Label="磁盘用量"
                Value="72"
                Detail="360 / 500 GB">

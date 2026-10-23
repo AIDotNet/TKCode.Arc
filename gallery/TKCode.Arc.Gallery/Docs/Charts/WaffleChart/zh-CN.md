@@ -1,7 +1,7 @@
 ---
 title: 华夫图
 summary: 十乘十的单位图表，每个方格代表百分之一；数据变化时，方格会飞到各自的新分组。
-source-hash: 13bbecfe92d4
+source-hash: 8db60ae92ac0
 ---
 
 <Demo name="EnergyMix" />
@@ -28,7 +28,7 @@ source-hash: 13bbecfe92d4
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:WaffleChart Label="发电量"
                      Unit="TWh"
                      ItemsSource="{Binding Mix}" />

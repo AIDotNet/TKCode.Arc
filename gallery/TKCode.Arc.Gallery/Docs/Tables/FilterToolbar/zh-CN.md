@@ -1,7 +1,7 @@
 ---
 title: 筛选工具栏
 summary: 让集合筛选条件保持在近处，并便于重置。
-source-hash: 8db4320fbe67
+source-hash: c9a11d7afb0d
 ---
 
 <Demo name="Filters" />
@@ -224,7 +224,7 @@ public partial class InvoicesViewModel : ObservableObject
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:collections="using:System.Collections.ObjectModel">
     <StackPanel Width="600">
         <arc:FilterToolbar>

@@ -36,7 +36,7 @@ names or the list the group summarizes.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:AvatarGroup Label="Editors">
         <arc:AvatarGroupMember DisplayName="Maya Chen" Status="Online" />
         <arc:AvatarGroupMember DisplayName="Noah Park" />

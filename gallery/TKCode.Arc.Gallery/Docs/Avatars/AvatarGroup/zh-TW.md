@@ -1,7 +1,7 @@
 ---
 title: 大頭貼群組
 summary: 在較小的空間內展示團隊或一組貢獻者。
-source-hash: 5302d2e8665f
+source-hash: d072c66fb218
 ---
 
 <Demo name="Team" />
@@ -28,7 +28,7 @@ source-hash: 5302d2e8665f
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:AvatarGroup Label="編輯者">
         <arc:AvatarGroupMember DisplayName="Maya Chen" Status="Online" />
         <arc:AvatarGroupMember DisplayName="Noah Park" />

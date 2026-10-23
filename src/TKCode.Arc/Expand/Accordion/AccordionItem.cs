@@ -66,7 +66,6 @@ public class AccordionItem : HeaderedContentControl
     private Control? _panel;
     private Control? _answer;
     private TranslateTransform? _answerShift;
-    private BlurEffect? _answerBlur;
     private MotionValue<double>? _reveal;
     private MotionValue<double>? _settleY;
     private MotionValue<double>? _settleBlur;
@@ -200,9 +199,7 @@ public class AccordionItem : HeaderedContentControl
             _answer.Effect = null;
             return;
         }
-        _answerBlur ??= new BlurEffect();
-        _answerBlur.Radius = radius;
-        _answer.Effect = _answerBlur;
+        _answer.Effect = ArcBlur.Get(radius);
     }
 
     private MotionValue<double> Create(Action<double> apply, double initial)

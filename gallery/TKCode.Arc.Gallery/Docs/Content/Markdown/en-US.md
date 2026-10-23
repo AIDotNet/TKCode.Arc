@@ -43,7 +43,7 @@ Static text is set with `Text`. The document grows with its content and has no i
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Markdown Text="## Release notes&#10;&#10;Arc **0.4** adds `Markdown`." />
 </UserControl>
 ```
@@ -120,6 +120,11 @@ at the end of the document. `IsStreaming` is `true` until the paced backlog has 
 markdown.Append(chunk);   // as tokens arrive, on the UI thread
 markdown.Complete();      // when the reply ends
 ```
+
+Three properties tune how appended text shows. `RevealFadeDuration` sets how long each new batch fades in at full motion (Arc's
+standard duration when null); `RevealFadeInReducedMotion` turns the fade off at reduced motion, which suits a reply that grows
+continuously; and `IsPaced` set to false shows every appended piece at once as one batch, for a host that has already paced the
+text itself, such as in whole words on a fixed clock.
 
 `Append` starts a new reply after `Complete`, and it replaces whatever is shown: `Text` reads `null` from then on. A
 stream you create yourself can be set on `Stream` instead, for example one that a worker thread feeds with

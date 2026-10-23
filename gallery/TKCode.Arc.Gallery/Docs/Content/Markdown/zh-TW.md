@@ -1,7 +1,7 @@
 ---
 title: Markdown
 summary: 以 Arc 的風格渲染 Markdown 文件與串流回覆，程式碼區塊使用 Arc 的語法配色高亮。
-source-hash: 996fd7825241
+source-hash: a32d466da5e0
 ---
 
 <Demo name="Document" />
@@ -30,7 +30,7 @@ source-hash: 996fd7825241
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Markdown Text="## 版本說明&#10;&#10;Arc **0.4** 新增 `Markdown`。" />
 </UserControl>
 ```
@@ -92,6 +92,8 @@ public sealed partial class ReleaseNotesViewModel : ObservableObject
 markdown.Append(chunk);   // 權杖抵達時呼叫，在 UI 執行緒上執行
 markdown.Complete();      // 回覆結束時呼叫
 ```
+
+三個屬性調整附加文字的顯示方式。`RevealFadeDuration` 設定每批新文字在完整動效下的淡入時長（為 null 時使用 Arc 的標準時長）；`RevealFadeInReducedMotion` 可在減少動效下關閉淡入，適合持續增長的回覆；`IsPaced` 設為 false 時，每次附加的內容會作為一批立即顯示，適用於宿主已自行控制節奏的情況，例如按固定時脈逐個整詞放出。
 
 `Complete` 之後再呼叫 `Append` 會開始新的回覆，並取代目前顯示的內容：此後 `Text` 讀取為 `null`。你自行建立的串流可以改為設定到 `Stream` 上，例如由工作執行緒透過 `MarkdownStream.Push` 寫入、並以 `Complete` 結束的串流。控制項在 UI 執行緒上套用快照，因此工作執行緒只推送文字，從不觸碰控制項。
 

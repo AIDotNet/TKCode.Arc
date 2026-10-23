@@ -38,7 +38,7 @@ headline and not yet on the controls.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TextReveal Text="Interfaces that feel considered from the first frame"
                     Level="H1" />
 </UserControl>

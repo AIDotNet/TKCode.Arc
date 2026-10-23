@@ -74,7 +74,7 @@ public class ModalPresenceTests
             modal.Open();
             Dispatcher.UIThread.RunJobs();
             var layers = window.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.VisualLayerManager>().First(m => ReferenceEquals(m.Child, anchor));
-            layers.Child!.Effect.ShouldBeOfType<Avalonia.Media.BlurEffect>().Radius.ShouldBe(7, 0.01);
+            layers.Child!.Effect.ShouldBeAssignableTo<Avalonia.Media.IBlurEffect>()!.Radius.ShouldBe(7, 0.01);
             modal.Close();
             Dispatcher.UIThread.RunJobs();
             layers.Child.Effect.ShouldBeNull();

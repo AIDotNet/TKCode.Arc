@@ -38,7 +38,7 @@ Set the axes with `Orientation`. The default is `Vertical`.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ScrollArea Width="360"
                     Height="260"
                     Label="Release notes"

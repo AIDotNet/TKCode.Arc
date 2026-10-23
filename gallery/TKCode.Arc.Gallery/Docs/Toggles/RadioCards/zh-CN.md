@@ -1,7 +1,7 @@
 ---
 title: 单选卡片
 summary: 可选择的选项卡片，带有滑动的选中光环、价格与描述插槽，并具有单选按钮的键盘行为。
-source-hash: 3099f03f618a
+source-hash: a439dd2259b6
 ---
 
 <Demo name="Grid" />
@@ -30,7 +30,7 @@ source-hash: 3099f03f618a
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RadioCards SelectedValue="pro">
         <arc:RadioCardOption Value="starter" Label="入门版" Description="适合刚开始使用的个人。" Meta="$0" />
         <arc:RadioCardOption Value="pro" Label="专业版" Description="无限项目与优先支持。" Meta="$12" />

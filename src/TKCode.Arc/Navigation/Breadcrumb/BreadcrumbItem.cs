@@ -187,8 +187,12 @@ public class BreadcrumbItem : ContentControl
         {
             return;
         }
-        _reserve.ContentTemplate = ContentTemplate;
-        _reserve.Content = Content is Control ? null : Content;
+        // The template goes on after the content, and only with content: a presenter builds the template it has, and one attached
+        // to empty content is built with null.
+        var content = Content is Control ? null : Content;
+        _reserve.ContentTemplate = null;
+        _reserve.Content = content;
+        _reserve.ContentTemplate = content is null ? null : ContentTemplate;
     }
 
     #region Input

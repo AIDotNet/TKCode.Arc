@@ -19,6 +19,12 @@ internal sealed class MentionInputToken : AbstractControlDesignToken
     /// <summary>Arc <c>.root[data-disabled] { opacity: .55 }</c>.</summary>
     public double DisabledOpacity { get; set; }
 
+    /// <summary>Token <c>padding: 1px 3px</c> (horizontal part cancelled by <c>margin: 0 -3px</c>, so no glyph moves).</summary>
+    public Thickness TokenPadding { get; set; }
+
+    /// <summary>Token <c>border-radius: 6px</c>.</summary>
+    public double TokenCornerRadius { get; set; }
+
     /// <summary>Channel token: <c>color-mix(in oklab, var(--foreground) 7%, transparent)</c>.</summary>
     public Color ChannelTokenFill { get; set; }
 
@@ -33,6 +39,8 @@ internal sealed class MentionInputToken : AbstractControlDesignToken
         EditorPadding = new Thickness(14, 11);
         EditorLetterSpacing = -0.16;
         DisabledOpacity = 0.55;
+        TokenPadding = new Thickness(3, 1);
+        TokenCornerRadius = 6;
         ChannelTokenFill = Oklch.WithAlpha(n.Foreground, 0.07);
         SuggestionHighlightFill = Oklch.WithAlpha(n.Foreground, 0.065);
     }

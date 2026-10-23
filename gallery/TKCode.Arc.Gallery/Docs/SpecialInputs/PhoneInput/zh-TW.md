@@ -1,7 +1,7 @@
 ---
 title: 電話輸入框
 summary: 帶國家或地區選擇器、輸入時即時格式化並輸出 E.164 格式的電話欄位。
-source-hash: 99020d88eca5
+source-hash: 973601bc9177
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: 99020d88eca5
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PhoneInput Label="電話號碼"
                     Country="US"
                     Description="我們會向此號碼傳送登入驗證碼簡訊。" />

@@ -41,7 +41,7 @@ page.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Pagination PageCount="{Binding PageCount}"
                     CurrentPage="{Binding CurrentPage, Mode=TwoWay}" />
 </UserControl>

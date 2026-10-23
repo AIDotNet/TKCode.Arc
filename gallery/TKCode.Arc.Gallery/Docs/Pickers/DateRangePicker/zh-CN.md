@@ -1,7 +1,7 @@
 ---
 title: 日期范围选择器
 summary: 从触发器展开为两个月份面板的范围选择器，附带预设项和随选区伸展的高亮。
-source-hash: baaba86e68df
+source-hash: 07b0d1fff7fc
 ---
 
 <Demo name="Report" />
@@ -27,7 +27,7 @@ source-hash: baaba86e68df
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:DateRangePicker Label="日期范围" />
 </UserControl>
 ```

@@ -1,7 +1,7 @@
 ---
 title: 搜尋欄位
 summary: 易於辨識的搜尋入口，並帶有清楚的操作提示。
-source-hash: 72dd93e3ef34
+source-hash: 1bac2afa01d8
 ---
 
 <Demo name="FilterList" />
@@ -30,7 +30,7 @@ source-hash: 72dd93e3ef34
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SearchField Label="搜尋人員"
                      Placeholder="依姓名篩選"
                      Width="360"

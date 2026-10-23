@@ -1,7 +1,7 @@
 ---
 title: 手风琴
 summary: 在原位逐步展示补充信息。
-source-hash: 2e9810ba8b53
+source-hash: 760af7e3b63f
 ---
 
 <Demo name="Default" />
@@ -27,7 +27,7 @@ source-hash: 2e9810ba8b53
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Accordion>
         <arc:AccordionItem Header="免费版包含哪些内容？">
             无限项目、三位协作者，以及一周的版本历史。

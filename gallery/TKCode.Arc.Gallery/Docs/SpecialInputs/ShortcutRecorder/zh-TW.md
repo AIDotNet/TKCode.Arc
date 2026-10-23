@@ -1,7 +1,7 @@
 ---
 title: 快速鍵錄入
 summary: 將按鍵組合錄入為鍵帽，支援衝突警告、Kbd 與可搜尋的速查表。
-source-hash: d4863ab0dc45
+source-hash: 23fc116169f3
 ---
 
 <Demo name="Default" />
@@ -28,7 +28,7 @@ source-hash: d4863ab0dc45
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ShortcutRecorder Label="命令面板"
                           Description="在應用程式的任何位置開啟命令面板。" />
 </UserControl>

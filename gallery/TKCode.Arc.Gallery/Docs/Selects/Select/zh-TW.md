@@ -1,7 +1,7 @@
 ---
 title: 下拉選擇
 summary: 精簡的選擇欄位，選單支援鍵盤操作。
-source-hash: 28de26be80a6
+source-hash: 1659bd3fc4e6
 ---
 
 <Demo name="Field" />
@@ -28,7 +28,7 @@ source-hash: 28de26be80a6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Select Label="地區"
                 Description="工作區資料的儲存位置。"
                 Width="280">

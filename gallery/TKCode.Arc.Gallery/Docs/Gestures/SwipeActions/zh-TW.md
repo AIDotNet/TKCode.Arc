@@ -1,7 +1,7 @@
 ---
 title: 滑動操作
 summary: 透過滑動顯示列操作，或從選單中的同一組操作執行。
-source-hash: 1717751e77c9
+source-hash: dba84e3d06a7
 ---
 
 <Demo name="Inbox" />
@@ -29,7 +29,7 @@ source-hash: 1717751e77c9
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:SwipeActions Label="收件匣" ItemsSource="{Binding Messages}">
         <arc:SwipeActions.LeadingActions>
             <arc:SwipeAction Label="未讀" Tone="Accent" KeepsRow="True" />

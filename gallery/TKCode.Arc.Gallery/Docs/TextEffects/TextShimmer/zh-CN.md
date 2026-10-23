@@ -1,7 +1,7 @@
 ---
 title: 文字闪光
 summary: 用平缓的光带扫过文字，表示正在进行的工作。
-source-hash: 49aba1b77be2
+source-hash: 23c614235a9b
 ---
 
 <Demo name="StatusLine" />
@@ -31,7 +31,7 @@ source-hash: 49aba1b77be2
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TextShimmer Text="思考中" />
 </UserControl>
 ```

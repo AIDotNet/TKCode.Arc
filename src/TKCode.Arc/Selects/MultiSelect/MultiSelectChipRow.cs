@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -255,7 +256,6 @@ internal sealed class MultiSelectChipRow : Panel
         private MotionValue<double>? _width;
         private MotionValue<double>? _opacity;
         private MotionValue<double>? _grow;
-        private BlurEffect? _blur;
         private double _widthFraction = 1;
 
         public Slot(MultiSelectChipRow row, object key, bool more)
@@ -425,13 +425,10 @@ internal sealed class MultiSelectChipRow : Panel
             if (blur < 0.05)
             {
                 _chip.Effect = null;
-                _blur = null;
             }
             else
             {
-                _blur ??= new BlurEffect();
-                _blur.Radius = blur;
-                _chip.Effect = _blur;
+                _chip.Effect = ArcBlur.Get(blur);
             }
         }
 

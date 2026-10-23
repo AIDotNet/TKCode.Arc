@@ -1,7 +1,7 @@
 ---
 title: 单选组
 summary: 从可见的一组选项中选择一项。
-source-hash: 440e811ad630
+source-hash: 67ac09d43a2f
 ---
 
 <Demo name="Plans" />
@@ -30,7 +30,7 @@ source-hash: 440e811ad630
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RadioGroup Header="套餐" Width="420" SelectedValue="pro">
         <arc:RadioOption Value="hobby" Label="爱好版" Description="适合个人项目和尝试。" />
         <arc:RadioOption Value="pro" Label="专业版" Description="适合每周都要交付的专业人士。" />

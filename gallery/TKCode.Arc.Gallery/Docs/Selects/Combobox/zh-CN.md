@@ -1,7 +1,7 @@
 ---
 title: 组合框
 summary: 无需离开字段即可搜索并从列表中选择。
-source-hash: 1f5bd673d3ed
+source-hash: c6681c6f8080
 ---
 
 <Demo name="Searchable" />
@@ -28,7 +28,7 @@ source-hash: 1f5bd673d3ed
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Combobox Label="框架"
                   Width="280"
                   Description="输入以搜索。">

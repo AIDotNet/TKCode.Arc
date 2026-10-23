@@ -102,8 +102,7 @@ internal sealed class TabsPanelHost : Control
         {
             FinishExit();
             ResetSlot(_current);
-            presenter.ContentTemplate = template;
-            presenter.Content = content;
+            Assign(presenter, content, template);
             _morphPending = false;
             InvalidateMeasure();
             return;
@@ -121,8 +120,7 @@ internal sealed class TabsPanelHost : Control
             _exiting = _current;
             _current = next;
             ResetSlot(next);
-            next.Presenter.ContentTemplate = template;
-            next.Presenter.Content = content;
+            Assign(next.Presenter, content, template);
             next.Presenter.Opacity = 0;
         }
 
@@ -200,10 +198,21 @@ internal sealed class TabsPanelHost : Control
         slot.Generation++;
         slot.Opacity?.Stop();
         slot.X?.Stop();
-        slot.Presenter.Content = null;
-        slot.Presenter.ContentTemplate = null;
+        Assign(slot.Presenter, null, null);
         ResetSlot(slot);
         InvalidateArrange();
+    }
+
+    /// <summary>
+    /// Puts content and template on a presenter. A presenter builds the template it has whenever its content changes, and a template
+    /// that is attached while the content is still null is built with null (a template reading its data then throws): the
+    /// template goes on last, and only with content.
+    /// </summary>
+    private static void Assign(ContentPresenter presenter, object? content, IDataTemplate? template)
+    {
+        presenter.ContentTemplate = null;
+        presenter.Content = content;
+        presenter.ContentTemplate = content is null ? null : template;
     }
 
     private static void ResetSlot(Slot slot)

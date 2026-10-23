@@ -1,7 +1,7 @@
 ---
 title: 浮動按鈕群組
 summary: 將柔和按鈕分隔放置在安靜的托盤中，一個共用的反白區塊隨游標在按鈕之間變形移動，按下狀態則原地回落。
-source-hash: b9e2bcc71894
+source-hash: a6350b2d7cb9
 ---
 
 <Demo name="MutedTray" />
@@ -30,7 +30,7 @@ source-hash: b9e2bcc71894
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:FloatingButtonGroup Label="畫板操作">
         <arc:FloatingButtonGroupItem Label="復原" Shortcut="⌘Z" IsIconOnly="True" />
         <arc:FloatingButtonGroupItem Label="重做" Shortcut="⇧⌘Z" IsIconOnly="True" />

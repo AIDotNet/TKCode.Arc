@@ -1,6 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     x:ClassModifier="internal">
     <ControlTheme x:Key="{x:Type arc:TagInput}" TargetType="arc:TagInput">
         <Setter Property="Template">
@@ -13,7 +13,6 @@
                                IsLabelVisible="{TemplateBinding IsLabelVisible}">
                         <arc:FieldFrame Name="PART_Frame"
                                         Cursor="IBeam"
-                                        HasFocusRing="True"
                                         Padding="0"
                                         VerticalContentAlignment="Stretch"
                                         IsInvalid="{TemplateBinding IsInvalid}">
@@ -39,7 +38,7 @@
         <Setter Property="ClipToBounds" Value="False" />
 
         <!-- Arc's tag shell rests on Border (not BorderStrong); a mouse hover hints BorderStrong; focus-within answers
-             with Foreground and the 3px halo (FieldFrame); invalid stays Danger. -->
+             with a Foreground border and nothing else (its 3px halo is transparent; FieldFrame); invalid stays Danger. -->
         <Style Selector="^ /template/ arc|FieldFrame#PART_Frame">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         </Style>

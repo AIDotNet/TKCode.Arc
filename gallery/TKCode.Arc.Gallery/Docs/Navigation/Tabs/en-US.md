@@ -37,7 +37,7 @@ Items are `TabItem` containers. The header is the trigger and the content is the
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Tabs AutomationProperties.Name="Workspace">
         <arc:TabItem Header="Overview">
             <TextBlock Text="Revenue is up 12% this quarter." />

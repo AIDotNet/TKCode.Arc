@@ -1,7 +1,7 @@
 ---
 title: 核取方塊
 summary: 二元選擇，狀態精確且清楚易讀。
-source-hash: 352309eb57b1
+source-hash: be62c2edeca3
 ---
 
 <Demo name="LabelAndDescription" />
@@ -30,7 +30,7 @@ source-hash: 352309eb57b1
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Checkbox Content="同意條款及條件"
                   Description="您同意我們的服務條款與隱私權政策。" />
 </UserControl>

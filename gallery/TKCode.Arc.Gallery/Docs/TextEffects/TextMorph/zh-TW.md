@@ -1,7 +1,7 @@
 ---
 title: 文字變形
 summary: 逐字母將標籤變形為下一個狀態。
-source-hash: 3532e6f81631
+source-hash: e933d5b868e9
 ---
 
 <Demo name="Status" />
@@ -30,7 +30,7 @@ source-hash: 3532e6f81631
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TextMorph Text="部署" FontSize="28" />
 </UserControl>
 ```

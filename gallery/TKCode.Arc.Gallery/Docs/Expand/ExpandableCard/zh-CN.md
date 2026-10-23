@@ -1,7 +1,7 @@
 ---
 title: 可展开卡片
 summary: 在需要时为密集的卡片提供更多空间。
-source-hash: d43a63bdadb8
+source-hash: 79906be72989
 ---
 
 <Demo name="Default" />
@@ -27,7 +27,7 @@ source-hash: d43a63bdadb8
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ExpandableCard Header="Pro 套餐"
                         Description="每月 ¥24 · 按年付费"
                         CollapsedWidth="420">

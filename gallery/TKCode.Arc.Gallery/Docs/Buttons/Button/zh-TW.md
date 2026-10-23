@@ -1,7 +1,7 @@
 ---
 title: 按鈕
 summary: 清楚、反應迅速的操作按鈕，次要狀態保持低調。
-source-hash: e6fbe5c079c6
+source-hash: 2e7052f3cb01
 ---
 
 <Demo name="Variants" />
@@ -28,7 +28,7 @@ source-hash: e6fbe5c079c6
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Button Content="儲存變更" Variant="Primary" />
 </UserControl>
 ```

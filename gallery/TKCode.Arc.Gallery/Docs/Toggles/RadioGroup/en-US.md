@@ -43,7 +43,7 @@ and an optional description.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:RadioGroup Header="Plan" Width="420" SelectedValue="pro">
         <arc:RadioOption Value="hobby" Label="Hobby" Description="For side projects and experiments." />
         <arc:RadioOption Value="pro" Label="Pro" Description="For professionals who ship every week." />

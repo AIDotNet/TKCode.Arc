@@ -1,7 +1,7 @@
 ---
 title: 動畫計數器
 summary: 讓變動的總數具有清楚的動感。
-source-hash: 2c57888c6b93
+source-hash: 7a4f420e754b
 ---
 
 <Demo name="RollingDigits" />
@@ -28,7 +28,7 @@ source-hash: 2c57888c6b93
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:AnimatedCounter Label="營收"
                          Prefix="$"
                          Value="{Binding Revenue}" />

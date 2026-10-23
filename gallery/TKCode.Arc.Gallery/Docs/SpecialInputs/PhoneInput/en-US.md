@@ -42,7 +42,7 @@ the national number, and the component keeps the stored value in one canonical f
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PhoneInput Label="Phone number"
                     Country="US"
                     Description="We text a sign-in code to this number." />

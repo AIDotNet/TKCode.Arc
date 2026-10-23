@@ -44,7 +44,7 @@ default rules: a minimum length of 12 characters, upper and lower case, a number
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:PasswordStrength Label="New password"
                           Placeholder="Choose a password"
                           Width="400"

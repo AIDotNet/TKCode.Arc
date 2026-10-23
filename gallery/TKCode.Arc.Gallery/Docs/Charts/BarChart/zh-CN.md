@@ -1,7 +1,7 @@
 ---
 title: 柱状图
 summary: 跨日、周或月比较同一指标，并可逐根查看任一柱子的数值。
-source-hash: 5c65bb9e6e37
+source-hash: a1fcd97fdae9
 ---
 
 <Demo name="WeekAndMonth" />
@@ -28,7 +28,7 @@ source-hash: 5c65bb9e6e37
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:BarChart Label="活跃分钟数"
                   Period="2026 年 9 月 24–30 日"
                   Unit="分钟"

@@ -21,7 +21,7 @@ internal readonly record struct MentionInputSuggestion(MentionKind Kind, Mention
 internal static class MentionInputEngine
 {
     /// <summary>How far before the caret a trigger is looked for.</summary>
-    public const int TriggerReach = 48;
+    public const int TriggerReach = TokenTextEngine.TriggerReach;
 
     private static readonly char[] s_wordSeparators = [' ', '\t', '\n', '\r', '\f', '\v', '-', '_', '.'];
 
@@ -31,21 +31,7 @@ internal static class MentionInputEngine
     /// </summary>
     public static List<Mention> Reconcile(MentionValue previous, string text, int hint)
     {
-        var a = previous.Text;
-        var prefix = 0;
-        var maxPrefix = Math.Min(Math.Min(a.Length, text.Length), Math.Max(0, hint));
-        while (prefix < maxPrefix && a[prefix] == text[prefix])
-        {
-            prefix++;
-        }
-        var suffix = 0;
-        while (suffix < a.Length - prefix && suffix < text.Length - prefix &&
-               a[a.Length - 1 - suffix] == text[text.Length - 1 - suffix])
-        {
-            suffix++;
-        }
-        var oldEnd = a.Length - suffix;
-        var delta = text.Length - a.Length;
+        var (prefix, oldEnd, delta) = TokenTextEngine.EditWindow(previous.Text, text, hint);
         var result = new List<Mention>(previous.Mentions.Count);
         foreach (var mention in previous.Mentions)
         {
@@ -83,74 +69,32 @@ internal static class MentionInputEngine
     }
 
     /// <summary>
+    /// Arc's <c>@</c> trigger: at the start or after whitespace or one of <c>( [ { " '</c>; the query may hold one space.
+    /// <paramref name="enabled"/> false when there are no people (the symbol still ends a channel query).
+    /// </summary>
+    public static TriggerRule PersonRule(bool enabled) =>
+        new('@', TokenTriggerPosition.AfterWhitespaceOrLineStart, 1, AllowAfterOpeningBracket: true, enabled);
+
+    /// <summary>Arc's <c>#</c> trigger: as <see cref="PersonRule"/>, but the query takes no space.</summary>
+    public static TriggerRule ChannelRule(bool enabled) =>
+        new('#', TokenTriggerPosition.AfterWhitespaceOrLineStart, 0, AllowAfterOpeningBracket: true, enabled);
+
+    /// <summary>
     /// The trigger the caret is in, if any: <c>@</c> or <c>#</c> at the start or after whitespace or one of
     /// <c>( [ { " '</c>, within 48 characters, not inside a mention and not across a line break. A person query
-    /// allows one space; a channel query none.
+    /// allows one space; a channel query none. (The rules of <see cref="TokenTextEngine.FindTrigger(string, int, IReadOnlyList{TokenSpan}, ReadOnlySpan{TriggerRule})"/>.)
     /// </summary>
     public static MentionInputTrigger? FindTrigger(string text, int caret, IReadOnlyList<Mention> mentions, bool people, bool channels)
     {
-        caret = Math.Clamp(caret, 0, text.Length);
-        for (var index = caret - 1; index >= 0 && index >= caret - TriggerReach; index--)
+        var tokens = new TokenSpan[mentions.Count];
+        for (var i = 0; i < tokens.Length; i++)
         {
-            var c = text[index];
-            if (c == '\n')
-            {
-                return null;
-            }
-            if (c != '@' && c != '#')
-            {
-                continue;
-            }
-            var kind = c == '@' ? MentionKind.Person : MentionKind.Channel;
-            if (kind == MentionKind.Person ? !people : !channels)
-            {
-                return null;
-            }
-            if (index > 0 && !IsTriggerLead(text[index - 1]))
-            {
-                return null;
-            }
-            foreach (var mention in mentions)
-            {
-                if (index >= mention.Start && index < mention.End)
-                {
-                    return null;
-                }
-            }
-            var query = text.Substring(index + 1, caret - index - 1);
-            return IsQueryShape(query, kind) ? new MentionInputTrigger(kind, index, query) : null;
+            tokens[i] = MentionInput.ToSpan(mentions[i]);
         }
-        return null;
-    }
-
-    /// <summary>Arc <c>/[\s([{"']/</c>.</summary>
-    private static bool IsTriggerLead(char c) => char.IsWhiteSpace(c) || c is '(' or '[' or '{' or '"' or '\'';
-
-    /// <summary>Person: <c>^[^\s@#]*( [^\s@#]*)?$</c>; channel: <c>^[^\s@#]*$</c>.</summary>
-    private static bool IsQueryShape(string query, MentionKind kind)
-    {
-        var spaces = 0;
-        foreach (var c in query)
-        {
-            if (c is '@' or '#')
-            {
-                return false;
-            }
-            if (c == ' ' && kind == MentionKind.Person)
-            {
-                spaces++;
-                if (spaces > 1)
-                {
-                    return false;
-                }
-                continue;
-            }
-            if (char.IsWhiteSpace(c))
-            {
-                return false;
-            }
-        }
-        return true;
+        ReadOnlySpan<TriggerRule> rules = [PersonRule(people), ChannelRule(channels)];
+        return TokenTextEngine.FindTrigger(text, caret, tokens, rules) is { } found
+            ? new MentionInputTrigger(found.Rule == 0 ? MentionKind.Person : MentionKind.Channel, found.Start, found.Query)
+            : null;
     }
 
     /// <summary>Arc ranking: prefix 4, word start 3, contains 2, role or description 1, otherwise 0.</summary>

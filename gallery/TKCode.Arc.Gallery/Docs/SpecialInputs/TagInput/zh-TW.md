@@ -1,7 +1,7 @@
 ---
 title: 標籤輸入
 summary: 將簡短文字值轉換為可移除的標籤。
-source-hash: 78af8002db9a
+source-hash: 49ac8f96a74d
 ---
 
 <Demo name="Default" />
@@ -29,7 +29,7 @@ source-hash: 78af8002db9a
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TagInput Label="標籤"
                   Placeholder="新增一個標籤"
                   Description="按 Enter 或輸入逗號即可新增標籤。" />
@@ -236,7 +236,7 @@ tags.FocusEditor();
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="640">
     <StackPanel Spacing="20">

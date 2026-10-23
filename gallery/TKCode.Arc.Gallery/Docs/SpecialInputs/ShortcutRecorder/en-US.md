@@ -38,7 +38,7 @@ and operating systems keep, so a remapping cannot silently break a command.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:ShortcutRecorder Label="Command palette"
                           Description="Opens the command palette from anywhere in the app." />
 </UserControl>

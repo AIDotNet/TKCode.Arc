@@ -39,7 +39,7 @@ controls are specialised cases of the same idea.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Button Content="Save changes" Variant="Primary" />
 </UserControl>
 ```

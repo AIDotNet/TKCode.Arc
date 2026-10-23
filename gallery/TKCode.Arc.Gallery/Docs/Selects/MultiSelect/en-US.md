@@ -37,7 +37,7 @@ alert. The picked values show as chips inside the field, so the person sees the 
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MultiSelect Label="Labels"
                      Description="Shown on the issue card."
                      Width="320">

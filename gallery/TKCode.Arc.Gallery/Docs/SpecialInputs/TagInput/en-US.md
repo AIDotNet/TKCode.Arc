@@ -42,7 +42,7 @@ row, so the list reads as a single form control next to the inputs around it.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:TagInput Label="Tags"
                   Placeholder="Add a tag"
                   Description="Press Enter or a comma to add a tag." />
@@ -282,7 +282,7 @@ removed and the message says how to fix it. Both fields share a width, so their 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              xmlns:generic="using:System.Collections.Generic"
              Width="640">
     <StackPanel Spacing="20">

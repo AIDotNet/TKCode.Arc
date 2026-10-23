@@ -1,7 +1,7 @@
 ---
 title: 骨架屏
 summary: 内容仍在加载时预留空间。
-source-hash: e0e028f28821
+source-hash: 8554de464f45
 ---
 
 <Demo name="Profile" />
@@ -30,7 +30,7 @@ source-hash: e0e028f28821
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Skeleton IsAvatarVisible="True" Lines="3" />
 </UserControl>
 ```

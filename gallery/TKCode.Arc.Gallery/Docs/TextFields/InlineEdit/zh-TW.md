@@ -1,7 +1,7 @@
 ---
 title: 原地編輯
 summary: 原地重新命名：文字變為欄位，位置不移動。
-source-hash: 5cd94f50bd18
+source-hash: df6f2599fc05
 ---
 
 <Demo name="Rename" />
@@ -30,7 +30,7 @@ source-hash: 5cd94f50bd18
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:InlineEdit Label="專案名稱"
                     Value="Atlas redesign"
                     HeadingLevel="2" />

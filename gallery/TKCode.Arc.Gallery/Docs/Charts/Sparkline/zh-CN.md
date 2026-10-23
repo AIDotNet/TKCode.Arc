@@ -1,7 +1,7 @@
 ---
 title: 迷你趋势图
 summary: 在数值旁展示紧凑的趋势。
-source-hash: 41c455f4761a
+source-hash: de23d529fe6e
 ---
 
 <Demo name="KpiCards" />
@@ -28,7 +28,7 @@ source-hash: 41c455f4761a
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Sparkline Label="收入"
                    Value="$48.2K"
                    Change="+4.1%"

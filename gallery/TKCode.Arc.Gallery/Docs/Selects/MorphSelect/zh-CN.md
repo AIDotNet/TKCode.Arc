@@ -1,7 +1,7 @@
 ---
 title: 变形选择
 summary: 触发器展开为列表的选择器，带有滑动高亮和键入查找。
-source-hash: 6935d8323e05
+source-hash: bef2d4fcda84
 ---
 
 <Demo name="GroupedWithSearch" />
@@ -28,7 +28,7 @@ source-hash: 6935d8323e05
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:MorphSelect Label="状态" SelectedIndex="1">
         <arc:SelectItem Content="待办" />
         <arc:SelectItem Content="进行中" />

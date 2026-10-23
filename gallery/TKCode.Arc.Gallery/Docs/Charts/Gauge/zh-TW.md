@@ -1,7 +1,7 @@
 ---
 title: 儀表板
 summary: 在已知範圍內顯示一個數值。
-source-hash: 9e6018797779
+source-hash: 3dae9af72c9b
 ---
 
 <Demo name="Thresholds" />
@@ -29,7 +29,7 @@ source-hash: 9e6018797779
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Gauge Label="磁碟用量"
                Value="72"
                Detail="360 / 500 GB">

@@ -1,7 +1,7 @@
 ---
 title: 多行文本框
 summary: 用于备注、描述和较长文本的多行输入字段。
-source-hash: 61e42e12837f
+source-hash: 7e1f98021e7c
 ---
 
 <Demo name="LiveCount" />
@@ -30,7 +30,7 @@ source-hash: 61e42e12837f
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:arc="https://github.com/AtomUICommunity/TKCode.Arc">
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc">
     <arc:Textarea Label="个人简介"
                   Placeholder="用一两句话介绍你自己"
                   Description="还剩 160 个字符"

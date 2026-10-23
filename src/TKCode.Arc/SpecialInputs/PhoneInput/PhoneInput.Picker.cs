@@ -69,7 +69,6 @@ public partial class PhoneInput
     private MotionValue<double>? _searchFade;
     private MotionValue<double>? _lidFaceFade;
     private MotionValue<double>? _lidFillFade;
-    private BlurEffect? _searchBlur;
     private string _query = string.Empty;
     private string? _activeKey;
     private bool _scrollIntent;
@@ -766,9 +765,7 @@ public partial class PhoneInput
                 }
                 else
                 {
-                    _searchBlur ??= new BlurEffect();
-                    _searchBlur.Radius = radius;
-                    _searchRow.Effect = _searchBlur;
+                    _searchRow.Effect = ArcBlur.Get(radius);
                 }
             };
         }
