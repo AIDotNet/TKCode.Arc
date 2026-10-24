@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasEdgeStylesDemo">
+    <!-- The same workflow with curved, right-angled and straight edges. -->
+    <StackPanel MaxWidth="640" Spacing="16">
+        <arc:SegmentedControl x:Name="StylePicker" HorizontalAlignment="Center" SelectedValue="Bezier">
+            <arc:SegmentedOption Value="Bezier" Label="Curved" />
+            <arc:SegmentedOption Value="Step" Label="Right angles" />
+            <arc:SegmentedOption Value="Straight" Label="Straight" />
+        </arc:SegmentedControl>
+        <arc:WorkflowCanvas x:Name="Canvas"
+                            WheelMode="ModifierZoom"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="1" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasArrangeDemo">
+    <!-- Scatter the steps, then let the canvas arrange them: the cards glide into ranks and the edges follow. -->
+    <StackPanel MaxWidth="640" Spacing="16">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="ScatterButton" Content="Scatter steps" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="ArrangeButton" Content="Arrange" Size="Small" />
+        </StackPanel>
+        <arc:WorkflowCanvas x:Name="Canvas"
+                            Height="440"
+                            AutoFit="Fit"
+                            MaxZoom="1"
+                            WheelMode="ModifierZoom"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="1" />
+    </StackPanel>
+</UserControl>

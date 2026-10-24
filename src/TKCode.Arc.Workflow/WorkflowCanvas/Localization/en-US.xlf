@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.WorkflowLangResourceKind">
+    <unit id="AnnounceConnectCancelled">
+      <segment>
+        <source>Connection cancelled</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnectMode">
+      <segment>
+        <source>Connecting from {0} to {1}: arrow keys choose a step, Enter connects, Escape cancels</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnectNoTarget">
+      <segment>
+        <source>No step can take this connection</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnectPort">
+      <segment>
+        <source>Output {0}: left and right choose an output, Enter continues</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnected">
+      <segment>
+        <source>Connected {0} to {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCopiedOne">
+      <segment>
+        <source>Copied 1 step</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCopiedOther">
+      <segment>
+        <source>Copied {0} steps</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCutOne">
+      <segment>
+        <source>Cut 1 step</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCutOther">
+      <segment>
+        <source>Cut {0} steps</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedEdgesOne">
+      <segment>
+        <source>Deleted 1 connection</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedEdgesOther">
+      <segment>
+        <source>Deleted {0} connections</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedOne">
+      <segment>
+        <source>Deleted 1 step</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedOther">
+      <segment>
+        <source>Deleted {0} steps</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceDisconnected">
+      <segment>
+        <source>Disconnected {0} from {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceFailed">
+      <segment>
+        <source>{0} failed</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceFailedReason">
+      <segment>
+        <source>{0} failed: {1}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceFinished">
+      <segment>
+        <source>Run finished: {0} done, {1} failed, {2} skipped</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceMoveCancelled">
+      <segment>
+        <source>Move cancelled</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceMoveMode">
+      <segment>
+        <source>Moving: arrow keys move, Enter places, Escape cancels</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceMovedOne">
+      <segment>
+        <source>Moved 1 step</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceMovedOther">
+      <segment>
+        <source>Moved {0} steps</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceNothingToPaste">
+      <segment>
+        <source>Nothing to paste</source>
+      </segment>
+    </unit>
+    <unit id="AnnouncePastedOne">
+      <segment>
+        <source>Pasted 1 step</source>
+      </segment>
+    </unit>
+    <unit id="AnnouncePastedOther">
+      <segment>
+        <source>Pasted {0} steps</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRedo">
+      <segment>
+        <source>Redone</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRefused">
+      <segment>
+        <source>Can't connect: {0}</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceUndo">
+      <segment>
+        <source>Undone</source>
+      </segment>
+    </unit>
+    <unit id="CanvasHelp">
+      <segment>
+        <source>Arrow keys move between steps, Alt with an arrow follows the connections, Enter opens a step, plus and minus zoom, Shift+1 fits the workflow.</source>
+      </segment>
+    </unit>
+    <unit id="CanvasHelpEditable">
+      <segment>
+        <source>Arrow keys move between steps, Alt with an arrow follows the connections, Enter opens a step, Space selects, M moves the selected steps, C connects the focused step, Delete removes the selection, Ctrl+C and Ctrl+V copy and paste, Ctrl+Z undoes, plus and minus zoom, Shift+1 fits the workflow.</source>
+      </segment>
+    </unit>
+    <unit id="CanvasNameOne">
+      <segment>
+        <source>Workflow, 1 step</source>
+      </segment>
+    </unit>
+    <unit id="CanvasNameOther">
+      <segment>
+        <source>Workflow, {0} steps</source>
+      </segment>
+    </unit>
+    <unit id="CardSelected">
+      <segment>
+        <source>selected</source>
+      </segment>
+    </unit>
+    <unit id="ConnectCycle">
+      <segment>
+        <source>This would create a loop</source>
+      </segment>
+    </unit>
+    <unit id="ConnectDirection">
+      <segment>
+        <source>Connect an output to an input</source>
+      </segment>
+    </unit>
+    <unit id="ConnectDuplicate">
+      <segment>
+        <source>Already connected</source>
+      </segment>
+    </unit>
+    <unit id="ConnectFull">
+      <segment>
+        <source>This port takes no more connections</source>
+      </segment>
+    </unit>
+    <unit id="ConnectSelf">
+      <segment>
+        <source>Can't connect a step to itself</source>
+      </segment>
+    </unit>
+    <unit id="ConnectType">
+      <segment>
+        <source>Port types don't match</source>
+      </segment>
+    </unit>
+    <unit id="DurationMilliseconds">
+      <segment>
+        <source>{0} ms</source>
+      </segment>
+    </unit>
+    <unit id="DurationMinutes">
+      <segment>
+        <source>{0} min {1} s</source>
+      </segment>
+    </unit>
+    <unit id="DurationSeconds">
+      <segment>
+        <source>{0} s</source>
+      </segment>
+    </unit>
+    <unit id="StateDone">
+      <segment>
+        <source>Done</source>
+      </segment>
+    </unit>
+    <unit id="StateFailed">
+      <segment>
+        <source>Failed</source>
+      </segment>
+    </unit>
+    <unit id="StatePending">
+      <segment>
+        <source>Waiting</source>
+      </segment>
+    </unit>
+    <unit id="StateRunning">
+      <segment>
+        <source>Running</source>
+      </segment>
+    </unit>
+    <unit id="StateSkipped">
+      <segment>
+        <source>Skipped</source>
+      </segment>
+    </unit>
+    <unit id="ZoomFit">
+      <segment>
+        <source>Fit to view</source>
+      </segment>
+    </unit>
+    <unit id="ZoomIn">
+      <segment>
+        <source>Zoom in</source>
+      </segment>
+    </unit>
+    <unit id="ZoomOut">
+      <segment>
+        <source>Zoom out</source>
+      </segment>
+    </unit>
+    <unit id="ZoomPercent">
+      <segment>
+        <source>{0}%</source>
+      </segment>
+    </unit>
+    <unit id="ZoomReset">
+      <segment>
+        <source>Reset to 100%</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

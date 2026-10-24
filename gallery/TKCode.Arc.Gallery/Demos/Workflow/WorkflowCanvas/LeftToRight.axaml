@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasLeftToRightDemo">
+    <!-- The same kind of workflow running across: edges leave a card's right side and enter the next card's left side. -->
+    <arc:WorkflowCanvas x:Name="Canvas"
+                        WheelMode="ModifierZoom"
+                        LayoutDirection="LeftToRight"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="1" />
+</UserControl>

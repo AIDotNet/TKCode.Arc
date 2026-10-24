@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasCustomNodesDemo">
+    <!-- Two kinds of step have their own card content: the webhook shows its address and an on / off switch, the email
+         edits its recipient and whether the invoice goes along. The other steps keep the default card. -->
+    <arc:WorkflowCanvas x:Name="Canvas"
+                        MaxWidth="680"
+                        Height="520"
+                        AutoFit="Fit"
+                        MaxZoom="1"
+                        IsEditable="True"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="1">
+        <arc:WorkflowCanvas.NodeTemplates>
+            <arc:WorkflowNodeTemplate Kind="webhook" x:DataType="arc:WorkflowNode">
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Zap}"
+                                      Size="17"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding Title}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                        <arc:Switch Grid.Column="2" IsChecked="True" VerticalAlignment="Center" />
+                    </Grid>
+                    <TextBlock Text="{Binding Description}"
+                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </arc:WorkflowNodeTemplate>
+            <arc:WorkflowNodeTemplate Kind="email" x:DataType="arc:WorkflowNode">
+                <StackPanel Spacing="10">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Mail}"
+                                      Size="17"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Title}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <arc:Input Text="{Binding Description, Mode=TwoWay}" />
+                    <arc:Switch Content="Attach the invoice" IsChecked="True" />
+                </StackPanel>
+            </arc:WorkflowNodeTemplate>
+        </arc:WorkflowCanvas.NodeTemplates>
+    </arc:WorkflowCanvas>
+</UserControl>

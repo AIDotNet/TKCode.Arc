@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasLargeGraphDemo">
+    <!-- A generated workflow of 200 or 500 steps, arranged by the canvas and shown from its start at 75%: drag or scroll
+         to move around, use the map in the corner, or fit the whole workflow with the bar. -->
+    <StackPanel MaxWidth="680" Spacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock x:Name="Status"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arc:SegmentedControl x:Name="Count"
+                                  Grid.Column="1"
+                                  SelectedValue="200"
+                                  SelectionChanged="OnCountChanged">
+                <arc:SegmentedOption Value="200" Label="200 steps" />
+                <arc:SegmentedOption Value="500" Label="500 steps" />
+            </arc:SegmentedControl>
+        </Grid>
+        <Panel Height="480">
+            <arc:WorkflowCanvas x:Name="Canvas"
+                                AutoFit="None"
+                                Zoom="0.75"
+                                MinZoom="0.05"
+                                MaxZoom="1.5"
+                                IsEditable="True"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="1" />
+            <arc:WorkflowZoomControls Target="{Binding #Canvas}"
+                                      Margin="12"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Bottom" />
+            <arc:WorkflowMinimap Target="{Binding #Canvas}"
+                                 Margin="12"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Bottom" />
+        </Panel>
+    </StackPanel>
+</UserControl>

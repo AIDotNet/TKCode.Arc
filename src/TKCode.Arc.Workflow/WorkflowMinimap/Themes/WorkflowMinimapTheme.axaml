@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The map: the zoom bar's surface (Surface, 1px Border, radius 10, ShadowResting); steps in BorderStrong, running and
+         selected ones in the accent, failed ones in Danger; the view as an accent frame over AccentSubtle. Self-drawn. -->
+    <ControlTheme x:Key="{x:Type arc:WorkflowMinimap}" TargetType="arc:WorkflowMinimap">
+        <Setter Property="Width" Value="{arc:WorkflowMinimapTokenResource MapWidth}" />
+        <Setter Property="Height" Value="{arc:WorkflowMinimapTokenResource MapHeight}" />
+        <Setter Property="Padding" Value="{arc:WorkflowMinimapTokenResource MapPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:WorkflowMinimapTokenResource MapRadius}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        <Setter Property="NodeBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="ViewportFill" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="NodeRadius" Value="{arc:WorkflowMinimapTokenResource NodeRadius}" />
+        <Setter Property="ViewportRadius" Value="{arc:WorkflowMinimapTokenResource ViewportRadius}" />
+    </ControlTheme>
+</ResourceDictionary>

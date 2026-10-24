@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasPreviewDemo">
+    <!-- A sample automation that runs sample orders on its own; Send test event runs the next one at once.
+         Like Arc's hero, it only fits: no panning or zooming, so the page scrolls over it. -->
+    <StackPanel MaxWidth="640" Spacing="16">
+        <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <Ellipse x:Name="Live" Width="7" Height="7" Fill="{arc:ArcDesignTokenResource Success}" />
+                <TextBlock Text="on-order-placed.ts"
+                           FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                           FontSize="13"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+            <arc:Button x:Name="SendButton" Grid.Column="1" Content="Send test event" Variant="Secondary" Size="Small" />
+        </Grid>
+        <arc:WorkflowCanvas x:Name="Canvas"
+                            IsPanZoomEnabled="False"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="1" />
+        <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" BorderThickness="1" CornerRadius="6"
+                        Padding="7,1" Background="{arc:ArcDesignTokenResource Surface}">
+                    <TextBlock Text="order.placed"
+                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </Border>
+                <TextBlock x:Name="RunCount" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </StackPanel>
+            <TextBlock x:Name="Summary" Grid.Column="1" FontSize="13" VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

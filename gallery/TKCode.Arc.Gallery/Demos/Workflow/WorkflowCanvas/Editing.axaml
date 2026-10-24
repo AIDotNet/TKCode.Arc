@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasEditingDemo">
+    <!-- An editable workflow: drag steps (they snap to the grid), Shift + drag the empty canvas to select several,
+         press M to move the selection with the arrow keys, Delete to remove it, Ctrl / Cmd + Z to undo. The approval
+         step is locked. -->
+    <StackPanel MaxWidth="680" Spacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock x:Name="Status"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                <arc:Button Content="Delete selected" Variant="Secondary" Size="Small" Command="{Binding #Canvas.DeleteSelectionCommand}" />
+                <arc:Button x:Name="ArrangeButton" Content="Arrange" Variant="Secondary" Size="Small" />
+            </StackPanel>
+        </Grid>
+        <Panel Height="460">
+            <arc:WorkflowCanvas x:Name="Canvas"
+                                IsEditable="True"
+                                AutoFit="Fit"
+                                MaxZoom="1"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="1" />
+            <arc:WorkflowZoomControls Target="{Binding #Canvas}"
+                                      Margin="12"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Bottom" />
+        </Panel>
+    </StackPanel>
+</UserControl>

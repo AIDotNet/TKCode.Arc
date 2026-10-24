@@ -1,0 +1,156 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- A step card (Arc HeroRelay .node): 1px border, radius 14, padding 0 14, 13px text, the surface and Arc's node shadow. -->
+    <ControlTheme x:Key="{x:Type arc:WorkflowNodeCard}" TargetType="arc:WorkflowNodeCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="{arc:WorkflowNodeCardTokenResource StandardWidth}" />
+        <Setter Property="Height" Value="{arc:WorkflowNodeCardTokenResource StandardHeight}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:WorkflowNodeCardTokenResource CardRadius}" />
+        <Setter Property="Padding" Value="{arc:WorkflowNodeCardTokenResource InlinePadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:WorkflowNodeCardTokenResource TitleFontSize}" />
+        <Setter Property="RunningBorderAccentShare" Value="{arc:WorkflowNodeCardTokenResource RunningBorderAccentShare}" />
+        <Setter Property="RunningFillAccentShare" Value="{arc:WorkflowNodeCardTokenResource RunningFillAccentShare}" />
+        <Setter Property="FailedBorderBrush" Value="{arc:WorkflowNodeCardTokenResource FailedBorderColor}" />
+        <Setter Property="CardShadow" Value="{arc:WorkflowNodeCardTokenResource CardShadow}" />
+        <Setter Property="SkippedOpacity" Value="{arc:WorkflowNodeCardTokenResource SkippedOpacity}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WorkflowNodeCard">
+                <Panel>
+                <!-- The shadows are pictures (WorkflowCardShadow): a box shadow costs the GPU a blur pass per card per frame. -->
+                <arc:WorkflowCardShadow Shadows="{TemplateBinding StateShadow}"
+                                        CornerRadius="{TemplateBinding CornerRadius}"
+                                        Opacity="{TemplateBinding StateOpacity}" />
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding StateBackground}"
+                        BorderBrush="{TemplateBinding StateBorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Opacity="{TemplateBinding StateOpacity}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                    <arc:WorkflowCardPanel Name="PART_Layout"
+                                           Gap="{arc:WorkflowNodeCardTokenResource ContentGap}"
+                                           RowGap="{arc:WorkflowNodeCardTokenResource CompactRowGap}">
+                        <ContentPresenter Name="PART_Icon"
+                                          Width="{arc:WorkflowNodeCardTokenResource NodeIconSize}"
+                                          Height="{arc:WorkflowNodeCardTokenResource NodeIconSize}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center" />
+                        <StackPanel Name="PART_Text">
+                            <TextBlock Name="PART_Title"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       LineHeight="17" />
+                            <TextBlock Name="PART_Subtitle"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis"
+                                       LineHeight="16" />
+                        </StackPanel>
+                        <arc:WorkflowStateMark Name="PART_State"
+                                               AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                               SuccessBrush="{arc:ArcDesignTokenResource Success}"
+                                               DangerBrush="{arc:ArcDesignTokenResource Danger}"
+                                               MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                               RingBrush="{arc:WorkflowNodeCardTokenResource PendingRingColor}"
+                                               GlyphSize="{arc:WorkflowNodeCardTokenResource StateGlyphSize}"
+                                               Gap="{arc:WorkflowNodeCardTokenResource StateGap}"
+                                               RingSize="{arc:WorkflowNodeCardTokenResource PendingRingSize}"
+                                               RingThickness="{arc:WorkflowNodeCardTokenResource PendingRingThickness}"
+                                               SpinnerSize="{arc:WorkflowNodeCardTokenResource SpinnerSize}"
+                                               SpinnerTrackShare="{arc:WorkflowNodeCardTokenResource SpinnerTrackAccentShare}"
+                                               FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                    </arc:WorkflowCardPanel>
+                    <!-- Content from a node template replaces the row; the frame, halo and ring stay. -->
+                    <ContentPresenter Name="PART_Content" IsVisible="False" />
+                    </Panel>
+                </Border>
+                <arc:WorkflowCardShadow Shadows="{TemplateBinding StateInsetShadow}"
+                                        CornerRadius="{TemplateBinding CornerRadius}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Opacity="{TemplateBinding StateOpacity}" />
+                <!-- Selected: 3px of the subtle accent around the card's accent border. -->
+                <Border Name="PART_Selection"
+                        IsVisible="False"
+                        IsHitTestVisible="False"
+                        Margin="{arc:WorkflowNodeCardTokenResource SelectionHaloMargin}"
+                        CornerRadius="{arc:WorkflowNodeCardTokenResource SelectionHaloRadius}"
+                        BorderThickness="{arc:WorkflowNodeCardTokenResource SelectionHaloThickness}"
+                        BorderBrush="{arc:ArcDesignTokenResource AccentSubtle}" />
+                <!-- Keyboard focus: Arc's shared ring, 2px, 2px outside the card. -->
+                <Border Name="PART_FocusRing"
+                        IsVisible="False"
+                        IsHitTestVisible="False"
+                        Margin="{arc:WorkflowNodeCardTokenResource FocusRingMargin}"
+                        CornerRadius="{arc:WorkflowNodeCardTokenResource FocusRingRadius}"
+                        BorderThickness="2"
+                        BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:compact">
+            <Setter Property="Width" Value="{arc:WorkflowNodeCardTokenResource CompactWidth}" />
+            <Setter Property="Height" Value="{arc:WorkflowNodeCardTokenResource CompactHeight}" />
+        </Style>
+
+        <!-- Arc's narrow layout (a canvas under 520): 344 × 52 and 108 × 72; two-row cards tighten to padding 10, row gap 6. -->
+        <Style Selector="^:narrow">
+            <Setter Property="Width" Value="{arc:WorkflowNodeCardTokenResource NarrowStandardWidth}" />
+            <Setter Property="Height" Value="{arc:WorkflowNodeCardTokenResource NarrowStandardHeight}" />
+        </Style>
+        <Style Selector="^:narrow:compact">
+            <Setter Property="Width" Value="{arc:WorkflowNodeCardTokenResource NarrowCompactWidth}" />
+            <Setter Property="Height" Value="{arc:WorkflowNodeCardTokenResource NarrowCompactHeight}" />
+            <Setter Property="Padding" Value="{arc:WorkflowNodeCardTokenResource NarrowCompactInlinePadding}" />
+        </Style>
+        <Style Selector="^:narrow:compact /template/ arc|WorkflowCardPanel#PART_Layout">
+            <Setter Property="RowGap" Value="{arc:WorkflowNodeCardTokenResource NarrowCompactRowGap}" />
+        </Style>
+
+        <!-- Content from a node template: as tall as it needs (at least the card's height), padded on every side. -->
+        <Style Selector="^:custom">
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="MinHeight" Value="{arc:WorkflowNodeCardTokenResource StandardHeight}" />
+            <Setter Property="Padding" Value="{arc:WorkflowNodeCardTokenResource CustomContentPadding}" />
+        </Style>
+        <Style Selector="^:custom:compact">
+            <Setter Property="MinHeight" Value="{arc:WorkflowNodeCardTokenResource CompactHeight}" />
+        </Style>
+
+        <!-- While a connection is made, the steps it cannot go to fade. -->
+        <Style Selector="^:connect-invalid">
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+
+        <Style Selector="^:selected /template/ Border#PART_Selection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Arc: border-color, background-color and opacity ease over the standard duration; reduced motion has no transition. -->
+        <Style Selector="^:motion-full /template/ Border#PART_Frame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

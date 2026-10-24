@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasConnectingDemo">
+    <!-- Drag from an output (the circles under a card when you point at it) onto another step to connect them, or drag
+         the end of an edge off its input to move or remove it. Connecting "Yes" straight to the refund is refused:
+         amounts over $500 need an approval first. A connection dropped on the empty canvas adds a step there. -->
+    <StackPanel MaxWidth="680" Spacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBlock x:Name="Status"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                <arc:Button Content="Undo" Variant="Secondary" Size="Small" Command="{Binding #Canvas.UndoCommand}" />
+                <arc:Button Content="Redo" Variant="Secondary" Size="Small" Command="{Binding #Canvas.RedoCommand}" />
+            </StackPanel>
+        </Grid>
+        <arc:WorkflowCanvas x:Name="Canvas"
+                            Height="460"
+                            IsEditable="True"
+                            AutoFit="Fit"
+                            MaxZoom="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                            BorderThickness="1" />
+    </StackPanel>
+</UserControl>

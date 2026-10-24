@@ -1,0 +1,77 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!-- The workflow canvas (Arc HeroRelay): the page background with a touch of accent, a dot grid, wires and cards. -->
+    <ControlTheme x:Key="{x:Type arc:WorkflowCanvas}" TargetType="arc:WorkflowCanvas">
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="CanvasAccentShare" Value="{arc:WorkflowCanvasTokenResource CanvasAccentShare}" />
+        <Setter Property="ZoomStep" Value="{arc:WorkflowCanvasTokenResource ZoomStep}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WorkflowCanvas">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding CanvasBrush}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <arc:WorkflowGridLayer Name="PART_Grid"
+                                               Spacing="{arc:WorkflowCanvasTokenResource GridSpacing}"
+                                               DotRadius="{arc:WorkflowCanvasTokenResource GridDotRadius}"
+                                               DotBrush="{arc:WorkflowCanvasTokenResource GridDotColor}"
+                                               MinScreenSpacing="{arc:WorkflowCanvasTokenResource GridMinScreenSpacing}" />
+                        <arc:WorkflowWorldPanel Name="PART_World"
+                                                RankGap="{arc:WorkflowCanvasTokenResource RankGap}"
+                                                FanOutRankGap="{arc:WorkflowCanvasTokenResource FanOutRankGap}"
+                                                NodeGap="{arc:WorkflowCanvasTokenResource NodeGap}"
+                                                NarrowRankGap="{arc:WorkflowCanvasTokenResource NarrowRankGap}"
+                                                NarrowFanOutRankGap="{arc:WorkflowCanvasTokenResource NarrowFanOutRankGap}"
+                                                NarrowNodeGap="{arc:WorkflowCanvasTokenResource NarrowNodeGap}">
+                            <arc:WorkflowEdgeLayer Name="PART_Edges"
+                                                   WireThickness="{arc:WorkflowCanvasTokenResource WireThickness}"
+                                                   WireBrush="{arc:WorkflowCanvasTokenResource WireColor}"
+                                                   FlowThickness="{arc:WorkflowCanvasTokenResource FlowThickness}"
+                                                   AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                   AccentSubtleBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                   SkippedDashLength="{arc:WorkflowCanvasTokenResource SkippedDashLength}"
+                                                   SkippedGapLength="{arc:WorkflowCanvasTokenResource SkippedGapLength}"
+                                                   SkippedWireOpacity="{arc:WorkflowCanvasTokenResource SkippedWireOpacity}"
+                                                   BezierMinHandle="{arc:WorkflowCanvasTokenResource BezierMinHandle}"
+                                                   StepCornerRadius="{arc:WorkflowCanvasTokenResource StepCornerRadius}"
+                                                   FlowDuration="{arc:WorkflowCanvasTokenResource FlowDuration}" />
+                            <arc:WorkflowPortLayer Name="PART_Ports"
+                                                   WireBrush="{arc:WorkflowCanvasTokenResource WireColor}"
+                                                   SurfaceBrush="{arc:ArcDesignTokenResource Surface}"
+                                                   AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                   LabelBrush="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   LabelBorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                        </arc:WorkflowWorldPanel>
+                        <arc:WorkflowOverlayLayer Name="PART_Overlay"
+                                                  HintBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                  HintBackground="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                  HintBorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                  FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                  FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                  AccentBrush="{arc:ArcDesignTokenResource Accent}"
+                                                  AccentSubtleBrush="{arc:ArcDesignTokenResource AccentSubtle}" />
+                        <TextBlock Name="PART_Announcer"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False"
+                                   ClipToBounds="True"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   AutomationProperties.LiveSetting="Polite" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

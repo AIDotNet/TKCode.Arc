@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.WorkflowLangResourceKind">
+    <unit id="AnnounceConnectCancelled">
+      <segment>
+        <source>Connection cancelled</source>
+        <target state="translated">已取消连接</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnectMode">
+      <segment>
+        <source>Connecting from {0} to {1}: arrow keys choose a step, Enter connects, Escape cancels</source>
+        <target state="translated">正在从 {0} 连接到 {1}：方向键选择步骤，Enter 连接，Esc 取消</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnectNoTarget">
+      <segment>
+        <source>No step can take this connection</source>
+        <target state="translated">没有步骤可以接受这条连接</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnectPort">
+      <segment>
+        <source>Output {0}: left and right choose an output, Enter continues</source>
+        <target state="translated">输出 {0}：左右键选择输出，Enter 继续</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceConnected">
+      <segment>
+        <source>Connected {0} to {1}</source>
+        <target state="translated">已将 {0} 连接到 {1}</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCopiedOne">
+      <segment>
+        <source>Copied 1 step</source>
+        <target state="translated">已复制 1 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCopiedOther">
+      <segment>
+        <source>Copied {0} steps</source>
+        <target state="translated">已复制 {0} 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCutOne">
+      <segment>
+        <source>Cut 1 step</source>
+        <target state="translated">已剪切 1 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCutOther">
+      <segment>
+        <source>Cut {0} steps</source>
+        <target state="translated">已剪切 {0} 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedEdgesOne">
+      <segment>
+        <source>Deleted 1 connection</source>
+        <target state="translated">已删除 1 条连线</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedEdgesOther">
+      <segment>
+        <source>Deleted {0} connections</source>
+        <target state="translated">已删除 {0} 条连线</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedOne">
+      <segment>
+        <source>Deleted 1 step</source>
+        <target state="translated">已删除 1 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceDeletedOther">
+      <segment>
+        <source>Deleted {0} steps</source>
+        <target state="translated">已删除 {0} 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceDisconnected">
+      <segment>
+        <source>Disconnected {0} from {1}</source>
+        <target state="translated">已断开 {0} 与 {1} 的连接</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceFailed">
+      <segment>
+        <source>{0} failed</source>
+        <target state="translated">{0} 失败</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceFailedReason">
+      <segment>
+        <source>{0} failed: {1}</source>
+        <target state="translated">{0} 失败：{1}</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceFinished">
+      <segment>
+        <source>Run finished: {0} done, {1} failed, {2} skipped</source>
+        <target state="translated">运行结束：{0} 个完成，{1} 个失败，{2} 个跳过</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceMoveCancelled">
+      <segment>
+        <source>Move cancelled</source>
+        <target state="translated">已取消移动</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceMoveMode">
+      <segment>
+        <source>Moving: arrow keys move, Enter places, Escape cancels</source>
+        <target state="translated">移动中：方向键移动，Enter 放下，Esc 取消</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceMovedOne">
+      <segment>
+        <source>Moved 1 step</source>
+        <target state="translated">已移动 1 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceMovedOther">
+      <segment>
+        <source>Moved {0} steps</source>
+        <target state="translated">已移动 {0} 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceNothingToPaste">
+      <segment>
+        <source>Nothing to paste</source>
+        <target state="translated">没有可粘贴的内容</target>
+      </segment>
+    </unit>
+    <unit id="AnnouncePastedOne">
+      <segment>
+        <source>Pasted 1 step</source>
+        <target state="translated">已粘贴 1 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnouncePastedOther">
+      <segment>
+        <source>Pasted {0} steps</source>
+        <target state="translated">已粘贴 {0} 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRedo">
+      <segment>
+        <source>Redone</source>
+        <target state="translated">已重做</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRefused">
+      <segment>
+        <source>Can't connect: {0}</source>
+        <target state="translated">无法连接：{0}</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceUndo">
+      <segment>
+        <source>Undone</source>
+        <target state="translated">已撤销</target>
+      </segment>
+    </unit>
+    <unit id="CanvasHelp">
+      <segment>
+        <source>Arrow keys move between steps, Alt with an arrow follows the connections, Enter opens a step, plus and minus zoom, Shift+1 fits the workflow.</source>
+        <target state="translated">方向键在步骤间移动，Alt 加方向键沿连线移动，Enter 打开步骤，加号和减号缩放，Shift+1 适合窗口。</target>
+      </segment>
+    </unit>
+    <unit id="CanvasHelpEditable">
+      <segment>
+        <source>Arrow keys move between steps, Alt with an arrow follows the connections, Enter opens a step, Space selects, M moves the selected steps, C connects the focused step, Delete removes the selection, Ctrl+C and Ctrl+V copy and paste, Ctrl+Z undoes, plus and minus zoom, Shift+1 fits the workflow.</source>
+        <target state="translated">方向键在步骤间移动，Alt 加方向键沿连线移动，Enter 打开步骤，空格键选择，M 移动选中的步骤，C 连接焦点步骤，Delete 删除选中内容，Ctrl+C 和 Ctrl+V 复制与粘贴，Ctrl+Z 撤销，加号和减号缩放，Shift+1 适合窗口。</target>
+      </segment>
+    </unit>
+    <unit id="CanvasNameOne">
+      <segment>
+        <source>Workflow, 1 step</source>
+        <target state="translated">工作流，1 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="CanvasNameOther">
+      <segment>
+        <source>Workflow, {0} steps</source>
+        <target state="translated">工作流，{0} 个步骤</target>
+      </segment>
+    </unit>
+    <unit id="CardSelected">
+      <segment>
+        <source>selected</source>
+        <target state="translated">已选中</target>
+      </segment>
+    </unit>
+    <unit id="ConnectCycle">
+      <segment>
+        <source>This would create a loop</source>
+        <target state="translated">会形成循环</target>
+      </segment>
+    </unit>
+    <unit id="ConnectDirection">
+      <segment>
+        <source>Connect an output to an input</source>
+        <target state="translated">请把输出连接到输入</target>
+      </segment>
+    </unit>
+    <unit id="ConnectDuplicate">
+      <segment>
+        <source>Already connected</source>
+        <target state="translated">已经连接</target>
+      </segment>
+    </unit>
+    <unit id="ConnectFull">
+      <segment>
+        <source>This port takes no more connections</source>
+        <target state="translated">该端口不能再接受连接</target>
+      </segment>
+    </unit>
+    <unit id="ConnectSelf">
+      <segment>
+        <source>Can't connect a step to itself</source>
+        <target state="translated">不能连接到自身</target>
+      </segment>
+    </unit>
+    <unit id="ConnectType">
+      <segment>
+        <source>Port types don't match</source>
+        <target state="translated">端口类型不匹配</target>
+      </segment>
+    </unit>
+    <unit id="DurationMilliseconds">
+      <segment>
+        <source>{0} ms</source>
+        <target state="translated">{0} 毫秒</target>
+      </segment>
+    </unit>
+    <unit id="DurationMinutes">
+      <segment>
+        <source>{0} min {1} s</source>
+        <target state="translated">{0} 分 {1} 秒</target>
+      </segment>
+    </unit>
+    <unit id="DurationSeconds">
+      <segment>
+        <source>{0} s</source>
+        <target state="translated">{0} 秒</target>
+      </segment>
+    </unit>
+    <unit id="StateDone">
+      <segment>
+        <source>Done</source>
+        <target state="translated">已完成</target>
+      </segment>
+    </unit>
+    <unit id="StateFailed">
+      <segment>
+        <source>Failed</source>
+        <target state="translated">失败</target>
+      </segment>
+    </unit>
+    <unit id="StatePending">
+      <segment>
+        <source>Waiting</source>
+        <target state="translated">等待中</target>
+      </segment>
+    </unit>
+    <unit id="StateRunning">
+      <segment>
+        <source>Running</source>
+        <target state="translated">运行中</target>
+      </segment>
+    </unit>
+    <unit id="StateSkipped">
+      <segment>
+        <source>Skipped</source>
+        <target state="translated">已跳过</target>
+      </segment>
+    </unit>
+    <unit id="ZoomFit">
+      <segment>
+        <source>Fit to view</source>
+        <target state="translated">适合窗口</target>
+      </segment>
+    </unit>
+    <unit id="ZoomIn">
+      <segment>
+        <source>Zoom in</source>
+        <target state="translated">放大</target>
+      </segment>
+    </unit>
+    <unit id="ZoomOut">
+      <segment>
+        <source>Zoom out</source>
+        <target state="translated">缩小</target>
+      </segment>
+    </unit>
+    <unit id="ZoomPercent">
+      <segment>
+        <source>{0}%</source>
+        <target state="translated">{0}%</target>
+      </segment>
+    </unit>
+    <unit id="ZoomReset">
+      <segment>
+        <source>Reset to 100%</source>
+        <target state="translated">重置为 100%</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

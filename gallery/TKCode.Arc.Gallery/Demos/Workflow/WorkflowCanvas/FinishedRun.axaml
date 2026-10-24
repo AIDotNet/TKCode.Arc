@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasFinishedRunDemo">
+    <!-- A finished run loaded from history: the small order skipped two actions, and a deploy step failed. -->
+    <arc:WorkflowCanvas x:Name="Canvas"
+                        WheelMode="ModifierZoom"
+                        MaxWidth="640"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="1" />
+</UserControl>

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasNarrowDemo">
+    <!-- Under 520 wide the canvas switches to Arc's phone layout: narrower cards and tighter spacing, at actual size. -->
+    <arc:WorkflowCanvas x:Name="Canvas"
+                        MaxWidth="392"
+                        WheelMode="ModifierZoom"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="1" />
+</UserControl>

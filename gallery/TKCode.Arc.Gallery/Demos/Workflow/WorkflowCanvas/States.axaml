@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WorkflowCanvasStatesDemo">
+    <!-- The six states a step card shows, from no run at all to failed. Cards also work outside a canvas. -->
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="16" LineSpacing="16" MaxWidth="640">
+        <arc:WorkflowNodeCard>
+            <arc:WorkflowNodeCard.Node>
+                <arc:WorkflowNode Title="Find customer account" Description="Plan, seats and owner"
+                                  Icon="{x:Static arc:ArcIcons.Search}" State="Idle" />
+            </arc:WorkflowNodeCard.Node>
+        </arc:WorkflowNodeCard>
+        <arc:WorkflowNodeCard>
+            <arc:WorkflowNodeCard.Node>
+                <arc:WorkflowNode Title="Find customer account" Description="Plan, seats and owner"
+                                  Icon="{x:Static arc:ArcIcons.Search}" State="Pending" />
+            </arc:WorkflowNodeCard.Node>
+        </arc:WorkflowNodeCard>
+        <arc:WorkflowNodeCard>
+            <arc:WorkflowNodeCard.Node>
+                <arc:WorkflowNode Title="Find customer account" Description="Plan, seats and owner"
+                                  Icon="{x:Static arc:ArcIcons.Search}" State="Running" />
+            </arc:WorkflowNodeCard.Node>
+        </arc:WorkflowNodeCard>
+        <arc:WorkflowNodeCard>
+            <arc:WorkflowNodeCard.Node>
+                <arc:WorkflowNode Title="Find customer account" Description="Plan, seats and owner"
+                                  Result="Enterprise, 212 seats" Duration="0:0:0.118"
+                                  Icon="{x:Static arc:ArcIcons.Search}" State="Done" />
+            </arc:WorkflowNodeCard.Node>
+        </arc:WorkflowNodeCard>
+        <arc:WorkflowNodeCard>
+            <arc:WorkflowNodeCard.Node>
+                <arc:WorkflowNode Title="Create onboarding task" Description="Onboarding team"
+                                  Error="Task service timed out" Appearance="Compact"
+                                  Icon="{x:Static arc:ArcIcons.ListChecks}" State="Failed" />
+            </arc:WorkflowNodeCard.Node>
+        </arc:WorkflowNodeCard>
+        <arc:WorkflowNodeCard>
+            <arc:WorkflowNodeCard.Node>
+                <arc:WorkflowNode Title="Post to #revenue" Description="Team chat" Appearance="Compact"
+                                  Icon="{x:Static arc:ArcIcons.MessageSquare}" State="Skipped" />
+            </arc:WorkflowNodeCard.Node>
+        </arc:WorkflowNodeCard>
+    </WrapPanel>
+</UserControl>
