@@ -26,7 +26,7 @@ ENV DOTNET_ROOT=/opt/dotnet \
     DOTNET_CLI_TELEMETRY_OPTOUT=1
 RUN dotnet --info && dotnet workload install wasm-tools-net10
 COPY . .
-# Trimmed and compiled ahead of time to WebAssembly (RunAOTCompilation, see the Browser project file): the slowest step of the image.
+# Trimmed (compiling ahead of time to WebAssembly is off: -p:ArcAot=true, see the Browser project file).
 RUN dotnet publish gallery/TKCode.Arc.Gallery.Browser/TKCode.Arc.Gallery.Browser.csproj \
         -c Release -o /app \
         ${STREAMMARK_VERSION:+-p:StreamMarkVersion=${STREAMMARK_VERSION}}

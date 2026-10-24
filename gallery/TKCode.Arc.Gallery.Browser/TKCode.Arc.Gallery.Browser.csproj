@@ -18,7 +18,10 @@
              publish takes about 12 minutes longer. Builds and dotnet run stay interpreted; -p:RunAOTCompilation=false publishes
              without it. Emscripten's -Oz made the compiled code no smaller (26.06 against 26.05 MB), so the defaults stay.
              The compiling happens in the SDK's nested publish build, which clears _IsPublishing and passes it on as _WasmIsPublishing. -->
-        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
+        <!-- Off by default since 2026-10-24: the compiled build of 0.3.0-preview.5 crashed at startup on docs.tkcode.si ("memory access out of
+             bounds" inside dotnet.native.wasm, the page stays on "Starting..."), reproduced locally in headless Edge; the same publish
+             with -p:RunAOTCompilation=false starts in 3 s. Pass -p:ArcAot=true to publish compiled again once that is understood. -->
+        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And '$(ArcAot)' == 'true' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
         <!-- Publishing also shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
              everything. -p:ArcWasmPrune=false publishes with everything, -p:ArcWasmPrune=true shrinks a build as well. -->
         <ArcWasmPrune Condition="'$(ArcWasmPrune)' == ''">$(_IsPublishing)</ArcWasmPrune>
