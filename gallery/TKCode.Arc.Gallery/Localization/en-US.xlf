@@ -86,6 +86,11 @@
         <source>Advanced charts</source>
       </segment>
     </unit>
+    <unit id="Category_Workflow">
+      <segment>
+        <source>Workflow</source>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>

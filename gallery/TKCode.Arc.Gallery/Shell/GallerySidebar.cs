@@ -113,14 +113,17 @@ public sealed class GallerySidebar : Border
 
     public GallerySidebar()
     {
-        var implemented = GalleryCatalog.Categories.SelectMany(c => c.Entries).Count(e => GalleryPages.IsImplemented(e.ClassName));
+        // The footer counts the whole Components section: Arc's components and the extras. Blocks and the Special
+        // components are listed in their own sections and stay out of it (as they do on uiarc.dev).
+        var components = GalleryCatalog.ComponentEntries.ToList();
+        var implemented = components.Count(e => GalleryPages.IsImplemented(e.ClassName));
         _clear = BuildClearButton();
         _shortcut = BuildShortcutHint();
 
         var list = new StackPanel { Margin = new Thickness(8, 4, 8, 28) };
         // The sections follow uiarc.dev's sidebar order: Docs, Components, Blocks.
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Docs, ArcIcons.FileText, [GalleryCatalog.Docs], flatten: true));
-        // Arc's groups, then the extras group (not counted among the Arc components in the footer).
+        // Arc's groups, then the extras group (both are part of the section, so both count in the footer).
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Components, ArcIcons.LayoutGrid, GalleryCatalog.AllCategories.ToArray()));
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true));
         // The Special components section (uiarc.dev's fourth section).
@@ -158,7 +161,7 @@ public sealed class GallerySidebar : Border
         top.Children.Add(BuildSearchBox());
         top.Children.Add(_filter);
 
-        var footer = BuildFooter(implemented);
+        var footer = BuildFooter(implemented, components.Count);
         footer.Margin = new Thickness(16, 8, 16, 16);
 
         var root = new Grid { RowDefinitions = new RowDefinitions("Auto,*,Auto") };
@@ -428,14 +431,14 @@ public sealed class GallerySidebar : Border
         return item;
     }
 
-    private Control BuildFooter(int implemented)
+    private Control BuildFooter(int implemented, int total)
     {
         var dot = new Ellipse { Width = 8, Height = 8, VerticalAlignment = VerticalAlignment.Center };
         ArcTokens.Bind(dot, Shape.FillProperty, ArcDesignTokenKind.Success);
         var label = new TextBlock { Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
         GalleryText.Bind(label, TextBlock.TextProperty, GalleryShellLangResourceKind.Implemented);
         var count = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextMuted, 12);
-        GalleryText.BindFormat(count, TextBlock.TextProperty, GalleryShellLangResourceKind.ImplementedCount, implemented, GalleryCatalog.Count);
+        GalleryText.BindFormat(count, TextBlock.TextProperty, GalleryShellLangResourceKind.ImplementedCount, implemented, total);
         count.VerticalAlignment = VerticalAlignment.Center;
         count.Margin = new Thickness(0, 0, 8, 0);
         var chevron = GalleryUi.Glyph(ArcIcons.ChevronRight, 14, ArcDesignTokenKind.TextMuted);

@@ -6,12 +6,11 @@ namespace TKCode.Arc.Gallery.Shell;
 
 /// <summary>
 /// The Gallery's brand mark: the logo in the top bar and the icon of the desktop window. The artwork is
-/// <c>Assets/logo.png</c>; <c>tools/branding/build_icons.py</c> builds it, and the executable, app bundle and
-/// browser icons, from one master image.
+/// <c>Assets/icon.png</c>.
 /// </summary>
 internal static class GalleryBrand
 {
-    private static readonly Uri s_logo = new("avares://TKCode.Arc.Gallery/Assets/logo.png");
+    private static readonly Uri s_logo = new("avares://TKCode.Arc.Gallery/Assets/icon.png");
 
     /// <summary>The logo as an image for the top bar.</summary>
     public static Bitmap CreateLogo()

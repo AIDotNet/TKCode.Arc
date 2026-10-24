@@ -3,7 +3,28 @@ import { dotnet } from './_framework/dotnet.js'
 const is_browser = typeof window != "undefined";
 if (!is_browser) throw new Error(`Expected to be running in a browser`);
 
+// The splash in index.html: the bar follows the runtime's downloads (resources loaded of all it needs); once they are in, the
+// bar sweeps until Avalonia draws the first frame and removes the splash.
+const splash = document.querySelector('.avalonia-splash');
+const splashBar = document.getElementById('splash-bar');
+const splashStatus = document.getElementById('splash-status');
+let splashShown = 0;
+const showProgress = (loaded, total) => {
+    if (!splash || !total) {
+        return;
+    }
+    const done = loaded >= total;
+    // Never move backwards: the total can grow while the runtime discovers more resources.
+    splashShown = Math.max(splashShown, Math.min(loaded / total, 1));
+    const percent = Math.round(splashShown * 100);
+    splashBar.style.transform = `scaleX(${splashShown})`;
+    splash.setAttribute('aria-valuenow', String(percent));
+    splashStatus.textContent = done ? 'Starting…' : `${percent}%`;
+    splash.classList.toggle('splash-starting', done);
+};
+
 const dotnetRuntime = await dotnet
+    .withModuleConfig({ onDownloadResourceProgress: showProgress })
     .withDiagnosticTracing(false)
     .withApplicationArgumentsFromQuery()
     .create();

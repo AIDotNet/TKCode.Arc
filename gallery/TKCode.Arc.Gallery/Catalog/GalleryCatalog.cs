@@ -32,6 +32,12 @@ public static partial class GalleryCatalog
                 "A spreadsheet grid with range selection, inline editing, a fill handle, clipboard, undo, sorting, filters, grouping, totals and export.",
                 IsArc: false),
         ], IsArc: false),
+        new("Workflow", "Workflow", "工作流",
+        [
+            new("WorkflowCanvas", "Workflow canvas", "workflow-canvas", 0,
+                "Show a workflow on a dotted canvas and play its runs: each step lights up in turn, the data draws along the edges, and every step reports its result and time.",
+                IsArc: false),
+        ], IsArc: false),
         new("Content", "Extras", "扩展",
         [
             new("Markdown", "Markdown", "markdown", 0,
@@ -127,15 +133,24 @@ public static partial class GalleryCatalog
     /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 110 Arc components.</summary>
     public static GalleryCategory AdvancedCharts => Extras[0];
 
-    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts after Charts, then the other extras.</summary>
+    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 110 Arc components.</summary>
+    public static GalleryCategory Workflow => Extras[1];
+
+    /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts and Workflow after Charts, then the other extras.</summary>
     public static IEnumerable<GalleryCategory> AllCategories =>
-        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts } : new[] { c })
-                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts)));
+        Categories.SelectMany(c => c.Code == "Charts" ? new[] { c, AdvancedCharts, Workflow } : new[] { c })
+                  .Concat(Extras.Where(e => !ReferenceEquals(e, AdvancedCharts) && !ReferenceEquals(e, Workflow)));
 
     /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>
         Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries).Concat(Special.SelectMany(c => c.AllEntries));
 
+    /// <summary>Every entry of the Components section: Arc's components and the extras.</summary>
+    public static IEnumerable<GalleryEntry> ComponentEntries => AllCategories.SelectMany(c => c.Entries);
+
     /// <summary>Number of Arc components (extras not included).</summary>
     public static int Count => Categories.Sum(c => c.Entries.Length);
+
+    /// <summary>Number the Components section lists: the Arc components and the extras.</summary>
+    public static int ComponentCount => ComponentEntries.Count();
 }

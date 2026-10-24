@@ -108,7 +108,7 @@ public class GalleryDocsTests
     {
         // The rule for a new component: write Docs/<Category>/<Class>/en-US.md and its translations (design/engineering/gallery-app.md, 6).
         var entries = GalleryCatalog.Categories.SelectMany(c => c.Entries)
-            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "AdvancedCharts").SelectMany(c => c.Entries))
+            .Concat(GalleryCatalog.Extras.Where(c => c.Code is "Content" or "AdvancedCharts" or "Workflow").SelectMany(c => c.Entries))
             .Concat(GalleryCatalog.Special.SelectMany(c => c.Entries));
         foreach (var entry in entries)
         {

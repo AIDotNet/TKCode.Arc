@@ -192,8 +192,8 @@ public class GalleryLocalizationTests
             chinese.ShouldContain("代码");
             chinese.ShouldContain("本页内容");
             chinese.ShouldContain("在 uiarc.dev 查看");
-            // The sidebar counts Arc components only: ported blocks are IsArc too, but are not components.
-            chinese.ShouldContain($"{GalleryCatalog.Categories.SelectMany(c => c.Entries).Count(e => GalleryPages.IsImplemented(e.ClassName))} / {GalleryCatalog.Count}");
+            // The sidebar footer counts the whole Components section: the Arc components and the extras, not Blocks.
+            chinese.ShouldContain($"{GalleryCatalog.ComponentEntries.Count(e => GalleryPages.IsImplemented(e.ClassName))} / {GalleryCatalog.ComponentCount}");
             // The page summary comes from the translated docs page; component names stay in English.
             chinese.ShouldContain("标签清晰、状态实用的单行输入框。");
             chinese.ShouldNotContain("A single line field with clear labels and useful states.");

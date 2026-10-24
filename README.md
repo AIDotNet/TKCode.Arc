@@ -32,7 +32,8 @@ dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.4    # option
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
-(the animated AI explainers of the Special components section) are separate packages on NuGet. Versions carry a `-preview` suffix, so the API may still change between
+(the animated AI explainers of the Special components section) are separate packages on NuGet; `TKCode.Arc.Workflow`
+(the workflow canvas, `UseArcWorkflow()`) joins them with the next release. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started

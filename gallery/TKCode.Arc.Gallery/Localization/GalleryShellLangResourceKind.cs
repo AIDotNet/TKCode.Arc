@@ -74,6 +74,7 @@ public enum GalleryShellLangResourceKind
     Category_Cards,
     Category_Charts,
     Category_AdvancedCharts,
+    Category_Workflow,
     Category_Tables,
     Category_Activity,
     Category_Media,

@@ -41,6 +41,7 @@ public static partial class LlmsSite
         ["TKCode.Arc"] = "UseArc()",
         ["TKCode.Arc.Blocks"] = "UseArcBlocks()",
         ["TKCode.Arc.AdvancedCharts"] = "UseArcAdvancedCharts()",
+        ["TKCode.Arc.Workflow"] = "UseArcWorkflow()",
         ["TKCode.Arc.Special"] = "UseArcSpecial()",
     };
 

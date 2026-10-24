@@ -2044,6 +2044,10 @@
         <source>Raised once when a message's countdown reaches zero.</source>
         <target>訊息的倒數計時歸零時引發一次。</target>
       </trans-unit>
+      <trans-unit id="AnnouncementBar.DismissalDuration">
+        <source>How long a remembered dismissal keeps the bar hidden; null (default) keeps it hidden for good.</source>
+        <target>記住的關閉狀態讓橫幅保持隱藏的時長；null（預設）表示永久隱藏。</target>
+      </trans-unit>
       <trans-unit id="AnnouncementBar.DismissalKey">
         <source>Remembers the dismissal under this key; change the key to show a new campaign to everyone again.</source>
         <target>以此鍵記住關閉狀態；變更該鍵可讓所有人重新看到新的活動。</target>
@@ -7528,6 +7532,418 @@
         <source>Shows the cell as an accent-colored link with an underline that strengthens on hover. A click on the text raises `CellInvoked` with `Part`; the cell is not selected by that click.</source>
         <target>把儲存格顯示為強調色連結，底線在滑鼠移上時加深。點擊文字會以 `Part` 觸發 `CellInvoked`；該次點擊不會選取儲存格。</target>
       </trans-unit>
+      <trans-unit id="Login">
+        <source>The Login block as one control: it shows one of the five sign in and sign up layouts, chosen by `Variant`. Each layout is also a control of its own (`SignIn`, `LoginCentered`, `LoginSplit`, `LoginImmersive`, `SignupForm`) with its own properties and events; `Form` is the one being shown, so a host that switches layouts at run time configures it after each switch.</source>
+        <target>將登入區塊作為單一控制項呈現：它會顯示五種登入與註冊版面之一，由 `Variant` 選擇。每種版面本身也是一個控制項（`SignIn`、`LoginCentered`、`LoginSplit`、`LoginImmersive`、`SignupForm`），擁有各自的屬性與事件；`Form` 是目前顯示的那一個，因此在執行時切換版面的宿主需要在每次切換後再設定它。</target>
+      </trans-unit>
+      <trans-unit id="Login.Form">
+        <source>Defines the `Form` property.</source>
+        <target>定義 `Form` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="Login.FormChanged">
+        <source>Raised when `Variant` changed and `Form` is a new control; configure it here.</source>
+        <target>`Variant` 變更且 `Form` 為新控制項時觸發；請在此處進行設定。</target>
+      </trans-unit>
+      <trans-unit id="Login.Variant">
+        <source>Defines the `Variant` property.</source>
+        <target>定義 `Variant` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered">
+        <source>A passkey-first sign in and sign up screen (Arc's Login › Centered block): a card on a quiet ring backdrop that morphs from the passkey view through an email address and a six digit code to the signed-in account, with single sign-on buttons, a sign in / sign up switch in the top bar and a status line in the footer. Steps rise into place out of a small blur while the card's height follows on a spring; the resend countdown rolls; the backdrop drifts with a fine pointer.</source>
+        <target>以通行密鑰為先的登入與註冊畫面（Arc 的 Login › Centered 區塊）：卡片位於安靜的環形背景上，依序從通行密鑰檢視變為電子郵件地址、六位數驗證碼，最後變為已登入的帳號；卡片上有單一登入按鈕，頂列有登入 / 註冊切換，頁尾有狀態列。步驟從輕微模糊中浮現，卡片高度依彈簧動畫跟隨調整；重新寄送倒數以滾動方式顯示；背景隨細微的指標移動而飄移。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Account">
+        <source>The account the card shows: the address a code was sent to, or the signed-in address.</source>
+        <target>卡片顯示的帳號：驗證碼寄送到的位址，或已登入的位址。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.DemoCode">
+        <source>The code the simulated email contains (Arc's `demoCode`); shown as helper copy while no `VerifyCodeAsync` is set.</source>
+        <target>模擬郵件中包含的驗證碼（Arc 的 `demoCode`）；在未設定 `VerifyCodeAsync` 時作為輔助文字顯示。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.DemoEmail">
+        <source>The account a simulated passkey or single sign-on resolves to (Arc's `demoEmail`).</source>
+        <target>模擬密碼金鑰或單一登入解析到的帳號（Arc 的 `demoEmail`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Email">
+        <source>The text of the email field (Arc's `email` state); two-way. Kept when the card moves between views.</source>
+        <target>電子郵件欄位的文字（Arc 的 `email` 狀態），雙向繫結。卡片切換檢視時保留。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.IsBusy">
+        <source>True while a request runs (sending or checking a code, a provider); actions are ignored meanwhile.</source>
+        <target>請求執行期間為 True（傳送或檢查驗證碼、第三方登入）；期間的操作會被忽略。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.IsFullScreen">
+        <source>Fill the host with no frame (Arc's `fullScreen`): no border, square corners, no minimum height. Off by default: a framed 640px block.</source>
+        <target>填滿宿主且無框（Arc 的 `fullScreen`）：無邊框、直角，且沒有最小高度。預設關閉：為有框的 640px 區塊。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Labels">
+        <source>All built-in text; replace the object to localize or reword it.</source>
+        <target>所有內建文字；替換此物件即可在地化或改寫。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Method">
+        <source>How the person signed in (meaningful on the Done view).</source>
+        <target>使用者的登入方式（在完成檢視上有意義）。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Mode">
+        <source>Sign in (default) or create an account; two-way. Setting it moves the card as the top bar's switch does.</source>
+        <target>登入（預設）或註冊帳號；雙向繫結。設定此值時，卡片會隨頂列的開關一起切換。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Navigate">
+        <source>Raised when a footer link is activated; handle it to open the destination yourself.</source>
+        <target>頁尾連結被啟用時觸發；處理此事件可自行開啟目的地。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.PasskeyPhase">
+        <source>The passkey request: Idle, Waiting (the device is asked) or Verified.</source>
+        <target>通行密鑰請求的狀態：Idle、Waiting（向裝置發出驗證）或 Verified。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.PrivacyHref">
+        <source>The footer's Privacy link (Arc's `privacyHref`).</source>
+        <target>頁尾 Privacy 連結的位址（Arc 的 `privacyHref`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.ResendSeconds">
+        <source>Seconds before another code can be requested (Arc's `RESEND_SECONDS`, 30).</source>
+        <target>再次請求驗證碼前需等待的秒數（Arc 的 `RESEND_SECONDS`，30）。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.SignedIn">
+        <source>Raised once a sign in or sign up succeeds (Arc's `onSignIn(email, method, mode)`).</source>
+        <target>登入或註冊成功後引發（Arc 的 `onSignIn(email, method, mode)`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.SignedInCommand">
+        <source>Executed with the `LoginCenteredSignedInEventArgs` after `SignedIn`.</source>
+        <target>在 `SignedIn` 之後，以 `LoginCenteredSignedInEventArgs` 作為參數執行。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.SignedOut">
+        <source>Raised when Sign out returns the card to the passkey view.</source>
+        <target>當 "Sign out" 使卡片返回密碼金鑰檢視時觸發。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Status">
+        <source>The line in the footer, also announced to screen readers ("Code sent to …").</source>
+        <target>頁尾中的狀態列，同時也會由螢幕閱讀器朗讀（"Code sent to …"）。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.Step">
+        <source>The view on show: Passkey, Email, Code or Done.</source>
+        <target>正在顯示的檢視：Passkey、Email、Code 或 Done。</target>
+      </trans-unit>
+      <trans-unit id="LoginCentered.TermsHref">
+        <source>The footer's Terms link (Arc's `termsHref`). An in-page address (`#terms`) only says in the status line where it would go.</source>
+        <target>頁尾的條款連結（Arc 的 `termsHref`）。頁內位址（`#terms`）只會在狀態列中說明它會前往的位置。</target>
+      </trans-unit>
+      <trans-unit id="LoginCenteredNavigateEventArgs">
+        <source>Arguments of `NavigateEvent`: a footer link was activated. Set `Handled` to open the destination yourself; otherwise an absolute `http`, `https` or `mailto` address opens with the platform launcher, and an in-page address (`#terms`, Arc's default) only says in the status line where it would go.</source>
+        <target>`NavigateEvent` 的引数：頁尾連結已被啟用。設定 `Handled` 可自行開啟目的地；否則絕對位址 `http`、`https` 或 `mailto` 會由平台啟動器開啟，而頁內位址（`#terms`，Arc 的預設值）只會在狀態列中說明將前往的位置。</target>
+      </trans-unit>
+      <trans-unit id="LoginCenteredSignedInEventArgs">
+        <source>Arguments of `SignedInEvent` (Arc's `onSignIn(email, method, mode)`).</source>
+        <target>`SignedInEvent`（Arc 的 `onSignIn(email, method, mode)`）的引數。</target>
+      </trans-unit>
+      <trans-unit id="LoginFormChangedEventArgs">
+        <source>Data for `FormChanged`.</source>
+        <target>`FormChanged` 的事件資料。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive">
+        <source>A full-page magic-link sign-in over a picture: the product's mark and a sign-in / sign-up switch along the top, a frosted glass card in the middle, a note and the legal links along the bottom. The card walks through three steps: the email form (with single sign-on buttons under "or"), the Sent step (an envelope folds shut over the address, Open mail app, and a resend countdown) and the Done step (a drawn check, the account and the method, Sign out).</source>
+        <target>整頁式魔術連結登入，覆蓋在圖片之上：頂部為產品標誌與登入 / 註冊切換，中間為毛玻璃卡片，底部為說明文字與法律連結。卡片依序經過三個步驟：電子郵件表單（在 "or" 下方附有單一登入按鈕）、已寄出步驟（信封在位址上方折起闔上、開啟郵件應用程式按鈕，以及重新寄送倒數）和完成步驟（繪製的勾選標記、帳號與登入方式、登出）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Account">
+        <source>The address the link went to, or the signed-in address (trimmed, lower case); null on the form.</source>
+        <target>連結寄送到的地址，或已登入的帳號地址（已去除前後空白並轉為小寫）；表單頁上為 null。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.BrandMark">
+        <source>The product's mark: an outline on a 20-unit box, drawn 2.25 wide with round ends. Null draws the default notebook mark.</source>
+        <target>產品標誌：在 20 單位的方框上繪製的輪廓，線寬 2.25，線端為圓頭。為 null 時繪製預設的筆記本標誌。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.BrandName">
+        <source>The product's name in the header and the headings ("Fieldnote").</source>
+        <target>產品名稱，顯示在頁首和標題中（"Fieldnote"）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.DefaultEmail">
+        <source>The address a provider sign-in uses in the demo when the email field holds no valid address.</source>
+        <target>當電子郵件欄位中沒有有效位址時，第三方登入在示範中使用的位址。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Email">
+        <source>The text of the email field (two way).</source>
+        <target>電子郵件欄位的文字（雙向繫結）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.IsBusy">
+        <source>True while the page waits for a send, the mail app or a provider.</source>
+        <target>頁面等待傳送、郵件應用程式或第三方登入時為 True。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.IsFullScreen">
+        <source>Fills its container edge to edge with square corners (the page is the whole window). False (default): a block with 26px corners and at least 640px high.</source>
+        <target>以直角從邊到邊填滿其容器（頁面即整個視窗）。False（預設）：圓角為 26px、高度至少 640px 的區塊。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.IsProvidersVisible">
+        <source>Shows "or" and the single sign-on buttons (default true).</source>
+        <target>顯示 "or" 以及單一登入按鈕（預設為 true）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Labels">
+        <source>Every text the page shows or announces.</source>
+        <target>頁面顯示或播報的所有文字。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.LinkSent">
+        <source>A link went out (the first one, or another from the Sent step).</source>
+        <target>連結已寄出（第一次寄出，或在已寄出步驟中再次寄出）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.MailAppUri">
+        <source>The mail app's address (for example `mailto:`). With one (and no `OpenMailAppAsync`), Open mail app opens it and the page waits on the Sent step for `CompleteSignIn`; without one it runs the demo.</source>
+        <target>郵件應用程式的位址（例如 `mailto:`）。設定後（且沒有 `OpenMailAppAsync`），開啟郵件應用程式會開啟它，頁面停留在已寄出步驟，等待 `CompleteSignIn`；否則執行示範。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Method">
+        <source>How the person signed in (meaningful on the Done step).</source>
+        <target>使用者的登入方式（在完成步驟中生效）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Mode">
+        <source>Sign in (default) or create an account (two way); the header switch flips it.</source>
+        <target>登入（預設）或建立帳號（兩種模式，雙向切換）；標頭的開關會切換它。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Navigate">
+        <source>Terms, Privacy or the mail app was chosen. Handle it to open the destination yourself.</source>
+        <target>選擇了服務條款、隱私權或郵件應用程式時觸發。若要自行開啟目標頁面，請處理此事件。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.NavigateCommand">
+        <source>Runs after an unhandled `Navigate`; its parameter is the event arguments.</source>
+        <target>未處理的 `Navigate` 之後執行；參數為事件引數。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Photo">
+        <source>The picture behind everything, cropped to fill like CSS `object-fit: cover`. Null draws a dusk landscape.</source>
+        <target>位於所有內容後方的圖片，裁切方式與 CSS `object-fit: cover` 相同，以填滿區域。為 null 時繪製黃昏風景。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.PhotoAlignment">
+        <source>Which point of the picture stays in view when it is cropped, as fractions (default 0.5, 0.58: centred, a little below the middle).</source>
+        <target>裁切圖片時保持在可見範圍內的焦點，以分數表示（預設 0.5, 0.58：置中，略低於中線）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.PrivacyHref">
+        <source>The privacy policy's address. Without one, Privacy shows a note in the footer instead.</source>
+        <target>隱私權政策的位址。未設定時，隱私權會改在頁尾顯示一則說明。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Provider">
+        <source>The provider the person signed in with, or null.</source>
+        <target>使用者登入所用的第三方登入方式，或 null。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Providers">
+        <source>The single sign-on providers, one equal button each. Empty (the default) shows Google, Apple and GitHub.</source>
+        <target>單一登入的第三方登入方式，每項各對應一個等寬按鈕。為空（預設值）時顯示 Google、Apple 和 GitHub。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.ProvidersSource">
+        <source>Single sign-on providers from a view model; when set it wins over `Providers`.</source>
+        <target>來自檢視模型的單一登入提供者；設定後優先於 `Providers`。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.ResendSeconds">
+        <source>Seconds before another link can be sent from the Sent step (30).</source>
+        <target>已寄出步驟中再次寄送連結前需等待的秒數（30）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.SignedIn">
+        <source>The person signed in (the emailed link, a provider, or `CompleteSignIn`).</source>
+        <target>使用者已登入（透過郵件連結、第三方登入或 `CompleteSignIn`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.SignedInCommand">
+        <source>Runs after `SignedIn`; its parameter is the event arguments.</source>
+        <target>在 `SignedIn` 之後執行；其參數為事件參數。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.SignedOut">
+        <source>The person signed out from the Done step (or `SignOut` was called).</source>
+        <target>使用者在完成步驟中登出（或呼叫了 `SignOut`）時觸發。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Step">
+        <source>The card's step.</source>
+        <target>卡片的步驟。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.TermsHref">
+        <source>The terms' address. Without one, Terms shows a note in the footer instead.</source>
+        <target>服務條款的位址。未設定時，"Terms" 會改為在頁尾顯示一則說明。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersive.Timings">
+        <source>The demo's delays.</source>
+        <target>示範的延遲時間。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveLabels">
+        <source>Every text a `LoginImmersive` page shows or announces, with English defaults. Sentences that carry a value (the product, an address, a provider, a count of seconds) are functions.</source>
+        <target>`LoginImmersive` 頁面顯示或朗讀的所有文字，附英文預設值。帶有數值（產品、位址、第三方登入、秒數）的句子為函式。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveLinkSentEventArgs">
+        <source>Arguments of `LinkSent`.</source>
+        <target>`LinkSent` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveNavigateEventArgs">
+        <source>Arguments of `Navigate`. Set `Handled` to open the destination yourself; otherwise the page opens `Href` with the platform launcher when it is an absolute web or mail address.</source>
+        <target>`Navigate` 的引數。設定 `Handled` 可自行開啟目的地；否則當 `Href` 為絕對網頁或郵件位址時，頁面會透過平台啟動器開啟它。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveProvider">
+        <source>A single sign-on provider of a `LoginImmersive` page: one equal-width button in the row under "or", with the provider's mark before its name. The name also fills the busy and success sentences ("Opening {name}").</source>
+        <target>`LoginImmersive` 頁面的單一登入提供者：位於 "or" 下方一列中的等寬按鈕，名稱前顯示提供者的標誌。名稱也用於忙碌與成功提示（"Opening {name}"）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveProvider.Mark">
+        <source>The provider's mark on a 24-unit box, filled with `MarkBrush` (null: the button's text colour).</source>
+        <target>提供者的標誌，位於 24 單位的方框中，以 `MarkBrush` 填滿（為 null 時使用按鈕的文字顏色）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveProvider.MarkBrush">
+        <source>The fill of `Mark`; null follows the button's text colour in both themes.</source>
+        <target>`Mark` 的填滿色；為 null 時在兩種主題下都跟隨按鈕的文字顏色。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveProvider.Name">
+        <source>The provider's name, shown on its button.</source>
+        <target>第三方登入的名稱，顯示在其按鈕上。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveProvider.Tag">
+        <source>An app-defined value that identifies the provider in handlers (for example an OAuth scheme name).</source>
+        <target>由應用程式定義的值，用於在處理常式中識別該第三方登入（例如 OAuth 方案名稱）。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveSignedInEventArgs">
+        <source>Arguments of `SignedIn`.</source>
+        <target>`SignedIn` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="LoginImmersiveTimings">
+        <source>How long the built-in simulation waits at each beat (the measured beats of the reference preview). Only used for actions whose handler (`SendLinkAsync`, `OpenMailAppAsync`, `SignInWithProviderAsync`) is not set, except `LinkSentHold`, which always applies.</source>
+        <target>內建模擬在每個節拍處等待的時長（即參考預覽中量測的節拍）。僅用於未設定處理常式（`SendLinkAsync`、`OpenMailAppAsync`、`SignInWithProviderAsync`）的操作，`LinkSentHold` 除外，它一律生效。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit">
+        <source>Split login page: an email-first sign-in in the left column (brand and "Sign up" above, the steps in the middle, a status line and the legal links below) beside a full-height picture. Continue looks the account up, the password step shows it as a chip, Sign in checks the password, narrows to a check and opens the account with a progress line before greeting the person by name; single sign-on skips the password. "Forgot password?" sends a reset link with a resend countdown. The flow is simulated with the reference preview's timings until you set the asynchronous handlers (`LookupAccountAsync`, `VerifyPasswordAsync`, `SignInWithProviderAsync`, `SendResetLinkAsync`); `SignedIn` hands the account to your app. Breakpoints follow the block's own width: 5:6 columns from 1100, 1:1 from 760, the form alone below 760 (the picture hides), tighter padding below 480.</source>
+        <target>分割式登入頁：左欄是以電子郵件為先的登入（上方為品牌和 "Sign up"，中間為步驟，下方為狀態列和法律連結），右側是全高圖片。"Continue" 會查詢帳戶，密碼步驟將其顯示為標籤；"Sign in" 檢查密碼，收合為勾號並開啟帳戶，同時顯示進度列，然後以名字問候使用者；單一登入則略過密碼。"Forgot password?" 會寄出附重新寄送倒數的重設連結。此流程依參考預覽的時間設定模擬，直到你設定非同步處理常式（`LookupAccountAsync`、`VerifyPasswordAsync`、`SignInWithProviderAsync`、`SendResetLinkAsync`）為止；`SignedIn` 將帳戶交給你的應用程式。斷點依區塊本身的寬度：1100 起為 5:6 欄，760 起為 1:1，760 以下只顯示表單（圖片隱藏），480 以下內距更緊湊。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Account">
+        <source>The account being signed in or signed in; null on the email step.</source>
+        <target>正在登入或已登入的帳戶；在電子郵件步驟時為 null。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.AccountsSource">
+        <source>Accounts to recognize when `LookupAccountAsync` is not set (an email matching one, case-insensitive, shows its name and picture); when set this wins over `Accounts`.</source>
+        <target>未設定 `LookupAccountAsync` 時用於辨識的帳號（電子郵件與其中之一相符時，不區分大小寫，會顯示其名稱與圖片）；設定後，此項優先於 `Accounts`。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.BrandMark">
+        <source>The brand mark (24 × 24 view box, stroked in the accent color); null draws the built-in notebook.</source>
+        <target>品牌標誌（24 × 24 檢視框，以強調色描邊）；為 null 時繪製內建的筆記本圖示。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.BrandName">
+        <source>The product name beside the brand mark; also used in the headings and the block's accessible name.</source>
+        <target>緊接品牌標誌旁的產品名稱；也用於標題與區塊的無障礙名稱。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.DefaultAccount">
+        <source>The account single sign-on uses when the email field holds no valid address (null: the first account, else a built-in sample).</source>
+        <target>電子郵件欄位沒有有效位址時，單一登入所使用的帳號（為 null 時：第一個帳號，若無則使用內建範例）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.DemoPassword">
+        <source>The password the simulated check accepts while `VerifyPasswordAsync` is not set.</source>
+        <target>未設定 `VerifyPasswordAsync` 時，模擬驗證接受的密碼。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Email">
+        <source>The text of the email field (two-way). Signing out puts the account's email back here.</source>
+        <target>電子郵件欄位的文字（雙向繫結）。登出時會將帳號的電子郵件放回此處。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.IsBusy">
+        <source>True while an action runs.</source>
+        <target>操作執行期間為 True。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.IsFullScreen">
+        <source>True fills the parent with square corners and no border (a whole screen); false (default) is a framed block with a 1px border, 26px corners and at least 640 high.</source>
+        <target>True 時填滿父容器，採用直角且無邊框（整個螢幕）；false（預設）為有框區塊，具有 1px 邊框、26px 圓角，且高度至少為 640。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Labels">
+        <source>Every built-in text (English defaults).</source>
+        <target>所有內建文字（英文預設值）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Navigate">
+        <source>Raised when "Sign up", "Terms" or "Privacy" is used; handle it to navigate yourself.</source>
+        <target>使用 "Sign up"、"Terms" 或 "Privacy" 時引發；請自行處理以導覽。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.NavigateCommand">
+        <source>Runs with the `LoginSplitLink` when a link is used.</source>
+        <target>使用連結時，與 `LoginSplitLink` 一起執行。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Photo">
+        <source>The picture of the right column, cropped to cover it; null draws a metal facade in code.</source>
+        <target>右側欄的圖片，裁切以填滿該區域；為 null 時由程式碼繪製金屬外牆。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.PhotoAlignment">
+        <source>The picture's focal point as fractions of its size (default 0.5, 0.58: centered, a little below the middle).</source>
+        <target>圖片的焦點，以其尺寸的比例表示（預設 0.5, 0.58：置中，略低於中間）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.PrivacyHref">
+        <source>Address of "Privacy" (see `SignUpHref`).</source>
+        <target>"Privacy" 的位址（參見 `SignUpHref`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.ProvidersSource">
+        <source>Single sign-on buttons; when set this wins over `Providers`. An empty list hides the divider and the buttons.</source>
+        <target>單一登入按鈕；設定後優先於 `Providers`。空清單會隱藏分隔線與按鈕。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.ResendSeconds">
+        <source>Seconds before another reset link can be asked for (default 30).</source>
+        <target>再次申請重設連結前需等待的秒數（預設 30）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.ResetLinkSent">
+        <source>Raised when a password reset link went out (first send and every resend).</source>
+        <target>密碼重設連結寄出時引發（首次寄送和每次重新寄送時）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.SignUpHref">
+        <source>Address of "Sign up". With an address, an unhandled `Navigate` opens it; without, the status line says where it would go.</source>
+        <target>"Sign up" 的位址。設定位址後，未處理的 `Navigate` 會開啟該位址；未設定時，狀態列會說明將前往的位置。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.SignedIn">
+        <source>Raised when the greeting appears after a sign-in (Arc's `onSignIn`).</source>
+        <target>登入後出現問候語時觸發（Arc 的 `onSignIn`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.SignedInCommand">
+        <source>Runs with the `LoginSplitSignedInEventArgs` after a sign-in.</source>
+        <target>登入後以 `LoginSplitSignedInEventArgs` 作為參數執行。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.SignedOut">
+        <source>Raised after Sign out.</source>
+        <target>在登出後引發。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.StatusText">
+        <source>The visible status line (also announced politely); null when empty.</source>
+        <target>可見的狀態列（同時以禮貌方式朗讀）；為空時為 null。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Step">
+        <source>The step on show.</source>
+        <target>目前顯示的步驟。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.StepChanged">
+        <source>Raised when the step changes.</source>
+        <target>步驟變更時觸發。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.TermsHref">
+        <source>Address of "Terms" (see `SignUpHref`).</source>
+        <target>"Terms" 的位址（參見 `SignUpHref`）。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplit.Timings">
+        <source>Pauses of the simulated flow and the beats of the sign-in sequence.</source>
+        <target>模擬流程的暫停時間，以及登入序列的節拍。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitAccount">
+        <source>A person who can sign in to a `LoginSplit`: a name, an email and an optional picture. The chip, the account row and the greeting show it; without a picture the avatar shows the initials of the name.</source>
+        <target>可登入 `LoginSplit` 的帳號：包含名稱、電子郵件和可選的圖片。晶片、帳號列和問候語都會顯示它；沒有圖片時，頭像顯示名稱的首字母。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitLabels">
+        <source>Every built-in text of `LoginSplit` (English defaults): headings, field labels, buttons, errors, the status line and what screen readers hear. Replace the whole object through `Labels` to localize or rename; texts with values are functions.</source>
+        <target>`LoginSplit` 的所有內建文字（英文預設值）：標題、欄位標籤、按鈕、錯誤訊息、狀態列，以及螢幕閱讀器朗讀的內容。透過 `Labels` 整體取代即可在地化或更名；帶值的文字為函式。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitNavigateEventArgs">
+        <source>Arguments of `NavigateEvent`. Set `Handled` to keep the block from opening `Href`.</source>
+        <target>`NavigateEvent` 的參數。設定 `Handled` 可阻止區塊開啟 `Href`。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitProvider">
+        <source>A single sign-on button of a `LoginSplit`: a name and a mark.</source>
+        <target>`LoginSplit` 中的單一登入按鈕，包含名稱和標記。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitResetLinkSentEventArgs">
+        <source>Arguments of `ResetLinkSentEvent`.</source>
+        <target>`ResetLinkSentEvent` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitSignedInEventArgs">
+        <source>Arguments of `SignedInEvent`.</source>
+        <target>`SignedInEvent` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitSignedOutEventArgs">
+        <source>Arguments of `SignedOutEvent`.</source>
+        <target>`SignedOutEvent` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitStepChangedEventArgs">
+        <source>Arguments of `StepChangedEvent`.</source>
+        <target>`StepChangedEvent` 的引數。</target>
+      </trans-unit>
+      <trans-unit id="LoginSplitTimings">
+        <source>The pauses of the simulated flow a `LoginSplit` plays when no handler is set, and the beats of the sign-in sequence. Defaults are the reference preview's measured timings.</source>
+        <target>未設定處理常式時，`LoginSplit` 播放之模擬流程中的停頓，以及登入序列中的節拍。預設值為參考預覽中實測的時長。</target>
+      </trans-unit>
       <trans-unit id="Markdown">
         <source>An Arc-styled Markdown document rendered by StreamMark: headings, lists, tables, quotes, links, inline code and fenced code highlighted in Arc's syntax palette. Show static text with `Text`, or stream a reply with `Append` / `Complete` (or your own `Stream`). The document grows with its content (no internal scrolling); put long documents in a `ScrollViewer`.</source>
         <target>由 StreamMark 渲染的 Arc 風格 Markdown 文件：標題、清單、表格、引言、連結、行內程式碼，以及依 Arc 語法配色高亮的圍欄程式碼區塊。使用 `Text` 顯示靜態文字，或使用 `Append` / `Complete`（或你自己的 `Stream`）串流輸出回覆。文件隨內容增長（無內部捲動）；長文件請放入 `ScrollViewer`。</target>
@@ -8408,6 +8824,138 @@
         <source>Returns the value of an option, used to match the selection.</source>
         <target>傳回選項的值，用於比對所選項目。</target>
       </trans-unit>
+      <trans-unit id="MultiStepForm">
+        <source>A guided form that asks for one thing at a time: a card with a progress list and a step count, one step of fields, and Back and Continue buttons (Continue reads `CompleteLabel` on the last step). Submitting the last step shows a success block in place of the fields and folds the buttons away. Steps slide 20 px in the direction of travel while the card springs to the new step's height (both ways); done steps draw a check and the count rolls. Every step keeps its fields alive while other steps are shown, so values survive Back and Continue. Enter in a single-line text field submits the step. A step can block its submission with `ValidateAsync`, with `StepValidating`, or by a field with a data validation error; `CompleteAsync` runs the final submission with a spinner on the button.</source>
+        <target>引導式表單，一次只詢問一件事：一張卡片，包含進度清單和步驟計數、一個步驟的欄位，以及「返回」與「繼續」按鈕（最後一步時「繼續」顯示 `CompleteLabel`）。送出最後一步後，卡片會以成功提示區塊取代欄位，並收合按鈕。各步驟會以 20 px 的距離沿前進方向滑動，同時卡片以彈簧動畫過渡到新步驟的高度（前進與後退皆然）；已完成的步驟會繪製勾選標記，計數會滾動變化。每個步驟在顯示其他步驟時都會保留其欄位，因此返回與繼續時數值不會遺失。在單行文字欄位中按 Enter 會送出該步驟。步驟可透過 `ValidateAsync`、`StepValidating` 或帶有資料驗證錯誤的欄位阻止送出；`CompleteAsync` 執行最終送出，按鈕上顯示載入指示器。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.AnnouncementFormat">
+        <source>Defines the `AnnouncementFormat` property.</source>
+        <target>定義 `AnnouncementFormat` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.BackLabel">
+        <source>Defines the `BackLabel` property.</source>
+        <target>定義 `BackLabel` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CompleteCommand">
+        <source>Defines the `CompleteCommand` property.</source>
+        <target>定義 `CompleteCommand` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CompleteFailed">
+        <source>Defines the `CompleteFailed` event.</source>
+        <target>定義 `CompleteFailed` 事件。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CompleteLabel">
+        <source>Defines the `CompleteLabel` property.</source>
+        <target>定義 `CompleteLabel` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.Completed">
+        <source>Defines the `Completed` event.</source>
+        <target>定義 `Completed` 事件。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CompletedStepText">
+        <source>Defines the `CompletedStepText` property.</source>
+        <target>定義 `CompletedStepText` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CountFormat">
+        <source>Defines the `CountFormat` property.</source>
+        <target>定義 `CountFormat` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CurrentIndex">
+        <source>Defines the `CurrentIndex` property.</source>
+        <target>定義 `CurrentIndex` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.CurrentStepText">
+        <source>Defines the `CurrentStepText` property.</source>
+        <target>定義 `CurrentStepText` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.FormName">
+        <source>Defines the `FormName` property.</source>
+        <target>定義 `FormName` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.IsBusy">
+        <source>Defines the `IsBusy` property.</source>
+        <target>定義 `IsBusy` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.IsComplete">
+        <source>Defines the `IsComplete` property.</source>
+        <target>定義 `IsComplete` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.NextLabel">
+        <source>Defines the `NextLabel` property.</source>
+        <target>定義 `NextLabel` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.ProgressNameFormat">
+        <source>Defines the `ProgressNameFormat` property.</source>
+        <target>定義 `ProgressNameFormat` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.StepChanged">
+        <source>Defines the `StepChanged` event.</source>
+        <target>定義 `StepChanged` 事件。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.StepCount">
+        <source>Defines the `StepCount` property.</source>
+        <target>定義 `StepCount` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.StepValidating">
+        <source>Defines the `StepValidating` event.</source>
+        <target>定義 `StepValidating` 事件。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.Steps">
+        <source>Defines the `Steps` property.</source>
+        <target>定義 `Steps` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.StepsSource">
+        <source>Defines the `StepsSource` property.</source>
+        <target>定義 `StepsSource` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.SuccessDescription">
+        <source>Defines the `SuccessDescription` property.</source>
+        <target>定義 `SuccessDescription` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepForm.SuccessTitle">
+        <source>Defines the `SuccessTitle` property.</source>
+        <target>定義 `SuccessTitle` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormCompleteFailedEventArgs">
+        <source>Arguments of `CompleteFailed`: `CompleteAsync` threw, so the form stayed on the last step.</source>
+        <target>`CompleteFailed` 的參數：`CompleteAsync` 擲出了例外，因此表單停留在最後一步。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormCompletedEventArgs">
+        <source>Arguments of `Completed`, raised once the last step was submitted and the success state is shown.</source>
+        <target>`Completed` 的參數，在最後一步送出且顯示成功狀態後引發。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStep">
+        <source>One step of a `MultiStepForm`: a title (the step's heading and its label in the progress list), an optional line of description and the step's fields as `Content`. The content stays alive while other steps are shown, so whatever a person typed is still there when they come back.</source>
+        <target>`MultiStepForm` 的一個步驟：標題（步驟的標題，也是進度清單中的標籤）、選用的一行說明，以及步驟的欄位，即 `Content`。顯示其他步驟時內容會保持存在，因此使用者輸入的內容在回到此步驟時仍然保留。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStep.Content">
+        <source>Defines the `Content` property.</source>
+        <target>定義 `Content` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStep.ContentTemplate">
+        <source>Defines the `ContentTemplate` property.</source>
+        <target>定義 `ContentTemplate` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStep.Description">
+        <source>Defines the `Description` property.</source>
+        <target>定義 `Description` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStep.Id">
+        <source>Defines the `Id` property.</source>
+        <target>定義 `Id` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStep.Title">
+        <source>Defines the `Title` property.</source>
+        <target>定義 `Title` 屬性。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStepChangedEventArgs">
+        <source>Arguments of `StepChanged`: the step that was shown, the one shown now and the way it went.</source>
+        <target>`StepChanged` 的參數：先前顯示的步驟、目前顯示的步驟，以及切換方式。</target>
+      </trans-unit>
+      <trans-unit id="MultiStepFormStepValidatingEventArgs">
+        <source>Arguments of `StepValidating`, raised when a step is submitted and before its `ValidateAsync` runs. Set `Cancel` to stay on the step.</source>
+        <target>`StepValidating` 的參數，在步驟被送出時、且在其 `ValidateAsync` 執行之前引發。設定 `Cancel` 可讓表單停留在該步驟。</target>
+      </trans-unit>
       <trans-unit id="NewsletterIssue">
         <source>One issue of the newsletter as it appears on the stack. The first three `Stories` are shown.</source>
         <target>電子報的一期，以它在堆疊中的樣子呈現。顯示前三個 `Stories`。</target>
@@ -8759,6 +9307,178 @@
       <trans-unit id="NumberField.ValueChanged">
         <source>Raised after every real change of `Value` (never during template application).</source>
         <target>每次 `Value` 實際變更後觸發（套用範本期間不會觸發）。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration">
+        <source>A compact first-run card: a line drawing on top whose shapes morph from scene to scene (an empty box, files dropping in, a team around a board, a badge), and below it the step's title and sentence, a row of step dots, Back and a main button. The main button says Next, then Get started on the last step, then Replay intro once the onboarding is complete; Skip in the drawing's corner jumps to the last step. The Left and Right arrow keys step back and forth anywhere in the card. With no `Steps` the card shows four sample steps, one per scene.</source>
+        <target>精簡的首次執行卡片：上方是線條圖，其形狀會在各場景之間變形（空盒子、檔案落入、團隊圍繞看板、徽章）；下方是步驟的標題與說明、一排步驟點、「返回」按鈕與主按鈕。主按鈕先顯示「下一步」，最後一步顯示「開始使用」，導覽完成後顯示「重播導覽」；繪圖角落的「跳過」會直接跳到最後一步。左右方向鍵可在卡片任意位置前後切換步驟。未設定 `Steps` 時，卡片顯示四個範例步驟，每個場景一個。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.CompletedDescription">
+        <source>The sentence of the completed state.</source>
+        <target>已完成狀態下的說明文字。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.CompletedTitle">
+        <source>The title of the completed state.</source>
+        <target>完成狀態的標題。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.CurrentIndex">
+        <source>The step shown, 0-based (two way). Values outside the steps are clamped.</source>
+        <target>顯示的步驟，從 0 開始計數（雙向）。超出步驟範圍的值會被限制在有效範圍內。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.GetStarted">
+        <source>Get started was pressed on the last step: start the app's own flow here.</source>
+        <target>在最後一步按下「開始使用」時觸發：請在此啟動應用程式自己的流程。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.GetStartedCommand">
+        <source>Runs when Get started is pressed, after `GetStarted`; its parameter is the event arguments.</source>
+        <target>按下「開始使用」時執行，在 `GetStarted` 之後；其參數為事件參數。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.IsCompleted">
+        <source>True once Get started was pressed (two way): the card shows `CompletedTitle` and `CompletedDescription`, Back is unavailable and the main button replays the steps. Setting it moves to the last step; a step dot or a new `CurrentIndex` leaves it.</source>
+        <target>按下 Get started 後為 true（雙向）：卡片顯示 `CompletedTitle` 和 `CompletedDescription`，Back 無法使用，主按鈕會重播各步驟。設定此值會跳到最後一步；點選步驟圓點或設定新的 `CurrentIndex` 會離開完成狀態。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.IsCompletionVisible">
+        <source>Get started enters the completed state (default true). False: Get started only raises `GetStarted` and the app moves on (closes the dialog, opens the workspace).</source>
+        <target>按下 Get started 會進入完成狀態（預設為 true）。為 false 時，按下 Get started 只會引發 `GetStarted`，由應用程式接續後續動作（例如關閉對話方塊、開啟工作區）。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.IsFramed">
+        <source>Draws the card's border, rounded corners and shadow (default true). False for a card that fills a sheet or a phone screen edge to edge.</source>
+        <target>繪製卡片的邊框、圓角與陰影（預設為 true）。若卡片要貼齊整張頁面或手機螢幕邊緣，請設為 false。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.IsSkipVisible">
+        <source>Shows Skip in the drawing's corner on every step but the last (default true).</source>
+        <target>除最後一步外，每一步都在繪圖角落顯示「跳過」（預設為 true）。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.Label">
+        <source>The accessible name of the card's region, such as "Northdesk onboarding".</source>
+        <target>卡片區域的無障礙名稱，例如 "Northdesk onboarding"。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.Labels">
+        <source>The button labels, the dots' names and the announced status texts.</source>
+        <target>按鈕文字、圓點的名稱以及朗讀的狀態文字。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.Replayed">
+        <source>Replay intro was pressed (or `Replay` called); the card is back on the first step.</source>
+        <target>按下「重播導覽」（或呼叫了 `Replay`）時觸發；卡片回到第一步。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.SkipCommand">
+        <source>Runs when Skip is pressed, after `Skipped`; its parameter is the event arguments.</source>
+        <target>按下「跳過」時執行，在 `Skipped` 之後；其參數為事件參數。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.Skipped">
+        <source>Skip was pressed (or `Skip` called); the card is now on the last step.</source>
+        <target>按下 Skip（或呼叫 `Skip`）後為 true；卡片此時位於最後一步。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.StepChanged">
+        <source>The step changed (Next, Back, a dot, an arrow key, Skip, Replay or code), with the old and new index and the reason.</source>
+        <target>步驟變更（Next、Back、圓點、方向鍵、Skip、Replay 或程式碼切換）時引發，包含舊的與新的索引以及原因。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.Steps">
+        <source>The steps, in order (each with its scene and text). Empty (the default) shows four sample steps.</source>
+        <target>依序排列的步驟（每個步驟包含其場景與文字）。為空（預設值）時顯示四個範例步驟。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustration.StepsSource">
+        <source>Steps from a view model; when set it wins over `Steps`, and changes to an observable collection show at once.</source>
+        <target>來自檢視模型的步驟；設定後優先於 `Steps`，對可觀察集合的變更會立即顯示。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingIllustrationLabels">
+        <source>Every word `OnboardingIllustration` shows or announces besides the steps themselves, in English by default. Replace the instance to translate or reword; texts with numbers are functions so the word order can change.</source>
+        <target>`OnboardingIllustration` 除了步驟本身之外顯示或朗讀的所有文字，預設為英文。替換整個執行個體即可翻譯或改寫；含數字的文字為函式，以便調整詞序。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingStep">
+        <source>One step of `OnboardingIllustration`: its drawing, its title and sentence, and the accessible description of the drawing. A change to any of them shows at once in the block.</source>
+        <target>`OnboardingIllustration` 的一個步驟：包含其插圖、標題與說明文字，以及插圖的無障礙描述。修改其中任一項都會立即在區塊中顯示。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingStep.Description">
+        <source>The sentence under the title (two lines at most fit without moving the buttons).</source>
+        <target>標題下方的說明文字（最多兩行，且不會使按鈕移動）。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingStep.Scene">
+        <source>The drawing shown for this step.</source>
+        <target>此步驟顯示的繪圖。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingStep.SceneDescription">
+        <source>What the drawing shows, read by screen readers as the image's name.</source>
+        <target>插圖描繪的內容，螢幕閱讀器會將其當作圖片名稱朗讀。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingStep.Title">
+        <source>The step's title (one short line).</source>
+        <target>步驟的標題（一行簡短文字）。</target>
+      </trans-unit>
+      <trans-unit id="OnboardingStepChangedEventArgs">
+        <source>Arguments of `StepChanged`.</source>
+        <target>`StepChanged` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput">
+        <source>A row of single-character slots for one-time codes (Arc's OTP input block): a visible label, one slot per character, helper and error copy under the row. Typing fills a slot and moves on; a paste fills the slots from the focused one; arrow keys move between slots and Backspace on an empty slot clears the one before it. Characters rise into their slot, a paste lands as a short left to right wave, one focus ring glides between the slots, and a new error nudges the row side to side once. `Value` is two-way; `Completed` fires when an edit fills the last slot, which is where a host checks the code.</source>
+        <target>用於一次性驗證碼的單字元格子列（Arc 的 OTP 輸入區塊）：可見的標籤、每個字元一個格子，以及列下方的輔助文字與錯誤文字。輸入時填入格子並移至下一格；貼上時從目前聚焦的格子開始依序填入；方向鍵可在格子之間移動，在空白格子上按 Backspace 會清除前一格。字元會向上升入格子，貼上時出現一道由左至右的短暫波浪動畫，一個焦點環在格子之間滑動，新的錯誤會讓整列左右晃動一次。`Value` 為雙向繫結；編輯填滿最後一格時觸發 `Completed`，宿主應在此檢查驗證碼。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.AutoFocus">
+        <source>Focuses the first slot when the field is loaded (Arc's `autoFocus`).</source>
+        <target>載入時聚焦第一個格子（Arc 的 `autoFocus`）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.Completed">
+        <source>Raised after every edit by the person that leaves all slots filled (Arc: `if (next.length === length) verify(next)`).</source>
+        <target>使用者每次編輯後引發，且所有格子均已填滿時引發。（Arc：`if (next.length === length) verify(next)`）</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.CompletedCommand">
+        <source>Executed with the code when an edit fills every slot (after `Completed`).</source>
+        <target>編輯填滿所有格子時執行，參數為驗證碼（在 `Completed` 之後）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.Description">
+        <source>Helper copy under the slots (Arc's `description`).</source>
+        <target>格子下方的輔助文字（Arc 的 `description`）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.ErrorMessage">
+        <source>Error copy under the slots (Arc's `error`); non-empty makes the field invalid, and a new error shakes the row once.</source>
+        <target>格子下方的錯誤文字（Arc 的 `error`）；非空時欄位變為無效狀態，新的錯誤會讓輸入列抖動一次。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.InputMode">
+        <source>Which characters the slots accept (Arc's `inputMode`): digits only (default) or any text.</source>
+        <target>格子接受的字元類型（Arc 的 `inputMode`）：僅數字（預設）或任意文字。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.IsComplete">
+        <source>True while every slot holds a character.</source>
+        <target>所有格子都有字元時為 true。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.IsInvalid">
+        <source>Invalid state: danger slots and ring. Always true while `ErrorMessage` is not empty.</source>
+        <target>無效狀態：格子與焦點環顯示為危險色。只要 `ErrorMessage` 不為空，此值一律為 true。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.IsReadOnly">
+        <source>When true the slots keep focus and arrow keys but ignore typing, paste and deletion (while a host checks a code).</source>
+        <target>為 true 時，格子保留焦點與方向鍵，但忽略輸入、貼上與刪除（用於主機檢查驗證碼期間）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.IsSuccess">
+        <source>Success state: success slots and ring (an addition to Arc, which has no success look).</source>
+        <target>成功狀態：格子與圓環顯示成功樣式（這是對 Arc 的補充，Arc 沒有成功樣式）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.Label">
+        <source>The visible label and the name of the group of slots (Arc's required `label`).</source>
+        <target>可見的標籤，同時也是這組格子的名稱（Arc 必填的 `label`）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.Length">
+        <source>Number of slots (Arc's `length`), 1 to 32.</source>
+        <target>格子數量（Arc 的 `length`），取值 1 到 32。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.SlotLabelFormat">
+        <source>The accessible name of each slot: `{0}` is `Label`, `{1}` the slot's position from 1 and `{2}``Length` ("Verification code, digit 1 of 6").</source>
+        <target>每個格子的無障礙名稱：`{0}` 為 `Label`，`{1}` 為從 1 開始的格子位置，`{2}``Length`（"Verification code, digit 1 of 6"）。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.Value">
+        <source>The code, one character per slot (Arc's `value` and `onChange`); two-way.</source>
+        <target>驗證碼，每個格子一個字元（Arc 的 `value` 與 `onChange`）；雙向。</target>
+      </trans-unit>
+      <trans-unit id="OtpInput.ValueChanged">
+        <source>Raised whenever `Value` changes; `ChangeSource` tells edits from code.</source>
+        <target>`Value` 每次變更時觸發；`ChangeSource` 用於區分編輯產生的變更與程式碼產生的變更。</target>
+      </trans-unit>
+      <trans-unit id="OtpInputCompletedEventArgs">
+        <source>Arguments of `Completed`.</source>
+        <target>`Completed` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="OtpInputValueChangedEventArgs">
+        <source>Arguments of `ValueChanged`.</source>
+        <target>`ValueChanged` 的參數。</target>
       </trans-unit>
       <trans-unit id="PageHeader">
         <source>The frame of a project or record page (Arc page header block): a fixed header with breadcrumbs, a large title with a status badge, a description, a meta row, actions and tabs, over the scrolling body of the selected tab. Scrolling the body past 16px folds the header into a compact bar (the breadcrumbs give way to the title and its status, which scrolls back to the top when chosen); it opens again only near the top (4px), so it never flickers. Secondary actions fold into the "More actions" menu when the breadcrumbs would get less than 240px, and return at 272px. Tab counts roll digit by digit, a 2px indicator glides between tabs, and panels slide in from the side of travel. Breakpoints follow the control's own width: below 560px the padding tightens, the root crumb and the compact badge hide and the title steps down a size; below 460px the primary action shows only its icon. Ported from Arc's free page-header block (MIT, Copyright (c) 2026 Elia Kuratli) and made data driven: tabs are `PageHeaderTab` items (or data items with `ItemTemplate` and `ContentTemplate`), actions are `PageHeaderAction`s.</source>
@@ -11860,6 +12580,330 @@
         <source>Whether the pages of a collapsible section are shown (two-way). Ignored when the section is not collapsible.</source>
         <target>可收合群組的頁面是否顯示（雙向）。群組不可收合時會被忽略。</target>
       </trans-unit>
+      <trans-unit id="SignIn">
+        <source>A sign in card that morphs from an email address to a six digit code to the signed in account, with a passkey button and single sign-on buttons (Arc's free sign-in block, the "Email code" variant of Login). Each step slides in from the side it is heading to while the card's height follows on a spring; the account's avatar grows from the code step into the signed in state, where a ring draws around it and a check pops in.</source>
+        <target>登入卡片：從電子郵件地址變為六位數驗證碼，最後變為已登入的帳號，並附有通行密鑰按鈕與單一登入按鈕（Arc 的免費登入區塊，即 Login 的 "Email code" 變體）。每個步驟從其前往的一側滑入，卡片高度依彈簧動畫跟隨調整；帳號頭像從驗證碼步驟放大為已登入狀態，此時頭像周圍繪製一圈環線，並彈出勾選標記。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Account">
+        <source>The account being signed in to (code step) or signed in (done), or null (read only).</source>
+        <target>正在登入的帳號（驗證碼步驟）或已登入的帳號（完成）；唯讀時為 null。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.AccountsSource">
+        <source>The known accounts; when set, it is used instead of `Accounts`.</source>
+        <target>已知帳號；設定後將取代 `Accounts` 使用。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ChangeEmailAccessibleName">
+        <source>The accessible name of that button ("Change email").</source>
+        <target>該按鈕的無障礙名稱（"Change email"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ChangeEmailLabel">
+        <source>The label of the button that goes back to the email ("Change").</source>
+        <target>用於返回電子郵件的按鈕標籤（"Change"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CheckingStatus">
+        <source>Status while the code is checked ("Checking code").</source>
+        <target>檢查驗證碼時的狀態（"Checking code"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CodeDescription">
+        <source>The line under the heading of the code step.</source>
+        <target>驗證碼步驟標題下方的說明文字。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CodeHint">
+        <source>Helper copy under the code. Null shows `DemoCodeHintFormat` while the check is simulated (no `VerifyCodeAsync`) and nothing otherwise.</source>
+        <target>驗證碼下方的輔助文字。為 null 時，在模擬檢查期間（無 `VerifyCodeAsync`）顯示 `DemoCodeHintFormat`，否則不顯示任何內容。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CodeLabel">
+        <source>The label of the code field ("Verification code").</source>
+        <target>驗證碼欄位的標籤（"Verification code"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CodeMismatchMessage">
+        <source>The error for a wrong code.</source>
+        <target>驗證碼錯誤時顯示的錯誤訊息。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CodeSentStatus">
+        <source>Status once the code is sent ("Code sent").</source>
+        <target>驗證碼送出後的狀態（"Code sent"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.CodeTitle">
+        <source>The heading of the code step ("Check your email").</source>
+        <target>驗證碼步驟的標題（"Check your email"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ContinueLabel">
+        <source>The label of the button that sends the code ("Continue").</source>
+        <target>傳送驗證碼的按鈕文字（"Continue"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.DemoCode">
+        <source>The code the simulated email contains ("123456"); used only while `VerifyCodeAsync` is null.</source>
+        <target>模擬郵件中的驗證碼（"123456"）；僅在 `VerifyCodeAsync` 為 null 時使用。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.DemoCodeHintFormat">
+        <source>The helper copy of the simulated check; {0} is `DemoCode` ("For this demo, the code is {0}.").</source>
+        <target>模擬驗證的輔助文字；{0} 為 `DemoCode`（"For this demo, the code is {0}."）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Description">
+        <source>The line under the heading of the email step.</source>
+        <target>電子郵件步驟標題下方的說明文字。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.DeviceLabel">
+        <source>The label of the second row ("This browser").</source>
+        <target>第二列的標籤（"This browser"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.DeviceValue">
+        <source>The value of the second row ("Remembered for 30 days").</source>
+        <target>第二列的值（"Remembered for 30 days"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.DividerLabel">
+        <source>The word in the divider ("or").</source>
+        <target>分隔線中的文字（"or"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EditEmailStatus">
+        <source>Status after going back to the email ("Edit your email").</source>
+        <target>返回電子郵件後的狀態（"Edit your email"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Email">
+        <source>The email address in the field; two-way. Signing out puts the account's address back.</source>
+        <target>欄位中的電子郵件地址；雙向繫結。登出後會恢復為帳號的位址。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EmailChangedStatusFormat">
+        <source>Status after the suggestion is taken; {0} is the address ("Email changed to {0}").</source>
+        <target>採納建議後的狀態；{0} 為位址（"Email changed to {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EmailCodeMethodLabel">
+        <source>The name of the email code method ("Email code").</source>
+        <target>電子郵件驗證碼方式的名稱（"Email code"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EmailCodeStatusMethod">
+        <source>How the signed in status names the email code method ("an email code").</source>
+        <target>已登入狀態中如何稱呼電子郵件驗證碼方式（"an email code"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EmailLabel">
+        <source>The label of the email field ("Email").</source>
+        <target>電子郵件欄位的標籤（"Email"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EmailPlaceholder">
+        <source>The placeholder of the email field ("name@example.com").</source>
+        <target>電子郵件欄位的預留位置文字（"name@example.com"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.EmptyEmailMessage">
+        <source>The error for an empty email field.</source>
+        <target>電子郵件欄位為空時的錯誤訊息。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.FallbackName">
+        <source>The name of an account whose address gives none ("Arc member").</source>
+        <target>帳號的位址無法提供名稱時所使用的名稱（"Arc member"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.IncompleteCodeMessage">
+        <source>The error for an incomplete code ("Enter all 6 digits.").</source>
+        <target>驗證碼不完整時的錯誤訊息（"Enter all 6 digits."）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.InvalidEmailMessage">
+        <source>The error for an incomplete address.</source>
+        <target>電子郵件地址不完整時的錯誤訊息。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.IsBusy">
+        <source>True while a code is being sent or checked, or a passkey or provider is pending (read only).</source>
+        <target>正在寄送或檢查驗證碼，或密碼金鑰、第三方登入待處理時為 True（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.IsPasskeyVisible">
+        <source>Whether the passkey button shows (true).</source>
+        <target>是否顯示通行密鑰按鈕（預設為 true）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.IsProvidersVisible">
+        <source>Whether the single sign-on buttons show (true).</source>
+        <target>是否顯示單一登入按鈕（預設為 true）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.IsSignUpVisible">
+        <source>Whether the footer's "No account? Sign up" shows (true).</source>
+        <target>頁尾的 "No account? Sign up" 是否顯示（預設 true）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Method">
+        <source>How the account signed in, once it has (read only).</source>
+        <target>帳號的登入方式（登入後才有值，唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.MismatchStatus">
+        <source>Status after a wrong code ("Code didn't match").</source>
+        <target>輸入錯誤驗證碼後的狀態（"Code didn't match"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.NewCodeStatus">
+        <source>Status after a new code is sent ("New code sent").</source>
+        <target>傳送新驗證碼後的狀態（"New code sent"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.OpeningProviderStatusFormat">
+        <source>Status while a provider is pending; {0} is the provider ("Opening {0}").</source>
+        <target>第三方登入等待期間的狀態；{0} 是第三方登入方式（"Opening {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.PasskeyLabel">
+        <source>The label of the passkey button ("Sign in with a passkey").</source>
+        <target>密碼金鑰按鈕的標籤（"Sign in with a passkey"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.PasskeyMethodLabel">
+        <source>The name of the passkey method ("Passkey").</source>
+        <target>密碼金鑰登入方式的名稱（"Passkey"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.PasskeyWaitingStatus">
+        <source>Status while a passkey is pending ("Waiting for your passkey").</source>
+        <target>密碼金鑰待處理時的狀態（"Waiting for your passkey"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ProviderLabelFormat">
+        <source>The accessible name of a provider button; {0} is the provider ("Continue with {0}").</source>
+        <target>第三方登入按鈕的無障礙名稱；{0} 為第三方登入方（"Continue with {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ProvidersSource">
+        <source>The single sign-on providers; when set, it is used instead of `Providers`.</source>
+        <target>單一登入的第三方登入方式；設定後將取代 `Providers` 使用。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ResendAvailableInFormat">
+        <source>The accessible name while waiting; {0} is the seconds ("Resend code, available in {0} seconds").</source>
+        <target>等待期間的無障礙名稱；{0} 為秒數（"Resend code, available in {0} seconds"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ResendCountdownLabel">
+        <source>The words before the countdown ("Resend code in").</source>
+        <target>倒數計時前的文字（"Resend code in"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ResendLabel">
+        <source>The resend button once a new code can be sent ("Resend code").</source>
+        <target>可再次寄送新驗證碼時的重新寄送按鈕（"Resend code"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.ResendSeconds">
+        <source>Seconds before a new code can be sent (30).</source>
+        <target>再次傳送新驗證碼前需等待的秒數（30）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SendFailedMessage">
+        <source>The error when `SendCodeAsync` fails.</source>
+        <target>`SendCodeAsync` 失敗時的錯誤訊息。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SendingStatus">
+        <source>Status while a code is sent ("Sending a code").</source>
+        <target>傳送驗證碼時的狀態（"Sending a code"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignInFailedStatusFormat">
+        <source>Status when a passkey or provider fails; {0} is the method ("Couldn't sign in with {0}. Try again.").</source>
+        <target>密碼金鑰或第三方登入失敗時的狀態；{0} 為登入方式（"Couldn't sign in with {0}. Try again."）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignOutLabel">
+        <source>The label of the sign out button ("Sign out").</source>
+        <target>登出按鈕的標籤（"Sign out"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignUpCommand">
+        <source>Runs after `SignUpRequested` when "Sign up" is pressed.</source>
+        <target>按下 "Sign up" 時，於 `SignUpRequested` 之後執行。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignUpLabel">
+        <source>The label of the sign up button ("Sign up").</source>
+        <target>註冊按鈕的標籤（"Sign up"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignUpPrompt">
+        <source>The words before the sign up button ("No account?").</source>
+        <target>註冊按鈕前的提示文字（"No account?"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignUpRequested">
+        <source>"Sign up" was pressed. Mark it handled when you open sign up; otherwise the card says "Sign up opens in your app".</source>
+        <target>按下了 "Sign up"。開啟註冊頁面時請將其標記為已處理；否則卡片會顯示 "Sign up opens in your app"。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignUpStatus">
+        <source>Status when nobody handles `SignUpRequested` ("Sign up opens in your app").</source>
+        <target>沒有人處理 `SignUpRequested` 時的狀態（"Sign up opens in your app"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignedIn">
+        <source>Sign in succeeded (Arc's `onSignIn(account, method)`).</source>
+        <target>登入成功（Arc 的 `onSignIn(account, method)`）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignedInCommand">
+        <source>Runs after `SignedIn`; its parameter is the account.</source>
+        <target>在 `SignedIn` 之後執行；其參數為帳號。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignedInStatusFormat">
+        <source>Status once signed in; {0} is the method ("Signed in with {0}").</source>
+        <target>登入後的狀態；{0} 為登入方式（"Signed in with {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignedInWithLabel">
+        <source>The label of the method row ("Signed in with").</source>
+        <target>登入方式列的標籤（"Signed in with"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignedOut">
+        <source>"Sign out" was pressed on the signed in step.</source>
+        <target>在已登入步驟中按下了 "Sign out"。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SignedOutStatus">
+        <source>Status after signing out ("Signed out").</source>
+        <target>登出後的狀態（"Signed out"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SingleSignOnLabel">
+        <source>The accessible name of the group of provider buttons ("Single sign-on").</source>
+        <target>第三方登入按鈕群組的無障礙名稱（"Single sign-on"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Status">
+        <source>The last status line ("Code sent"), also announced to screen readers (read only).</source>
+        <target>最後一則狀態列（"Code sent"），同時向螢幕閱讀器朗讀（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Step">
+        <source>The step showing: Email, Code or Done (read only).</source>
+        <target>目前顯示的步驟：Email、Code 或 Done（唯讀）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.SuggestionFormat">
+        <source>The typo suggestion; {0} is the corrected address, shown as a button ("Did you mean {0}?").</source>
+        <target>拼寫錯誤的建議；{0} 為更正後的位址，以按鈕形式顯示（"Did you mean {0}?"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.Title">
+        <source>The heading of the email step ("Sign in to Arc").</source>
+        <target>電子郵件步驟的標題（"Sign in to Arc"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.UseSuggestionLabelFormat">
+        <source>The accessible name of the suggestion button; {0} is the address ("Use {0}").</source>
+        <target>建議按鈕的無障礙名稱；{0} 為位址（"Use {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.VerifyFailedMessage">
+        <source>The error when `VerifyCodeAsync` fails.</source>
+        <target>`VerifyCodeAsync` 失敗時的錯誤訊息。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.VerifyLabel">
+        <source>The label of the button that checks the code ("Verify").</source>
+        <target>用於驗證驗證碼的按鈕標籤（"Verify"）。</target>
+      </trans-unit>
+      <trans-unit id="SignIn.WelcomeFormat">
+        <source>The welcome; {0} is the first name ("Welcome back, {0}").</source>
+        <target>歡迎語；{0} 為名字（"Welcome back, {0}"）。</target>
+      </trans-unit>
+      <trans-unit id="SignInAccount">
+        <source>An account a `SignIn` card signs in to: a name, an address and an optional photo. Without a photo the card shows initials.</source>
+        <target>`SignIn` 卡片登入所用的帳號：包含名稱、位址和可選的圖片。沒有圖片時，卡片顯示姓名首字母。</target>
+      </trans-unit>
+      <trans-unit id="SignInAccount.Email">
+        <source>The email address.</source>
+        <target>電子郵件位址。</target>
+      </trans-unit>
+      <trans-unit id="SignInAccount.Name">
+        <source>The person's name ("Emma Collins"); the welcome uses its first word.</source>
+        <target>使用者姓名（"Emma Collins"）；歡迎語使用其第一個單字。</target>
+      </trans-unit>
+      <trans-unit id="SignInAccount.Photo">
+        <source>A photo of the person, drawn in a circle (object-fit cover); null shows initials.</source>
+        <target>使用者照片，以圓形繪製（object-fit cover）；為 null 時顯示姓名首字母。</target>
+      </trans-unit>
+      <trans-unit id="SignInProvider">
+        <source>A single sign-on button of a `SignIn` card ("Continue with Google").</source>
+        <target>`SignIn` 卡片上的單一登入按鈕（"Continue with Google"）。</target>
+      </trans-unit>
+      <trans-unit id="SignInProvider.Icon">
+        <source>A mark of your own on a 24 by 24 grid, filled in the text colour (used when `Mark` is None).</source>
+        <target>你自己的標記，位於 24 by 24 網格上，以文字顏色填滿（在 `Mark` 為 None 時使用）。</target>
+      </trans-unit>
+      <trans-unit id="SignInProvider.Mark">
+        <source>A built-in mark (Google, Apple, GitHub) or None.</source>
+        <target>內建標誌（Google、Apple、GitHub）之一，或 None。</target>
+      </trans-unit>
+      <trans-unit id="SignInProvider.Name">
+        <source>The provider's name: the button's text and the method shown once signed in ("Google").</source>
+        <target>提供者的名稱：按鈕的文字，以及登入後顯示的登入方式（"Google"）。</target>
+      </trans-unit>
+      <trans-unit id="SignInSignedInEventArgs">
+        <source>Arguments of `SignedIn`: who signed in and how (Arc's `onSignIn(account, method)`).</source>
+        <target>`SignedIn` 的參數：誰登入以及以何種方式登入（Arc 的 `onSignIn(account, method)`）。</target>
+      </trans-unit>
+      <trans-unit id="SignInSignedOutEventArgs">
+        <source>Arguments of `SignedOut`.</source>
+        <target>`SignedOut` 的參數。</target>
+      </trans-unit>
       <trans-unit id="SignaturePad">
         <source>Arc's signature field with real ink: width follows pen pressure, or speed for a mouse or finger, and the ends taper like a nib lifting off. It keeps undo and redo, clears with a wipe across the pad, replays the signature in its original rhythm, and exports a cropped PNG or SVG. A "Sign here" hint rests on the baseline until the first stroke.</source>
         <target>Arc 簽名板，帶有真實墨跡：線寬隨筆壓變化；使用滑鼠或手指時則隨速度變化，筆畫兩端像筆尖離紙一樣逐漸收細。支援復原與重做，以一次擦拭橫越整個畫板即可清除，並能依原有節奏重播簽名，還可匯出裁切後的 PNG 或 SVG。在第一筆落下之前，基線上會保留一個「在此簽名」提示。</target>
@@ -11907,6 +12951,118 @@
       <trans-unit id="SignaturePad.StrokesChanged">
         <source>Raised after every change: a stroke drawn, undo, redo or clear (Arc's `onChange`).</source>
         <target>每次變化後觸發：畫出一筆、復原、重做或清除（Arc 中為 `onChange`）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm">
+        <source>An account creation card (Arc's Sign up block): Google, Apple and GitHub buttons, then the full name, a work email and a password with a four-bar strength meter, a product updates opt-in and Create account. When the account is made, the card slides to a completion panel whose check draws itself in, with how the account was made and Start over; the card's height glides between the two.</source>
+        <target>帳號建立卡片（Arc 的註冊區塊）：包括 Google、Apple 和 GitHub 按鈕，接著是全名、工作電子郵件和密碼（附四格強度列）、產品更新訂閱選項，以及 "Create account" 按鈕。帳號建立完成後，卡片會滑動到完成面板，面板中的勾號會逐步繪製出現，並顯示帳號的建立方式以及 "Start over" 按鈕；卡片高度會在兩個檢視之間平滑過渡。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.AccountCreated">
+        <source>An account was created (through the form or a provider); the completion panel is about to show.</source>
+        <target>帳號已建立（透過表單或第三方登入）；即將顯示完成面板。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.AccountCreatedCommand">
+        <source>Runs after `AccountCreated`; its parameter is the event's `SignupFormCompletedEventArgs`.</source>
+        <target>在 `AccountCreated` 之後執行；參數為該事件的 `SignupFormCompletedEventArgs`。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.AreProvidersVisible">
+        <source>Whether the provider buttons and the "or" divider show (true).</source>
+        <target>是否顯示第三方登入按鈕與 "or" 分隔線（true）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.BusyMethod">
+        <source>What is running while `IsBusy`: `Email` for the form, otherwise the provider; null when idle.</source>
+        <target>在 `IsBusy` 期間正在執行的內容：表單為 `Email`，否則為第三方登入；閒置時為 null。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.Email">
+        <source>The work email in the form (two-way).</source>
+        <target>表單中的工作電子郵件（雙向繫結）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.FullName">
+        <source>The full name in the form (two-way).</source>
+        <target>表單中的全名（雙向繫結）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.IsBusy">
+        <source>True while an account is being created, through the form or a provider.</source>
+        <target>帳號正在建立時為 true，無論是透過表單或第三方登入。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.Labels">
+        <source>Every user-visible string (Arc's English copy by default).</source>
+        <target>所有面向使用者的文字（預設為 Arc 的英文文案）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.Navigate">
+        <source>Terms, Privacy policy or Sign in was pressed. Mark it handled to stop the status line's preview text.</source>
+        <target>按下了條款、隱私權政策或登入。將其標記為已處理，以阻止狀態列的預覽文字。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.NavigateCommand">
+        <source>Runs after `Navigate`; its parameter is the `SignupFormLink`.</source>
+        <target>在 `Navigate` 之後執行；其參數為 `SignupFormLink`。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.Password">
+        <source>The password in the form (two-way).</source>
+        <target>表單中的密碼（雙向繫結）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.PasswordScore">
+        <source>The password's strength, 0 (empty or very weak) to 4 (strong): one point each for 8 and 12 characters, mixed case, and a digit or symbol.</source>
+        <target>密碼強度，範圍為 0（空白或非常弱）到 4（強）：長度達 8 個和 12 個字元、大小寫混用、包含數字或符號，各得 1 分。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.ProductUpdates">
+        <source>Whether "Email me product updates" is checked (two-way).</source>
+        <target>是否勾選了 "Email me product updates"（雙向繫結）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.ProviderCommand">
+        <source>Runs after `ProviderSelected`; its parameter is the `SignupFormMethod` of the provider.</source>
+        <target>於 `ProviderSelected` 之後執行；其參數為第三方登入的 `SignupFormMethod`。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.ProviderSelected">
+        <source>A provider button was pressed (Arc's `onProvider`): start your OAuth redirect here.</source>
+        <target>第三方登入按鈕被按下（Arc 的 `onProvider`）：請在此啟動 OAuth 重新導向。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.ProviderSimulationDuration">
+        <source>How long a simulated provider takes when `ProviderAsync` is null (900 ms).</source>
+        <target>當 `ProviderAsync` 為 null 時，模擬第三方登入所需的時長（900 ms）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.ServerError">
+        <source>An error from your API (Arc's `serverError`), shown above Create account; a submit error wins over it.</source>
+        <target>來自你的 API 的錯誤（Arc 的 `serverError`），顯示在 "Create account" 上方；提交錯誤優先於此項。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.ShownError">
+        <source>The error above Create account: the last submit error, else `ServerError`, else null.</source>
+        <target>建立帳號上方顯示的錯誤：最近一次提交的錯誤；否則為 `ServerError`；再否則為 null。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.SignedUpWith">
+        <source>How the last account was created (shown on the completion panel).</source>
+        <target>上一個帳號是如何建立的（顯示在完成面板上）。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.Status">
+        <source>The line in the footer (also read by screen readers): what just happened, or empty.</source>
+        <target>頁尾中的狀態文字（螢幕閱讀器也會朗讀）：剛剛發生了什麼，或為空。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.Step">
+        <source>The view on screen: the form or the completion panel.</source>
+        <target>目前顯示的檢視：表單或完成面板。</target>
+      </trans-unit>
+      <trans-unit id="SignupForm.SubmitMinimumDuration">
+        <source>The least time Create account stays busy, even when `SubmitAsync` returns sooner (700 ms).</source>
+        <target>即使 `SubmitAsync` 更早傳回，"Create account" 保持忙碌狀態的最短時間（700 ms）。</target>
+      </trans-unit>
+      <trans-unit id="SignupFormCompletedEventArgs">
+        <source>Arguments of `AccountCreatedEvent`: the completion panel is about to show.</source>
+        <target>`AccountCreatedEvent` 的參數：即將顯示完成面板。</target>
+      </trans-unit>
+      <trans-unit id="SignupFormDetails">
+        <source>The details of a new account (Arc's `SignupDetails`), passed to `SubmitAsync`.</source>
+        <target>新帳號的詳細資訊（Arc 的 `SignupDetails`），會傳遞給 `SubmitAsync`。</target>
+      </trans-unit>
+      <trans-unit id="SignupFormLabels">
+        <source>The built-in text of a `SignupForm`: Arc's English copy. Replace the whole object (with an object initializer) to localize or reword it; the block rebuilds its text when `Labels` changes. Sentences that carry a value (a provider, a name, a strength word) are functions.</source>
+        <target>`SignupForm` 的內建文字：Arc 的英文文案。以物件初始化器取代整個物件即可在地化或改寫；`Labels` 變更時，區塊會重建其文字。帶有數值（第三方登入、名字、強度詞）的句子為函式。</target>
+      </trans-unit>
+      <trans-unit id="SignupFormNavigateEventArgs">
+        <source>Arguments of `NavigateEvent`: a text link was activated. Set `Handled` when you open the destination; otherwise the footer status says where the link would go, as in Arc's preview.</source>
+        <target>`NavigateEvent` 的引數：文字連結被觸發。開啟目標時請設定 `Handled`；否則頁尾狀態會說明該連結會前往何處，與 Arc 的預覽一致。</target>
+      </trans-unit>
+      <trans-unit id="SignupFormProviderEventArgs">
+        <source>Arguments of `ProviderSelectedEvent` (Arc's `onProvider`).</source>
+        <target>`ProviderSelectedEvent`（Arc 的 `onProvider`）的引數。</target>
       </trans-unit>
       <trans-unit id="SiteFooter">
         <source>A website footer in three layouts: link columns with a newsletter signup (`Columns`), a single quiet row (`Minimal`), and a closing layout where the Arc arch rises in, oversized and cropped by the bottom edge, fading into the page (`Logo`). The newsletter validates in place, keeps its width while the button morphs, and confirms without a toast. Every text, link, column and the status line can be replaced; with nothing set the footer shows Arc's sample footer.</source>
@@ -12179,6 +13335,10 @@
       <trans-unit id="SiteHeader.SecondaryActionLabel">
         <source>Identifies `SecondaryActionLabel`.</source>
         <target>識別 `SecondaryActionLabel`。</target>
+      </trans-unit>
+      <trans-unit id="SiteHeader.TrailingContent">
+        <source>Identifies `TrailingContent`.</source>
+        <target>標識 `TrailingContent`。</target>
       </trans-unit>
       <trans-unit id="SiteHeader.Variant">
         <source>Identifies `Variant`.</source>
@@ -14359,6 +15519,242 @@
       <trans-unit id="WeekCalendarSource.Tag">
         <source>Any object the app wants to keep with the calendar.</source>
         <target>應用程式希望與該行事曆一同保存的任意物件。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas">
+        <source>Shows a `WorkflowGraph` on a dotted canvas (visual rules from Arc's free hero-section block, HeroRelay): one card per step, edges between them, and a run played out step by step. Set the steps' states as your run goes; when a step finishes, the data draws along its edges in the accent before the next step shows as running, and the edges of a branch the run did not take turn dashed. Steps without a position are arranged in ranks; by default the whole workflow shows at actual size and shrinks like a screenshot when it does not fit. Pan with a drag or the wheel, zoom with Ctrl / ⌘ + wheel, a pinch or the keyboard, and move between steps with the arrow keys.</source>
+        <target>在點陣畫布上呈現 `WorkflowGraph`（視覺規則來自 Arc 免費的 hero-section 區塊 HeroRelay）：每個步驟一張卡片，步驟之間是連線，執行過程逐步呈現。隨執行進度設定各步驟的狀態；一個步驟完成後，資料會以強調色沿其連線繪製，之後下一個步驟才顯示為執行中，執行未經過的分支連線會變成虛線。沒有位置的步驟按層排列；預設以實際大小顯示整個工作流程，放不下時像截圖一樣縮小。拖曳或捲動滾輪可平移，用 Ctrl / ⌘ + 滾輪、雙指縮放或鍵盤縮放，用方向鍵在步驟間移動。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.AutoFit">
+        <source>How the workflow fits the canvas (default `ShrinkToFit`: actual size, centered, shrinking when it does not fit). Panning, zooming or setting `Zoom` or `Offset` stops fitting until `FitToContent`. In a container with unlimited height the canvas is as tall as the fitted workflow.</source>
+        <target>工作流程如何符合畫布（預設 `ShrinkToFit`：實際大小、置中，放不下時縮小）。平移、縮放或自行設定 `Zoom`、`Offset` 後停止符合，直到呼叫 `FitToContent`。在高度不受限的容器中，畫布與符合後的工作流程一樣高。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.ConnectionDroppedOnCanvas">
+        <source>Raised when a person drops a new connection on the empty canvas: show a list of steps there, add the chosen one and connect it yourself.</source>
+        <target>當使用者將新連線拖放到空白畫布上時觸發：在此顯示步驟清單，由你自行新增所選的步驟並連接它。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.ConnectionRequested">
+        <source>Raised when a person connects two ports, after the workflow's own checks (`CanConnect`) and before the edge is added: set `Cancel` to refuse it, with a `Reason` to tell them why.</source>
+        <target>當使用者連接兩個連接埠時觸發，位於工作流程自身的檢查（`CanConnect`）之後、連線新增之前：設定 `Cancel` 可拒絕該連線，並可搭配 `Reason` 告知使用者原因。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.EdgeStyle">
+        <source>How edges are drawn: curves (default, as in Arc), right angles with rounded corners, or straight lines.</source>
+        <target>連線的畫法：曲線（預設，與 Arc 相同）、帶圓角的直角，或直線。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.Graph">
+        <source>The workflow to show.</source>
+        <target>要顯示的工作流程。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.GraphEdited">
+        <source>Raised once after each edit a person makes (moving steps, deleting steps), when it is done: save the workflow or record the edit here.</source>
+        <target>每次使用者完成一次編輯（移動步驟、刪除步驟）後觸發一次：在這裡儲存工作流程或記錄這次編輯。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.IsEditable">
+        <source>Whether people can move and delete steps (default false). Selecting works either way.</source>
+        <target>是否允許使用者移動與刪除步驟（預設 false）。無論是否開啟，都可以選取步驟。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.IsPanZoomEnabled">
+        <source>Whether people can pan and zoom (default true): dragging pans, the wheel works per `WheelMode`, a pinch zooms, and the + / − keys zoom. Turn it off for a workflow shown inside a scrolling page that should only fit (Arc's hero). `ZoomTo`, `FitToContent` and `ScrollIntoView` work either way.</source>
+        <target>是否允許平移和縮放（預設 true）：拖曳可平移，滾輪依 `WheelMode` 運作，雙指縮放可縮放，+ / − 鍵可縮放。對於放在捲動頁面中、只需符合的工作流程（如 Arc 的 hero），請關閉它。無論是否開啟，`ZoomTo`、`FitToContent` 與 `ScrollIntoView` 都可使用。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.LayoutDirection">
+        <source>Which way the workflow runs: down (default, as in Arc) or across. Edges and arranging follow it.</source>
+        <target>工作流程的執行方向：向下（預設，與 Arc 一致）或向右。連線與排列都隨之調整。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.MaxZoom">
+        <source>The largest zoom (default 2).</source>
+        <target>最大縮放比例（預設為 2）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.MinZoom">
+        <source>The smallest zoom (default 0.25).</source>
+        <target>最小縮放比例（預設為 0.25）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.NarrowBelowWidth">
+        <source>Below this width (default 520, as in Arc; 0 never) the canvas is narrow: cards shrink to 344 × 52 and 108 × 72, and a workflow the canvas arranged itself is arranged again with tighter spacing, so it stays readable on a phone instead of shrinking like a screenshot. Steps placed by your code keep their places.</source>
+        <target>低於此寬度（預設 520，與 Arc 相同；0 表示永不）時畫布為窄螢幕：卡片縮為 344 × 52 與 108 × 72，畫布自己排列的工作流程會以更緊湊的間距重新排列，在手機上依然清楚易讀，而不是像截圖一樣縮小。由你的程式碼放置的步驟維持原位。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.NodeActivated">
+        <source>Raised when a step is opened: double-clicked, or Enter pressed on its card. Open its settings here.</source>
+        <target>開啟某個步驟時觸發：按兩下它，或在其卡片上按 Enter。在這裡開啟它的設定。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.Offset">
+        <source>The canvas point shown at the top-left corner of the view.</source>
+        <target>顯示在檢視左上角的畫布座標點。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.QueueRunVisuals">
+        <source>Whether a step that starts while the data is still drawing toward it keeps showing as waiting until the data arrives (default true), so a run reads step, edge, step as in Arc even when your run sets the next step running at once. Only what is shown waits; the steps' states are untouched. Full motion only.</source>
+        <target>當資料仍朝某步驟繪製時，即使該步驟已開始執行，是否仍顯示為等待，直到資料抵達為止（預設為 true）。如此一來，即使你的執行立即將下一個步驟設為執行中，畫面仍會依 Arc 的方式呈現步驟、連線、步驟的順序。只有顯示會等待，步驟的狀態不受影響。僅在完整動效下生效。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.SelectionChanged">
+        <source>Raised once each time the selection changes, also when selected steps leave the workflow.</source>
+        <target>選取每變化一次觸發一次，包括選取的步驟離開工作流程時。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.ShowGrid">
+        <source>Whether the dot grid shows (default true).</source>
+        <target>是否顯示點陣（預設為 true）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.SnapToGrid">
+        <source>Whether moved steps snap to the dot grid when let go (default true); holding Alt while dragging skips it.</source>
+        <target>移動的步驟放開時是否吸附到點陣（預設 true）；拖曳時按住 Alt 可略過吸附。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.WheelMode">
+        <source>What the wheel does (default `Pan`: scrolling pans, Ctrl / ⌘ + wheel zooms; `ModifierZoom` leaves plain scrolling to the page).</source>
+        <target>滾輪的作用（預設 `Pan`：捲動平移，Ctrl / ⌘ + 滾輪縮放；`ModifierZoom` 把一般捲動留給頁面）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowCanvas.Zoom">
+        <source>Screen pixels per canvas unit; kept within `MinZoom` and `MaxZoom`.</source>
+        <target>每個畫布單位對應的螢幕像素數；保持在 `MinZoom` 與 `MaxZoom` 之間。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowConnectionDroppedEventArgs">
+        <source>A connection dropped on the empty canvas, for `ConnectionDroppedOnCanvas`.</source>
+        <target>拖放到空白畫布上的連線，用於 `ConnectionDroppedOnCanvas`。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowConnectionRequestedEventArgs">
+        <source>A connection a person is making, for `ConnectionRequested`.</source>
+        <target>使用者正在建立的連線，用於 `ConnectionRequested`。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowEdge">
+        <source>A connection from one step of a `WorkflowGraph` to the next: the data of a run flows from `Source` to `Target`. The ends are fixed; to reconnect, remove the edge and add a new one.</source>
+        <target>`WorkflowGraph` 中從一個步驟到下一個步驟的連接：執行的資料從 `Source` 流向 `Target`。兩端固定；要重新連接，請移除該連線並新增一條。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowEdge.State">
+        <source>How the edge shows the run. `Auto` (the default) follows its two steps, so a run only needs to set the steps' states.</source>
+        <target>連線如何顯示執行情況。`Auto`（預設）會跟隨其兩端的步驟，因此執行只需設定步驟的狀態即可。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowEditEventArgs">
+        <source>One edit a person made on a `WorkflowCanvas`, for `GraphEdited`.</source>
+        <target>使用者在 `WorkflowCanvas` 上完成的一次編輯，用於 `GraphEdited`。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowGraph">
+        <source>A workflow: its steps (`Nodes`) and the connections between them (`Edges`). Show it with a `WorkflowCanvas`; change the collections or any step and the canvas follows. Removing a step removes its edges; an edge whose steps are not in `Nodes` is refused.</source>
+        <target>一個工作流程：由其步驟（`Nodes`）以及步驟之間的連接（`Edges`）組成。以 `WorkflowCanvas` 顯示它；變更集合或任何步驟，畫布都會隨之更新。移除步驟時會一併移除其連線；兩端步驟不在 `Nodes` 中的連線會被拒絕。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowGraph.AllowCycles">
+        <source>Whether a connection may close a loop (default false: people cannot connect a step to one before it).</source>
+        <target>連線是否可以封閉形成迴圈（預設為 false：使用者不能將步驟連接到其前面的步驟）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowHistory">
+        <source>Undo and redo for the edits people make on a `WorkflowCanvas` showing the workflow: moving, deleting, connecting, disconnecting and pasting steps. Changes your code makes to the `WorkflowGraph` are recorded only inside `BeginGroup`. Keeps the last 100 edits.</source>
+        <target>為使用者在顯示此工作流程的 `WorkflowCanvas` 上所做的編輯提供復原與重做：移動、刪除、連接、中斷連線與貼上步驟。你的程式碼對 `WorkflowGraph` 所做的變更只會在 `BeginGroup` 內記錄。保留最近 100 次編輯。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowHistory.Changed">
+        <source>Raised when what can be undone or redone changes.</source>
+        <target>當可復原或可重做的內容變更時觸發。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowMinimap">
+        <source>A small map of a `WorkflowCanvas`: every step as a block (running and selected steps in the accent, failed ones in red) and the part the canvas shows as a frame. Press to move the view there, drag to pan. Set `Target` to the canvas and place the map over a corner, like `WorkflowZoomControls`. It is a pointer shortcut: the canvas's own keys do the same, so the map takes no focus and screen readers skip it.</source>
+        <target>`WorkflowCanvas` 的小地圖：將每個步驟畫成一個方塊（執行中與已選取的步驟使用強調色，失敗的步驟使用紅色），並以一個框標示畫布目前顯示的範圍。按下即可將檢視移至該處，拖曳則為平移。將 `Target` 設為畫布，並像 `WorkflowZoomControls` 一樣把小地圖放在某個角落。它只是指標捷徑：畫布本身的按鍵也能做到相同操作，因此小地圖不會取得焦點，螢幕閱讀器也會略過它。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowMinimap.Target">
+        <source>The canvas the map shows and moves.</source>
+        <target>小地圖所顯示並移動的畫布。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode">
+        <source>One step of a `WorkflowGraph`: what it is (title, description, icon), where it sits on the canvas, and while a run goes through the workflow its state, result and time. Every property is observed, so changing a step updates the canvas.</source>
+        <target>`WorkflowGraph` 中的一個步驟：它是什麼（標題、描述、圖示）、在畫布上的位置，以及執行經過工作流程時的狀態、結果與耗時。每個屬性都會被監看，因此變更步驟會更新畫布。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Appearance">
+        <source>One row (`Standard`) or two (`Compact`).</source>
+        <target>一行（`Standard`）或兩行（`Compact`）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Description">
+        <source>The line under the title while nothing has run yet: what the step works on ("Plan, seats and owner").</source>
+        <target>尚未執行時位於標題下方的一行：說明此步驟處理的內容（例如 "Plan, seats and owner"）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Duration">
+        <source>How long the step took; shown next to the check once it is done ("118 ms").</source>
+        <target>步驟耗時；完成後顯示在勾號旁邊（例如 "118 ms"）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Error">
+        <source>Why the step failed; shown under the title in the failed state and read by screen readers.</source>
+        <target>步驟失敗的原因；在失敗狀態下顯示於標題下方，並會由螢幕閱讀器朗讀。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.HasDefaultInput">
+        <source>Whether the step has an implicit input when `Inputs` is empty (default true). Turn it off for a step nothing leads into, such as a trigger.</source>
+        <target>當 `Inputs` 為空時，步驟是否具有隱含輸入（預設為 true）。對於沒有任何連線指向它的步驟（例如觸發器），請將其關閉。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Icon">
+        <source>The 20 × 20 mark at the start of the card: a Lucide geometry from `ArcIcons` (drawn as a stroke), an image, or any control.</source>
+        <target>卡片起始處的 20 × 20 標記：來自 `ArcIcons` 的 Lucide 幾何圖形（以描邊繪製）、圖片或任意元件。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.IsLocked">
+        <source>A locked step stays where it is and cannot be deleted on an editable canvas; it can still be selected and opened.</source>
+        <target>鎖定的步驟在可編輯畫布上維持原位且無法刪除，但仍可以被選取與開啟。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Kind">
+        <source>Your own category of the step (trigger, action, condition); screen readers read it after the title.</source>
+        <target>你自訂的步驟類別（如觸發器、動作、條件）；螢幕閱讀器會在標題之後朗讀它。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Position">
+        <source>The card's top-left corner on the canvas. NaN (the default) lets the canvas place the step by arranging the whole workflow, and writes the place it chose back here.</source>
+        <target>卡片在畫布上的左上角位置。NaN（預設值）表示由畫布透過排列整個工作流程來放置此步驟，並將其選定的位置寫回此處。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Result">
+        <source>The line under the title once the step is done: what it found ("Enterprise, 212 seats"); null keeps the description.</source>
+        <target>步驟完成後標題下方的一行：其查得的結果（例如 "Enterprise, 212 seats"）；為 null 時保留描述。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Size">
+        <source>The card's size; null uses the size of its `Appearance` (300 × 60 or 200 × 84).</source>
+        <target>卡片的尺寸；為 null 時使用其 `Appearance` 對應的尺寸（300 × 60 或 200 × 84）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.State">
+        <source>Where the step stands in the current run (`Idle` when there is no run).</source>
+        <target>步驟在目前執行中所處的狀態（沒有執行時為 `Idle`）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNode.Title">
+        <source>What the step does, on one line (it is cut with an ellipsis when it does not fit).</source>
+        <target>步驟所做的事，佔一行（放不下時以省略號截斷）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNodeCard">
+        <source>The card of one workflow step on a `WorkflowCanvas` (visual rules from Arc's free hero-section block, HeroRelay): icon, title, the description or result under it, and the run state at the end. A running card takes the accent, a skipped one fades, a failed one shows its error. The canvas creates one card per `WorkflowNode`; style it through the semantic part `arc.workflow.node`.</source>
+        <target>`WorkflowCanvas` 上一個工作流程步驟的卡片（視覺規則取自 Arc 免費的 hero 區塊 HeroRelay）：圖示、標題、其下的描述或結果，以及末尾的執行狀態。執行中的卡片採用強調色，已略過的卡片淡出，失敗的卡片會顯示其錯誤。畫布會為每個 `WorkflowNode` 建立一張卡片；請透過語意部件 `arc.workflow.node` 為其設定樣式。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNodeCard.ContentTemplate">
+        <source>Content for the card in place of its icon, title, subtitle and state, built from the `Node` when the template matches it (a `WorkflowNodeTemplate` matches a step's `Kind`). The frame, the run's colors, the selection and the focus ring stay. Without `Size` the card is as tall as its content. On a canvas, set `NodeTemplates` instead.</source>
+        <target>卡片的內容取代其圖示、標題、副標題與狀態，由 `Node` 建立，並在範本與其相符時套用（`WorkflowNodeTemplate` 會與步驟的 `Kind` 相符）。框、執行狀態的顏色、選取狀態與焦點環保留不變。未設定 `Size` 時，卡片高度與其內容相同。若在畫布上使用，請改為設定 `NodeTemplates`。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNodeCard.DisplayState">
+        <source>The state the card shows. It is the step's `State`, except that on a canvas a step that starts while the data is still drawing toward it keeps showing `Pending` until the data arrives (`QueueRunVisuals`).</source>
+        <target>卡片顯示的狀態。它與步驟的 `State` 相同，但在畫布上，若某步驟在資料仍朝其繪製時開始，則會持續顯示 `Pending`，直到資料抵達為止（`QueueRunVisuals`）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNodeCard.Node">
+        <source>The step this card shows.</source>
+        <target>此卡片所顯示的步驟。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNodeEventArgs">
+        <source>A step of a `WorkflowCanvas`, for `NodeActivated`.</source>
+        <target>`WorkflowCanvas` 的一個步驟，用於 `NodeActivated`。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowNodeTemplate">
+        <source>Content for the cards of one kind of step, written in XAML: put it in `NodeTemplates`. It matches the steps whose `Kind` is `Kind` (every step when null), and its content replaces the card's icon, title, subtitle and state; the data is the `WorkflowNode`. Write `x:DataType="arc:WorkflowNode"` on it for compiled bindings.</source>
+        <target>為某一類步驟的卡片撰寫的內容，以 XAML 寫成：將它放入 `NodeTemplates`。它會比對 `Kind` 為 `Kind` 的步驟（為 null 時比對所有步驟），其內容取代卡片的圖示、標題、副標題與狀態；資料為 `WorkflowNode`。在其上寫入 `x:DataType="arc:WorkflowNode"` 以使用編譯繫結。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowPort">
+        <source>A named connection point of a `WorkflowNode`, such as the "Yes" and "No" outputs of a condition. A step without ports of a direction has one implicit port there (an edge's port is then null).</source>
+        <target>`WorkflowNode` 的一個具名連接點，例如條件步驟的 "Yes" 和 "No" 輸出。若步驟在某個方向上沒有連接埠，則該方向會有一個隱含連接埠（此時連線的連接埠為 null）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowPort.DataType">
+        <source>Your name for the kind of data the port carries; two ports with a data type connect only when the types are the same (null connects to anything).</source>
+        <target>你為連接埠所承載的資料種類指定的名稱；兩個具有資料類型的連接埠只有在類型相同時才能連接（null 可與任何類型連接）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowPort.Label">
+        <source>A short name shown next to the port, such as "Yes"; null shows none.</source>
+        <target>顯示在連接埠旁的簡短名稱，例如 "Yes"；為 null 時不顯示。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowPort.MaxConnections">
+        <source>How many edges the port takes (default no limit).</source>
+        <target>連接埠可接受的連線數量（預設不限制）。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowSelectionChangedEventArgs">
+        <source>A change of a `WorkflowCanvas`'s selection, for `SelectionChanged`.</source>
+        <target>`WorkflowCanvas` 選取的一次變化，用於 `SelectionChanged`。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowZoomControls">
+        <source>A small zoom bar for a `WorkflowCanvas`: zoom out, the current zoom (click it for 100%), zoom in, and fit. Set `Target` to the canvas and place the bar where it suits, usually over a corner of the canvas. It matches the library's other zoom bars: a 34px pill with 28px buttons.</source>
+        <target>`WorkflowCanvas` 的小型縮放列：縮小、目前縮放比例（點選可回到 100%）、放大與符合。將 `Target` 設為畫布，再把縮放列放在合適的位置，通常是畫布的一角。它與元件庫中其他縮放列一致：34px 的膠囊，內含 28px 的按鈕。</target>
+      </trans-unit>
+      <trans-unit id="WorkflowZoomControls.Target">
+        <source>The canvas the buttons zoom.</source>
+        <target>按鈕所縮放的畫布。</target>
       </trans-unit>
     </body>
   </file>

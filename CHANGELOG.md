@@ -4,9 +4,39 @@ All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Ver
 while the version carries a `-preview` suffix the API may still change between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
+(`TKCode.Arc.Workflow` from the next release).
 
 ## Unreleased
+
+### Added
+
+- **Workflow canvas** (new package `TKCode.Arc.Workflow`, call `UseArcWorkflow()`; the look and the run animation follow
+  the workflow graph of Arc's free Hero section block): `WorkflowCanvas` shows a `WorkflowGraph` of steps and
+  connections on a dotted canvas and plays its runs. Set each step's state as your run goes: when a step finishes, the
+  data draws along its edges in the accent before the next step shows as running, a skipped branch turns dashed and
+  fades, and every step reports its result and time. Steps without a position are arranged in ranks, top to bottom or
+  left to right; the whole workflow shows at actual size and shrinks like a screenshot when it does not fit.
+  `WorkflowNodeCard` (one row, or two rows when compact) also works on its own. Pan with a drag or the wheel, zoom with
+  Ctrl / ⌘ + wheel, a pinch or the + / − keys, or with the `WorkflowZoomControls` bar; edges can be curves, right angles
+  or straight lines; a workflow the canvas arranged glides into place when it changes, and switches to Arc's phone
+  layout under 520 wide. Arrow keys move between steps (Alt follows the connections), Enter opens a step
+  (`NodeActivated`), and screen readers hear failures and the end of a run. Built-in text in English, 简体中文 and
+  繁體中文; docs and demos in all three. With `IsEditable` people drag steps (they snap to the grid), select
+  several with Shift + drag, move the selection with the keyboard and delete it; `IsLocked` steps stay put, and
+  `GraphEdited` reports each finished edit. People connect steps by dragging from an output to another step (a
+  step can have named ports, such as a condition's "Yes" and "No"), move or remove an edge by its end, select and
+  delete edges, and connect from the keyboard with C. Each connection is checked (no loops, matching `DataType`s,
+  `MaxConnections`); `ConnectionRequested` adds your own rules, and `ConnectionDroppedOnCanvas` tells you where a
+  connection was let go on the empty canvas. `WorkflowGraph.History` undoes and redoes the edits made on the canvas
+  (Ctrl / ⌘ + Z), and `History.BeginGroup()` makes your own changes one undoable edit. Copy, cut, paste and duplicate
+  steps with the usual keys (the clipboard carries them as JSON between apps). `NodeTemplates` gives the cards of a
+  `Kind` of step their own content (`WorkflowNodeTemplate`), with inputs and switches that keep their own keys.
+  `WorkflowMinimap` shows the whole workflow with the part on screen; a workflow of 500 steps stays responsive, and
+  only the cards near the view are built once a workflow has more than 300 steps. Toolbar buttons bind to the canvas's
+  commands (`UndoCommand`, `DeleteSelectionCommand`, `ZoomInCommand`, …), which enable and disable themselves.
+- **Core**: `PanZoomTransform` and `WheelRouter` (pan-and-zoom view math and wheel, trackpad and pinch routing) and
+  `LayeredGraphLayout` (a deterministic layered layout for directed graphs, about 2 ms for 500 nodes).
 
 ### Changed
 

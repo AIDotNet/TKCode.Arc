@@ -103,6 +103,12 @@
         <target state="translated">高级图表</target>
       </segment>
     </unit>
+    <unit id="Category_Workflow">
+      <segment>
+        <source>Workflow</source>
+        <target state="translated">工作流</target>
+      </segment>
+    </unit>
     <unit id="Category_Content">
       <segment>
         <source>Extras</source>
