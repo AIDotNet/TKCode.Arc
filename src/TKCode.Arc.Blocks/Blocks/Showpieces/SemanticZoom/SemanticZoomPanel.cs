@@ -104,6 +104,7 @@ public class SemanticZoomPanel : TemplatedControl
     private TextBlock? _dueLabel;
     private TextBlock? _peopleLabel;
     private SemanticZoomNode? _observed;
+    private bool _attached;
     private SemanticZoomNode? _shownScope;
     private readonly List<SemanticZoomAvatar> _faceSlots = new();
 
@@ -167,7 +168,7 @@ public class SemanticZoomPanel : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == ScopeProperty)
         {
-            Observe(change.GetNewValue<SemanticZoomNode?>());
+            Observe(_attached ? change.GetNewValue<SemanticZoomNode?>() : null);
             Refresh();
         }
         else if (change.Property == LayoutProperty)
@@ -212,6 +213,22 @@ public class SemanticZoomPanel : TemplatedControl
         {
             block.Text = text;
         }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        // The scope belongs to the organization, which outlives the panel: watch it only while attached.
+        Observe(Scope);
+        Refresh();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        Observe(null);
     }
 
     private void Observe(SemanticZoomNode? node)

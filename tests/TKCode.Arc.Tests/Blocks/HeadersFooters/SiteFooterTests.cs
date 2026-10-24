@@ -610,6 +610,75 @@ public class SiteFooterTests
         }
     }
 
+    [AvaloniaFact]
+    public void A_Footer_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var source = new System.Collections.ObjectModel.ObservableCollection<SiteFooterColumn> { new("Docs", new SiteFooterLink("Guides")) };
+        var links = new Avalonia.Collections.AvaloniaList<SiteFooterLink> { new("Home") };
+        var withData = FooterOver(f =>
+        {
+            f.ColumnsSource = source;
+            f.Links = links;
+        });
+        // The sample columns are static: they must not keep a default footer either.
+        var withSamples = FooterOver(null);
+        for (var i = 0; i < 4 && (withData.IsAlive || withSamples.IsAlive); i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Dispatcher.UIThread.RunJobs();
+        }
+        withData.IsAlive.ShouldBeFalse();
+        withSamples.IsAlive.ShouldBeFalse();
+        source[0].Links.Add(new SiteFooterLink("Later"));
+        source.Add(new SiteFooterColumn("More"));
+        links.Add(new SiteFooterLink("Later"));
+    }
+
+    [AvaloniaFact]
+    public void A_Footer_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var source = new System.Collections.ObjectModel.ObservableCollection<SiteFooterColumn> { new("Docs", new SiteFooterLink("Guides")) };
+        var footer = new SiteFooter { ColumnsSource = source };
+        var host = new Border { Child = footer };
+        var window = TestHelpers.Show(host);
+        window.Width = 1200;
+        window.Height = 900;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            All<SiteFooterColumnView>(footer).Select(c => c.Title).ShouldBe(["Docs"]);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            source.Add(new SiteFooterColumn("Company", new SiteFooterLink("About")));
+            source[0].Links.Add(new SiteFooterLink("Recipes"));
+            host.Child = footer;
+            Dispatcher.UIThread.RunJobs();
+            footer.UpdateLayout();
+            All<SiteFooterColumnView>(footer).Select(c => c.Title).ShouldBe(["Docs", "Company"]);
+            Visible(footer).Select(b => b.Label).ShouldContain("Recipes");
+            // Back in the window, it listens again.
+            source[1].Links.Add(new SiteFooterLink("Careers"));
+            Dispatcher.UIThread.RunJobs();
+            footer.UpdateLayout();
+            Visible(footer).Select(b => b.Label).ShouldContain("Careers");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference FooterOver(Action<SiteFooter>? configure)
+    {
+        var (window, footer) = Open(configure);
+        window.Content = null;
+        window.Close();
+        Dispatcher.UIThread.RunJobs();
+        return new WeakReference(footer);
+    }
+
     private sealed class RelayCommand(Action<object?> run) : System.Windows.Input.ICommand
     {
         public event EventHandler? CanExecuteChanged { add { } remove { } }

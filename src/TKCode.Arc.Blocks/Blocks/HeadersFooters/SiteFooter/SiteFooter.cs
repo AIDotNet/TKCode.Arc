@@ -428,6 +428,9 @@ public class SiteFooter : TemplatedControl
     private readonly List<SiteFooterColumn> _watchedColumns = new();
     private INotifyCollectionChanged? _watchedSource;
     private INotifyCollectionChanged? _watchedLinks;
+    // The data the footer shows can outlive it (a view model's lists, the static sample columns): it listens only while
+    // it is in a visual tree and catches up when it comes back.
+    private bool _watching;
     private Panel? _columnsPanel;
     private Panel? _legalPanel;
     private Panel? _socialPanel;
@@ -516,15 +519,7 @@ public class SiteFooter : TemplatedControl
         }
         else if (property == LinksProperty)
         {
-            if (_watchedLinks is not null)
-            {
-                _watchedLinks.CollectionChanged -= OnDataChanged;
-            }
-            _watchedLinks = change.GetNewValue<AvaloniaList<SiteFooterLink>?>();
-            if (_watchedLinks is not null)
-            {
-                _watchedLinks.CollectionChanged += OnDataChanged;
-            }
+            WatchLinks(change.GetNewValue<AvaloniaList<SiteFooterLink>?>());
             QueueRebuild();
         }
         else if (property == BrandNameProperty || property == BrandHrefProperty || property == TaglineProperty
@@ -565,17 +560,58 @@ public class SiteFooter : TemplatedControl
         StatusLink = new SiteFooterLink(StatusLabel, StatusHref);
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchSource(ColumnsSource);
+        WatchLinks(Links);
+        // The column link lists are watched by Rebuild, which also picks up whatever changed while the footer was away.
+        QueueRebuild();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchSource(null);
+        WatchLinks(null);
+        UnwatchColumns();
+    }
+
     private void WatchSource(IEnumerable<SiteFooterColumn>? source)
     {
         if (_watchedSource is not null)
         {
             _watchedSource.CollectionChanged -= OnDataChanged;
         }
-        _watchedSource = source as INotifyCollectionChanged;
+        _watchedSource = _watching ? source as INotifyCollectionChanged : null;
         if (_watchedSource is not null)
         {
             _watchedSource.CollectionChanged += OnDataChanged;
         }
+    }
+
+    private void WatchLinks(AvaloniaList<SiteFooterLink>? links)
+    {
+        if (_watchedLinks is not null)
+        {
+            _watchedLinks.CollectionChanged -= OnDataChanged;
+        }
+        _watchedLinks = _watching ? links : null;
+        if (_watchedLinks is not null)
+        {
+            _watchedLinks.CollectionChanged += OnDataChanged;
+        }
+    }
+
+    private void UnwatchColumns()
+    {
+        foreach (var column in _watchedColumns)
+        {
+            column.Links.CollectionChanged -= OnDataChanged;
+        }
+        _watchedColumns.Clear();
     }
 
     private void OnDataChanged(object? sender, NotifyCollectionChangedEventArgs e) => QueueRebuild();
@@ -602,15 +638,15 @@ public class SiteFooter : TemplatedControl
             return;
         }
         var columns = EffectiveColumns();
-        foreach (var column in _watchedColumns)
+        UnwatchColumns();
+        // The sample columns never change: nothing to watch.
+        if (_watching && !ReferenceEquals(columns, s_sampleColumns))
         {
-            column.Links.CollectionChanged -= OnDataChanged;
-        }
-        _watchedColumns.Clear();
-        foreach (var column in columns)
-        {
-            column.Links.CollectionChanged += OnDataChanged;
-            _watchedColumns.Add(column);
+            foreach (var column in columns)
+            {
+                column.Links.CollectionChanged += OnDataChanged;
+                _watchedColumns.Add(column);
+            }
         }
         FillColumns(columns);
         var legal = EffectiveLegal();

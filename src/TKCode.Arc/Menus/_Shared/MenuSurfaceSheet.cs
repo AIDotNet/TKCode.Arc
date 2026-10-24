@@ -48,6 +48,9 @@ internal sealed class MenuSurfaceSheet
     /// <summary>Current drag offset (tests).</summary>
     internal double DragOffset => _translate.Y;
 
+    /// <summary>The scrim behind the sheet, once one was shown (tests).</summary>
+    internal Border? Scrim => _scrim;
+
     /// <summary>Sizes the surface for the anchor's window and shows the scrim (before the popup opens).</summary>
     public void Prepare(Control anchor, TopLevel topLevel)
     {
@@ -114,12 +117,18 @@ internal sealed class MenuSurfaceSheet
     /// <summary>The sheet started closing: fade the scrim out.</summary>
     public void OnClosing() => _ = HideScrimAsync();
 
-    /// <summary>The popup closed: drop any leftover drag offset.</summary>
+    /// <summary>The popup closed: drop any leftover drag offset and stop following the window (the next open fits again).</summary>
     public void OnClosed()
     {
         _pointer = null;
         _offset?.Jump(0);
         _translate.Y = 0;
+        // A closed sheet does not need resizes, and the window would otherwise keep the menu (and its anchor's page) alive.
+        if (_topLevel is not null)
+        {
+            _topLevel.SizeChanged -= OnWindowResized;
+            _topLevel = null;
+        }
     }
 
     private void ShowScrim(Control anchor, TopLevel topLevel)

@@ -74,7 +74,6 @@ internal sealed class ChatThreadPicker
         _active = 0;
         UpdateTabStops();
         popup.IsOpen = true;
-        Console.WriteLine($"DEBUG after set: {popup.IsOpen}");
         AnimateIn();
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
@@ -123,10 +122,8 @@ internal sealed class ChatThreadPicker
             IsLightDismissEnabled = true
         };
         ((ISetLogicalParent)_popup).SetParent(_thread);
-        _popup.Opened += (_, _) => Console.WriteLine("DEBUG opened");
         _popup.Closed += (_, _) =>
         {
-            Console.WriteLine("DEBUG closed " + Environment.StackTrace);
             if (Message is not null)
             {
                 Message = null;

@@ -31,6 +31,7 @@ public sealed partial class AgentStatus
     private double _available = double.NaN;
     private ExplainerAnnouncer? _announcer;
     private bool _attached;
+    private readonly HashSet<AgentStatusStep> _watchedSteps = new();
     private bool _built;
     private AgentModel? _markModel;
     private bool _refreshing;
@@ -64,34 +65,52 @@ public sealed partial class AgentStatus
             old.Changed -= OnSimulationChanged;
         }
         _sim = sim;
-        if (sim is not null)
+        // A host's simulation (and its steps) can outlive the pill: the pill listens only while attached.
+        if (sim is not null && _attached)
         {
             sim.Changed += OnSimulationChanged;
-            if (_attached)
-            {
-                sim.Start();
-            }
+            sim.Start();
         }
         Refresh();
+    }
+
+    /// <summary>Listens to the simulation and the steps while attached, so data that outlives the pill does not keep it.</summary>
+    private void WatchData(bool watch)
+    {
+        if (_sim is not null)
+        {
+            _sim.Changed -= OnSimulationChanged;
+            if (watch)
+            {
+                _sim.Changed += OnSimulationChanged;
+            }
+        }
+        // The watched set, not the list: a Clear reports no old items.
+        foreach (var step in _watchedSteps)
+        {
+            step.PropertyChanged -= OnStepChanged;
+        }
+        _watchedSteps.Clear();
+        if (watch)
+        {
+            foreach (var step in _steps)
+            {
+                if (_watchedSteps.Add(step))
+                {
+                    step.PropertyChanged += OnStepChanged;
+                }
+            }
+        }
     }
 
     private void OnSimulationChanged(object? sender, EventArgs e) => Refresh();
 
     private void OnStepsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-        if (e.OldItems is not null)
+        // While detached nothing is watched; attaching watches every step.
+        if (_attached)
         {
-            foreach (AgentStatusStep step in e.OldItems)
-            {
-                step.PropertyChanged -= OnStepChanged;
-            }
-        }
-        if (e.NewItems is not null)
-        {
-            foreach (AgentStatusStep step in e.NewItems)
-            {
-                step.PropertyChanged += OnStepChanged;
-            }
+            WatchData(true);
         }
         Refresh();
     }
@@ -110,6 +129,7 @@ public sealed partial class AgentStatus
             _autoSim = new AgentRunSimulation(AgentStatusSamples.Coding, TimeProvider);
             SetCurrentValue(SimulationProperty, _autoSim);
         }
+        WatchData(true);
         _sim?.Start();
         ApplyLevel();
         Refresh();
@@ -124,6 +144,7 @@ public sealed partial class AgentStatus
     {
         base.OnDetachedFromVisualTree(e);
         _attached = false;
+        WatchData(false);
         StopTick();
         StopSettle();
         ReleasePanel();

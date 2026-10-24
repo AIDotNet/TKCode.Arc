@@ -1,10 +1,12 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Pages;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Gallery.Shell;
 
@@ -74,6 +76,7 @@ public sealed class GalleryShell : Grid
         if (route.Kind == GalleryRouteKind.Friends)
         {
             _sidebar.IsVisible = false;
+            ReleaseFocusFromPage();
             _pageHost.Content = _friends ??= new GalleryFriendsView();
             SetRoute(GalleryRoute.Friends);
             return;
@@ -81,6 +84,7 @@ public sealed class GalleryShell : Grid
         if (route.Entry is not { } entry)
         {
             _sidebar.IsVisible = false;
+            ReleaseFocusFromPage();
             _pageHost.Content = _home ??= new GalleryHomeView(this);
             SetRoute(GalleryRoute.Home);
             return;
@@ -132,8 +136,23 @@ public sealed class GalleryShell : Grid
 
     private void OnEntrySelected(GalleryEntry entry)
     {
+        ReleaseFocusFromPage();
         _pageHost.Content = GalleryPages.Create(entry);
         SetRoute(GalleryRoute.To(entry));
+    }
+
+    /// <summary>
+    /// The window remembers the last focused element of its focus scope, and Avalonia forgets it only when that element
+    /// still has the focus as it leaves. A page whose remembered element had lost the focus (the window was inactive, or
+    /// the page was replaced from code) would stay in memory, so the shell takes the focus before the page goes.
+    /// </summary>
+    private void ReleaseFocusFromPage()
+    {
+        if (_pageHost.Content is Visual page && TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is Visual focused
+            && (ReferenceEquals(focused, page) || page.IsVisualAncestorOf(focused)))
+        {
+            Focus();
+        }
     }
 
     private void SetRoute(GalleryRoute route)

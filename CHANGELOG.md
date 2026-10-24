@@ -6,6 +6,29 @@ while the version carries a `-preview` suffix the API may still change between r
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
 
+## Unreleased
+
+### Fixed
+
+- **SiteFooter**: a footer was never released once it had been shown. With the default content it listened to the
+  static sample columns, so every footer stayed in memory with its whole page. A footer now listens to its columns and
+  links only while it is in a visual tree, and catches up with what changed while it was away.
+- **SemanticZoom**: a map kept listening to its `Organization` after it left the window, so an organization that
+  outlives the map (a view model's, or shared sample data) kept every map that had shown it, with its caches (about
+  30 MB per visit of the gallery page). The map and its panel now listen only while attached and rebuild on return if
+  the organization changed meanwhile.
+- **AgentStatus**: the pill kept listening to a host's `Simulation` and `Steps` after it left the window; it now
+  listens only while attached, and clearing `Steps` releases the old steps too. The gallery demos dispose their
+  simulations when the page goes.
+- **Menus**: a sheet (`MenuSurfaceVariant.Sheet`, such as `UserMenu` in a narrow window) closed by its popup (a click
+  outside, the window losing focus, the anchor leaving) left its scrim over the window, swallowing every click; the
+  scrim now fades out. A closed sheet also stops listening to the window's size, which kept the menu and its anchor's
+  page in memory.
+- **ChatThread**: the reaction picker no longer writes debug lines (with a stack trace on every close) to the console.
+- **Gallery**: a page whose last focused element had lost the focus stayed in memory after the visitor moved on; the
+  shell now takes the focus before it replaces a page. Visiting every page three times now keeps no old page in memory
+  (before, the managed heap grew by about 44 MB per round).
+
 ## 0.3.0-preview.4 - 2026-10-24
 
 ### Added

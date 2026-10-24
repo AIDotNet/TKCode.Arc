@@ -447,6 +447,12 @@ public class MenuSurface : HeaderedItemsControl
         DetachDismissHandlers();
         PseudoClasses.Set(OpenPseudoClass, false);
         SetActive(null, false, animate: false);
+        if (!wasClosing)
+        {
+            // Closed by the popup itself (light dismiss, the window lost focus, the anchor left): HidePopup did not run,
+            // so the sheet's scrim was never told to go and would keep covering the window.
+            _sheet?.OnClosing();
+        }
         _sheet?.OnClosed();
         if (_reopenPending && IsOpen)
         {

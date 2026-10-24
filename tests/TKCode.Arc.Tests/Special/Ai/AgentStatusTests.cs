@@ -847,4 +847,64 @@ public class AgentStatusTests
         layer.Children.Contains(status.Surface).ShouldBeFalse();
         status.IsFloating.ShouldBeFalse();
     }
+
+    [AvaloniaFact]
+    public void A_Pill_Is_Collected_While_The_Hosts_Simulation_And_Steps_Live_On()
+    {
+        var time = new AgentStatusTestClock();
+        var sim = new AgentRunSimulation(AgentStatusSamples.Coding, time);
+        var kept = new AgentStatusStep("a", "Read 12 files", AgentStatusStepState.Done);
+        var cleared = new AgentStatusStep("b", "Running tests", AgentStatusStepState.Active);
+        var reference = PillOver(sim, kept, cleared);
+        for (var i = 0; i < 4 && reference.IsAlive; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Dispatcher.UIThread.RunJobs();
+        }
+        reference.IsAlive.ShouldBeFalse();
+        // The run and the steps go on without the pill.
+        time.Advance(5_000);
+        kept.Label = "Read 13 files";
+        cleared.Label = "Ran tests";
+        GC.KeepAlive(sim);
+    }
+
+    [AvaloniaFact]
+    public void A_Pill_Put_Back_Follows_Its_Simulation_Again()
+    {
+        using var f = new Fixture();
+        var sim = new AgentRunSimulation(AgentStatusSamples.Coding, f.Time);
+        var status = new AgentStatus { Simulation = sim, TimeProvider = f.Time };
+        var host = new Border { Child = status };
+        f.Status = status;
+        f.Window = TestHelpers.Show(host, ArcMotionLevel.Off);
+        f.Pump(0.1);
+        f.AdvanceTime(900 + 3000);
+        status.DisplayState.ShouldBe(AgentStatusRunState.Working);
+        host.Child = null;
+        Dispatcher.UIThread.RunJobs();
+        sim.Pause();
+        host.Child = status;
+        f.Pump(0.1);
+        status.DisplayState.ShouldBe(AgentStatusRunState.Paused);
+        sim.Resume();
+        status.DisplayState.ShouldBe(AgentStatusRunState.Working);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference PillOver(AgentRunSimulation sim, AgentStatusStep kept, AgentStatusStep cleared)
+    {
+        var status = new AgentStatus { Simulation = sim };
+        status.Steps.Add(cleared);
+        var window = TestHelpers.Show(status);
+        // A Clear reports no old items: the pill must still let go of the step it watched.
+        status.Steps.Clear();
+        status.Steps.Add(kept);
+        Dispatcher.UIThread.RunJobs();
+        window.Content = null;
+        window.Close();
+        Dispatcher.UIThread.RunJobs();
+        return new WeakReference(status);
+    }
 }

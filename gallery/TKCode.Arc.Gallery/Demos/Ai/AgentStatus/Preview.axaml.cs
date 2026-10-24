@@ -11,6 +11,8 @@ public partial class AgentStatusPreviewDemo : UserControl
     {
         InitializeComponent();
         Pill.Simulation = _simulation;
+        // The demo owns the run: stop its timer when the page goes away.
+        DetachedFromVisualTree += (_, _) => _simulation.Dispose();
     }
 
     private void OnScenarioChanged(object? sender, SelectionChangedEventArgs e)

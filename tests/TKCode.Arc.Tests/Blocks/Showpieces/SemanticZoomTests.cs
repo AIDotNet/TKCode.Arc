@@ -746,4 +746,107 @@ public class SemanticZoomTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Map_And_Its_Panel_Are_Collected_While_The_Organization_Lives_On()
+    {
+        var org = SemanticZoomDemoData.Create();
+        var map = MapOver(org);
+        var panel = PanelOver(org.Teams[0].Projects[0]);
+        for (var i = 0; i < 4 && (map.IsAlive || panel.IsAlive); i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Settle();
+        }
+        map.IsAlive.ShouldBeFalse();
+        panel.IsAlive.ShouldBeFalse();
+        // The organization goes on without them.
+        org.Teams[0].Projects[0].Title = "Renamed later";
+        org.Teams.Add(new SemanticZoomTeam { Title = "Later" });
+        Settle();
+    }
+
+    [AvaloniaFact]
+    public void A_Map_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var map = new SemanticZoom { Header = "Network map", Organization = SemanticZoomDemoData.Create() };
+        var host = new Border { Child = map };
+        var window = TestHelpers.Show(host);
+        window.Width = 665;
+        window.Height = 1100;
+        Settle();
+        try
+        {
+            var org = map.Organization!;
+            host.Child = null;
+            Settle();
+            org.Teams[0].Projects[0].Title = "Renamed while away";
+            var team = new SemanticZoomTeam { Title = "Security" };
+            team.Projects.Add(new SemanticZoomProject { Title = "Camera upgrade" });
+            org.Teams.Add(team);
+            host.Child = map;
+            Settle();
+            Stage(map).Layout.TeamCount.ShouldBe(6);
+            map.Table!.Rows.ShouldContain(r => r.StartsWith("Renamed while away"));
+            // Back in the window, it listens again.
+            org.Teams[1].Projects[0].Title = "Renamed after";
+            map.Table!.Rows.ShouldContain(r => r.StartsWith("Renamed after"));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Panel_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var org = SemanticZoomEngineTests.Organization([2], tasks: 4);
+        var panel = new SemanticZoomPanel { Scope = org.Teams[0].Projects[0], Layout = SemanticZoomPanelLayout.Stack };
+        var host = new Border { Child = panel };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            Settle();
+            TestHelpers.Descendant<ShowpieceNumber>(panel, SemanticZoomPanel.OpenPart).Value.ShouldBe(4);
+            host.Child = null;
+            Settle();
+            org.Teams[0].Projects[0].Tasks[0].Status = SemanticZoomTaskStatus.Done;
+            host.Child = panel;
+            Settle();
+            TestHelpers.Descendant<ShowpieceNumber>(panel, SemanticZoomPanel.OpenPart).Value.ShouldBe(3);
+            org.Teams[0].Projects[0].Tasks[1].Status = SemanticZoomTaskStatus.Done;
+            Settle();
+            TestHelpers.Descendant<ShowpieceNumber>(panel, SemanticZoomPanel.OpenPart).Value.ShouldBe(2);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference MapOver(SemanticZoomOrganization org)
+    {
+        var (map, window) = Show(organization: org);
+        map.FlyTo(org.Teams[1]);
+        Settle();
+        window.Content = null;
+        window.Close();
+        Settle();
+        return new WeakReference(map);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference PanelOver(SemanticZoomNode scope)
+    {
+        var panel = new SemanticZoomPanel { Scope = scope };
+        var window = TestHelpers.Show(panel);
+        Settle();
+        window.Content = null;
+        window.Close();
+        Settle();
+        return new WeakReference(panel);
+    }
 }

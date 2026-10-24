@@ -35,6 +35,10 @@ public partial class SemanticZoom : ISemanticZoomStageHost
     private SemanticZoomPanel? _panel;
 
     private SemanticZoomOrganization? _org;
+    // True while in a visual tree (the organization's events are watched only then).
+    private bool _watching;
+    // The organization's revision when the map was detached: a different one on return means the map is stale.
+    private int? _revisionAtDetach;
     private SemanticZoomLayout _layout = SemanticZoomLayout.Empty;
     private SemanticZoomLabels _labels = SemanticZoomLabels.Empty;
     private readonly SemanticZoomTour _tour = new();
@@ -315,23 +319,35 @@ public partial class SemanticZoom : ISemanticZoomStageHost
 
     private void AttachOrganization(SemanticZoomOrganization? organization)
     {
-        if (_org is not null)
-        {
-            _org.StructureChanged -= OnStructureChanged;
-            _org.ValuesChanged -= OnValuesChanged;
-        }
+        WatchOrganization(false);
         _org = organization;
-        if (_org is not null)
-        {
-            _org.StructureChanged += OnStructureChanged;
-            _org.ValuesChanged += OnValuesChanged;
-        }
+        WatchOrganization(_watching);
+        _revisionAtDetach = null;
         if (IsTourPlaying)
         {
             StopTour();
         }
         _dirty = true;
         Rebuild(keepView: false);
+    }
+
+    /// <summary>
+    /// The organization usually outlives the map (a view model's, or shared sample data): the map listens to it only while
+    /// it is in a visual tree, so a map that was taken out can be collected.
+    /// </summary>
+    private void WatchOrganization(bool watch)
+    {
+        if (_org is null)
+        {
+            return;
+        }
+        _org.StructureChanged -= OnStructureChanged;
+        _org.ValuesChanged -= OnValuesChanged;
+        if (watch)
+        {
+            _org.StructureChanged += OnStructureChanged;
+            _org.ValuesChanged += OnValuesChanged;
+        }
     }
 
     private void OnStructureChanged()
@@ -1131,9 +1147,25 @@ public partial class SemanticZoom : ISemanticZoomStageHost
         }
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchOrganization(true);
+        if (_revisionAtDetach is { } seen && _org is not null && _org.Revision != seen)
+        {
+            // The organization changed while the map was away: catch up (labels and layout).
+            OnStructureChanged();
+        }
+        _revisionAtDetach = null;
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchOrganization(false);
+        _revisionAtDetach = _org?.Revision;
         if (_touring)
         {
             EndTour(completed: false, stopCamera: false);

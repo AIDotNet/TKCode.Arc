@@ -590,9 +590,20 @@ public sealed class SemanticZoomOrganization : SemanticZoomNode
     /// <summary>Raised after a shown value (a title, a status, a tick or a rollup) changed somewhere in the map.</summary>
     internal event Action<SemanticZoomNode>? ValuesChanged;
 
-    internal void RaiseStructureChanged() => StructureChanged?.Invoke();
+    /// <summary>Counts every structure and value change, so a map that was away (detached) can tell whether to rebuild.</summary>
+    internal int Revision { get; private set; }
 
-    internal void RaiseValuesChanged(SemanticZoomNode node) => ValuesChanged?.Invoke(node);
+    internal void RaiseStructureChanged()
+    {
+        Revision++;
+        StructureChanged?.Invoke();
+    }
+
+    internal void RaiseValuesChanged(SemanticZoomNode node)
+    {
+        Revision++;
+        ValuesChanged?.Invoke(node);
+    }
 }
 
 /// <summary>A team: a panel of project cards with a lead.</summary>

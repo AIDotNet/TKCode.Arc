@@ -12,5 +12,11 @@ public partial class AgentStatusHeaderBarDemo : UserControl
         InitializeComponent();
         Left.Simulation = _coding;
         Right.Simulation = _research;
+        // The demo owns the runs: stop their timers when the page goes away.
+        DetachedFromVisualTree += (_, _) =>
+        {
+            _coding.Dispose();
+            _research.Dispose();
+        };
     }
 }
