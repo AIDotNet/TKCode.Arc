@@ -1,6 +1,6 @@
 ---
 title: 更新日誌
-source-hash: 2ad836a9f46d
+source-hash: 5c75afb62948
 ---
 
 # 更新日誌
@@ -8,6 +8,26 @@ source-hash: 2ad836a9f46d
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 與 `TKCode.Arc.Special`。
+
+## 0.3.0-preview.5 (2026-10-24)
+
+### 新增
+
+- **工作流程畫布**：新套件 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）：`WorkflowCanvas` 顯示步驟與連線組成的圖並播放執行過程，支援平移縮放、編輯、連線、復原重做、複製貼上、節點範本、縮圖，500 個步驟的版面約 2 毫秒。另有 `WorkflowNodeCard` 與 `WorkflowZoomControls`。
+- **Blocks › 驗證**：`SignIn`、`SignupForm`、`LoginSplit`、`LoginCentered`、`LoginImmersive`、`OtpInput`、`OnboardingIllustration` 和 `MultiStepForm`。
+- **Core**：`PanZoomTransform`、`WheelRouter` 和 `LayeredGraphLayout`。
+
+### 變更
+
+- **Gallery**（網頁）：網站改為 WebAssembly 預先編譯，慢速 CPU 上動畫更流暢；首次造訪下載量較大。
+
+### 修復
+
+- **記憶體**：許多控制項（`TreeView`、`ChatThread`、`Markdown`、圖表、`DataGrid`、AI、Projects 和 Special 區塊等）在整個生命週期內都監聽其顯示的資料，使頁面一直留在記憶體中；現在只在位於視覺樹時監聽。`SiteFooter`、`SemanticZoom`、`AgentStatus` 和 Gallery 頁面也不再洩漏。
+- **選單**：關閉的面板不再把遮罩留在視窗上。
+- **ChatThread**：表情選擇器不再向主控台寫入除錯訊息。
+- **Accordion** 與 **ExpandableCard**：展開時分隔線開銷更低，外觀不變。
+- **Markdown** 與 AI 回答改用 StreamMark `0.1.0`。
 
 ## 0.3.0-preview.4 (2026-10-24)
 

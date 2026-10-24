@@ -4,13 +4,17 @@ All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Ver
 while the version carries a `-preview` suffix the API may still change between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
-(`TKCode.Arc.Workflow` from the next release).
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special` and
+`TKCode.Arc.Workflow`.
 
-## Unreleased
+## 0.3.0-preview.5 - 2026-10-24
 
 ### Added
 
+- **Blocks › Auth** (`TKCode.Arc.Blocks`): `SignIn`, `SignupForm`, `LoginSplit`, `LoginCentered`, `LoginImmersive`,
+  `OtpInput`, `OnboardingIllustration` and `MultiStepForm`: sign-in and sign-up flows with providers, one-time codes,
+  validation and success states, an illustrated onboarding and a multi-step form. Docs and demos in English, 简体中文
+  and 繁體中文.
 - **Workflow canvas** (new package `TKCode.Arc.Workflow`, call `UseArcWorkflow()`; the look and the run animation follow
   the workflow graph of Arc's free Hero section block): `WorkflowCanvas` shows a `WorkflowGraph` of steps and
   connections on a dotted canvas and plays its runs. Set each step's state as your run goes: when a step finishes, the
@@ -463,6 +467,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.4...v0.3.0-preview.5
 [0.3.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.3...v0.3.0-preview.4
 [0.3.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.2...v0.3.0-preview.3
 [0.3.0-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.1...v0.3.0-preview.2

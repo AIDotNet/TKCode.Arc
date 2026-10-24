@@ -23,16 +23,16 @@ TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 
 
 ## 安装
 
-最新预览版为 [`0.3.0-preview.4`](CHANGELOG.md)，已发布到 [NuGet](https://www.nuget.org/packages/TKCode.Arc)：
+最新预览版为 [`0.3.0-preview.5`](CHANGELOG.md)，已发布到 [NuGet](https://www.nuget.org/packages/TKCode.Arc)：
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.0-preview.4
-dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.4           # 可选：Geist 与 Geist Mono 字体
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.4    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 0.3.0-preview.5
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.5           # 可选：Geist 与 Geist Mono 字体
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.5    # 可选：完整的 Lucide 图标集
 ```
 
 `TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`
-（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装；工作流画布 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）将随下一个版本发布。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
+（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装；工作流画布 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）随 0.3.0-preview.5 起一同发布。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
 
 ## 快速开始
 

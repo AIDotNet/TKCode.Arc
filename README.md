@@ -23,17 +23,17 @@ with Arc's visual language and spring motion.
 
 ## Install
 
-The latest preview is [`0.3.0-preview.4`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
+The latest preview is [`0.3.0-preview.5`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.0-preview.4
-dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.4           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.4    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.3.0-preview.5
+dotnet add package TKCode.Arc.Fonts --version 0.3.0-preview.5           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.0-preview.5    # optional: the full Lucide set
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
 (the animated AI explainers of the Special components section) are separate packages on NuGet; `TKCode.Arc.Workflow`
-(the workflow canvas, `UseArcWorkflow()`) joins them with the next release. Versions carry a `-preview` suffix, so the API may still change between
+(the workflow canvas, `UseArcWorkflow()`) ships with them too. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started

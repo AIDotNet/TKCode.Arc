@@ -9,7 +9,27 @@ version carries a `-preview` suffix, the API may still change between releases; 
 keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special` and `TKCode.Arc.Workflow`.
+
+## 0.3.0-preview.5 (2026-10-24)
+
+### Added
+
+- **Workflow canvas**: the new `TKCode.Arc.Workflow` package (`UseArcWorkflow()`): `WorkflowCanvas` shows a graph of steps and connections and plays its runs, with pan and zoom, editing, connections, undo and redo, copy and paste, node templates, a minimap and layout of 500 steps in about 2 ms. Also `WorkflowNodeCard` and `WorkflowZoomControls`.
+- **Blocks › Auth**: `SignIn`, `SignupForm`, `LoginSplit`, `LoginCentered`, `LoginImmersive`, `OtpInput`, `OnboardingIllustration` and `MultiStepForm`.
+- **Core**: `PanZoomTransform`, `WheelRouter` and `LayeredGraphLayout`.
+
+### Changed
+
+- **Gallery** (web): the site is compiled ahead of time to WebAssembly, which smooths animations on slow CPUs; the first visit downloads more.
+
+### Fixed
+
+- **Memory**: many controls (`TreeView`, `ChatThread`, `Markdown`, the charts, `DataGrid`, the AI, Projects and Special blocks and more) listened to the data they show for their whole life and kept their page in memory. They now listen only while in a visual tree. `SiteFooter`, `SemanticZoom`, `AgentStatus` and the Gallery pages no longer leak either.
+- **Menus**: a closed sheet no longer leaves its scrim over the window.
+- **ChatThread**: the reaction picker no longer writes debug lines to the console.
+- **Accordion** and **ExpandableCard**: cheaper dividers while opening, with an unchanged look.
+- **Markdown** and the AI answers use StreamMark `0.1.0`.
 
 ## 0.3.0-preview.4 (2026-10-24)
 
