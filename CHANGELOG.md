@@ -8,6 +8,13 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 ## Unreleased
 
+### Changed
+
+- **Gallery** (web): the published site is compiled ahead of time to WebAssembly as well as trimmed. On a CPU four times
+  slower than an M5, opening an Accordion row on its docs page cost the main thread 6.7 ms a frame and dropped about six
+  frames; compiled, it costs 3.0 ms and drops none. The first visit downloads more (26 MB instead of 13.5 MB, brotli) and
+  the image takes about 12 minutes longer to build; `-p:RunAOTCompilation=false` publishes without it.
+
 ### Fixed
 
 - **SiteFooter**: a footer was never released once it had been shown. With the default content it listened to the
@@ -56,6 +63,10 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - **Accordion** and **ExpandableCard**: their dividers are filled strips instead of one-sided borders. Avalonia draws a
   border with an uneven thickness as a path (two outlines and a boolean exclude) and builds it again on every size
   change, which happened every frame while a row or a card opened. The look is unchanged, pixel for pixel.
+- **Markdown** and the AI answers now use StreamMark `0.1.0` (was `0.1.0-alpha.25`). A Markdown view that had left
+  the window stayed subscribed to its document, so a document or stream that outlives the view (a chat message
+  the app keeps) kept the view and its page in memory. Code blocks and tables also stop rebuilding their pens and
+  outlines on every frame while content above them opens.
 
 ## 0.3.0-preview.4 - 2026-10-24
 
