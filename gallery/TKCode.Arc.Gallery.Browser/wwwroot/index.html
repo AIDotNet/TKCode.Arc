@@ -11,8 +11,9 @@
          llms.txt (written by gallery/TKCode.Arc.Gallery.Llms when the site is built). -->
     <meta name="description" content="TKCode.Arc: Arc's components for Avalonia. AI assistants: every page is available as Markdown, listed in /llms.txt.">
     <link rel="alternate" type="text/plain" href="llms.txt" title="Docs for AI assistants (llms.txt)">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Bump ?v= when the icons change: they are cached for a day (docker/nginx.conf) and browsers keep favicons longer still. -->
+    <link rel="icon" type="image/png" href="favicon.png?v=2">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
     <link rel="preload" id="webassembly" />
     <script type="importmap"></script>
     <script type='module' src="main#[.{fingerprint}].js"></script>
@@ -21,7 +22,7 @@
 <body style="margin: 0; overflow: hidden">
 <div id="out">
     <div class="avalonia-splash" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100">
-        <img class="splash-mark" src="splash-mark.png" alt="" width="44" height="44">
+        <img class="splash-mark" src="splash-mark.png?v=2" alt="" width="44" height="44">
         <div class="splash-name">TKCode.Arc</div>
         <div class="splash-track"><div class="splash-bar" id="splash-bar"></div></div>
         <div class="splash-status" id="splash-status">0%</div>
