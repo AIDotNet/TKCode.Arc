@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginImmersiveReducedMotionDemo">
+    <!-- Reduced motion: steps only fade in, the envelope is already sealed, the check is drawn whole and the countdown
+         changes without rolling. The demo's delays stay the same. -->
+    <arc:LoginImmersive Height="640" arc:ArcMotion.Level="Reduced" />
+</UserControl>

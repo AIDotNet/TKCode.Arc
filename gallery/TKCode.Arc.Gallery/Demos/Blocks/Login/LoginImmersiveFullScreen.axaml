@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginImmersiveFullScreenDemo">
+    <!-- IsFullScreen: square corners and no minimum height, for a window that is only the sign-in page.
+         The frame here stands in for the window. -->
+    <Border Height="760"
+            BorderThickness="1"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:LoginImmersive IsFullScreen="True" />
+    </Border>
+</UserControl>

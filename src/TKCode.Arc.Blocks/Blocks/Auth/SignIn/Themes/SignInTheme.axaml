@@ -1,0 +1,488 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Ported from Arc's free sign-in block (MIT, Copyright (c) 2026 Elia Kuratli): sign-in.module.css.
+
+        The card is at most 432 wide, 1px border, surface radius (panel radius when it is offered at most 448: Arc's 480px
+        viewport), surface fill, clipped. Inside: the viewport with the steps (each padded 32; 24 20 when the card is at most
+        380 wide: :narrow) and the footer (48 high at least, padding 12 32 / 12 20, top border, 12px muted text). Body text in
+        the card is tracked -0.16 (Arc sets -0.01em on the card, so every child inherits -0.16px). Values that change with a
+        pseudo-class are styles, not template values (a template value would win over them).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignIn}" TargetType="arc:SignIn">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignIn">
+                <Border Name="PART_Card"
+                        MaxWidth="{arc:SignInTokenResource CardMaxWidth}"
+                        BorderThickness="1"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        Background="{arc:ArcDesignTokenResource Surface}"
+                        ClipToBounds="True"
+                        TextElement.LetterSpacing="-0.16">
+                    <Grid RowDefinitions="Auto,Auto">
+                        <arc:SignInViewport Name="PART_Viewport">
+                            <arc:SignInStepHost Name="PART_Steps" />
+                        </arc:SignInViewport>
+                        <Border Name="PART_Footer"
+                                Grid.Row="1"
+                                MinHeight="48"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                            <arc:SignInFooterPanel VerticalAlignment="Stretch">
+                                <arc:SignInSwap Name="PART_Status" AutomationProperties.AccessibilityView="Raw" />
+                                <StackPanel Name="PART_Switch" Orientation="Horizontal" Spacing="3.4">
+                                    <TextBlock Name="PART_SignUpPrompt"
+                                               LineHeight="16.8"
+                                               VerticalAlignment="Center"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:SignInTextButton Name="PART_SignUp" IsQuiet="True" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:SignInFooterPanel>
+                        </Border>
+                        <arc:AuthAnnouncer Name="PART_Announcer" ClearsOnEmpty="True" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Card">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource FooterPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Card">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource FooterPaddingNarrow}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Step one: heading (gap 8, 24 below), the form (field group then Continue, 16 apart), the divider (12px muted "or"
+        between two hairlines, 20 above and below) and the alternatives (passkey, then the providers in equal columns, 8 apart).
+        The suggestion row opens on the smooth spring and fades in over 160ms (Arc's motion.div with height auto).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignInEmailStep}" TargetType="arc:SignInEmailStep">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignInEmailStep">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                    <StackPanel>
+                        <StackPanel Spacing="8" Margin="0,0,0,24">
+                            <arc:SignInText Name="PART_Title"
+                                            IsBalanced="True"
+                                            TextWrapping="Wrap"
+                                            HorizontalAlignment="Left"
+                                            FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                            FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                            AutomationProperties.HeadingLevel="2" />
+                            <arc:SignInText Name="PART_Description"
+                                            IsPretty="True"
+                                            TextWrapping="Wrap"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                            LineHeight="19.6"
+                                            Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <StackPanel Spacing="16">
+                            <StackPanel>
+                                <arc:Input Name="PART_Email" />
+                                <arc:SpringSizeDecorator Name="PART_Suggestion"
+                                                         Axis="Height"
+                                                         Spring="Smooth"
+                                                         IsExpanded="False"
+                                                         ClipOverflow="0">
+                                    <WrapPanel Name="PART_SuggestionBody"
+                                               Margin="0,8,0,4"
+                                               Opacity="0"
+                                               TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                        <TextBlock Name="PART_SuggestionBefore" LineHeight="16.8" VerticalAlignment="Center" />
+                                        <arc:SignInTextButton Name="PART_SuggestionButton" VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_SuggestionAfter" LineHeight="16.8" VerticalAlignment="Center" />
+                                    </WrapPanel>
+                                </arc:SpringSizeDecorator>
+                            </StackPanel>
+                            <arc:Button Name="PART_Continue" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        <Grid Name="PART_Divider" ColumnDefinitions="*,Auto,*" ColumnSpacing="12" Margin="0,20">
+                            <Border Height="1" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource Border}" />
+                            <TextBlock Name="PART_DividerText"
+                                       Grid.Column="1"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="12"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <Border Grid.Column="2" Height="1" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource Border}" />
+                        </Grid>
+                        <StackPanel Name="PART_Alternatives" Spacing="8">
+                            <arc:Button Name="PART_Passkey" Variant="Secondary" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <!-- Lucide key-round (ISC), the dot drawn as a tiny stroked circle. -->
+                                    <arc:ArcGlyph Size="16"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center"
+                                                  Data="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z M16 7.5a.5.5 0 1 0 1 0a.5.5 0 1 0 -1 0z" />
+                                    <TextBlock Name="PART_PasskeyText" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arc:Button>
+                            <arc:SignInProviderRow Name="PART_Providers" Gap="8" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:SignInTokenResource StepPadding}" />
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource StepPaddingNarrow}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="39.6" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="30.8" />
+            <Setter Property="LetterSpacing" Value="-0.84" />
+        </Style>
+        <Style Selector="^:motion-full /template/ WrapPanel#PART_SuggestionBody">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Step two: heading, the account row (1px border, control radius, padding 8 8 8 12, 24 below: a 32px avatar, the
+        address and a small ghost Change; gap 12, or 8 with padding 8 when narrow), the form (the code field and Verify,
+        16 apart) and the resend pill (36 high, 8 inline padding, pulled 8 left and 8 down, 12 below the form).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignInCodeStep}" TargetType="arc:SignInCodeStep">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignInCodeStep">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                    <StackPanel>
+                        <StackPanel Spacing="8" Margin="0,0,0,24">
+                            <arc:SignInText Name="PART_Title"
+                                            IsBalanced="True"
+                                            TextWrapping="Wrap"
+                                            HorizontalAlignment="Left"
+                                            FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                            FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                            AutomationProperties.HeadingLevel="2" />
+                            <arc:SignInText Name="PART_Description"
+                                            IsPretty="True"
+                                            TextWrapping="Wrap"
+                                            HorizontalAlignment="Left"
+                                            FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                            LineHeight="19.6"
+                                            Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <Border Name="PART_Identity"
+                                Margin="0,0,0,24"
+                                BorderThickness="1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
+                            <Grid Name="PART_IdentityRow" ColumnDefinitions="Auto,*,Auto">
+                                <arc:SignInAvatar Name="PART_Avatar"
+                                                  Width="{arc:SignInTokenResource AvatarSmallSize}"
+                                                  Height="{arc:SignInTokenResource AvatarSmallSize}"
+                                                  VerticalAlignment="Center"
+                                                  InitialsFontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                  FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                  Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                  Stroke="{arc:ArcDesignTokenResource Border}"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                  ZIndex="1" />
+                                <TextBlock Name="PART_IdentityEmail"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           LineHeight="19.6" />
+                                <arc:Button Name="PART_Change" Grid.Column="2" Variant="Ghost" Size="Small" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                        <StackPanel Spacing="16">
+                            <arc:OtpInput Name="PART_Code" AutoFocus="True" />
+                            <arc:Button Name="PART_Verify" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        <arc:SignInResendButton Name="PART_Resend" Margin="-8,12,0,-8">
+                            <arc:SignInSwap Name="PART_ResendSwap" />
+                        </arc:SignInResendButton>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:SignInTokenResource StepPadding}" />
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource StepPaddingNarrow}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="39.6" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="30.8" />
+            <Setter Property="LetterSpacing" Value="-0.84" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Identity">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource IdentityPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_IdentityRow">
+            <Setter Property="ColumnSpacing" Value="12" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Identity">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource IdentityPaddingNarrow}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Grid#PART_IdentityRow">
+            <Setter Property="ColumnSpacing" Value="8" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Step three: the 96px stage (pulled 4 left, 24 below) with the success ring (r 47, 1.5 stroke, from 12 o'clock),
+        the 88px avatar and the 26px check badge (success fill, 2px surface edge, 2 from the right, 4 from the bottom);
+        the welcome and the address (gap 8, 24 below); two detail rows between hairlines (12 above and below, 16 apart,
+        the value right-aligned); Sign out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignInDoneStep}" TargetType="arc:SignInDoneStep">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignInDoneStep">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                    <StackPanel>
+                        <Panel Name="PART_Stage"
+                               Width="{arc:SignInTokenResource AvatarStageSize}"
+                               Height="{arc:SignInTokenResource AvatarStageSize}"
+                               HorizontalAlignment="Left"
+                               Margin="-4,0,0,24">
+                            <arc:ArcRing Name="PART_Ring"
+                                         Width="95.5"
+                                         Height="95.5"
+                                         Value="1"
+                                         StartAngle="-90"
+                                         IsRoundCap="False"
+                                         Thickness="{arc:SignInTokenResource RingThickness}"
+                                         Foreground="{arc:ArcDesignTokenResource Success}" />
+                            <arc:SignInAvatar Name="PART_Avatar"
+                                              Width="{arc:SignInTokenResource AvatarLargeSize}"
+                                              Height="{arc:SignInTokenResource AvatarLargeSize}"
+                                              InitialsFontSize="{arc:ArcDesignTokenResource Type2XL}"
+                                              FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <Border Name="PART_Badge"
+                                    Width="{arc:SignInTokenResource BadgeSize}"
+                                    Height="{arc:SignInTokenResource BadgeSize}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom"
+                                    Margin="0,0,2,4"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    BorderThickness="2"
+                                    BorderBrush="{arc:ArcDesignTokenResource Surface}"
+                                    Background="{arc:ArcDesignTokenResource Success}"
+                                    AutomationProperties.AccessibilityView="Raw">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                              Size="14"
+                                              StrokeThickness="2.25"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource Surface}" />
+                            </Border>
+                        </Panel>
+                        <StackPanel Name="PART_Heading" Spacing="8" Margin="0,0,0,24">
+                            <arc:SignInText Name="PART_Title"
+                                            IsBalanced="True"
+                                            TextWrapping="Wrap"
+                                            HorizontalAlignment="Left"
+                                            FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                            FontWeight="{arc:ArcDesignTokenResource WeightRegular}" />
+                            <TextBlock Name="PART_Email"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       LineHeight="19.6"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <Border Name="PART_Details"
+                                Margin="0,0,0,24"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}">
+                            <StackPanel>
+                                <Border Padding="0,12" BorderThickness="0,0,0,1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                                        <TextBlock Name="PART_MethodLabel" LineHeight="19.6" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <TextBlock Name="PART_MethodValue" Grid.Column="1" LineHeight="19.6" TextAlignment="Right" TextWrapping="Wrap" />
+                                    </Grid>
+                                </Border>
+                                <Border Padding="0,12" BorderThickness="0,0,0,1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                                        <TextBlock Name="PART_DeviceLabel" LineHeight="19.6" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <TextBlock Name="PART_DeviceValue" Grid.Column="1" LineHeight="19.6" TextAlignment="Right" TextWrapping="Wrap" />
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                        <Panel Name="PART_SignOutHost">
+                            <arc:Button Name="PART_SignOut" Variant="Secondary" HorizontalAlignment="Stretch" />
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Padding" Value="{arc:SignInTokenResource StepPadding}" />
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:SignInTokenResource StepPaddingNarrow}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="LineHeight" Value="39.6" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="30.8" />
+            <Setter Property="LetterSpacing" Value="-0.84" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Arc's .textButton: the surrounding size, medium weight, the text colour, underlined 3px below the baseline in the
+        strong border colour (:quiet, the footer's "Sign up": no underline); hover (mouse and pen) turns the underline to the
+        text colour over 160ms on the standard curve (none when reduced). Keyboard focus: a 2px ring 2px outside, radius 4.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignInTextButton}" TargetType="arc:SignInTextButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignInTextButton">
+                <Panel>
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               Background="Transparent"
+                               LineHeight="16.8"
+                               TextWrapping="Wrap" />
+                    <arc:SignInUnderline Name="PART_Underline" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="8"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|SignInUnderline#PART_Underline">
+            <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:quiet /template/ arc|SignInUnderline#PART_Underline">
+            <Setter Property="UnderlineBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="^:hover /template/ arc|SignInUnderline#PART_Underline">
+            <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|SignInUnderline#PART_Underline">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="UnderlineBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Arc's .resend: a pill 36 high with 8 inline padding, 14px medium in the text colour; hover (mouse and pen) fills
+        it with the muted surface. While the timer runs (:waiting, Arc's aria-disabled) it is muted, regular weight and
+        has no hover. Colour and fill change over 160ms on the standard curve (none when reduced).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignInResendButton}" TargetType="arc:SignInResendButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignInResendButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:waiting">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:hover:not(:waiting)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

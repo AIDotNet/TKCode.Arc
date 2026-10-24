@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignupFormHandlersDemo">
+    <!--
+        Wired to a (pretend) API: SubmitAsync creates the account and rejects an address that is taken, the providers
+        report which one was picked, and every event lands in the log. Try taken@northwind.studio.
+    -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center">
+        <arc:SignupForm x:Name="Form"
+                        AccountCreated="OnAccountCreated"
+                        ProviderSelected="OnProviderSelected"
+                        Navigate="OnNavigate" />
+        <TextBlock x:Name="Log"
+                   MaxWidth="432"
+                   TextWrapping="Wrap"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

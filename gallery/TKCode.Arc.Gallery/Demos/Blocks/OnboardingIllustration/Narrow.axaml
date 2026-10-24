@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingIllustrationNarrowDemo">
+    <!-- A 358 wide phone screen: the card fills it edge to edge (IsFramed off) and switches to its compact layout. -->
+    <Border Width="358"
+            Margin="0,12"
+            HorizontalAlignment="Center"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1"
+            CornerRadius="28"
+            ClipToBounds="True"
+            Padding="0,24,0,32"
+            Background="{arc:ArcDesignTokenResource SurfaceRaised}">
+        <arc:OnboardingIllustration IsFramed="False" Label="Northdesk onboarding" />
+    </Border>
+</UserControl>

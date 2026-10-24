@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginImmersiveEventsDemo">
+    <!-- Your own product, picture and handlers: the page asks the app to send the link, open the mail app and run
+         single sign-on, and reports every step. The switch makes the next send fail. -->
+    <StackPanel Spacing="16">
+        <arc:Switch x:Name="Fail" Content="Fail the next send" HorizontalAlignment="Center" />
+        <arc:LoginImmersive x:Name="Login"
+                            Height="640"
+                            BrandName="Harbor Desk"
+                            ResendSeconds="15"
+                            TermsHref="https://example.com/terms"
+                            PrivacyHref="https://example.com/privacy" />
+        <Border MinHeight="132"
+                Padding="16,12"
+                CornerRadius="12"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock x:Name="Log"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="12"
+                       LineHeight="18"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="Send a link, open the mail app, or pick a provider." />
+        </Border>
+    </StackPanel>
+</UserControl>

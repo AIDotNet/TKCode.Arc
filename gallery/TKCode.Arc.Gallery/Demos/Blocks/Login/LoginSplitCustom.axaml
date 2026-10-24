@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitCustomDemo">
+    <!--
+        Another product: its name, words, demo password and sign-on buttons, and a picture of its own in the right column
+        (drawn in code here), focused a little above the middle. Shown full screen at 1100 × 720, scaled to fit.
+    -->
+    <Border Margin="0,12"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <Viewbox Stretch="Uniform">
+            <arc:LoginSplit x:Name="Split"
+                            IsFullScreen="True"
+                            Width="1100"
+                            Height="720"
+                            BrandName="Northdesk"
+                            DemoPassword="queue-zero"
+                            PhotoAlignment="0.5,0.45" />
+        </Viewbox>
+    </Border>
+</UserControl>

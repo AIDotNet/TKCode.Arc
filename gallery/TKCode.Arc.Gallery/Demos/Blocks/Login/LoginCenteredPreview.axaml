@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginCenteredPreviewDemo">
+    <!-- Arc's preview: the screen full size in a frame, everything simulated. Try a passkey, or email with a wrong code, then 482913. -->
+    <Border Height="720"
+            BorderThickness="1"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:LoginCentered IsFullScreen="True" />
+    </Border>
+</UserControl>

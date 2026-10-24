@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OtpInputVerifyDemo">
+    <!-- A verification step: the last digit checks the code (simulated, 700 ms). A wrong code clears the slots and shakes. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" Width="360">
+        <arc:OtpInput x:Name="Code"
+                      Description="For this demo, the code is 123456."
+                      Completed="OnCompleted"
+                      ValueChanged="OnValueChanged" />
+        <arc:Button x:Name="Restart" Content="Start over" Variant="Secondary" HorizontalAlignment="Left" Click="OnRestart" />
+    </StackPanel>
+</UserControl>

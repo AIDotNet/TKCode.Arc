@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignupFormPreviewDemo">
+    <!--
+        Arc's preview: the 432 wide card with nothing wired up. Create account checks the fields and, when they are valid,
+        shows the completion panel after 700 ms; a provider button simulates its redirect for 900 ms.
+    -->
+    <arc:SignupForm />
+</UserControl>

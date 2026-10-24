@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginCenteredFramedDemo">
+    <!-- Without IsFullScreen the block draws its own frame: a 1px border, the panel radius and at least 640px of height. -->
+    <arc:LoginCentered />
+</UserControl>

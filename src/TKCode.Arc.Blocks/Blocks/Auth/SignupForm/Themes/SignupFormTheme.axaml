@@ -1,0 +1,374 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Ported from Arc's free signup-form block (MIT, Copyright (c) 2026 Elia Kuratli): signup-form.module.css.
+
+        The card: at most 432 wide, 1px border, the surface radius (34; the panel radius 26 once narrower than 432), surface
+        background, clipped. Inside, the viewport with the two steps (padding 32; 24 20 at 380 and below) and the footer
+        (min 48, padding 12 32 / 12 20, top border). Text is the body font at −0.16px tracking; headings the display font,
+        36px (28 narrow), −0.03em, line height 1.1. Values that change with :narrow / :compact / :password-error are styles,
+        not template values (a template value would win over them).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignupForm}" TargetType="arc:SignupForm">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:SignupFormTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignupForm">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <DockPanel>
+                            <!-- Footer: the status line and "Have an account? Sign in". -->
+                            <Border Name="PART_Footer" DockPanel.Dock="Bottom">
+                                <arc:SignupFormFooterPanel Name="PART_FooterRow" VerticalAlignment="Center">
+                                    <arc:SignupFormSwap Name="PART_Status"
+                                                        IsSingleLine="True"
+                                                        AutomationProperties.AccessibilityView="Raw" />
+                                    <TextBlock Name="PART_SwitchLine" TextWrapping="NoWrap" ClipToBounds="False" />
+                                </arc:SignupFormFooterPanel>
+                            </Border>
+
+                            <arc:SignupFormStage Name="PART_Stage">
+                                <!-- Step 1: the form. -->
+                                <Border Name="PART_FormStep" Classes="step">
+                                    <StackPanel>
+                                        <StackPanel Classes="heading">
+                                            <arc:SignupFormText Name="PART_Title" Classes="title" Wrap="Balance" AutomationProperties.HeadingLevel="2" />
+                                            <arc:SignupFormText Name="PART_Description" Classes="lead" Wrap="Pretty" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_ProvidersBlock">
+                                            <Grid Name="PART_Providers" ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                                                <arc:Button Name="PART_Google" Grid.Column="0" Classes="sso" Variant="Secondary">
+                                                    <StackPanel Classes="sso-face">
+                                                        <arc:AuthProviderMark Kind="Google" Width="16" Height="16" VerticalAlignment="Center" />
+                                                        <TextBlock Text="Google" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </arc:Button>
+                                                <arc:Button Name="PART_Apple" Grid.Column="1" Classes="sso" Variant="Secondary">
+                                                    <StackPanel Classes="sso-face">
+                                                        <arc:AuthProviderMark Kind="Apple" Width="16" Height="16" VerticalAlignment="Center" />
+                                                        <TextBlock Text="Apple" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </arc:Button>
+                                                <arc:Button Name="PART_GitHub" Grid.Column="2" Classes="sso" Variant="Secondary">
+                                                    <StackPanel Classes="sso-face">
+                                                        <arc:AuthProviderMark Kind="GitHub" Width="16" Height="16" VerticalAlignment="Center" />
+                                                        <TextBlock Text="GitHub" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </arc:Button>
+                                            </Grid>
+                                            <Grid Name="PART_Divider" ColumnDefinitions="*,Auto,*" ColumnSpacing="12" AutomationProperties.AccessibilityView="Raw">
+                                                <Border Grid.Column="0" Classes="rule" />
+                                                <TextBlock Name="PART_DividerText" Grid.Column="1" VerticalAlignment="Center" />
+                                                <Border Grid.Column="2" Classes="rule" />
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel Name="PART_Fields" Spacing="16">
+                                            <arc:Input Name="PART_NameInput" />
+                                            <arc:Input Name="PART_EmailInput" />
+                                            <StackPanel Name="PART_PasswordGroup">
+                                                <arc:PasswordField Name="PART_PasswordInput" />
+                                                <Grid Name="PART_Feedback" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                                    <arc:SignupFormSwap Name="PART_FeedbackText" VerticalAlignment="Center" />
+                                                    <arc:SignupFormMeter Name="PART_Meter"
+                                                                         Grid.Column="1"
+                                                                         VerticalAlignment="Center"
+                                                                         AutomationProperties.AccessibilityView="Raw" />
+                                                </Grid>
+                                            </StackPanel>
+                                            <arc:Checkbox Name="PART_Updates" HorizontalAlignment="Left" />
+                                            <arc:SignupFormErrorRow Name="PART_SubmitError" />
+                                            <arc:Button Name="PART_Submit" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                        </StackPanel>
+                                        <!-- Unclipped: the links' focus rings reach past the line box. -->
+                                        <TextBlock Name="PART_Legal" TextWrapping="Wrap" ClipToBounds="False" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Step 2: the completion panel. -->
+                                <Border Name="PART_DoneStep" Classes="step" IsVisible="False">
+                                    <StackPanel>
+                                        <arc:SignupFormSuccessMark Name="PART_Mark"
+                                                                   HorizontalAlignment="Left"
+                                                                   AutomationProperties.AccessibilityView="Raw" />
+                                        <StackPanel Classes="heading">
+                                            <arc:SignupFormText Name="PART_DoneTitle"
+                                                                Classes="title"
+                                                                Wrap="Balance"
+                                                                Focusable="True"
+                                                                KeyboardNavigation.IsTabStop="False"
+                                                                AutomationProperties.HeadingLevel="2" />
+                                            <TextBlock Name="PART_DoneDescription" Classes="lead" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <Border Name="PART_Details" Classes="details">
+                                            <StackPanel>
+                                                <Border Classes="detail">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                                        <TextBlock Name="PART_MethodLabel" Classes="term" />
+                                                        <TextBlock Name="PART_MethodValue" Grid.Column="1" Classes="value" />
+                                                    </Grid>
+                                                </Border>
+                                                <Border Classes="detail">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                                        <TextBlock Name="PART_UpdatesLabel" Classes="term" />
+                                                        <TextBlock Name="PART_UpdatesValue" Grid.Column="1" Classes="value" />
+                                                    </Grid>
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+                                        <arc:Button Name="PART_StartOver"
+                                                    Variant="Secondary"
+                                                    HorizontalAlignment="Stretch"
+                                                    HorizontalContentAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
+                            </arc:SignupFormStage>
+                        </DockPanel>
+                    </Border>
+                    <arc:AuthAnnouncer Name="PART_Announcer" />
+                    <arc:AuthAnnouncer Name="PART_Alert" IsAssertive="True" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Steps: padding 32 (24 20 narrow). -->
+        <Style Selector="^ /template/ Border.step">
+            <Setter Property="Padding" Value="{arc:SignupFormTokenResource StepInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.heading">
+            <Setter Property="Spacing" Value="8" />
+            <Setter Property="Margin" Value="0,0,0,24" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.title">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type3XL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="LineHeight" Value="39.6" />
+            <Setter Property="LetterSpacing" Value="-1.08" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.lead">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource BodyLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- Providers: three equal columns, gap 8; padding-inline 8; mark 16 + label, gap 8 (6 and 12px narrow). -->
+        <Style Selector="^ /template/ arc|Button.sso">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.sso-face">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Spacing" Value="8" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Divider">
+            <Setter Property="Margin" Value="0,20" />
+        </Style>
+        <Style Selector="^ /template/ Border.rule">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_DividerText">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="12" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <!-- The password's line: margin-top 8, at least 18 high, the words and the meter 12 apart. -->
+        <Style Selector="^ /template/ Grid#PART_Feedback">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="MinHeight" Value="18" />
+        </Style>
+        <Style Selector="^ /template/ arc|SignupFormSwap#PART_FeedbackText">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource SmallLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:password-error /template/ arc|SignupFormSwap#PART_FeedbackText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SignupFormMeter#PART_Meter">
+            <Setter Property="BarWidth" Value="{arc:SignupFormTokenResource MeterBarWidth}" />
+            <Setter Property="BarHeight" Value="{arc:SignupFormTokenResource MeterBarHeight}" />
+            <Setter Property="Gap" Value="{arc:SignupFormTokenResource MeterBarGap}" />
+        </Style>
+
+        <!-- The opt-in keeps its 44px hit area; pulled out so the square lines up with the fields. -->
+        <Style Selector="^ /template/ arc|Checkbox#PART_Updates">
+            <Setter Property="Margin" Value="-13,-8,0,-8" />
+        </Style>
+        <Style Selector="^ /template/ arc|SignupFormErrorRow#PART_SubmitError">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource SmallLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Legal">
+            <Setter Property="Margin" Value="0,16,0,0" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource SmallLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <!-- Completion: the 48px mark 24 above the heading, the details between two rules. -->
+        <Style Selector="^ /template/ arc|SignupFormSuccessMark#PART_Mark">
+            <Setter Property="Width" Value="{arc:SignupFormTokenResource MarkDiameter}" />
+            <Setter Property="Height" Value="{arc:SignupFormTokenResource MarkDiameter}" />
+            <Setter Property="Margin" Value="0,0,0,24" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Details">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Margin" Value="0,0,0,24" />
+        </Style>
+        <Style Selector="^ /template/ Border.detail">
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Padding" Value="0,12" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.term">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource BodyLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.value">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource BodyLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+
+        <!-- Footer: min 48, padding 12 32, top rule; muted 12px status, secondary prompt. -->
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="MinHeight" Value="{arc:SignupFormTokenResource FooterMinHeight}" />
+            <Setter Property="Padding" Value="{arc:SignupFormTokenResource FooterInset}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SignupFormSwap#PART_Status">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource SmallLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_SwitchLine">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:SignupFormTokenResource SmallLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:SignupFormTokenResource BodyTracking}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <!-- Below the full width: the panel radius (Arc: viewport ≤ 480). -->
+        <Style Selector="^:compact">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+
+        <!-- 380 and below (Arc's container query). -->
+        <Style Selector="^:narrow">
+            <Style Selector="^ /template/ Border.step">
+                <Setter Property="Padding" Value="{arc:SignupFormTokenResource StepInsetNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock.title">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+                <Setter Property="LineHeight" Value="30.8" />
+                <Setter Property="LetterSpacing" Value="-0.84" />
+            </Style>
+            <Style Selector="^ /template/ arc|Button.sso">
+                <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel.sso-face">
+                <Setter Property="Spacing" Value="6" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="Padding" Value="{arc:SignupFormTokenResource FooterInsetNarrow}" />
+            </Style>
+            <Style Selector="^ /template/ arc|SignupFormMeter#PART_Meter">
+                <Setter Property="BarWidth" Value="{arc:SignupFormTokenResource MeterBarWidthNarrow}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A text button in a line of copy (.textButton): 12px secondary text with an underline 3px under it; hover turns it to
+        the foreground (160 ms, standard). The footer's strong one is foreground, medium weight. Keyboard focus: 2px ring
+        2px outside, square.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SignupFormLinkButton}" TargetType="arc:SignupFormLinkButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- Inside a line of copy: keep the text's fractional width (rounding up each link can wrap Arc's one-line sentence). -->
+        <Setter Property="UseLayoutRounding" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SignupFormLinkButton">
+                <Panel Background="Transparent">
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Content}"
+                               Foreground="{TemplateBinding Foreground}"
+                               FontWeight="{TemplateBinding FontWeight}"
+                               LineHeight="{arc:SignupFormTokenResource SmallLineHeight}"
+                               LetterSpacing="{arc:SignupFormTokenResource BodyTracking}"
+                               TextWrapping="NoWrap" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:strong">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

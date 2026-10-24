@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingIllustrationReducedMotionDemo">
+    <!-- Reduced motion for this card only: scenes crossfade, the copy fades, the dots jump; no parallax. -->
+    <arc:OnboardingIllustration Margin="0,24"
+                                Label="Northdesk onboarding"
+                                arc:ArcMotion.Level="Reduced" />
+</UserControl>

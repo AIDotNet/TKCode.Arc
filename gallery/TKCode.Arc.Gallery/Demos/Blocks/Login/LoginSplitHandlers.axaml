@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitHandlersDemo">
+    <!--
+        Your own back end: the handlers below stand in for one. Only @fieldnote.app addresses have accounts, the password
+        is "correct horse", and single sign-on fails for addresses outside the team. With a password check set, the demo
+        password hint disappears.
+    -->
+    <arc:LoginSplit x:Name="Split" Height="640" Margin="0,12" />
+</UserControl>

@@ -1,0 +1,138 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Ported from Arc's free otp-input block (MIT, Copyright (c) 2026 Elia Kuratli): otp-input.module.css.
+
+        The field is a label (14px medium, 8 below), the row and the two message rows (Arc's Field parts). The row is as
+        wide as its slots (42 each, 8 apart) and left-aligned; it shrinks its slots when the field is narrower. A narrow
+        field (:narrow, offered at most 328) has slots 6 apart and 44 high. The row's panel carries the shake transform,
+        so the ring and the characters (drawn above the slots by the overlay) move with it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:OtpInput}" TargetType="arc:OtpInput">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OtpInput">
+                <arc:Field Name="PART_Field"
+                           Label="{TemplateBinding Label}"
+                           Description="{TemplateBinding Description}"
+                           ErrorMessage="{TemplateBinding ErrorMessage}">
+                    <Panel Name="PART_Inputs" HorizontalAlignment="Left">
+                        <arc:OtpInputRow Name="PART_Row" SlotWidth="{arc:OtpInputTokenResource SlotWidth}" />
+                        <arc:OtpInputOverlay Name="PART_Overlay"
+                                             GlyphBrush="{arc:ArcDesignTokenResource Foreground}"
+                                             GlyphFontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                             GlyphFontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                             RingBrush="{arc:ArcDesignTokenResource AccentStrong}"
+                                             RingInvalidBrush="{arc:ArcDesignTokenResource Danger}"
+                                             RingSuccessBrush="{arc:ArcDesignTokenResource Success}"
+                                             RingRadius="{arc:ArcDesignTokenResource RadiusControl}" />
+                    </Panel>
+                </arc:Field>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|OtpInputRow#PART_Row">
+            <Setter Property="Gap" Value="{arc:OtpInputTokenResource SlotGap}" />
+            <Setter Property="SlotHeight" Value="{arc:OtpInputTokenResource SlotHeight}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|OtpInputRow#PART_Row">
+            <Setter Property="Gap" Value="{arc:OtpInputTokenResource SlotGapNarrow}" />
+            <Setter Property="SlotHeight" Value="{arc:OtpInputTokenResource SlotHeightNarrow}" />
+        </Style>
+        <!-- Arc's CSS dims the characters with their disabled slot (.input:disabled ~ .glyph). -->
+        <Style Selector="^:disabled /template/ arc|OtpInputOverlay#PART_Overlay">
+            <Setter Property="GlyphOpacity" Value="{arc:OtpInputTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One slot: 1px border, control radius, surface fill. Its own text is transparent (the overlay draws the character);
+        the caret is the accent. Hover (mouse and pen only) strengthens an empty, valid slot; a filled slot is the accent
+        on the accent-subtle fill; an invalid one is the danger on danger mixed 7% into the surface; a disabled one is
+        dimmed to .48 on the muted surface. Border and fill change over 160ms on the standard curve (none when reduced).
+    -->
+    <ControlTheme x:Key="{x:Type arc:OtpInputSlot}" TargetType="arc:OtpInputSlot">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OtpInputSlot">
+                <Border Name="PART_Box"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <TextPresenter Name="PART_TextPresenter"
+                                   Text="{TemplateBinding Text, Mode=TwoWay}"
+                                   CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                   CaretIndex="{TemplateBinding CaretIndex}"
+                                   SelectionStart="{TemplateBinding SelectionStart}"
+                                   SelectionEnd="{TemplateBinding SelectionEnd}"
+                                   TextAlignment="Center"
+                                   TextWrapping="NoWrap"
+                                   LineHeight="{TemplateBinding LineHeight}"
+                                   SelectionBrush="{TemplateBinding SelectionBrush}"
+                                   SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                   CaretBrush="{TemplateBinding CaretBrush}"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Foreground" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+        <Setter Property="LineHeight" Value="25.2" />
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="IsUndoEnabled" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+
+        <Style Selector="^:hover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:filled">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:success">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="Background" Value="{arc:OtpInputTokenResource SuccessFill}" />
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:OtpInputTokenResource InvalidFill}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:OtpInputTokenResource DisabledOpacity}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

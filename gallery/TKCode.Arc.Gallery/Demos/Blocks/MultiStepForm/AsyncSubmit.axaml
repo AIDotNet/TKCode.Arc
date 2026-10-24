@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiStepFormAsyncSubmitDemo">
+    <!-- The last step is sent to a pretend server (1.2 s); the switch makes the next send fail. -->
+    <StackPanel Spacing="12" Margin="0,24">
+        <arc:Switch x:Name="FailNext" Content="Fail the next send" HorizontalAlignment="Center" />
+        <arc:MultiStepForm x:Name="Form"
+                           CompleteLabel="Send request"
+                           SuccessTitle="Request sent"
+                           SuccessDescription="We usually reply within a day.">
+            <arc:MultiStepFormStep Title="Topic" Description="What do you need help with?">
+                <arc:Input Label="Subject" Text="Moving our data to a new region" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Title="Details">
+                <arc:Textarea Label="Message" Text="We would like to move our workspace to the EU region before the end of the month." />
+            </arc:MultiStepFormStep>
+        </arc:MultiStepForm>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="520"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <arc:Button x:Name="StartOver"
+                    IsVisible="False"
+                    Variant="Ghost"
+                    Size="Small"
+                    Content="Start over"
+                    HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

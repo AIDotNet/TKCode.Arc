@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OtpInputLengthDemo">
+    <!-- Four digits for a PIN, and eight characters of any kind for a recovery code. -->
+    <StackPanel Spacing="32" HorizontalAlignment="Center">
+        <arc:OtpInput Label="PIN" Length="4" Description="The four digits you chose for this device." />
+        <arc:OtpInput Label="Recovery code"
+                      Length="8"
+                      InputMode="Text"
+                      Description="Letters and digits, from your saved recovery codes." />
+    </StackPanel>
+</UserControl>

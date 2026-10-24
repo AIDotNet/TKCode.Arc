@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OtpInputSuccessDemo">
+    <!-- A checked code: success slots, read-only until the next step takes over. -->
+    <arc:OtpInput Value="482913"
+                  Description="Code verified."
+                  IsSuccess="True"
+                  IsReadOnly="True"
+                  HorizontalAlignment="Center" />
+</UserControl>

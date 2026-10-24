@@ -1,0 +1,424 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Multi-step form (design reference: Arc's Pro multi-step-form block, ADR 0020; all values measured on its preview).
+        A 540 wide card: the progress header (list left, count right; stacked when narrow), the step area that springs to
+        the current step's height, and the Back / submit row that folds away after the last step. Values that change with
+        :narrow are set in styles, never on the template elements, so the narrow styles can override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MultiStepForm}" TargetType="arc:MultiStepForm">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MultiStepForm">
+                <Panel>
+                    <Border Name="PART_Card"
+                            MaxWidth="{arc:MultiStepFormTokenResource CardWidth}"
+                            VerticalAlignment="Top"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            TextElement.LetterSpacing="-0.16">
+                        <StackPanel>
+                            <Border Name="PART_HeaderFrame"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                <arc:MultiStepHeaderPanel Name="PART_Header">
+                                    <ScrollViewer Name="PART_ProgressScroller"
+                                                  HorizontalScrollBarVisibility="Hidden"
+                                                  VerticalScrollBarVisibility="Disabled">
+                                        <arc:MultiStepProgressList Name="PART_ProgressList" />
+                                    </ScrollViewer>
+                                    <StackPanel Name="PART_Count"
+                                                Orientation="Horizontal"
+                                                AutomationProperties.AccessibilityView="Raw"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                        <TextBlock Name="PART_CountPrefix"
+                                                   LineHeight="{arc:MultiStepFormTokenResource SmallLineHeight}" />
+                                        <arc:MultiStepSwap Name="PART_CountDigit"
+                                                           IsTabular="True"
+                                                           LineHeight="{arc:MultiStepFormTokenResource SmallLineHeight}" />
+                                        <TextBlock Name="PART_CountSuffix"
+                                                   LineHeight="{arc:MultiStepFormTokenResource SmallLineHeight}" />
+                                    </StackPanel>
+                                </arc:MultiStepHeaderPanel>
+                            </Border>
+                            <Border Name="PART_Body">
+                                <StackPanel>
+                                    <arc:SpringSizeDecorator Name="PART_ViewportSize"
+                                                             Axis="Height"
+                                                             Spring="Smooth"
+                                                             CrossClipOverflow="48">
+                                        <arc:MultiStepViewport Name="PART_Viewport" />
+                                    </arc:SpringSizeDecorator>
+                                    <arc:MultiStepCollapse Name="PART_Actions">
+                                        <StackPanel Name="PART_ActionsRow"
+                                                    Orientation="Horizontal"
+                                                    HorizontalAlignment="Right"
+                                                    Spacing="{arc:MultiStepFormTokenResource ActionsGap}">
+                                            <arc:MultiStepButton Name="PART_Back" Classes="back" />
+                                            <arc:MultiStepButton Name="PART_Next" Classes="next" />
+                                        </StackPanel>
+                                    </arc:MultiStepCollapse>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:AuthAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:MultiStepFormTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MultiStepHeaderPanel#PART_Header">
+            <Setter Property="Gap" Value="{arc:MultiStepFormTokenResource HeaderGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MultiStepProgressList#PART_ProgressList">
+            <Setter Property="Spacing" Value="{arc:MultiStepFormTokenResource ItemGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Body">
+            <Setter Property="Padding" Value="{arc:MultiStepFormTokenResource BodyPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MultiStepViewport#PART_Viewport">
+            <Setter Property="MinHeight" Value="{arc:MultiStepFormTokenResource ViewportMinHeight}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_ActionsRow">
+            <Setter Property="Margin" Value="{arc:MultiStepFormTokenResource ActionsMargin}" />
+        </Style>
+
+        <!-- Narrow cards (at most 388): the count above the list, tighter paddings, a taller step area. -->
+        <Style Selector="^:narrow /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:MultiStepFormTokenResource NarrowHeaderPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|MultiStepHeaderPanel#PART_Header">
+            <Setter Property="Gap" Value="{arc:MultiStepFormTokenResource NarrowHeaderGap}" />
+            <Setter Property="IsStacked" Value="True" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|MultiStepProgressList#PART_ProgressList">
+            <Setter Property="Spacing" Value="{arc:MultiStepFormTokenResource NarrowItemGap}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Body">
+            <Setter Property="Padding" Value="{arc:MultiStepFormTokenResource NarrowBodyPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|MultiStepViewport#PART_Viewport">
+            <Setter Property="MinHeight" Value="{arc:MultiStepFormTokenResource NarrowViewportMinHeight}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_ActionsRow">
+            <Setter Property="Margin" Value="{arc:MultiStepFormTokenResource NarrowActionsMargin}" />
+        </Style>
+
+        <!-- No steps: nothing is drawn (Arc renders null). -->
+        <Style Selector="^:empty /template/ Border#PART_Card">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- One entry of the progress list: marker + label; colors move over 240 ms on the standard curve (full motion only). -->
+    <ControlTheme x:Key="{x:Type arc:MultiStepProgressItem}" TargetType="arc:MultiStepProgressItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MultiStepProgressItem">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:MultiStepMarker Name="PART_Marker"
+                                         Width="{arc:MultiStepFormTokenResource MarkerSize}"
+                                         Height="{arc:MultiStepFormTokenResource MarkerSize}"
+                                         VerticalAlignment="Center"
+                                         Number="{TemplateBinding Number}"
+                                         IsChecked="{TemplateBinding IsDone}" />
+                    <!-- The hidden medium-weight copy keeps the width of the current label, so the list never shifts. -->
+                    <Panel VerticalAlignment="Center">
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Title}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:MultiStepFormTokenResource SmallLineHeight}"
+                                   TextWrapping="NoWrap" />
+                        <TextBlock Name="PART_LabelSizer"
+                                   Text="{TemplateBinding Title}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   TextWrapping="NoWrap"
+                                   Height="0"
+                                   Opacity="0"
+                                   IsHitTestVisible="False" />
+                    </Panel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Upcoming. -->
+        <Style Selector="^ /template/ arc|MultiStepMarker#PART_Marker">
+            <Setter Property="Fill" Value="Transparent" />
+            <Setter Property="Ring" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="DigitBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="CheckBrush" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="DigitWeight" Value="Normal" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+
+        <!-- Current. -->
+        <Style Selector="^:current /template/ arc|MultiStepMarker#PART_Marker">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Ring" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="DigitBrush" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="DigitWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:current /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <!-- Done. -->
+        <Style Selector="^:complete /template/ arc|MultiStepMarker#PART_Marker">
+            <Setter Property="Ring" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:complete /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|MultiStepMarker#PART_Marker">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Fill" Tween="Standard" />
+                        <arc:ArcBrushTransition Property="Ring" Tween="Standard" />
+                        <arc:ArcBrushTransition Property="DigitBrush" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Label">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A step (Arc's fieldset): heading 18/25.2 medium, optional description 14/19.6, then the fields. -->
+    <ControlTheme x:Key="{x:Type arc:MultiStepStepView}" TargetType="arc:MultiStepStepView">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MultiStepStepView">
+                <StackPanel VerticalAlignment="Top">
+                    <arc:MultiStepLegend Name="PART_Legend"
+                                         Text="{TemplateBinding Title}"
+                                         FontSize="{arc:MultiStepFormTokenResource LegendFontSize}"
+                                         LineHeight="{arc:MultiStepFormTokenResource LegendLineHeight}"
+                                         FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                         Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                         TextWrapping="Wrap" />
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="{arc:MultiStepFormTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               TextWrapping="Wrap" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Margin" Value="{arc:MultiStepFormTokenResource DescriptionMargin}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Margin" Value="{arc:MultiStepFormTokenResource ContentMarginNoDescription}" />
+        </Style>
+        <Style Selector="^:described /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:described /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The success block: an 18 px check in a 32 cell, the title (display font 18/19.8, −0.54) and one line. -->
+    <ControlTheme x:Key="{x:Type arc:MultiStepSuccessView}" TargetType="arc:MultiStepSuccessView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MultiStepSuccessView">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Panel Width="{arc:MultiStepFormTokenResource SuccessIconSize}"
+                           Height="{arc:MultiStepFormTokenResource SuccessIconSize}"
+                           HorizontalAlignment="Center">
+                        <arc:MultiStepCheck Name="PART_Glyph"
+                                            Width="{arc:MultiStepFormTokenResource SuccessGlyphSize}"
+                                            Height="{arc:MultiStepFormTokenResource SuccessGlyphSize}"
+                                            StrokeThickness="2"
+                                            Foreground="{arc:ArcDesignTokenResource Success}" />
+                    </Panel>
+                    <arc:MultiStepLegend Name="PART_Title"
+                                         Margin="0,12,0,0"
+                                         Text="{TemplateBinding Title}"
+                                         FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                         FontSize="{arc:MultiStepFormTokenResource LegendFontSize}"
+                                         LineHeight="{arc:MultiStepFormTokenResource SuccessTitleLineHeight}"
+                                         LetterSpacing="{arc:MultiStepFormTokenResource SuccessTitleTracking}"
+                                         FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                         Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                         TextAlignment="Center"
+                                         HorizontalAlignment="Center"
+                                         TextWrapping="Wrap" />
+                    <TextBlock Name="PART_Description"
+                               Margin="0,8,0,0"
+                               Text="{TemplateBinding Description}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="{arc:MultiStepFormTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        Back and submit: 36 high, padding 0 12, radius 18, Inter 14 medium, a 16 px arrow (stroke 2) 8 px from the label.
+        Colors move over 160 ms on CSS ease (full motion only); disabled is 45% at once; the keyboard ring is 2 px, 2 px out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MultiStepButton}" TargetType="arc:MultiStepButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:MultiStepFormTokenResource ButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:MultiStepFormTokenResource ButtonPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:MultiStepFormTokenResource ButtonRadius}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MultiStepButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Panel>
+                            <StackPanel Name="PART_Row"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:MultiStepFormTokenResource ButtonIconGap}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_LeadingIcon"
+                                              Data="{x:Static arc:ArcIcons.ArrowLeft}"
+                                              Size="16"
+                                              StrokeThickness="2"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                                <arc:SpringSizeDecorator Name="PART_LabelSlot"
+                                                         Axis="Width"
+                                                         Spring="Smooth"
+                                                         ClipOverflow="0"
+                                                         CrossClipOverflow="8"
+                                                         VerticalAlignment="Center">
+                                    <arc:MultiStepSwap Name="PART_Label"
+                                                       Text="{TemplateBinding Label}"
+                                                       HorizontalAlignment="Left" />
+                                </arc:SpringSizeDecorator>
+                                <arc:ArcGlyph Name="PART_TrailingIcon"
+                                              Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                              Size="16"
+                                              StrokeThickness="2"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                            </StackPanel>
+                            <arc:ArcSpinner Name="PART_Spinner"
+                                            IsVisible="False"
+                                            Width="16"
+                                            Height="16"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                        </Panel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:MultiStepFormTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:MultiStepFormTokenResource FocusRingRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Back: surface, strong border; hover: muted surface, foreground border. -->
+        <Style Selector="^.back">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^:hover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_TrailingIcon">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+
+        <!-- Submit: accent fill; hover: strong accent. -->
+        <Style Selector="^.next">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Style Selector="^:hover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_LeadingIcon">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:MultiStepFormTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <Style Selector="^:loading">
+            <Setter Property="Cursor" Value="AppStarting" />
+            <Style Selector="^ /template/ StackPanel#PART_Row">
+                <Setter Property="Opacity" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcSpinner#PART_Spinner">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Duration="0:0:0.16" Easing="0.25,0.1,0.25,1" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Duration="0:0:0.16" Easing="0.25,0.1,0.25,1" />
+                    <arc:ArcBrushTransition Property="Foreground" Duration="0:0:0.16" Easing="0.25,0.1,0.25,1" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OtpInputErrorDemo">
+    <!-- An error under the helper copy: danger slots and ring. Setting a new error shakes the row once. -->
+    <arc:OtpInput Description="For this demo, the code is 123456."
+                  ErrorMessage="That code didn't match. Check the latest email and try again."
+                  HorizontalAlignment="Center" />
+</UserControl>

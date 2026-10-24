@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitPreviewDemo">
+    <!--
+        The framed block as a page shows it: below 760 wide the picture column hides and the form stands alone.
+        Try fieldnote-demo as the password, rowan@fieldnote.app for a known teammate, or any other address.
+    -->
+    <arc:LoginSplit Height="640" Margin="0,12">
+        <arc:LoginSplit.Accounts>
+            <arc:LoginSplitAccount Name="Rowan Hale" Email="rowan@fieldnote.app" />
+            <arc:LoginSplitAccount Name="Iris Vance" Email="iris@fieldnote.app" />
+            <arc:LoginSplitAccount Name="Teo Marsh" Email="teo@fieldnote.app" />
+            <arc:LoginSplitAccount Name="Juno Park" Email="juno@fieldnote.app" />
+        </arc:LoginSplit.Accounts>
+    </arc:LoginSplit>
+</UserControl>

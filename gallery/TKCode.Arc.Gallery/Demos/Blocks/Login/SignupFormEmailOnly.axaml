@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignupFormEmailOnlyDemo">
+    <!-- Without single sign-on: the provider row and the "or" divider go, the form starts under the heading. -->
+    <arc:SignupForm AreProvidersVisible="False" />
+</UserControl>

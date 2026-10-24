@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiStepFormPreviewDemo">
+    <!-- Two short steps: a name, then a lead. The line under the card answers the Completed event (part of this demo). -->
+    <StackPanel Spacing="16" Margin="0,24">
+        <arc:MultiStepForm x:Name="Form"
+                           CompleteLabel="Create workspace"
+                           SuccessTitle="You're in"
+                           SuccessDescription="Your workspace is ready.">
+            <arc:MultiStepFormStep Id="workspace"
+                                   Title="Workspace basics"
+                                   Description="Give it a short, memorable name.">
+                <arc:Input Label="Workspace name" Text="Northwind studio" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Id="lead" Title="Pick a lead">
+                <arc:Combobox Label="Lead" SelectedIndex="0">
+                    <arc:SelectItem Content="Priya Raman" />
+                    <arc:SelectItem Content="Tomás Ortega" />
+                    <arc:SelectItem Content="June Whitfield" />
+                </arc:Combobox>
+            </arc:MultiStepFormStep>
+        </arc:MultiStepForm>
+        <StackPanel x:Name="Status"
+                    IsVisible="False"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    HorizontalAlignment="Center">
+            <TextBlock Text="Workspace created"
+                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                       VerticalAlignment="Center" />
+            <arc:Button x:Name="StartOver" Variant="Ghost" Size="Small" Content="Start over" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignInCustomDemo">
+    <!-- Your own copy and providers: a mark of your own is a 24 by 24 path filled in the text colour. -->
+    <arc:SignIn HorizontalAlignment="Center"
+                Margin="0,24"
+                Title="Sign in to Northwind"
+                Description="We'll email you a 6 digit code. No password needed."
+                PasskeyLabel="Use a passkey"
+                IsSignUpVisible="False">
+        <arc:SignIn.Providers>
+            <arc:SignInProvider Name="Google" Mark="Google" />
+            <arc:SignInProvider Name="Microsoft" Icon="M3 3h8.5v8.5H3z M12.5 3H21v8.5h-8.5z M3 12.5h8.5V21H3z M12.5 12.5H21V21h-8.5z" />
+        </arc:SignIn.Providers>
+    </arc:SignIn>
+</UserControl>

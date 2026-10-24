@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginCenteredSignUpDemo">
+    <!-- Opens on the sign up form (Mode="SignUp") and routes by mode once the simulated flow succeeds. Code: 482913. -->
+    <StackPanel Spacing="12">
+        <Border Height="680"
+                BorderThickness="1"
+                CornerRadius="20"
+                ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:LoginCentered x:Name="Login"
+                               IsFullScreen="True"
+                               Mode="SignUp"
+                               SignedIn="OnSignedIn"
+                               SignedOut="OnSignedOut" />
+        </Border>
+        <TextBlock x:Name="Route"
+                   Text="Sign up or sign in to see where the app would go."
+                   HorizontalAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

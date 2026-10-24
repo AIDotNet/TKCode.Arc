@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingIllustrationCustomStepsDemo">
+    <!-- Own steps, completion text and button words (OnboardingIllustrationDemoData). -->
+    <arc:OnboardingIllustration x:Name="Card"
+                                Margin="0,24"
+                                Label="Fieldnote onboarding"
+                                CompletedTitle="Study created"
+                                CompletedDescription="Open the tour again from Help whenever you like." />
+</UserControl>

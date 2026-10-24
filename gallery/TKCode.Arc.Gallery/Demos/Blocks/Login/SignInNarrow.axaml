@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignInNarrowDemo">
+    <!-- At 380 or less the card tightens its padding, heading and provider buttons; the footer wraps. -->
+    <Border Width="328" HorizontalAlignment="Center" Margin="0,24">
+        <arc:SignIn />
+    </Border>
+</UserControl>

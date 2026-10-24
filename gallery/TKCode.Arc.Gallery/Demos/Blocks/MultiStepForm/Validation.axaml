@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiStepFormValidationDemo">
+    <!-- Three steps; the first checks its fields before it lets the form move on (code-behind). -->
+    <StackPanel Spacing="12" Margin="0,24">
+        <arc:MultiStepForm x:Name="Form"
+                           SuccessTitle="Welcome aboard"
+                           SuccessDescription="Check your inbox for the invite.">
+            <arc:MultiStepFormStep Id="account"
+                                   Title="Account"
+                                   Description="Where should we send the invite?">
+                <StackPanel Spacing="12">
+                    <arc:Input x:Name="Email" Label="Work email" Placeholder="you@company.com" />
+                    <arc:Input x:Name="FullName" Label="Your name" />
+                </StackPanel>
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Id="team" Title="Team" Description="Who joins you first?">
+                <arc:Combobox Label="Teammate" Placeholder="Search people">
+                    <arc:SelectItem Content="Ines Duarte" />
+                    <arc:SelectItem Content="Kofi Mensah" />
+                    <arc:SelectItem Content="Mira Lindqvist" />
+                    <arc:SelectItem Content="Wen Hao" />
+                </arc:Combobox>
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Id="plan" Title="Plan">
+                <arc:RadioCards x:Name="Plan" AutomationProperties.Name="Plan" Layout="List">
+                    <arc:RadioCardOption Value="free" Label="Free" Description="Up to three projects." Meta="$0" />
+                    <arc:RadioCardOption Value="team" Label="Team" Description="Unlimited projects and shared views." Meta="$10" />
+                    <arc:RadioCardOption Value="scale" Label="Scale" Description="Roles, audit trail and priority help." Meta="$24" />
+                </arc:RadioCards>
+            </arc:MultiStepFormStep>
+        </arc:MultiStepForm>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="520"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Leave the email empty or mistype it, then press Continue or Enter. The plan step needs a choice." />
+    </StackPanel>
+</UserControl>

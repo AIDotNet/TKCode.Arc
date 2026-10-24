@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiStepFormControlledDemo">
+    <!-- CurrentIndex is two-way: the switch above follows the form and moves it. The form starts on the second step. -->
+    <StackPanel Spacing="16" Margin="0,24">
+        <arc:SegmentedControl x:Name="Steps"
+                              AutomationProperties.Name="Step"
+                              HorizontalAlignment="Center"
+                              SelectedIndex="1">
+            <arc:SegmentedOption Value="0" Label="Profile" />
+            <arc:SegmentedOption Value="1" Label="Address" />
+            <arc:SegmentedOption Value="2" Label="Delivery" />
+        </arc:SegmentedControl>
+        <arc:MultiStepForm x:Name="Form"
+                           CurrentIndex="{Binding #Steps.SelectedIndex, Mode=TwoWay}"
+                           CompleteLabel="Save"
+                           SuccessTitle="Saved"
+                           SuccessDescription="Your details are up to date.">
+            <arc:MultiStepFormStep Title="Profile">
+                <arc:Input Label="Display name" Text="Lena Okafor" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Title="Address" Description="Where parcels should go.">
+                <arc:Input Label="Street and number" Text="14 Harbour Lane" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Title="Delivery">
+                <arc:Input Label="Instructions" Text="Leave it with the neighbour at 16." />
+            </arc:MultiStepFormStep>
+        </arc:MultiStepForm>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="CurrentIndex = 1" />
+    </StackPanel>
+</UserControl>

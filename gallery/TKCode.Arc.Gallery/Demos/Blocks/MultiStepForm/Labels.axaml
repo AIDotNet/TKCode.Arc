@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiStepFormLabelsDemo">
+    <!-- Every visible and spoken text is a property: buttons, the count, the success block and the screen reader lines. -->
+    <arc:MultiStepForm Margin="0,24"
+                       NextLabel="Next"
+                       BackLabel="Previous"
+                       CompleteLabel="Submit answers"
+                       CountFormat="{}{0} / {1}"
+                       AnnouncementFormat="Question {0} of {1}"
+                       ProgressNameFormat="Survey progress, question {0} of {1}"
+                       FormName="Feedback survey"
+                       SuccessTitle="Thanks for the feedback"
+                       SuccessDescription="It goes straight to the team.">
+        <arc:MultiStepFormStep Title="Rating" Description="How was your last order?">
+            <arc:RadioCards AutomationProperties.Name="Rating" Layout="List" SelectedValue="good">
+                <arc:RadioCardOption Value="great" Label="Great" />
+                <arc:RadioCardOption Value="good" Label="Good" />
+                <arc:RadioCardOption Value="poor" Label="Could be better" />
+            </arc:RadioCards>
+        </arc:MultiStepFormStep>
+        <arc:MultiStepFormStep Title="Comment">
+            <arc:Input Label="Anything to add?" Placeholder="Optional" />
+        </arc:MultiStepFormStep>
+    </arc:MultiStepForm>
+</UserControl>

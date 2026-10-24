@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignInHandlersDemo">
+    <!-- Wired to a (fake) auth service: the code is 424242, a passkey signs in as you, and every event is logged. -->
+    <StackPanel Spacing="16" HorizontalAlignment="Center" Margin="0,24">
+        <arc:SignIn x:Name="Card"
+                    CodeHint="This demo's service sends 424242."
+                    SignedIn="OnSignedIn"
+                    SignedOut="OnSignedOut"
+                    SignUpRequested="OnSignUpRequested" />
+        <TextBlock x:Name="Log"
+                   MaxWidth="432"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

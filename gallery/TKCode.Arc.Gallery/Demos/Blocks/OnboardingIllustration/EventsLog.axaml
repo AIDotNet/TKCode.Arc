@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingIllustrationEventsLogDemo">
+    <!-- Three steps of an invite flow; every event the card raises is listed under it, newest first. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <arc:OnboardingIllustration x:Name="Card" Label="Channel setup" CompletedTitle="Invites sent" CompletedDescription="Replay the steps to add another channel." />
+        <Border MaxWidth="440"
+                MinHeight="132"
+                Padding="16,12"
+                CornerRadius="12"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock x:Name="Log"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="12"
+                       LineHeight="18"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="Use the buttons, the dots or the arrow keys." />
+        </Border>
+    </StackPanel>
+</UserControl>

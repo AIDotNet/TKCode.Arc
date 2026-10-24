@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OnboardingIllustrationControlledDemo">
+    <!-- The page owns the step: the segmented control sets CurrentIndex, the switch sets IsCompleted, and both follow the card. -->
+    <StackPanel Spacing="20" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+            <arc:SegmentedControl x:Name="Step" SelectionChanged="OnStepSelected">
+                <arc:SegmentedOption Value="0" Label="Step 1" />
+                <arc:SegmentedOption Value="1" Label="Step 2" />
+                <arc:SegmentedOption Value="2" Label="Step 3" />
+                <arc:SegmentedOption Value="3" Label="Step 4" />
+            </arc:SegmentedControl>
+            <arc:Switch x:Name="Done" Content="Completed" VerticalAlignment="Center" IsCheckedChanged="OnDoneChanged" />
+        </StackPanel>
+        <arc:OnboardingIllustration x:Name="Card" Label="Northdesk onboarding" />
+    </StackPanel>
+</UserControl>

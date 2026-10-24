@@ -1,0 +1,417 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The onboarding card: at most 440 wide, radius 20, a 1px Border, the raised surface and the raised shadow. On top the
+        stage (muted surface, a 1px bottom border, padding 40 / 20 / 16) with the drawing (at most 352 wide, 8:5) and Skip
+        10 from its top right corner; below it the body (padding 20 / 24): the copy (at least 72 high) and the footer row
+        (36 high): step dots on the left, Back and the main button (136 wide) on the right. :compact (the card narrower
+        than 410) tightens the padding, shows Back as an arrow and narrows the main button; :unframed drops the frame.
+    -->
+    <ControlTheme x:Key="{x:Type arc:OnboardingIllustration}" TargetType="arc:OnboardingIllustration">
+        <!-- Shadow and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingIllustration">
+                <Panel>
+                    <Border Name="PART_Card"
+                            MaxWidth="{arc:OnboardingIllustrationTokenResource CardMaxWidth}"
+                            VerticalAlignment="Top"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <Grid RowDefinitions="Auto,Auto">
+                            <!-- The stage: the drawing's waiting shapes and the parallax stay inside it. -->
+                            <Panel Name="PART_Stage" ClipToBounds="True">
+                                <Border Name="PART_StageFrame"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BorderThickness="0,0,0,1">
+                                    <arc:OnboardingArt Name="PART_Art"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Top"
+                                                       MaxArtWidth="{arc:OnboardingIllustrationTokenResource ArtMaxWidth}"
+                                                       StrokeWidth="{arc:OnboardingIllustrationTokenResource ArtStrokeWidth}"
+                                                       CheckStrokeWidth="{arc:OnboardingIllustrationTokenResource ArtCheckStrokeWidth}"
+                                                       PaperBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                                       ShadeBrush="{arc:ArcDesignTokenResource Border}"
+                                                       InkBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                       MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                       AccentBrush="{arc:ArcDesignTokenResource Accent}" />
+                                </Border>
+                                <arc:OnboardingButton Name="PART_Skip"
+                                                      Classes="skip"
+                                                      HorizontalAlignment="Right"
+                                                      VerticalAlignment="Top"
+                                                      Margin="{arc:OnboardingIllustrationTokenResource SkipOffset}" />
+                            </Panel>
+                            <Border Grid.Row="1" Name="PART_Body">
+                                <StackPanel Name="PART_BodyStack">
+                                    <!-- Old copy lifts away (180ms), new copy rises 80ms later (480ms); both share one cell. -->
+                                    <arc:OnboardingSwap Name="PART_Copy"
+                                                        EnterDelay="0.08"
+                                                        EnterSeconds="0.48"
+                                                        ExitSeconds="0.18"
+                                                        ReducedEnterSeconds="0.48"
+                                                        ReducedExitSeconds="0.18" />
+                                    <Grid ColumnDefinitions="*,Auto" Height="{arc:OnboardingIllustrationTokenResource ActionHeight}">
+                                        <arc:OnboardingDotRow Name="PART_Dots"
+                                                              HorizontalAlignment="Left"
+                                                              VerticalAlignment="Center"
+                                                              Margin="{arc:OnboardingIllustrationTokenResource DotsOffset}" />
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    Spacing="{arc:OnboardingIllustrationTokenResource ActionGap}"
+                                                    Margin="{arc:OnboardingIllustrationTokenResource ActionsOffset}">
+                                            <arc:OnboardingButton Name="PART_Back" Classes="back">
+                                                <StackPanel Orientation="Horizontal"
+                                                            Spacing="{arc:OnboardingIllustrationTokenResource LabelGap}"
+                                                            HorizontalAlignment="Center">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowLeft}"
+                                                                  Size="{arc:OnboardingIllustrationTokenResource ActionGlyphSize}"
+                                                                  StrokeThickness="{arc:OnboardingIllustrationTokenResource ActionGlyphStroke}"
+                                                                  VerticalAlignment="Center" />
+                                                    <TextBlock Name="PART_BackText"
+                                                               VerticalAlignment="Center"
+                                                               LetterSpacing="{arc:OnboardingIllustrationTokenResource TextLetterSpacing}" />
+                                                </StackPanel>
+                                            </arc:OnboardingButton>
+                                            <arc:OnboardingButton Name="PART_Primary" Classes="primary">
+                                                <!-- The label swaps: old 180ms up and out, new 240ms up and in, no delay. -->
+                                                <arc:OnboardingSwap Name="PART_PrimaryLabel"
+                                                                    EnterDelay="0"
+                                                                    EnterSeconds="0.24"
+                                                                    ExitSeconds="0.18"
+                                                                    ReducedEnterSeconds="0.24"
+                                                                    ReducedExitSeconds="0.18" />
+                                            </arc:OnboardingButton>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <!-- The polite live region (title, sentence and "Step n of N"): out of the layout. -->
+                    <arc:AuthAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource CardRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <!-- Values that change with a state live in styles (a local value on a template element cannot be overridden). -->
+        <Style Selector="^ /template/ Border#PART_Card">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowRaised}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_StageFrame">
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource StageInset}" />
+            <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource StageRadius}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Body">
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource BodyInset}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_BodyStack">
+            <Setter Property="Spacing" Value="{arc:OnboardingIllustrationTokenResource BodyGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|OnboardingSwap#PART_Copy">
+            <Setter Property="MinHeight" Value="{arc:OnboardingIllustrationTokenResource CopyMinHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|OnboardingButton#PART_Primary">
+            <Setter Property="Width" Value="{arc:OnboardingIllustrationTokenResource PrimaryWidth}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_StageFrame">
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource CompactStageInset}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Body">
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource CompactBodyInset}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_BodyStack">
+            <Setter Property="Spacing" Value="{arc:OnboardingIllustrationTokenResource CompactBodyGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|OnboardingSwap#PART_Copy">
+            <Setter Property="MinHeight" Value="{arc:OnboardingIllustrationTokenResource CompactCopyMinHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|OnboardingButton#PART_Primary">
+            <Setter Property="Width" Value="{arc:OnboardingIllustrationTokenResource CompactPrimaryWidth}" />
+        </Style>
+        <!-- Compact Back: a 36 square arrow; its name stays "Back". -->
+        <Style Selector="^:compact /template/ arc|OnboardingButton#PART_Back">
+            <Setter Property="Width" Value="{arc:OnboardingIllustrationTokenResource CompactBackWidth}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_BackText">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:unframed">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^:unframed /template/ Border#PART_Card">
+            <Setter Property="BoxShadow" Value="none" />
+        </Style>
+        <Style Selector="^:unframed /template/ Border#PART_StageFrame">
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Back, the main button and Skip. Back: 36 high, radius 12, a 1px Border outline, Foreground text; the muted surface
+        under a mouse; inert (Arc's aria-disabled) with the subtle border and muted text. The main button: Foreground fill,
+        Background text, .88 opaque under a mouse. Both scale to .97 while pressed. Skip: a 28 high pill in the secondary
+        text color, the raised surface and Foreground under a mouse, never scaled. Colors and the press cross over in 160ms,
+        also under reduced motion (Arc keeps these CSS transitions).
+    -->
+    <ControlTheme x:Key="{x:Type arc:OnboardingButton}" TargetType="arc:OnboardingButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:OnboardingIllustrationTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource ActionFocusRingRadius}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^.back">
+            <Setter Property="Height" Value="{arc:OnboardingIllustrationTokenResource ActionHeight}" />
+            <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource ActionRadius}" />
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource BackInset}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.back:fine-hover:not(:inert)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.back:inert">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^.back:pressed:not(:inert)">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+
+        <Style Selector="^.primary">
+            <Setter Property="Height" Value="{arc:OnboardingIllustrationTokenResource ActionHeight}" />
+            <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource ActionRadius}" />
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource PrimaryInset}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^.primary:fine-hover">
+            <Setter Property="Opacity" Value="0.88" />
+        </Style>
+        <Style Selector="^.primary:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+
+        <Style Selector="^.skip">
+            <Setter Property="Height" Value="{arc:OnboardingIllustrationTokenResource SkipHeight}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource SkipInset}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.skip:fine-hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.skip /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+
+        <!-- Skip's opacity is driven by its presence fade, so only the main button transitions Opacity. -->
+        <Style Selector="^:motion-full, ^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^.primary:motion-full, ^.primary:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A step dot: a 6 high pill (20 wide on the current step; the width springs in code) in a 32 high hit area with 5 at
+        the sides. Done steps TextMuted, the current step Accent, later steps BorderStrong (TextMuted under a mouse); the
+        color crosses over in 240ms, also under reduced motion.
+    -->
+    <ControlTheme x:Key="{x:Type arc:OnboardingDot}" TargetType="arc:OnboardingDot">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:OnboardingIllustrationTokenResource DotHitHeight}" />
+        <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource DotInset}" />
+        <Setter Property="MarkWidth" Value="{arc:OnboardingIllustrationTokenResource DotSize}" />
+        <Setter Property="CurrentMarkWidth" Value="{arc:OnboardingIllustrationTokenResource DotCurrentWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingDot">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Mark"
+                            Height="{arc:OnboardingIllustrationTokenResource DotSize}"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{TemplateBinding Background}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:OnboardingIllustrationTokenResource FocusRingOutset}"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:complete">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:upcoming:fine-hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full, ^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The step's text: title (display face, 18 / 19.8, medium; compact 16 / 17.6) over the sentence (14 / 19.6, secondary). -->
+    <ControlTheme x:Key="{x:Type arc:OnboardingCopy}" TargetType="arc:OnboardingCopy">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingCopy">
+                <StackPanel Spacing="{arc:OnboardingIllustrationTokenResource CopyLineGap}" VerticalAlignment="Top">
+                    <TextBlock Name="PART_Title"
+                               Text="{TemplateBinding Title}"
+                               TextWrapping="Wrap"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               TextWrapping="Wrap"
+                               FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="{arc:OnboardingIllustrationTokenResource DescriptionLineHeight}"
+                               LetterSpacing="{arc:OnboardingIllustrationTokenResource TextLetterSpacing}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeLG}" />
+            <Setter Property="LineHeight" Value="{arc:OnboardingIllustrationTokenResource TitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:OnboardingIllustrationTokenResource TitleLetterSpacing}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="LineHeight" Value="{arc:OnboardingIllustrationTokenResource CompactTitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:OnboardingIllustrationTokenResource CompactTitleLetterSpacing}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The main button's label: "Next" and an arrow after it, "Get started", or a replay arrow before "Replay intro". -->
+    <ControlTheme x:Key="{x:Type arc:OnboardingPrimaryLabel}" TargetType="arc:OnboardingPrimaryLabel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:OnboardingPrimaryLabel">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="{arc:OnboardingIllustrationTokenResource LabelGap}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <arc:ArcGlyph Name="PART_Lead"
+                                  IsVisible="False"
+                                  Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                  Size="{arc:OnboardingIllustrationTokenResource ActionGlyphSize}"
+                                  StrokeThickness="{arc:OnboardingIllustrationTokenResource ActionGlyphStroke}"
+                                  VerticalAlignment="Center" />
+                    <TextBlock Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               LetterSpacing="{arc:OnboardingIllustrationTokenResource TextLetterSpacing}" />
+                    <arc:ArcGlyph Name="PART_Trail"
+                                  IsVisible="False"
+                                  Data="{x:Static arc:ArcIcons.ArrowRight}"
+                                  Size="{arc:OnboardingIllustrationTokenResource ActionGlyphSize}"
+                                  StrokeThickness="{arc:OnboardingIllustrationTokenResource ActionGlyphStroke}"
+                                  VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:replay /template/ arc|ArcGlyph#PART_Lead">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:next /template/ arc|ArcGlyph#PART_Trail">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

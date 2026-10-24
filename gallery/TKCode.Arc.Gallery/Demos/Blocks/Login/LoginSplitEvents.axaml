@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitEventsDemo">
+    <!-- Every event the block raises, newest first. Sign up, Terms and Privacy are handled here instead of opening a page. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <arc:LoginSplit x:Name="Split" Height="640" />
+        <Border MinHeight="150"
+                Padding="16,12"
+                CornerRadius="12"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock x:Name="Log"
+                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                       FontSize="12"
+                       LineHeight="18"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="Sign in with fieldnote-demo, try Forgot password?, or use a link." />
+        </Border>
+    </StackPanel>
+</UserControl>

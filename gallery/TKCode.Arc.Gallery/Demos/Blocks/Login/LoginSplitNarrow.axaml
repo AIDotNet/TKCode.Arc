@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitNarrowDemo">
+    <!-- A phone-sized block (390 wide): 20px padding around the header and footer, the sign-on buttons share the width. -->
+    <arc:LoginSplit Width="390" Height="720" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

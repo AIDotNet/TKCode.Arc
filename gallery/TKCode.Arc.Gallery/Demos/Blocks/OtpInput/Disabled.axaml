@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OtpInputDisabledDemo">
+    <!-- Every slot disabled: dimmed to .48 on the muted surface, skipped by Tab. -->
+    <arc:OtpInput Value="482"
+                  Description="Request a new code to try again."
+                  IsEnabled="False"
+                  HorizontalAlignment="Center" />
+</UserControl>

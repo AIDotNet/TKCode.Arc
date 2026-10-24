@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MultiStepFormNarrowDemo">
+    <!-- A 340 wide container: the count moves above the list, paddings tighten and the four steps scroll sideways. -->
+    <Border Width="340" HorizontalAlignment="Center" Margin="0,24">
+        <arc:MultiStepForm CompleteLabel="Book"
+                           SuccessTitle="Booked"
+                           SuccessDescription="See you on Thursday.">
+            <arc:MultiStepFormStep Title="Service">
+                <arc:Input Label="What needs doing?" Text="Bike tune-up" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Title="Date and time">
+                <arc:Input Label="Preferred slot" Text="Thursday, 9:30" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Title="Contact">
+                <arc:Input Label="Phone" Text="+44 20 7946 0958" />
+            </arc:MultiStepFormStep>
+            <arc:MultiStepFormStep Title="Review" Description="Nothing is charged until the visit.">
+                <TextBlock Text="Bike tune-up, Thursday 9:30." TextWrapping="Wrap" />
+            </arc:MultiStepFormStep>
+        </arc:MultiStepForm>
+    </Border>
+</UserControl>

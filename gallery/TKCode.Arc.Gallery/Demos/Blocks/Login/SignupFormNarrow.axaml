@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignupFormNarrowDemo">
+    <!--
+        A 320 wide card (a phone): at 380 and below the padding, heading and provider labels shrink, the strength bars
+        narrow, the corners take the panel radius and the footer puts "Have an account?" on its own line.
+    -->
+    <Border Width="320" HorizontalAlignment="Center">
+        <arc:SignupForm />
+    </Border>
+</UserControl>

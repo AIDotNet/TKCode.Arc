@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginSignupFormServerErrorDemo">
+    <!-- An error from your API (ServerError) shows above Create account until you clear it. -->
+    <arc:SignupForm FullName="Jasmine Brooks"
+                    Email="jasmine@northwind.studio"
+                    ServerError="That email is already registered." />
+</UserControl>

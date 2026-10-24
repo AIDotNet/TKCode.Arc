@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginCenteredNarrowDemo">
+    <!-- A phone-sized screen: the block's own width (here 380) selects the tighter bars, card and provider buttons. -->
+    <Border Width="380"
+            Height="720"
+            HorizontalAlignment="Center"
+            BorderThickness="1"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:LoginCentered IsFullScreen="True" />
+    </Border>
+</UserControl>

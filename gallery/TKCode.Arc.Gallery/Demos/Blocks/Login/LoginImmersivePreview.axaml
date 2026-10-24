@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginImmersivePreviewDemo">
+    <!-- The block as it sits in a page: 640 high with rounded corners, everything simulated. Send a link, watch the
+         envelope, then Open mail app; or pick a provider to sign in straight away. -->
+    <arc:LoginImmersive Height="640" />
+</UserControl>

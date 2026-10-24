@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginImmersiveSignUpDemo">
+    <!-- Mode is two way: start on sign-up and let the header switch flip it back. -->
+    <arc:LoginImmersive Height="640" Mode="SignUp" />
+</UserControl>

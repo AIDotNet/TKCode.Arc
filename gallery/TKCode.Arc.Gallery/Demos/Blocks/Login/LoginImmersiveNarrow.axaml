@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginImmersiveNarrowDemo">
+    <!-- A phone-sized screen (390 wide): the bars pad 16, the card runs 16 from the edges, its steps pad 24 20 and the
+         heading drops to 28. The footer note wraps beside the links. -->
+    <Border Width="390"
+            Height="760"
+            HorizontalAlignment="Center"
+            BorderThickness="1"
+            CornerRadius="28"
+            ClipToBounds="True"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:LoginImmersive IsFullScreen="True" />
+    </Border>
+</UserControl>

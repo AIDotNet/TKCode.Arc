@@ -1,0 +1,328 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Ported from Arc's free login-centered block (MIT, Copyright (c) 2026 Elia Kuratli): login-centered.module.css.
+
+        The screen is three rows: a 64px top bar (mark and name on the left, the sign in / sign up switch on the right),
+        the stage with the card in its middle, and a 64px footer (the status line on the left, Terms and Privacy on the
+        right). Both bars share one height, so the stage center and the backdrop's ring center are the same point. The
+        card is at most 420 wide: surface, 1px border, 34 radius (26 when narrow), resting shadow; its viewport holds the
+        steps. A framed block has a 1px border, the panel radius and at least 640px; a full-screen one has neither.
+        Container classes: :narrow (≤ 520) tightens bars, stage and card; :tiny (≤ 400) tightens the stage's sides and
+        the switch. The two prompts and the two switch labels each share one cell and cross-fade in place (240ms on the
+        enter curve, the leaving one rising 6px into a 2px blur), so the switch never changes width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginCentered}" TargetType="arc:LoginCentered">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="MinHeight" Value="{arc:LoginCenteredTokenResource FrameMinHeight}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginCentered">
+                <Border Name="PART_Screen"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True"
+                        TextElement.LetterSpacing="{arc:LoginCenteredTokenResource BodyLetterSpacing}">
+                    <Panel>
+                        <arc:LoginCenteredBackdrop Name="PART_Backdrop"
+                                                   LineBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                   MajorLineBrush="{arc:ArcDesignTokenResource Border}" />
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <!-- Top bar -->
+                            <Border Name="PART_Bar" Grid.Row="0"
+                                    Height="{arc:LoginCenteredTokenResource BarHeight}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Spacing="{arc:LoginCenteredTokenResource MarkGap}"
+                                                AutomationProperties.AccessibilityView="Raw">
+                                        <arc:LoginCenteredBrandMark Width="{arc:LoginCenteredTokenResource MarkSize}"
+                                                                    Height="{arc:LoginCenteredTokenResource MarkSize}"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                        <TextBlock Name="PART_BrandName"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="16" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Spacing="{arc:LoginCenteredTokenResource SwitchGap}">
+                                        <Panel VerticalAlignment="Center">
+                                            <TextBlock Name="PART_NoAccountPrompt" Classes="lc-swap lc-signin" HorizontalAlignment="Right" />
+                                            <TextBlock Name="PART_HaveAccountPrompt" Classes="lc-swap lc-signup" HorizontalAlignment="Right" />
+                                        </Panel>
+                                        <arc:LoginCenteredPillButton Name="PART_ModeSwitch" Classes="switch">
+                                            <Panel>
+                                                <TextBlock Name="PART_SignUpAction" Classes="lc-swap lc-signin" HorizontalAlignment="Center" />
+                                                <TextBlock Name="PART_SignInAction" Classes="lc-swap lc-signup" HorizontalAlignment="Center" />
+                                            </Panel>
+                                        </arc:LoginCenteredPillButton>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Stage and card -->
+                            <Border Name="PART_Stage" Grid.Row="1">
+                                <Border Name="PART_Card"
+                                        MaxWidth="{arc:LoginCenteredTokenResource CardMaxWidth}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Center"
+                                        Background="{arc:ArcDesignTokenResource Surface}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                        BorderThickness="1"
+                                        BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                                        ClipToBounds="True">
+                                    <arc:LoginCenteredViewport Name="PART_Viewport" />
+                                </Border>
+                            </Border>
+
+                            <!-- Footer -->
+                            <Border Name="PART_Foot" Grid.Row="2"
+                                    Height="{arc:LoginCenteredTokenResource BarHeight}"
+                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:LoginCenteredTokenResource BarGap}">
+                                    <arc:LoginCenteredPresence Name="PART_Status"
+                                                               VerticalAlignment="Center"
+                                                               AutomationProperties.AccessibilityView="Raw" />
+                                    <StackPanel Name="PART_Legal"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Spacing="{arc:LoginCenteredTokenResource LegalGap}">
+                                        <arc:LoginCenteredPillButton Name="PART_Terms" Classes="legal" />
+                                        <arc:LoginCenteredPillButton Name="PART_Privacy" Classes="legal" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <arc:AuthAnnouncer Name="PART_Announcer" RepeatsSameText="False" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:fullscreen">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+        </Style>
+
+        <!-- Values that change with the container classes live in styles (a template's own values would win). -->
+        <Style Selector="^ /template/ Border#PART_Bar">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource BarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Foot">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource BarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Stage">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource StagePadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Card">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        </Style>
+
+        <!-- Container classes. -->
+        <Style Selector="^:narrow /template/ Border#PART_Bar">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource BarPaddingNarrow}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Foot">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource BarPaddingNarrow}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Stage">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource StagePaddingNarrow}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Card">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^:tiny /template/ Border#PART_Stage">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource StagePaddingTiny}" />
+        </Style>
+        <Style Selector="^:tiny /template/ arc|LoginCenteredPillButton#PART_ModeSwitch">
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource SwitchPaddingTiny}" />
+        </Style>
+
+        <!-- The prompts and switch labels: the one for the other mode is hidden above, in a small blur. -->
+        <Style Selector="^ /template/ TextBlock#PART_NoAccountPrompt">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="19.6" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_HaveAccountPrompt">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+            <Setter Property="LineHeight" Value="19.6" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.lc-swap">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:signup /template/ TextBlock.lc-signin">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-6px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:not(:signup) /template/ TextBlock.lc-signup">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-6px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced:signup /template/ TextBlock.lc-signin">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^:motion-reduced:not(:signup) /template/ TextBlock.lc-signup">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock.lc-swap">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Enter" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Enter" />
+                    <arc:ArcEffectTransition Property="Effect" Tween="Enter" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ TextBlock.lc-swap">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The block's quiet pill buttons. text: secondary 14px medium, 36 high, 12 at the sides (the resend and passkey
+        links in the card); hover and press take the foreground on the muted surface; inert (Arc's aria-disabled) is muted
+        and regular weight, with no hover. switch: the same in the foreground color (only the fill changes). legal: 12px
+        regular, 32 high, 8 at the sides. Color and fill change over 160ms on the standard curve (none when reduced).
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginCenteredPillButton}" TargetType="arc:LoginCenteredPillButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource SwitchPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginCenteredPillButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:LoginCenteredTokenResource FocusRingMargin}"
+                            BorderThickness="2"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^.switch">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.legal">
+            <Setter Property="MinHeight" Value="{arc:LoginCenteredTokenResource LegalLinkHeight}" />
+            <Setter Property="Padding" Value="{arc:LoginCenteredTokenResource LegalLinkPadding}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^:pointerover:not(:inert)">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed:not(:inert)">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:inert">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="Background" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        "Change" inside the code view's sentence: medium, in the foreground color, underlined 3px under the baseline in the
+        strong border color, which turns to the text color on hover. Focus ring 2px, 2 outside, radius 4 + 2.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginCenteredInlineButton}" TargetType="arc:LoginCenteredInlineButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginCenteredInlineButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="8"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="UnderlineBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

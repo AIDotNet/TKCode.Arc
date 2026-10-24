@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginCenteredConnectedDemo">
+    <!-- The flow connected to a (fake) auth service: every call is logged; the right code is 424242. -->
+    <StackPanel Spacing="12">
+        <arc:Switch x:Name="Fail" Content="Fail the next send" HorizontalAlignment="Center" />
+        <Border Height="680"
+                BorderThickness="1"
+                CornerRadius="20"
+                ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:LoginCentered x:Name="Login"
+                               IsFullScreen="True"
+                               TermsHref="https://example.com/terms"
+                               PrivacyHref="https://example.com/privacy"
+                               Navigate="OnNavigate" />
+        </Border>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

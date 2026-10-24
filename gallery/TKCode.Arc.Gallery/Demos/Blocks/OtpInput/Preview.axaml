@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OtpInputPreviewDemo">
+    <!-- Arc's preview: six digits, three of them typed, centred on the page. Type, paste or use the arrow keys. -->
+    <arc:OtpInput Value="482"
+                  Description="Use the six digit code from your email."
+                  HorizontalAlignment="Center" />
+</UserControl>

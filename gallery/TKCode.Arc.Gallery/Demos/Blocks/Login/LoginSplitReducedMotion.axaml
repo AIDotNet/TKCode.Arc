@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitReducedMotionDemo">
+    <!--
+        Reduced motion: steps fade in over 120 ms without sliding or blurring, and the account opens in 400 ms instead
+        of 1.7 s. Every other pause, the focus moves and the announcements stay the same.
+    -->
+    <arc:LoginSplit arc:ArcMotion.Level="Reduced" Height="640" Margin="0,12" />
+</UserControl>

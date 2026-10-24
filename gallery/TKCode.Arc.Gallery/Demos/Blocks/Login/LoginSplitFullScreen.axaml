@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LoginLoginSplitFullScreenDemo">
+    <!-- A whole 1280 × 800 screen, scaled to fit the page: the form column beside the picture (columns 5:6 from 1100 wide). -->
+    <Border Margin="0,12"
+            CornerRadius="20"
+            ClipToBounds="True"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <Viewbox Stretch="Uniform">
+            <arc:LoginSplit IsFullScreen="True" Width="1280" Height="800">
+                <arc:LoginSplit.Accounts>
+                    <arc:LoginSplitAccount Name="Rowan Hale" Email="rowan@fieldnote.app" />
+                    <arc:LoginSplitAccount Name="Iris Vance" Email="iris@fieldnote.app" />
+                </arc:LoginSplit.Accounts>
+            </arc:LoginSplit>
+        </Viewbox>
+    </Border>
+</UserControl>

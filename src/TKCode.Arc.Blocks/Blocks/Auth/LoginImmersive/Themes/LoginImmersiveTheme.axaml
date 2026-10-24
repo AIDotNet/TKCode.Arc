@@ -1,0 +1,576 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:sys="using:System"
+                    x:ClassModifier="internal">
+
+    <!--
+        LoginImmersive (design reference: Arc's Immersive login, ADR 0020; all drawings and copy are ours).
+
+        The block is a picture (photo or the drawn dusk) under a flat scrim, with three rows on top: a 64px header (brand
+        and the sign-in / sign-up switch, padding 12 24), the stage (the glass card centred, padding 16 16 40) and a 56px
+        footer (the note and the legal links). At most 520 wide the bars pad 16 and the stage's bottom 24. Not full
+        screen: 26px corners and at least 640 high. The card is at most 420 wide with a 1px border-strong/70% edge,
+        34px corners and the floating shadow; its fill is the glass (frosted copy + surface at 80%, dark 74%).
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersive}" TargetType="arc:LoginImmersive">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="MinHeight" Value="{arc:LoginImmersiveTokenResource FramedMinHeight}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersive">
+                <Panel>
+                    <arc:LoginImmersiveBackdrop Name="PART_Backdrop"
+                                                AutomationProperties.AccessibilityView="Raw"
+                                                Photo="{TemplateBinding Photo}"
+                                                PhotoAlignment="{TemplateBinding PhotoAlignment}"
+                                                CornerRadius="{TemplateBinding CornerRadius}"
+                                                BaseBrush="{arc:LoginImmersiveTokenResource BackdropBase}"
+                                                ScrimBrush="{arc:LoginImmersiveTokenResource Scrim}" />
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <Border Name="PART_HeaderBar" Grid.Row="0">
+                            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center"
+                                            AutomationProperties.Name="{TemplateBinding BrandName}">
+                                    <arc:AuthBrandMark AutomationProperties.AccessibilityView="Raw"
+                                                                 ViewBox="20"
+                                                                 DefaultData="{x:Static arc:AuthBrandMarks.Notebook20}"
+                                                                 Width="{arc:LoginImmersiveTokenResource BrandMarkSize}"
+                                                                 Height="{arc:LoginImmersiveTokenResource BrandMarkSize}"
+                                                                 VerticalAlignment="Center"
+                                                                 Data="{TemplateBinding BrandMark}"
+                                                                 Foreground="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+                                    <TextBlock Text="{TemplateBinding BrandName}"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:ArcDesignTokenResource TypeBase}"
+                                               Foreground="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+                                </StackPanel>
+                                <arc:LoginImmersiveSwitch Name="PART_Switch" Grid.Column="1" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                        <Border Name="PART_Stage" Grid.Row="1">
+                            <Border Name="PART_Card"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    BorderThickness="1"
+                                    TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}">
+                                <Panel>
+                                    <arc:LoginImmersiveGlass Name="PART_Glass"
+                                                             AutomationProperties.AccessibilityView="Raw"
+                                                             Fill="{arc:LoginImmersiveTokenResource CardFill}"
+                                                             SolidFill="{arc:ArcDesignTokenResource Surface}"
+                                                             ReduceTransparency="{arc:ArcDesignTokenResource ReduceTransparency}" />
+                                    <arc:LoginImmersiveStepHost Name="PART_Steps">
+                                        <arc:LoginImmersiveFormView Name="PART_Form" />
+                                        <arc:LoginImmersiveSentView Name="PART_Sent" />
+                                        <arc:LoginImmersiveDoneView Name="PART_Done" />
+                                    </arc:LoginImmersiveStepHost>
+                                    <arc:SiteAnnouncer Name="PART_Announcer" />
+                                </Panel>
+                            </Border>
+                        </Border>
+                        <Border Name="PART_FooterBar" Grid.Row="2">
+                            <arc:LoginImmersiveFooterPanel Name="PART_Footer" VerticalAlignment="Center">
+                                <arc:SiteSwap Name="PART_Note"
+                                              HorizontalContentAlignment="Left"
+                                              VerticalContentAlignment="Center"
+                                              TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                              TextElement.Foreground="{arc:LoginImmersiveTokenResource OnPhotoMuted}">
+                                    <arc:SiteSwap.ContentTemplate>
+                                        <DataTemplate x:DataType="sys:String">
+                                            <TextBlock Text="{Binding}"
+                                                       TextWrapping="Wrap"
+                                                       LineHeight="{arc:LoginImmersiveTokenResource SmallLineHeight}" />
+                                        </DataTemplate>
+                                    </arc:SiteSwap.ContentTemplate>
+                                </arc:SiteSwap>
+                                <StackPanel Name="PART_Legal"
+                                            Orientation="Horizontal"
+                                            Spacing="4"
+                                            Margin="0,0,-8,0"
+                                            AutomationProperties.LandmarkType="Navigation">
+                                    <arc:LoginImmersiveTextButton Name="PART_Terms" Kind="OnPhoto" />
+                                    <arc:LoginImmersiveTextButton Name="PART_Privacy" Kind="OnPhoto" />
+                                </StackPanel>
+                            </arc:LoginImmersiveFooterPanel>
+                        </Border>
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_HeaderBar">
+            <Setter Property="MinHeight" Value="{arc:LoginImmersiveTokenResource HeaderHeight}" />
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource BarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FooterBar">
+            <Setter Property="MinHeight" Value="{arc:LoginImmersiveTokenResource FooterHeight}" />
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource BarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Stage">
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource StagePadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Card">
+            <Setter Property="MaxWidth" Value="{arc:LoginImmersiveTokenResource CardMaxWidth}" />
+            <Setter Property="BorderBrush" Value="{arc:LoginImmersiveTokenResource CardBorder}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        </Style>
+        <Style Selector="^ /template/ arc|LoginImmersiveGlass#PART_Glass">
+            <!-- The card's 34px corners less its 1px border. -->
+            <Setter Property="CornerRadius" Value="33" />
+        </Style>
+
+        <Style Selector="^:fullscreen">
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+
+        <Style Selector="^:compact /template/ Border#PART_HeaderBar">
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource BarPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_FooterBar">
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource BarPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Stage">
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource StagePaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|LoginImmersiveSwitch#PART_Switch">
+            <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource SwitchPaddingCompact}" />
+            <Setter Property="Margin" Value="0,0,-8,0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A step's heading: display 36/39.6, −0.03em (28 in a compact card), then 14/19.6 secondary, 8 apart. -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersiveHeading}" TargetType="arc:LoginImmersiveHeading">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersiveHeading">
+                <StackPanel Spacing="8">
+                    <TextBlock Name="PART_Title"
+                               Text="{TemplateBinding Title}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.HeadingLevel="2"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Name="PART_Description"
+                               Text="{TemplateBinding Description}"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:LoginImmersiveTokenResource HeadingFontSize}" />
+            <Setter Property="LineHeight" Value="{arc:LoginImmersiveTokenResource HeadingLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:LoginImmersiveTokenResource HeadingLetterSpacing}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="{arc:LoginImmersiveTokenResource HeadingFontSizeCompact}" />
+            <Setter Property="LineHeight" Value="{arc:LoginImmersiveTokenResource HeadingLineHeightCompact}" />
+            <Setter Property="LetterSpacing" Value="{arc:LoginImmersiveTokenResource HeadingLetterSpacingCompact}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Form: heading (24 below), the field and the main button (16 apart), "or" (20 above and below, 12/12 muted with
+        1px rules), then the providers in equal columns 8 apart. The headings of the two modes share one slot and swap
+        like the steps (old: up 8, blur 4, out in 130 ms; new: from 12 below on the smooth spring).
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersiveFormView}" TargetType="arc:LoginImmersiveFormView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersiveFormView">
+                <StackPanel Name="PART_Root">
+                    <arc:LoginImmersiveStepHost Name="PART_HeadingHost"
+                                                Margin="0,0,0,24"
+                                                AnimatesHeight="False"
+                                                ExitDuration="0:0:0.13"
+                                                ExitOpacityDuration="0:0:0.13">
+                        <arc:LoginImmersiveHeading Name="PART_SignInHeading" />
+                        <arc:LoginImmersiveHeading Name="PART_SignUpHeading" />
+                    </arc:LoginImmersiveStepHost>
+                    <StackPanel Spacing="16">
+                        <arc:Input Name="PART_Email" />
+                        <arc:Button Name="PART_Send" HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                    <Grid Name="PART_Divider"
+                          ColumnDefinitions="*,Auto,*"
+                          Margin="0,20"
+                          IsVisible="{TemplateBinding AreProvidersVisible}">
+                        <Border Height="1" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource Border}" />
+                        <TextBlock Grid.Column="1"
+                                   Margin="12,0"
+                                   Text="{TemplateBinding DividerText}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <Border Grid.Column="2" Height="1" VerticalAlignment="Center" Background="{arc:ArcDesignTokenResource Border}" />
+                    </Grid>
+                    <arc:LoginImmersiveEqualRow Name="PART_Providers"
+                                                Gap="8"
+                                                IsVisible="{TemplateBinding AreProvidersVisible}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Root">
+            <Setter Property="Margin" Value="{arc:LoginImmersiveTokenResource StepPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Root">
+            <Setter Property="Margin" Value="{arc:LoginImmersiveTokenResource StepPaddingCompact}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Sent: the envelope (96 × 80, pulled 8 up and left, 20 above the heading), the heading (24 below), the address box
+        (padding 12 16, border-strong/70%, 18px corners, 16 below: mail glyph, the address, Edit), Open mail app, and the
+        resend line (12 above, −8 below): "Didn't get it?" and a 36px pill (countdown muted, then "Send again").
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersiveSentView}" TargetType="arc:LoginImmersiveSentView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersiveSentView">
+                <StackPanel Name="PART_Root">
+                    <arc:LoginImmersiveEnvelope Name="PART_Envelope"
+                                                AutomationProperties.AccessibilityView="Raw"
+                                                Width="96"
+                                                Height="80"
+                                                HorizontalAlignment="Left"
+                                                Margin="-8,-8,0,20"
+                                                InkBrush="{arc:ArcDesignTokenResource Foreground}"
+                                                PaperBrush="{arc:ArcDesignTokenResource Surface}"
+                                                InkOpacity="{arc:LoginImmersiveTokenResource InkOpacity}" />
+                    <arc:LoginImmersiveHeading Name="PART_Heading" Margin="0,0,0,24" />
+                    <Border Name="PART_AddressBox"
+                            Padding="16,12"
+                            Margin="0,0,0,16"
+                            BorderThickness="1"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            BorderBrush="{arc:LoginImmersiveTokenResource AddressBorder}">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Mail}"
+                                          Size="16"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Grid.Column="1"
+                                       Margin="12,0"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding Address}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:LoginImmersiveTextButton Name="PART_Edit"
+                                                          Grid.Column="2"
+                                                          Kind="Inline"
+                                                          VerticalAlignment="Center"
+                                                          Content="{TemplateBinding EditText}" />
+                        </Grid>
+                    </Border>
+                    <arc:Button Name="PART_OpenMail" HorizontalAlignment="Stretch" />
+                    <WrapPanel Name="PART_ResendRow" Margin="0,12,0,-8" Orientation="Horizontal">
+                        <TextBlock Text="{TemplateBinding ResendPrompt}"
+                                   Margin="0,0,4,0"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <arc:LoginImmersiveTextButton Name="PART_Resend" Kind="Pill" VerticalAlignment="Center">
+                            <arc:SiteSwap Name="PART_ResendLabel" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" />
+                        </arc:LoginImmersiveTextButton>
+                    </WrapPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Root">
+            <Setter Property="Margin" Value="{arc:LoginImmersiveTokenResource StepPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Root">
+            <Setter Property="Margin" Value="{arc:LoginImmersiveTokenResource StepPaddingCompact}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Done: the success mark (56, 24 below), the heading (24 below), two detail rows between border-strong/60% rules
+        (padding 12 0; label secondary, value right-aligned; 24 below), Sign out.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersiveDoneView}" TargetType="arc:LoginImmersiveDoneView">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersiveDoneView">
+                <StackPanel Name="PART_Root">
+                    <arc:LoginImmersiveDoneMark Name="PART_Mark"
+                                                AutomationProperties.AccessibilityView="Raw"
+                                                Width="56"
+                                                Height="56"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,24"
+                                                Foreground="{arc:ArcDesignTokenResource Success}" />
+                    <arc:LoginImmersiveHeading Name="PART_Heading" Margin="0,0,0,24" />
+                    <Border BorderThickness="0,1,0,0"
+                            Margin="0,0,0,24"
+                            BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}"
+                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}">
+                        <StackPanel>
+                            <Border BorderThickness="0,0,0,1" Padding="0,12" BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <TextBlock Text="{TemplateBinding AccountLabel}"
+                                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Grid.Column="1"
+                                               Margin="16,0,0,0"
+                                               HorizontalAlignment="Right"
+                                               TextAlignment="Right"
+                                               TextTrimming="CharacterEllipsis"
+                                               Text="{TemplateBinding Account}"
+                                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderThickness="0,0,0,1" Padding="0,12" BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}">
+                                <Grid ColumnDefinitions="Auto,*">
+                                    <TextBlock Text="{TemplateBinding MethodLabel}"
+                                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <TextBlock Grid.Column="1"
+                                               Margin="16,0,0,0"
+                                               HorizontalAlignment="Right"
+                                               TextAlignment="Right"
+                                               TextTrimming="CharacterEllipsis"
+                                               Text="{TemplateBinding Method}"
+                                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:Button Name="PART_SignOut" Variant="Secondary" HorizontalAlignment="Stretch" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Root">
+            <Setter Property="Margin" Value="{arc:LoginImmersiveTokenResource StepPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Root">
+            <Setter Property="Margin" Value="{arc:LoginImmersiveTokenResource StepPaddingCompact}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The quiet text buttons. Inline (Edit): 14/500 foreground with a standing 1px underline in border-strong that
+        darkens to the text colour on hover. Pill (resend): 36 high, padding 0 8, round; muted and regular while it waits.
+        On the picture (Terms, Privacy): 32 high, padding 0 8, 12px near-white at 76%, full near-white on hover. Colour
+        changes take 160 ms (standard). Keyboard focus: a 2px ring 2px outside (near white on the picture).
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersiveTextButton}" TargetType="arc:LoginImmersiveTextButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersiveTextButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Panel HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <ContentPresenter Name="PART_Content"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <Border Name="PART_Underline"
+                                    Height="1"
+                                    VerticalAlignment="Bottom"
+                                    IsVisible="False"
+                                    IsHitTestVisible="False"
+                                    Background="{TemplateBinding BorderBrush}" />
+                        </Panel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="8" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Content">
+            <Setter Property="TextBlock.LineHeight" Value="{arc:LoginImmersiveTokenResource BodyLineHeight}" />
+        </Style>
+
+        <Style Selector="^[Kind=Inline]">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Style Selector="^ /template/ Border#PART_Underline">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^[Kind=Pill]">
+            <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            </Style>
+            <Style Selector="^:inert">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+                <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Cursor" Value="Arrow" />
+            </Style>
+        </Style>
+
+        <Style Selector="^[Kind=OnPhoto]">
+            <Setter Property="MinHeight" Value="{arc:LoginImmersiveTokenResource LegalHeight}" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Foreground" Value="{arc:LoginImmersiveTokenResource OnPhotoMuted}" />
+            <Style Selector="^ /template/ ContentPresenter#PART_Content">
+                <Setter Property="TextBlock.LineHeight" Value="{arc:LoginImmersiveTokenResource SmallLineHeight}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+                <Setter Property="BorderBrush" Value="{arc:LoginImmersiveTokenResource OnPhotoFocusRing}" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="Foreground" Value="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Foreground" Value="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+                <Setter Property="Background" Value="{arc:LoginImmersiveTokenResource OnPhotoPressed}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The header switch: a 36px pill (padding 0 12; 0 8 at most 520 wide) holding both sentences in one cell, right
+        aligned. The question is near-white at 76%, the action near-white 500; hover and keyboard focus underline the
+        action (160 ms). Pressed: a faint white wash. Keyboard focus also draws a near-white ring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LoginImmersiveSwitch}" TargetType="arc:LoginImmersiveSwitch">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Padding" Value="{arc:LoginImmersiveTokenResource SwitchPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LoginImmersiveSwitch">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Right">
+                            <StackPanel Name="PART_SignInGroup" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                <TextBlock Text="{TemplateBinding SignUpPrompt}"
+                                           LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                           Foreground="{arc:LoginImmersiveTokenResource OnPhotoMuted}" />
+                                <Panel>
+                                    <TextBlock Text="{TemplateBinding SignUpAction}"
+                                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+                                    <Border Name="PART_SignInUnderline" Classes="underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,1" />
+                                </Panel>
+                            </StackPanel>
+                            <StackPanel Name="PART_SignUpGroup" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right">
+                                <TextBlock Text="{TemplateBinding SignInPrompt}"
+                                           LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                           Foreground="{arc:LoginImmersiveTokenResource OnPhotoMuted}" />
+                                <Panel>
+                                    <TextBlock Text="{TemplateBinding SignInAction}"
+                                               LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+                                    <Border Name="PART_SignUpUnderline" Classes="underline" Height="1" VerticalAlignment="Bottom" Margin="0,0,0,1" />
+                                </Panel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:LoginImmersiveTokenResource OnPhotoFocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border.underline">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border.underline">
+            <Setter Property="Background" Value="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border.underline">
+            <Setter Property="Background" Value="{arc:LoginImmersiveTokenResource OnPhotoForeground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:LoginImmersiveTokenResource OnPhotoPressed}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border.underline">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
