@@ -315,4 +315,59 @@ public class AiChatConversationTests
 
         public void Execute(object? parameter) => action();
     }
+
+    #region Away from the window
+
+    /// <summary>Takes <paramref name="control"/> out of its window, as a closed tab or a page navigated away from would.</summary>
+    private static void Away(Avalonia.Controls.Control control)
+    {
+        ((Avalonia.Controls.Window)Avalonia.Controls.TopLevel.GetTopLevel(control)!).Content = null;
+        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+    }
+
+    [AvaloniaFact]
+    public void A_Chat_That_Switched_Conversations_While_Away_Is_Collected_While_They_Live_On()
+    {
+        var history = AiChatSamples.History();
+        var weak = TestHelpers.ShowAndClose(() =>
+        {
+            var chat = AiChatSamples.Chat();
+            chat.Conversations.AddRange(history);
+            chat.CurrentConversation = history[0];
+            return chat;
+        }, chat =>
+        {
+            Away(chat);
+            // A bound current conversation that changes while the chat is out of the window.
+            chat.CurrentConversation = history[1];
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        history[1].Turns.Add(new AiChatTurn(new AiChatUserMessage { Text = "And the CDN?" },
+            new AiChatReply { Status = AiChatReplyStatus.Done, Text = "Update its origin." }));
+    }
+
+    [AvaloniaFact]
+    public void A_Chat_Put_Back_Shows_The_Conversation_Chosen_While_Away_And_Follows_It()
+    {
+        using var rig = new AiChatRig(history: true);
+        var layers = rig.Window.Content;
+        rig.Window.Content = null;
+        rig.Settle();
+        var bucket = rig.Chat.Conversations[1];
+        rig.Chat.CurrentConversation = bucket;
+        rig.Window.Content = layers;
+        rig.Settle();
+        rig.Views.Count.ShouldBe(1);
+        rig.Views[0].User!.Message!.Text.ShouldBe("What breaks if we rename the staging bucket?");
+
+        bucket.Turns.Add(new AiChatTurn(new AiChatUserMessage { Text = "And the CDN?" },
+            new AiChatReply { Status = AiChatReplyStatus.Done, Text = "Update its origin." }));
+        rig.Settle();
+        rig.Views.Count.ShouldBe(2);
+        rig.Views[1].User!.Message!.Text.ShouldBe("And the CDN?");
+    }
+
+    #endregion
 }

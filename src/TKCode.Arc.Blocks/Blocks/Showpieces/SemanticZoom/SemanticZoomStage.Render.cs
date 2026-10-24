@@ -705,7 +705,7 @@ internal sealed partial class SemanticZoomStage
         }
         if (_avatarCache.Count >= MaxBakedAvatars)
         {
-            _avatarCache.Clear();
+            DropAvatars();
         }
         const int Pixels = 80;
         try
@@ -727,6 +727,25 @@ internal sealed partial class SemanticZoomStage
         }
         _avatarCache[(image, level)] = round;
         return round;
+    }
+
+    /// <summary>The baked avatars (tests).</summary>
+    internal IReadOnlyCollection<IImage> BakedAvatars => _avatarCache.Values;
+
+    /// <summary>
+    /// Empties the avatar cache and frees the baked bitmaps' native surfaces now rather than at finalization (frames already
+    /// drawn hold their own reference). A picture that could not be baked is cached as itself: never disposed here.
+    /// </summary>
+    private void DropAvatars()
+    {
+        foreach (var (key, baked) in _avatarCache)
+        {
+            if (!ReferenceEquals(baked, key.Image) && baked is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
+        _avatarCache.Clear();
     }
 }
 

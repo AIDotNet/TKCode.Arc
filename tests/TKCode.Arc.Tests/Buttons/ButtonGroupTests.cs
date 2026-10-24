@@ -451,6 +451,82 @@ public class ButtonGroupTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Chevron_Is_Collected_While_Its_Menu_Lives_On()
+    {
+        var menu = CreateMenu();
+        var weak = TestHelpers.ShowAndClose(() => new ButtonsChevronTrigger { Menu = menu });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        menu.IsOpen.ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
+    public void A_Chevron_Put_Back_Shows_A_Menu_Opened_While_It_Was_Away()
+    {
+        var menu = CreateMenu();
+        var chevron = new ButtonsChevronTrigger { Menu = menu };
+        var other = new Button { Content = "Other" };
+        var host = new Border { Child = chevron };
+        var window = TestHelpers.Show(new StackPanel { Children = { host, other } });
+        try
+        {
+            chevron.Classes.ShouldNotContain(ButtonsChevronTrigger.OpenPseudoClass);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            menu.Open(other);
+            Dispatcher.UIThread.RunJobs();
+            menu.IsOpen.ShouldBeTrue();
+            host.Child = chevron;
+            Dispatcher.UIThread.RunJobs();
+            chevron.Classes.ShouldContain(ButtonsChevronTrigger.OpenPseudoClass);
+            menu.Close(returnFocus: false);
+            Dispatcher.UIThread.RunJobs();
+            chevron.Classes.ShouldNotContain(ButtonsChevronTrigger.OpenPseudoClass);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Group_Is_Collected_While_Its_Menu_Lives_On()
+    {
+        var menu = CreateMenu();
+        var weak = TestHelpers.ShowAndClose(() => Create(menu));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        menu.IsOpen.ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
+    public void A_Group_Put_Back_Follows_Its_Menu_Again()
+    {
+        var menu = CreateMenu();
+        var group = Create(menu);
+        var other = new Button { Content = "Other" };
+        var host = new Border { Child = group };
+        var window = Show(new StackPanel { Children = { host, other } });
+        try
+        {
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            menu.Open(other);
+            Dispatcher.UIThread.RunJobs();
+            host.Child = group;
+            Dispatcher.UIThread.RunJobs();
+            group.Classes.ShouldContain(ButtonGroup.MenuOpenPseudoClass);
+            menu.Close(returnFocus: false);
+            Dispatcher.UIThread.RunJobs();
+            group.Classes.ShouldNotContain(ButtonGroup.MenuOpenPseudoClass);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
 
 internal static class ButtonGroupTestExtensions

@@ -149,6 +149,7 @@ public abstract class Explainer : TemplatedControl
     private bool _isStepping;
     private bool _canStep = true;
     private bool _syncingPlaying;
+    private bool _attached;
 
     static Explainer()
     {
@@ -268,6 +269,9 @@ public abstract class Explainer : TemplatedControl
     /// <summary>True when travel and sweeps are drawn (full motion); otherwise changes apply in place.</summary>
     private protected bool IsTravelEnabled => ArcMotion.IsFull(this);
 
+    /// <summary>True while the card is in a visual tree: it listens to the data it is given only then.</summary>
+    private protected bool IsAttached => _attached;
+
     /// <summary>The script, for tests.</summary>
     internal ExplainerScript Script => _script;
 
@@ -313,6 +317,15 @@ public abstract class Explainer : TemplatedControl
 
     /// <summary>Called when the playing state changes (pause, resume, step, end).</summary>
     private protected virtual void OnPlaybackChanged()
+    {
+    }
+
+    /// <summary>
+    /// Starts (on attach) or stops (on detach) listening to the data the card is given but does not own (the host's lists
+    /// and their items), so data that outlives the card does not keep it alive. Starting also catches up with changes made
+    /// while nothing listened; it runs before the story is first built, so a change found then reaches that build.
+    /// </summary>
+    private protected virtual void WatchData(bool watch)
     {
     }
 
@@ -402,6 +415,8 @@ public abstract class Explainer : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _attached = true;
+        WatchData(true);
         EnsureBuilt();
         _visibility?.Dispose();
         _visibility = null;
@@ -416,6 +431,8 @@ public abstract class Explainer : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        WatchData(false);
         _visibility?.Dispose();
         _visibility = null;
     }

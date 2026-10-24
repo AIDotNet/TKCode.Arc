@@ -13,8 +13,13 @@ public partial class KanbanBoard
     private readonly List<KanbanCard> _cards = new();
     private readonly HashSet<KanbanCard> _watchedCards = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<AvaloniaObject> _watchedStructure = new(ReferenceEqualityComparer.Instance);
+    private INotifyCollectionChanged? _observedCards;
     private INotifyCollectionChanged? _observedSource;
+    private INotifyCollectionChanged? _observedColumns;
+    private INotifyCollectionChanged? _observedPeople;
+    private INotifyCollectionChanged? _observedLabels;
     private KanbanGrid? _grid;
+    private bool _dataAttached;
     private bool _mutating;
     private bool _rebuildPending;
     private bool _rebuildAnimate;
@@ -29,6 +34,55 @@ public partial class KanbanBoard
         {
             FlushRebuild();
             return _cards;
+        }
+    }
+
+    /// <summary>
+    /// The board follows its lists and the cards, columns, people and labels in them only while it is in a visual tree:
+    /// they are the app's and usually outlive the board. Back in a tree it reads them again (it missed what changed).
+    /// </summary>
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _dataAttached = true;
+        WatchCollections();
+        WatchStructure();
+        WatchCards();
+        ScheduleRebuild(animate: false);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _dataAttached = false;
+        WatchCollections();
+        WatchStructure();
+        WatchCards();
+    }
+
+    private void WatchCollections()
+    {
+        Observe(ref _observedCards, _dataAttached ? Cards : null, OnCardsCollectionChanged);
+        Observe(ref _observedSource, _dataAttached ? CardsSource as INotifyCollectionChanged : null, OnSourceCollectionChanged);
+        Observe(ref _observedColumns, _dataAttached ? Columns : null, OnStructureCollectionChanged);
+        Observe(ref _observedPeople, _dataAttached ? People : null, OnStructureCollectionChanged);
+        Observe(ref _observedLabels, _dataAttached ? Labels : null, OnStructureCollectionChanged);
+    }
+
+    private static void Observe(ref INotifyCollectionChanged? observed, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
+    {
+        if (ReferenceEquals(observed, next))
+        {
+            return;
+        }
+        if (observed is not null)
+        {
+            observed.CollectionChanged -= handler;
+        }
+        observed = next;
+        if (observed is not null)
+        {
+            observed.CollectionChanged += handler;
         }
     }
 
@@ -58,17 +112,20 @@ public partial class KanbanBoard
     private void WatchStructure()
     {
         var now = new HashSet<AvaloniaObject>(ReferenceEqualityComparer.Instance);
-        foreach (var column in Columns ?? [])
+        if (_dataAttached)
         {
-            now.Add(column);
-        }
-        foreach (var person in People ?? [])
-        {
-            now.Add(person);
-        }
-        foreach (var label in Labels ?? [])
-        {
-            now.Add(label);
+            foreach (var column in Columns ?? [])
+            {
+                now.Add(column);
+            }
+            foreach (var person in People ?? [])
+            {
+                now.Add(person);
+            }
+            foreach (var label in Labels ?? [])
+            {
+                now.Add(label);
+            }
         }
         foreach (var gone in _watchedStructure.Where(o => !now.Contains(o)).ToList())
         {
@@ -175,10 +232,14 @@ public partial class KanbanBoard
 
     private void WatchCards()
     {
-        foreach (var gone in _watchedCards.Where(c => !_cards.Contains(c)).ToList())
+        foreach (var gone in _watchedCards.Where(c => !_dataAttached || !_cards.Contains(c)).ToList())
         {
             gone.PropertyChanged -= OnCardPropertyChanged;
             _watchedCards.Remove(gone);
+        }
+        if (!_dataAttached)
+        {
+            return;
         }
         foreach (var card in _cards)
         {

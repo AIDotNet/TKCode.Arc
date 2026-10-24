@@ -788,6 +788,60 @@ public class CustomerGalaxyTests
     }
 
     [AvaloniaFact]
+    public void A_Galaxy_Is_Collected_While_Its_Accounts_Live_On()
+    {
+        var source = new System.Collections.ObjectModel.ObservableCollection<GalaxyAccount>(TwoAccounts());
+        var weak = TestHelpers.ShowAndClose(() => new CustomerGalaxy { ItemsSource = source });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        source.Add(new GalaxyAccount { Id = "later", Name = "Later", Mrr = 10, Health = "growing" });
+    }
+
+    [AvaloniaFact]
+    public void A_Galaxy_Put_Back_Shows_Accounts_Added_While_It_Was_Away_And_Otherwise_Keeps_Its_View()
+    {
+        var source = new System.Collections.ObjectModel.ObservableCollection<GalaxyAccount>(CustomerGalaxyDemoData.Create());
+        var galaxy = new CustomerGalaxy { ItemsSource = source };
+        var host = new Border { Child = galaxy };
+        var window = TestHelpers.Show(host);
+        window.Width = 664;
+        window.Height = 1200;
+        Settle();
+        try
+        {
+            galaxy.Summary.AccountCount.ShouldBe(2400);
+            galaxy.FlyToAccount(source[100]);
+            Settle();
+            Stage(galaxy).View.TargetZoom.ShouldBeGreaterThanOrEqualTo(3);
+
+            // Nothing changed while it was away: the view stays where it was.
+            host.Child = null;
+            Settle();
+            host.Child = galaxy;
+            Settle();
+            galaxy.SelectedAccount.ShouldBe(source[100]);
+            Stage(galaxy).View.TargetZoom.ShouldBeGreaterThanOrEqualTo(3);
+
+            host.Child = null;
+            Settle();
+            source.Add(new GalaxyAccount { Id = "away", Name = "Arrived away", Mrr = 500, Health = "growing" });
+            host.Child = galaxy;
+            Settle();
+            galaxy.Summary.AccountCount.ShouldBe(2401);
+            galaxy.SelectedAccount.ShouldBe(source[100]);
+
+            // Back in the window, it listens again.
+            source.Add(new GalaxyAccount { Id = "back", Name = "Arrived back", Mrr = 500, Health = "steady" });
+            Settle();
+            galaxy.Summary.AccountCount.ShouldBe(2402);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Screen_Readers_Get_A_Summary_Keyboard_Help_And_A_Table()
     {
         var (galaxy, window) = Show();

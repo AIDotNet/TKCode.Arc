@@ -158,6 +158,8 @@ public partial class PromptCache
 
     private void SnapshotData()
     {
+        _dataSeen = DataState();
+        _looksSeen = LooksState();
         _segments = EffectiveSegments().ToArray();
         _requests = EffectiveRequests().ToArray();
         _tokens = _segments.Select(s => Math.Max(0, s.Tokens)).ToArray();

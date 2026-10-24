@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
@@ -462,6 +463,130 @@ public class DataGridBehaviorTests
         grid.CheckedRowKeys.ShouldBe(["r1", "r2", "r3", "r4"]);
     }
 
+    /// <summary>An observable collection that counts its listeners.</summary>
+    private sealed class CountedRows(IEnumerable<DataGridRow> rows) : ObservableCollection<DataGridRow>(rows)
+    {
+        public int Listeners { get; private set; }
+
+        public override event NotifyCollectionChangedEventHandler? CollectionChanged
+        {
+            add
+            {
+                base.CollectionChanged += value;
+                Listeners++;
+            }
+            remove
+            {
+                base.CollectionChanged -= value;
+                Listeners--;
+            }
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Grid_Is_Collected_When_Its_Rows_Were_Swapped_While_It_Was_Away()
+    {
+        var rows = Rows();
+        var weak = TestHelpers.ShowAndClose(() => Create(), grid =>
+        {
+            // A cached page: the grid leaves the tree, then its view model swaps the collection behind it.
+            ((Decorator)grid.Parent!).Child = null;
+            grid.ItemsSource = rows;
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        rows.Add(new DataGridRow("r5") { { "account", "Echo Energy" } });
+        rows[0]["arr"] = 1m;
+    }
+
+    [AvaloniaFact]
+    public void The_First_Show_Reads_The_Rows_Once_And_Follows_What_Changed_Before_It()
+    {
+        // Reading 100k rows twice doubled the first show: the grid follows its rows from the moment they are set, so
+        // showing it has nothing to catch up with.
+        var rows = new CountedRows(Rows());
+        var grid = Create(rows);
+        var version = grid.Store.Version;
+        rows.Listeners.ShouldBe(1);
+        rows[0]["account"] = "Lumen Group";
+        var window = Show(grid);
+        try
+        {
+            grid.Store.Version.ShouldBe(version);
+            grid.Store.ItemAt(0).ShouldBeSameAs(rows[0]);
+            grid.EnsureView();
+            grid.VisibleRowCount.ShouldBe(4);
+            rows.Add(new DataGridRow("r5") { { "account", "Echo Energy" } });
+            Dispatcher.UIThread.RunJobs();
+            grid.EnsureView();
+            grid.VisibleRowCount.ShouldBe(5);
+            rows.Listeners.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Grid_Put_Back_Shows_What_Changed_While_It_Was_Away_And_Follows_Its_Rows_Again()
+    {
+        var first = new CountedRows(Rows());
+        var grid = Create(first);
+        var host = new Border { Child = grid };
+        TestHelpers.Show(host);
+        grid.EnsureView();
+        grid.VisibleRowCount.ShouldBe(4);
+        first.Listeners.ShouldBe(1);
+
+        // Away, the same rows change.
+        host.Child = null;
+        first.Listeners.ShouldBe(0);
+        first.RemoveAt(3);
+        first[0]["account"] = "Lumen Group";
+        host.Child = grid;
+        Dispatcher.UIThread.RunJobs();
+        first.Listeners.ShouldBe(1);
+        grid.EnsureView();
+        grid.VisibleRowCount.ShouldBe(3);
+        grid.CellText(0, 0).ShouldBe("Lumen Group");
+
+        // Away, the view model swaps in other rows and changes them.
+        host.Child = null;
+        var second = new CountedRows(Rows());
+        grid.ItemsSource = second;
+        second.Listeners.ShouldBe(0);
+        second.RemoveAt(0);
+        second[0]["account"] = "Basalt Group";
+        host.Child = grid;
+        Dispatcher.UIThread.RunJobs();
+        first.Listeners.ShouldBe(0);
+        second.Listeners.ShouldBe(1);
+        grid.EnsureView();
+        grid.VisibleRowCount.ShouldBe(3);
+        grid.CellText(0, 0).ShouldBe("Basalt Group");
+
+        // Back in the tree it follows the rows again, once, however often it went away; the old rows are left alone.
+        host.Child = null;
+        host.Child = grid;
+        Dispatcher.UIThread.RunJobs();
+        second.Listeners.ShouldBe(1);
+        second.Add(new DataGridRow("r5") { { "account", "Echo Energy" } });
+        var edits = grid.EditVersion;
+        second[1]["account"] = "Cobalt Group";
+        grid.EditVersion.ShouldBe(edits + 1);
+        first.Add(new DataGridRow("r9") { { "account", "Old" } });
+        grid.EnsureView();
+        grid.VisibleRowCount.ShouldBe(4);
+        grid.CellText(1, 0).ShouldBe("Cobalt Group");
+        grid.CellText(3, 0).ShouldBe("Echo Energy");
+
+        // Swapping while shown moves the listener at once.
+        grid.ItemsSource = first;
+        first.Listeners.ShouldBe(1);
+        second.Listeners.ShouldBe(0);
+    }
+
     private sealed class Server(int count) : IDataGridDataSource
     {
         public List<DataGridRowsRequest> Requests { get; } = new();
@@ -501,5 +626,65 @@ public class DataGridBehaviorTests
         grid.UpdateLayout();
         Dispatcher.UIThread.RunJobs();
         server.Requests.Last().Sort.ShouldBe([DataGridSort.Descending("arr")]);
+    }
+
+    /// <summary>A data source that answers only when the test says so.</summary>
+    private sealed class SlowServer : IDataGridDataSource
+    {
+        public List<(TaskCompletionSource<DataGridRowsResult> Reply, CancellationToken Cancellation)> Requests { get; } = new();
+
+        public int BlockSize => 50;
+
+        public Task<DataGridRowsResult> GetRowsAsync(DataGridRowsRequest request, CancellationToken cancellation)
+        {
+            var reply = new TaskCompletionSource<DataGridRowsResult>();
+            Requests.Add((reply, cancellation));
+            return reply.Task;
+        }
+
+        public void Answer(int index) => Requests[index].Reply.SetResult(new DataGridRowsResult(
+            Enumerable.Range(0, 50).Select(i => (object)new DataGridRow($"s{i}") { { "account", $"Server {i}" } }).ToList(), 1000));
+    }
+
+    [AvaloniaFact]
+    public void Dropped_Data_Source_Requests_Are_Cancelled_And_Their_Late_Answers_Ignored()
+    {
+        var server = new SlowServer();
+        var grid = new TKCode.Arc.DataGrid { DataSource = server, Width = 600, MaxViewportHeight = 300 };
+        grid.Columns.Add(new DataGridColumn("account", "Account"));
+        grid.Columns.Add(new DataGridColumn("arr", "ARR", DataGridColumnType.Number));
+        var host = new Border { Child = grid };
+        TestHelpers.Show(host);
+        grid.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+        var shown = server.Requests.Count;
+        shown.ShouldBeGreaterThan(0);
+        server.Requests.Take(shown - 1).ShouldAllBe(r => r.Cancellation.IsCancellationRequested);
+
+        // A new sort drops the request in flight and asks again; leaving the tree drops that one too.
+        grid.SortDescriptions = [DataGridSort.Descending("arr")];
+        grid.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+        server.Requests.Count.ShouldBe(shown + 1);
+        server.Requests[shown - 1].Cancellation.IsCancellationRequested.ShouldBeTrue();
+        host.Child = null;
+        server.Requests[shown].Cancellation.IsCancellationRequested.ShouldBeTrue();
+        for (var i = 0; i <= shown; i++)
+        {
+            server.Answer(i);
+        }
+        Dispatcher.UIThread.RunJobs();
+        grid.VisibleRowCount.ShouldNotBe(1000);
+
+        // Back in the tree it asks again and shows the answer.
+        host.Child = grid;
+        grid.UpdateLayout();
+        Dispatcher.UIThread.RunJobs();
+        server.Requests.Count.ShouldBe(shown + 2);
+        server.Answer(shown + 1);
+        Dispatcher.UIThread.RunJobs();
+        grid.EnsureView();
+        grid.VisibleRowCount.ShouldBe(1000);
+        grid.CellText(3, 0).ShouldBe("Server 3");
     }
 }

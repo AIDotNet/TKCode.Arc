@@ -109,6 +109,45 @@ public class SiteSharedTests
     }
 
     [AvaloniaFact]
+    public void A_Face_Stack_Is_Collected_While_Its_Images_Live_On()
+    {
+        var images = new AvaloniaList<IImage> { new RenderTargetBitmap(new PixelSize(8, 8)) };
+        var weak = TestHelpers.ShowAndClose(() => new SiteFaceStack { Images = images });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        images.Add(new RenderTargetBitmap(new PixelSize(8, 8)));
+    }
+
+    [AvaloniaFact]
+    public void A_Face_Stack_Put_Back_Measures_The_Faces_Added_While_It_Was_Away()
+    {
+        var images = new AvaloniaList<IImage>(Enumerable.Range(0, 2).Select(_ => (IImage)new RenderTargetBitmap(new PixelSize(8, 8))));
+        var stack = new SiteFaceStack { Images = images, Diameter = 26, Overlap = 6, HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left };
+        var host = new StackPanel { Children = { stack } };
+        var window = Show(host);
+        try
+        {
+            stack.Bounds.Width.ShouldBe(46);
+            host.Children.Remove(stack);
+            window.UpdateLayout();
+            images.Add(new RenderTargetBitmap(new PixelSize(8, 8)));
+
+            host.Children.Add(stack);
+            window.UpdateLayout();
+            stack.Bounds.Width.ShouldBe(66);
+
+            // Back in the window, it listens again.
+            images.Add(new RenderTargetBitmap(new PixelSize(8, 8)));
+            window.UpdateLayout();
+            stack.Bounds.Width.ShouldBe(86);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Swap_Replaces_At_Once_When_Motion_Is_Off()
     {
         var swap = new SiteSwap { Content = "One" };

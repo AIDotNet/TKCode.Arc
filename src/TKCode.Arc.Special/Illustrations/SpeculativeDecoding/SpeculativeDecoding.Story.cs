@@ -641,12 +641,12 @@ public partial class SpeculativeDecoding
         var property = change.Property;
         if (property == TokensProperty)
         {
-            Observe(ref _observedTokens, Tokens);
+            Observe(ref _observedTokens, IsAttached ? Tokens : null);
             OnDataChanged(play: null);
         }
         else if (property == RoundsProperty)
         {
-            Observe(ref _observedRounds, Rounds);
+            Observe(ref _observedRounds, IsAttached ? Rounds : null);
             OnDataChanged(play: null);
         }
         else if (property == TokensSourceProperty || property == RoundsSourceProperty || property == SeedProperty ||
@@ -692,6 +692,18 @@ public partial class SpeculativeDecoding
         else if (property == ArcMotion.LevelProperty)
         {
             UpdateScene();
+        }
+    }
+
+    private protected override void WatchData(bool watch)
+    {
+        // A view model's lists can outlive the card: they are observed only while it is attached.
+        Observe(ref _observedTokens, watch ? Tokens : null);
+        Observe(ref _observedRounds, watch ? Rounds : null);
+        if (watch)
+        {
+            // Catch up with changes made while nothing listened; the plan's signature tells whether anything changed.
+            OnDataChanged(play: null);
         }
     }
 

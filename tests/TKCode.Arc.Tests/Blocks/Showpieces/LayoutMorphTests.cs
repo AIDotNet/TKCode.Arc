@@ -1034,6 +1034,72 @@ public class LayoutMorphTests
         }
     }
 
+    private static List<LayoutMorphItem> PlainItems(int count, string prefix = "Item") =>
+        Enumerable.Range(0, count).Select(i => new LayoutMorphItem { Title = $"{prefix} {i}", Value = $"${i}" }).ToList();
+
+    [AvaloniaFact]
+    public void A_morph_is_collected_while_its_items_live_on()
+    {
+        var source = new ObservableCollection<LayoutMorphItem>(PlainItems(6));
+        var shared = PlainItems(5);
+        var list = new Avalonia.Collections.AvaloniaList<LayoutMorphItem>(PlainItems(4));
+        var withSource = TestHelpers.ShowAndClose(() => new LayoutMorph { ItemsSource = source });
+        // The host's items in the morph's own list, and a list the host hands in.
+        var withItems = TestHelpers.ShowAndClose(() =>
+        {
+            var morph = new LayoutMorph();
+            morph.Items.AddRange(shared);
+            return morph;
+        });
+        var withList = TestHelpers.ShowAndClose(() => new LayoutMorph { Items = list });
+        TestHelpers.Collect(withSource, withItems, withList);
+        withSource.IsAlive.ShouldBeFalse();
+        withItems.IsAlive.ShouldBeFalse();
+        withList.IsAlive.ShouldBeFalse();
+        source.Add(new LayoutMorphItem { Title = "Later" });
+        source[0].Title = "Renamed";
+        shared[0].Title = "Renamed";
+        list.Add(new LayoutMorphItem { Title = "Later" });
+    }
+
+    [AvaloniaFact]
+    public void A_morph_put_back_shows_what_changed_while_it_was_away()
+    {
+        var source = new ObservableCollection<LayoutMorphItem>(PlainItems(6));
+        var morph = new LayoutMorph { Title = "Studio", ItemsSource = source };
+        var host = new Border { Child = morph };
+        var window = TestHelpers.Show(host);
+        window.Width = 1200;
+        window.Height = 1100;
+        Pump();
+        try
+        {
+            morph.Stage.Count.ShouldBe(6);
+            host.Child = null;
+            Pump();
+            source.Add(new LayoutMorphItem { Title = "Late arrival", Value = "$12" });
+            source[0].Title = "Renamed";
+            Pump();
+
+            host.Child = morph;
+            Pump();
+            morph.Stage.Count.ShouldBe(7);
+            AutomationProperties.GetName(morph.Stage.CardAt(0)).ShouldStartWith("Renamed");
+            AutomationProperties.GetName(morph.Stage.CardAt(6)).ShouldStartWith("Late arrival");
+
+            // Back in the window, it listens again.
+            source[1].Title = "Retitled";
+            source.RemoveAt(6);
+            Pump();
+            morph.Stage.Count.ShouldBe(6);
+            AutomationProperties.GetName(morph.Stage.CardAt(1)).ShouldStartWith("Retitled");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public async Task A_theme_switched_while_detached_is_picked_up_on_attach()
     {

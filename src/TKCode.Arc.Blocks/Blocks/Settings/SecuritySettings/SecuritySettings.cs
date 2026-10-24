@@ -227,6 +227,11 @@ public class SecuritySettings : TemplatedControl
     }
 
     private IList<SecuritySession> _sessions = new AvaloniaList<SecuritySession>();
+    private bool _ownsSessions = true;
+    private INotifyCollectionChanged? _watchedSessions;
+    // A session list the host hands in can outlive the page (a view model's): it is followed only while the page is in a
+    // visual tree, and read again when the page comes back. The page's own list is always followed.
+    private bool _watching;
 
     /// <inheritdoc cref="SessionsProperty"/>
     public IList<SecuritySession> Sessions
@@ -234,12 +239,12 @@ public class SecuritySettings : TemplatedControl
         get => _sessions;
         set
         {
+            var owns = value is null;
             value ??= new AvaloniaList<SecuritySession>();
-            var old = _sessions;
             if (SetAndRaise(SessionsProperty, ref _sessions, value))
             {
-                Watch(old, false);
-                Watch(value, true);
+                _ownsSessions = owns;
+                WatchSessions();
                 _gone.Clear();
                 SyncSessions();
             }
@@ -413,7 +418,7 @@ public class SecuritySettings : TemplatedControl
         _emptyNote = new SettingsRow();
         _refresh = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
         _refresh.Tick += (_, _) => RefreshTimes();
-        Watch(_sessions, true);
+        WatchSessions();
         UpdateScore();
         UpdateTexts();
     }
@@ -590,6 +595,13 @@ public class SecuritySettings : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchSessions();
+        if (!_ownsSessions)
+        {
+            // The host's list may have changed while the page was away.
+            SyncSessions();
+        }
         RefreshTimes();
         _refresh.Start();
     }
@@ -597,6 +609,8 @@ public class SecuritySettings : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchSessions();
         _refresh.Stop();
     }
 
@@ -1167,19 +1181,21 @@ public class SecuritySettings : TemplatedControl
 
     #region Sessions
 
-    private void Watch(IList<SecuritySession> sessions, bool on)
+    private void WatchSessions()
     {
-        if (sessions is not INotifyCollectionChanged observable)
+        var wanted = _ownsSessions || _watching ? _sessions as INotifyCollectionChanged : null;
+        if (ReferenceEquals(wanted, _watchedSessions))
         {
             return;
         }
-        if (on)
+        if (_watchedSessions is not null)
         {
-            observable.CollectionChanged += OnSessionsChanged;
+            _watchedSessions.CollectionChanged -= OnSessionsChanged;
         }
-        else
+        _watchedSessions = wanted;
+        if (_watchedSessions is not null)
         {
-            observable.CollectionChanged -= OnSessionsChanged;
+            _watchedSessions.CollectionChanged += OnSessionsChanged;
         }
     }
 
@@ -1453,7 +1469,8 @@ public class SecuritySettings : TemplatedControl
         {
             _sessions.Remove(session);
         }
-        if (_sessions is not INotifyCollectionChanged)
+        // A list that does not raise changes, or is not followed now, does not tell the rows.
+        if (!ReferenceEquals(_watchedSessions, _sessions))
         {
             SyncSessions();
         }

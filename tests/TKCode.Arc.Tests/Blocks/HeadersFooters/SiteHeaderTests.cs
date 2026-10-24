@@ -84,6 +84,66 @@ public class SiteHeaderTests
     }
 
     [AvaloniaFact]
+    public void A_Header_Is_Collected_While_Its_Items_Live_On()
+    {
+        var source = new System.Collections.ObjectModel.ObservableCollection<SiteHeaderItem> { new() { Value = "x", Label = "X" } };
+        var shared = new SiteHeaderItem { Value = "a", Label = "A", Links = { new SiteHeaderLink { Label = "Docs" } } };
+        var withSource = TestHelpers.ShowAndClose(() => new SiteHeader { ItemsSource = source });
+        // An item the host keeps, in the header's own list.
+        var withItems = TestHelpers.ShowAndClose(() =>
+        {
+            var header = new SiteHeader();
+            header.Items.Add(shared);
+            return header;
+        });
+        TestHelpers.Collect(withSource, withItems);
+        withSource.IsAlive.ShouldBeFalse();
+        withItems.IsAlive.ShouldBeFalse();
+        source.Add(new SiteHeaderItem { Value = "y", Label = "Y" });
+        source[0].Label = "Renamed";
+        shared.Label = "Renamed";
+        shared.Links[0].Label = "Guides";
+    }
+
+    [AvaloniaFact]
+    public void A_Header_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var source = new System.Collections.ObjectModel.ObservableCollection<SiteHeaderItem>
+        {
+            new() { Value = "x", Label = "X" },
+            new() { Value = "y", Label = "Y" }
+        };
+        var header = new SiteHeader { ItemsSource = source, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+        var host = new Border { Child = header };
+        var window = TestHelpers.Show(host);
+        window.Width = 1000;
+        window.Height = 700;
+        Pump();
+        try
+        {
+            header.NavItemsPanel!.Children.Count.ShouldBe(2);
+            host.Child = null;
+            Pump();
+            source.Add(new SiteHeaderItem { Value = "z", Label = "Z" });
+            source[0].Label = "Renamed";
+
+            host.Child = header;
+            Pump();
+            header.NavItemsPanel.Children.Count.ShouldBe(3);
+            header.NavButton("x")!.Label.ShouldBe("Renamed");
+
+            // Back in the window, it listens again.
+            source[1].Label = "Why";
+            Pump();
+            header.NavButton("y")!.Label.ShouldBe("Why");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Scrolling_Turns_Solid_With_Hysteresis_And_Sticks()
     {
         var (_, header, scroll) = Show(scrolling: true);

@@ -101,6 +101,8 @@ public class DataGridColumn : AvaloniaObject
     private BindingBase? _binding;
     private Func<object, object?>? _valueGetter;
     private Action<object, object?>? _valueSetter;
+    private EventHandler? _definitionChanged;
+    private DataGridCellRenderer? _followedRenderer;
 
     public DataGridColumn()
     {
@@ -262,26 +264,60 @@ public class DataGridColumn : AvaloniaObject
     /// <summary>The format the pure helpers (<see cref="DataGridValueFormat"/>, <see cref="DataGridValueParser"/>) take.</summary>
     public DataGridCellFormat CellFormat => new(Type, Decimals, CurrencySymbol, DateFormat);
 
-    internal event EventHandler? DefinitionChanged;
+    /// <summary>
+    /// Raised when anything that shapes the column changes, its renderer included. The column follows its renderer only while
+    /// this has a listener (an attached grid), so a renderer shared from resources never holds the column or its grid.
+    /// </summary>
+    internal event EventHandler? DefinitionChanged
+    {
+        add
+        {
+            _definitionChanged += value;
+            FollowRenderer();
+        }
+        remove
+        {
+            _definitionChanged -= value;
+            FollowRenderer();
+        }
+    }
+
+    /// <summary>Counts definition changes, heard or not (a grid compares it to find changes made while it was away).</summary>
+    internal int DefinitionVersion { get; private set; }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
         if (change.Property == RendererProperty)
         {
-            if (change.OldValue is DataGridCellRenderer old)
-            {
-                old.Changed -= OnDefinitionChanged;
-            }
-            if (change.NewValue is DataGridCellRenderer renderer)
-            {
-                renderer.Changed += OnDefinitionChanged;
-            }
+            FollowRenderer();
         }
         OnDefinitionChanged();
     }
 
-    private void OnDefinitionChanged() => DefinitionChanged?.Invoke(this, EventArgs.Empty);
+    private void FollowRenderer()
+    {
+        var renderer = _definitionChanged is null ? null : Renderer;
+        if (ReferenceEquals(renderer, _followedRenderer))
+        {
+            return;
+        }
+        if (_followedRenderer is not null)
+        {
+            _followedRenderer.Changed -= OnDefinitionChanged;
+        }
+        _followedRenderer = renderer;
+        if (renderer is not null)
+        {
+            renderer.Changed += OnDefinitionChanged;
+        }
+    }
+
+    private void OnDefinitionChanged()
+    {
+        DefinitionVersion++;
+        _definitionChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public override string ToString() => string.IsNullOrEmpty(Header) ? Key : Header;
 }

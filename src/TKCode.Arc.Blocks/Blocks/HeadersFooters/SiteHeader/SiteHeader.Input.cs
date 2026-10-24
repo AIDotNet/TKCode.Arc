@@ -419,6 +419,7 @@ public partial class SiteHeader
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        StartWatching();
         SyncScrollSource();
         UpdateOutside();
     }
@@ -427,6 +428,7 @@ public partial class SiteHeader
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        StopWatching();
         StopTimers();
         DetachOutside();
         HookScroll(null);

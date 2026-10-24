@@ -220,6 +220,10 @@ public class TokenTextEditor : TemplatedControl
     private IBrush? _defaultFill;
     private int _brushVersion;
     private bool _tokenCursor;
+    // One renderer is often shared by many editors (a style or a resource): it is listened to only while this editor is
+    // shown, so it never keeps a closed editor alive.
+    private TokenRenderer? _observedRenderer;
+    private bool _watching;
 
     static TokenTextEditor()
     {
@@ -679,11 +683,41 @@ public class TokenTextEditor : TemplatedControl
         }
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchRenderer();
+        if (_observedRenderer is not null)
+        {
+            // The renderer may have changed its sizes while the editor was away.
+            OnRendererMeasureInvalidated(null, EventArgs.Empty);
+        }
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
         _heightPlaced = false;
         _heightTarget = -1;
+        _watching = false;
+        WatchRenderer();
+    }
+
+    /// <summary>Listens to the current renderer while shown (and to none otherwise).</summary>
+    private void WatchRenderer()
+    {
+        if (_observedRenderer is not null)
+        {
+            _observedRenderer.Invalidated -= OnRendererInvalidated;
+            _observedRenderer.MeasureInvalidated -= OnRendererMeasureInvalidated;
+        }
+        _observedRenderer = _watching ? TokenRenderer : null;
+        if (_observedRenderer is not null)
+        {
+            _observedRenderer.Invalidated += OnRendererInvalidated;
+            _observedRenderer.MeasureInvalidated += OnRendererMeasureInvalidated;
+        }
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new TokenTextEditorAutomationPeer(this);
@@ -732,16 +766,7 @@ public class TokenTextEditor : TemplatedControl
         }
         else if (change.Property == TokenRendererProperty)
         {
-            if (change.GetOldValue<TokenRenderer?>() is { } old)
-            {
-                old.Invalidated -= OnRendererInvalidated;
-                old.MeasureInvalidated -= OnRendererMeasureInvalidated;
-            }
-            if (change.GetNewValue<TokenRenderer?>() is { } renderer)
-            {
-                renderer.Invalidated += OnRendererInvalidated;
-                renderer.MeasureInvalidated += OnRendererMeasureInvalidated;
-            }
+            WatchRenderer();
             OnRendererMeasureInvalidated(null, EventArgs.Empty);
             UpdateTokenCursor(null);
         }

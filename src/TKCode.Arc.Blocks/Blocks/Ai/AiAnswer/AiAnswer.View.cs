@@ -7,6 +7,7 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
 
@@ -591,9 +592,16 @@ public partial class AiAnswer
 
     private void OnFeedbackReasonsChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateFeedbackReasons();
 
-    /// <summary>Follows the shown version's sources (they stream in) and follow-up questions (the end of the stream brings them).</summary>
+    /// <summary>
+    /// Follows the shown version's sources (they stream in) and follow-up questions (the end of the stream brings them),
+    /// only while the answer is in a window: an app can keep the versions after the page is gone.
+    /// </summary>
     private void HookShownVersion(AiAnswerVersion? version)
     {
+        if (!this.IsAttachedToVisualTree())
+        {
+            version = null;
+        }
         if (ReferenceEquals(version, _hookedVersion))
         {
             return;

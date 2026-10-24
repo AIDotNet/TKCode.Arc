@@ -177,17 +177,11 @@ public class UsageBilling : TemplatedControl
         get => _meters;
         set
         {
-            var old = _meters;
+            var owns = value is null;
             if (SetAndRaise(MetersProperty, ref _meters, value ?? new AvaloniaList<UsageBillingMeter>()))
             {
-                if (old is INotifyCollectionChanged oldNotify)
-                {
-                    oldNotify.CollectionChanged -= OnMetersChanged;
-                }
-                if (_meters is INotifyCollectionChanged newNotify)
-                {
-                    newNotify.CollectionChanged += OnMetersChanged;
-                }
+                _ownsMeters = owns;
+                WatchMeters();
                 SyncMeters();
             }
         }
@@ -300,6 +294,12 @@ public class UsageBilling : TemplatedControl
     }
 
     private IList<UsageBillingMeter> _meters = new AvaloniaList<UsageBillingMeter>();
+    private bool _ownsMeters = true;
+    private INotifyCollectionChanged? _watchedMeters;
+    // Meters and days a host hands in can outlive the block (a view model's): the block follows them, and each meter's
+    // changes, only while it is in a visual tree, and reads them again when it comes back. Its own meter list is always
+    // followed (the totals keep up with meters added before the block is shown).
+    private bool _watching;
     private readonly List<MeterView> _views = new();
     private readonly HashSet<UsageBillingMeter> _observed = new();
     private TimeProvider _clock = TimeProvider.System;
@@ -341,10 +341,7 @@ public class UsageBilling : TemplatedControl
 
     public UsageBilling()
     {
-        if (_meters is INotifyCollectionChanged notify)
-        {
-            notify.CollectionChanged += OnMetersChanged;
-        }
+        WatchMeters();
         UpdateLimitPseudoClasses();
     }
 
@@ -438,7 +435,12 @@ public class UsageBilling : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        Refresh();
+        _watching = true;
+        WatchMeters();
+        WatchDaily();
+        // What changed while the block was away: SyncMeters follows the meters again, updates their rows and refreshes.
+        SyncMeters();
+        RefreshChart();
         ScheduleDayChange();
     }
 
@@ -448,6 +450,45 @@ public class UsageBilling : TemplatedControl
         FlushLimitEdit();
         _dayTimer?.Dispose();
         _dayTimer = null;
+        _watching = false;
+        WatchMeters();
+        WatchDaily();
+        foreach (var meter in _observed)
+        {
+            meter.PropertyChanged -= OnMeterPropertyChanged;
+        }
+        _observed.Clear();
+    }
+
+    private void WatchMeters()
+    {
+        var wanted = _ownsMeters || _watching ? _meters as INotifyCollectionChanged : null;
+        if (ReferenceEquals(wanted, _watchedMeters))
+        {
+            return;
+        }
+        if (_watchedMeters is not null)
+        {
+            _watchedMeters.CollectionChanged -= OnMetersChanged;
+        }
+        _watchedMeters = wanted;
+        if (_watchedMeters is not null)
+        {
+            _watchedMeters.CollectionChanged += OnMetersChanged;
+        }
+    }
+
+    private void WatchDaily()
+    {
+        if (_observedDaily is not null)
+        {
+            _observedDaily.CollectionChanged -= OnDailySpendChanged;
+        }
+        _observedDaily = _watching ? DailySpend as INotifyCollectionChanged : null;
+        if (_observedDaily is not null)
+        {
+            _observedDaily.CollectionChanged += OnDailySpendChanged;
+        }
     }
 
     #endregion
@@ -494,15 +535,7 @@ public class UsageBilling : TemplatedControl
         }
         else if (property == DailySpendProperty)
         {
-            if (_observedDaily is not null)
-            {
-                _observedDaily.CollectionChanged -= OnDailySpendChanged;
-            }
-            _observedDaily = DailySpend as INotifyCollectionChanged;
-            if (_observedDaily is not null)
-            {
-                _observedDaily.CollectionChanged += OnDailySpendChanged;
-            }
+            WatchDaily();
             RefreshChart();
         }
         else if (property == NarrowWidthProperty)
@@ -550,11 +583,14 @@ public class UsageBilling : TemplatedControl
             gone.PropertyChanged -= OnMeterPropertyChanged;
             _observed.Remove(gone);
         }
-        foreach (var meter in current)
+        if (_watching)
         {
-            if (_observed.Add(meter))
+            foreach (var meter in current)
             {
-                meter.PropertyChanged += OnMeterPropertyChanged;
+                if (_observed.Add(meter))
+                {
+                    meter.PropertyChanged += OnMeterPropertyChanged;
+                }
             }
         }
 

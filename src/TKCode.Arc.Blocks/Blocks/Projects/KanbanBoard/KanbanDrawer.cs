@@ -92,6 +92,8 @@ internal sealed class KanbanDrawer : TemplatedControl
     private int _token;
     private double _boardWidth;
     private KanbanCard? _watchedCard;
+    private Avalonia.Collections.AvaloniaList<KanbanChecklistItem>? _watchedChecklist;
+    private bool _attached;
 
     public KanbanDrawer()
     {
@@ -228,8 +230,8 @@ internal sealed class KanbanDrawer : TemplatedControl
     public void Show(KanbanCard card, NavigationMethod method)
     {
         var wasOpen = _isOpen && IsVisible;
-        WatchCard(card);
         Card = card;
+        WatchCard();
         _isOpen = true;
         _token++;
         IsVisible = true;
@@ -289,8 +291,8 @@ internal sealed class KanbanDrawer : TemplatedControl
             if (!_isOpen)
             {
                 IsVisible = false;
-                WatchCard(null);
                 Card = null;
+                WatchCard();
             }
         }
     }
@@ -344,30 +346,55 @@ internal sealed class KanbanDrawer : TemplatedControl
 
     // Content ----------------------------------------------------------------------------------------------------------
 
-    private void WatchCard(KanbanCard? card)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        WatchCard();
+        // The card may have changed while the board was out of the tree.
+        Refresh();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        WatchCard();
+    }
+
+    /// <summary>Follows <see cref="Card"/> and its checklist only while attached: the app's card outlives the board.</summary>
+    private void WatchCard()
+    {
+        var card = _attached ? Card : null;
+        if (ReferenceEquals(card, _watchedCard) && ReferenceEquals(card?.Checklist, _watchedChecklist))
+        {
+            return;
+        }
         if (_watchedCard is not null)
         {
             _watchedCard.PropertyChanged -= OnCardChanged;
-            _watchedCard.Checklist.CollectionChanged -= OnChecklistChanged;
+        }
+        if (_watchedChecklist is not null)
+        {
+            _watchedChecklist.CollectionChanged -= OnChecklistChanged;
         }
         _watchedCard = card;
-        if (card is not null)
+        _watchedChecklist = card?.Checklist;
+        if (_watchedCard is not null)
         {
-            card.PropertyChanged += OnCardChanged;
-            card.Checklist.CollectionChanged += OnChecklistChanged;
+            _watchedCard.PropertyChanged += OnCardChanged;
+        }
+        if (_watchedChecklist is not null)
+        {
+            _watchedChecklist.CollectionChanged += OnChecklistChanged;
         }
     }
 
     private void OnCardChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property == KanbanCard.ChecklistProperty && _watchedCard is not null)
+        if (e.Property == KanbanCard.ChecklistProperty)
         {
-            if (e.OldValue is Avalonia.Collections.AvaloniaList<KanbanChecklistItem> old)
-            {
-                old.CollectionChanged -= OnChecklistChanged;
-            }
-            _watchedCard.Checklist.CollectionChanged += OnChecklistChanged;
+            WatchCard();
         }
         Refresh();
     }

@@ -140,6 +140,57 @@ public class ProjectsSharedTests
     }
 
     [AvaloniaFact]
+    public void An_Avatar_And_A_Stack_Are_Collected_While_Their_People_Live_On()
+    {
+        var noor = new ProjectPerson("Noor Haddad");
+        var people = new AvaloniaList<ProjectPerson> { noor, new("Tomás Ferreira") };
+        var avatar = TestHelpers.ShowAndClose(() => new ProjectsAvatar { Person = noor, Width = 28, Height = 28 });
+        var stack = TestHelpers.ShowAndClose(() => new ProjectsAvatarStack { People = people });
+        TestHelpers.Collect(avatar, stack);
+        (avatar.IsAlive, stack.IsAlive).ShouldBe((false, false));
+        noor.Name = "Noor H.";
+        people.Add(new ProjectPerson("Ingrid Solberg"));
+    }
+
+    [AvaloniaFact]
+    public void An_Avatar_And_A_Stack_Put_Back_Show_What_Changed_While_They_Were_Away()
+    {
+        var noor = new ProjectPerson("Noor Haddad");
+        var people = new AvaloniaList<ProjectPerson> { noor };
+        var avatar = new ProjectsAvatar { Person = noor, Width = 28, Height = 28 };
+        var stack = new ProjectsAvatarStack { People = people };
+        var avatarHost = new Border { Child = avatar };
+        var stackHost = new Border { Child = stack };
+        var window = Show(new StackPanel { Children = { avatarHost, stackHost } });
+        try
+        {
+            avatarHost.Child = null;
+            stackHost.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            noor.Name = "Noor H.";
+            people.Add(new ProjectPerson("Tomás Ferreira"));
+            avatarHost.Child = avatar;
+            stackHost.Child = stack;
+            Dispatcher.UIThread.RunJobs();
+            AutomationProperties.GetName(avatar).ShouldBe("Noor H.");
+            stack.VisiblePeople.Count.ShouldBe(2);
+            AutomationProperties.GetName(stack).ShouldBe("Noor H. and Tomás Ferreira");
+
+            // Back in the window, both listen again.
+            noor.Name = "Noor";
+            people.RemoveAt(1);
+            Dispatcher.UIThread.RunJobs();
+            AutomationProperties.GetName(avatar).ShouldBe("Noor");
+            stack.VisiblePeople.Count.ShouldBe(1);
+            AutomationProperties.GetName(stack).ShouldBe("Noor");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void An_Armed_Flip_Springs_Children_From_Where_They_Were_Drawn()
     {
         var clock = new ManualFrameClock();

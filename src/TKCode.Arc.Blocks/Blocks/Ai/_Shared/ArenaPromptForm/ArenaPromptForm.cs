@@ -270,15 +270,7 @@ internal sealed class ArenaPromptForm : TemplatedControl
         }
         else if (change.Property == PromptsProperty)
         {
-            if (_observedPrompts is not null)
-            {
-                _observedPrompts.CollectionChanged -= OnPromptsChanged;
-            }
-            _observedPrompts = change.GetNewValue<IEnumerable<ArenaPrompt>?>() as INotifyCollectionChanged;
-            if (_observedPrompts is not null)
-            {
-                _observedPrompts.CollectionChanged += OnPromptsChanged;
-            }
+            ObservePrompts(this.IsAttachedToVisualTree() ? change.GetNewValue<IEnumerable<ArenaPrompt>?>() : null);
             RebuildChips();
         }
         else if (change.Property == PaddingProperty)
@@ -288,6 +280,91 @@ internal sealed class ArenaPromptForm : TemplatedControl
     }
 
     private void OnPromptsChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildChips();
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        ObservePrompts(Prompts);
+        // The prompts may have changed while the form was away: the same prompts are followed again, others get new chips.
+        if (ChipsMatchPrompts())
+        {
+            FollowChips();
+            RefreshPressed();
+        }
+        else
+        {
+            RebuildChips();
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        ObservePrompts(null);
+        UnfollowChips();
+    }
+
+    /// <summary>The prompts are app data that can outlive the form: the list and each chip's prompt are followed only while it is in a window.</summary>
+    private void ObservePrompts(IEnumerable<ArenaPrompt>? prompts)
+    {
+        var next = prompts as INotifyCollectionChanged;
+        if (ReferenceEquals(next, _observedPrompts))
+        {
+            return;
+        }
+        if (_observedPrompts is not null)
+        {
+            _observedPrompts.CollectionChanged -= OnPromptsChanged;
+        }
+        _observedPrompts = next;
+        if (_observedPrompts is not null)
+        {
+            _observedPrompts.CollectionChanged += OnPromptsChanged;
+        }
+    }
+
+    /// <summary>Each chip's label follows its prompt's, and a prompt's text decides which chip is pressed.</summary>
+    private void FollowChips()
+    {
+        if (_chipSubscriptions.Count > 0)
+        {
+            return;
+        }
+        foreach (var chip in _chips)
+        {
+            var prompt = chip.Prompt;
+            _chipSubscriptions.Add(chip.Bind(ArenaPromptChip.LabelProperty, prompt.GetObservable(ArenaPrompt.LabelProperty)));
+            _chipSubscriptions.Add(prompt.GetPropertyChangedObservable(ArenaPrompt.TextProperty)
+                .Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs>(_ => RefreshPressed())));
+        }
+    }
+
+    private void UnfollowChips()
+    {
+        foreach (var subscription in _chipSubscriptions)
+        {
+            subscription.Dispose();
+        }
+        _chipSubscriptions.Clear();
+    }
+
+    /// <summary>Whether the chips stand for exactly <see cref="Prompts"/>, in order.</summary>
+    private bool ChipsMatchPrompts()
+    {
+        var index = 0;
+        if (Prompts is { } prompts)
+        {
+            foreach (var prompt in prompts)
+            {
+                if (index >= _chips.Count || !ReferenceEquals(_chips[index].Prompt, prompt))
+                {
+                    return false;
+                }
+                index++;
+            }
+        }
+        return index == _chips.Count;
+    }
 
     private void RefreshNames()
     {
@@ -319,11 +396,7 @@ internal sealed class ArenaPromptForm : TemplatedControl
         {
             chip.Click -= OnChipClick;
         }
-        foreach (var subscription in _chipSubscriptions)
-        {
-            subscription.Dispose();
-        }
-        _chipSubscriptions.Clear();
+        UnfollowChips();
         _chips.Clear();
         if (_chipsPanel is null)
         {
@@ -334,14 +407,16 @@ internal sealed class ArenaPromptForm : TemplatedControl
         {
             foreach (var prompt in prompts)
             {
-                var chip = new ArenaPromptChip(prompt);
-                _chipSubscriptions.Add(chip.Bind(ArenaPromptChip.LabelProperty, prompt.GetObservable(ArenaPrompt.LabelProperty)));
-                _chipSubscriptions.Add(prompt.GetPropertyChangedObservable(ArenaPrompt.TextProperty)
-                    .Subscribe(new AnonymousObserver<AvaloniaPropertyChangedEventArgs>(_ => RefreshPressed())));
+                // The label as it is now; attaching makes it follow the prompt.
+                var chip = new ArenaPromptChip(prompt) { Label = prompt.Label };
                 chip.Click += OnChipClick;
                 _chips.Add(chip);
                 _chipsPanel.Children.Add(chip);
             }
+        }
+        if (this.IsAttachedToVisualTree())
+        {
+            FollowChips();
         }
         if (_chipsScroller is not null)
         {

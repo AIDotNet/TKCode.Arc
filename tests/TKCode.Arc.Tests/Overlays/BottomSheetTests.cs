@@ -174,4 +174,40 @@ public class BottomSheetTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Sheet_Is_Collected_While_Its_Detents_Live_On()
+    {
+        var detents = new BottomSheetDetents { 0.3, 0.9 };
+        var weak = TestHelpers.ShowAndClose(() => new BottomSheet { Title = "Trip details", Detents = detents });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        detents.Add(0.6);
+    }
+
+    [AvaloniaFact]
+    public void A_Sheet_Put_Back_Uses_Detents_Changed_While_It_Was_Away()
+    {
+        var detents = new BottomSheetDetents { 0.3, 0.9 };
+        var sheet = new BottomSheet { Title = "Trip details", Detents = detents };
+        var host = new Border { Child = sheet };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            sheet.EffectiveDetents.ShouldBe([0.3, 0.9]);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            detents.Add(0.6);
+            host.Child = sheet;
+            Dispatcher.UIThread.RunJobs();
+            sheet.EffectiveDetents.ShouldBe([0.3, 0.6, 0.9]);
+            detents.Remove(0.3);
+            Dispatcher.UIThread.RunJobs();
+            sheet.EffectiveDetents.ShouldBe([0.6, 0.9]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

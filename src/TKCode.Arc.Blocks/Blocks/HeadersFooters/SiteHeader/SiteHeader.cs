@@ -230,6 +230,10 @@ public partial class SiteHeader : TemplatedControl
     private List<SiteHeaderItem>? _defaults;
     private List<SiteHeaderItem> _resolved = new();
     private INotifyCollectionChanged? _sourceNotifier;
+    // The items (and an ItemsSource) can outlive the header (a view model's, a shared list): the header follows them only
+    // while it is in a visual tree and rebuilds from them when it comes back. Its own Items list is always followed.
+    private bool _watching;
+    private bool _rebuildPosted;
     private bool _isScrolled;
     private bool _isCollapsed;
     private string? _openValue;
@@ -404,17 +408,49 @@ public partial class SiteHeader : TemplatedControl
 
     private void OnItemsSourceChanged(AvaloniaPropertyChangedEventArgs e)
     {
+        WatchSource();
+        RebuildItems();
+    }
+
+    private void WatchSource()
+    {
         if (_sourceNotifier is not null)
         {
             _sourceNotifier.CollectionChanged -= OnSourceCollectionChanged;
-            _sourceNotifier = null;
         }
-        if (e.NewValue is INotifyCollectionChanged notifier)
+        _sourceNotifier = _watching ? ItemsSource as INotifyCollectionChanged : null;
+        if (_sourceNotifier is not null)
         {
-            _sourceNotifier = notifier;
-            notifier.CollectionChanged += OnSourceCollectionChanged;
+            _sourceNotifier.CollectionChanged += OnSourceCollectionChanged;
         }
-        RebuildItems();
+    }
+
+    /// <summary>In a visual tree: follows the items again and catches up with what changed while the header was away.</summary>
+    private void StartWatching()
+    {
+        _watching = true;
+        WatchSource();
+        if (_rebuildPosted)
+        {
+            return;
+        }
+        // The rebuild (which also follows the items) replaces the nav buttons: it runs after the attach pass.
+        _rebuildPosted = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _rebuildPosted = false;
+            if (_watching)
+            {
+                RebuildItems();
+            }
+        });
+    }
+
+    private void StopWatching()
+    {
+        _watching = false;
+        WatchSource();
+        Rewatch();
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildItems();
@@ -428,6 +464,10 @@ public partial class SiteHeader : TemplatedControl
             data.Invalidated -= OnItemInvalidated;
         }
         _watched.Clear();
+        if (!_watching)
+        {
+            return;
+        }
         foreach (var item in _resolved)
         {
             Watch(item);

@@ -985,6 +985,59 @@ public class PageHeaderTests
         GC.KeepAlive(action);
     }
 
+    [AvaloniaFact]
+    public void An_Action_Whose_Command_Outlives_The_Header_Does_Not_Keep_It_Alive()
+    {
+        var command = new RelayCommand(_ => { });
+        var reference = TestHelpers.ShowAndClose(() =>
+        {
+            var header = Create();
+            // A control icon lives in the action's button: through it the action reaches the whole header.
+            header.Actions.Add(new PageHeaderAction { Label = "Follow", Icon = new Border { Width = 16, Height = 16 }, Command = command });
+            return header;
+        }, header =>
+        {
+            var window = (Window)TopLevel.GetTopLevel(header)!;
+            window.Width = 1300;
+            window.Height = 800;
+            Pump();
+            header.Actions[0].Icon.ShouldBeOfType<Border>().GetVisualParent().ShouldNotBeNull();
+        });
+        TestHelpers.Collect(reference);
+        reference.IsAlive.ShouldBeFalse();
+        command.CanRun = false;
+    }
+
+    [AvaloniaFact]
+    public void A_Header_Put_Back_Shows_Its_Commands_State_And_Follows_It_Again()
+    {
+        var command = new RelayCommand(_ => { });
+        var header = Create();
+        header.Actions.Add(new PageHeaderAction { Label = "Follow", Icon = ArcIcons.Bell, Command = command });
+        var host = new Panel { Children = { header } };
+        var window = ShowHosted(host);
+        try
+        {
+            SecondaryButtons(header)[0].IsEnabled.ShouldBeTrue();
+            host.Children.Remove(header);
+            Pump();
+            command.CanRun = false;
+
+            host.Children.Add(header);
+            Pump();
+            SecondaryButtons(header)[0].IsEnabled.ShouldBeFalse();
+
+            // Back in the window, it listens again.
+            command.CanRun = true;
+            Pump();
+            SecondaryButtons(header)[0].IsEnabled.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static WeakReference HeaderOver(System.Collections.ObjectModel.ObservableCollection<string> crumbs, PageHeaderAction action)
     {

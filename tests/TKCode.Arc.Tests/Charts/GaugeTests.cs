@@ -1,6 +1,9 @@
 using Avalonia.Automation.Peers;
+using Avalonia.Collections;
+using Avalonia.Controls;
 using Avalonia.Automation.Provider;
 using Avalonia.Headless.XUnit;
+using Avalonia.Threading;
 
 namespace TKCode.Arc.Tests.Charts;
 
@@ -105,6 +108,54 @@ public class GaugeTests
             gauge.CurrentThreshold.ShouldBeNull();
             gauge.StatusText.ShouldBe(string.Empty);
             gauge.ValueText.ShouldBe("30%");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Gauge_Is_Collected_While_Its_Thresholds_Live_On()
+    {
+        var bands = new AvaloniaList<GaugeThreshold> { new(0, GaugeTone.Success, "Healthy"), new(60, GaugeTone.Warning, "Filling up") };
+        var weak = TestHelpers.ShowAndClose(() => new Gauge { Value = 72, Label = "Disk", Thresholds = bands });
+        // A list replaced while shown is let go at once.
+        var replaced = TestHelpers.ShowAndClose(() => new Gauge { Value = 72, Label = "Disk", Thresholds = bands },
+            gauge => gauge.Thresholds = new AvaloniaList<GaugeThreshold>());
+        TestHelpers.Collect(weak, replaced);
+        weak.IsAlive.ShouldBeFalse();
+        replaced.IsAlive.ShouldBeFalse();
+        bands.Add(new GaugeThreshold(85, GaugeTone.Danger, "Critical"));
+    }
+
+    [AvaloniaFact]
+    public void A_Gauge_Put_Back_Follows_Thresholds_Changed_While_It_Was_Away()
+    {
+        var bands = new AvaloniaList<GaugeThreshold> { new(0, GaugeTone.Success, "Healthy") };
+        var gauge = new Gauge { Value = 72, Label = "Disk", Thresholds = bands };
+        var host = new Border { Child = gauge };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            gauge.StatusText.ShouldBe("Healthy");
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            bands.Add(new GaugeThreshold(60, GaugeTone.Warning, "Filling up"));
+            host.Child = gauge;
+            Dispatcher.UIThread.RunJobs();
+            gauge.StatusText.ShouldBe("Filling up");
+            gauge.CurrentThreshold!.Tone.ShouldBe(GaugeTone.Warning);
+            bands.RemoveAt(1);
+            Dispatcher.UIThread.RunJobs();
+            gauge.StatusText.ShouldBe("Healthy");
+            // A replaced list is followed too.
+            var next = new AvaloniaList<GaugeThreshold> { new(0, GaugeTone.Success, "Fine") };
+            gauge.Thresholds = next;
+            gauge.StatusText.ShouldBe("Fine");
+            next.Add(new GaugeThreshold(70, GaugeTone.Danger, "Full"));
+            Dispatcher.UIThread.RunJobs();
+            gauge.StatusText.ShouldBe("Full");
         }
         finally
         {

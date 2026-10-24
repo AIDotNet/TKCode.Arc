@@ -165,6 +165,9 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public object? EndContent { get => GetValue(EndContentProperty); set => SetValue(EndContentProperty, value); }
 
     private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
+    // Marks may be a view model's list: it is observed only while the slider is shown, and re-read when it comes back.
+    private INotifyCollectionChanged? _observedMarks;
+    private bool _watching;
 
     /// <summary>Ticks on the track; labeled marks also print under it and are clickable.</summary>
     public IList<SliderMark> Marks
@@ -172,10 +175,10 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         get => _marks;
         set
         {
-            var old = _marks;
             if (SetAndRaise(MarksProperty, ref _marks, value ?? new AvaloniaList<SliderMark>()))
             {
-                OnMarksReplaced(old);
+                WatchMarks();
+                UpdateMarks();
             }
         }
     }
@@ -249,10 +252,6 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
             lift.Changed += _ => OnThumbMoved();
             _thumbs[index] = new ThumbMotion { Position = position, Lag = lag, Lift = lift };
             _bubbleTexts[index] = new SliderNumberText();
-        }
-        if (_marks is INotifyCollectionChanged observable)
-        {
-            observable.CollectionChanged += OnMarksChanged;
         }
         UpdatePseudoClasses();
     }
@@ -463,17 +462,34 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         }
     }
 
-    private void OnMarksReplaced(IList<SliderMark> old)
+    /// <summary>Listens to the current marks while shown (and to nothing otherwise).</summary>
+    private void WatchMarks()
     {
-        if (old is INotifyCollectionChanged oldObservable)
+        if (_observedMarks is not null)
         {
-            oldObservable.CollectionChanged -= OnMarksChanged;
+            _observedMarks.CollectionChanged -= OnMarksChanged;
         }
-        if (_marks is INotifyCollectionChanged observable)
+        _observedMarks = _watching ? _marks as INotifyCollectionChanged : null;
+        if (_observedMarks is not null)
         {
-            observable.CollectionChanged += OnMarksChanged;
+            _observedMarks.CollectionChanged += OnMarksChanged;
         }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchMarks();
+        // The marks may have changed while the slider was away.
         UpdateMarks();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchMarks();
     }
 
     private void OnMarksChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateMarks();

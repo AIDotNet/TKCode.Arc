@@ -433,6 +433,76 @@ public class UsageBillingTests
     }
 
     [AvaloniaFact]
+    public void A_Block_Is_Collected_While_Its_Meters_And_Days_Live_On()
+    {
+        var meters = new System.Collections.ObjectModel.ObservableCollection<UsageBillingMeter> { ApiCalls(), Storage() };
+        var shared = BuildMinutes();
+        var days = new AvaloniaList<double> { 1.5, 2.25, 3 };
+        var withList = TestHelpers.ShowAndClose(() => new UsageBilling { Clock = new FixedClock(October20), Meters = meters, DailySpend = days });
+        // A meter the host keeps, in the block's own list.
+        var withShared = TestHelpers.ShowAndClose(() =>
+        {
+            var block = new UsageBilling { Clock = new FixedClock(October20) };
+            block.Meters.Add(shared);
+            return block;
+        });
+        TestHelpers.Collect(withList, withShared);
+        withList.IsAlive.ShouldBeFalse();
+        withShared.IsAlive.ShouldBeFalse();
+        meters.Add(BuildMinutes());
+        meters[0].Used += 1_000;
+        shared.Used += 1_000;
+        days.Add(4);
+    }
+
+    [AvaloniaFact]
+    public void A_Block_Put_Back_Totals_What_Changed_While_It_Was_Away()
+    {
+        var meters = new System.Collections.ObjectModel.ObservableCollection<UsageBillingMeter> { ApiCalls(), Storage(), BuildMinutes() };
+        var days = new AvaloniaList<double> { 4, 5, 6 };
+        var block = new UsageBilling
+        {
+            PeriodStart = new DateTime(2026, 10, 1),
+            PeriodEnd = new DateTime(2026, 10, 31),
+            BaseFee = 90,
+            Clock = new FixedClock(October20),
+            Meters = meters,
+            DailySpend = days
+        };
+        var host = new Border { Child = block };
+        var window = TestHelpers.Show(host);
+        window.Width = 900;
+        window.Height = 1600;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            block.MeteredTotal.ShouldBe(12.96m);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            // API calls: 1.29M calls, 290k over at $0.40 per 10k = $11.60; build minutes leave.
+            meters[0].Used += 50_000;
+            meters.RemoveAt(2);
+            days.Add(7);
+
+            host.Child = block;
+            Dispatcher.UIThread.RunJobs();
+            block.MeteredTotal.ShouldBe(11.60m);
+            block.CurrentTotal.ShouldBe(101.60m);
+            TestHelpers.Descendant<BarChart>(block, UsageBilling.ChartPart).ItemsSource!.Cast<object>().Count().ShouldBe(4);
+
+            // Back in the window, it listens again: storage goes 50 GB over at $0.10.
+            meters[1].Used = 300;
+            block.MeteredTotal.ShouldBe(16.60m);
+            days.Add(8);
+            TestHelpers.Descendant<BarChart>(block, UsageBilling.ChartPart).ItemsSource!.Cast<object>().Count().ShouldBe(5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void A_Narrow_Block_Stacks_The_Limit_Under_The_Spend()
     {
         var block = Larkspur();

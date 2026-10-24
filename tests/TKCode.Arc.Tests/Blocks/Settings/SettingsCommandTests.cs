@@ -580,6 +580,99 @@ public class SettingsCommandTests
     }
 
     [AvaloniaFact]
+    public void A_Palette_Is_Collected_While_Its_Items_Live_On()
+    {
+        var shared = new SettingsCommandToggle { Group = "Appearance", Header = "Compact mode" };
+        var list = new System.Collections.ObjectModel.ObservableCollection<SettingsCommandItem>
+        {
+            new SettingsCommandToggle { Group = "Privacy", Header = "Read receipts" }
+        };
+        // An item the host keeps, in the palette's own list; and a list the host hands in.
+        var withItems = TestHelpers.ShowAndClose(() =>
+        {
+            var palette = new SettingsCommand { Width = 560 };
+            palette.Items.Add(shared);
+            return palette;
+        });
+        var withList = TestHelpers.ShowAndClose(() => new SettingsCommand { Width = 560, Items = list });
+        TestHelpers.Collect(withItems, withList);
+        withItems.IsAlive.ShouldBeFalse();
+        withList.IsAlive.ShouldBeFalse();
+        shared.IsChecked = true;
+        shared.Header = "Dense rows";
+        list.Add(new SettingsCommandAction { Header = "Later" });
+        list[0].Header = "Renamed";
+    }
+
+    [AvaloniaFact]
+    public void A_Palette_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var palette = Palette(out _, out var compact, out _, out var email);
+        var host = new Border { Child = palette };
+        var window = TestHelpers.Show(host);
+        window.Width = 700;
+        window.Height = 700;
+        Settle();
+        try
+        {
+            palette.RowOf(compact)!.Switch!.IsChecked.ShouldBe(false);
+            host.Child = null;
+            Settle();
+            compact.Header = "Dense rows";
+            compact.IsChecked = true;
+            palette.Items.Remove(email);
+
+            host.Child = palette;
+            Settle();
+            Headers(palette).ShouldBe(["Theme", "Dense rows", "Read receipts", "Mentions", "Email digests"]);
+            palette.RowOf(compact)!.HeaderText!.Inlines!.OfType<Avalonia.Controls.Documents.Run>().Select(r => r.Text).ShouldBe(["Dense rows"]);
+            palette.RowOf(compact)!.Switch!.IsChecked.ShouldBe(true);
+
+            // Back in the window, it listens again.
+            compact.IsChecked = false;
+            Settle();
+            palette.RowOf(compact)!.Switch!.IsChecked.ShouldBe(false);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Palette_Put_Back_Follows_A_List_The_Host_Changed_While_It_Was_Away()
+    {
+        var list = new System.Collections.ObjectModel.ObservableCollection<SettingsCommandItem>
+        {
+            new SettingsCommandToggle { Group = "Privacy", Header = "Read receipts" }
+        };
+        var palette = new SettingsCommand { Width = 560, Items = list };
+        var host = new Border { Child = palette };
+        var window = TestHelpers.Show(host);
+        window.Width = 700;
+        window.Height = 700;
+        Settle();
+        try
+        {
+            Headers(palette).ShouldBe(["Read receipts"]);
+            host.Child = null;
+            Settle();
+            list.Add(new SettingsCommandToggle { Group = "Privacy", Header = "Typing indicator" });
+
+            host.Child = palette;
+            Settle();
+            Headers(palette).ShouldBe(["Read receipts", "Typing indicator"]);
+            list.RemoveAt(0);
+            Settle();
+            Headers(palette).ShouldBe(["Typing indicator"]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void The_Footer_Never_Overflows_And_Keeps_The_Enter_Hint_Longest()
     {
         var palette = Palette(out _, out _, out _, out _);

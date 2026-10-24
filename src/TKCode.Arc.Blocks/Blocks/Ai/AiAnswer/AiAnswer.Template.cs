@@ -684,6 +684,7 @@ public partial class AiAnswer
         {
             StopRun(run, announce: false);
         }
+        HookShownVersion(null);
         _shareCancel?.Cancel();
         _shareTimer?.Stop();
         if (_shareState != ShareState.Idle)
@@ -696,6 +697,14 @@ public partial class AiAnswer
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        if (_shownVersion is { } version)
+        {
+            // Follow the shown version again and show what its sources and follow-ups became while the answer was away.
+            HookShownVersion(version);
+            var running = _run is { } run && ReferenceEquals(run.Version, version);
+            UpdateSteps(version, running);
+            UpdateRelated(version, running);
+        }
         // A question set before the answer had a window (or a responder) is asked now.
         Dispatcher.UIThread.Post(AskPendingQuestion, DispatcherPriority.Loaded);
     }

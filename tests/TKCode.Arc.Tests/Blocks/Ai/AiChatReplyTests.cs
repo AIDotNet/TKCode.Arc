@@ -344,4 +344,58 @@ public class AiChatReplyTests
     }
 
     #endregion
+
+    #region Away from the window
+
+    [AvaloniaFact]
+    public void A_Message_Sent_While_Away_Waits_Thinking_And_Streams_Once_The_Chat_Is_Back()
+    {
+        using var rig = new AiChatRig(history: true);
+        var layers = rig.Window.Content;
+        rig.Window.Content = null;
+        rig.Settle();
+        rig.Chat.Send("Anything else?");
+        rig.Settle();
+        var reply = rig.Sent.Single().Turn.SelectedVersion!.Reply;
+        rig.Responder!.Calls.ShouldBeEmpty();
+        reply.Status.ShouldBe(AiChatReplyStatus.Thinking);
+        rig.Chat.IsBusy.ShouldBeTrue();
+
+        rig.Window.Content = layers;
+        rig.Settle();
+        rig.Responder.Calls.Count.ShouldBe(1);
+        rig.Chat.IsStreaming(reply).ShouldBeTrue();
+        rig.LastReply.Reply.ShouldBeSameAs(reply);
+        rig.Call.Text("Nothing else is slow.");
+        rig.Call.End();
+        rig.RunUntil(() => reply.Status == AiChatReplyStatus.Done).ShouldBeTrue();
+        reply.Text.ShouldBe("Nothing else is slow.");
+    }
+
+    [AvaloniaFact]
+    public void A_Chat_Sent_To_While_Away_Streams_Nothing_And_Is_Collected()
+    {
+        var responder = new ScriptedResponder();
+        var conversation = AiChatSamples.NightlyBuild();
+        var weak = TestHelpers.ShowAndClose(() =>
+        {
+            var chat = AiChatSamples.Chat(responder);
+            chat.Conversations.Add(conversation);
+            chat.CurrentConversation = conversation;
+            return chat;
+        }, chat =>
+        {
+            ((Avalonia.Controls.Window)Avalonia.Controls.TopLevel.GetTopLevel(chat)!).Content = null;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            chat.Send("Anything else?");
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        responder.Calls.ShouldBeEmpty();
+        conversation.Turns.Count.ShouldBe(3);
+        conversation.Turns[2].SelectedVersion!.Reply.Status.ShouldBe(AiChatReplyStatus.Thinking);
+    }
+
+    #endregion
 }

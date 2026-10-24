@@ -287,7 +287,14 @@ internal sealed partial class SemanticZoomStage : ShowpieceStage
     {
         _paletteDirty = true;
         _pens.Clear();
-        _avatarCache.Clear();
+        DropAvatars();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        // The baked avatars are native surfaces (up to MaxBakedAvatars): a map out of the window frees them, then bakes again.
+        DropAvatars();
     }
 
     // Input --------------------------------------------------------------------------------------------------------------

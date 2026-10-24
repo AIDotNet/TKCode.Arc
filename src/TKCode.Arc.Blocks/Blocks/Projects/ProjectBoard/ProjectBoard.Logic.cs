@@ -22,7 +22,10 @@ public partial class ProjectBoard
     private readonly Dictionary<ProjectBoardTask, ProjectBoardCard> _cards = new();
     private readonly Dictionary<ProjectBoardTask, ProjectBoardCard> _leavingCards = new();
     private readonly Dictionary<ProjectBoardStage, ProjectBoardColumn> _columns = new();
+    private INotifyCollectionChanged? _observedTasks;
     private INotifyCollectionChanged? _observedSource;
+    private INotifyCollectionChanged? _observedStages;
+    private INotifyCollectionChanged? _observedTeam;
     private ProjectBoardPanel? _panel;
     private ScrollViewer? _scroll;
     private ProjectsSnapScroll? _snap;
@@ -38,6 +41,7 @@ public partial class ProjectBoard
     private int _draftIndex;
     private bool _rebuildPending;
     private bool _pendingAnimate;
+    private bool _dataAttached;
     private bool _built;
     private bool _isNarrow;
     private bool _isCompact;
@@ -489,12 +493,68 @@ public partial class ProjectBoard
         }
     }
 
+    /// <summary>
+    /// The board follows its lists and the tasks and stages in them only while it is in a visual tree: they are the app's
+    /// and usually outlive the board. Back in a tree it reads them again (it missed what changed meanwhile).
+    /// </summary>
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _dataAttached = true;
+        WatchCollections();
+        Watch();
+        UpdateTeam();
+        ScheduleRebuild(animate: false);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _dataAttached = false;
+        WatchCollections();
+        Watch();
+    }
+
+    private void WatchCollections()
+    {
+        Observe(ref _observedTasks, _dataAttached ? Tasks : null, OnTasksChanged);
+        Observe(ref _observedSource, _dataAttached ? TasksSource as INotifyCollectionChanged : null, OnSourceChanged);
+        Observe(ref _observedStages, _dataAttached ? Stages : null, OnStagesChanged);
+        Observe(ref _observedTeam, _dataAttached ? Team : null, OnTeamChanged);
+    }
+
+    private static void Observe(ref INotifyCollectionChanged? observed, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
+    {
+        if (ReferenceEquals(observed, next))
+        {
+            return;
+        }
+        if (observed is not null)
+        {
+            observed.CollectionChanged -= handler;
+        }
+        observed = next;
+        if (observed is not null)
+        {
+            observed.CollectionChanged += handler;
+        }
+    }
+
     private void Watch()
     {
-        foreach (var task in _watchedTasks.Where(t => !_tasks.Contains(t)).ToList())
+        foreach (var task in _watchedTasks.Where(t => !_dataAttached || !_tasks.Contains(t)).ToList())
         {
             task.PropertyChanged -= OnTaskPropertyChanged;
             _watchedTasks.Remove(task);
+        }
+        foreach (var stage in _watchedStages.Where(s => !_dataAttached || !_stages.Contains(s)).ToList())
+        {
+            stage.PropertyChanged -= OnStagePropertyChanged;
+            _watchedStages.Remove(stage);
+        }
+        if (!_dataAttached)
+        {
+            return;
         }
         foreach (var task in _tasks)
         {
@@ -502,11 +562,6 @@ public partial class ProjectBoard
             {
                 task.PropertyChanged += OnTaskPropertyChanged;
             }
-        }
-        foreach (var stage in _watchedStages.Where(s => !_stages.Contains(s)).ToList())
-        {
-            stage.PropertyChanged -= OnStagePropertyChanged;
-            _watchedStages.Remove(stage);
         }
         foreach (var stage in _stages)
         {
@@ -906,43 +961,9 @@ public partial class ProjectBoard
     {
         base.OnPropertyChanged(change);
         var property = change.Property;
-        if (property == TasksProperty)
+        if (property == TasksProperty || property == TasksSourceProperty || property == StagesProperty)
         {
-            if (change.OldValue is AvaloniaList<ProjectBoardTask> oldTasks)
-            {
-                oldTasks.CollectionChanged -= OnTasksChanged;
-            }
-            if (change.NewValue is AvaloniaList<ProjectBoardTask> newTasks)
-            {
-                newTasks.CollectionChanged += OnTasksChanged;
-            }
-            ScheduleRebuild(animate: false);
-            FlushItems();
-        }
-        else if (property == TasksSourceProperty)
-        {
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged -= OnSourceChanged;
-            }
-            _observedSource = TasksSource as INotifyCollectionChanged;
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged += OnSourceChanged;
-            }
-            ScheduleRebuild(animate: false);
-            FlushItems();
-        }
-        else if (property == StagesProperty)
-        {
-            if (change.OldValue is AvaloniaList<ProjectBoardStage> oldStages)
-            {
-                oldStages.CollectionChanged -= OnStagesChanged;
-            }
-            if (change.NewValue is AvaloniaList<ProjectBoardStage> newStages)
-            {
-                newStages.CollectionChanged += OnStagesChanged;
-            }
+            WatchCollections();
             ScheduleRebuild(animate: false);
             FlushItems();
         }
@@ -964,14 +985,7 @@ public partial class ProjectBoard
         {
             if (property == TeamProperty)
             {
-                if (change.OldValue is AvaloniaList<ProjectPerson> oldTeam)
-                {
-                    oldTeam.CollectionChanged -= OnTeamChanged;
-                }
-                if (change.NewValue is AvaloniaList<ProjectPerson> newTeam)
-                {
-                    newTeam.CollectionChanged += OnTeamChanged;
-                }
+                WatchCollections();
             }
             UpdateTeam();
         }

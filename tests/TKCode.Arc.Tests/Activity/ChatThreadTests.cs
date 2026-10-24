@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Globalization;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -36,19 +37,21 @@ public class ChatThreadTests
         At("m5", "you", "Thanks both!", s_now.AddMinutes(-10))
     ];
 
+    private static ChatThread NewThread() => new()
+    {
+        Participants = People(),
+        CurrentUserId = "you",
+        TimeZone = s_utc,
+        Culture = CultureInfo.GetCultureInfo("en-US"),
+        Width = 520,
+        Height = 560,
+        Now = static () => s_now
+    };
+
     private static (ChatThread Thread, Window Window) Show(IEnumerable<ChatMessage>? messages = null, ArcMotionLevel level = ArcMotionLevel.Off,
                                                          bool bound = false)
     {
-        var thread = new ChatThread
-        {
-            Participants = People(),
-            CurrentUserId = "you",
-            TimeZone = s_utc,
-            Culture = CultureInfo.GetCultureInfo("en-US"),
-            Width = 520,
-            Height = 560,
-            Now = static () => s_now
-        };
+        var thread = NewThread();
         var list = messages?.ToList() ?? Conversation();
         if (bound)
         {
@@ -474,6 +477,88 @@ public class ChatThreadTests
             clock.Advance(TimeSpan.FromSeconds(2), TimeSpan.FromMilliseconds(1000.0 / 60));
             Dispatcher.UIThread.RunJobs();
             view!.Opacity.ShouldBe(1, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Thread_Is_Collected_While_Its_Messages_Live_On()
+    {
+        var messages = new ObservableCollection<ChatMessage>(Conversation());
+        var typing = new ObservableCollection<string> { "sam" };
+        var withMessages = TestHelpers.ShowAndClose(() =>
+        {
+            var thread = NewThread();
+            thread.ItemsSource = messages;
+            return thread;
+        });
+        var withTyping = TestHelpers.ShowAndClose(() =>
+        {
+            var thread = NewThread();
+            thread.TypingParticipantIds = typing;
+            return thread;
+        });
+        TestHelpers.Collect(withMessages, withTyping);
+        withMessages.IsAlive.ShouldBeFalse();
+        withTyping.IsAlive.ShouldBeFalse();
+        messages[0].Text = "Edited";
+        messages.Add(At("m6", "lee", "Shipped.", s_now));
+        typing.Add("lee");
+    }
+
+    [AvaloniaFact]
+    public void A_Thread_Taken_Out_And_Put_Back_Shows_What_Changed_Meanwhile()
+    {
+        var reply = At("r1", "sam", "", s_now.AddMinutes(-1));
+        var list = Conversation();
+        list.Add(reply);
+        var lee = list[3];
+        lee.Text = "Looking at **it** now.";
+        var typing = new ObservableCollection<string>();
+        var thread = NewThread();
+        thread.ItemsSource = new ObservableCollection<ChatMessage>(list);
+        thread.TypingParticipantIds = typing;
+        var host = new Border { Child = thread };
+        var window = TestHelpers.Show(host);
+        window.Width = 700;
+        window.Height = 700;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            thread.AppendToMessage("r1", "Part one").ShouldBeTrue();
+            thread.Bodies.Peek(lee).ShouldNotBeNull();
+            Row(thread, "m4").First.ShouldBeTrue();
+
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            lee.AuthorId = "sam";
+            lee.CreatedAt = s_now.AddMinutes(-27);
+            lee.Text = "**Fixed** it.";
+            typing.Add("lee");
+            thread.AppendToMessage("r1", " and two").ShouldBeTrue();
+            Dispatcher.UIThread.RunJobs();
+
+            host.Child = thread;
+            Dispatcher.UIThread.RunJobs();
+            // m4 now joins Sam's group, shows its new text, and Lee is typing; the streamed reply is still streaming.
+            Row(thread, "m4").Author.Id.ShouldBe("sam");
+            Row(thread, "m4").First.ShouldBeFalse();
+            thread.Bodies.Peek(lee)!.Text.ShouldBe("**Fixed** it.");
+            thread.Rows[^1].ShouldBeOfType<ChatThreadTypingRow>();
+            thread.IsMessageStreaming("r1").ShouldBeTrue();
+            reply.Text.ShouldBe("Part one and two");
+
+            lee.AuthorId = "lee";
+            lee.Text = "Looking at **it** now.";
+            typing.Clear();
+            Dispatcher.UIThread.RunJobs();
+            Row(thread, "m4").Author.Id.ShouldBe("lee");
+            Row(thread, "m4").First.ShouldBeTrue();
+            thread.Bodies.Peek(lee)!.Text.ShouldBe("Looking at **it** now.");
+            thread.Rows.OfType<ChatThreadTypingRow>().ShouldBeEmpty();
         }
         finally
         {

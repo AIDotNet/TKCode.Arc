@@ -412,4 +412,82 @@ public class SwipeActionsTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Removed_Row_Is_Collected_While_Its_List_Lives_On()
+    {
+        var items = new AvaloniaList<string> { "Alpha", "Beta" };
+        var list = new SwipeActions { Label = "Things", Width = ListWidth, ItemsSource = items };
+        list.TrailingActions.Add(new SwipeAction { Label = "Remove", Icon = ArcIcons.X, Tone = SwipeActionTone.Danger });
+        var window = TestHelpers.Show(list);
+        try
+        {
+            var weak = RowAt(list, 1);
+            items.RemoveAt(1);
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.Collect(weak);
+            weak.IsAlive.ShouldBeFalse();
+            // The row that stayed still follows the shared actions.
+            var row = (SwipeActionsRow)list.ContainerFromIndex(0)!;
+            row.OpenMenu(MenuOpenFocus.None);
+            Dispatcher.UIThread.RunJobs();
+            row.Menu!.Items.Cast<MenuEntry>().Single().Header.ShouldBe("Remove");
+            row.Menu.Close(returnFocus: false);
+            Dispatcher.UIThread.RunJobs();
+            list.TrailingActions[0].Label = "Delete";
+            row.OpenMenu(MenuOpenFocus.None);
+            Dispatcher.UIThread.RunJobs();
+            row.Menu.Items.Cast<MenuEntry>().Single().Header.ShouldBe("Delete");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Row_Is_Collected_While_A_Shared_Action_Lives_On()
+    {
+        var archive = new SwipeAction { Label = "Archive", Icon = ArcIcons.Archive };
+        var weak = TestHelpers.ShowAndClose(() => new SwipeActionsRow { Label = "Mail", TrailingActions = { archive } });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        archive.Label = "Store";
+    }
+
+    [AvaloniaFact]
+    public void A_Row_Put_Back_Shows_An_Action_Changed_While_It_Was_Away()
+    {
+        var row = CreateRow("Mail");
+        var host = new Border { Width = ListWidth, Child = row };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            row.OpenMenu(MenuOpenFocus.None);
+            Dispatcher.UIThread.RunJobs();
+            row.Menu!.Items.Cast<MenuEntry>().Select(e => e.Header).ShouldBe(["Unread", "Archive", "Delete"]);
+            row.Menu.Close(returnFocus: false);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            row.TrailingActions[0].Label = "Store";
+            host.Child = row;
+            Dispatcher.UIThread.RunJobs();
+            row.OpenMenu(MenuOpenFocus.None);
+            Dispatcher.UIThread.RunJobs();
+            row.Menu.Items.Cast<MenuEntry>().Select(e => e.Header).ShouldBe(["Unread", "Store", "Delete"]);
+            row.Menu.Close(returnFocus: false);
+            Dispatcher.UIThread.RunJobs();
+            row.LeadingActions[0].Label = "Read";
+            row.OpenMenu(MenuOpenFocus.None);
+            Dispatcher.UIThread.RunJobs();
+            row.Menu.Items.Cast<MenuEntry>().Select(e => e.Header).ShouldBe(["Read", "Store", "Delete"]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference RowAt(SwipeActions list, int index) => new(list.ContainerFromIndex(index)!);
 }

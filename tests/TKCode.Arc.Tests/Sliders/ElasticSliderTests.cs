@@ -1,6 +1,7 @@
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -148,5 +149,42 @@ public class ElasticSliderTests
         tracker.Add(1032, 20);
         tracker.Velocity(1040).ShouldBe(625, 0.001);
         tracker.Velocity(1100).ShouldBe(0);
+    }
+
+    [AvaloniaFact]
+    public void A_Elastic_Slider_Is_Collected_While_Its_Marks_Live_On()
+    {
+        var marks = new AvaloniaList<SliderMark> { new(0, "Min"), new(50, "Mid") };
+        var weak = TestHelpers.ShowAndClose(() => new ElasticSlider { Label = "Zoom", Marks = marks });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        marks.Add(new SliderMark(100, "Max"));
+    }
+
+    [AvaloniaFact]
+    public void A_Elastic_Slider_Put_Back_Shows_Marks_Changed_While_It_Was_Away()
+    {
+        var marks = new AvaloniaList<SliderMark>();
+        var slider = new ElasticSlider { Label = "Zoom", Width = 324, Marks = marks };
+        var host = new Border { Child = slider };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            slider.Classes.Contains(":marks").ShouldBeFalse();
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            marks.Add(new SliderMark(50, "Mid"));
+            host.Child = slider;
+            Dispatcher.UIThread.RunJobs();
+            slider.Classes.Contains(":marks").ShouldBeTrue();
+            TestHelpers.Descendant<SliderMarkLabels>(slider).IsVisible.ShouldBeTrue();
+            marks.Clear();
+            Dispatcher.UIThread.RunJobs();
+            slider.Classes.Contains(":marks").ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

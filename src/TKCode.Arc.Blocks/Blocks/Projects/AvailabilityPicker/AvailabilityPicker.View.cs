@@ -19,8 +19,11 @@ public partial class AvailabilityPicker
     private readonly List<ProjectPerson> _attendees = new();
     private readonly HashSet<AvailabilityDay> _watchedDays = new();
     private readonly HashSet<ProjectPerson> _watchedPeople = new();
+    private INotifyCollectionChanged? _observedDays;
     private INotifyCollectionChanged? _observedDaysSource;
+    private INotifyCollectionChanged? _observedPeople;
     private INotifyCollectionChanged? _observedPeopleSource;
+    private bool _dataAttached;
     private bool _dataPending;
     private bool _templated;
     private bool _initialized;
@@ -139,18 +142,6 @@ public partial class AvailabilityPicker
                 _days.Add(day);
             }
         }
-        foreach (var day in _watchedDays.Where(d => !_days.Contains(d)).ToList())
-        {
-            day.Changed -= OnDayContentChanged;
-            _watchedDays.Remove(day);
-        }
-        foreach (var day in _days)
-        {
-            if (_watchedDays.Add(day))
-            {
-                day.Changed += OnDayContentChanged;
-            }
-        }
 
         _attendees.Clear();
         IEnumerable people = AttendeesSource ?? Attendees ?? (IEnumerable)Array.Empty<ProjectPerson>();
@@ -161,10 +152,77 @@ public partial class AvailabilityPicker
                 _attendees.Add(person);
             }
         }
-        foreach (var person in _watchedPeople.Where(p => !_attendees.Contains(p)).ToList())
+        WatchItems();
+    }
+
+    /// <summary>
+    /// The picker follows its lists and the days and people in them only while it is in a visual tree: they are the app's
+    /// and usually outlive the picker. Back in a tree it reads them again (it missed what changed meanwhile).
+    /// </summary>
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _dataAttached = true;
+        WatchCollections();
+        WatchItems();
+        ScheduleData();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _dataAttached = false;
+        WatchCollections();
+        WatchItems();
+    }
+
+    private void WatchCollections()
+    {
+        Observe(ref _observedDays, _dataAttached ? Days : null, OnDaysChanged);
+        Observe(ref _observedDaysSource, _dataAttached ? DaysSource as INotifyCollectionChanged : null, OnDaysChanged);
+        Observe(ref _observedPeople, _dataAttached ? Attendees : null, OnPeopleChanged);
+        Observe(ref _observedPeopleSource, _dataAttached ? AttendeesSource as INotifyCollectionChanged : null, OnPeopleChanged);
+    }
+
+    private static void Observe(ref INotifyCollectionChanged? observed, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
+    {
+        if (ReferenceEquals(observed, next))
+        {
+            return;
+        }
+        if (observed is not null)
+        {
+            observed.CollectionChanged -= handler;
+        }
+        observed = next;
+        if (observed is not null)
+        {
+            observed.CollectionChanged += handler;
+        }
+    }
+
+    private void WatchItems()
+    {
+        foreach (var day in _watchedDays.Where(d => !_dataAttached || !_days.Contains(d)).ToList())
+        {
+            day.Changed -= OnDayContentChanged;
+            _watchedDays.Remove(day);
+        }
+        foreach (var person in _watchedPeople.Where(p => !_dataAttached || !_attendees.Contains(p)).ToList())
         {
             person.PropertyChanged -= OnPersonChanged;
             _watchedPeople.Remove(person);
+        }
+        if (!_dataAttached)
+        {
+            return;
+        }
+        foreach (var day in _days)
+        {
+            if (_watchedDays.Add(day))
+            {
+                day.Changed += OnDayContentChanged;
+            }
         }
         foreach (var person in _attendees)
         {
@@ -215,54 +273,10 @@ public partial class AvailabilityPicker
     {
         base.OnPropertyChanged(change);
         var property = change.Property;
-        if (property == DaysProperty)
+        if (property == DaysProperty || property == DaysSourceProperty || property == AttendeesProperty
+            || property == AttendeesSourceProperty)
         {
-            if (change.OldValue is AvaloniaList<AvailabilityDay> oldDays)
-            {
-                oldDays.CollectionChanged -= OnDaysChanged;
-            }
-            if (change.NewValue is AvaloniaList<AvailabilityDay> newDays)
-            {
-                newDays.CollectionChanged += OnDaysChanged;
-            }
-            ScheduleData();
-        }
-        else if (property == DaysSourceProperty)
-        {
-            if (_observedDaysSource is not null)
-            {
-                _observedDaysSource.CollectionChanged -= OnDaysChanged;
-            }
-            _observedDaysSource = DaysSource as INotifyCollectionChanged;
-            if (_observedDaysSource is not null)
-            {
-                _observedDaysSource.CollectionChanged += OnDaysChanged;
-            }
-            ScheduleData();
-        }
-        else if (property == AttendeesProperty)
-        {
-            if (change.OldValue is AvaloniaList<ProjectPerson> oldPeople)
-            {
-                oldPeople.CollectionChanged -= OnPeopleChanged;
-            }
-            if (change.NewValue is AvaloniaList<ProjectPerson> newPeople)
-            {
-                newPeople.CollectionChanged += OnPeopleChanged;
-            }
-            ScheduleData();
-        }
-        else if (property == AttendeesSourceProperty)
-        {
-            if (_observedPeopleSource is not null)
-            {
-                _observedPeopleSource.CollectionChanged -= OnPeopleChanged;
-            }
-            _observedPeopleSource = AttendeesSource as INotifyCollectionChanged;
-            if (_observedPeopleSource is not null)
-            {
-                _observedPeopleSource.CollectionChanged += OnPeopleChanged;
-            }
+            WatchCollections();
             ScheduleData();
         }
         else if (property == SelectedDayProperty)

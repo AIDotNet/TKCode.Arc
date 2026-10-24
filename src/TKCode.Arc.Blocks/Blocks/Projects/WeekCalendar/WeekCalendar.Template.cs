@@ -404,6 +404,7 @@ public partial class WeekCalendar
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        OnDataAttached();
         _topLevel = TopLevel.GetTopLevel(this);
         if (_topLevel is not null)
         {
@@ -427,6 +428,7 @@ public partial class WeekCalendar
         ArcToday.Changed -= OnTodayChanged;
         ActualThemeVariantChanged -= OnThemeChanged;
         OnEditingDetached();
+        OnDataDetached();
     }
 
     private void OnTopLevelPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

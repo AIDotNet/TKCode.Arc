@@ -32,35 +32,57 @@ public partial class DataGrid
     private int _totalsKey = -1;
     private bool _slidePending;
     private bool _syncingChecked;
+    private bool _attached;
+    private readonly HashSet<DataGridColumn> _followedColumns = new(ReferenceEqualityComparer.Instance);
 
     #region Columns
 
     private void OnColumnsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (e.OldItems is not null)
-        {
-            foreach (DataGridColumn column in e.OldItems)
-            {
-                column.DefinitionChanged -= OnColumnDefinitionChanged;
-            }
-        }
-        if (e.NewItems is not null)
-        {
-            foreach (DataGridColumn column in e.NewItems)
-            {
-                column.DefinitionChanged += OnColumnDefinitionChanged;
-            }
-        }
-        if (e.Action == NotifyCollectionChangedAction.Reset)
-        {
-            foreach (var column in Columns)
-            {
-                column.DefinitionChanged -= OnColumnDefinitionChanged;
-                column.DefinitionChanged += OnColumnDefinitionChanged;
-            }
-        }
+        FollowColumns();
         _definitionsDirty = true;
         InvalidateColumns();
+    }
+
+    /// <summary>
+    /// Listens to exactly the columns in <see cref="Columns"/> while attached, and to none while detached: a column (and the
+    /// renderer it follows while listened to) may outlive the grid. The followed set is the record, since a Reset reports no
+    /// old items.
+    /// </summary>
+    private void FollowColumns()
+    {
+        if (!_attached)
+        {
+            foreach (var column in _followedColumns)
+            {
+                column.DefinitionChanged -= OnColumnDefinitionChanged;
+            }
+            _followedColumns.Clear();
+            return;
+        }
+        var current = new HashSet<DataGridColumn>(Columns, ReferenceEqualityComparer.Instance);
+        foreach (var column in _followedColumns.Where(c => !current.Contains(c)).ToArray())
+        {
+            column.DefinitionChanged -= OnColumnDefinitionChanged;
+            _followedColumns.Remove(column);
+        }
+        foreach (var column in current)
+        {
+            if (_followedColumns.Add(column))
+            {
+                column.DefinitionChanged += OnColumnDefinitionChanged;
+            }
+        }
+    }
+
+    /// <summary>Reads the columns again when one changed while nobody listened (before the first show, or while away).</summary>
+    private void RereadChangedColumns()
+    {
+        if (!_definitionsDirty && _store.Accessors.Any(a => a.DefinitionVersion != a.Column.DefinitionVersion))
+        {
+            _definitionsDirty = true;
+            InvalidateColumns();
+        }
     }
 
     private void OnColumnDefinitionChanged(object? sender, EventArgs e)

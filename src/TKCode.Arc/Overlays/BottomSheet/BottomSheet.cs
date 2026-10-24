@@ -131,7 +131,9 @@ public class BottomSheet : ModalOverlay
     private DragTracker? _bodyDrag;
     private SheetDrag? _drag;
     private bool _suppressGrabberClick;
+    // Detents may be a view model's list: it is observed only while the sheet is in a visual tree, and re-read on return.
     private BottomSheetDetents? _observedDetents;
+    private bool _watching;
 
     private sealed class SheetDrag
     {
@@ -217,16 +219,43 @@ public class BottomSheet : ModalOverlay
         base.OnPropertyChanged(change);
         if (change.Property == DetentsProperty)
         {
-            if (_observedDetents is not null)
-            {
-                _observedDetents.CollectionChanged -= OnDetentsChanged;
-            }
-            _observedDetents = change.GetNewValue<BottomSheetDetents?>();
-            if (_observedDetents is not null)
-            {
-                _observedDetents.CollectionChanged += OnDetentsChanged;
-            }
+            WatchDetents();
             OnDetentsChanged(null, null);
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchDetents();
+        // The detents may have changed while the sheet was away; an open sheet moves only if they did.
+        var before = _stops;
+        UpdateStops();
+        if (!before.AsSpan().SequenceEqual(_stops))
+        {
+            OnDetentsChanged(null, null);
+        }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchDetents();
+    }
+
+    /// <summary>Listens to the current detents while in a visual tree (and to nothing otherwise).</summary>
+    private void WatchDetents()
+    {
+        if (_observedDetents is not null)
+        {
+            _observedDetents.CollectionChanged -= OnDetentsChanged;
+        }
+        _observedDetents = _watching ? Detents : null;
+        if (_observedDetents is not null)
+        {
+            _observedDetents.CollectionChanged += OnDetentsChanged;
         }
     }
 

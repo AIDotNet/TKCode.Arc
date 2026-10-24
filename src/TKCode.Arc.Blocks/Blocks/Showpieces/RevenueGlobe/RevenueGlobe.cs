@@ -278,11 +278,10 @@ public partial class RevenueGlobe : TemplatedControl
         get => _regionsList;
         set
         {
-            var old = _regionsList;
             if (SetAndRaise(RegionsProperty, ref _regionsList, value ?? new AvaloniaList<RevenueRegion>()))
             {
-                old.CollectionChanged -= OnRegionsChanged;
-                _regionsList.CollectionChanged += OnRegionsChanged;
+                _ownsRegions = value is null;
+                WatchRegions();
                 RebuildScene();
             }
         }
@@ -416,6 +415,12 @@ public partial class RevenueGlobe : TemplatedControl
     #endregion
 
     private AvaloniaList<RevenueRegion> _regionsList = new();
+    private bool _ownsRegions = true;
+    private AvaloniaList<RevenueRegion>? _watchedRegions;
+    private INotifyCollectionChanged? _watchedPayments;
+    // Regions and payments a host hands in can outlive the globe (a view model's, a live feed): the globe follows them
+    // only while it is in a visual tree and reads them again when it comes back. Its own region list is always followed.
+    private bool _watching;
     private bool _isLive = true;
     private RevenueGlobePlaybackState _playbackState = RevenueGlobePlaybackState.Live;
     private double _centerLongitude;
@@ -455,7 +460,7 @@ public partial class RevenueGlobe : TemplatedControl
         GoLiveCommand = new RevenueGlobeCommand(GoLive);
         TogglePauseCommand = new RevenueGlobeCommand(TogglePause);
         Cities.CollectionChanged += OnCitiesChanged;
-        _regionsList.CollectionChanged += OnRegionsChanged;
+        WatchRegions();
         _clockLoop = new LiveLoop(this, OnClockFrame);
         _ledger = new RevenueGlobeLedger(0);
         InitializeTime();
@@ -583,14 +588,7 @@ public partial class RevenueGlobe : TemplatedControl
         }
         else if (property == PaymentsProperty)
         {
-            if (change.OldValue is INotifyCollectionChanged oldCollection)
-            {
-                oldCollection.CollectionChanged -= OnPaymentsCollectionChanged;
-            }
-            if (change.NewValue is INotifyCollectionChanged newCollection)
-            {
-                newCollection.CollectionChanged += OnPaymentsCollectionChanged;
-            }
+            WatchPayments();
             _extraPayments.Clear();
             RebuildLedger();
         }
@@ -657,6 +655,19 @@ public partial class RevenueGlobe : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchRegions();
+        WatchPayments();
+        // What changed while the globe was away: a host's region list (compared with the scene's), and the payments of a
+        // source that raises changes (no cheaper way to tell, so the ledger is read again).
+        if (!SceneHasRegions())
+        {
+            RebuildScene();
+        }
+        else if (_watchedPayments is not null)
+        {
+            RebuildLedger();
+        }
         AnchorClock();
         UpdateMotionLevel();
         RefreshClockLoop();
@@ -665,7 +676,58 @@ public partial class RevenueGlobe : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchRegions();
+        WatchPayments();
         _clockLoop.Stop();
+    }
+
+    private void WatchRegions()
+    {
+        var wanted = _ownsRegions || _watching ? _regionsList : null;
+        if (ReferenceEquals(wanted, _watchedRegions))
+        {
+            return;
+        }
+        if (_watchedRegions is not null)
+        {
+            _watchedRegions.CollectionChanged -= OnRegionsChanged;
+        }
+        _watchedRegions = wanted;
+        if (_watchedRegions is not null)
+        {
+            _watchedRegions.CollectionChanged += OnRegionsChanged;
+        }
+    }
+
+    private void WatchPayments()
+    {
+        if (_watchedPayments is not null)
+        {
+            _watchedPayments.CollectionChanged -= OnPaymentsCollectionChanged;
+        }
+        _watchedPayments = _watching ? Payments as INotifyCollectionChanged : null;
+        if (_watchedPayments is not null)
+        {
+            _watchedPayments.CollectionChanged += OnPaymentsCollectionChanged;
+        }
+    }
+
+    /// <summary>True when the scene was built from the regions <see cref="Regions"/> holds now.</summary>
+    private bool SceneHasRegions()
+    {
+        if (_regions.Length != _regionsList.Count)
+        {
+            return false;
+        }
+        for (var i = 0; i < _regions.Length; i++)
+        {
+            if (!ReferenceEquals(_regions[i], _regionsList[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Layout --------------------------------------------------------------------------------------------------------------

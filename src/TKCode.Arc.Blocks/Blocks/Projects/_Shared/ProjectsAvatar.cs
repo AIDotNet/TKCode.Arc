@@ -145,6 +145,7 @@ internal sealed class ProjectsAvatar : Control
 
     private readonly ProjectsAvatarPainter _painter = new();
     private ProjectPerson? _subscribed;
+    private bool _attached;
 
     static ProjectsAvatar()
     {
@@ -179,20 +180,48 @@ internal sealed class ProjectsAvatar : Control
         base.OnPropertyChanged(change);
         if (change.Property == PersonProperty)
         {
-            if (_subscribed is not null)
-            {
-                _subscribed.PropertyChanged -= OnPersonChanged;
-            }
-            _subscribed = Person;
-            if (_subscribed is not null)
-            {
-                _subscribed.PropertyChanged += OnPersonChanged;
-            }
+            WatchPerson();
             UpdateName();
         }
         else if (change.Property == IsDecorativeProperty)
         {
             UpdateName();
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        WatchPerson();
+        // The person may have changed while the avatar was out of the tree.
+        UpdateName();
+        InvalidateVisual();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        WatchPerson();
+    }
+
+    /// <summary>Follows <see cref="Person"/> only while attached: the people usually outlive the views that show them.</summary>
+    private void WatchPerson()
+    {
+        var next = _attached ? Person : null;
+        if (ReferenceEquals(next, _subscribed))
+        {
+            return;
+        }
+        if (_subscribed is not null)
+        {
+            _subscribed.PropertyChanged -= OnPersonChanged;
+        }
+        _subscribed = next;
+        if (_subscribed is not null)
+        {
+            _subscribed.PropertyChanged += OnPersonChanged;
         }
     }
 
@@ -260,6 +289,7 @@ internal sealed class ProjectsAvatarStack : Control
     private readonly ProjectsAvatarPainter _painter = new();
     private readonly List<ProjectPerson> _people = new();
     private INotifyCollectionChanged? _observed;
+    private bool _attached;
 
     static ProjectsAvatarStack()
     {
@@ -313,21 +343,48 @@ internal sealed class ProjectsAvatarStack : Control
         base.OnPropertyChanged(change);
         if (change.Property == PeopleProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnPeopleChanged;
-            }
-            _observed = People as INotifyCollectionChanged;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnPeopleChanged;
-            }
+            WatchPeople();
             Rebuild();
         }
         else if (change.Property == MaxVisibleProperty || change.Property == LabelProperty
                  || change.Property == LabelPrefixProperty || change.Property == AndWordProperty)
         {
             Rebuild();
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        WatchPeople();
+        // The list may have changed while the stack was out of the tree.
+        Rebuild();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        WatchPeople();
+    }
+
+    /// <summary>Follows <see cref="People"/> only while attached: the list usually outlives the views that show it.</summary>
+    private void WatchPeople()
+    {
+        var next = _attached ? People as INotifyCollectionChanged : null;
+        if (ReferenceEquals(next, _observed))
+        {
+            return;
+        }
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged -= OnPeopleChanged;
+        }
+        _observed = next;
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged += OnPeopleChanged;
         }
     }
 

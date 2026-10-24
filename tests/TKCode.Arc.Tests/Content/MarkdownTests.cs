@@ -297,4 +297,72 @@ public class MarkdownTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Markdown_Is_Collected_While_Its_Stream_Lives_On()
+    {
+        var stream = new MarkdownStream(smooth: false);
+        stream.Push("Hello");
+        // StreamMark's MarkdownView (alpha.25) stays subscribed to the stream's document after it is detached, which
+        // keeps its templated parent alive on its own: a template without it isolates the control's own subscriptions.
+        var weak = TestHelpers.ShowAndClose(() => new Markdown
+        {
+            Stream = stream,
+            Template = new Avalonia.Controls.Templates.FuncControlTemplate<Markdown>((_, _) => new Border())
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        stream.Push(" world");
+        stream.Complete();
+        Dispatcher.UIThread.RunJobs();
+        stream.Document.IsComplete.ShouldBeTrue();
+    }
+
+    [AvaloniaFact]
+    public async Task A_Stream_That_Ends_While_Away_Ends_When_The_Markdown_Comes_Back()
+    {
+        var stream = new MarkdownStream(smooth: false);
+        var markdown = new Markdown { Stream = stream };
+        var host = new Border { Child = markdown };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            stream.Push("Hello");
+            Dispatcher.UIThread.RunJobs();
+            markdown.IsStreaming.ShouldBeTrue();
+
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            stream.Complete();
+            Dispatcher.UIThread.RunJobs();
+            stream.Document.IsComplete.ShouldBeTrue();
+
+            host.Child = markdown;
+            Dispatcher.UIThread.RunJobs();
+            markdown.IsStreaming.ShouldBeFalse();
+            markdown.Classes.ShouldNotContain(":streaming");
+
+            // A reply that ends while the control is away still counts as ended: the next Append starts a new one.
+            markdown.Append("Next");
+            var reply = markdown.Stream.ShouldNotBeNull();
+            reply.ShouldNotBeSameAs(stream);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            markdown.Complete();
+            await WaitUntil(() => reply.Document.IsComplete);
+            markdown.Append("Again");
+            markdown.Stream.ShouldNotBeSameAs(reply);
+            markdown.IsStreaming.ShouldBeTrue();
+
+            host.Child = markdown;
+            Dispatcher.UIThread.RunJobs();
+            markdown.Complete();
+            await WaitUntil(() => !markdown.IsStreaming);
+            markdown.Stream!.Document.GetText(0, markdown.Stream.Document.Length).ShouldBe("Again");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

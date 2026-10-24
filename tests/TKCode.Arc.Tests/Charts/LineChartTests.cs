@@ -1,4 +1,6 @@
+using System.Collections.ObjectModel;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.VisualTree;
 using Avalonia.Input;
@@ -191,6 +193,69 @@ public class LineChartTests
             chart.Announcement.ShouldBe("Loading");
             chart.IsLoading = false;
             chart.Announcement.ShouldBe(string.Empty);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Chart_Is_Collected_While_Its_Series_Values_Live_On()
+    {
+        var values = new ObservableCollection<double> { 12, 18, 15 };
+        var weak = TestHelpers.ShowAndClose(() => new LineChart { Label = "Signups", Series = { new ChartSeries { Key = "now", Name = "Now", Values = values } } });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        values.Add(24);
+    }
+
+    [AvaloniaFact]
+    public void A_Chart_Given_Items_While_Away_Is_Collected_While_They_Live_On()
+    {
+        var items = new ObservableCollection<ChartPoint> { new(new DateTime(2026, 9, 15), 10), new(new DateTime(2026, 9, 16), 12) };
+        var weak = ShowCloseThenSetItems(items);
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        items.Add(new ChartPoint(new DateTime(2026, 9, 17), 14));
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference ShowCloseThenSetItems(System.Collections.IEnumerable items)
+    {
+        LineChart? shown = null;
+        var weak = TestHelpers.ShowAndClose(() => shown = new LineChart { Label = "Visits" });
+        // Set after the window closed: a detached chart must not start listening.
+        shown!.ItemsSource = items;
+        return weak;
+    }
+
+    [AvaloniaFact]
+    public void A_Chart_Put_Back_Shows_Values_Changed_While_It_Was_Away()
+    {
+        var values = new ObservableCollection<double> { 12, 18, 15 };
+        var items = new ObservableCollection<ChartPoint> { new(new DateTime(2026, 9, 15), 10), new(new DateTime(2026, 9, 16), 12) };
+        var chart = new LineChart { Label = "Signups", Series = { new ChartSeries { Key = "now", Name = "Now", Values = values } } };
+        var visits = new LineChart { Label = "Visits", ItemsSource = items };
+        var host = new StackPanel { Children = { chart, visits } };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            chart.Summary.ShouldContain("Now, latest 15.");
+            host.Children.Clear();
+            Dispatcher.UIThread.RunJobs();
+            values.Add(24);
+            items.Add(new ChartPoint(new DateTime(2026, 9, 17), 14));
+            host.Children.Add(chart);
+            host.Children.Add(visits);
+            Dispatcher.UIThread.RunJobs();
+            chart.Summary.ShouldContain("Now, latest 24.");
+            visits.Data.Count.ShouldBe(3);
+            values.Add(31);
+            items.Add(new ChartPoint(new DateTime(2026, 9, 18), 16));
+            Dispatcher.UIThread.RunJobs();
+            chart.Summary.ShouldContain("Now, latest 31.");
+            visits.Data.Count.ShouldBe(4);
         }
         finally
         {

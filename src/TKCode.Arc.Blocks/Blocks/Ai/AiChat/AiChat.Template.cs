@@ -643,6 +643,11 @@ public partial class AiChat
             UpdateTitle();
             UpdateBusy();
         }
+        // Replies asked for while away start once the chat and its views are in the window.
+        if (_pendingReplies.Count > 0)
+        {
+            Dispatcher.UIThread.Post(StartPendingReplies, DispatcherPriority.Loaded);
+        }
     }
 
     #endregion

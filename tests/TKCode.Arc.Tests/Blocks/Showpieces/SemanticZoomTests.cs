@@ -826,6 +826,55 @@ public class SemanticZoomTests
         }
     }
 
+    [AvaloniaFact]
+    public void Baked_Avatars_Are_Freed_When_The_Map_Leaves_The_Window_Or_The_Theme_Changes()
+    {
+        var org = SemanticZoomDemoData.Create();
+        // One bitmap the host owns behind every avatar: only the map's round copies of it may be freed.
+        var source = new Avalonia.Media.Imaging.RenderTargetBitmap(new PixelSize(16, 16));
+        foreach (var person in org.Teams.SelectMany(t => t.People))
+        {
+            person.Avatar = source;
+        }
+        var map = new SemanticZoom { Header = "Network map", Organization = org };
+        var host = new Border { Child = map };
+        var window = TestHelpers.Show(host);
+        window.Width = 665;
+        window.Height = 1100;
+        Settle();
+        try
+        {
+            var stage = Stage(map);
+            map.FlyTo(org.Teams[0]);
+            Settle(8);
+            var baked = stage.BakedAvatars.OfType<Avalonia.Media.Imaging.RenderTargetBitmap>().ToList();
+            baked.ShouldNotBeEmpty();
+            baked.ShouldNotContain(source);
+
+            host.Child = null;
+            Settle();
+            stage.BakedAvatars.ShouldBeEmpty();
+            foreach (var bitmap in baked)
+            {
+                Should.Throw<ObjectDisposedException>(() => bitmap.CreateDrawingContext());
+            }
+            Should.NotThrow(() => source.CreateDrawingContext(clear: false).Dispose());
+
+            // Back in the window it bakes them again; a theme switch frees them as well.
+            host.Child = map;
+            Settle(8);
+            var again = stage.BakedAvatars.OfType<Avalonia.Media.Imaging.RenderTargetBitmap>().ToList();
+            again.ShouldNotBeEmpty();
+            window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
+            Settle();
+            Should.Throw<ObjectDisposedException>(() => again[0].CreateDrawingContext());
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
     private static WeakReference MapOver(SemanticZoomOrganization org)
     {

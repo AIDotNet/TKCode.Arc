@@ -45,7 +45,9 @@ internal sealed class SiteFaceStack : Control
         AvaloniaProperty.Register<SiteFaceStack, int>(nameof(MaxCount));
 
     private readonly List<FaceReveal> _reveals = new();
+    // The list belongs to the block around the stack (or its host): followed only while the stack is in a visual tree.
     private INotifyCollectionChanged? _observed;
+    private bool _watching;
 
     static SiteFaceStack()
     {
@@ -122,15 +124,37 @@ internal sealed class SiteFaceStack : Control
         base.OnPropertyChanged(change);
         if (change.Property == ImagesProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnImagesChanged;
-            }
-            _observed = Images as INotifyCollectionChanged;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnImagesChanged;
-            }
+            WatchImages();
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchImages();
+        // Pictures added or removed while the stack was away.
+        InvalidateMeasure();
+        InvalidateVisual();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchImages();
+    }
+
+    private void WatchImages()
+    {
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged -= OnImagesChanged;
+        }
+        _observed = _watching ? Images as INotifyCollectionChanged : null;
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged += OnImagesChanged;
         }
     }
 

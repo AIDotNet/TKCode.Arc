@@ -664,14 +664,7 @@ public partial class KanbanBoard : TemplatedControl
         var property = change.Property;
         if (property == CardsProperty)
         {
-            if (change.OldValue is AvaloniaList<KanbanCard> oldCards)
-            {
-                oldCards.CollectionChanged -= OnCardsCollectionChanged;
-            }
-            if (change.NewValue is AvaloniaList<KanbanCard> newCards)
-            {
-                newCards.CollectionChanged += OnCardsCollectionChanged;
-            }
+            WatchCollections();
             if (CardsSource is null)
             {
                 RebuildNow(animate: false);
@@ -679,27 +672,12 @@ public partial class KanbanBoard : TemplatedControl
         }
         else if (property == CardsSourceProperty)
         {
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-            }
-            _observedSource = CardsSource as INotifyCollectionChanged;
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged += OnSourceCollectionChanged;
-            }
+            WatchCollections();
             RebuildNow(animate: false);
         }
         else if (property == ColumnsProperty || property == PeopleProperty || property == LabelsProperty)
         {
-            if (change.OldValue is INotifyCollectionChanged oldList)
-            {
-                oldList.CollectionChanged -= OnStructureCollectionChanged;
-            }
-            if (change.NewValue is INotifyCollectionChanged newList)
-            {
-                newList.CollectionChanged += OnStructureCollectionChanged;
-            }
+            WatchCollections();
             WatchStructure();
             ScheduleRebuild(animate: true);
         }

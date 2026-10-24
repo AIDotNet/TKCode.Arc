@@ -18,6 +18,9 @@ internal sealed class ButtonsChevronTrigger : Button
     public const string OpenPseudoClass = ":open";
 
     private MenuSurface? _menu;
+    // The menu may outlive this trigger (a ButtonGroup's Menu comes from the app): it is listened to only while shown.
+    private MenuSurface? _observedMenu;
+    private bool _watching;
 
     static ButtonsChevronTrigger()
     {
@@ -34,17 +37,39 @@ internal sealed class ButtonsChevronTrigger : Button
             {
                 return;
             }
-            if (_menu is not null)
-            {
-                _menu.PropertyChanged -= OnMenuPropertyChanged;
-            }
             _menu = value;
             DropdownMenu.SetMenu(this, value);
-            if (value is not null)
-            {
-                value.PropertyChanged += OnMenuPropertyChanged;
-            }
+            WatchMenu();
             SyncOpen(value?.IsOpen == true);
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchMenu();
+        // The menu may have opened or closed while the trigger was away.
+        SyncOpen(_menu?.IsOpen == true);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchMenu();
+    }
+
+    private void WatchMenu()
+    {
+        if (_observedMenu is not null)
+        {
+            _observedMenu.PropertyChanged -= OnMenuPropertyChanged;
+        }
+        _observedMenu = _watching ? _menu : null;
+        if (_observedMenu is not null)
+        {
+            _observedMenu.PropertyChanged += OnMenuPropertyChanged;
         }
     }
 

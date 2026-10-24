@@ -479,6 +479,9 @@ internal sealed class AiPanelBlockView : Control
     private readonly AiPanelBlockMarker _marker = new();
     private readonly AiPanelBlockBox _box = new();
     private readonly List<(AiPanelText Text, int Row, int Column)> _texts = [];
+    // Exactly what was subscribed: a column or row taken out of the table is no longer in it when it is let go.
+    private readonly List<AiPanelColumn> _observedColumns = [];
+    private readonly List<INotifyCollectionChanged> _observedCells = [];
     private AiPanelBlock _block;
     private string _shownKey = string.Empty;
     private bool _observing;
@@ -658,10 +661,12 @@ internal sealed class AiPanelBlockView : Control
             foreach (var column in table.Columns)
             {
                 column.PropertyChanged += OnTablePartChanged;
+                _observedColumns.Add(column);
             }
             foreach (var row in table.Rows)
             {
                 row.Cells.CollectionChanged += OnTableCollectionChanged;
+                _observedCells.Add(row.Cells);
             }
         }
     }
@@ -678,16 +683,18 @@ internal sealed class AiPanelBlockView : Control
         {
             table.Columns.CollectionChanged -= OnTableCollectionChanged;
             table.Rows.CollectionChanged -= OnTableCollectionChanged;
-            foreach (var column in table.Columns)
-            {
-                column.PropertyChanged -= OnTablePartChanged;
-            }
-            foreach (var row in table.Rows)
-            {
-                row.Cells.CollectionChanged -= OnTableCollectionChanged;
-            }
             _observedTable = null;
         }
+        foreach (var column in _observedColumns)
+        {
+            column.PropertyChanged -= OnTablePartChanged;
+        }
+        foreach (var cells in _observedCells)
+        {
+            cells.CollectionChanged -= OnTableCollectionChanged;
+        }
+        _observedColumns.Clear();
+        _observedCells.Clear();
     }
 
     private void OnBlockPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => DataChanged?.Invoke(this, EventArgs.Empty);

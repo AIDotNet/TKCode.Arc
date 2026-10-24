@@ -453,4 +453,48 @@ public class AiAnswerTests
         Assert.Equal("CI migration", rig.Answer.TitleText);
         Assert.Equal(AiAnswerPageSamples.MoveBuilds, rig.Answer.QuestionHeading!.Text);
     }
+
+    [AvaloniaFact]
+    public void An_Answer_Is_Collected_While_A_Version_It_Showed_Lives_On()
+    {
+        // An app can keep the versions (a history of answers) after the page is gone.
+        AiAnswerVersion? kept = null;
+        var weak = TestHelpers.ShowAndClose(() => AiAnswerPageSamples.StaticPage(), answer => kept = answer.Versions[0]);
+        TestHelpers.Collect(weak);
+        Assert.False(weak.IsAlive);
+        kept!.Sources.Add(new AiSource { Index = 9, Title = "Runner images", Domain = "docs.example.org" });
+        kept.FollowUps.Add("And the runners?");
+    }
+
+    [AvaloniaFact]
+    public void An_Answer_Taken_Out_And_Put_Back_Shows_What_Its_Version_Got_Meanwhile()
+    {
+        var answer = AiAnswerPageSamples.StaticPage();
+        var host = new Border { Child = answer };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            var version = answer.Versions[0];
+            Assert.Equal("8 sources", answer.SourcesRow!.LabelText);
+            Assert.True(answer.Related!.IsVisible);
+
+            host.Child = null;
+            version.Sources.Add(new AiSource { Index = 9, Title = "Runner images", Domain = "docs.example.org" });
+            version.FollowUps.Clear();
+            host.Child = answer;
+            Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+            Assert.Equal("9 sources", answer.SourcesRow.LabelText);
+            Assert.Same(version.Sources[8], answer.Document!.FindSource(9));
+            Assert.False(answer.Related.IsVisible);
+
+            // And it follows the version again.
+            version.Sources.Add(new AiSource { Index = 10, Title = "Cache keys", Domain = "docs.example.org" });
+            Assert.Equal("10 sources", answer.SourcesRow.LabelText);
+            Assert.Same(version.Sources[9], answer.Document.FindSource(10));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

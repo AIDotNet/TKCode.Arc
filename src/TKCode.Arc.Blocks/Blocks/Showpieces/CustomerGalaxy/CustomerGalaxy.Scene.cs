@@ -39,6 +39,11 @@ public partial class CustomerGalaxy : IGalaxyStageHost
     private bool _dirty = true;
     private bool _rebuildPosted;
     private INotifyCollectionChanged? _sourceNotifier;
+    // An ItemsSource can outlive the galaxy (a view model's list): the galaxy follows it only while it is in a visual tree.
+    private bool _watching;
+    // The accounts the model was built from, when they came from an observable source: on attach they tell whether the
+    // source changed while the galaxy was away (a rebuild fits the camera again, so an unchanged source keeps the view).
+    private GalaxyAccount[]? _builtFrom;
     private int _focusIndex = -1;
     private int _hoverRow = -1;
     private bool _keyboardCard;
@@ -210,7 +215,9 @@ public partial class CustomerGalaxy : IGalaxyStageHost
         ResourcesChanged += OnResourcesChanged;
         // The theme may have changed while the block was away, and a refresh that ran then read transparent colors.
         PostColors();
-        if (_dirty)
+        _watching = true;
+        WatchSource();
+        if (_dirty || SourceChangedSinceBuild())
         {
             ScheduleRebuild();
         }
@@ -221,6 +228,31 @@ public partial class CustomerGalaxy : IGalaxyStageHost
         base.OnDetachedFromVisualTree(e);
         ActualThemeVariantChanged -= OnThemeChanged;
         ResourcesChanged -= OnResourcesChanged;
+        _watching = false;
+        WatchSource();
+    }
+
+    private void WatchSource()
+    {
+        if (_sourceNotifier is not null)
+        {
+            _sourceNotifier.CollectionChanged -= OnSourceChanged;
+        }
+        _sourceNotifier = _watching ? ItemsSource as INotifyCollectionChanged : null;
+        if (_sourceNotifier is not null)
+        {
+            _sourceNotifier.CollectionChanged += OnSourceChanged;
+        }
+    }
+
+    /// <summary>True when an observable <see cref="ItemsSource"/> no longer holds the accounts the model was built from.</summary>
+    private bool SourceChangedSinceBuild()
+    {
+        if (ItemsSource is not { } items || items is not INotifyCollectionChanged)
+        {
+            return false;
+        }
+        return _builtFrom is null || !items.SequenceEqual(_builtFrom, ReferenceEqualityComparer.Instance);
     }
 
     private bool _colorsPosted;
@@ -284,6 +316,7 @@ public partial class CustomerGalaxy : IGalaxyStageHost
         IReadOnlyList<GalaxyAccount> source = ItemsSource is { } items
             ? items as IReadOnlyList<GalaxyAccount> ?? items.ToList()
             : Items;
+        _builtFrom = ItemsSource is INotifyCollectionChanged ? source.ToArray() : null;
         _model = GalaxyModel.Build(source, HealthStates);
         _sets.Clear();
         _layoutKey = ResolveGroupingKey(SelectedGroupingKey);
@@ -340,15 +373,7 @@ public partial class CustomerGalaxy : IGalaxyStageHost
         var property = change.Property;
         if (property == ItemsSourceProperty)
         {
-            if (_sourceNotifier is not null)
-            {
-                _sourceNotifier.CollectionChanged -= OnSourceChanged;
-            }
-            _sourceNotifier = ItemsSource as INotifyCollectionChanged;
-            if (_sourceNotifier is not null)
-            {
-                _sourceNotifier.CollectionChanged += OnSourceChanged;
-            }
+            WatchSource();
             ScheduleRebuild();
         }
         else if (property == SelectedGroupingKeyProperty)

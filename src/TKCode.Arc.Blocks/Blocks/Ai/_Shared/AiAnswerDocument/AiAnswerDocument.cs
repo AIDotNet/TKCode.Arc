@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using Avalonia.VisualTree;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 
@@ -507,7 +508,7 @@ internal partial class AiAnswerDocument : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == SourcesProperty)
         {
-            HookSources(change.GetNewValue<IList<AiSource>?>());
+            HookSources(this.IsAttachedToVisualTree() ? change.GetNewValue<IList<AiSource>?>() : null);
             OnSourcesChanged();
         }
         else if (change.Property == LitSourceNumberProperty)
@@ -574,17 +575,31 @@ internal partial class AiAnswerDocument : TemplatedControl
         }
     }
 
+    /// <summary>The sources are app data that can outlive the answer (a kept version holds them): followed only while it is in a window.</summary>
     private void HookSources(IList<AiSource>? sources)
     {
+        var next = sources as INotifyCollectionChanged;
+        if (ReferenceEquals(next, _sourcesHook))
+        {
+            return;
+        }
         if (_sourcesHook is not null)
         {
             _sourcesHook.CollectionChanged -= OnSourcesCollectionChanged;
         }
-        _sourcesHook = sources as INotifyCollectionChanged;
+        _sourcesHook = next;
         if (_sourcesHook is not null)
         {
             _sourcesHook.CollectionChanged += OnSourcesCollectionChanged;
         }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        HookSources(Sources);
+        // The list may have changed while the answer was away.
+        OnSourcesChanged();
     }
 
     private void OnSourcesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnSourcesChanged();

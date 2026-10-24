@@ -255,7 +255,11 @@ public abstract class ChartBase : TemplatedControl
     private bool _dataDirty = true;
     private bool _dataPosted;
     private bool _paletteDirty = true;
+    // Outside data (an ItemsSource collection, the series' Values) is observed only while the chart is shown: a view-model
+    // collection that outlives the page would otherwise keep the chart alive and rebuilding its data off screen.
+    private bool _watching;
     private INotifyCollectionChanged? _observedItems;
+    private ChartSeriesCollection? _watchedSeries;
     private ViewportVisibility? _visibility;
     private bool _inView;
     private bool _revealed;
@@ -365,6 +369,10 @@ public abstract class ChartBase : TemplatedControl
             _series.Invalidated -= OnSeriesInvalidated;
             _series = value;
             _series.Invalidated += OnSeriesInvalidated;
+            if (_watching)
+            {
+                WatchSeries(value);
+            }
             InvalidateData();
         }
     }
@@ -515,11 +523,12 @@ public abstract class ChartBase : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _paletteDirty = true;
-        if (_itemsUnsubscribed && _observedItems is not null)
+        _watching = true;
+        var items = WatchItems(ItemsSource);
+        var values = WatchSeries(_series);
+        if ((items || values) && !_dataDirty)
         {
-            // The collection may have changed while the chart was away: listen again and rebuild once.
-            _itemsUnsubscribed = false;
-            _observedItems.CollectionChanged += OnItemsCollectionChanged;
+            // The collections may have changed since the last build, made while nothing listened: rebuild once.
             InvalidateData();
         }
         if (!_revealed)
@@ -540,15 +549,33 @@ public abstract class ChartBase : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         _visibility?.Dispose();
         _visibility = null;
-        // A view-model collection that outlives the page would keep this chart alive and rebuild its data while it is not shown.
-        if (_observedItems is not null && !_itemsUnsubscribed)
-        {
-            _observedItems.CollectionChanged -= OnItemsCollectionChanged;
-            _itemsUnsubscribed = true;
-        }
+        _watching = false;
+        WatchItems(null);
+        WatchSeries(null);
     }
 
-    private bool _itemsUnsubscribed;
+    /// <summary>Listens to <paramref name="items"/> while shown (null or detached: to nothing); true when it can change.</summary>
+    private bool WatchItems(IEnumerable? items)
+    {
+        if (_observedItems is not null)
+        {
+            _observedItems.CollectionChanged -= OnItemsCollectionChanged;
+        }
+        _observedItems = _watching ? items as INotifyCollectionChanged : null;
+        if (_observedItems is not null)
+        {
+            _observedItems.CollectionChanged += OnItemsCollectionChanged;
+        }
+        return _observedItems is not null;
+    }
+
+    /// <summary>Watches the values of <paramref name="series"/> (null: none); true when any of them can change.</summary>
+    private bool WatchSeries(ChartSeriesCollection? series)
+    {
+        _watchedSeries?.Unwatch();
+        _watchedSeries = series;
+        return series?.Watch() ?? false;
+    }
 
     private void OnVisibilityChanged(object? sender, bool visible)
     {
@@ -1032,16 +1059,7 @@ public abstract class ChartBase : TemplatedControl
         var property = change.Property;
         if (property == ItemsSourceProperty)
         {
-            if (_observedItems is not null)
-            {
-                _observedItems.CollectionChanged -= OnItemsCollectionChanged;
-            }
-            _observedItems = change.NewValue as INotifyCollectionChanged;
-            _itemsUnsubscribed = false;
-            if (_observedItems is not null)
-            {
-                _observedItems.CollectionChanged += OnItemsCollectionChanged;
-            }
+            WatchItems(change.GetNewValue<IEnumerable?>());
             InvalidateData();
         }
         else if (property == XBindingProperty || property == XSelectorProperty || property == YBindingProperty ||

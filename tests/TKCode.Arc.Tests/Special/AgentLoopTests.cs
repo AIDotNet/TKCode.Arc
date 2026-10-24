@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -575,6 +576,66 @@ public class AgentLoopTests
                 Run(clock, 19);
             }
             loop.GetVisualDescendants().Count().ShouldBeLessThanOrEqualTo(count + 4);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Loop_Is_Collected_While_Its_Iterations_Live_On()
+    {
+        var source = new ObservableCollection<AgentLoopIteration>
+        {
+            Loop("Ticket", 1200, false, Call("Tracker", "Read ticket")),
+            Loop("Logs", 900, true, Call("Logs", "Search logs"))
+        };
+        var weak = TestHelpers.ShowAndClose(() => new AgentLoop { AutoPlay = false, IterationsSource = source });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        // The data still works without the card.
+        source.Add(Loop("Fix", 600, true, Call("Editor", "Patch the handler")));
+    }
+
+    [AvaloniaFact]
+    public void A_Loop_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var clock = new ManualFrameClock();
+        using var install = clock.Install();
+        var source = new ObservableCollection<AgentLoopIteration>
+        {
+            Loop("Ticket", 1200, false, Call("Tracker", "Read ticket")),
+            Loop("Logs", 900, true, Call("Logs", "Search logs"))
+        };
+        var loop = new AgentLoop { AutoPlay = false, IterationsSource = source };
+        var host = new Border { Child = loop };
+        var window = TestHelpers.Show(host, ArcMotionLevel.Full);
+        try
+        {
+            window.Width = 800;
+            window.Height = 760;
+            Dispatcher.UIThread.RunJobs();
+            loop.Run.Count.ShouldBe(2);
+            loop.Advance(1);
+            // Away and back with nothing changed: the story carries on from where it was.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            host.Child = loop;
+            Dispatcher.UIThread.RunJobs();
+            loop.StoryTime.ShouldBe(1);
+            // Changes made while away show once it is back.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            source.Add(Loop("Fix", 600, true, Call("Editor", "Patch the handler")));
+            host.Child = loop;
+            Dispatcher.UIThread.RunJobs();
+            loop.Run.Count.ShouldBe(3);
+            // And it follows changes made after it came back.
+            source.RemoveAt(0);
+            Dispatcher.UIThread.RunJobs();
+            loop.Run.Count.ShouldBe(2);
+            loop.Run[0].Gather.Label.ShouldBe("Logs");
         }
         finally
         {

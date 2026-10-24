@@ -13,6 +13,8 @@ public partial class AgentPlan
 {
     private readonly Dictionary<AgentPlanStep, AgentPlanRow> _rows = new(ReferenceEqualityComparer.Instance);
     private AvaloniaList<AgentPlanStep>? _observed;
+    private readonly HashSet<AgentPlanStep> _watchedSteps = new(ReferenceEqualityComparer.Instance);
+    private bool _attached;
     private AgentPlanStatus _simulatedStatus = AgentPlanStatus.Draft;
     private AgentPlanSimulation? _defaultSimulation;
     private AgentPlanSimulation? _attachedSimulation;
@@ -92,6 +94,8 @@ public partial class AgentPlan
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _attached = true;
+        WatchSteps();
         if (Status is null)
         {
             if (_attachedSimulation is null)
@@ -109,6 +113,8 @@ public partial class AgentPlan
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        Observe(null);
         _attachedSimulation?.Suspend();
     }
 
@@ -246,33 +252,78 @@ public partial class AgentPlan
 
     // Rows ----------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// The steps may be the host's (a view model's list and objects that outlive the plan): the list and the steps are
+    /// observed only while the plan is attached. Unwatches every step; rows watch theirs again as they are made.
+    /// </summary>
     private void Observe(AvaloniaList<AgentPlanStep>? list)
     {
         if (_observed is not null)
         {
             _observed.CollectionChanged -= OnStepsChanged;
         }
-        foreach (var step in _rows.Keys)
+        foreach (var step in _watchedSteps)
         {
-            Unwatch(step);
+            step.PropertyChanged -= OnStepPropertyChanged;
+            step.Activities.CollectionChanged -= OnActivitiesChanged;
         }
-        _observed = list;
-        if (list is not null)
+        _watchedSteps.Clear();
+        _observed = _attached ? list : null;
+        if (_observed is not null)
         {
-            list.CollectionChanged += OnStepsChanged;
+            _observed.CollectionChanged += OnStepsChanged;
         }
+    }
+
+    /// <summary>Listens to the steps again on attach and brings the rows up to date with what changed while it did not.</summary>
+    private void WatchSteps()
+    {
+        Observe(Steps);
+        if (!_built || _list is null)
+        {
+            // The rows are made from the steps when the template is applied.
+            return;
+        }
+        // Catch up as the changes would have shown live: rows of removed steps go and new steps get a row (both at once; a
+        // streamed suggestion still streams), the rows follow the list's order and every row shows its step as it is now.
+        var steps = Steps;
+        var current = new HashSet<AgentPlanStep>(steps, ReferenceEqualityComparer.Instance);
+        foreach (var gone in _rows.Keys.Where(step => !current.Contains(step)).ToList())
+        {
+            RemoveRow(gone, animate: false);
+        }
+        for (var i = 0; i < steps.Count; i++)
+        {
+            if (_rows.TryGetValue(steps[i], out var row))
+            {
+                Watch(steps[i]);
+                _list.Move(row, i);
+            }
+            else
+            {
+                InsertRow(steps[i], i, animate: false);
+            }
+        }
+        RefreshAll(animate: false);
+        _ = FailedIndexChanged();
     }
 
     private void Watch(AgentPlanStep step)
     {
-        step.PropertyChanged += OnStepPropertyChanged;
-        step.Activities.CollectionChanged += OnActivitiesChanged;
+        if (_attached && _watchedSteps.Add(step))
+        {
+            step.PropertyChanged += OnStepPropertyChanged;
+            step.Activities.CollectionChanged += OnActivitiesChanged;
+        }
     }
 
     private void Unwatch(AgentPlanStep step)
     {
-        step.PropertyChanged -= OnStepPropertyChanged;
-        step.Activities.CollectionChanged -= OnActivitiesChanged;
+        if (_watchedSteps.Remove(step))
+        {
+            step.PropertyChanged -= OnStepPropertyChanged;
+            step.Activities.CollectionChanged -= OnActivitiesChanged;
+        }
     }
 
     private AgentPlanRow CreateRow(AgentPlanStep step)

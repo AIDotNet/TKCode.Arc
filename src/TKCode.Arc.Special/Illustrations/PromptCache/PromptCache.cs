@@ -191,6 +191,8 @@ public partial class PromptCache : Explainer
     private INotifyCollectionChanged? _observedSegmentsSource;
     private INotifyCollectionChanged? _observedRequestsSource;
     private readonly HashSet<AvaloniaObject> _observedItems = new();
+    private object?[]? _dataSeen;
+    private object?[]? _looksSeen;
     private IReadOnlyList<PromptCacheSegment>? _defaultSegments;
     private IReadOnlyList<PromptCacheRequest>? _defaultRequests;
     private bool _rebuildQueued;
@@ -342,6 +344,28 @@ public partial class PromptCache : Explainer
         }
     }
 
+    private protected override void WatchData(bool watch)
+    {
+        ObserveData();
+        if (!watch || _dataSeen is null)
+        {
+            return;
+        }
+        // Catch up with changes made while nothing listened, as the same changes seen live would.
+        if (!_dataSeen.SequenceEqual(DataState()))
+        {
+            QueueRebuild();
+        }
+        else if (!_looksSeen!.SequenceEqual(LooksState()))
+        {
+            _looksSeen = LooksState();
+            InvalidatePalette();
+            RebuildLegend();
+            RefreshStaticTexts();
+        }
+    }
+
+    /// <summary>The lists and items may be the host's: they are observed only while the card is attached.</summary>
     private void ObserveData()
     {
         foreach (var item in _observedItems)
@@ -349,10 +373,15 @@ public partial class PromptCache : Explainer
             item.PropertyChanged -= OnItemChanged;
         }
         _observedItems.Clear();
-        Swap(ref _observedSegments, Segments);
-        Swap(ref _observedRequests, Requests);
-        SwapSource(ref _observedSegmentsSource, SegmentsSource as INotifyCollectionChanged);
-        SwapSource(ref _observedRequestsSource, RequestsSource as INotifyCollectionChanged);
+        var attached = IsAttached;
+        Swap(ref _observedSegments, attached ? Segments : null);
+        Swap(ref _observedRequests, attached ? Requests : null);
+        SwapSource(ref _observedSegmentsSource, attached ? SegmentsSource as INotifyCollectionChanged : null);
+        SwapSource(ref _observedRequestsSource, attached ? RequestsSource as INotifyCollectionChanged : null);
+        if (!attached)
+        {
+            return;
+        }
         foreach (var item in (SegmentsSource?.OfType<AvaloniaObject>() ?? Segments ?? Enumerable.Empty<AvaloniaObject>())
                  .Concat(RequestsSource?.OfType<AvaloniaObject>() ?? Requests ?? Enumerable.Empty<AvaloniaObject>()))
         {
@@ -395,6 +424,37 @@ public partial class PromptCache : Explainer
         {
             field.CollectionChanged += OnDataCollectionChanged;
         }
+    }
+
+    /// <summary>The items the story is built from and the values that rebuild it, to tell whether they changed unobserved.</summary>
+    private object?[] DataState()
+    {
+        var state = new List<object?>();
+        foreach (var segment in EffectiveSegments())
+        {
+            state.Add(segment);
+            state.Add(segment.Id);
+            state.Add(segment.Tokens);
+        }
+        foreach (var request in EffectiveRequests())
+        {
+            state.Add(request);
+            state.Add(request.Tokens);
+            state.Add(request.Gap);
+        }
+        return state.ToArray();
+    }
+
+    /// <summary>The segment names and colors (a change redraws the legend without starting over).</summary>
+    private object?[] LooksState()
+    {
+        var state = new List<object?>();
+        foreach (var segment in EffectiveSegments())
+        {
+            state.Add(segment.Label);
+            state.Add(segment.Color);
+        }
+        return state.ToArray();
     }
 
     private void OnDataCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

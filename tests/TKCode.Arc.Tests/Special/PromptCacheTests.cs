@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using AtomUI.Theme.Algorithms;
 using AtomUI.Theme.Configuration;
 using Avalonia;
@@ -9,6 +10,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc.Tests.Special;
@@ -724,6 +726,69 @@ public class PromptCacheTests
             Dispatcher.UIThread.RunJobs();
             toggle.IsChecked.ShouldBe(true);
             card.IsChangeArmed.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Card_Is_Collected_While_Its_Segments_And_Requests_Live_On()
+    {
+        var segments = new AvaloniaList<PromptCacheSegment> { new("sys", "System", 1_000), new("docs", "Docs", 9_000) };
+        var requests = new ObservableCollection<PromptCacheRequest> { new("one", 100), new("two", 200, 10) };
+        var weak = TestHelpers.ShowAndClose(() => new PromptCache { AutoPlay = false, Segments = segments, RequestsSource = requests });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        // The data still works without the card.
+        segments.Add(new PromptCacheSegment("chat", "Chat", 3_000));
+        segments[0].Tokens = 2_000;
+        requests.Add(new PromptCacheRequest("three", 50));
+        requests[0].Gap = 5;
+    }
+
+    [AvaloniaFact]
+    public void A_Card_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var segments = new AvaloniaList<PromptCacheSegment> { new("sys", "System", 1_000), new("docs", "Docs", 9_000) };
+        var requests = new ObservableCollection<PromptCacheRequest> { new("one", 100), new("two", 200, 10) };
+        var card = new PromptCache { AutoPlay = false, Segments = segments, RequestsSource = requests };
+        var host = new Border { Child = card };
+        var window = TestHelpers.Show(host, ArcMotionLevel.Full);
+        try
+        {
+            window.Width = 800;
+            window.Height = 900;
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.Descendant<PromptCacheTable>(card).Rows.Count.ShouldBe(2);
+            card.Advance(2);
+            // Away and back with nothing changed: the story carries on from where it was.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            card.StoryTime.ShouldBe(2);
+            // A new name while away shows in the legend without starting over.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            segments[0].Label = "Rules";
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            card.StoryTime.ShouldBe(2);
+            card.GetVisualDescendants().OfType<TextBlock>().ShouldContain(t => t.Text == "Rules");
+            // A new request while away starts the story over with it.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            requests.Add(new PromptCacheRequest("three", 50));
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.Descendant<PromptCacheTable>(card).Rows.Count.ShouldBe(3);
+            card.StoryTime.ShouldBe(0);
+            // And it follows changes made after it came back.
+            requests.Add(new PromptCacheRequest("four", 60));
+            Dispatcher.UIThread.RunJobs();
+            TestHelpers.Descendant<PromptCacheTable>(card).Rows.Count.ShouldBe(4);
         }
         finally
         {

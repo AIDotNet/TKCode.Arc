@@ -97,6 +97,7 @@ public class AgentLoop : Explainer
 
     private readonly AgentLoopScene _scene = new();
     private IReadOnlyList<AgentLoopIteration> _run = Array.Empty<AgentLoopIteration>();
+    private bool _runRead;
     private AgentLoopTimeline _timeline = AgentLoopTimeline.Build(Array.Empty<AgentLoopShape>());
     private bool _isSample;
     private AgentLoopStage? _stage;
@@ -253,7 +254,7 @@ public class AgentLoop : Explainer
         base.OnPropertyChanged(change);
         if (change.Property == IterationsSourceProperty)
         {
-            ObserveSource(change.GetNewValue<IEnumerable<AgentLoopIteration>?>());
+            ObserveSource(IsAttached ? change.GetNewValue<IEnumerable<AgentLoopIteration>?>() : null);
             ScheduleRebuild();
         }
         else if (change.Property == TaskProperty || change.Property == SummaryProperty)
@@ -295,6 +296,7 @@ public class AgentLoop : Explainer
     private protected override void BuildStory(ExplainerScript script)
     {
         _run = SnapshotRun(out _isSample);
+        _runRead = true;
         var shapes = new AgentLoopShape[_run.Count];
         for (var i = 0; i < _run.Count; i++)
         {
@@ -528,6 +530,17 @@ public class AgentLoop : Explainer
     {
         if (IterationsSource is null)
         {
+            ScheduleRebuild();
+        }
+    }
+
+    private protected override void WatchData(bool watch)
+    {
+        // A view model's list can outlive the card: it is observed only while the card is attached.
+        ObserveSource(watch ? IterationsSource : null);
+        if (watch && _runRead && !_run.SequenceEqual(SnapshotRun(out _)))
+        {
+            // Changed while nothing listened: rebuild as a change seen live would.
             ScheduleRebuild();
         }
     }

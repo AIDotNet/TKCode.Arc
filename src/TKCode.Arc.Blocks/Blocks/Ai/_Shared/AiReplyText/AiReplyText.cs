@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using StreamMark.Avalonia;
 using StreamMark.Avalonia.Extensions;
 using StreamMark.Avalonia.Rendering;
@@ -595,7 +596,7 @@ internal partial class AiReplyText : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == SourcesProperty)
         {
-            HookSources(change.GetNewValue<IList<AiSource>?>());
+            HookSources(this.IsAttachedToVisualTree() ? change.GetNewValue<IList<AiSource>?>() : null);
             OnSourcesChanged();
         }
         else if (change.Property == RevealIntervalProperty || change.Property == WordsPerStepProperty)
@@ -623,16 +624,33 @@ internal partial class AiReplyText : TemplatedControl
         }
     }
 
+    /// <summary>The sources are app data that can outlive the reply (a conversation keeps them): followed only while it is in a window.</summary>
     private void HookSources(IList<AiSource>? sources)
     {
+        var next = sources as INotifyCollectionChanged;
+        if (ReferenceEquals(next, _sourcesHook))
+        {
+            return;
+        }
         if (_sourcesHook is not null)
         {
             _sourcesHook.CollectionChanged -= OnSourcesCollectionChanged;
         }
-        _sourcesHook = sources as INotifyCollectionChanged;
+        _sourcesHook = next;
         if (_sourcesHook is not null)
         {
             _sourcesHook.CollectionChanged += OnSourcesCollectionChanged;
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        HookSources(Sources);
+        // The list may have changed while the reply was away; without citations there is nothing to bring in line.
+        if (_targetList.Count > 0)
+        {
+            OnSourcesChanged();
         }
     }
 

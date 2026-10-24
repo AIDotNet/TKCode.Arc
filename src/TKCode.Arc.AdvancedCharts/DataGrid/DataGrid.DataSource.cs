@@ -102,11 +102,13 @@ public partial class DataGrid
 
     private async Task LoadBlockAsync(IDataGridDataSource source, int block, int size)
     {
-        var cancellation = new CancellationTokenSource();
-        _pendingBlocks[block] = cancellation;
         var query = _queryVersion;
         var request = new DataGridRowsRequest(block * size, (block + 1) * size, SortDescriptions.ToArray(),
             new Dictionary<string, DataGridFilter>(Filters), (SearchText ?? string.Empty).Trim());
+        // Every way out of this method leaves the source out of _pendingBlocks (done, or dropped by CancelBlockRequests),
+        // so nothing can cancel it after it is disposed.
+        using var cancellation = new CancellationTokenSource();
+        _pendingBlocks[block] = cancellation;
         DataGridRowsResult result;
         try
         {

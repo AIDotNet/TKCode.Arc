@@ -175,6 +175,9 @@ public class ButtonGroup : ItemsControl
     private readonly List<Control> _navigable = new();
     private GlidingIndicator? _highlight;
     private ButtonsChevronTrigger? _menuButton;
+    // The menu listened to (only while attached) and whether the group is in a visual tree.
+    private MenuSurface? _watchedMenu;
+    private bool _attached;
     private StackPanel? _row;
     private ButtonsLiveRegion? _status;
     private Control? _hover;
@@ -255,16 +258,7 @@ public class ButtonGroup : ItemsControl
         }
         else if (change.Property == MenuProperty)
         {
-            if (change.GetOldValue<MenuSurface?>() is { } old)
-            {
-                old.ItemClicked -= OnMenuItemClicked;
-                old.PropertyChanged -= OnMenuPropertyChanged;
-            }
-            if (change.GetNewValue<MenuSurface?>() is { } menu)
-            {
-                menu.ItemClicked += OnMenuItemClicked;
-                menu.PropertyChanged += OnMenuPropertyChanged;
-            }
+            WatchMenu(_attached ? change.GetNewValue<MenuSurface?>() : null);
             SyncMenu();
             Place();
         }
@@ -303,6 +297,38 @@ public class ButtonGroup : ItemsControl
             chevron.Classes.Set("solid", Variant == ButtonGroupVariant.Solid);
         }
         Place();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        WatchMenu(Menu);
+        // The menu may have opened or closed while the group was away.
+        PseudoClasses.Set(MenuOpenPseudoClass, Menu?.IsOpen == true);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _attached = false;
+        WatchMenu(null);
+    }
+
+    /// <summary>The menu is the app's and can outlive the group: the group listens to it only while attached.</summary>
+    private void WatchMenu(MenuSurface? menu)
+    {
+        if (_watchedMenu is { } old)
+        {
+            old.ItemClicked -= OnMenuItemClicked;
+            old.PropertyChanged -= OnMenuPropertyChanged;
+        }
+        _watchedMenu = menu;
+        if (menu is not null)
+        {
+            menu.ItemClicked += OnMenuItemClicked;
+            menu.PropertyChanged += OnMenuPropertyChanged;
+        }
     }
 
     private void SyncMenu()

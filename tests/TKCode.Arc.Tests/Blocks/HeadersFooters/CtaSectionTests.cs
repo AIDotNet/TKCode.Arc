@@ -1006,6 +1006,60 @@ public class CtaSectionTests
     }
 
     [AvaloniaFact]
+    public void A_Setup_Card_Is_Collected_While_Its_Steps_And_Faces_Live_On()
+    {
+        var steps = new AvaloniaList<string> { "Create workspace", "Invite teammates" };
+        var faces = new AvaloniaList<IImage> { Picture(Colors.Teal) };
+        var weak = TestHelpers.ShowAndClose(() => new CtaSetupCard { Steps = steps, Faces = faces });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        steps.Add("Ship");
+        faces.Add(Picture(Colors.Coral));
+    }
+
+    [AvaloniaFact]
+    public void A_Setup_Card_Put_Back_Shows_The_Steps_And_Faces_Added_While_It_Was_Away()
+    {
+        var steps = new AvaloniaList<string> { "Create workspace", "Invite teammates" };
+        var faces = new AvaloniaList<IImage> { Picture(Colors.Teal) };
+        var card = new CtaSetupCard { Steps = steps, Faces = faces, Completed = 2 };
+        var host = new Border { Child = card };
+        var window = Show(host);
+        try
+        {
+            card.Rows.Select(r => r.Label).ShouldBe(["Create workspace", "Invite teammates"]);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            faces.Add(Picture(Colors.Coral));
+
+            // Same steps, one more face: the last row draws it, shown like the first.
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            Part<SiteFaceStack>(card.Rows[^1], "PART_Faces").Count.ShouldBe(2);
+            card.Rows[^1].FaceState(1).Opacity.ShouldBe(1);
+
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            steps.Add("Import issues");
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            card.Rows.Select(r => r.Label).ShouldBe(["Create workspace", "Invite teammates", "Import issues"]);
+            card.Rows[^1].Faces.ShouldBeSameAs(faces);
+
+            // Back in the window, it listens again.
+            steps.RemoveAt(2);
+            faces.Add(Picture(Colors.Gold));
+            Dispatcher.UIThread.RunJobs();
+            card.Rows.Count.ShouldBe(2);
+            card.Rows[^1].FaceState(2).Opacity.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Teammate_Faces_Jump_When_Motion_Is_Off()
     {
         var section = new CtaSection { Variant = CtaVariant.Split };

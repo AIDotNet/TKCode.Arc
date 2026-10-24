@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using TKCode.Arc.Motion;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -14,6 +15,15 @@ public class TreeViewTests
     {
         public override string ToString() => Name;
     }
+
+    private sealed class LiveNode(string name)
+    {
+        public ObservableCollection<LiveNode> Children { get; } = new();
+
+        public override string ToString() => name;
+    }
+
+    private static System.Collections.IEnumerable LiveChildren(object node) => ((LiveNode)node).Children;
 
     private static TreeViewItem Folder(string name, bool open, params TreeViewItem[] children)
     {
@@ -325,6 +335,61 @@ public class TreeViewTests
             tree.RowsPanel!.HasRowMotion.ShouldBeFalse();
             Row(tree, readme).Bounds.Top.ShouldBe(before + 2 * 38, 0.5);
             Row(tree, components).ChevronAngle.ShouldBe(90);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Tree_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var docs = new LiveNode("docs");
+        docs.Children.Add(new LiveNode("guide.md"));
+        var roots = new ObservableCollection<LiveNode> { docs, new("package.json") };
+        // One tree listens to the roots, the other only to an open folder's children.
+        var rootsTree = TestHelpers.ShowAndClose(() => new TreeView { ItemsSource = roots, ChildrenSelector = LiveChildren });
+        var folderTree = TestHelpers.ShowAndClose(() => new TreeView { ItemsSource = new List<LiveNode> { docs }, ChildrenSelector = LiveChildren },
+            tree => tree.Expand(docs));
+        TestHelpers.Collect(rootsTree, folderTree);
+        rootsTree.IsAlive.ShouldBeFalse();
+        folderTree.IsAlive.ShouldBeFalse();
+        roots.Add(new LiveNode("README.md"));
+        docs.Children.Add(new LiveNode("api.md"));
+        roots.Count.ShouldBe(3);
+    }
+
+    [AvaloniaFact]
+    public void A_Tree_Taken_Out_And_Put_Back_Shows_What_Changed_Meanwhile()
+    {
+        var docs = new LiveNode("docs");
+        docs.Children.Add(new LiveNode("guide.md"));
+        var roots = new ObservableCollection<LiveNode> { docs, new("package.json") };
+        var tree = new TreeView { ItemsSource = roots, ChildrenSelector = LiveChildren };
+        var host = new Border { Child = tree };
+        var window = Show(host);
+        try
+        {
+            tree.Expand(docs);
+            Labels(tree).ShouldBe(["docs", "guide.md", "package.json"]);
+
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            roots.Add(new LiveNode("README.md"));
+            docs.Children.Add(new LiveNode("api.md"));
+            Dispatcher.UIThread.RunJobs();
+            // Away from the window the tree does not follow its data.
+            Labels(tree).ShouldBe(["docs", "guide.md", "package.json"]);
+
+            host.Child = tree;
+            Dispatcher.UIThread.RunJobs();
+            Labels(tree).ShouldBe(["docs", "guide.md", "api.md", "package.json", "README.md"]);
+
+            roots.RemoveAt(1);
+            docs.Children.RemoveAt(0);
+            Dispatcher.UIThread.RunJobs();
+            Labels(tree).ShouldBe(["docs", "api.md", "README.md"]);
         }
         finally
         {

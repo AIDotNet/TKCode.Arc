@@ -241,7 +241,8 @@ public class Markdown : TemplatedControl
         {
             return;
         }
-        if (Stream is null || !IsStreaming)
+        // A stream that ended while the control was detached (not listening for Completed) has ended all the same.
+        if (Stream is null || !IsStreaming || Stream.Document.IsComplete)
         {
             // The reply replaces the static text (Text reads null while a reply is shown).
             SetCurrentValue(TextProperty, null);
@@ -599,6 +600,12 @@ public class Markdown : TemplatedControl
             document.SnapshotReady += OnSnapshotReady;
             OnSnapshotReady(null);
         }
+        ListenTo(Stream);
+        if (IsStreaming && Stream is { Document.IsComplete: true })
+        {
+            // The stream ended while the control was away.
+            SetStreaming(false);
+        }
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -608,29 +615,40 @@ public class Markdown : TemplatedControl
         {
             document.SnapshotReady -= OnSnapshotReady;
         }
+        ListenTo(null);
     }
 
     private void Subscribe(MarkdownStream? stream)
     {
+        ListenTo(IsAttached ? stream : null);
+        if (!ReferenceEquals(stream, _ownStream))
+        {
+            _ownStream = null;
+        }
+        SetStreaming(stream is not null && !stream.Document.IsComplete);
+    }
+
+    /// <summary>A stream may outlive the control: it is listened to only while the control is attached.</summary>
+    private void ListenTo(MarkdownStream? stream)
+    {
+        if (ReferenceEquals(stream, _subscribed))
+        {
+            return;
+        }
         if (_subscribed is not null)
         {
             _subscribed.Completed -= OnStreamCompleted;
         }
         _subscribed = stream;
-        if (!ReferenceEquals(stream, _ownStream))
-        {
-            _ownStream = null;
-        }
         if (stream is not null)
         {
             stream.Completed += OnStreamCompleted;
         }
-        SetStreaming(stream is not null && !stream.Document.IsComplete);
     }
 
     private void OnStreamCompleted() => Dispatcher.UIThread.Post(() =>
     {
-        if (_subscribed is { } stream && stream.Document.IsComplete)
+        if (Stream is { } stream && stream.Document.IsComplete)
         {
             SetStreaming(false);
         }

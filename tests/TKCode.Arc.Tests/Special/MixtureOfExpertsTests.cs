@@ -530,4 +530,63 @@ public class MixtureOfExpertsTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Card_Is_Collected_While_Its_Tokens_And_Experts_Live_On()
+    {
+        var tokens = new AvaloniaList<MixtureOfExpertsTokenItem> { new("let"), new("the") };
+        var experts = new AvaloniaList<MixtureOfExpertsExpert> { new("Code"), new("Prose") };
+        var weak = TestHelpers.ShowAndClose(() => new MixtureOfExperts { AutoPlay = false, Tokens = tokens, Experts = experts }, _ => Pump());
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        // The data still works without the card.
+        tokens.Add(new MixtureOfExpertsTokenItem("42"));
+        tokens[0].Text = "var";
+        experts[0].Name = "Syntax";
+    }
+
+    [AvaloniaFact]
+    public void A_Card_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var tokens = new AvaloniaList<MixtureOfExpertsTokenItem> { new("let"), new("the"), new("42") };
+        var experts = new AvaloniaList<MixtureOfExpertsExpert> { new("Code"), new("Prose"), new("Numbers") };
+        var card = new MixtureOfExperts { AutoPlay = false, Tokens = tokens, Experts = experts };
+        var host = new Border { Child = card };
+        var window = TestHelpers.Show(host, ArcMotionLevel.Full);
+        window.Width = 792;
+        window.Height = 900;
+        Pump();
+        try
+        {
+            card.Routes.Count.ShouldBe(3);
+            card.Advance(2.2 + 1.2);
+            var token = card.CurrentTokenIndex;
+            token.ShouldBeGreaterThan(0);
+            // Away and back with nothing changed: the story carries on from where it was.
+            host.Child = null;
+            Pump();
+            host.Child = card;
+            Pump();
+            card.CurrentTokenIndex.ShouldBe(token);
+            // Changes made while away show once it is back.
+            host.Child = null;
+            Pump();
+            tokens.Add(new MixtureOfExpertsTokenItem("+"));
+            experts[0].Name = "Grammar";
+            host.Child = card;
+            Pump();
+            card.Routes.Count.ShouldBe(4);
+            AutomationProperties.GetName(card.Stage!.Tiles[0]).ShouldStartWith("Grammar");
+            // And it follows changes made after it came back.
+            tokens.Add(new MixtureOfExpertsTokenItem("-"));
+            experts[1].Name = "Words";
+            Pump();
+            card.Routes.Count.ShouldBe(5);
+            AutomationProperties.GetName(card.Stage.Tiles[1]).ShouldStartWith("Words");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

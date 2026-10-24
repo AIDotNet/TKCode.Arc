@@ -46,7 +46,9 @@ internal sealed class CtaSetupStep : TemplatedControl
     private MotionValue<double>[] _fade = [];
     private MotionValue<double>[] _slide = [];
     private bool _revealed;
+    // The faces belong to the card's host: followed only while the row is in a visual tree.
     private INotifyCollectionChanged? _observed;
+    private bool _watching;
 
     static CtaSetupStep()
     {
@@ -99,15 +101,7 @@ internal sealed class CtaSetupStep : TemplatedControl
         }
         else if (change.Property == FacesProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnFacesChanged;
-            }
-            _observed = Faces as INotifyCollectionChanged;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnFacesChanged;
-            }
+            WatchFaces();
             if (_stack is not null)
             {
                 _stack.Images = Faces;
@@ -121,6 +115,32 @@ internal sealed class CtaSetupStep : TemplatedControl
     {
         BuildFaceMotion();
         ApplyFacesNow();
+    }
+
+    private void WatchFaces()
+    {
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged -= OnFacesChanged;
+        }
+        _observed = _watching ? Faces as INotifyCollectionChanged : null;
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged += OnFacesChanged;
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchFaces();
+        // Faces added or removed while the row was away (the stack draws whichever pictures are there).
+        if (_fade.Length != FaceCount)
+        {
+            BuildFaceMotion();
+            ApplyFacesNow();
+        }
     }
 
     private int FaceCount => Faces?.Count ?? 0;
@@ -205,6 +225,8 @@ internal sealed class CtaSetupStep : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchFaces();
         foreach (var value in _fade)
         {
             value.Stop();
@@ -257,7 +279,9 @@ internal sealed class CtaSetupCard : TemplatedControl
     private TextBlock? _ready;
     private readonly List<CtaSetupStep> _rows = new();
     private readonly List<DispatcherTimer> _timers = new();
+    // The step names belong to the host: followed only while the card is in a visual tree.
     private INotifyCollectionChanged? _observedSteps;
+    private bool _watching;
     private string _initial = "N";
     private bool _started;
 
@@ -321,15 +345,7 @@ internal sealed class CtaSetupCard : TemplatedControl
         }
         else if (change.Property == StepsProperty)
         {
-            if (_observedSteps is not null)
-            {
-                _observedSteps.CollectionChanged -= OnStepsChanged;
-            }
-            _observedSteps = Steps as INotifyCollectionChanged;
-            if (_observedSteps is not null)
-            {
-                _observedSteps.CollectionChanged += OnStepsChanged;
-            }
+            WatchSteps();
             RebuildRows();
             Apply();
         }
@@ -354,6 +370,37 @@ internal sealed class CtaSetupCard : TemplatedControl
     {
         RebuildRows();
         Apply();
+    }
+
+    private void WatchSteps()
+    {
+        if (_observedSteps is not null)
+        {
+            _observedSteps.CollectionChanged -= OnStepsChanged;
+        }
+        _observedSteps = _watching ? Steps as INotifyCollectionChanged : null;
+        if (_observedSteps is not null)
+        {
+            _observedSteps.CollectionChanged += OnStepsChanged;
+        }
+    }
+
+    /// <summary>True when the rows show <see cref="EffectiveSteps"/> as they are now.</summary>
+    private bool RowsMatchSteps()
+    {
+        var names = EffectiveSteps;
+        if (names.Count != _rows.Count)
+        {
+            return false;
+        }
+        for (var i = 0; i < names.Count; i++)
+        {
+            if (!string.Equals(names[i], _rows[i].Label, StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void RebuildRows()
@@ -392,6 +439,14 @@ internal sealed class CtaSetupCard : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchSteps();
+        // Steps changed while the card was away (rebuilding unchanged rows would reset their faces).
+        if (_steps is not null && !RowsMatchSteps())
+        {
+            RebuildRows();
+            Apply();
+        }
         if (ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Reduced)
         {
             Finish();
@@ -401,6 +456,8 @@ internal sealed class CtaSetupCard : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchSteps();
         CancelTimers();
     }
 

@@ -242,4 +242,53 @@ public class FilterToolbarTests
         FilterToolbar.Describe([a], [new FilterChip("status", "Status", "Closed")]).ShouldBe("Status changed to Closed");
         FilterToolbar.Describe([a, b], [b]).ShouldBe("Removed Status: Open");
     }
+
+    [AvaloniaFact]
+    public void A_Toolbar_Is_Collected_While_Its_Filters_Live_On()
+    {
+        var filters = new ObservableCollection<FilterChip> { new("status", "Status", "Open") };
+        var weak = TestHelpers.ShowAndClose(() => new FilterToolbar { ActiveFilters = filters });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        filters.Add(new FilterChip("owner", "Owner", "Mina"));
+        filters.Count.ShouldBe(2);
+    }
+
+    [AvaloniaFact]
+    public void A_Toolbar_Taken_Out_And_Put_Back_Shows_What_Changed_Meanwhile()
+    {
+        var filters = new ObservableCollection<FilterChip> { new("status", "Status", "Open") };
+        var toolbar = new FilterToolbar { ActiveFilters = filters };
+        var host = new Border { Child = toolbar };
+        var window = TestHelpers.Show(host);
+        window.Width = 900;
+        window.Height = 600;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            toolbar.Slots.Keys.ShouldBe(["status"]);
+
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            filters.Add(new FilterChip("owner", "Owner", "Mina"));
+            filters.RemoveAt(0);
+            Dispatcher.UIThread.RunJobs();
+            // Away from the window the chips do not follow the list.
+            toolbar.Slots.Keys.ShouldBe(["status"]);
+
+            host.Child = toolbar;
+            Dispatcher.UIThread.RunJobs();
+            toolbar.Slots.Keys.ShouldBe(["owner"]);
+            toolbar.HasFilters.ShouldBeTrue();
+
+            filters.Clear();
+            Dispatcher.UIThread.RunJobs();
+            toolbar.Slots.ShouldBeEmpty();
+            toolbar.HasFilters.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

@@ -647,6 +647,7 @@ internal partial class AiReplyText
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        HookSources(null);
         CloseCard();
         _hoverKey = -1;
     }

@@ -676,6 +676,65 @@ public class RevenueGlobeTests
     }
 
     [AvaloniaFact]
+    public void A_Globe_Is_Collected_While_Its_Payments_And_Regions_Live_On()
+    {
+        var payments = new System.Collections.ObjectModel.ObservableCollection<RevenuePayment> { new(Day.AddHours(1), "bos", 10) };
+        var regions = new Avalonia.Collections.AvaloniaList<RevenueRegion> { new() { Key = "am", Name = "Americas", Forecast = 1_000 } };
+        var weak = TestHelpers.ShowAndClose(() =>
+        {
+            var globe = Globe();
+            globe.Payments = payments;
+            globe.Regions = regions;
+            return globe;
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        payments.Add(new RevenuePayment(Day.AddHours(2), "bos", 10));
+        regions.Add(new RevenueRegion { Key = "eu", Name = "EMEA" });
+    }
+
+    [AvaloniaFact]
+    public void A_Globe_Put_Back_Counts_What_Arrived_While_It_Was_Away()
+    {
+        var globe = Globe();
+        var payments = new System.Collections.ObjectModel.ObservableCollection<RevenuePayment>(globe.Payments!);
+        globe.Payments = payments;
+        var regions = new Avalonia.Collections.AvaloniaList<RevenueRegion>(globe.Regions);
+        globe.Regions = regions;
+        var host = new Border { Child = globe };
+        var window = TestHelpers.Show(host);
+        window.Width = 700;
+        window.Height = 1400;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var before = globe.CurrentRevenue;
+            globe.RegionRowControls.Count.ShouldBe(3);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            payments.Add(new RevenuePayment(Day.AddHours(11), "bos", 1_000));
+            regions.Add(new RevenueRegion { Key = "oc", Name = "Oceania", Forecast = 5_000 });
+
+            host.Child = globe;
+            Dispatcher.UIThread.RunJobs();
+            globe.CurrentRevenue.ShouldBe(before + 1_000);
+            globe.RegionRowControls.Count.ShouldBe(4);
+
+            // Back in the window, it listens again.
+            payments.Add(new RevenuePayment(Day.AddHours(11), "zur", 500));
+            Dispatcher.UIThread.RunJobs();
+            globe.CurrentRevenue.ShouldBe(before + 1_500);
+            regions.Add(new RevenueRegion { Key = "af", Name = "Africa", Forecast = 2_000 });
+            Dispatcher.UIThread.RunJobs();
+            globe.RegionRowControls.Count.ShouldBe(5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void The_Clock_Loop_Runs_Only_While_Time_Moves_By_Itself()
     {
         var (globe, window) = ShowGlobe(level: ArcMotionLevel.Full);

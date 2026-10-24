@@ -1,6 +1,7 @@
 using System.Text;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
 
@@ -24,6 +25,9 @@ public partial class AiChat
     }
 
     private readonly Dictionary<AiChatReply, ReplyRun> _runs = new(ReferenceEqualityComparer.Instance);
+
+    /// <summary>Replies asked for while the chat was out of a window: they start once it is in one.</summary>
+    private readonly List<(AiChatConversation Conversation, AiChatTurn Turn, AiChatReply Reply)> _pendingReplies = new();
 
     /// <summary>Whether a reply is being streamed by the chat (tests).</summary>
     internal bool IsStreaming(AiChatReply reply) => _runs.ContainsKey(reply);
@@ -119,6 +123,15 @@ public partial class AiChat
             UpdateBusy();
             return;
         }
+        if (!this.IsAttachedToVisualTree())
+        {
+            // Out of a window nothing streams (leaving one stops the replies, and a stream nothing stops would keep the
+            // chat alive): the reply waits, thinking, and starts once the chat is shown.
+            reply.Status = AiChatReplyStatus.Thinking;
+            _pendingReplies.Add((conversation, turn, reply));
+            UpdateBusy();
+            return;
+        }
         // A new reply in the same conversation stops the one still running (Arc: retry and edit abort the stream).
         foreach (var other in _runs.Values.Where(r => ReferenceEquals(r.Conversation, conversation) && !ReferenceEquals(r.Reply, reply)).ToList())
         {
@@ -137,6 +150,25 @@ public partial class AiChat
         UpdateBusy();
         Announce(Labels.Replying(FindModel(reply.ModelId)?.Name ?? SelectedModel?.Name ?? Labels.Chat));
         _ = RunAsync(run, responder, request);
+    }
+
+    /// <summary>Starts the replies asked for while the chat was out of a window, now that it is in one.</summary>
+    private void StartPendingReplies()
+    {
+        if (_pendingReplies.Count == 0 || !this.IsAttachedToVisualTree())
+        {
+            return;
+        }
+        var pending = _pendingReplies.ToList();
+        _pendingReplies.Clear();
+        foreach (var (conversation, turn, reply) in pending)
+        {
+            // Only a reply still waiting: one your code filled or stopped meanwhile, or a version no longer shown, stays as it is.
+            if (ReferenceEquals(turn.SelectedVersion?.Reply, reply) && reply.Status == AiChatReplyStatus.Thinking && !_runs.ContainsKey(reply))
+            {
+                StartReply(conversation, turn);
+            }
+        }
     }
 
     /// <summary>Reads the responder's events on the UI thread and writes them into the reply.</summary>
@@ -456,6 +488,16 @@ public partial class AiChat
             StopRun(run, announce: false);
             stopped = true;
         }
+        foreach (var pending in _pendingReplies.Where(p => ReferenceEquals(p.Conversation, conversation)).ToList())
+        {
+            _pendingReplies.Remove(pending);
+            if (pending.Reply.Status == AiChatReplyStatus.Thinking)
+            {
+                pending.Reply.Status = AiChatReplyStatus.Stopped;
+                RaiseEvent(new AiChatReplyEventArgs(ReplyCompletedEvent, this, pending.Reply));
+                stopped = true;
+            }
+        }
         foreach (var entry in _branch)
         {
             var reply = entry.Version.Reply;
@@ -483,6 +525,11 @@ public partial class AiChat
                 busy = true;
                 break;
             }
+        }
+        if (!busy)
+        {
+            // A reply waiting for the chat to be shown (the thread may not be built yet).
+            busy = _pendingReplies.Any(p => ReferenceEquals(p.Conversation, CurrentConversation) && p.Reply.Status == AiChatReplyStatus.Thinking);
         }
         if (!busy)
         {

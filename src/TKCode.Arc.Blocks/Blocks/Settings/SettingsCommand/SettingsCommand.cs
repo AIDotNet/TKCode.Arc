@@ -107,18 +107,12 @@ public class SettingsCommand : TemplatedControl
         get => _items;
         set
         {
-            var old = _items;
+            var owns = value is null;
             value ??= new AvaloniaList<SettingsCommandItem>();
             if (SetAndRaise(ItemsProperty, ref _items, value))
             {
-                if (old is INotifyCollectionChanged oldObservable)
-                {
-                    oldObservable.CollectionChanged -= OnItemsCollectionChanged;
-                }
-                if (value is INotifyCollectionChanged observable)
-                {
-                    observable.CollectionChanged += OnItemsCollectionChanged;
-                }
+                _ownsItems = owns;
+                WatchItems();
                 SyncRows();
                 Refilter(resetActive: false);
             }
@@ -191,6 +185,13 @@ public class SettingsCommand : TemplatedControl
     private readonly List<GroupBucket> _groups = new();
     private readonly PausableTimer _noticeTimer;
     private IList<SettingsCommandItem> _items;
+    private bool _ownsItems = true;
+    private INotifyCollectionChanged? _watchedItems;
+    private readonly HashSet<SettingsCommandItem> _followed = new();
+    // The items, and a list the host hands in, can outlive the palette (a view model's, a static list): the palette
+    // follows them only while it is in a visual tree and reads them again when it comes back. Its own list is always
+    // followed.
+    private bool _watching;
     private SettingsCommandItem? _activeItem;
     private SettingsCommandRow? _active;
     private TextBox? _searchBox;
@@ -215,9 +216,8 @@ public class SettingsCommand : TemplatedControl
     /// <summary>Creates an empty palette.</summary>
     public SettingsCommand()
     {
-        var items = new AvaloniaList<SettingsCommandItem>();
-        items.CollectionChanged += OnItemsCollectionChanged;
-        _items = items;
+        _items = new AvaloniaList<SettingsCommandItem>();
+        WatchItems();
         _noticeTimer = new PausableTimer(NoticeDuration, HideNotice);
         AddHandler(KeyDownEvent, OnPreviewKeyDown, RoutingStrategies.Tunnel);
         AddHandler(PointerPressedEvent, OnAnyPointerPressed, RoutingStrategies.Bubble, handledEventsToo: true);
@@ -310,12 +310,51 @@ public class SettingsCommand : TemplatedControl
         }
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchItems();
+        // What changed while the palette was away: SyncRows follows the list and the items again, every row reads its item.
+        SyncRows();
+        foreach (var row in _rows.Values)
+        {
+            row.Refresh(null);
+        }
+        Refilter(resetActive: false);
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
         // A notice belongs to the moment it was shown: a palette that comes back (a dialog reopened) starts without one.
         _noticeTimer.Stop();
         HideNotice();
+        _watching = false;
+        WatchItems();
+        foreach (var item in _followed)
+        {
+            item.Changed -= OnItemChanged;
+        }
+        _followed.Clear();
+    }
+
+    private void WatchItems()
+    {
+        var wanted = _ownsItems || _watching ? _items as INotifyCollectionChanged : null;
+        if (ReferenceEquals(wanted, _watchedItems))
+        {
+            return;
+        }
+        if (_watchedItems is not null)
+        {
+            _watchedItems.CollectionChanged -= OnItemsCollectionChanged;
+        }
+        _watchedItems = wanted;
+        if (_watchedItems is not null)
+        {
+            _watchedItems.CollectionChanged += OnItemsCollectionChanged;
+        }
     }
 
     #region Items and rows
@@ -345,7 +384,10 @@ public class SettingsCommand : TemplatedControl
                 foreach (var item in removed)
                 {
                     var row = _rows[item];
-                    item.Changed -= OnItemChanged;
+                    if (_followed.Remove(item))
+                    {
+                        item.Changed -= OnItemChanged;
+                    }
                     _results?.Children.Remove(row);
                     _rows.Remove(item);
                     if (ReferenceEquals(row, _active))
@@ -363,8 +405,17 @@ public class SettingsCommand : TemplatedControl
             }
             var row = new SettingsCommandRow(this, item) { IsVisible = false };
             _rows.Add(item, row);
-            item.Changed += OnItemChanged;
             _results?.Children.Add(row);
+        }
+        if (_watching)
+        {
+            foreach (var item in _rows.Keys)
+            {
+                if (_followed.Add(item))
+                {
+                    item.Changed += OnItemChanged;
+                }
+            }
         }
     }
 

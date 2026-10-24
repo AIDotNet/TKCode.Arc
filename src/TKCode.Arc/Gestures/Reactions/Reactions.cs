@@ -80,6 +80,9 @@ public class Reactions : TemplatedControl
         AvaloniaProperty.RegisterDirect<Reactions, bool>(nameof(IsPickerOpen), o => o.IsPickerOpen);
 
     private IList<ReactionOption> _options = new AvaloniaList<ReactionOption>();
+    // Options may be a view model's list: it is observed only while the bar is shown, and re-read when it comes back.
+    private INotifyCollectionChanged? _observedOptions;
+    private bool _watching;
     private bool _isPickerOpen;
 
     [Content]
@@ -88,17 +91,9 @@ public class Reactions : TemplatedControl
         get => _options;
         set
         {
-            var old = _options;
             if (SetAndRaise(OptionsProperty, ref _options, value ?? new AvaloniaList<ReactionOption>()))
             {
-                if (old is INotifyCollectionChanged oldNotify)
-                {
-                    oldNotify.CollectionChanged -= OnOptionsChanged;
-                }
-                if (_options is INotifyCollectionChanged newNotify)
-                {
-                    newNotify.CollectionChanged += OnOptionsChanged;
-                }
+                WatchOptions();
                 OnOptionsChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
@@ -141,10 +136,6 @@ public class Reactions : TemplatedControl
 
     public Reactions()
     {
-        if (_options is INotifyCollectionChanged notify)
-        {
-            notify.CollectionChanged += OnOptionsChanged;
-        }
         AutomationProperties.SetName(this, Label);
     }
 
@@ -224,6 +215,20 @@ public class Reactions : TemplatedControl
     {
         Sync(animate: false);
         UpdatePicker();
+    }
+
+    /// <summary>Listens to the current options while shown (and to nothing otherwise).</summary>
+    private void WatchOptions()
+    {
+        if (_observedOptions is not null)
+        {
+            _observedOptions.CollectionChanged -= OnOptionsChanged;
+        }
+        _observedOptions = _watching ? _options as INotifyCollectionChanged : null;
+        if (_observedOptions is not null)
+        {
+            _observedOptions.CollectionChanged += OnOptionsChanged;
+        }
     }
 
     #endregion
@@ -587,9 +592,21 @@ public class Reactions : TemplatedControl
         Toggle(id);
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchOptions();
+        // The options may have changed while the bar was away.
+        Sync(animate: false);
+        UpdatePicker();
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchOptions();
         if (IsPickerOpen)
         {
             ClosePicker();

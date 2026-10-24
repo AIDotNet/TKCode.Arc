@@ -215,7 +215,13 @@ public partial class LayoutMorph : TemplatedControl
     private readonly LayoutMorphStage _stage;
     private readonly List<LayoutMorphItem> _effective = new();
     private readonly HashSet<LayoutMorphItem> _watched = new();
+    private readonly AvaloniaList<LayoutMorphItem> _ownItems = new();
+    private AvaloniaList<LayoutMorphItem>? _watchedItems;
     private INotifyCollectionChanged? _observed;
+    // The items and the lists a host hands in can outlive the morph (a view model's, a static sample list): the morph
+    // follows them only while it is in a visual tree and reads them again when it comes back.
+    private bool _watching;
+    private bool _refreshCards;
     private LayoutMorphItem? _frontItem;
     private Panel? _stageHost;
     private LayoutMorphViewBar? _viewBar;
@@ -233,7 +239,9 @@ public partial class LayoutMorph : TemplatedControl
     {
         _stage = new LayoutMorphStage(this);
         SetCurrentValue(DefaultStatsProperty, new AvaloniaList<LayoutMorphFact>());
-        SetCurrentValue(ItemsProperty, new AvaloniaList<LayoutMorphItem>());
+        // The morph's own list is followed always; a list set in its place only while attached (WatchItems).
+        _ownItems.CollectionChanged += OnItemsChanged;
+        SetCurrentValue(ItemsProperty, _ownItems);
         PseudoClasses.Set(FramedPseudoClass, true);
     }
 
@@ -439,7 +447,8 @@ public partial class LayoutMorph : TemplatedControl
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (ItemsSource is null)
+        // The own list stays followed after Items moved to another list: only the list on show counts.
+        if (ItemsSource is null && ReferenceEquals(sender, Items))
         {
             ScheduleRebuild();
         }
@@ -493,11 +502,14 @@ public partial class LayoutMorph : TemplatedControl
             item.PropertyChanged -= OnItemPropertyChanged;
             _watched.Remove(item);
         }
-        foreach (var item in _effective)
+        if (_watching)
         {
-            if (_watched.Add(item))
+            foreach (var item in _effective)
             {
-                item.PropertyChanged += OnItemPropertyChanged;
+                if (_watched.Add(item))
+                {
+                    item.PropertyChanged += OnItemPropertyChanged;
+                }
             }
         }
         _stage.SetItems(_effective);
@@ -505,8 +517,29 @@ public partial class LayoutMorph : TemplatedControl
         {
             SetCurrentValue(OpenedItemProperty, null);
         }
+        if (_refreshCards)
+        {
+            RefreshCards();
+        }
         UpdateStageName();
         UpdateDefaultPanel();
+    }
+
+    /// <summary>The items' own changes made while the morph was away: every card, and the open detail, reads its item again.</summary>
+    private void RefreshCards()
+    {
+        _refreshCards = false;
+        foreach (var item in _effective)
+        {
+            // Any text property: the card drops its text, renames itself and repaints (sizes and pictures come with SetItems
+            // and the stage's attach).
+            _stage.OnItemChanged(item, LayoutMorphItem.TitleProperty);
+        }
+        if (OpenedItem is { } open)
+        {
+            UpdateDialog(open);
+            UpdateAction(open, animate: false);
+        }
     }
 
     private void OnItemPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -538,27 +571,12 @@ public partial class LayoutMorph : TemplatedControl
         var property = change.Property;
         if (property == ItemsProperty)
         {
-            if (change.OldValue is AvaloniaList<LayoutMorphItem> oldItems)
-            {
-                oldItems.CollectionChanged -= OnItemsChanged;
-            }
-            if (change.NewValue is AvaloniaList<LayoutMorphItem> newItems)
-            {
-                newItems.CollectionChanged += OnItemsChanged;
-            }
+            WatchItems();
             RebuildItems();
         }
         else if (property == ItemsSourceProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnSourceChanged;
-            }
-            _observed = ItemsSource as INotifyCollectionChanged;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnSourceChanged;
-            }
+            WatchSource();
             RebuildItems();
         }
         else if (property == LayoutProperty)
@@ -601,6 +619,58 @@ public partial class LayoutMorph : TemplatedControl
         else if (property == CloseTextFormatProperty && OpenedItem is { } opened)
         {
             UpdateDialog(opened);
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchItems();
+        WatchSource();
+        // Whatever changed while the morph was away: the next rebuild reads the lists, follows the items again and
+        // refreshes every card.
+        _refreshCards = true;
+        ScheduleRebuild();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchItems();
+        WatchSource();
+        foreach (var item in _watched)
+        {
+            item.PropertyChanged -= OnItemPropertyChanged;
+        }
+        _watched.Clear();
+    }
+
+    /// <summary>Follows a list set as <see cref="Items"/> in place of the morph's own (only while attached).</summary>
+    private void WatchItems()
+    {
+        if (_watchedItems is not null)
+        {
+            _watchedItems.CollectionChanged -= OnItemsChanged;
+        }
+        _watchedItems = _watching && !ReferenceEquals(Items, _ownItems) ? Items : null;
+        if (_watchedItems is not null)
+        {
+            _watchedItems.CollectionChanged += OnItemsChanged;
+        }
+    }
+
+    private void WatchSource()
+    {
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged -= OnSourceChanged;
+        }
+        _observed = _watching ? ItemsSource as INotifyCollectionChanged : null;
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged += OnSourceChanged;
         }
     }
 

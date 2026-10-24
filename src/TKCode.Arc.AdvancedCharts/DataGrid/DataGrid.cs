@@ -239,6 +239,12 @@ public partial class DataGrid : TemplatedControl
         RoutedEvent.Register<DataGrid, DataGridExportingEventArgs>(nameof(Exporting), RoutingStrategies.Bubble);
 
     /// <inheritdoc cref="ItemsSourceProperty"/>
+    /// <remarks>
+    /// The grid follows the source from the moment it is set; once the grid has been shown and taken out of the visual tree
+    /// it follows the source only while it is shown again, so a source that outlives the page does not keep the grid. A
+    /// grid that is given a long-lived source but never shown keeps following it: clear <see cref="ItemsSource"/> if you
+    /// drop such a grid.
+    /// </remarks>
     public IEnumerable? ItemsSource { get => GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value); }
 
     /// <summary>Column definitions in definition order (the XAML content of the grid). Pinned columns are drawn first.</summary>
@@ -613,17 +619,15 @@ public partial class DataGrid : TemplatedControl
         UpdatePseudoClasses();
     }
 
-    private bool _detached;
-
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        if (_detached)
-        {
-            // The source may have changed while the grid was away; follow it again and re-read it.
-            _detached = false;
-            _store.Attach();
-        }
+        // The columns, the source and its items are followed only while attached, so outside data that outlives the grid
+        // never holds it; what changed while nobody listened (before the first show, or while away) is read again here.
+        _attached = true;
+        FollowColumns();
+        RereadChangedColumns();
+        _store.Attach();
         _languages = DataGridText.Languages;
         if (_languages is not null)
         {
@@ -642,9 +646,9 @@ public partial class DataGrid : TemplatedControl
             _languages = null;
         }
         CancelBlockRequests();
-        // Stop following the source and its items so a long-lived collection does not keep the grid alive.
+        _attached = false;
         _store.Detach();
-        _detached = true;
+        FollowColumns();
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

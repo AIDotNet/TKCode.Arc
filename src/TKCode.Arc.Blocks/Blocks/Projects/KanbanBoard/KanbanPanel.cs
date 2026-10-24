@@ -330,6 +330,12 @@ internal sealed class KanbanPanel : Panel
             _items.Add(new List<Control>());
             _midlines.Add(new List<double>());
         }
+        if (_items.Count > inputs.Length)
+        {
+            // Cells that are gone (swimlanes back to Status) would keep the views of deleted cards alive.
+            _items.RemoveRange(inputs.Length, _items.Count - inputs.Length);
+            _midlines.RemoveRange(inputs.Length, _midlines.Count - inputs.Length);
+        }
         var composerCell = _composer.IsVisible ? _composer.Cell : (-1, -1);
         for (var lane = 0; lane < grid.Lanes.Count; lane++)
         {

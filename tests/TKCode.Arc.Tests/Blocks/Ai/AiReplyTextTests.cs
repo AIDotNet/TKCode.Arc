@@ -650,4 +650,44 @@ public class AiReplyTextTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Reply_Is_Collected_While_Its_Sources_Live_On()
+    {
+        // A conversation keeps a reply's sources after its views are gone (another conversation opened).
+        var sources = new AvaloniaList<AiSource> { Source(1, "Caching dependencies in pipelines", "docs.example.org") };
+        var weak = TestHelpers.ShowAndClose(() => new AiReplyText { Sources = sources }, reply => reply.SetText("Key [1]."));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        sources.Add(Source(2, "Build performance checklist", "handbook.example.com"));
+    }
+
+    [AvaloniaFact]
+    public void A_Reply_Taken_Out_And_Put_Back_Shows_The_Sources_That_Changed_Meanwhile()
+    {
+        var sources = new AvaloniaList<AiSource> { Source(1, "Caching dependencies in pipelines", "docs.example.org") };
+        var reply = new AiReplyText { Sources = sources, CitationName = (n, title, domain) => $"Source {n}: {title}, {domain}" };
+        var host = new Border { Child = reply };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            reply.SetText("Key [1], image [3].");
+            reply.CitationTargets.Select(t => t.IsVisible).ShouldBe([true, false]);
+
+            host.Child = null;
+            sources.Add(Source(3, "Build performance checklist", "handbook.example.com"));
+            host.Child = reply;
+            Settle(window);
+            reply.CitationTargets.Select(t => t.IsVisible).ShouldBe([true, true]);
+            Avalonia.Automation.AutomationProperties.GetName(reply.CitationTargets[1]).ShouldBe("Source 3: Build performance checklist, handbook.example.com");
+
+            // And it follows the list again.
+            sources.RemoveAt(0);
+            reply.CitationTargets.Select(t => t.IsVisible).ShouldBe([false, true]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

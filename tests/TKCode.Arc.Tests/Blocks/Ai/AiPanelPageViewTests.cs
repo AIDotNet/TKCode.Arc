@@ -689,4 +689,69 @@ public class AiPanelPageViewTests
     }
 
     #endregion
+
+    #region Following the data
+
+    private static AiPanelTable LimitsTable()
+    {
+        var table = new AiPanelTable { Id = "limits", Label = "Limits" };
+        table.Columns.Add(new AiPanelColumn { Header = "Plan", IsRowHeader = true });
+        table.Columns.Add(new AiPanelColumn { Header = "Storage" });
+        foreach (var (plan, storage) in new[] { ("Free", "5 GB"), ("Team", "1 TB"), ("Business", "5 TB") })
+        {
+            var row = new AiPanelRow();
+            row.Cells.AddRange([plan, storage]);
+            table.Rows.Add(row);
+        }
+        return table;
+    }
+
+    [AvaloniaFact]
+    public void A_Table_Block_Is_Collected_While_A_Row_And_A_Column_Taken_Out_Of_It_Live_On()
+    {
+        var table = LimitsTable();
+        var row = table.Rows[1];
+        var column = table.Columns[1];
+        var weak = TestHelpers.ShowAndClose(() => new AiPanelBlockView(table), _ =>
+        {
+            table.Rows.Remove(row);
+            table.Columns.Remove(column);
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        row.Cells[1] = "2 TB";
+        column.Header = "Space";
+    }
+
+    [AvaloniaFact]
+    public void A_Row_Or_Column_Taken_Out_Of_The_Table_No_Longer_Reports_Changes()
+    {
+        var table = LimitsTable();
+        var view = new AiPanelBlockView(table);
+        var window = TestHelpers.Show(view);
+        try
+        {
+            var changes = 0;
+            view.DataChanged += (_, _) => changes++;
+            var row = table.Rows[1];
+            var column = table.Columns[1];
+            table.Rows.Remove(row);
+            table.Columns.Remove(column);
+            changes = 0;
+            row.Cells[1] = "2 TB";
+            column.Header = "Space";
+            changes.ShouldBe(0);
+
+            // What stays in the table still does.
+            table.Rows[0].Cells[0] = "Hobby";
+            table.Columns[0].Header = "Tier";
+            changes.ShouldBe(2);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    #endregion
 }

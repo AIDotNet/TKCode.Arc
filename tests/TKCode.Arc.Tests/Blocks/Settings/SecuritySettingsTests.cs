@@ -565,6 +565,47 @@ public class SecuritySettingsTests
     }
 
     [AvaloniaFact]
+    public void Security_Settings_Are_Collected_While_Their_Sessions_Live_On()
+    {
+        var sessions = new System.Collections.ObjectModel.ObservableCollection<SecuritySession>(Others());
+        var weak = TestHelpers.ShowAndClose(() => new SecuritySettings { Clock = new FixedClock(Now), Sessions = sessions });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        sessions.Add(Current());
+    }
+
+    [AvaloniaFact]
+    public void Security_Settings_Put_Back_List_The_Sessions_That_Changed_While_They_Were_Away()
+    {
+        var sessions = new System.Collections.ObjectModel.ObservableCollection<SecuritySession>(Others());
+        var security = new SecuritySettings { Clock = new FixedClock(Now), PasswordChangedAt = Now.AddMonths(-3), Sessions = sessions };
+        var host = new Border { Child = security };
+        var window = ShowWide(host);
+        try
+        {
+            SessionRows(security).Count.ShouldBe(3);
+            host.Child = null;
+            Settle();
+            var iPad = sessions.Single(s => s.Device == "iPad mini");
+            sessions.Remove(iPad);
+            sessions.Add(Current());
+
+            host.Child = security;
+            Settle();
+            SessionRows(security).Select(r => r.Header).ShouldBe(["MacBook Air · Firefox", "Pixel 9 · Larkspur app", "ThinkPad X1 · Edge"]);
+
+            // Back in the window, it listens again.
+            sessions.Add(iPad);
+            Settle();
+            SessionRows(security).Count.ShouldBe(4);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void An_Empty_Session_List_Shows_A_Note()
     {
         var security = Create(withSessions: false);

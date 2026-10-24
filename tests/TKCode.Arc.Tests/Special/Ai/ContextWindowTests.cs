@@ -529,4 +529,68 @@ public class ContextWindowTests
             window.Close();
         }
     }
+
+    private static AvaloniaList<ContextWindowItem> SmallSession() =>
+    [
+        new(ContextWindowCategory.System, "Instructions", 2_000),
+        new(ContextWindowCategory.Messages, "First", 10_000)
+    ];
+
+    [AvaloniaFact]
+    public void A_Card_Is_Collected_While_Its_Items_And_Models_Live_On()
+    {
+        var items = SmallSession();
+        var models = new AvaloniaList<ContextWindowModel> { new("small", "Small", 100_000, 8_000) };
+        var turns = new AvaloniaList<ContextWindowTurn>();
+        var weak = TestHelpers.ShowAndClose(() => new ContextWindow { Timers = new ContextWindowTestTimers(), Items = items, Models = models, Turns = turns },
+            _ => Pump());
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        // The data still works without the card.
+        items.Add(new ContextWindowItem(ContextWindowCategory.Messages, "Second", 5_000));
+        items[0].Tokens = 3_000;
+        models.Clear();
+    }
+
+    [AvaloniaFact]
+    public void A_Card_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var items = SmallSession();
+        var models = new AvaloniaList<ContextWindowModel> { new("small", "Small", 100_000, 8_000) };
+        var card = new ContextWindow
+        {
+            Timers = new ContextWindowTestTimers(),
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+            Items = items,
+            Models = models
+        };
+        var host = new Border { Child = card };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            window.Width = 792;
+            window.Height = 900;
+            Pump();
+            card.UsedTokens.ShouldBe(12_000);
+            // Changes made while away show once it is back.
+            host.Child = null;
+            Pump();
+            items.Add(new ContextWindowItem(ContextWindowCategory.Messages, "Second", 5_000));
+            items[0].Tokens = 3_000;
+            host.Child = card;
+            Pump();
+            card.UsedTokens.ShouldBe(18_000);
+            // And it follows changes made after it came back.
+            items[1].Tokens = 11_000;
+            Pump();
+            card.UsedTokens.ShouldBe(19_000);
+            items.RemoveAt(2);
+            Pump();
+            card.UsedTokens.ShouldBe(14_000);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

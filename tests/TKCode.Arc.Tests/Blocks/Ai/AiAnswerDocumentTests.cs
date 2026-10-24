@@ -928,4 +928,68 @@ public class AiAnswerDocumentTests
     }
 
     #endregion
+
+    [AvaloniaFact]
+    public void A_Document_Is_Collected_While_Its_Sources_Live_On()
+    {
+        var sources = AiAnswerSamples.Sources();
+        var weak = TestHelpers.ShowAndClose(() => new AiAnswerDocument { Sources = sources }, doc => doc.SetMarkdown("One. [1] Two. [2]"));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        sources.Add(new AiSource { Index = 9, Title = "Later" });
+    }
+
+    [AvaloniaFact]
+    public void A_Document_Taken_Out_And_Put_Back_Shows_The_Sources_That_Arrived_Meanwhile()
+    {
+        var sources = new AvaloniaList<AiSource> { new() { Title = "First" } };
+        var doc = new AiAnswerDocument { Sources = sources, CitationNameFormat = (n, title, domain) => $"Source {n}: {title}" };
+        var host = new Border { Child = doc };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            doc.SetMarkdown("One. [1] Two. [2] Five. [5]");
+            Settle(window);
+            var pills = doc.AllCitations().ToList();
+            pills.Select(p => p.HasSource).ShouldBe([true, false, false]);
+
+            host.Child = null;
+            sources.Add(new AiSource { Title = "Second" });
+            host.Child = doc;
+            Settle(window);
+            pills.Select(p => p.HasSource).ShouldBe([true, true, false]);
+            AutomationProperties.GetName(pills[1]).ShouldBe("Source 2: Second");
+
+            // And it follows the list again.
+            sources.Add(new AiSource { Index = 5, Title = "Fifth" });
+            pills[2].HasSource.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Code_Taken_Out_While_It_Is_Highlighted_Lets_Its_Session_Go_Once_Done()
+    {
+        var text = new AiAnswerCodeText();
+        var host = new Border { Child = text };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            text.SetCode("name: checks\non: [push]\n", "yaml", fade: false, languageChanged: true);
+            text.HasSession.ShouldBeTrue();
+            text.WhenHighlighted.IsCompleted.ShouldBeFalse();
+            host.Child = null;
+            await Task.WhenAny(text.WhenHighlighted, Task.Delay(TimeSpan.FromSeconds(20)));
+            Dispatcher.UIThread.RunJobs();
+            text.WhenHighlighted.IsCompleted.ShouldBeTrue();
+            text.HasSession.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

@@ -651,6 +651,60 @@ public class AvailabilityPickerTests
         }
     }
 
+    [AvaloniaFact]
+    public void A_Picker_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var week = CreateWeek();
+        var days = new System.Collections.ObjectModel.ObservableCollection<AvailabilityDay>(week.Days);
+        var people = new System.Collections.ObjectModel.ObservableCollection<ProjectPerson>(week.People);
+        var withSources = TestHelpers.ShowAndClose(() => new AvailabilityPicker { DaysSource = days, AttendeesSource = people });
+        // The picker's own lists hold the app's days and people: it follows those too.
+        var withItems = TestHelpers.ShowAndClose(() => CreatePicker(week));
+        TestHelpers.Collect(withSources, withItems);
+        (withSources.IsAlive, withItems.IsAlive).ShouldBe((false, false));
+        week.Days[0].Slots.Add(At(17, 0));
+        week.Days[1].Slots[0].BusyAttendees.Clear();
+        week.Noor.Name = "Noor H.";
+        days.RemoveAt(0);
+        people.RemoveAt(0);
+    }
+
+    [AvaloniaFact]
+    public void A_Picker_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var week = CreateWeek();
+        var picker = CreatePicker(week);
+        var host = new Border { Child = picker };
+        var window = Show(host);
+        try
+        {
+            picker.DayStrip!.Buttons.Count.ShouldBe(5);
+            host.Child = null;
+            Pump();
+            picker.Days.RemoveAt(4);
+            week.Noor.Name = "Noor H.";
+            week.Days[0].Slots.Add(At(17, 0));
+            host.Child = picker;
+            Pump();
+            picker.DayStrip!.Buttons.Count.ShouldBe(4);
+            (AutomationProperties.GetName(picker.AvatarStack!) ?? string.Empty).ShouldContain("Noor H.");
+            picker.SlotButtons.Count.ShouldBe(5);
+
+            // Back in the window, it listens again.
+            picker.Days.Add(week.Days[4]);
+            week.Noor.Name = "Noor Haddad";
+            week.Days[0].Slots.RemoveAt(4);
+            Pump();
+            picker.DayStrip!.Buttons.Count.ShouldBe(5);
+            (AutomationProperties.GetName(picker.AvatarStack!) ?? string.Empty).ShouldContain("Noor Haddad");
+            picker.SlotButtons.Count.ShouldBe(4);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     // Layout --------------------------------------------------------------------------------------------------------------
 
     [AvaloniaFact]

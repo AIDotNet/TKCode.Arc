@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -588,6 +589,59 @@ public class SpeculativeDecodingTests
         }
     }
 
+    private static AvaloniaList<DecodeToken> SampleTokens(int count)
+        => new(SpeculativeDecodingSamples.Tokens.Take(count).Select(t => new DecodeToken(t.Text, t.Ease, t.Miss)));
+
+    [AvaloniaFact]
+    public void A_Card_Is_Collected_While_Its_Tokens_And_Rounds_Live_On()
+    {
+        var tokens = SampleTokens(8);
+        var rounds = new AvaloniaList<DecodeRound>();
+        var weak = TestHelpers.ShowAndClose(() => new SpeculativeDecoding { AutoPlay = false, Tokens = tokens, Rounds = rounds });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        // The data still works without the card.
+        tokens.Add(new DecodeToken(" more"));
+        rounds.Clear();
+    }
+
+    [AvaloniaFact]
+    public void A_Card_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var tokens = SampleTokens(8);
+        var card = new SpeculativeDecoding { AutoPlay = false, Width = 720, Tokens = tokens };
+        var host = new Border { Child = card };
+        var window = Show(host, ArcMotionLevel.Full);
+        try
+        {
+            var plan = card.Plan;
+            var count = plan.Tokens.Count;
+            card.Advance(0.5);
+            // Away and back with nothing changed: the same plan, the story carries on from where it was.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            card.Plan.ShouldBeSameAs(plan);
+            card.StoryTime.ShouldBe(0.5);
+            // Changes made while away show once it is back.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            tokens.Add(new DecodeToken(" more"));
+            host.Child = card;
+            Dispatcher.UIThread.RunJobs();
+            card.Plan.Tokens.Count.ShouldBe(count + 1);
+            // And it follows changes made after it came back.
+            tokens.RemoveAt(tokens.Count - 1);
+            tokens.RemoveAt(tokens.Count - 1);
+            Dispatcher.UIThread.RunJobs();
+            card.Plan.Tokens.Count.ShouldBe(count - 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
 
 internal static class SpeculativeDecodingTestExtensions

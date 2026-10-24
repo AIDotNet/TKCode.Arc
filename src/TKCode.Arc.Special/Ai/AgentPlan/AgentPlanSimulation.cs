@@ -49,6 +49,7 @@ public sealed class AgentPlanSimulation
     private readonly HashSet<string> _inserted = new(StringComparer.Ordinal);
     private readonly List<AgentPlanStep> _initial = new();
     private IAgentPlanSimulationHost? _host;
+    private WeakReference<IAgentPlanSimulationHost>? _heldHost;
     private IDisposable? _timer;
     private Action? _pending;
     private TimeSpan _due;
@@ -84,7 +85,7 @@ public sealed class AgentPlanSimulation
     public AgentPlanStatus Status { get; private set; }
 
     /// <summary>True while it drives a plan.</summary>
-    public bool IsAttached => _host is not null;
+    public bool IsAttached => Host is not null;
 
     /// <summary>True when Keep planning has suggestions left.</summary>
     public bool CanKeepPlanning => _nextSuggestion < Suggestions.Count;
@@ -93,6 +94,9 @@ public sealed class AgentPlanSimulation
     public bool IsWaiting => _pending is not null;
 
     internal TimeSpan RemainingWhilePaused => _remaining;
+
+    /// <summary>The plan it drives; held weakly while the plan is off screen (see <see cref="Suspend"/>).</summary>
+    private IAgentPlanSimulationHost? Host => _host ?? (_heldHost is { } held && held.TryGetTarget(out var host) ? host : null);
 
     /// <summary>
     /// Starts driving <paramref name="host"/>: a plan with no steps gets the scripted draft; the steps it has now are what
@@ -130,12 +134,21 @@ public sealed class AgentPlanSimulation
     {
         Cancel();
         _host = null;
+        _heldHost = null;
         _suspended = false;
     }
 
-    /// <summary>Holds the waiting timer (the plan left the screen); <see cref="Wake"/> continues it.</summary>
+    /// <summary>
+    /// Holds the waiting timer (the plan left the screen); <see cref="Wake"/> continues it. Meanwhile the plan is held
+    /// weakly, so a simulation that outlives it (a view model's) does not keep it alive.
+    /// </summary>
     internal void Suspend()
     {
+        if (_host is not null)
+        {
+            _heldHost = new WeakReference<IAgentPlanSimulationHost>(_host);
+            _host = null;
+        }
         if (_suspended || _pending is null || _timer is null)
         {
             _suspended = true;
@@ -150,6 +163,11 @@ public sealed class AgentPlanSimulation
     /// <summary>Continues a timer held by <see cref="Suspend"/>.</summary>
     internal void Wake()
     {
+        if (_heldHost is not null)
+        {
+            _host = Host;
+            _heldHost = null;
+        }
         if (!_suspended)
         {
             return;
@@ -191,7 +209,7 @@ public sealed class AgentPlanSimulation
     /// <summary>Approve plan: every step starts pending and the first one starts after 280ms.</summary>
     internal void OnApproved()
     {
-        if (_host is not { } host || Status != AgentPlanStatus.Draft)
+        if (Host is not { } host || Status != AgentPlanStatus.Draft)
         {
             return;
         }
@@ -214,7 +232,7 @@ public sealed class AgentPlanSimulation
     /// <summary>Pause (true) keeps the waiting timer's remaining time; Resume (false) continues it.</summary>
     internal void OnPauseChanged(bool paused)
     {
-        if (_host is null)
+        if (Host is null)
         {
             return;
         }
@@ -241,7 +259,7 @@ public sealed class AgentPlanSimulation
     /// <summary>Retry runs the failed step again (its lines stay, the retry's lines follow); Skip moves on.</summary>
     internal void OnStepAction(AgentPlanStepActionKind kind, AgentPlanStep step)
     {
-        if (_host is null || step.State != AgentPlanStepState.Failed || Status is AgentPlanStatus.Draft or AgentPlanStatus.Done)
+        if (Host is null || step.State != AgentPlanStepState.Failed || Status is AgentPlanStatus.Draft or AgentPlanStatus.Done)
         {
             return;
         }
@@ -266,26 +284,28 @@ public sealed class AgentPlanSimulation
     /// <summary>Keep planning: after a short wait the next suggestion streams in before the last step.</summary>
     internal void OnKeepPlanning()
     {
-        if (_host is not { } host || Status != AgentPlanStatus.Draft || _planning || !CanKeepPlanning)
+        if (Host is not { } host || Status != AgentPlanStatus.Draft || _planning || !CanKeepPlanning)
         {
             return;
         }
         _planning = true;
         host.SetPlanning(true, CanKeepPlanning);
+        // The waiting action finds the plan when it runs: a captured one would stay alive while the timer is held.
         Schedule(PlanningWait, () =>
         {
             _planning = false;
+            var plan = Host!;
             var suggestion = Suggestions[_nextSuggestion++];
-            var index = Math.Max(0, host.Steps.Count - 1);
-            host.InsertSuggestion(suggestion.CreateStep(AgentPlanNoteKind.Suggested), index);
-            host.SetPlanning(false, CanKeepPlanning);
+            var index = Math.Max(0, plan.Steps.Count - 1);
+            plan.InsertSuggestion(suggestion.CreateStep(AgentPlanNoteKind.Suggested), index);
+            plan.SetPlanning(false, CanKeepPlanning);
         });
     }
 
     /// <summary>Start over: the draft the simulation started from, every suggestion available again.</summary>
     internal void OnStartOver()
     {
-        if (_host is not { } host)
+        if (Host is not { } host)
         {
             return;
         }
@@ -307,7 +327,7 @@ public sealed class AgentPlanSimulation
 
     private bool HasPending()
     {
-        foreach (var step in _host!.Steps)
+        foreach (var step in Host!.Steps)
         {
             if (step.State == AgentPlanStepState.Pending)
             {
@@ -331,7 +351,7 @@ public sealed class AgentPlanSimulation
 
     private void ActivateNext()
     {
-        var host = _host!;
+        var host = Host!;
         AgentPlanStep? next = null;
         foreach (var step in host.Steps)
         {
@@ -386,7 +406,7 @@ public sealed class AgentPlanSimulation
 
     private void Insert(AgentPlanStep after, AgentPlanScriptedStep inserted)
     {
-        var host = _host!;
+        var host = Host!;
         _inserted.Add(inserted.Id);
         var at = host.Steps.IndexOf(after);
         var step = inserted.CreateStep(AgentPlanNoteKind.AddedByAgent);
@@ -436,7 +456,7 @@ public sealed class AgentPlanSimulation
     private void SetStatus(AgentPlanStatus status)
     {
         Status = status;
-        _host?.SetSimulatedStatus(status);
+        Host?.SetSimulatedStatus(status);
     }
 
     private void Schedule(TimeSpan delay, Action action)

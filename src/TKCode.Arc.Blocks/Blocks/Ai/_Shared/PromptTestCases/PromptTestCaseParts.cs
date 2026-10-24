@@ -57,11 +57,38 @@ internal sealed class PromptTestCaseOption : AvaloniaButton
             {
                 ClearValue(LabelProperty);
             }
+            else if (this.IsAttachedToVisualTree())
+            {
+                FollowCase();
+            }
             else
             {
-                _labelBinding = Bind(LabelProperty, value.GetObservable(PromptTestCase.LabelProperty));
+                // The label as it is now; attaching makes it follow the case.
+                Label = value.Label;
             }
         }
+    }
+
+    /// <summary>The case is app data that can outlive the option: its label is followed only while the option is in a window.</summary>
+    private void FollowCase()
+    {
+        if (_case is not null && _labelBinding is null)
+        {
+            _labelBinding = Bind(LabelProperty, _case.GetObservable(PromptTestCase.LabelProperty));
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        FollowCase();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _labelBinding?.Dispose();
+        _labelBinding = null;
     }
 
     protected override void OnPointerEntered(PointerEventArgs e)

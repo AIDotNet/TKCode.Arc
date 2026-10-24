@@ -200,6 +200,8 @@ public class SwipeActions : ItemsControl
                 row.IsGenerated = false;
                 row.ClearValue(SwipeActionsRow.LabelProperty);
             }
+            // Let go of the list's shared actions (a cleared row that stays in the panel follows its own again).
+            row.OnActionsChanged();
         }
         UpdateFrame();
     }

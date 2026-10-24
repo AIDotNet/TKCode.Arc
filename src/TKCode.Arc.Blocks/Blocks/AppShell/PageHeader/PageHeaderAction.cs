@@ -126,9 +126,26 @@ public class PageHeaderAction : AvaloniaObject
     public event EventHandler? Click;
 
     private ICommand? _subscribedCommand;
+    private EventHandler? _stateChanged;
 
-    /// <summary>Raised when <see cref="CanExecute"/> may have changed (command state, enabled, loading).</summary>
-    internal event EventHandler? StateChanged;
+    /// <summary>
+    /// Raised when <see cref="CanExecute"/> may have changed (command state, enabled, loading). The command is followed
+    /// only while someone listens here (a header that shows the action): a command that outlives the view would otherwise
+    /// keep the action alive, and with it an <see cref="Icon"/> control and the header around it.
+    /// </summary>
+    internal event EventHandler? StateChanged
+    {
+        add
+        {
+            _stateChanged += value;
+            FollowCommand();
+        }
+        remove
+        {
+            _stateChanged -= value;
+            FollowCommand();
+        }
+    }
 
     /// <summary>True when the action can be chosen now: enabled, not loading, and its command can execute.</summary>
     internal bool CanExecute => IsEnabled && !IsLoading && (Command is not { } command || command.CanExecute(CommandParameter));
@@ -158,22 +175,32 @@ public class PageHeaderAction : AvaloniaObject
         base.OnPropertyChanged(change);
         if (change.Property == CommandProperty)
         {
-            if (_subscribedCommand is not null)
-            {
-                _subscribedCommand.CanExecuteChanged -= OnCanExecuteChanged;
-            }
-            _subscribedCommand = Command;
-            if (_subscribedCommand is not null)
-            {
-                _subscribedCommand.CanExecuteChanged += OnCanExecuteChanged;
-            }
-            StateChanged?.Invoke(this, EventArgs.Empty);
+            FollowCommand();
+            _stateChanged?.Invoke(this, EventArgs.Empty);
         }
         else if (change.Property == IsEnabledProperty || change.Property == IsLoadingProperty || change.Property == CommandParameterProperty)
         {
-            StateChanged?.Invoke(this, EventArgs.Empty);
+            _stateChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
-    private void OnCanExecuteChanged(object? sender, EventArgs e) => StateChanged?.Invoke(this, EventArgs.Empty);
+    private void FollowCommand()
+    {
+        var wanted = _stateChanged is null ? null : Command;
+        if (ReferenceEquals(wanted, _subscribedCommand))
+        {
+            return;
+        }
+        if (_subscribedCommand is not null)
+        {
+            _subscribedCommand.CanExecuteChanged -= OnCanExecuteChanged;
+        }
+        _subscribedCommand = wanted;
+        if (_subscribedCommand is not null)
+        {
+            _subscribedCommand.CanExecuteChanged += OnCanExecuteChanged;
+        }
+    }
+
+    private void OnCanExecuteChanged(object? sender, EventArgs e) => _stateChanged?.Invoke(this, EventArgs.Empty);
 }

@@ -307,7 +307,8 @@ public class ChatThread : ItemsControl
     private readonly ObservableCollection<ChatThreadRow> _rows = new();
     private readonly Dictionary<string, ChatThreadRow> _rowsByKey = new(StringComparer.Ordinal);
     private readonly Dictionary<ChatMessage, ChatThreadMessageRow> _messageRows = new(ReferenceEqualityComparer.Instance);
-    private readonly HashSet<ChatMessage> _subscribed = new(ReferenceEqualityComparer.Instance);
+    // The messages the rows and bodies were made for; while the thread is attached it also listens to each of them.
+    private readonly HashSet<ChatMessage> _tracked = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<string> _known = new(StringComparer.Ordinal);
     private readonly List<ChatMessage> _messages = new();
     private readonly ChatThreadBodies _bodies;
@@ -321,6 +322,7 @@ public class ChatThread : ItemsControl
     private ActivityLiveRegion? _typingRegion;
     private ActivityLiveRegion? _logRegion;
     private INotifyCollectionChanged? _typingSource;
+    private bool _watching;
     private readonly TranslateTransform _contentTranslate = new();
     private MotionValue<double>? _contentY;
     private MotionValue<double>? _scrollMotion;
@@ -468,10 +470,20 @@ public class ChatThread : ItemsControl
         Rebuild();
     }
 
+    // Messages and the typing list may outlive the view (a view model): the thread listens to them only while it is
+    // attached, so they do not keep it alive, and catches up with what changed meanwhile when it comes back.
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
         ArcToday.Changed += OnTodayChanged;
+        _watching = true;
+        foreach (var message in _tracked)
+        {
+            message.PropertyChanged += OnMessagePropertyChanged;
+        }
+        WatchTyping(TypingParticipantIds);
+        _bodies.CatchUp();
+        Rebuild();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -479,6 +491,25 @@ public class ChatThread : ItemsControl
         base.OnDetachedFromVisualTree(e);
         ArcToday.Changed -= OnTodayChanged;
         _picker?.Close(restoreFocus: false);
+        _watching = false;
+        foreach (var message in _tracked)
+        {
+            message.PropertyChanged -= OnMessagePropertyChanged;
+        }
+        WatchTyping(null);
+    }
+
+    private void WatchTyping(IEnumerable<string>? typing)
+    {
+        if (_typingSource is not null)
+        {
+            _typingSource.CollectionChanged -= OnTypingChanged;
+        }
+        _typingSource = _watching ? typing as INotifyCollectionChanged : null;
+        if (_typingSource is not null)
+        {
+            _typingSource.CollectionChanged += OnTypingChanged;
+        }
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -523,15 +554,7 @@ public class ChatThread : ItemsControl
         }
         else if (change.Property == TypingParticipantIdsProperty)
         {
-            if (_typingSource is not null)
-            {
-                _typingSource.CollectionChanged -= OnTypingChanged;
-            }
-            _typingSource = change.GetNewValue<IEnumerable<string>?>() as INotifyCollectionChanged;
-            if (_typingSource is not null)
-            {
-                _typingSource.CollectionChanged += OnTypingChanged;
-            }
+            WatchTyping(change.GetNewValue<IEnumerable<string>?>());
             Rebuild();
         }
         else if (change.Property == LabelProperty && _list is not null)
@@ -711,18 +734,21 @@ public class ChatThread : ItemsControl
                 _messages.Add(message);
             }
         }
-        // Keep PropertyChanged subscriptions in step with the messages.
+        // Keep PropertyChanged subscriptions (while attached) in step with the messages.
         var current = new HashSet<ChatMessage>(_messages, ReferenceEqualityComparer.Instance);
-        foreach (var gone in _subscribed.Where(m => !current.Contains(m)).ToList())
+        foreach (var gone in _tracked.Where(m => !current.Contains(m)).ToList())
         {
-            gone.PropertyChanged -= OnMessagePropertyChanged;
-            _subscribed.Remove(gone);
+            if (_watching)
+            {
+                gone.PropertyChanged -= OnMessagePropertyChanged;
+            }
+            _tracked.Remove(gone);
             _messageRows.Remove(gone);
             _bodies.Forget(gone);
         }
         foreach (var message in _messages)
         {
-            if (_subscribed.Add(message))
+            if (_tracked.Add(message) && _watching)
             {
                 message.PropertyChanged += OnMessagePropertyChanged;
             }
@@ -1653,6 +1679,8 @@ internal sealed class ChatThreadBodies(ChatThread thread)
     private readonly LinkedList<ChatMessage> _recent = new();
     private readonly Dictionary<ChatMessage, LinkedListNode<ChatMessage>> _nodes = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<ChatMessage> _streaming = new(ReferenceEqualityComparer.Instance);
+    // The message text each body was last given, to spot changes the thread missed while it was detached.
+    private readonly Dictionary<ChatMessage, string?> _given = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<ChatMessage, bool> _mine = new(ReferenceEqualityComparer.Instance);
     private ChatMessage? _appending;
 
@@ -1669,6 +1697,7 @@ internal sealed class ChatThreadBodies(ChatThread thread)
             markdown = Create();
             markdown.Text = message.Text;
             _bodies[message] = markdown;
+            _given[message] = message.Text;
         }
         Touch(message);
         if (!_mine.TryGetValue(message, out var was) || was != mine)
@@ -1695,6 +1724,7 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         {
             markdown.Append(text);
         }
+        _given[message] = before + text;
         _appending = message;
         try
         {
@@ -1724,11 +1754,40 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         if (_streaming.Remove(message) && _bodies.TryGetValue(message, out var streamed))
         {
             streamed.Text = message.Text;
+            _given[message] = message.Text;
             return;
         }
-        if (_bodies.TryGetValue(message, out var markdown) && markdown.Text != message.Text)
+        if (_bodies.TryGetValue(message, out var markdown))
         {
-            markdown.Text = message.Text;
+            if (markdown.Text != message.Text)
+            {
+                markdown.Text = message.Text;
+            }
+            _given[message] = message.Text;
+        }
+    }
+
+    /// <summary>
+    /// Applies the text changes the thread missed while it was detached (not listening to its messages), as
+    /// <see cref="OnTextChanged"/> would have: only bodies whose message text is no longer what they were given.
+    /// </summary>
+    public void CatchUp()
+    {
+        List<ChatMessage>? changed = null;
+        foreach (var message in _bodies.Keys)
+        {
+            if (!string.Equals(_given.GetValueOrDefault(message), message.Text, StringComparison.Ordinal))
+            {
+                (changed ??= new List<ChatMessage>()).Add(message);
+            }
+        }
+        if (changed is null)
+        {
+            return;
+        }
+        foreach (var message in changed)
+        {
+            OnTextChanged(message);
         }
     }
 
@@ -1739,6 +1798,7 @@ internal sealed class ChatThreadBodies(ChatThread thread)
             host.Child = null;
         }
         _streaming.Remove(message);
+        _given.Remove(message);
         _mine.Remove(message);
         if (_nodes.Remove(message, out var node))
         {

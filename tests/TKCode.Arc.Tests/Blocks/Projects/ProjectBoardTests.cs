@@ -953,6 +953,75 @@ public class ProjectBoardTests
         }
     }
 
+    // Outside data and the visual tree ----------------------------------------------------------------------------------
+
+    [AvaloniaFact]
+    public void A_Board_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var (rhea, tomas, ines) = ProjectBoardDemoData.CreateTeam();
+        var stages = new Avalonia.Collections.AvaloniaList<ProjectBoardStage>(ProjectBoardDemoData.CreateStages());
+        var team = new Avalonia.Collections.AvaloniaList<ProjectPerson> { rhea, tomas, ines };
+        var source = new System.Collections.ObjectModel.ObservableCollection<ProjectBoardTask>(ProjectBoardDemoData.CreateTasks(rhea, tomas, ines));
+        var tasks = new Avalonia.Collections.AvaloniaList<ProjectBoardTask>(ProjectBoardDemoData.CreateTasks(rhea, tomas, ines));
+        var withSource = TestHelpers.ShowAndClose(() => new ProjectBoard { Stages = stages, Team = team, CurrentUser = rhea, TasksSource = source });
+        var withTasks = TestHelpers.ShowAndClose(() => new ProjectBoard { Stages = stages, Team = team, CurrentUser = rhea, Tasks = tasks });
+        TestHelpers.Collect(withSource, withTasks);
+        (withSource.IsAlive, withTasks.IsAlive).ShouldBe((false, false));
+        source[0].StageKey = "done";
+        source.Add(new ProjectBoardTask("Later", "planned") { Owner = tomas });
+        tasks.RemoveAt(0);
+        stages[0].Header = "Next";
+        team.Add(new ProjectPerson("Ada Moreau"));
+        rhea.Name = "Rhea C.";
+    }
+
+    [AvaloniaFact]
+    public void A_Board_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var board = new ProjectBoard();
+        ProjectBoardDemoData.Fill(board);
+        var host = new Border { Child = board };
+        var window = TestHelpers.Show(host);
+        window.Width = 1440;
+        window.Height = 900;
+        Pump();
+        try
+        {
+            var team = TestHelpers.Descendant<ProjectsAvatarStack>(board, ProjectBoard.TeamPart);
+            team.VisiblePeople.Count.ShouldBe(3);
+            var task = board.Tasks.First(t => t.Title == "Split the settings API");
+            host.Child = null;
+            Pump();
+            task.StageKey = "done";
+            var added = new ProjectBoardTask("Added while away", "planned");
+            board.Tasks.Add(added);
+            board.Stages[0].Header = "Next up";
+            board.Team.RemoveAt(2);
+            host.Child = board;
+            Pump();
+            Titles(board, 3).ShouldContain("Split the settings API");
+            Titles(board, 0).ShouldContain("Added while away");
+            board.Panel!.Columns[0].Header.ShouldBe("Next up");
+            team.VisiblePeople.Count.ShouldBe(2);
+
+            // Back in the window, it listens again.
+            task.StageKey = "review";
+            board.Tasks.Remove(added);
+            board.Stages[0].Header = "Planned";
+            board.Team.Clear();
+            Pump();
+            Titles(board, 2).ShouldContain("Split the settings API");
+            Titles(board, 0).ShouldNotContain("Added while away");
+            board.Panel.Columns[0].Header.ShouldBe("Planned");
+            team.VisiblePeople.Count.ShouldBe(0);
+            team.IsVisible.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private sealed class RelayCommand(Action<object?> execute) : System.Windows.Input.ICommand
     {
         public event EventHandler? CanExecuteChanged

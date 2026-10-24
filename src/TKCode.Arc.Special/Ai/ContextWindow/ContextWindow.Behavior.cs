@@ -73,6 +73,8 @@ public partial class ContextWindow
     private AvaloniaList<ContextWindowTurn>? _observedTurns;
     private AvaloniaList<ContextWindowTurn>? _observedFiles;
     private readonly HashSet<ContextWindowItem> _observedItemSet = new();
+    private bool _attached;
+    private object?[]? _dataAtDetach;
 
     // The status line.
     private string _statusText = string.Empty;
@@ -380,6 +382,19 @@ public partial class ContextWindow
         }
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _attached = true;
+        ObserveData();
+        // Catch up with changes made while nothing listened (before the first attach, or while the card was away).
+        if (_dataAtDetach is null || !_dataAtDetach.SequenceEqual(DataState()))
+        {
+            OnDataChanged();
+        }
+        _dataAtDetach = null;
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
@@ -393,6 +408,9 @@ public partial class ContextWindow
             Land();
         }
         SettleNumbers();
+        _attached = false;
+        ObserveData();
+        _dataAtDetach = DataState();
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new CardPeer(this);
@@ -541,13 +559,46 @@ public partial class ContextWindow
         return _models.Count > 0 ? _models[0] : selected;
     }
 
+    /// <summary>The lists and items may be the app's (outliving the card): they are observed only while it is attached.</summary>
     private void ObserveData()
     {
-        Swap(ref _observedItems, Items);
-        Swap(ref _observedModels, Models);
-        Swap(ref _observedTurns, Turns);
-        Swap(ref _observedFiles, Files);
+        Swap(ref _observedItems, _attached ? Items : null);
+        Swap(ref _observedModels, _attached ? Models : null);
+        Swap(ref _observedTurns, _attached ? Turns : null);
+        Swap(ref _observedFiles, _attached ? Files : null);
         ObserveItemProperties();
+    }
+
+    /// <summary>The given items, models, turns and files and the item values the card reads, to tell whether they changed unobserved.</summary>
+    private object?[] DataState()
+    {
+        var state = new List<object?>();
+        AddList(state, Items);
+        if (Items is { } items)
+        {
+            foreach (var item in items)
+            {
+                state.Add(item.Tokens);
+                state.Add(item.Category);
+            }
+        }
+        AddList(state, Models);
+        AddList(state, Turns);
+        AddList(state, Files);
+        return state.ToArray();
+    }
+
+    private static void AddList<T>(List<object?> state, AvaloniaList<T>? list)
+    {
+        // The count marks where the list ends (turns and files hold the same type).
+        state.Add(list?.Count ?? -1);
+        if (list is not null)
+        {
+            foreach (var entry in list)
+            {
+                state.Add(entry);
+            }
+        }
     }
 
     private void Swap<T>(ref AvaloniaList<T>? field, AvaloniaList<T>? value)
@@ -575,7 +626,7 @@ public partial class ContextWindow
             item.PropertyChanged -= OnItemPropertyChanged;
         }
         _observedItemSet.Clear();
-        if (current is null)
+        if (current is null || !_attached)
         {
             return;
         }

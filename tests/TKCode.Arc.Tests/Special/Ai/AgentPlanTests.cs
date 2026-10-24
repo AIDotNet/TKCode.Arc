@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -757,6 +758,118 @@ public class AgentPlanTests
             Assert.Equal(6, plan.Steps.Count);
             Assert.Equal(6, Rows(plan).Count);
             Assert.Same(plan.ApproveButton, Focused(window));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Plan_Is_Collected_While_Its_Steps_Live_On()
+    {
+        var steps = new AvaloniaList<AgentPlanStep> { new("a", "Alpha"), new("b", "Beta") };
+        var weak = TestHelpers.ShowAndClose(() => new AgentPlan { Status = AgentPlanStatus.Running, Steps = steps });
+        TestHelpers.Collect(weak);
+        Assert.False(weak.IsAlive);
+        // The data still works without the plan.
+        steps.Add(new AgentPlanStep("c", "Gamma"));
+        steps[0].State = AgentPlanStepState.Done;
+    }
+
+    [AvaloniaFact]
+    public void A_Plan_Is_Collected_While_Its_Simulation_Lives_On()
+    {
+        var clock = new AgentPlanManualScheduler();
+        var simulation = new AgentPlanSimulation(clock);
+        // Keep planning leaves a suggestion waiting on the simulation's timer when the plan goes away.
+        var weak = TestHelpers.ShowAndClose(() => new AgentPlan { Simulation = simulation }, plan => plan.KeepPlanning());
+        TestHelpers.Collect(weak);
+        Assert.False(weak.IsAlive);
+        Assert.False(simulation.IsAttached);
+        clock.Advance(TimeSpan.FromSeconds(5));
+    }
+
+    [AvaloniaFact]
+    public void A_Plan_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var steps = new AvaloniaList<AgentPlanStep> { new("a", "Alpha"), new("b", "Beta") };
+        var plan = new AgentPlan { Status = AgentPlanStatus.Draft, Steps = steps, Width = 560, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+        var host = new Border { Child = plan };
+        var window = TestHelpers.Show(host);
+        window.Width = 640;
+        window.Height = 1000;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            Assert.Equal(2, Rows(plan).Count);
+            var first = Rows(plan)[0];
+            // Away and back with nothing changed: the same rows.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            host.Child = plan;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Same(first, Rows(plan)[0]);
+            // Changes made while away show once it is back.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            steps.Add(new AgentPlanStep("c", "Gamma"));
+            steps[0].Title = "Alpha two";
+            host.Child = plan;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(new[] { "Alpha two", "Beta", "Gamma" }, Rows(plan).Select(r => r.TitleBox.Text ?? string.Empty));
+            Assert.Same(first, Rows(plan)[0]);
+            Assert.Equal("3", plan.HeadingCount.Text);
+            // Moves and removals too.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            steps.Move(2, 0);
+            steps.RemoveAt(2);
+            host.Child = plan;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(new[] { "Gamma", "Alpha two" }, Rows(plan).Select(r => r.TitleBox.Text ?? string.Empty));
+            Assert.Same(first, Rows(plan)[1]);
+            // And it follows changes made after it came back.
+            steps.Add(new AgentPlanStep("d", "Delta"));
+            steps[1].Title = "Alpha three";
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(new[] { "Gamma", "Alpha three", "Delta" }, Rows(plan).Select(r => r.TitleBox.Text ?? string.Empty));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Simulated_Run_Waits_While_The_Plan_Is_Away_And_Carries_On_When_It_Is_Back()
+    {
+        var clock = new AgentPlanManualScheduler();
+        var plan = new AgentPlan { Simulation = new AgentPlanSimulation(clock), Width = 560, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+        var host = new Border { Child = plan };
+        var window = TestHelpers.Show(host);
+        window.Width = 640;
+        window.Height = 1000;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            plan.Approve();
+            clock.Advance(TimeSpan.FromMilliseconds(300));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(AgentPlanStepState.Active, plan.Steps[0].State);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            // Nothing runs while the plan is away.
+            clock.Advance(TimeSpan.FromSeconds(10));
+            Assert.Empty(plan.Steps[0].Activities);
+            Assert.Equal(AgentPlanStatus.Running, plan.CurrentStatus);
+            host.Child = plan;
+            Dispatcher.UIThread.RunJobs();
+            clock.Advance(TimeSpan.FromSeconds(10));
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(AgentPlanStepState.Done, plan.Steps[0].State);
+            Assert.NotEmpty(plan.Steps[0].Activities);
+            Assert.Equal(plan.Steps.Count, Rows(plan).Count);
         }
         finally
         {

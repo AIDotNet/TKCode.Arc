@@ -170,6 +170,7 @@ public partial class MixtureOfExperts : Explainer
     private AvaloniaList<MixtureOfExpertsTokenItem>? _observedTokens;
     private AvaloniaList<MixtureOfExpertsExpert>? _observedExperts;
     private readonly List<AvaloniaObject> _observedItems = new();
+    private object?[] _dataSeen = [];
     private MixtureOfExpertsPlan _plan = MixtureOfExpertsPlanner.Plan([], MixtureOfExpertsPlanner.MinExperts, 2, 1);
     private int _planVersion;
     private bool _dataDirty = true;
@@ -487,6 +488,18 @@ public partial class MixtureOfExperts : Explainer
 
     // Data ---------------------------------------------------------------------------------------------------------------
 
+    private protected override void WatchData(bool watch)
+    {
+        ObserveCollections();
+        WatchItems();
+        if (watch && !_dataSeen.SequenceEqual(DataState()))
+        {
+            // Changed while nothing listened (or before the first attach): re-plan as a change seen live would.
+            ScheduleDataChanged();
+        }
+    }
+
+    /// <summary>The lists may be the host's: they are observed only while the card is attached.</summary>
     private void ObserveCollections()
     {
         if (_observedTokens is not null)
@@ -497,8 +510,8 @@ public partial class MixtureOfExperts : Explainer
         {
             _observedExperts.CollectionChanged -= OnCollectionChanged;
         }
-        _observedTokens = Tokens;
-        _observedExperts = Experts;
+        _observedTokens = IsAttached ? Tokens : null;
+        _observedExperts = IsAttached ? Experts : null;
         if (_observedTokens is not null)
         {
             _observedTokens.CollectionChanged += OnCollectionChanged;
@@ -548,20 +561,12 @@ public partial class MixtureOfExperts : Explainer
     private void RefreshData()
     {
         _dataDirty = false;
-        foreach (var item in _observedItems)
-        {
-            item.PropertyChanged -= OnItemPropertyChanged;
-        }
-        _observedItems.Clear();
         _experts.Clear();
-        var experts = Experts;
-        if (experts is { Count: >= MixtureOfExpertsPlanner.MinExperts })
+        if (OwnExperts() is { } experts)
         {
-            foreach (var expert in experts.Take(MixtureOfExpertsPlanner.MaxExperts))
+            foreach (var expert in experts)
             {
                 _experts.Add((expert.Name, expert.Handles, expert.Icon));
-                expert.PropertyChanged += OnItemPropertyChanged;
-                _observedItems.Add(expert);
             }
         }
         else
@@ -572,14 +577,11 @@ public partial class MixtureOfExperts : Explainer
             }
         }
         _tokens.Clear();
-        var tokens = Tokens;
-        if (tokens is { Count: > 0 })
+        if (OwnTokens() is { } tokens)
         {
             foreach (var token in tokens)
             {
                 _tokens.Add((token.Text ?? string.Empty, token.Scores));
-                token.PropertyChanged += OnItemPropertyChanged;
-                _observedItems.Add(token);
             }
         }
         else
@@ -589,7 +591,56 @@ public partial class MixtureOfExperts : Explainer
                 _tokens.Add((token.Text, token.Scores));
             }
         }
+        _dataSeen = DataState();
+        WatchItems();
         Replan();
+    }
+
+    /// <summary>The given experts the card reads, or null when it shows the default ones.</summary>
+    private IEnumerable<MixtureOfExpertsExpert>? OwnExperts()
+        => Experts is { Count: >= MixtureOfExpertsPlanner.MinExperts } experts ? experts.Take(MixtureOfExpertsPlanner.MaxExperts) : null;
+
+    /// <summary>The given tokens, or null when the card shows the default sentence.</summary>
+    private IEnumerable<MixtureOfExpertsTokenItem>? OwnTokens() => Tokens is { Count: > 0 } tokens ? tokens : null;
+
+    /// <summary>The given items and the values the routing reads from them, to tell whether they changed unobserved.</summary>
+    private object?[] DataState()
+    {
+        var state = new List<object?>();
+        foreach (var expert in OwnExperts() ?? [])
+        {
+            state.Add(expert);
+            state.Add(expert.Name);
+            state.Add(expert.Handles);
+            state.Add(expert.Icon);
+        }
+        // Experts and tokens are different types, so the two runs cannot be mistaken for each other.
+        foreach (var token in OwnTokens() ?? [])
+        {
+            state.Add(token);
+            state.Add(token.Text);
+            state.Add(token.Scores);
+        }
+        return state.ToArray();
+    }
+
+    /// <summary>Listens to the items the routing reads (the host's objects) while the card is attached.</summary>
+    private void WatchItems()
+    {
+        foreach (var item in _observedItems)
+        {
+            item.PropertyChanged -= OnItemPropertyChanged;
+        }
+        _observedItems.Clear();
+        if (!IsAttached)
+        {
+            return;
+        }
+        foreach (var item in (OwnExperts() ?? []).Concat<AvaloniaObject>(OwnTokens() ?? []))
+        {
+            item.PropertyChanged += OnItemPropertyChanged;
+            _observedItems.Add(item);
+        }
     }
 
     private void Replan()

@@ -1,6 +1,7 @@
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
@@ -362,6 +363,44 @@ public class ReactionsTests
             TestHelpers.Descendant<Primitives.RollingDigits>(pill).DisplayText.ShouldBe("10");
             pill.Glyph!.KickScaleVelocity.ShouldBe(0);
             AutomationProperties.GetName(pill).ShouldBe("Like, 10 reactions");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Reactions_Are_Collected_While_Their_Options_Live_On()
+    {
+        var options = new AvaloniaList<ReactionOption> { new("like", "Like", ArcIcons.ThumbsUp), new("love", "Love", ArcIcons.Heart) };
+        var weak = TestHelpers.ShowAndClose(() => new Reactions { Value = [new Reaction("like", 3)], Options = options });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        options.Add(new ReactionOption("star", "Star", ArcIcons.Star));
+    }
+
+    [AvaloniaFact]
+    public void Reactions_Put_Back_Show_Options_Changed_While_They_Were_Away()
+    {
+        var options = new AvaloniaList<ReactionOption> { new("like", "Like", ArcIcons.ThumbsUp) };
+        var reactions = new Reactions { Value = [new Reaction("like", 3), new Reaction("love", 2)], Options = options };
+        var host = new Border { Child = reactions };
+        var window = TestHelpers.Show(host);
+        try
+        {
+            reactions.Pills.Count.ShouldBe(1);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            options.Add(new ReactionOption("love", "Love", ArcIcons.Heart));
+            host.Child = reactions;
+            Dispatcher.UIThread.RunJobs();
+            reactions.Pills.Count.ShouldBe(2);
+            reactions.PillFor("love").ShouldNotBeNull();
+            options.RemoveAt(0);
+            Dispatcher.UIThread.RunJobs();
+            reactions.Pills.Count.ShouldBe(1);
+            reactions.PillFor("like").ShouldBeNull();
         }
         finally
         {

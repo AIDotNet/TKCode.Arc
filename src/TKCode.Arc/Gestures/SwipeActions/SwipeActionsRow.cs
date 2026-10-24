@@ -131,7 +131,10 @@ public class SwipeActionsRow : ContentControl
     private readonly MotionValue<double> _presence;
     private readonly MotionValue<double> _fade;
     private readonly TranslateTransform _translate = new();
+    // The actions may be shared (the list's defaults, or app objects): their changes are watched only while the row is
+    // shown, so a removed row is not kept alive by actions that outlive it.
     private readonly List<SwipeAction> _watched = new();
+    private bool _watching;
     private SwipeActionsRowLayers? _layers;
     private Panel? _host;
     private SwipeActionsMoreButton? _more;
@@ -373,11 +376,28 @@ public class SwipeActionsRow : ContentControl
     /// <summary>The actions (or the list's defaults) changed: redraw, rebuild the menu on its next open, close an emptied side.</summary>
     internal void OnActionsChanged()
     {
+        WatchActions();
+        _menuDirty = true;
+        _layers?.Reset();
+        UpdateHasActions();
+        if (OpenSide != SwipeActionSide.None && ActionsOf(OpenSide).Count == 0)
+        {
+            Settle(0);
+        }
+    }
+
+    /// <summary>Watches the actions the row shows while it is shown (and none otherwise).</summary>
+    private void WatchActions()
+    {
         foreach (var action in _watched)
         {
             action.PropertyChanged -= OnActionPropertyChanged;
         }
         _watched.Clear();
+        if (!_watching)
+        {
+            return;
+        }
         foreach (var side in new[] { SwipeActionSide.Leading, SwipeActionSide.Trailing })
         {
             foreach (var action in ActionsOf(side))
@@ -385,13 +405,6 @@ public class SwipeActionsRow : ContentControl
                 action.PropertyChanged += OnActionPropertyChanged;
                 _watched.Add(action);
             }
-        }
-        _menuDirty = true;
-        _layers?.Reset();
-        UpdateHasActions();
-        if (OpenSide != SwipeActionSide.None && ActionsOf(OpenSide).Count == 0)
-        {
-            Settle(0);
         }
     }
 
@@ -439,6 +452,11 @@ public class SwipeActionsRow : ContentControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchActions();
+        // An action may have changed while the row was away.
+        _menuDirty = true;
+        _layers?.Reset();
         if (_enterPending)
         {
             StartEntrance();
@@ -448,6 +466,8 @@ public class SwipeActionsRow : ContentControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchActions();
         // A removed row is gone; if it is ever shown again it starts at rest.
         _restoreTimer?.Dispose();
         _restoreTimer = null;

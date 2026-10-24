@@ -15,9 +15,12 @@ public partial class WeekCalendar
     private readonly Dictionary<string, WeekCalendarSource> _calendarById = new(StringComparer.Ordinal);
     private readonly HashSet<WeekCalendarEvent> _watchedEvents = new();
     private readonly HashSet<WeekCalendarSource> _watchedCalendars = new();
+    private INotifyCollectionChanged? _observedEventsList;
     private INotifyCollectionChanged? _observedEvents;
+    private INotifyCollectionChanged? _observedCalendarsList;
     private INotifyCollectionChanged? _observedCalendars;
     private WeekCalendarIndex _index = WeekCalendarIndex.Empty;
+    private bool _dataAttached;
     private bool _rebuildPending;
 
     /// <summary>The events shown (from <see cref="EventsSource"/> or <see cref="Events"/>).</summary>
@@ -78,55 +81,53 @@ public partial class WeekCalendar
 
     private void OnEventsPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        if (change.Property == EventsProperty)
+        WatchCollections();
+        ScheduleRebuild();
+    }
+
+    /// <summary>
+    /// The calendar follows its lists and the events and calendars in them only while it is in a visual tree (like its
+    /// window and clock hooks): they are the app's and usually outlive the calendar. Back in a tree it reads them again.
+    /// </summary>
+    private void OnDataAttached()
+    {
+        _dataAttached = true;
+        WatchCollections();
+        // Read now rather than on the queued turn: what changed meanwhile was missed, and a render before that turn would
+        // apply it mid-render (the swatches read the calendars while they draw).
+        RebuildData();
+    }
+
+    private void OnDataDetached()
+    {
+        _dataAttached = false;
+        WatchCollections();
+        Watch(_events, _watchedEvents, OnEventChanged);
+        Watch(_calendars, _watchedCalendars, OnCalendarChanged);
+    }
+
+    private void WatchCollections()
+    {
+        Observe(ref _observedEventsList, _dataAttached ? Events : null, OnEventsCollectionChanged);
+        Observe(ref _observedEvents, _dataAttached ? EventsSource as INotifyCollectionChanged : null, OnEventsCollectionChanged);
+        Observe(ref _observedCalendarsList, _dataAttached ? Calendars : null, OnCalendarsCollectionChanged);
+        Observe(ref _observedCalendars, _dataAttached ? CalendarsSource as INotifyCollectionChanged : null, OnCalendarsCollectionChanged);
+    }
+
+    private static void Observe(ref INotifyCollectionChanged? observed, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
+    {
+        if (ReferenceEquals(observed, next))
         {
-            if (change.OldValue is AvaloniaList<WeekCalendarEvent> old)
-            {
-                old.CollectionChanged -= OnEventsCollectionChanged;
-            }
-            if (change.NewValue is AvaloniaList<WeekCalendarEvent> list)
-            {
-                list.CollectionChanged += OnEventsCollectionChanged;
-            }
-            ScheduleRebuild();
+            return;
         }
-        else if (change.Property == EventsSourceProperty)
+        if (observed is not null)
         {
-            if (_observedEvents is not null)
-            {
-                _observedEvents.CollectionChanged -= OnEventsCollectionChanged;
-            }
-            _observedEvents = EventsSource as INotifyCollectionChanged;
-            if (_observedEvents is not null)
-            {
-                _observedEvents.CollectionChanged += OnEventsCollectionChanged;
-            }
-            ScheduleRebuild();
+            observed.CollectionChanged -= handler;
         }
-        else if (change.Property == CalendarsProperty)
+        observed = next;
+        if (observed is not null)
         {
-            if (change.OldValue is AvaloniaList<WeekCalendarSource> old)
-            {
-                old.CollectionChanged -= OnCalendarsCollectionChanged;
-            }
-            if (change.NewValue is AvaloniaList<WeekCalendarSource> list)
-            {
-                list.CollectionChanged += OnCalendarsCollectionChanged;
-            }
-            ScheduleRebuild();
-        }
-        else if (change.Property == CalendarsSourceProperty)
-        {
-            if (_observedCalendars is not null)
-            {
-                _observedCalendars.CollectionChanged -= OnCalendarsCollectionChanged;
-            }
-            _observedCalendars = CalendarsSource as INotifyCollectionChanged;
-            if (_observedCalendars is not null)
-            {
-                _observedCalendars.CollectionChanged += OnCalendarsCollectionChanged;
-            }
-            ScheduleRebuild();
+            observed.CollectionChanged += handler;
         }
     }
 
@@ -192,13 +193,17 @@ public partial class WeekCalendar
         OnDataRebuilt();
     }
 
-    private static void Watch<T>(List<T> items, HashSet<T> watched, EventHandler<AvaloniaPropertyChangedEventArgs> handler)
+    private void Watch<T>(List<T> items, HashSet<T> watched, EventHandler<AvaloniaPropertyChangedEventArgs> handler)
         where T : AvaloniaObject
     {
-        foreach (var item in watched.Where(w => !items.Contains(w)).ToList())
+        foreach (var item in watched.Where(w => !_dataAttached || !items.Contains(w)).ToList())
         {
             item.PropertyChanged -= handler;
             watched.Remove(item);
+        }
+        if (!_dataAttached)
+        {
+            return;
         }
         foreach (var item in items)
         {

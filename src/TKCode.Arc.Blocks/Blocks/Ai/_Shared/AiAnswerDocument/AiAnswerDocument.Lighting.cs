@@ -450,6 +450,7 @@ internal partial class AiAnswerDocument
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        HookSources(null);
         CloseCard();
         _hoverPill = null;
     }

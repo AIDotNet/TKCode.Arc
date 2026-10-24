@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -573,6 +574,72 @@ public class ReasoningTreeTests
                 Dispatcher.UIThread.RunJobs();
             }
             texts.Misses.ShouldBe(misses);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Tree_Is_Collected_While_Its_Thoughts_Live_On()
+    {
+        var thoughts = new ObservableCollection<ReasoningThought>
+        {
+            new("Cache at the edge", 0.6) { Children = { new ReasoningThought("Purge on publish", 0.7) } },
+            new("Add a read replica", 0.4)
+        };
+        var weak = TestHelpers.ShowAndClose(() => new ReasoningTree { AutoPlay = false, ThoughtsSource = thoughts });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        // The data still works without the card.
+        thoughts.Add(new ReasoningThought("Shard the table", 0.5));
+        thoughts[0].Score = 0.9;
+        thoughts[0].Children.Add(new ReasoningThought("Warm on deploy"));
+    }
+
+    [AvaloniaFact]
+    public void A_Tree_Taken_Out_And_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var clock = new ManualFrameClock();
+        using var install = clock.Install();
+        var edge = new ReasoningThought("Cache at the edge", 0.6) { Children = { new ReasoningThought("Purge on publish", 0.7) } };
+        var thoughts = new ObservableCollection<ReasoningThought> { edge, new("Add a read replica", 0.4) };
+        var tree = new ReasoningTree
+        {
+            AutoPlay = false,
+            Width = 760,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
+            ThoughtsSource = thoughts
+        };
+        var host = new Border { Child = tree };
+        var window = TestHelpers.Show(host, ArcMotionLevel.Full);
+        try
+        {
+            window.Width = 840;
+            window.Height = 1000;
+            Dispatcher.UIThread.RunJobs();
+            var model = tree.SearchModel!;
+            model.ThoughtCount.ShouldBe(3);
+            // Away and back with nothing changed: the same search, nothing starts over.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            host.Child = tree;
+            Dispatcher.UIThread.RunJobs();
+            tree.SearchModel.ShouldBeSameAs(model);
+            // Changes made while away show once it is back.
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            thoughts.Add(new ReasoningThought("Shard the table", 0.5));
+            edge.Label = "Edge cache";
+            host.Child = tree;
+            Dispatcher.UIThread.RunJobs();
+            tree.SearchModel!.ThoughtCount.ShouldBe(4);
+            tree.SearchModel.Nodes.ShouldContain(n => n.Label == "Edge cache");
+            // And it follows changes made after it came back.
+            edge.Children.Add(new ReasoningThought("Warm on deploy", 0.8));
+            Dispatcher.UIThread.RunJobs();
+            tree.SearchModel!.ThoughtCount.ShouldBe(5);
         }
         finally
         {

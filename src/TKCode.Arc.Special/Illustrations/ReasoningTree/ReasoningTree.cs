@@ -105,6 +105,7 @@ public class ReasoningTree : Explainer
     private readonly ReasoningTreeScene _scene = new();
     private readonly List<ReasoningThought> _watched = new();
     private INotifyCollectionChanged? _watchedSource;
+    private object?[]? _dataSeen;
     private ReasoningTreeStage? _stage;
     private ReasoningTreeStatus? _status;
     private SegmentedControl? _beam;
@@ -379,6 +380,7 @@ public class ReasoningTree : Explainer
             return;
         }
         _modelDirty = false;
+        _dataSeen = DataState();
         _model = ReasoningTreeModel.Build(Question ?? string.Empty, EffectiveDetail(), EffectiveThoughts(), Seed);
         _results =
         [
@@ -597,13 +599,24 @@ public class ReasoningTree : Explainer
         DataChanged();
     }
 
+    private protected override void WatchData(bool watch)
+    {
+        WatchSource();
+        if (watch && _dataSeen is not null && !_dataSeen.SequenceEqual(DataState()))
+        {
+            // Changed while nothing listened: search again as a change seen live would.
+            DataChanged();
+        }
+    }
+
+    /// <summary>A view model's list and its thoughts can outlive the card: they are observed only while it is attached.</summary>
     private void WatchSource()
     {
         if (_watchedSource is not null)
         {
             _watchedSource.CollectionChanged -= OnThoughtsChanged;
         }
-        _watchedSource = ThoughtsSource as INotifyCollectionChanged;
+        _watchedSource = IsAttached ? ThoughtsSource as INotifyCollectionChanged : null;
         if (_watchedSource is not null)
         {
             _watchedSource.CollectionChanged += OnThoughtsChanged;
@@ -618,6 +631,10 @@ public class ReasoningTree : Explainer
             thought.Changed -= OnThoughtChanged;
         }
         _watched.Clear();
+        if (!IsAttached)
+        {
+            return;
+        }
         IEnumerable list = ThoughtsSource ?? (IEnumerable)Thoughts;
         foreach (var item in list)
         {
@@ -630,6 +647,44 @@ public class ReasoningTree : Explainer
     }
 
     private void OnThoughtChanged(object? sender, EventArgs e) => DataChanged();
+
+    /// <summary>The given thoughts the search reads (to depth 3) and their values, to tell whether they changed unobserved.</summary>
+    private object?[] DataState()
+    {
+        var state = new List<object?>();
+        // An empty Thoughts (the sample story) reads as no thoughts.
+        foreach (var thought in ThoughtsSource ?? Thoughts)
+        {
+            AddState(state, thought, 1);
+        }
+        return state.ToArray();
+    }
+
+    private static void AddState(List<object?> state, ReasoningThought? thought, int depth)
+    {
+        state.Add(thought);
+        if (thought is null)
+        {
+            return;
+        }
+        state.Add(thought.Key);
+        state.Add(thought.Label);
+        state.Add(thought.Text);
+        state.Add(thought.Score);
+        if (depth >= ReasoningTreeModel.MaxDepth)
+        {
+            return;
+        }
+        // The count marks where this thought's children end.
+        state.Add(thought.Children.Count);
+        foreach (var child in thought.Children)
+        {
+            if (!ReferenceEquals(child, thought))
+            {
+                AddState(state, child, depth + 1);
+            }
+        }
+    }
 
     /// <summary>The data changed: search again once the current batch of changes is done.</summary>
     private void DataChanged()

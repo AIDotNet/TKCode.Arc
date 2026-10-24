@@ -9,6 +9,12 @@ namespace TKCode.Arc;
 /// handoff at its moment, the way events would arrive from a backend. When the source run is over it turns live mode
 /// off, so the timeline settles on its summary.
 /// </summary>
+/// <remarks>
+/// A running driver works on a dispatcher timer, which keeps the driver, its timeline and the view around the timeline
+/// alive and keeps delivering events until the run ends, also after the timeline has left the screen. Call
+/// <see cref="Stop"/> (or <see cref="Dispose"/>) when the timeline leaves the visual tree, for example from the host's
+/// <c>OnDetachedFromVisualTree</c>, and <see cref="Start"/> again when it is shown.
+/// </remarks>
 public sealed class AgentTimelineLiveDriver : IDisposable
 {
     private readonly AgentTimelineRun _source;

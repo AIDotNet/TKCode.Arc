@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Globalization;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
@@ -71,6 +72,9 @@ public class Gauge : Control
     private readonly MotionValue<Color> _ringColor;
     private readonly MotionValue<Color> _textColor;
     private IList<GaugeThreshold> _thresholds;
+    // The bands list may be a view model's: it is observed only while the gauge is shown, and re-read when it comes back.
+    private AvaloniaList<GaugeThreshold>? _observedThresholds;
+    private bool _watching;
     private GaugeThreshold[] _bands = [];
     private GaugeThreshold? _live;
     private bool _filled;
@@ -115,9 +119,7 @@ public class Gauge : Control
             VisualChildren.Add(child);
             LogicalChildren.Add(child);
         }
-        var list = new AvaloniaList<GaugeThreshold>();
-        list.CollectionChanged += (_, _) => OnThresholdsChanged();
-        _thresholds = list;
+        _thresholds = new AvaloniaList<GaugeThreshold>();
         AutomationProperties.SetLiveSetting(this, AutomationLiveSetting.Polite);
     }
 
@@ -176,10 +178,7 @@ public class Gauge : Control
         set
         {
             _thresholds = value ?? new AvaloniaList<GaugeThreshold>();
-            if (_thresholds is AvaloniaList<GaugeThreshold> list)
-            {
-                list.CollectionChanged += (_, _) => OnThresholdsChanged();
-            }
+            WatchThresholds();
             OnThresholdsChanged();
         }
     }
@@ -249,6 +248,22 @@ public class Gauge : Control
         return found;
     }
 
+    /// <summary>Listens to the current bands list while shown (and to nothing otherwise).</summary>
+    private void WatchThresholds()
+    {
+        if (_observedThresholds is not null)
+        {
+            _observedThresholds.CollectionChanged -= OnThresholdsCollectionChanged;
+        }
+        _observedThresholds = _watching ? _thresholds as AvaloniaList<GaugeThreshold> : null;
+        if (_observedThresholds is not null)
+        {
+            _observedThresholds.CollectionChanged += OnThresholdsCollectionChanged;
+        }
+    }
+
+    private void OnThresholdsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnThresholdsChanged();
+
     private void OnThresholdsChanged()
     {
         _bands = _thresholds.Where(t => t is not null).OrderBy(t => t.From).ToArray();
@@ -291,14 +306,18 @@ public class Gauge : Control
         base.OnAttachedToVisualTree(e);
         _label.IsVisible = !string.IsNullOrEmpty(Label);
         _detail.IsVisible = !string.IsNullOrEmpty(Detail);
-        _status.IsVisible = _bands.Length > 0;
-        UpdateState(animate: false);
+        _watching = true;
+        WatchThresholds();
+        // Reads the bands again (they may have changed while the gauge was away) and shows the state without animating.
+        OnThresholdsChanged();
         _reveal.Attach();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchThresholds();
         _reveal.Detach();
     }
 

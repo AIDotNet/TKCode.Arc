@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
 
@@ -295,10 +296,15 @@ public partial class AiChat
     /// <summary>
     /// Follows every list and object the visible branch runs through: the conversation's turns, each turn's versions and
     /// selected version, each shown version's prompt, reply and continuation, and each reply's status (for
-    /// <see cref="IsBusy"/>). A change refreshes the branch.
+    /// <see cref="IsBusy"/>). A change refreshes the branch. Only while the chat is in a window: the conversations are app
+    /// data that can outlive it, and attaching refreshes the branch, which watches it again.
     /// </summary>
     private void WatchBranch()
     {
+        if (!this.IsAttachedToVisualTree())
+        {
+            return;
+        }
         var wanted = new HashSet<object>(ReferenceEqualityComparer.Instance);
         if (_shown is not null)
         {

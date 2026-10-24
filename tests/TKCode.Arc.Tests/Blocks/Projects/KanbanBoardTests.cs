@@ -1354,4 +1354,118 @@ public class KanbanBoardTests
             window.Close();
         }
     }
+
+    // Outside data and the visual tree ---------------------------------------------------------------------------------
+
+    [AvaloniaFact]
+    public void A_Board_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var columns = KanbanBoardDemoData.CreateColumns();
+        var people = KanbanBoardDemoData.CreatePeople();
+        var labels = KanbanBoardDemoData.CreateLabels();
+        var source = new System.Collections.ObjectModel.ObservableCollection<KanbanCard>(KanbanBoardDemoData.CreateCards());
+        var cards = KanbanBoardDemoData.CreateCards();
+        var withSource = TestHelpers.ShowAndClose(() => new KanbanBoard
+        {
+            Columns = columns,
+            People = people,
+            Labels = labels,
+            CardsSource = source
+        }, board =>
+        {
+            // Swimlanes and an open drawer: lane heads and the drawer follow the people and the opened card too.
+            board.GroupBy = KanbanGroupBy.Assignee;
+            board.OpenedCard = source[0];
+        });
+        var withCards = TestHelpers.ShowAndClose(() => new KanbanBoard { Columns = columns, People = people, Labels = labels, Cards = cards });
+        TestHelpers.Collect(withSource, withCards);
+        (withSource.IsAlive, withCards.IsAlive).ShouldBe((false, false));
+        source[0].ColumnKey = "shipped";
+        source[0].Title = "Still a card";
+        source.Add(new KanbanCard("FLD-300", "Later", "queued"));
+        cards.RemoveAt(0);
+        people[0].Name = "Amara O.";
+        columns[0].Name = "Inbox";
+        labels[0].Name = "Syncing";
+    }
+
+    [AvaloniaFact]
+    public void Lane_Heads_And_Card_Views_The_Board_Drops_Are_Collected()
+    {
+        var (window, board) = Show(setup: b => b.GroupBy = KanbanGroupBy.Assignee);
+        try
+        {
+            board.Panel!.LaneHeads.Count.ShouldBe(4);
+            var dropped = WeakAll(board.Panel.LaneHeads).Append(WeakViewOf(board, "FLD-231")).ToArray();
+            board.GroupBy = KanbanGroupBy.Status;
+            board.Cards.Remove(Card(board, "FLD-231"));
+            Pump();
+            board.Panel.LaneHeads.Count.ShouldBe(0);
+            board.Panel.CardViews.Count().ShouldBe(11);
+            TestHelpers.Collect(dropped);
+            // Four lane heads, then the card's view.
+            Enumerable.Range(0, dropped.Length).Where(i => dropped[i].IsAlive).ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Board_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var board = new KanbanBoard();
+        KanbanBoardDemoData.Fill(board);
+        var host = new Border { Child = board };
+        var window = TestHelpers.Show(host);
+        window.Width = 1440;
+        window.Height = 1000;
+        Pump();
+        try
+        {
+            var card = Card(board, "FLD-231");
+            var opened = Card(board, "FLD-236");
+            board.OpenedCard = opened;
+            Pump();
+            host.Child = null;
+            Pump();
+            card.ColumnKey = "shipped";
+            card.Title = "Renamed while away";
+            opened.Title = "Opened and renamed";
+            var added = new KanbanCard("FLD-300", "Added while away", "queued") { AssigneeKey = "mei" };
+            board.Cards.Add(added);
+            board.Columns[0].Name = "Inbox";
+            host.Child = board;
+            Pump();
+            board.Grid!.SlotOf(card)?.ColumnKey.ShouldBe("shipped");
+            View(board, "FLD-231").TitleText.ShouldBe("Renamed while away");
+            board.Panel!.ViewOf(added).ShouldNotBeNull();
+            board.Panel.Heads[0].ColumnName.ShouldBe("Inbox");
+            board.Drawer!.TitleBox!.Text.ShouldBe("Opened and renamed");
+
+            // Back in the window, it listens again.
+            card.ColumnKey = "testing";
+            card.Title = "Renamed again";
+            opened.Title = "Opened, renamed again";
+            board.Cards.Remove(added);
+            board.Columns[0].Name = "Queued";
+            Pump();
+            board.Grid!.SlotOf(card)?.ColumnKey.ShouldBe("testing");
+            View(board, "FLD-231").TitleText.ShouldBe("Renamed again");
+            board.Panel.ViewOf(added).ShouldBeNull();
+            board.Panel.Heads[0].ColumnName.ShouldBe("Queued");
+            board.Drawer.TitleBox.Text.ShouldBe("Opened, renamed again");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static IEnumerable<WeakReference> WeakAll(IEnumerable<object> items) => items.Select(i => new WeakReference(i)).ToList();
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference WeakViewOf(KanbanBoard board, string key) => new(View(board, key));
 }

@@ -28,6 +28,31 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 - **Gallery**: a page whose last focused element had lost the focus stayed in memory after the visitor moved on; the
   shell now takes the focus before it replaces a page. Visiting every page three times now keeps no old page in memory
   (before, the managed heap grew by about 44 MB per round).
+- **Controls kept alive by the data they show**: these controls listened, for their whole life, to collections, items,
+  commands or helpers the app hands them, which usually outlive the view. A view model or a shared list therefore kept
+  every control that had shown it, with its page, and the dead controls kept reacting to every change. They now listen
+  only while they are in a visual tree and catch up with what changed while they were away:
+  - `TKCode.Arc`: `TreeView`, `ChatThread` (messages and `TypingParticipantIds`), `Markdown` (`Stream`), `FilterToolbar`
+    (`ActiveFilters`), the charts (`Series` values and `ItemsSource`), `Gauge` (`Thresholds`), `Slider` and
+    `ElasticSlider` (`Marks`), `Reactions` (`Options`), `BottomSheet` (`Detents`), `TokenTextEditor` (a shared
+    `TokenRenderer`), `ButtonGroup` and its menu button (`Menu`), and `SwipeActions` (a row that left kept handlers on
+    the shared actions).
+  - `TKCode.Arc.AdvancedCharts`: `DataGrid` (its rows and their items once it has left the window, and column renderers
+    shared from resources; `Columns.Clear()` now lets the columns go).
+  - `TKCode.Arc.Blocks`: `AiChat`, `AiAnswer`, the reply text and answer document sources, `ArenaPromptForm`,
+    `PromptTestCases`, the AI panel tables, `KanbanBoard` (lane heads and the views of deleted cards were kept by their
+    avatars), `ProjectBoard`, `AvailabilityPicker`, `ReleaseReadiness`, `WeekCalendar`, `LayoutMorph`, `RevenueGlobe`,
+    `CustomerGalaxy`, `SecuritySettings`, `UsageBilling`, `SettingsCommand`, `SiteHeader`, `SiteFaceStack`,
+    `CtaSetupCard` and `PageHeader` actions (`Command`).
+  - `TKCode.Arc.Special`: the five explainers, `AgentPlan` (and a suspended `AgentPlanSimulation`) and `ContextWindow`.
+    `AgentTimelineLiveDriver` keeps running until it is stopped, as before; its docs now say to stop or dispose it when
+    the timeline goes away.
+- **AiChat**: a reply asked for while the chat is out of a window (`Send`, `Retry` or an edit from code) no longer
+  streams unseen; it waits, thinking, and starts when the chat is shown, as leaving the window already stopped replies.
+- **SemanticZoom**: the baked avatar bitmaps are disposed when the cache is cleared (a theme change, an overflow) and
+  when the map leaves, instead of waiting for the finalizer.
+- **AI answers**: a code block taken out while it was highlighting now releases its highlighting session.
+- **DataGrid**: the block requests of a `DataSource` dispose their cancellation sources.
 
 ## 0.3.0-preview.4 - 2026-10-24
 

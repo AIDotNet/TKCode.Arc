@@ -408,4 +408,39 @@ public class PromptTestCasesTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void The_Control_Is_Collected_While_Its_Cases_Live_On()
+    {
+        var cases = PromptRunSamples.Cases();
+        var weak = TestHelpers.ShowAndClose(() => Create(cases));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        cases[1].Label = "Late box";
+    }
+
+    [AvaloniaFact]
+    public void Options_Taken_Out_And_Put_Back_Show_The_Labels_Changed_Meanwhile()
+    {
+        var cases = PromptRunSamples.Cases();
+        var control = Create(cases);
+        var host = new Border { Child = control };
+        var window = Show(host);
+        try
+        {
+            host.Child = null;
+            cases[1].Label = "Late box";
+            host.Child = control;
+            Settle(window);
+            control.Options.Select(o => o.Label).ShouldBe(["Broken spar", "Late box", "Out of policy"]);
+
+            // And they follow the cases again.
+            cases[2].Label = "Refund request";
+            control.Options[2].Label.ShouldBe("Refund request");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

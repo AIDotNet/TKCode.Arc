@@ -100,6 +100,9 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     public object? EndIcon { get => GetValue(EndIconProperty); set => SetValue(EndIconProperty, value); }
 
     private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
+    // Marks may be a view model's list: it is observed only while the slider is shown, and re-read when it comes back.
+    private INotifyCollectionChanged? _observedMarks;
+    private bool _watching;
 
     /// <summary>Detents: a dragged thumb clicks into each one and holds for a few pixels. Labels print under the track.</summary>
     public IList<SliderMark> Marks
@@ -107,17 +110,9 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         get => _marks;
         set
         {
-            var old = _marks;
             if (SetAndRaise(MarksProperty, ref _marks, value ?? new AvaloniaList<SliderMark>()))
             {
-                if (old is INotifyCollectionChanged oldObservable)
-                {
-                    oldObservable.CollectionChanged -= OnMarksChanged;
-                }
-                if (_marks is INotifyCollectionChanged observable)
-                {
-                    observable.CollectionChanged += OnMarksChanged;
-                }
+                WatchMarks();
                 UpdateMarks();
             }
         }
@@ -180,10 +175,6 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         _lift = Create(1, Place);
         _sway = new ElasticSliderSway(this);
         _sway.Changed += Place;
-        if (_marks is INotifyCollectionChanged observable)
-        {
-            observable.CollectionChanged += OnMarksChanged;
-        }
         ValueText = FormatValue(Value);
     }
 
@@ -356,6 +347,36 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         {
             AutomationProperties.SetItemStatus(_rail.Thumbs[0], ValueText);
         }
+    }
+
+    /// <summary>Listens to the current marks while shown (and to nothing otherwise).</summary>
+    private void WatchMarks()
+    {
+        if (_observedMarks is not null)
+        {
+            _observedMarks.CollectionChanged -= OnMarksChanged;
+        }
+        _observedMarks = _watching ? _marks as INotifyCollectionChanged : null;
+        if (_observedMarks is not null)
+        {
+            _observedMarks.CollectionChanged += OnMarksChanged;
+        }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        WatchMarks();
+        // The marks may have changed while the slider was away.
+        UpdateMarks();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        WatchMarks();
     }
 
     private void OnMarksChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateMarks();

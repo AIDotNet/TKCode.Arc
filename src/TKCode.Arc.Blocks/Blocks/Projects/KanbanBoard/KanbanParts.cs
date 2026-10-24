@@ -139,6 +139,7 @@ internal sealed class KanbanCardView : TemplatedControl
 
     private bool _hovered;
     private bool _instantPending;
+    private bool _watching;
 
     public KanbanCardView(KanbanCard card, KanbanBoard board)
     {
@@ -146,7 +147,6 @@ internal sealed class KanbanCardView : TemplatedControl
         Board = board;
         Focusable = true;
         Cursor = new Cursor(StandardCursorType.Hand);
-        card.PropertyChanged += OnCardChanged;
         AutomationProperties.SetControlTypeOverride(this, AutomationControlType.Button);
         ActualThemeVariantChanged += (_, _) => OnThemeChanged();
         ResourcesChanged += (_, _) => OnThemeChanged();
@@ -199,7 +199,26 @@ internal sealed class KanbanCardView : TemplatedControl
     /// <summary>The card's title as read by screen readers ("title, id, owner").</summary>
     public string AccessibleName => AutomationProperties.GetName(this) ?? string.Empty;
 
-    public void Detach() => Card.PropertyChanged -= OnCardChanged;
+    /// <summary>Stops following the card (the view is thrown away).</summary>
+    public void Detach() => WatchCard(false);
+
+    /// <summary>Follows the card only while attached: the app's cards outlive the views the board drops.</summary>
+    private void WatchCard(bool watch)
+    {
+        if (watch == _watching)
+        {
+            return;
+        }
+        _watching = watch;
+        if (watch)
+        {
+            Card.PropertyChanged += OnCardChanged;
+        }
+        else
+        {
+            Card.PropertyChanged -= OnCardChanged;
+        }
+    }
 
     private void OnCardChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => Refresh();
 
@@ -253,8 +272,15 @@ internal sealed class KanbanCardView : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        WatchCard(true);
         Refresh();
         UpdateFrame();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        WatchCard(false);
     }
 
     private void OnThemeChanged()

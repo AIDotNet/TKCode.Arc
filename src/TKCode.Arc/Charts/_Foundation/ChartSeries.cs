@@ -80,22 +80,55 @@ public class ChartSeries : AvaloniaObject
     /// <summary>Raised when any property or the <see cref="Values"/> collection changes.</summary>
     internal event EventHandler? Invalidated;
 
+    // Values is often a view-model collection that outlives the chart: it is observed only while a shown chart watches
+    // this series (ChartSeriesCollection.Watch), counted because one series may sit in several charts.
     private INotifyCollectionChanged? _observed;
+    private int _watchers;
+
+    /// <summary>True when <see cref="Values"/> can change without this series being set again.</summary>
+    internal bool HasObservableValues => Values is INotifyCollectionChanged;
+
+    /// <summary>Starts raising <see cref="Invalidated"/> for changes inside <see cref="Values"/>.</summary>
+    internal void WatchValues()
+    {
+        if (_watchers++ == 0)
+        {
+            ObserveValues(Values as INotifyCollectionChanged);
+        }
+    }
+
+    /// <summary>Undoes one <see cref="WatchValues"/>; the last one lets go of <see cref="Values"/>.</summary>
+    internal void UnwatchValues()
+    {
+        if (_watchers > 0 && --_watchers == 0)
+        {
+            ObserveValues(null);
+        }
+    }
+
+    private void ObserveValues(INotifyCollectionChanged? values)
+    {
+        if (ReferenceEquals(_observed, values))
+        {
+            return;
+        }
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged -= OnValuesCollectionChanged;
+        }
+        _observed = values;
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged += OnValuesCollectionChanged;
+        }
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == ValuesProperty)
+        if (change.Property == ValuesProperty && _watchers > 0)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnValuesCollectionChanged;
-            }
-            _observed = change.NewValue as INotifyCollectionChanged;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnValuesCollectionChanged;
-            }
+            ObserveValues(change.NewValue as INotifyCollectionChanged);
         }
         Invalidated?.Invoke(this, EventArgs.Empty);
     }
@@ -109,10 +142,52 @@ public sealed class ChartSeriesCollection : AvaloniaList<ChartSeries>
     /// <summary>Raised when a series is added, removed or changed.</summary>
     internal event EventHandler? Invalidated;
 
+    // The series whose values this collection watches for its shown charts (counted: a collection may be shared).
+    private readonly List<ChartSeries> _watched = new();
+    private int _watchers;
+
     public ChartSeriesCollection()
     {
         ResetBehavior = ResetBehavior.Remove;
         CollectionChanged += OnCollectionChanged;
+    }
+
+    /// <summary>
+    /// A chart is shown: watch every series' <see cref="ChartSeries.Values"/> until <see cref="Unwatch"/>. Returns true
+    /// when any of them can have changed unseen (the chart then rebuilds once).
+    /// </summary>
+    internal bool Watch()
+    {
+        if (_watchers++ == 0)
+        {
+            foreach (var series in this)
+            {
+                series.WatchValues();
+                _watched.Add(series);
+            }
+        }
+        foreach (var series in this)
+        {
+            if (series.HasObservableValues)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>A chart left: the last one lets go of every series' values.</summary>
+    internal void Unwatch()
+    {
+        if (_watchers == 0 || --_watchers > 0)
+        {
+            return;
+        }
+        foreach (var series in _watched)
+        {
+            series.UnwatchValues();
+        }
+        _watched.Clear();
     }
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -122,6 +197,10 @@ public sealed class ChartSeriesCollection : AvaloniaList<ChartSeries>
             foreach (ChartSeries series in e.OldItems)
             {
                 series.Invalidated -= OnSeriesInvalidated;
+                if (_watched.Remove(series))
+                {
+                    series.UnwatchValues();
+                }
             }
         }
         if (e.NewItems is not null)
@@ -129,6 +208,11 @@ public sealed class ChartSeriesCollection : AvaloniaList<ChartSeries>
             foreach (ChartSeries series in e.NewItems)
             {
                 series.Invalidated += OnSeriesInvalidated;
+                if (_watchers > 0)
+                {
+                    series.WatchValues();
+                    _watched.Add(series);
+                }
             }
         }
         Invalidated?.Invoke(this, EventArgs.Empty);

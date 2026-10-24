@@ -31,11 +31,11 @@ internal sealed class ReleaseReadinessRow : TemplatedControl
     private TextBlock? _description;
     private bool _syncing;
     private bool _isLocked;
+    private bool _watching;
 
     public ReleaseReadinessRow(ReleaseCheck check)
     {
         Check = check;
-        check.PropertyChanged += OnCheckChanged;
         PseudoClasses.Set(DonePseudoClass, check.IsDone);
     }
 
@@ -72,7 +72,39 @@ internal sealed class ReleaseReadinessRow : TemplatedControl
     }
 
     /// <summary>Stops following the check (the row is thrown away).</summary>
-    public void Detach() => Check.PropertyChanged -= OnCheckChanged;
+    public void Detach() => WatchCheck(false);
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        WatchCheck(true);
+        // The check may have changed while the row was out of the tree.
+        Refresh();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        WatchCheck(false);
+    }
+
+    /// <summary>Follows the check only while attached: the app's checks outlive the rows.</summary>
+    private void WatchCheck(bool watch)
+    {
+        if (watch == _watching)
+        {
+            return;
+        }
+        _watching = watch;
+        if (watch)
+        {
+            Check.PropertyChanged += OnCheckChanged;
+        }
+        else
+        {
+            Check.PropertyChanged -= OnCheckChanged;
+        }
+    }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {

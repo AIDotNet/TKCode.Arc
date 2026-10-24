@@ -207,6 +207,7 @@ public class TreeView : TemplatedControl
     private TreeViewRowsPanel? _panel;
     private object? _focusKey;
     private bool _rebuildPosted;
+    private bool _watching;
     private int _bulk;
     private object? _pendingStagger;
     private bool _syncingSelection;
@@ -422,6 +423,10 @@ public class TreeView : TemplatedControl
 
     private void UpdateSubscriptions(HashSet<INotifyCollectionChanged> next)
     {
+        if (!_watching)
+        {
+            next.Clear();
+        }
         foreach (var old in _subscriptions)
         {
             if (!next.Contains(old))
@@ -491,6 +496,28 @@ public class TreeView : TemplatedControl
                 LogicalChildren.Add(tvi);
             }
         }
+    }
+
+    /// <summary>Whether the TreeViewItem roots of <see cref="ItemsSource"/> differ from those that joined the logical tree.</summary>
+    private bool SourceLogicalItemsChanged()
+    {
+        var index = 0;
+        foreach (var item in ItemsSource ?? Array.Empty<object>())
+        {
+            if (item is not TreeViewItem tvi)
+            {
+                continue;
+            }
+            if (index < _sourceLogicalItems.Count && ReferenceEquals(_sourceLogicalItems[index], tvi))
+            {
+                index++;
+            }
+            else if (tvi.Parent is null)
+            {
+                return true;
+            }
+        }
+        return index != _sourceLogicalItems.Count;
     }
 
     private void PostRebuild()
@@ -841,6 +868,26 @@ public class TreeView : TemplatedControl
             _panel.SetRows(_rows, animate: false);
             _panel.SetHighlight(SelectedItem is not null && _nodes.ContainsKey(SelectedItem) ? SelectedItem : null, animate: false);
         }
+    }
+
+    // The data may outlive the view (a view model): the tree listens to its collections only while it is attached, so
+    // the data does not keep it alive, and rebuilds from the data when it comes back to show what changed meanwhile.
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        if (SourceLogicalItemsChanged())
+        {
+            UpdateSourceLogicalItems();
+        }
+        Rebuild(animate: false);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        UpdateSubscriptions([]);
     }
 
     protected override void OnInitialized()

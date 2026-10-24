@@ -714,4 +714,89 @@ public class ArenaPromptFormTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void A_Form_Is_Collected_While_Its_Prompt_List_Lives_On()
+    {
+        var prompts = new Avalonia.Collections.AvaloniaList<ArenaPrompt>(Prompts());
+        var weak = TestHelpers.ShowAndClose(() => Create(prompts));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        prompts.RemoveAt(2);
+        prompts[0].Label = "Remove duplicate orders";
+    }
+
+    [AvaloniaFact]
+    public void A_Form_Is_Collected_While_Its_Prompts_Live_On()
+    {
+        // A plain array: only the prompts themselves (label, text) are followed.
+        var prompts = Prompts();
+        var weak = TestHelpers.ShowAndClose(() => Create(prompts));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        prompts[0].Label = "Remove duplicate orders";
+        prompts[1].Text = "Explain debounce.";
+    }
+
+    [AvaloniaFact]
+    public void A_Form_Taken_Out_And_Put_Back_Shows_The_Prompt_Changes_Made_Meanwhile()
+    {
+        var prompts = new Avalonia.Collections.AvaloniaList<ArenaPrompt>(Prompts());
+        var form = Create(prompts);
+        var host = new Border { Child = form };
+        var window = Show(host);
+        try
+        {
+            form.Chips.Select(c => c.IsChecked).ShouldBe([true, false, false]);
+
+            host.Child = null;
+            prompts[0].Label = "Remove duplicate orders";
+            prompts[0].Text = "Remove the duplicate orders.";
+            prompts.Add(new ArenaPrompt { Id = "haiku", Label = "A haiku", Text = "Write a haiku about build caches." });
+            Settle(window);
+            host.Child = form;
+            Settle(window);
+            form.Chips.Select(c => c.Label).ShouldBe(["Remove duplicate orders", "Debounce vs throttle", "Move a 1:1", "A haiku"]);
+            form.Chips.Select(c => c.IsChecked).ShouldBe([false, false, false, false]);
+
+            // And it follows the prompts again.
+            prompts[3].Label = "Write a haiku";
+            form.Chips[3].Label.ShouldBe("Write a haiku");
+            form.Text = "Write a haiku about build caches.";
+            prompts.RemoveAt(1);
+            Settle(window);
+            form.Chips.Select(c => c.IsChecked).ShouldBe([false, false, true]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Form_Put_Back_With_The_Same_Prompts_Keeps_Its_Chips()
+    {
+        var prompts = Prompts();
+        var form = Create(prompts);
+        var host = new Border { Child = form };
+        var window = Show(host);
+        try
+        {
+            var chips = form.Chips.ToList();
+            host.Child = null;
+            prompts[1].Label = "Debounce or throttle";
+            prompts[1].Text = form.Text;
+            host.Child = form;
+            Settle(window);
+            form.Chips.ShouldBe(chips);
+            form.Chips[1].Label.ShouldBe("Debounce or throttle");
+            form.Chips.Select(c => c.IsChecked).ShouldBe([true, true, false]);
+            prompts[2].Label = "Move our 1:1";
+            form.Chips[2].Label.ShouldBe("Move our 1:1");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

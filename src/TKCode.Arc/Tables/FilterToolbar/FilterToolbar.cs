@@ -154,6 +154,7 @@ public class FilterToolbar : TemplatedControl
     private List<FilterChip> _seen = new();
     private int? _pendingFocus;
     private bool _templateReady;
+    private bool _watching;
 
     public FilterToolbar()
     {
@@ -262,6 +263,7 @@ public class FilterToolbar : TemplatedControl
 
     #region Chips
 
+    /// <summary>The filter list may outlive the toolbar (a view model): it is listened to only while the toolbar is attached.</summary>
     private void Observe(IList<FilterChip>? list)
     {
         if (_observed is not null)
@@ -269,7 +271,7 @@ public class FilterToolbar : TemplatedControl
             _observed.CollectionChanged -= OnFiltersCollectionChanged;
             _observed = null;
         }
-        if (list is INotifyCollectionChanged observable)
+        if (_watching && list is INotifyCollectionChanged observable)
         {
             _observed = observable;
             observable.CollectionChanged += OnFiltersCollectionChanged;
@@ -582,6 +584,23 @@ public class FilterToolbar : TemplatedControl
         {
             AutomationProperties.SetName(this, Label);
         }
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _watching = true;
+        Observe(ActiveFilters);
+        // Show what changed while the toolbar was away, at once and without announcing it.
+        _seen = Current.ToList();
+        Sync(animate: false);
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _watching = false;
+        Observe(null);
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

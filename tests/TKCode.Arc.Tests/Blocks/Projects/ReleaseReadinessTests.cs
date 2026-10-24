@@ -292,6 +292,77 @@ public class ReleaseReadinessTests
         group.IsVisible.ShouldBeFalse();
     }
 
+    [AvaloniaFact]
+    public void A_Gate_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var checks = new ObservableCollection<ReleaseCheck>(Samples());
+        var owners = new ObservableCollection<ProjectPerson> { new("Noor Haddad") };
+        var items = Samples();
+        var owner = new ProjectPerson("Rina Kato");
+        var withSources = TestHelpers.ShowAndClose(() => new ReleaseReadiness { ChecksSource = checks, OwnersSource = owners });
+        // The gate's own lists hold the app's checks and people: it follows those too.
+        var withItems = TestHelpers.ShowAndClose(() =>
+        {
+            var gate = new ReleaseReadiness();
+            gate.Checks.AddRange(items);
+            gate.Owners.Add(owner);
+            return gate;
+        });
+        TestHelpers.Collect(withSources, withItems);
+        (withSources.IsAlive, withItems.IsAlive).ShouldBe((false, false));
+        checks[1].IsDone = true;
+        checks.Add(new ReleaseCheck("Access granted"));
+        owners[0].Name = "Noor H.";
+        owners.Clear();
+        items[2].IsDone = true;
+        items[3].Title = "Support briefed twice";
+        owner.Name = "Rina K.";
+    }
+
+    [AvaloniaFact]
+    public void A_Gate_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var checks = new ObservableCollection<ReleaseCheck>(Samples());
+        var owners = new ObservableCollection<ProjectPerson> { new("Noor Haddad") };
+        using var rig = new Rig(configure: g =>
+        {
+            g.ChecksSource = checks;
+            g.OwnersSource = owners;
+        });
+        var group = TestHelpers.Descendant<ReleaseReadinessOwners>(rig.Gate, ReleaseReadiness.OwnersPart);
+        rig.Gate.DoneCount.ShouldBe(1);
+        rig.Host.Child = null;
+        rig.Pump();
+        checks[1].IsDone = true;
+        checks[2].Title = "Notes written while away";
+        checks.Add(new ReleaseCheck("Access granted"));
+        owners.Add(new ProjectPerson("Tomás Ferreira"));
+        rig.Host.Child = rig.Gate;
+        rig.Pump();
+        rig.Gate.DoneCount.ShouldBe(2);
+        rig.Gate.TotalCount.ShouldBe(5);
+        rig.Rows.Count.ShouldBe(5);
+        rig.Box(1).IsChecked.ShouldBe(true);
+        AutomationProperties.GetName(rig.Box(2)).ShouldBe("Notes written while away");
+        rig.Count.Text.ShouldBe("2 of 5");
+        AutomationProperties.GetName(group).ShouldBe("Owners: Noor Haddad and Tomás Ferreira");
+
+        // Back in the window, it listens again.
+        rig.CheckEvents.Clear();
+        checks[2].IsDone = true;
+        checks[3].Title = "Support briefed twice";
+        checks.RemoveAt(4);
+        owners.RemoveAt(1);
+        rig.Pump();
+        rig.CheckEvents.ShouldHaveSingleItem().Check.ShouldBe(checks[2]);
+        rig.Gate.DoneCount.ShouldBe(3);
+        rig.Rows.Count.ShouldBe(4);
+        rig.Box(2).IsChecked.ShouldBe(true);
+        AutomationProperties.GetName(rig.Box(3)).ShouldBe("Support briefed twice");
+        rig.Count.Text.ShouldBe("3 of 4");
+        AutomationProperties.GetName(group).ShouldBe("Owners: Noor Haddad");
+    }
+
     #endregion
 
     #region Release, failure, retry, cancel, reset

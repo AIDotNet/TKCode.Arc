@@ -265,6 +265,7 @@ internal sealed class AiAnswerCodeText : SelectableTextBlock
     private IReadOnlyList<ImmutableArray<HighlightToken>>? _tokens;
     private string _tokensCode = string.Empty;
     private bool _busy;
+    private bool _releaseWhenIdle;
     private int _version;
     private TaskCompletionSource? _highlighted;
 
@@ -293,6 +294,9 @@ internal sealed class AiAnswerCodeText : SelectableTextBlock
 
     /// <summary>The fades of new lines (tests).</summary>
     internal AiAnswerFades Fades => _fades;
+
+    /// <summary>Whether the block holds a highlighting session (tests).</summary>
+    internal bool HasSession => _session is not null;
 
     /// <summary>Shows <paramref name="code"/>; with <paramref name="fade"/> what was added fades in.</summary>
     public void SetCode(string code, string language, bool fade, bool languageChanged)
@@ -398,7 +402,20 @@ internal sealed class AiAnswerCodeText : SelectableTextBlock
         finally
         {
             _busy = false;
+            if (_releaseWhenIdle)
+            {
+                // Detached while the worker had the session: let it go now.
+                _releaseWhenIdle = false;
+                ReleaseSession();
+            }
         }
+    }
+
+    private void ReleaseSession()
+    {
+        _session?.Dispose();
+        _session = null;
+        _sessionKey = null;
     }
 
     /// <summary>One run per token of the lines that have tokens for this code; the rest in the text color.</summary>
@@ -483,17 +500,20 @@ internal sealed class AiAnswerCodeText : SelectableTextBlock
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _releaseWhenIdle = false;
         _fades.OnAttached();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        if (!_busy)
+        if (_busy)
         {
-            _session?.Dispose();
-            _session = null;
-            _sessionKey = null;
+            _releaseWhenIdle = true;
+        }
+        else
+        {
+            ReleaseSession();
         }
     }
 }

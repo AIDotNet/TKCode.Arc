@@ -24,6 +24,29 @@ public class DataGridRendererTests
             value is decimal d ? $"<{d:0}>" : base.GetText(value, format, culture);
     }
 
+    /// <summary>A renderer with a setting, like the built-in ones: changing it tells the column to draw again.</summary>
+    private sealed class PrefixRenderer : DataGridCellRenderer
+    {
+        private string _prefix = string.Empty;
+
+        public List<string> Texts { get; } = [];
+
+        public string Prefix
+        {
+            get => _prefix;
+            set
+            {
+                _prefix = value;
+                NotifyChanged();
+            }
+        }
+
+        public override void Render(in DataGridCellRenderContext context) => Texts.Add(context.Text);
+
+        public override string GetText(object? value, DataGridCellFormat format, CultureInfo culture) =>
+            value is null ? string.Empty : _prefix + base.GetText(value, format, culture);
+    }
+
     private static void Settle()
     {
         AvaloniaHeadlessPlatform.ForceRenderTimerTick();
@@ -168,5 +191,103 @@ public class DataGridRendererTests
             Settle();
             Settle();
         });
+    }
+
+    [AvaloniaFact]
+    public void A_Grid_Is_Collected_While_A_Renderer_Shared_From_Resources_Lives_On()
+    {
+        var shared = new BadgeRenderer();
+        var weak = TestHelpers.ShowAndClose(() =>
+        {
+            var grid = DataGridBehaviorTests.Create();
+            grid.Columns[1].Renderer = shared;
+            return grid;
+        });
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        shared.ToneMap = "Europe=Success";
+    }
+
+    [AvaloniaFact]
+    public void Clearing_The_Columns_Lets_Them_Go_And_The_Grid_Stops_Following_Them()
+    {
+        var shared = new BadgeRenderer();
+        var grid = WithRenderer(shared);
+        var kept = grid.Columns[0];
+        DataGridBehaviorTests.Show(grid);
+        Settle();
+        var weak = Clear(grid);
+        grid.UpdateLayout();
+        Settle();
+        TestHelpers.Collect(weak);
+        // The shared renderer no longer holds the column it drew.
+        weak.IsAlive.ShouldBeFalse();
+        // A Clear reports no old items: the grid still stops listening to the columns it had.
+        var version = grid.ColumnsVersion;
+        kept.Header = "Customer";
+        shared.ToneMap = "Europe=Success";
+        grid.EnsureView();
+        grid.ColumnsVersion.ShouldBe(version);
+
+        // Both made out of line so no hidden temporary in this method keeps the cleared column.
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        static TKCode.Arc.DataGrid WithRenderer(DataGridCellRenderer renderer)
+        {
+            var grid = DataGridBehaviorTests.Create();
+            grid.Columns[1].Renderer = renderer;
+            return grid;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        static WeakReference Clear(TKCode.Arc.DataGrid grid)
+        {
+            var column = grid.Columns[1];
+            grid.Columns.Clear();
+            grid.EnsureView();
+            return new WeakReference(column);
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Grid_Put_Back_Picks_Up_Column_And_Renderer_Changes_Made_While_It_Was_Away()
+    {
+        var renderer = new PrefixRenderer();
+        var grid = DataGridBehaviorTests.Create();
+        grid.Columns[2].Renderer = renderer;
+        grid.Columns[2].Rules.Add(new RangeRule { Minimum = 1000 });
+        var host = new Border { Child = grid };
+        var window = TestHelpers.Show(host);
+        window.Width = 1000;
+        window.Height = 700;
+        Settle();
+        grid.VisibleAccessors.Length.ShouldBe(5);
+        grid.ValidateAll().ShouldBe(1);
+
+        // A trip away and back with nothing changed keeps the flags.
+        host.Child = null;
+        host.Child = grid;
+        Settle();
+        grid.ErrorCount.ShouldBe(1);
+
+        // Away, a column is hidden and the renderer changes.
+        host.Child = null;
+        grid.Columns[1].IsHidden = true;
+        renderer.Prefix = "#";
+        renderer.Texts.Clear();
+        host.Child = grid;
+        Settle();
+        Settle();
+        grid.VisibleAccessors.Length.ShouldBe(4);
+        renderer.Texts.Where(t => t.Length > 0).ShouldNotBeEmpty();
+        renderer.Texts.Where(t => t.Length > 0).ShouldAllBe(t => t.StartsWith('#'));
+
+        // Back in the tree it follows the columns and the renderer again.
+        grid.Columns[1].IsHidden = false;
+        grid.VisibleAccessors.Length.ShouldBe(5);
+        renderer.Prefix = "~";
+        renderer.Texts.Clear();
+        Settle();
+        renderer.Texts.Where(t => t.Length > 0).ShouldNotBeEmpty();
+        renderer.Texts.Where(t => t.Length > 0).ShouldAllBe(t => t.StartsWith('~'));
     }
 }

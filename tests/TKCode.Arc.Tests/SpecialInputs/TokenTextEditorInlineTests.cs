@@ -387,4 +387,42 @@ public class TokenTextEditorInlineTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void An_Editor_Is_Collected_While_Its_Renderer_Lives_On()
+    {
+        // One renderer shared by every editor (a style or resource) outlives each of them.
+        var renderer = new BoxRenderer();
+        var weak = TestHelpers.ShowAndClose(() => Create("ab{{name}}cd", renderer));
+        TestHelpers.Collect(weak);
+        weak.IsAlive.ShouldBeFalse();
+        renderer.Grow(40);
+        renderer.Repaint();
+    }
+
+    [AvaloniaFact]
+    public void An_Editor_Put_Back_Lays_Out_A_Renderer_Change_Made_While_It_Was_Away()
+    {
+        var renderer = new BoxRenderer();
+        var editor = Create("ab{{name}}cd", renderer);
+        var host = new Border { Child = editor };
+        var window = Show(host);
+        try
+        {
+            (X(editor, 10) - X(editor, 2)).ShouldBe(ChipWidth, 0.01);
+            host.Child = null;
+            Dispatcher.UIThread.RunJobs();
+            renderer.Grow(50);
+            host.Child = editor;
+            Dispatcher.UIThread.RunJobs();
+            (X(editor, 10) - X(editor, 2)).ShouldBe(50, 0.01);
+            renderer.Grow(70);
+            Dispatcher.UIThread.RunJobs();
+            (X(editor, 10) - X(editor, 2)).ShouldBe(70, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

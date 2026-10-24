@@ -108,6 +108,7 @@ public partial class ReleaseReadiness
 
     private readonly List<ReleaseCheck> _checks = new();
     private readonly Dictionary<ReleaseCheck, ReleaseReadinessRow> _rows = new();
+    private readonly HashSet<ReleaseCheck> _watchedChecks = new();
     private INotifyCollectionChanged? _observedChecks;
 
     private TextBlock? _title;
@@ -129,6 +130,7 @@ public partial class ReleaseReadiness
     private TextBlock? _labelText;
     private bool? _labelIsDone;
     private INotifyCollectionChanged? _observedOwners;
+    private bool _dataAttached;
 
     private CancellationTokenSource? _cancellation;
     private ReleaseRequest? _lastRequest;
@@ -362,28 +364,12 @@ public partial class ReleaseReadiness
         var property = change.Property;
         if (property == ChecksSourceProperty)
         {
-            if (_observedChecks is not null)
-            {
-                _observedChecks.CollectionChanged -= OnSourceChanged;
-            }
-            _observedChecks = ChecksSource as INotifyCollectionChanged;
-            if (_observedChecks is not null)
-            {
-                _observedChecks.CollectionChanged += OnSourceChanged;
-            }
+            WatchSources();
             RebuildChecks();
         }
         else if (property == OwnersSourceProperty)
         {
-            if (_observedOwners is not null)
-            {
-                _observedOwners.CollectionChanged -= OnOwnersSourceChanged;
-            }
-            _observedOwners = OwnersSource as INotifyCollectionChanged;
-            if (_observedOwners is not null)
-            {
-                _observedOwners.CollectionChanged += OnOwnersSourceChanged;
-            }
+            WatchSources();
             UpdateOwners();
         }
         else if (property == OwnersLabelProperty || property == OwnersLabelPrefixProperty || property == AndWordProperty)
@@ -434,11 +420,70 @@ public partial class ReleaseReadiness
         UpdateCompact(e.NewSize.Width);
     }
 
+    /// <summary>
+    /// The block follows the outside lists and the checks only while it is in a visual tree: they are the app's and
+    /// usually outlive the block. Back in a tree it reads them again (it missed what changed meanwhile).
+    /// </summary>
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        _dataAttached = true;
+        WatchSources();
+        RebuildChecks();
+        UpdateOwners();
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
         // A release still running when the block leaves the window is cancelled, like an unmounted request.
         CancelRelease();
+        _dataAttached = false;
+        WatchSources();
+        WatchChecks();
+    }
+
+    private void WatchSources()
+    {
+        Observe(ref _observedChecks, _dataAttached ? ChecksSource as INotifyCollectionChanged : null, OnSourceChanged);
+        Observe(ref _observedOwners, _dataAttached ? OwnersSource as INotifyCollectionChanged : null, OnOwnersSourceChanged);
+    }
+
+    private static void Observe(ref INotifyCollectionChanged? observed, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
+    {
+        if (ReferenceEquals(observed, next))
+        {
+            return;
+        }
+        if (observed is not null)
+        {
+            observed.CollectionChanged -= handler;
+        }
+        observed = next;
+        if (observed is not null)
+        {
+            observed.CollectionChanged += handler;
+        }
+    }
+
+    private void WatchChecks()
+    {
+        foreach (var gone in _watchedChecks.Where(c => !_dataAttached || !_checks.Contains(c)).ToArray())
+        {
+            gone.PropertyChanged -= OnCheckPropertyChanged;
+            _watchedChecks.Remove(gone);
+        }
+        if (!_dataAttached)
+        {
+            return;
+        }
+        foreach (var check in _checks)
+        {
+            if (_watchedChecks.Add(check))
+            {
+                check.PropertyChanged += OnCheckPropertyChanged;
+            }
+        }
     }
 
     private void UpdateCompact(double width)
@@ -472,7 +517,6 @@ public partial class ReleaseReadiness
         }
         foreach (var gone in _checks.Where(c => !next.Contains(c)).ToArray())
         {
-            gone.PropertyChanged -= OnCheckPropertyChanged;
             if (_rows.Remove(gone, out var row))
             {
                 row.Detach();
@@ -481,10 +525,10 @@ public partial class ReleaseReadiness
         foreach (var added in next.Where(c => !_checks.Contains(c)))
         {
             added.FirstSeenDone ??= added.IsDone;
-            added.PropertyChanged += OnCheckPropertyChanged;
         }
         _checks.Clear();
         _checks.AddRange(next);
+        WatchChecks();
 
         if (_rowsPanel is not null)
         {

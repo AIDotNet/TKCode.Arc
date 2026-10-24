@@ -42,6 +42,7 @@ internal sealed class DataGridColumnAccessor
         Column = column;
         Key = column.Key;
         Type = column.Type;
+        DefinitionVersion = column.DefinitionVersion;
         if (column.ValueGetter is null && column.Binding is { } binding)
         {
             _probe = new DataGridBindingProbe(binding);
@@ -53,6 +54,9 @@ internal sealed class DataGridColumnAccessor
     public string Key { get; }
 
     public DataGridColumnType Type { get; }
+
+    /// <summary>The column's <see cref="DataGridColumn.DefinitionVersion"/> when this accessor was made.</summary>
+    public int DefinitionVersion { get; }
 
     /// <summary>True when the column can write into <paramref name="item"/>.</summary>
     public bool CanWrite(object item)
@@ -152,7 +156,9 @@ internal sealed class DataGridColumnAccessor
 
 /// <summary>
 /// The rows behind a <see cref="DataGrid"/>: the items, their keys and a cache of normalized values per column, filled
-/// lazily per column. Follows collection changes (any change reloads) and item property changes (the row is re-read).
+/// lazily per column. It follows collection changes (any change reloads) and item property changes (the row is re-read)
+/// from the moment the source is set until the grid first leaves the visual tree, and after that only while the grid is
+/// attached (<see cref="Attach"/> re-reads what was missed), so outside data does not hold a grid that was shown and left.
 /// </summary>
 internal sealed class DataGridStore
 {
@@ -167,6 +173,12 @@ internal sealed class DataGridStore
     private INotifyCollectionChanged? _observed;
     private IEnumerable? _source;
     private Func<object, object>? _keySelector;
+    private bool _attached;
+    // Until the grid is first shown the store follows its source as before (so the first show reads nothing twice); from
+    // the first detach on it follows the source only while attached.
+    private bool _everAttached;
+
+    private bool Listening => _attached || !_everAttached;
 
     /// <summary>Raised after the item set changed (reload).</summary>
     public event Action? Reset;
@@ -197,17 +209,12 @@ internal sealed class DataGridStore
 
     public void SetSource(IEnumerable? source, Func<object, object>? keySelector)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnCollectionChanged;
-            _observed = null;
-        }
+        Unobserve();
         _source = source;
         _keySelector = keySelector;
-        if (source is INotifyCollectionChanged observable)
+        if (Listening)
         {
-            _observed = observable;
-            observable.CollectionChanged += OnCollectionChanged;
+            Observe();
         }
         Reload();
     }
@@ -297,11 +304,7 @@ internal sealed class DataGridStore
 
     public void Reload()
     {
-        foreach (var watched in _watched)
-        {
-            watched.PropertyChanged -= OnItemPropertyChanged;
-        }
-        _watched.Clear();
+        UnwatchItems();
         _items.Clear();
         _keys.Clear();
         _indexByKey.Clear();
@@ -327,10 +330,7 @@ internal sealed class DataGridStore
                 _indexByItem.TryAdd(item, _items.Count);
                 _items.Add(item);
                 _keys.Add(key);
-                if (item is INotifyPropertyChanged notifier && _watched.Add(notifier))
-                {
-                    notifier.PropertyChanged += OnItemPropertyChanged;
-                }
+                Watch(item);
             }
         }
         _values = new object?[]?[_accessors.Length];
@@ -339,28 +339,65 @@ internal sealed class DataGridStore
         Reset?.Invoke();
     }
 
+    /// <summary>Stops following the source and its items (the grid left the visual tree).</summary>
     public void Detach()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnCollectionChanged;
-            _observed = null;
-        }
-        foreach (var watched in _watched)
-        {
-            watched.PropertyChanged -= OnItemPropertyChanged;
-        }
-        _watched.Clear();
+        _attached = false;
+        _everAttached = true;
+        Unobserve();
+        UnwatchItems();
     }
 
+    /// <summary>
+    /// Follows the source and its items again and re-reads them: changes made while detached were missed. The first attach
+    /// has nothing to catch up with (the store has followed the source since it was set) and reads nothing.
+    /// </summary>
     public void Attach()
+    {
+        var first = !_everAttached;
+        _attached = true;
+        _everAttached = true;
+        if (first)
+        {
+            return;
+        }
+        Observe();
+        Reload();
+    }
+
+    private void Observe()
     {
         if (_observed is null && _source is INotifyCollectionChanged observable)
         {
             _observed = observable;
             observable.CollectionChanged += OnCollectionChanged;
         }
-        Reload();
+    }
+
+    private void Unobserve()
+    {
+        if (_observed is not null)
+        {
+            _observed.CollectionChanged -= OnCollectionChanged;
+            _observed = null;
+        }
+    }
+
+    private void Watch(object item)
+    {
+        if (Listening && item is INotifyPropertyChanged notifier && _watched.Add(notifier))
+        {
+            notifier.PropertyChanged += OnItemPropertyChanged;
+        }
+    }
+
+    private void UnwatchItems()
+    {
+        foreach (var watched in _watched)
+        {
+            watched.PropertyChanged -= OnItemPropertyChanged;
+        }
+        _watched.Clear();
     }
 
     private bool _suppress;
@@ -394,7 +431,8 @@ internal sealed class DataGridStore
         finally
         {
             _batch--;
-            if (_batch == 0 && _batchChanged)
+            // Detached, the store hears nothing from an observable source, so it re-reads the changes the grid made itself.
+            if (_batch == 0 && (_batchChanged || (_observed is null && _source is INotifyCollectionChanged)))
             {
                 _batchChanged = false;
                 Reload();
@@ -448,10 +486,7 @@ internal sealed class DataGridStore
             _indexByItem.Add(item!, index);
             _items.Add(item!);
             _keys.Add(keys[index - first]);
-            if (item is INotifyPropertyChanged notifier && _watched.Add(notifier))
-            {
-                notifier.PropertyChanged += OnItemPropertyChanged;
-            }
+            Watch(item!);
             index++;
         }
         for (var a = 0; a < _accessors.Length; a++)

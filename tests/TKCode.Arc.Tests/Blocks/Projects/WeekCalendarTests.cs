@@ -979,4 +979,67 @@ public class WeekCalendarTests
             window.Close();
         }
     }
+
+    // Outside data and the visual tree --------------------------------------------------------------------------------------
+
+    [AvaloniaFact]
+    public void A_Calendar_Is_Collected_While_Its_Data_Lives_On()
+    {
+        var events = new System.Collections.ObjectModel.ObservableCollection<WeekCalendarEvent>(
+            WeekCalendarDemoData.CreateEvents(Monday, TimeZoneInfo.Utc));
+        var calendars = new System.Collections.ObjectModel.ObservableCollection<WeekCalendarSource>(WeekCalendarDemoData.CreateCalendars());
+        var list = new Avalonia.Collections.AvaloniaList<WeekCalendarEvent>(WeekCalendarDemoData.CreateEvents(Monday, TimeZoneInfo.Utc));
+        var withSources = TestHelpers.ShowAndClose(() => Create(setup: c =>
+        {
+            c.EventsSource = events;
+            c.CalendarsSource = calendars;
+        }));
+        var withList = TestHelpers.ShowAndClose(() => Create(setup: c => c.Events = list));
+        TestHelpers.Collect(withSources, withList);
+        (withSources.IsAlive, withList.IsAlive).ShouldBe((false, false));
+        events[0].Title = "Still an event";
+        events.Add(new WeekCalendarEvent("late", "Later", Utc(Monday, 16), Utc(Monday, 17), WeekCalendarDemoData.Studio));
+        calendars[1].IsVisible = false;
+        calendars.RemoveAt(0);
+        list.RemoveAt(0);
+        list[0].Title = "Still an event";
+    }
+
+    [AvaloniaFact]
+    public void A_Calendar_Put_Back_Shows_What_Changed_While_It_Was_Away()
+    {
+        var calendar = Create();
+        var host = new Border { Child = calendar };
+        var window = TestHelpers.Show(host);
+        window.Width = 1440;
+        window.Height = 900;
+        Pump();
+        try
+        {
+            var before = Pane(calendar).Presenters.Count;
+            var crew = Pane(calendar).Presenters.Count(p => p.Event!.CalendarId == WeekCalendarDemoData.Crew);
+            crew.ShouldBeGreaterThan(0);
+            host.Child = null;
+            Pump();
+            calendar.Calendars[1].IsVisible = false;
+            var added = new WeekCalendarEvent("late", "Added while away", Utc(Monday, 16), Utc(Monday, 17), WeekCalendarDemoData.Studio);
+            calendar.Events.Add(added);
+            host.Child = calendar;
+            Pump();
+            Pane(calendar).Presenters.Count.ShouldBe(before - crew + 1);
+            Pane(calendar).Presenters.ShouldContain(p => p.Event == added);
+
+            // Back in the window, it listens again.
+            calendar.Calendars[1].IsVisible = true;
+            Pump();
+            calendar.Events.Remove(added);
+            Pump();
+            Pane(calendar).Presenters.Count.ShouldBe(before);
+            Pane(calendar).Presenters.ShouldNotContain(p => p.Event == added);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
