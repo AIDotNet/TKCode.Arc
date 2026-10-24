@@ -8,9 +8,8 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AccordionItem">
-                <Border BorderThickness="{arc:AccordionItemTokenResource RowBorderThickness}"
-                        BorderBrush="{arc:ArcDesignTokenResource Border}">
-                    <StackPanel Orientation="Vertical">
+                <Panel>
+                    <StackPanel Orientation="Vertical" Margin="{arc:AccordionItemTokenResource RowBorderThickness}">
                         <arc:AccordionTrigger Name="PART_Trigger">
                             <Grid ColumnDefinitions="*,Auto">
                                 <ContentPresenter Name="PART_HeaderPresenter"
@@ -39,7 +38,14 @@
                             </Border>
                         </arc:SpringSizeDecorator>
                     </StackPanel>
-                </Border>
+                    <!-- The row's divider is a strip of its own (the token as Padding, filled): a Border with an uneven
+                         BorderThickness rebuilds a path geometry on every size change, and this row's height springs every
+                         frame while it opens. -->
+                    <Border VerticalAlignment="Bottom"
+                            IsHitTestVisible="False"
+                            Padding="{arc:AccordionItemTokenResource RowBorderThickness}"
+                            Background="{arc:ArcDesignTokenResource Border}" />
+                </Panel>
             </ControlTemplate>
         </Setter>
 

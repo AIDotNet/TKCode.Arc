@@ -184,4 +184,26 @@ public class AccordionTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Nothing_That_Grows_With_An_Opening_Row_Draws_An_Uneven_Border()
+    {
+        // Avalonia draws a Border with an uneven BorderThickness as a path (two outlines and a boolean exclude) rebuilt on
+        // every size change; the list and the row grow every frame while a row opens, so their dividers are filled strips.
+        var accordion = Faq();
+        var window = TestHelpers.Show(accordion);
+        try
+        {
+            var panel = Panel(Row(accordion, 1));
+            var growing = panel.GetVisualAncestors().TakeWhile(a => !ReferenceEquals(a, window)).OfType<Border>().ToList();
+            growing.ShouldAllBe(b => b.BorderThickness.IsUniform);
+            // The strips are drawn: one rule above the list and one below each row.
+            accordion.GetVisualDescendants().OfType<Border>().Count(b => b.Padding.Top + b.Padding.Bottom > 0 && b.Background != null && b.Child == null)
+                .ShouldBe(1 + accordion.ItemCount);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

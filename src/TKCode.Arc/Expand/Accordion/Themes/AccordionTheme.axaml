@@ -5,11 +5,18 @@
     <ControlTheme x:Key="{x:Type arc:Accordion}" TargetType="arc:Accordion">
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Accordion">
-                <Border BorderThickness="{arc:AccordionTokenResource ListBorderThickness}"
-                        BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        Background="{TemplateBinding Background}">
-                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
-                </Border>
+                <Panel Background="{TemplateBinding Background}">
+                    <ItemsPresenter Name="PART_ItemsPresenter"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    Margin="{arc:AccordionTokenResource ListBorderThickness}" />
+                    <!-- The list's top line is a strip of its own (the token as Padding, filled): a Border with an uneven
+                         BorderThickness rebuilds a path geometry on every size change, and the list grows every frame while
+                         a row opens. -->
+                    <Border VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            Padding="{arc:AccordionTokenResource ListBorderThickness}"
+                            Background="{arc:ArcDesignTokenResource Border}" />
+                </Panel>
             </ControlTemplate>
         </Setter>
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />

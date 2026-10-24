@@ -154,4 +154,22 @@ public class ExpandableCardTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Nothing_That_Resizes_While_The_Card_Opens_Draws_An_Uneven_Border()
+    {
+        // The card's width and height spring while it opens: an uneven BorderThickness would rebuild a path geometry every
+        // frame, so the divider above the details is a filled strip.
+        var card = Card();
+        card.IsExpanded = true;
+        var window = TestHelpers.Show(card);
+        try
+        {
+            card.GetVisualDescendants().OfType<Border>().Where(b => b.IsEffectivelyVisible).ShouldAllBe(b => b.BorderThickness.IsUniform);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

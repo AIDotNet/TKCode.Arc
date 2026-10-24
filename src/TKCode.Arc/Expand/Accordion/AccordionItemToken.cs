@@ -6,6 +6,7 @@ namespace TKCode.Arc;
 [ControlDesignToken]
 internal sealed class AccordionItemToken : AbstractControlDesignToken
 {
+    /// <summary>The row's divider (Arc border-b): one edge, drawn as a filled strip of this thickness at the bottom.</summary>
     public Thickness RowBorderThickness { get; set; }
 
     /// <summary>Arc md trigger: padding space-2 0, gap space-5.</summary>

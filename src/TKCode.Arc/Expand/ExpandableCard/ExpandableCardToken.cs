@@ -23,7 +23,7 @@ internal sealed class ExpandableCardToken : AbstractControlDesignToken
     /// <summary>Arc: padding space-4 space-5 space-5.</summary>
     public Thickness DetailsPadding { get; set; }
 
-    /// <summary>The divider is an inset line, so a closed panel is truly zero height.</summary>
+    /// <summary>The divider is an inset line, so a closed panel is truly zero height; one edge, drawn as a filled strip at the top.</summary>
     public Thickness DetailsDivider { get; set; }
 
     public double DetailsLineHeight { get; set; }

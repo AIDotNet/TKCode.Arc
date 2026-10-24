@@ -43,19 +43,27 @@
                             </Grid>
                         </arc:ExpandableCardTrigger>
                         <arc:ExpandableCardPanel Name="PART_Panel">
-                            <Border Name="PART_Details"
-                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    BorderThickness="{arc:ExpandableCardTokenResource DetailsDivider}"
-                                    Padding="{arc:ExpandableCardTokenResource DetailsPadding}">
-                                <ContentPresenter Name="PART_ContentPresenter"
-                                                  TextWrapping="Wrap"
-                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
-                                                  FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                                                  TextBlock.LineHeight="{arc:ExpandableCardTokenResource DetailsLineHeight}"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
-                            </Border>
+                            <Panel>
+                                <Border Name="PART_Details"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        Padding="{arc:ExpandableCardTokenResource DetailsPadding}">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Margin="{arc:ExpandableCardTokenResource DetailsDivider}"
+                                                      TextWrapping="Wrap"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      TextBlock.LineHeight="{arc:ExpandableCardTokenResource DetailsLineHeight}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                </Border>
+                                <!-- The divider is a strip of its own (the token as Padding, filled): a Border with an uneven
+                                     BorderThickness rebuilds a path geometry on every size change, and the card's width springs
+                                     every frame while it opens. -->
+                                <Border VerticalAlignment="Top"
+                                        IsHitTestVisible="False"
+                                        Padding="{arc:ExpandableCardTokenResource DetailsDivider}"
+                                        Background="{arc:ArcDesignTokenResource Border}" />
+                            </Panel>
                         </arc:ExpandableCardPanel>
                     </StackPanel>
                 </Border>

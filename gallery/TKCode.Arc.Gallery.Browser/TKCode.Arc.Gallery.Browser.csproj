@@ -11,6 +11,14 @@
              the SDK was exactly 10.0.300 (ATOMUIREG006); 6.2.8 accepts net10.0-browser with any SDK 10 or later, and this repository
              builds with SDK 11. -p:PublishTrimmed=false publishes untrimmed; the boot-list pruning below then applies instead. -->
         <PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_IsPublishing)' == 'true'">true</PublishTrimmed>
+        <!-- Publishing also compiles the .NET code ahead of time to WebAssembly (the SDK allows it only for a trimmed publish; the
+             wasm-tools-net10 workload that WasmBuildNative needs brings the compiler). Measured 2026-10-24 in Edge with the CPU four
+             times slower than an M5: opening an Accordion row on its docs page cost the main thread 6.7 ms a frame and dropped about
+             6 frames interpreted, 3.0 ms and none compiled. The cost: the startup download grows from 13.5 to 26 MB (brotli) and the
+             publish takes about 12 minutes longer. Builds and dotnet run stay interpreted; -p:RunAOTCompilation=false publishes
+             without it. Emscripten's -Oz made the compiled code no smaller (26.06 against 26.05 MB), so the defaults stay.
+             The compiling happens in the SDK's nested publish build, which clears _IsPublishing and passes it on as _WasmIsPublishing. -->
+        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
         <!-- Publishing also shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
              everything. -p:ArcWasmPrune=false publishes with everything, -p:ArcWasmPrune=true shrinks a build as well. -->
         <ArcWasmPrune Condition="'$(ArcWasmPrune)' == ''">$(_IsPublishing)</ArcWasmPrune>

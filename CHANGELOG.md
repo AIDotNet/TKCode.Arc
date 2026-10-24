@@ -53,6 +53,9 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
   when the map leaves, instead of waiting for the finalizer.
 - **AI answers**: a code block taken out while it was highlighting now releases its highlighting session.
 - **DataGrid**: the block requests of a `DataSource` dispose their cancellation sources.
+- **Accordion** and **ExpandableCard**: their dividers are filled strips instead of one-sided borders. Avalonia draws a
+  border with an uneven thickness as a path (two outlines and a boolean exclude) and builds it again on every size
+  change, which happened every frame while a row or a card opened. The look is unchanged, pixel for pixel.
 
 ## 0.3.0-preview.4 - 2026-10-24
 
