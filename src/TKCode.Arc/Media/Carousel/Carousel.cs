@@ -494,6 +494,17 @@ public class Carousel : SelectingItemsControl
             }
             _drainIndex = index;
             var from = GetDrain(index);
+            if (from >= 1)
+            {
+                // A slide that already ran out starts a fresh interval. With nothing remaining, PausableTimer
+                // would call OnRotationElapsed synchronously and the rotation would spin without yielding.
+                from = 0;
+                if (index >= 0 && index < _drains.Length)
+                {
+                    _drains[index] = 0;
+                }
+                _drained.Remove(index);
+            }
             var remaining = TimeSpan.FromTicks((long)(Interval.Ticks * (1 - from)));
             _timer ??= new PausableTimer(remaining, OnRotationElapsed);
             _timer.Restart(remaining);
