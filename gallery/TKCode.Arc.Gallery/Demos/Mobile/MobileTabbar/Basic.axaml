@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileTabbarBasicDemo">
+    <arcm:Page>
+        <TextBlock Margin="16"
+                   Text="Tap a tab to select it. A finger on a tab dims it; there is no hover state."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arcm:Page.Footer>
+            <arcm:Tabbar SelectedIndex="0">
+                <arcm:TabbarItem Content="Home" Icon="{x:Static arc:ArcIcons.House}" />
+                <arcm:TabbarItem Content="Search" Icon="{x:Static arc:ArcIcons.Search}" />
+                <arcm:TabbarItem Content="Alerts" Icon="{x:Static arc:ArcIcons.Bell}" />
+                <arcm:TabbarItem Content="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+            </arcm:Tabbar>
+        </arcm:Page.Footer>
+    </arcm:Page>
+</UserControl>

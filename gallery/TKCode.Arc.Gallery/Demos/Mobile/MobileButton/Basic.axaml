@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileButtonBasicDemo">
+    <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+        <arcm:Button Content="Continue" HorizontalAlignment="Stretch" />
+        <arcm:Button Content="Save draft" HorizontalAlignment="Center" />
+        <arcm:Button Content="Not available" IsEnabled="False" HorizontalAlignment="Center" />
+        <TextBlock Text="Press and hold a button: it scales down and dims while a finger is on it."
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -15,7 +15,7 @@ internal static class DocSnippets
 {
     private const string Wrapper =
         "<StackPanel xmlns=\"https://github.com/avaloniaui\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" " +
-        "xmlns:arc=\"https://github.com/AIDotNet/TKCode.Arc\" " +
+        "xmlns:arc=\"https://github.com/AIDotNet/TKCode.Arc\" xmlns:arcm=\"https://github.com/AIDotNet/TKCode.Arc.Mobile\" " +
         "xmlns:ill=\"https://github.com/AIDotNet/TKCode.Arc/illustrations\">{0}</StackPanel>";
 
     /// <summary>A fenced block: its info-string language (lowercase, may be empty), its text and the 1-based line it starts on.</summary>

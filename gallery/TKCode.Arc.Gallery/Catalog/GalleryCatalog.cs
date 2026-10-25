@@ -130,6 +130,15 @@ public static partial class GalleryCatalog
                 .ToArray())).ToArray());
 
     /// <summary>
+    /// The Mobile section of the sidebar: the components of TKCode.Arc.Mobile, whose live demos run inside a phone frame
+    /// (<see cref="Shell.PhoneFrame"/>). Their pages live under <c>/components/</c> like the Special components, and they
+    /// are not part of the 111 Arc components (<see cref="Count"/>).
+    /// </summary>
+    public static readonly GalleryCategory Mobile = new(MobileCatalog.Folder, "Mobile", "移动端",
+        MobileCatalog.Components.Select(c => new GalleryEntry(c.ClassName, c.Title, c.Slug, 0, c.Description, IsArc: false)).ToArray(),
+        IsArc: false);
+
+    /// <summary>
     /// The Docs section of the sidebar: the gallery's own documentation pages, listed first, as on uiarc.dev. Not Arc
     /// components, and their pages are planned.
     /// </summary>
@@ -156,7 +165,7 @@ public static partial class GalleryCatalog
 
     /// <summary>Every entry the gallery lists: the Docs, Components, Blocks and Special components sections.</summary>
     public static IEnumerable<GalleryEntry> AllEntries =>
-        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries).Concat(Special.SelectMany(c => c.AllEntries));
+        Docs.AllEntries.Concat(AllCategories.SelectMany(c => c.AllEntries)).Concat(Blocks.AllEntries).Concat(Special.SelectMany(c => c.AllEntries)).Concat(Mobile.AllEntries);
 
     /// <summary>Every entry of the Components section: Arc's components and the extras.</summary>
     public static IEnumerable<GalleryEntry> ComponentEntries => AllCategories.SelectMany(c => c.Entries);

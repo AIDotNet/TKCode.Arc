@@ -26,7 +26,7 @@ public class GallerySmokeTests
         GalleryCatalog.Special.ShouldAllBe(c => !c.IsArc && c.Entries.All(e => !e.IsArc && e.ArcUrl == null));
         // Blocks and Special components are listed under their own sections and not counted either.
         GalleryCatalog.AllEntries.Count().ShouldBe(111 + GalleryCatalog.Extras.Sum(c => c.Entries.Length) + GalleryCatalog.Docs.Entries.Length
-            + GalleryCatalog.Blocks.AllEntries.Count() + GalleryCatalog.Special.Sum(c => c.Entries.Length));
+            + GalleryCatalog.Blocks.AllEntries.Count() + GalleryCatalog.Special.Sum(c => c.Entries.Length) + GalleryCatalog.Mobile.Entries.Length);
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
         // The sidebar footer counts the whole Components section, extras included: 111 + 4 = 115.
         GalleryCatalog.ComponentCount.ShouldBe(115);

@@ -9,6 +9,7 @@
         <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../../src/TKCode.Arc/TKCode.Arc.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />

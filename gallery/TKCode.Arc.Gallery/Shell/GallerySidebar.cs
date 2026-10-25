@@ -128,6 +128,8 @@ public sealed class GallerySidebar : Border
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Blocks, ArcIcons.Box, GalleryCatalog.Blocks.Subcategories!, isBlockGroups: true));
         // The Special components section (uiarc.dev's fourth section).
         list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Special, ArcIcons.Sparkles, GalleryCatalog.Special));
+        // The Mobile section: the TKCode.Arc.Mobile components, listed flat (their demos run inside a phone frame).
+        list.Children.Add(BuildSection(GalleryShellLangResourceKind.Category_Mobile, ArcIcons.Smartphone, [GalleryCatalog.Mobile], flatten: true));
         _empty.Margin = new Thickness(16, 12);
         _empty.IsVisible = false;
         list.Children.Add(_empty);

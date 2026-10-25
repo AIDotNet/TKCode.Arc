@@ -731,5 +731,55 @@
         <source>New</source>
       </segment>
     </unit>
+    <unit id="Category_Mobile">
+      <segment>
+        <source>Mobile</source>
+      </segment>
+    </unit>
+    <unit id="PhoneDevice">
+      <segment>
+        <source>Device</source>
+      </segment>
+    </unit>
+    <unit id="PhonePortrait">
+      <segment>
+        <source>Portrait</source>
+      </segment>
+    </unit>
+    <unit id="PhoneLandscape">
+      <segment>
+        <source>Landscape</source>
+      </segment>
+    </unit>
+    <unit id="PhoneKeyboard">
+      <segment>
+        <source>Keyboard</source>
+      </segment>
+    </unit>
+    <unit id="PhoneSimulationNote">
+      <segment>
+        <source>A desktop simulation of a phone: not a real device, so safe areas, the keyboard and rendering on Android and iOS are approximations.</source>
+      </segment>
+    </unit>
+    <unit id="PhoneDeviceIPhone">
+      <segment>
+        <source>iPhone 15</source>
+      </segment>
+    </unit>
+    <unit id="PhoneDevicePixel">
+      <segment>
+        <source>Pixel</source>
+      </segment>
+    </unit>
+    <unit id="PhoneDeviceSmall">
+      <segment>
+        <source>Small phone</source>
+      </segment>
+    </unit>
+    <unit id="PhoneDeviceTablet">
+      <segment>
+        <source>Tablet</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

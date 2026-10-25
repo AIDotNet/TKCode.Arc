@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobilePageContentOnlyDemo">
+    <arcm:Page>
+        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+            <TextBlock Text="Welcome" FontSize="28" FontWeight="SemiBold" />
+            <TextBlock Text="With no header and no footer the content fills the safe area, clear of the status bar and the home indicator."
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <arcm:Button Content="Get started" />
+        </StackPanel>
+    </arcm:Page>
+</UserControl>

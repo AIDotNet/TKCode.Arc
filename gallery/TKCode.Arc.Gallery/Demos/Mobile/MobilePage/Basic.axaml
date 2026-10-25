@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobilePageBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Inbox">
+                <arcm:Navbar.Trailing>
+                    <arcm:Button Content="Edit" />
+                </arcm:Navbar.Trailing>
+            </arcm:Navbar>
+        </arcm:Page.Header>
+        <StackPanel Margin="16" Spacing="12">
+            <TextBlock Text="Today" FontWeight="SemiBold" />
+            <TextBlock Text="The page keeps its header and footer in place and puts the content between them."
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <arcm:Button Content="Compose" />
+        </StackPanel>
+        <arcm:Page.Footer>
+            <arcm:Tabbar SelectedIndex="0">
+                <arcm:TabbarItem Content="Inbox" Icon="{x:Static arc:ArcIcons.Mail}" />
+                <arcm:TabbarItem Content="Search" Icon="{x:Static arc:ArcIcons.Search}" />
+                <arcm:TabbarItem Content="Me" Icon="{x:Static arc:ArcIcons.User}" />
+            </arcm:Tabbar>
+        </arcm:Page.Footer>
+    </arcm:Page>
+</UserControl>

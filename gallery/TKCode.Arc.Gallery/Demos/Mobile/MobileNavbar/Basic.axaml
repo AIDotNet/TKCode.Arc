@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileNavbarBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Settings">
+                <arcm:Navbar.Leading>
+                    <arcm:Button Content="Back" />
+                </arcm:Navbar.Leading>
+                <arcm:Navbar.Trailing>
+                    <arcm:Button Content="Done" />
+                </arcm:Navbar.Trailing>
+            </arcm:Navbar>
+        </arcm:Page.Header>
+        <TextBlock Margin="16"
+                   Text="Leading, title and trailing sit in one 44 px bar."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </arcm:Page>
+</UserControl>

@@ -877,5 +877,65 @@
         <target state="translated">新</target>
       </segment>
     </unit>
+    <unit id="Category_Mobile">
+      <segment>
+        <source>Mobile</source>
+        <target state="translated">行動裝置</target>
+      </segment>
+    </unit>
+    <unit id="PhoneDevice">
+      <segment>
+        <source>Device</source>
+        <target state="translated">裝置</target>
+      </segment>
+    </unit>
+    <unit id="PhonePortrait">
+      <segment>
+        <source>Portrait</source>
+        <target state="translated">直向</target>
+      </segment>
+    </unit>
+    <unit id="PhoneLandscape">
+      <segment>
+        <source>Landscape</source>
+        <target state="translated">橫向</target>
+      </segment>
+    </unit>
+    <unit id="PhoneKeyboard">
+      <segment>
+        <source>Keyboard</source>
+        <target state="translated">鍵盤</target>
+      </segment>
+    </unit>
+    <unit id="PhoneSimulationNote">
+      <segment>
+        <source>A desktop simulation of a phone: not a real device, so safe areas, the keyboard and rendering on Android and iOS are approximations.</source>
+        <target state="translated">桌面上的手機模擬，並非真機：安全區、鍵盤以及 Android 和 iOS 上的渲染都只是近似。</target>
+      </segment>
+    </unit>
+    <unit id="PhoneDeviceIPhone">
+      <segment>
+        <source>iPhone 15</source>
+        <target state="translated">iPhone 15</target>
+      </segment>
+    </unit>
+    <unit id="PhoneDevicePixel">
+      <segment>
+        <source>Pixel</source>
+        <target state="translated">Pixel</target>
+      </segment>
+    </unit>
+    <unit id="PhoneDeviceSmall">
+      <segment>
+        <source>Small phone</source>
+        <target state="translated">小螢幕手機</target>
+      </segment>
+    </unit>
+    <unit id="PhoneDeviceTablet">
+      <segment>
+        <source>Tablet</source>
+        <target state="translated">平板</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

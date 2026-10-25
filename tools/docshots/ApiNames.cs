@@ -68,6 +68,11 @@ internal static partial class ApiNames
             foreach (var type in types)
             {
                 known.Add(StripArity(type.Name));
+                // TKCode.Arc.Mobile types go by a Mobile prefix in the docs (MobileButton), as the generator names them.
+                if (type.Namespace == "TKCode.Arc.Mobile")
+                {
+                    known.Add("Mobile" + StripArity(type.Name));
+                }
                 // Namespaces are written out in code (System.Globalization.CultureInfo).
                 foreach (var part in type.Namespace?.Split('.') ?? [])
                 {

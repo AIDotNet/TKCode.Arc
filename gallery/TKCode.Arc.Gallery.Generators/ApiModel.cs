@@ -56,7 +56,7 @@ internal sealed class ApiType
 
     private ApiType(INamedTypeSymbol symbol, string? summary, string? baseName)
     {
-        Name = symbol.Name;
+        Name = ApiName(symbol);
         TypeExpression = symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         Summary = summary;
         BaseName = baseName;
@@ -77,7 +77,20 @@ internal sealed class ApiType
     public static bool IsArc(ITypeSymbol? type)
         => type?.ContainingAssembly?.Name is { } name && (name == "TKCode.Arc" || name.StartsWith("TKCode.Arc.", System.StringComparison.Ordinal));
 
-    /// <summary>A public type of the TKCode.Arc assemblies referenced by <paramref name="compilation"/>.</summary>
+    /// <summary>
+    /// The name a type goes by in the docs (the <c>api:</c> line, the table's heading, the translation keys): its own name,
+    /// except for the types of <c>TKCode.Arc.Mobile</c>, which carry a <c>Mobile</c> prefix (<c>MobileButton</c>) because they
+    /// share short names with the desktop controls (<c>Button</c>, <c>Switch</c>) and the docs key types by name.
+    /// </summary>
+    public static string ApiName(INamedTypeSymbol type)
+        => type.ContainingNamespace?.ToDisplayString() == MobileNamespace ? "Mobile" + type.Name : type.Name;
+
+    private const string MobileNamespace = "TKCode.Arc.Mobile";
+
+    /// <summary>
+    /// A public type of the TKCode.Arc assemblies referenced by <paramref name="compilation"/>: <c>TKCode.Arc.&lt;name&gt;</c>,
+    /// or, for a name that starts with <c>Mobile</c> and names no such type, <c>TKCode.Arc.Mobile.&lt;rest&gt;</c> (see <see cref="ApiName"/>).
+    /// </summary>
     public static INamedTypeSymbol? Find(Compilation compilation, string name)
     {
         foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols)
@@ -85,6 +98,17 @@ internal sealed class ApiType
             if (IsArcAssembly(assembly) && assembly.GetTypeByMetadataName("TKCode.Arc." + name) is { DeclaredAccessibility: Accessibility.Public } type)
             {
                 return type;
+            }
+        }
+        if (name.Length > "Mobile".Length && name.StartsWith("Mobile", System.StringComparison.Ordinal))
+        {
+            foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols)
+            {
+                if (IsArcAssembly(assembly) &&
+                    assembly.GetTypeByMetadataName(MobileNamespace + "." + name.Substring("Mobile".Length)) is { DeclaredAccessibility: Accessibility.Public } mobile)
+                {
+                    return mobile;
+                }
             }
         }
         return null;
@@ -140,7 +164,7 @@ internal sealed class ApiType
                     var isReadOnly = isAttached
                         ? !owner.GetMembers("Set" + name).Any(m => m.DeclaredAccessibility == Accessibility.Public)
                         : clr is not null && clr.SetMethod is not { DeclaredAccessibility: Accessibility.Public };
-                    var key = owner.Name + "." + name;
+                    var key = ApiName(owner) + "." + name;
                     var summary = docs.Summary(field, clr);
                     Require(summary, key, docs, diagnostics);
                     result.Members.Add(new ApiMember(false, name, valueType.ToDisplayString(s_typeFormat), key, summary,
@@ -155,7 +179,7 @@ internal sealed class ApiType
                         continue;
                     }
                     var clr = chain.SelectMany(t => t.GetMembers(name)).OfType<IEventSymbol>().FirstOrDefault();
-                    var key = owner.Name + "." + name;
+                    var key = ApiName(owner) + "." + name;
                     var summary = docs.Summary(field, clr);
                     Require(summary, key, docs, diagnostics);
                     result.Members.Add(new ApiMember(true, name, argsType, key, summary, null, false, false));
@@ -167,7 +191,7 @@ internal sealed class ApiType
                 {
                     continue;
                 }
-                var key = owner.Name + "." + clrEvent.Name;
+                var key = ApiName(owner) + "." + clrEvent.Name;
                 var summary = docs.Summary(clrEvent);
                 Require(summary, key, docs, diagnostics);
                 result.Members.Add(new ApiMember(true, clrEvent.Name, EventArgsType(clrEvent.Type), key, summary, null, false, false));

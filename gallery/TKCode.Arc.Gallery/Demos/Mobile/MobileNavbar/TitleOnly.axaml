@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileNavbarTitleOnlyDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Photos" />
+        </arcm:Page.Header>
+        <TextBlock Margin="16"
+                   Text="With empty slots the title stays centered."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </arcm:Page>
+</UserControl>

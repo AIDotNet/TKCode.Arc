@@ -8388,6 +8388,62 @@
         <source>The token as the model sees it (spaces are kept, so " the" and "the" are different tokens). It is shown in the input, output and sequence chips and named in the footer.</source>
         <target>模型所见的 token（保留空格，因此 " the" 与 "the" 是不同的 token）。它显示在输入、输出和序列标签块中，并在页脚中被点名。</target>
       </trans-unit>
+      <trans-unit id="MobileButton">
+        <source>Mobile button: a touch-first filled button with a press state (it scales down and dims while a finger is on it) and no hover state. It is at least 44 by 44 so it is easy to hit.</source>
+        <target>移动端按钮：触控优先的填充按钮，有按压状态（手指按在上面时缩小并变暗），没有悬停状态。它至少 44 乘 44，便于点中。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar">
+        <source>The top bar of a `Page`: a `Leading` slot (usually a back button), a centered `Title` and a `Trailing` slot for actions. It is 44 high, and the slots are at least 44 wide.</source>
+        <target>`Page` 的顶部栏：起始的 `Leading` 槽（通常是返回按钮）、居中的 `Title` 和放操作的 `Trailing` 槽。栏高 44，槽的宽度至少 44。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.Leading">
+        <source>The content at the start of the bar, usually a back button.</source>
+        <target>栏起始处的内容，通常是返回按钮。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.Title">
+        <source>The bar's title.</source>
+        <target>栏的标题。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.Trailing">
+        <source>The content at the end of the bar, usually action buttons.</source>
+        <target>栏末端的内容，通常是操作按钮。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage">
+        <source>A mobile page: an optional `Header` (usually a `Navbar`), the content, and an optional `Footer` (usually a `Tabbar`), laid out inside the device's safe area. The safe area is the space the notch, rounded corners and gesture bar take; on desktop and in tests it is zero unless set by hand.</source>
+        <target>移动端页面：可选的 `Header`（通常是 `Navbar`）、内容，以及可选的 `Footer`（通常是 `Tabbar`），排布在设备的安全区之内。安全区是刘海、圆角和手势条占用的空间；在桌面和测试中，除非手动设置，否则为零。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.Footer">
+        <source>The slot below the content, usually a `Tabbar`.</source>
+        <target>内容下方的槽，通常是 `Tabbar`。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.Header">
+        <source>The slot above the content, usually a `Navbar`.</source>
+        <target>内容上方的槽，通常是 `Navbar`。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.SafeArea">
+        <source>The insets the page keeps free on each edge. With `UsePlatformSafeArea` the platform sets it (zero where there is no insets manager); otherwise set it yourself.</source>
+        <target>页面在每条边上保留的空白。启用 `UsePlatformSafeArea` 时由平台设置（没有 insets 管理器时为零）；否则请自行设置。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.UsePlatformSafeArea">
+        <source>Whether `SafeArea` follows the platform's safe area padding.</source>
+        <target>`SafeArea` 是否跟随平台的安全区边距。</target>
+      </trans-unit>
+      <trans-unit id="MobileSwitch">
+        <source>Mobile switch: a 51 by 31 toggle for settings that take effect immediately. The thumb glides on a spring, the hit area is at least 44 by 44, and there is no hover state. The track fills with the on color when checked.</source>
+        <target>移动端开关：51 乘 31 的切换控件，用于立即生效的设置。滑块沿弹簧滑动，点按区域至少 44 乘 44，没有悬停状态。选中时滑轨填充为开启色。</target>
+      </trans-unit>
+      <trans-unit id="MobileTabbar">
+        <source>The bottom tab bar of a `Page`. Put `TabbarItem`s in it; the selected one is highlighted and the items share the width equally.</source>
+        <target>`Page` 的底部标签栏。把 `TabbarItem` 放进去；选中的一项高亮，各项平分宽度。</target>
+      </trans-unit>
+      <trans-unit id="MobileTabbarItem">
+        <source>One tab of a `Tabbar`: an `Icon` above its label (the content). It is at least 44 high and has no hover state.</source>
+        <target>`Tabbar` 的一个标签：标签文字（内容）上方有一个 `Icon`。它至少 44 高，没有悬停状态。</target>
+      </trans-unit>
+      <trans-unit id="MobileTabbarItem.Icon">
+        <source>The glyph geometry shown above the label, for example a Lucide icon.</source>
+        <target>显示在标签文字上方的图标几何，例如 Lucide 图标。</target>
+      </trans-unit>
       <trans-unit id="ModalOverlay.Actions">
         <source>Footer content, usually buttons; give them `arc:Dialog.Result` to close with a result.</source>
         <target>页脚内容，通常是按钮；为按钮设置 `arc:Dialog.Result` 即可以某个结果关闭。</target>

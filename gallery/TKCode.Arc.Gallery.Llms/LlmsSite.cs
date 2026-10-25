@@ -40,6 +40,7 @@ public static partial class LlmsSite
     {
         ["TKCode.Arc"] = "UseArc()",
         ["TKCode.Arc.Blocks"] = "UseArcBlocks()",
+        ["TKCode.Arc.Mobile"] = "UseArcMobile()",
         ["TKCode.Arc.AdvancedCharts"] = "UseArcAdvancedCharts()",
         ["TKCode.Arc.Workflow"] = "UseArcWorkflow()",
         ["TKCode.Arc.Special"] = "UseArcSpecial()",
@@ -55,7 +56,7 @@ public static partial class LlmsSite
     {
         baseUrl = baseUrl.TrimEnd('/');
         var docs = GalleryCatalog.Docs.Entries.Select(e => new Page(e, GalleryRoute.To(e).Path, e.ClassName["Docs".Length..])).ToArray();
-        var components = GalleryCatalog.AllCategories.Concat(GalleryCatalog.Special).Select(c => (c.Title, Pages: Documented(c.AllEntries))).Where(g => g.Pages.Length > 0).ToArray();
+        var components = GalleryCatalog.AllCategories.Concat(GalleryCatalog.Special).Append(GalleryCatalog.Mobile).Select(c => (c.Title, Pages: Documented(c.AllEntries))).Where(g => g.Pages.Length > 0).ToArray();
         var blocks = (GalleryCatalog.Blocks.Subcategories ?? []).Select(c => (c.Title, Pages: Documented(c.AllEntries))).Where(g => g.Pages.Length > 0).ToArray();
         var all = docs.Concat(components.SelectMany(g => g.Pages)).Concat(blocks.SelectMany(g => g.Pages)).ToArray();
 

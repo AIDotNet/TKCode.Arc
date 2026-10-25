@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Localization;
 using Avalonia;
@@ -156,6 +157,10 @@ public sealed class GalleryDemoView : StackPanel
         }
     }
 
+    /// <summary>Whether <paramref name="demo"/> belongs to a TKCode.Arc.Mobile component (<c>Demos/Mobile/...</c>).</summary>
+    public static bool IsMobileDemo(GalleryDemo demo)
+        => demo.Files.Length > 0 && demo.Files[0].Path.Replace('\\', '/').StartsWith($"Demos/{MobileCatalog.Folder}/", StringComparison.Ordinal);
+
     private Control CreateContent()
     {
         if (_demo is not null)
@@ -164,7 +169,8 @@ public sealed class GalleryDemoView : StackPanel
             // A UserControl clips to its bounds, which cut off whatever a control draws outside its own box (the
             // inline edit's frame and the focus rings sit a few pixels past it); the stage has room around the view.
             view.ClipToBounds = false;
-            return view;
+            // The demos of TKCode.Arc.Mobile run on a phone's screen, not on the stage.
+            return IsMobileDemo(_demo) ? new PhoneFrame { Screen = view } : view;
         }
         // The generator rejects unknown demos (GDOC010), so this only shows for a page edited while the app runs.
         var missing = GalleryUi.Mono(DemoId, ArcDesignTokenKind.TextMuted);

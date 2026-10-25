@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileSwitchSettingsDemo">
+    <StackPanel Margin="24" Spacing="4" VerticalAlignment="Center">
+        <Grid ColumnDefinitions="*,Auto" MinHeight="52">
+            <TextBlock Text="Notifications" VerticalAlignment="Center" />
+            <arcm:Switch Grid.Column="1" IsChecked="True" />
+        </Grid>
+        <Grid ColumnDefinitions="*,Auto" MinHeight="52">
+            <TextBlock Text="Weekly summary" VerticalAlignment="Center" />
+            <arcm:Switch Grid.Column="1" />
+        </Grid>
+        <Grid ColumnDefinitions="*,Auto" MinHeight="52">
+            <TextBlock Text="Managed by your team"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arcm:Switch Grid.Column="1" IsChecked="True" IsEnabled="False" />
+        </Grid>
+    </StackPanel>
+</UserControl>
