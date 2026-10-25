@@ -9,7 +9,25 @@ version carries a `-preview` suffix, the API may still change between releases; 
 keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special` and `TKCode.Arc.Workflow`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel` and `TKCode.Arc.Mobile`.
+
+## 0.3.1-preview.1 (2026-10-26)
+
+### Added
+
+- **Mobile**: the new `TKCode.Arc.Mobile` package (`UseArcMobile()`) with the first touch-first controls: `Button` (press state, 44 x 44 touch target), `Switch`, `Page` (header, content and footer inside the safe area), `Navbar` and `Tabbar`. It depends on `TKCode.Arc.Core` only and has its own namespace. It has not been verified on Android or iOS devices yet, and it still pulls `Avalonia.Desktop` and `AtomUI.Desktop.Controls` in through `TKCode.Arc.Core`.
+- **Gallery › Mobile**: a Mobile section with a phone-frame preview (iPhone 15, Pixel, small phone, tablet, portrait and landscape, status bar, simulated safe area, soft-keyboard placeholder). It is a desktop simulation, not a device.
+- **Pixel theme**: the new `TKCode.Arc.Themes.Pixel` package (`UseArcPixelTheme()`): square corners, hard shadows and a limited palette in light and dark, with the Silkscreen and VT323 pixel fonts (SIL OFL) in `TKCode.Arc.Fonts` (`WithArcPixelFonts()`). The Gallery's Appearance panel has a Style switch, Arc or Pixel.
+- **Tables › TreeTable**: a table with nested rows, tri-state selection, hierarchy-preserving sort, lazy-loaded children and treegrid keyboard navigation. The Gallery marks new components with a New badge for 60 days.
+- **Core**: design tokens for border widths and corner radii (`EdgeThickness`, `FocusEdgeThickness`, `RadiusStep*`, `EdgeThickness*`) so a theme can change them; every default equals the value it replaces.
+
+### Changed
+
+- **Gallery** (web): the WebAssembly host is published without ahead-of-time compilation again, because the compiled build crashed at startup. Its icon URLs are versioned so browsers drop the old favicon.
+
+### Fixed
+
+- **Carousel**: a slide whose timer had already run out no longer advances the rotation again without yielding; it starts a fresh interval.
 
 ## 0.3.0-preview.5 (2026-10-24)
 

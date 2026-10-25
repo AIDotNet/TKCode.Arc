@@ -1,7 +1,7 @@
 name: CI
 
 # verify:  build and test on pushes to main and on pull requests.
-# pack:    packs TKCode.Arc, TKCode.Arc.Core, TKCode.Arc.Fonts and TKCode.Arc.Icons.Lucide (v* tag, or a manual run).
+# pack:    packs every TKCode.Arc package (the id lists below) (v* tag, or a manual run).
 # nuget:   pushes them to nuget.org (v* tag, or a manual run with "publish" on).
 #
 # Publishing uses nuget.org Trusted Publishing: the job exchanges its GitHub OIDC token for a short-lived API key,
@@ -146,7 +146,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Workflow; do
+          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Mobile; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -211,7 +211,7 @@ jobs:
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Workflow; do
+          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Mobile; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

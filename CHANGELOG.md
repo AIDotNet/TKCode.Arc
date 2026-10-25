@@ -4,8 +4,42 @@ All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Ver
 while the version carries a `-preview` suffix the API may still change between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special` and
-`TKCode.Arc.Workflow`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
+`TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel` and `TKCode.Arc.Mobile`.
+
+## 0.3.1-preview.1 - 2026-10-26
+
+### Added
+
+- **Mobile** (new package `TKCode.Arc.Mobile`, call `UseArcMobile()`): the first touch-first controls, `Button`
+  (press state, 44 x 44 touch target, no hover), `Switch`, `Page` (header, content and footer inside the device's safe
+  area), `Navbar` and `Tabbar` / `TabbarItem`. The package depends on `TKCode.Arc.Core` only and has its own namespace
+  `TKCode.Arc.Mobile`, so its `Button` and `Switch` can sit next to the desktop ones. It has not been verified on
+  Android or iOS devices yet, and it still pulls `Avalonia.Desktop` and `AtomUI.Desktop.Controls` in through
+  `TKCode.Arc.Core`.
+- **Gallery › Mobile**: a Mobile section with a phone-frame preview: iPhone 15, Pixel, small phone and tablet,
+  portrait and landscape, a status bar, a simulated safe area and a soft-keyboard placeholder. It is a desktop
+  simulation, not a device.
+- **Pixel theme** (new package `TKCode.Arc.Themes.Pixel`, call `UseArcPixelTheme()`): square corners, hard shadows, a
+  hand-tuned limited palette in light and dark (`ArcPixelTheme.CreateRequest(dark)`, `ArcPixelScope` picks which
+  packages it covers), plus the Silkscreen and VT323 pixel fonts (SIL OFL) in `TKCode.Arc.Fonts`
+  (`WithArcPixelFonts()`). The Gallery's Appearance panel has a Style switch, Arc or Pixel.
+- **Tables › TreeTable**: a table with nested rows, tri-state selection, hierarchy-preserving sort, lazy-loaded
+  children and treegrid keyboard navigation. The Gallery marks new components with a New badge for 60 days.
+- **Core tokens**: `EdgeThickness`, `FocusEdgeThickness`, 30 `RadiusStep*` and 8 `EdgeThickness*` design tokens, so a
+  theme can change corner radii and border widths; every default equals the value it replaces. `ArcTokens.BindCornerRadius`
+  and `ArcPixelRendering` (aliased edges, nearest-neighbour bitmaps).
+
+### Changed
+
+- **Gallery** (web): the WebAssembly host is published without ahead-of-time compilation again, because the compiled
+  build crashed at startup; `-p:ArcAot=true` turns it back on. Its icon URLs are versioned so browsers drop the old
+  favicon.
+
+### Fixed
+
+- **Carousel**: a slide whose timer had already run out no longer advances the rotation again without yielding; it
+  starts a fresh interval.
 
 ## 0.3.0-preview.5 - 2026-10-24
 
@@ -467,6 +501,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.5...v0.3.1-preview.1
 [0.3.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.4...v0.3.0-preview.5
 [0.3.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.3...v0.3.0-preview.4
 [0.3.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.2...v0.3.0-preview.3

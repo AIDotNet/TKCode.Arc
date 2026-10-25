@@ -1,13 +1,31 @@
 ---
 title: 更新日志
-source-hash: 5c75afb62948
+source-hash: ebb66486ef60
 ---
 
 # 更新日志
 
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
-每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 和 `TKCode.Arc.Special`。
+每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel` 和 `TKCode.Arc.Mobile`。
+
+## 0.3.1-preview.1 (2026-10-26)
+
+### 新增
+
+- **移动端**：新包 `TKCode.Arc.Mobile`（`UseArcMobile()`），首批触摸优先控件：`Button`（按压态、44 × 44 触摸目标）、`Switch`、`Page`（页眉、内容与页脚位于安全区内）、`Navbar` 和 `Tabbar`。只依赖 `TKCode.Arc.Core`，有自己的命名空间。尚未在 Android 或 iOS 真机上验证，并且仍会经由 `TKCode.Arc.Core` 间接引入 `Avalonia.Desktop` 与 `AtomUI.Desktop.Controls`。
+- **Gallery › Mobile**：新增 Mobile 区，用手机框预览（iPhone 15、Pixel、小屏手机、平板，竖屏与横屏，状态栏、模拟安全区、软键盘占位）。这是桌面上的模拟，不是真机。
+- **像素风主题**：新包 `TKCode.Arc.Themes.Pixel`（`UseArcPixelTheme()`）：直角、硬边阴影、受限调色板，明暗两套；像素字体 Silkscreen 与 VT323（SIL OFL）随 `TKCode.Arc.Fonts` 提供（`WithArcPixelFonts()`）。Gallery 的外观面板新增「风格」切换：Arc 或 Pixel。
+- **表格 › TreeTable**：带嵌套行、三态选择、保持层级的排序、懒加载子节点与 treegrid 键盘导航的表格。Gallery 用「New」标记新组件，持续 60 天。
+- **Core**：边框宽度与圆角的设计 Token（`EdgeThickness`、`FocusEdgeThickness`、`RadiusStep*`、`EdgeThickness*`），主题可以改写它们；所有默认值与原先的取值一致。
+
+### 变更
+
+- **Gallery**（网页）：WebAssembly 宿主重新改为不做提前编译，因为编译版在启动时崩溃。图标地址带上版本号，浏览器会丢弃旧图标。
+
+### 修复
+
+- **Carousel**：计时已耗尽的幻灯片不再不让出线程就再次推进轮播，而是重新开始一个间隔。
 
 ## 0.3.0-preview.5 (2026-10-24)
 
