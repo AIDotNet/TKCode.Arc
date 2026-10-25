@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeTableLazyLoadingDemo">
+    <StackPanel Spacing="12" MaxWidth="720">
+        <arc:TreeTable x:Name="Table"
+                       Caption="Accounts"
+                       ChildrenLoadFailed="OnLoadFailed" />
+        <TextBlock x:Name="Status"
+                   Text="Open Marketing: its children load on the first expand. Sales fails once; use Retry."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

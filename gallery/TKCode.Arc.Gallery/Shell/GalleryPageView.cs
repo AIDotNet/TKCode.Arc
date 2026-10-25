@@ -111,7 +111,7 @@ public sealed class GalleryPageView : Grid
     {
         var column = new StackPanel();
         column.Children.Add(BuildBreadcrumb(_entry));
-        column.Children.Add(Spaced(GalleryUi.Text(_entry.Title, ArcDesignTokenKind.Foreground, 44), top: 14));
+        column.Children.Add(Spaced(BuildTitle(_entry), top: 14));
         _summary.MaxWidth = 640;
         _summary.HorizontalAlignment = HorizontalAlignment.Left;
         column.Children.Add(Spaced(_summary, top: 12));
@@ -216,6 +216,19 @@ public sealed class GalleryPageView : Grid
     }
 
     #region Header
+
+    /// <summary>The page title, followed by the New badge while the component is new.</summary>
+    private static Control BuildTitle(GalleryEntry entry)
+    {
+        var title = GalleryUi.Text(entry.Title, ArcDesignTokenKind.Foreground, 44);
+        if (!entry.IsNew)
+        {
+            return title;
+        }
+
+        var badge = new GalleryNewBadge(13) { Margin = new Thickness(0, 6, 0, 0), VerticalAlignment = VerticalAlignment.Center };
+        return new StackPanel { Orientation = Orientation.Horizontal, Spacing = 14, Children = { title, badge } };
+    }
 
     private static Control BuildBreadcrumb(GalleryEntry entry)
     {

@@ -150,4 +150,5 @@ public enum GalleryShellLangResourceKind
     SponsorBannerAction,
     FriendNextcoDesc,
     PageLoadFailed,
+    NewBadge,
 }
