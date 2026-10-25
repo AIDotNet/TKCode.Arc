@@ -1,0 +1,98 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:TreeTable}" TargetType="arc:TreeTable">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TreeTable">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- The header stays pinned: it sits outside the scrolling body. -->
+                        <Border Name="PART_HeaderSlot"
+                                Grid.Row="0"
+                                Height="{arc:TreeTableTokenResource HeaderHeight}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="0,0,0,1" />
+                        <ScrollViewer Name="PART_Scroll"
+                                      Grid.Row="1"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <Border Name="PART_RowsSlot" Padding="{arc:TreeTableTokenResource BodyPadding}" />
+                        </ScrollViewer>
+                        <TextBlock Name="PART_Empty"
+                                   Grid.Row="1"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Margin="16,32"
+                                   IsVisible="False"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Name="PART_Status"
+                                   Grid.Row="1"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   IsHitTestVisible="False" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TextSecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="TextMutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="DividerBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="GuideBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="GuideActiveBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SkeletonBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="RowHeight" Value="{arc:TreeTableTokenResource RowHeight}" />
+        <Setter Property="IndentWidth" Value="{arc:TreeTableTokenResource IndentWidth}" />
+        <Setter Property="ChevronExtent" Value="{arc:TreeTableTokenResource ChevronExtent}" />
+        <Setter Property="CheckColumnWidth" Value="{arc:TreeTableTokenResource CheckColumnWidth}" />
+        <Setter Property="TreeCellMargin" Value="{arc:TreeTableTokenResource TreeCellMargin}" />
+        <Setter Property="CellInlinePadding" Value="{arc:TreeTableTokenResource CellInlinePadding}" />
+    </ControlTheme>
+
+    <!-- Rows: hover and selection fills fade on the standard curve; pending (loading or retry) lines never hover. -->
+    <ControlTheme x:Key="{x:Type arc:TreeTableRow}" TargetType="arc:TreeTableRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Style Selector="^:pointerover:not(:pending)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

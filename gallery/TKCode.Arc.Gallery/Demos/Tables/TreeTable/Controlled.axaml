@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeTableControlledDemo">
+    <StackPanel Spacing="12" MaxWidth="720">
+        <WrapPanel ItemSpacing="12" LineSpacing="12">
+            <arc:Button Content="Expand all" Variant="Secondary" Size="Small" Click="OnExpandAll" />
+            <arc:Button Content="Collapse all" Variant="Secondary" Size="Small" Click="OnCollapseAll" />
+            <arc:Button Content="Sort by cost" Variant="Secondary" Size="Small" Click="OnSortCost" />
+            <arc:Button Content="Select Engineering" Variant="Ghost" Size="Small" Click="OnSelectEngineering" />
+        </WrapPanel>
+        <arc:TreeTable x:Name="Table"
+                       Caption="Teams"
+                       IsSelectable="True" />
+        <TextBlock x:Name="State"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

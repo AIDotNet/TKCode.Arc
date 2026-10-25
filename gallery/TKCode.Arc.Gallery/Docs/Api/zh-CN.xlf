@@ -14824,6 +14824,118 @@
         <source>Tooltip content: a string, or any object (bind it when the text comes from the view model).</source>
         <target>提示内容：字符串或任意对象（当文本来自视图模型时进行绑定）。</target>
       </trans-unit>
+      <trans-unit id="TreeTable">
+        <source>A table whose rows nest. Rows expand and collapse on a spring with indent guides, parents carry tri-state checkboxes (`IsSelectable`), sorting reorders siblings without breaking the hierarchy, and children can load on first expand (`ChildrenLoader`). The first column shown holds the tree. Keyboard follows the treegrid pattern: ↑/↓ move, → opens or enters, ← closes or goes to the parent, Home/End, PageUp/PageDown move ten rows, `*` opens all siblings, Space selects, Enter toggles a parent or activates a leaf, Ctrl/Cmd+A selects all. Rows come from `ItemsSource` and `ChildrenSelector`; each row is identified by `KeySelector` (the item itself when not set), which is what `ExpandedKeys` and `SelectedKeys` hold. Like Arc, rows are not virtualized: every visible row exists and animates, so keep an expanded tree to a few hundred rows and load deeper levels on demand.</source>
+        <target>行可以嵌套的表格。行在弹簧上展开和收起并带有缩进引导线，父行带有三态复选框（`IsSelectable`），排序会重排同级行而不破坏层级，子行可以在第一次展开时加载（`ChildrenLoader`）。显示出来的第一列承载树。键盘遵循树状网格模式：↑/↓ 移动，→ 展开或进入，← 收起或转到父级，Home/End，PageUp/PageDown 移动十行，`*` 展开所有同级行，Space 选择，Enter 切换父行或激活叶子，Ctrl/Cmd+A 全选。行来自 `ItemsSource` 和 `ChildrenSelector`；每一行由 `KeySelector` 标识（未设置时为行项本身），`ExpandedKeys` 和 `SelectedKeys` 保存的就是这些键。与 Arc 一样，行不做虚拟化：每个可见行都存在并带有动画，因此展开的树请保持在几百行以内，更深的层级按需加载。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.Caption">
+        <source>The accessible name of the table (Arc `label`).</source>
+        <target>表格的无障碍名称（Arc 的 `label`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.ChildrenLoadFailed">
+        <source>Raised when `ChildrenLoader` faults; the row shows a retry line.</source>
+        <target>当 `ChildrenLoader` 出错时触发；该行显示重试行。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.ChildrenLoader">
+        <source>Loads the children of a row with `HasChildrenSelector` the first time it expands (Arc `loadChildren`). A faulted task shows a retry row.</source>
+        <target>当带有 `HasChildrenSelector` 的行第一次展开时，加载它的子行（Arc 的 `loadChildren`）。出错的任务会显示重试行。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.ChildrenSelector">
+        <source>Children of a row item (Arc `children`). Return null when the children are not loaded; an empty list means a leaf.</source>
+        <target>行项的子行（Arc 的 `children`）。子行尚未加载时返回 null；空列表表示叶子。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.EmptyMessage">
+        <source>Shown when there are no rows (Arc `emptyState`).</source>
+        <target>没有行时显示的文字（Arc 的 `emptyState`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.ExpandedKeys">
+        <source>The keys of the expanded rows (two-way; Arc `expanded` / `defaultExpanded`).</source>
+        <target>已展开行的键（双向；对应 Arc 的 `expanded` / `defaultExpanded`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.HasChildrenSelector">
+        <source>Marks a row whose children are not loaded yet (Arc `hasChildren`); needs `ChildrenLoader`.</source>
+        <target>标记子行尚未加载的行（Arc 的 `hasChildren`）；需要 `ChildrenLoader`。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.IsSelectable">
+        <source>Adds a checkbox column. Checking a parent checks everything under it (Arc `selectable`).</source>
+        <target>添加一个复选框列。勾选父行会勾选其下的所有内容（Arc 的 `selectable`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.ItemsSource">
+        <source>The top-level rows.</source>
+        <target>顶层行。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.KeySelector">
+        <source>Identifies a row; the keys of `ExpandedKeys` and `SelectedKeys` (Arc `id`). The item itself when not set.</source>
+        <target>标识一行；即 `ExpandedKeys` 和 `SelectedKeys` 中的键（Arc 的 `id`）。未设置时使用行项本身。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.RowActivated">
+        <source>Raised when a row without children is clicked or gets Enter (Arc `onRowActivate`). Parent rows toggle instead.</source>
+        <target>点击没有子行的行或在其上按 Enter 时触发（Arc 的 `onRowActivate`）。父行则会切换展开状态。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.RowExpandedChanged">
+        <source>Raised when rows expand or collapse (Arc `onExpandedChange`).</source>
+        <target>行展开或收起时触发（Arc 的 `onExpandedChange`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.RowLabelSelector">
+        <source>Names a row for its checkbox and for assistive technology (Arc `rowLabel`), such as the file or team name.</source>
+        <target>为一行命名，用于它的复选框和辅助技术（Arc 的 `rowLabel`），例如文件名或团队名。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.SelectedKeys">
+        <source>The keys of the selected rows (two-way; Arc `selected` / `defaultSelected`). Parents are added or removed to match their children.</source>
+        <target>已选中行的键（双向；对应 Arc 的 `selected` / `defaultSelected`）。会按子行的状态添加或移除父行。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.SelectionChanged">
+        <source>Raised with the new selection (Arc `onSelectedChange`).</source>
+        <target>以新的选择状态触发（Arc 的 `onSelectedChange`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.SortChanged">
+        <source>Raised when a header cycles the sort (Arc `onSortChange`).</source>
+        <target>当某个表头循环切换排序时触发（Arc 的 `onSortChange`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.SortDirection">
+        <source>The sort direction (two-way; Arc `sort.direction`). A header cycles ascending, descending, none.</source>
+        <target>排序方向（双向；对应 Arc 的 `sort.direction`）。表头依次循环：升序、降序、关闭。</target>
+      </trans-unit>
+      <trans-unit id="TreeTable.SortKey">
+        <source>The key of the column rows are sorted by, or null (two-way; Arc `sort.columnId`).</source>
+        <target>行排序所依据的列的键，或 null（双向；对应 Arc 的 `sort.columnId`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn">
+        <source>One column of a `TreeTable`. The cell value comes from `ValueSelector` or `Binding` (compiled against the row item in XAML); `CellTemplate` hosts custom content. The first column shown holds the tree: its chevron, indent and guides sit before the cell content. A column is sortable when it has a value (`SortValueSelector` or `ValueSelector`) and `IsSortable` is true.</source>
+        <target>`TreeTable` 的一列。单元格的值来自 `ValueSelector` 或 `Binding`（在 XAML 中针对行项编译）；`CellTemplate` 承载自定义内容。显示出来的第一列承载树：它的箭头、缩进和引导线位于单元格内容之前。当列有值（`SortValueSelector` 或 `ValueSelector`）且 `IsSortable` 为 true 时，该列可排序。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.CellTemplate">
+        <source>Custom cell content (Arc `cell`); the data context is the row item.</source>
+        <target>自定义单元格内容（Arc 的 `cell`）；数据上下文是行项。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.Header">
+        <source>Column label; also the default `EffectiveKey`.</source>
+        <target>列标题；也是默认的 `EffectiveKey`。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.HideBelow">
+        <source>Hides the column while the table is narrower than this many pixels (0: never; Arc `hideBelow`).</source>
+        <target>当表格窄于这个像素值时隐藏该列（0：从不隐藏；Arc 的 `hideBelow`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.IsEndAligned">
+        <source>Right-aligns the column and sets its figures in tabular width (Arc `align: "end"`).</source>
+        <target>让该列右对齐，并使用等宽数字（Arc 的 `align: "end"`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.IsSortable">
+        <source>When false the header is a plain label even though the column has a value.</source>
+        <target>为 false 时，即使该列有值，表头也只是普通标签。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.Key">
+        <source>Stable id reported by sort events and `SortKey`.</source>
+        <target>排序事件和 `SortKey` 报告的稳定标识。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.StringFormat">
+        <source>Format for cell text: a composite format (`{0:N0} MB`) or a format string (`C0`).</source>
+        <target>单元格文字的格式：复合格式（`{0:N0} MB`）或格式字符串（`C0`）。</target>
+      </trans-unit>
+      <trans-unit id="TreeTableColumn.Width">
+        <source>Arc's grid track: pixels (`96`), a share of the rest (`2*`). Defaults to `1*` (`minmax(0, 1fr)`).</source>
+        <target>Arc 的网格轨道：像素（`96`）、剩余空间的份额（`2*`）。默认为 `1*`（`minmax(0, 1fr)`）。</target>
+      </trans-unit>
       <trans-unit id="TreeView">
         <source>A keyboard-navigable file tree with animated folders and a selection fill that glides between rows. Folders open with their space growing on a smooth spring while the new rows stagger in; the chevron turns on a snappy spring and the folder icon pops open. Keyboard: ↑/↓ move, → opens or enters, ← closes or goes to the parent, Home/End, PageUp/PageDown, Enter/Space select and toggle, and typing jumps to a matching row. Unlike `TreeView` (nested item containers), rows are a flat, virtualized list of pooled, self-drawn rows (see `TablesTreeRowsPanel`): thousands of open nodes cost one screenful of rows, and the open / close motion never relayouts the whole tree. Nodes come from inline `Items` (`TreeViewItem`) or from `ItemsSource` with `ChildrenSelector`.</source>
         <target>可用键盘导航的文件树，文件夹带动画，选中填充会在行之间平滑滑动。文件夹展开时其空间以平滑弹簧增长，新行依次交错出现；箭头以灵敏的弹簧转动，文件夹图标弹出展开。键盘操作：↑/↓ 移动，→ 展开或进入，← 收起或转到父级，Home/End，PageUp/PageDown，Enter/Space 选取并切换展开，输入字符可跳转到匹配的行。与 `TreeView`（嵌套的项容器）不同，行是扁平的虚拟化列表，由池化的自绘行组成（参见 `TablesTreeRowsPanel`）：数千个展开的节点只需渲染一屏的行，展开和收起动画也从不重新布局整棵树。节点可来自内联的 `Items`（`TreeViewItem`），或来自带 `ChildrenSelector` 的 `ItemsSource`。</target>

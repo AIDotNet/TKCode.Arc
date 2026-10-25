@@ -412,7 +412,13 @@ public sealed class GallerySidebar : Border
         var implemented = GalleryPages.IsImplemented(entry.ClassName);
         var content = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
         content.Children.Add(new TextBlock { Text = entry.Title, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center });
-        if (!implemented)
+        if (entry.IsNew)
+        {
+            var badge = new GalleryNewBadge { Margin = new Thickness(8, 0, 4, 0) };
+            Grid.SetColumn(badge, 1);
+            content.Children.Add(badge);
+        }
+        else if (!implemented)
         {
             var phase = GalleryUi.Text($"P{entry.Phase}", ArcDesignTokenKind.TextMuted, 11);
             phase.VerticalAlignment = VerticalAlignment.Center;

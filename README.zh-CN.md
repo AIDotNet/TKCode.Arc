@@ -3,7 +3,7 @@
 [English](README.md) | 简体中文
 
 面向 Avalonia 的 Arc 风格组件库，基于 [AtomUI](https://github.com/AtomUI/AtomUI) 构建。
-TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 110 个组件），
+TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 111 个组件），
 保留 Arc 的视觉语言和弹簧动效。
 
 - 目标框架 `net10.0` 和 `net11.0`；支持桌面平台（Windows、macOS、Linux）。

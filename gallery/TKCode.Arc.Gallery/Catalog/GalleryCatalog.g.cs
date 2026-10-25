@@ -158,6 +158,7 @@ public static partial class GalleryCatalog
         new("Tables", "Tables", "表格与数据",
         [
             new("SortableDataTable", "Sortable data table", "sortable-data-table", 9, "Compare structured records with sortable columns."),
+            new("TreeTable", "Tree table", "tree-table", 9, "A table with nested rows, tri-state selection, hierarchy-preserving sort, and lazy-loaded children.", AddedOn: "2026-10-25"),
             new("TreeView", "Tree view", "tree-view", 9, "Navigate nested folders and structured content."),
             new("ReorderableList", "Reorderable list", "reorderable-list", 7, "Organize items with direct drag and drop."),
             new("FilterToolbar", "Filter toolbar", "filter-toolbar", 6, "Keep collection filters close and easy to reset."),

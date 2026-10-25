@@ -2,9 +2,19 @@ namespace TKCode.Arc.Gallery.Catalog;
 
 /// <param name="IsArc">True for Arc components (uiarc.dev originals); false for TKCode extras such as Markdown.</param>
 /// <param name="ArcPath">The page under uiarc.dev/components/ when it is not the slug (blocks live under <c>blocks/</c>).</param>
+/// <param name="AddedOn">ISO date (yyyy-MM-dd) the component joined the gallery; null for components that are not new.</param>
 public sealed record GalleryEntry(string ClassName, string Title, string Slug, int Phase, string Description, bool IsArc = true,
-    string? ArcPath = null)
+    string? ArcPath = null, string? AddedOn = null)
 {
+    /// <summary>True while the entry carries a date it was added on and <see cref="GalleryCatalog.NewWindowDays"/> have not passed since (see <see cref="IsNewOn"/>).</summary>
+    public bool IsNew => IsNewOn(DateOnly.FromDateTime(DateTime.Today));
+
+    /// <summary>Whether the entry counts as new on <paramref name="today"/>: added within the last <see cref="GalleryCatalog.NewWindowDays"/> days (never before its date).</summary>
+    public bool IsNewOn(DateOnly today) =>
+        AddedOn is not null
+        && DateOnly.TryParseExact(AddedOn, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var added)
+        && today >= added && today.DayNumber - added.DayNumber < GalleryCatalog.NewWindowDays;
+
     /// <summary>The Arc original on uiarc.dev; null for extras, which have none.</summary>
     public string? ArcUrl => IsArc ? $"https://uiarc.dev/components/{ArcPath ?? Slug}" : null;
 }
@@ -20,8 +30,11 @@ public sealed record GalleryCategory(string Code, string Title, string ChineseTi
 
 public static partial class GalleryCatalog
 {
+    /// <summary>How many days after <see cref="GalleryEntry.AddedOn"/> an entry keeps its "New" badge.</summary>
+    public const int NewWindowDays = 60;
+
     /// <summary>
-    /// TKCode components with no Arc original, listed after Arc's groups. They are not part of the 110 Arc components
+    /// TKCode components with no Arc original, listed after Arc's groups. They are not part of the 111 Arc components
     /// (<see cref="Categories"/> / <see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory[] Extras =
@@ -51,7 +64,7 @@ public static partial class GalleryCatalog
 
     /// <summary>
     /// The groups of the Special components section, listed after Blocks as on uiarc.dev. Their pages live under
-    /// <c>/components/</c> like any component, but they are not part of the 110 Arc components (<see cref="Count"/>).
+    /// <c>/components/</c> like any component, but they are not part of the 111 Arc components (<see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory[] Special =
     [
@@ -107,7 +120,7 @@ public static partial class GalleryCatalog
 
     /// <summary>
     /// The Blocks group under Components, with its subgroups and blocks from the TKCode.Arc.Blocks catalog. Not part of
-    /// the 110 Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
+    /// the 111 Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
     /// uiarc.dev page; original blocks have none.
     /// </summary>
     public static readonly GalleryCategory Blocks = new("Blocks", "Blocks", "区块", [],
@@ -130,10 +143,10 @@ public static partial class GalleryCatalog
         new("DocsChangelog", "Changelog", "changelog", 0, "Release notes.", IsArc: false),
     ], IsArc: false);
 
-    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 110 Arc components.</summary>
+    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 111 Arc components.</summary>
     public static GalleryCategory AdvancedCharts => Extras[0];
 
-    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 110 Arc components.</summary>
+    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 111 Arc components.</summary>
     public static GalleryCategory Workflow => Extras[1];
 
     /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts and Workflow after Charts, then the other extras.</summary>

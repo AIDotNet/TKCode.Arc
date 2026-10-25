@@ -865,5 +865,11 @@
         <target state="translated">无法加载此页面。请检查网络连接，然后重新打开此页面。</target>
       </segment>
     </unit>
+    <unit id="NewBadge">
+      <segment>
+        <source>New</source>
+        <target state="translated">新</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
