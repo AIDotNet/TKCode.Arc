@@ -148,7 +148,7 @@
                         <Border Name="PART_Section">
                             <!-- The shadow is the outer border's; the inner one clips the tray and the body to the rounded card. -->
                             <Border Name="PART_Card"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
                                     Background="{arc:ArcDesignTokenResource Surface}"
                                     BoxShadow="{arc:ArcDesignTokenResource ShadowResting}">
@@ -156,7 +156,7 @@
                                     <StackPanel>
                                         <Border Name="PART_Tray"
                                                 ClipToBounds="True"
-                                                BorderThickness="0,0,0,1"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                                 Background="{arc:NewsletterSignupTokenResource TrayBackground}">
                                             <arc:NewsletterIssueStack Name="PART_Stack"
@@ -183,7 +183,7 @@
                                                            TextWrapping="Wrap" />
                                                 <arc:NewsletterForm Name="PART_Form" />
                                                 <Border Name="PART_ReadersRow"
-                                                        BorderThickness="0,1,0,0"
+                                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                                     <arc:NewsletterReaders Name="PART_Readers"
                                                                            RingBrush="{arc:ArcDesignTokenResource Surface}" />
@@ -235,10 +235,10 @@
                     <Setter Property="Padding" Value="16,40" />
                 </Style>
                 <Style Selector="^ /template/ Border#PART_Card">
-                    <Setter Property="CornerRadius" Value="28" />
+                    <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep28}" />
                 </Style>
                 <Style Selector="^ /template/ Border#PART_CardClip">
-                    <Setter Property="CornerRadius" Value="28" />
+                    <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep28}" />
                 </Style>
                 <Style Selector="^ /template/ Border#PART_Tray">
                     <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource TrayHeightNarrow}" />
@@ -534,7 +534,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="6"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -561,7 +561,7 @@
             <ControlTemplate TargetType="arc:NewsletterIssueCard">
                 <Border Background="{TemplateBinding Background}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Padding="{TemplateBinding Padding}"
                         BoxShadow="{TemplateBinding PaperShadow}">
@@ -620,7 +620,7 @@
                         </Grid>
                         <Border Name="PART_SubjectBox"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="0,1,0,0">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                             <arc:NewsletterBalancedText Name="PART_Subject"
                                        HorizontalAlignment="Left"
                                        Text="{TemplateBinding IssueSubject}"

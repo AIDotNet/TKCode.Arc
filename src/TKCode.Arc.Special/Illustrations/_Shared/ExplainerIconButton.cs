@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -29,7 +30,7 @@ internal sealed class ExplainerIconButton : Button
         Height = 36;
         MinWidth = 36;
         Padding = new Thickness(0);
-        CornerRadius = new CornerRadius(18);
+        this.BindCornerRadius(ArcDesignTokenKind.RadiusStep18);
     }
 
     protected override Type StyleKeyOverride => typeof(Button);

@@ -51,7 +51,7 @@
                     <Border Name="PART_Row"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                             Padding="{arc:RadioGroupTokenResource RowInset}">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:RadioGroupTokenResource MarkGap}">
@@ -61,7 +61,7 @@
                                    VerticalAlignment="Center"
                                    RenderTransformOrigin="50%,50%">
                                 <Border Name="PART_Ring"
-                                        BorderThickness="1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         CornerRadius="{arc:RadioGroupTokenResource RingRadius}"
                                         Background="Transparent" />
                                 <!-- A faint dot previews the choice while the pointer is down. -->

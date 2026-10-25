@@ -142,7 +142,7 @@
                             ClipToBounds="True">
                         <StackPanel>
                             <Border Name="PART_Header"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                     BorderBrush="{TemplateBinding BorderBrush}">
                                 <arc:PromptStudioHeaderPanel Name="PART_HeaderRow"
                                                              ColumnGap="{arc:PromptStudioTokenResource HeaderColumnGap}"
@@ -165,7 +165,7 @@
                                 </arc:PromptStudioHeaderPanel>
                             </Border>
                             <Border Name="PART_EditorSection"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                     BorderBrush="{TemplateBinding BorderBrush}">
                                 <StackPanel>
                                     <Grid Name="PART_EditorBar"

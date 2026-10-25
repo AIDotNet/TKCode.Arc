@@ -13,7 +13,7 @@
                             <ItemsPresenter Name="PART_ItemsPresenter"
                                             ItemsPanel="{TemplateBinding ItemsPanel}"
                                             VerticalAlignment="Top" />
-                            <Border Name="PART_Empty" VerticalAlignment="Top" BorderThickness="1">
+                            <Border Name="PART_Empty" VerticalAlignment="Top" BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}">
                                 <Panel>
                                     <StackPanel Name="PART_DefaultEmpty"
                                                 HorizontalAlignment="Center"
@@ -78,7 +78,7 @@
                                     BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}" />
                             <Border Name="PART_Face"
                                     CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     Background="{arc:ArcDesignTokenResource Surface}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
                                     ClipToBounds="True">

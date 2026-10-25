@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -436,7 +437,7 @@ public class AvatarGroup : TemplatedControl
         {
             chip.Width = d;
             chip.Height = d;
-            chip.CornerRadius = new CornerRadius(d / 2);
+            chip.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
             chip.BorderThickness = new Thickness(2);
             chip.BorderBrush = SurfaceBrush;
             chip.Background = ChipBackground;
@@ -452,7 +453,7 @@ public class AvatarGroup : TemplatedControl
     {
         tip.Background = TipBackground;
         tip.Padding = TipPadding;
-        tip.CornerRadius = new CornerRadius(9999);
+        tip.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
         text.Foreground = TipForeground;
         text.FontFamily = FontFamily;
         text.FontSize = FontSize;

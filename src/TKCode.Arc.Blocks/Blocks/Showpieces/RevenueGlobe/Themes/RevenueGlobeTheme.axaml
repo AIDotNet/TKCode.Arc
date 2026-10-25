@@ -16,12 +16,12 @@
                             IsHitTestVisible="False"
                             Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:RevenueGlobeTokenResource ButtonRadius}"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter Name="PART_ContentPresenter"
@@ -85,7 +85,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
@@ -161,7 +161,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
@@ -282,7 +282,7 @@
                                 DockPanel.Dock="Top"
                                 Padding="{arc:RevenueGlobeTokenResource HeaderPadding}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="0,0,0,1">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
                             <arc:RevenueGlobeHeaderPanel>
                                 <StackPanel>
                                     <ContentPresenter Name="PART_Title"
@@ -512,12 +512,12 @@
             <Setter Property="Padding" Value="{arc:RevenueGlobeTokenResource TimelinePadding}" />
         </Style>
         <Style Selector="^ /template/ Border#PART_Aside">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         </Style>
 
         <!-- Wide: the panel beside the globe with a left border. Narrow: tighter timeline, smaller revenue figure. -->
         <Style Selector="^:wide /template/ Border#PART_Aside">
-            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
         </Style>
         <Style Selector="^:narrow /template/ Border#PART_TimelineArea">
             <Setter Property="Padding" Value="{arc:RevenueGlobeTokenResource NarrowTimelinePadding}" />

@@ -411,7 +411,7 @@
                                     <Border Name="PART_Details"
                                             Margin="{arc:CardTokenResource DetailsMargin}"
                                             Padding="{arc:CardTokenResource DetailsPadding}"
-                                            BorderThickness="0,1,0,0"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                             BorderBrush="{arc:ArcDesignTokenResource Border}">
                                         <ContentPresenter Name="PART_DetailsPresenter"
                                                           TextWrapping="Wrap"

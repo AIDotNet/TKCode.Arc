@@ -310,9 +310,9 @@ public partial class DataGrid
             Width = 240,
             Padding = new Thickness(6),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(16),
             Child = new StackPanel { Children = { search, scroll, footer } }
         };
+        surface.BindCornerRadius(ArcDesignTokenKind.RadiusStep16);
         ArcTokens.Bind(surface, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceRaised);
         ArcTokens.Bind(surface, Border.BorderBrushProperty, ArcDesignTokenKind.Border);
         ArcTokens.Bind(surface, TextElement.FontSizeProperty, ArcDesignTokenKind.TypeSM);

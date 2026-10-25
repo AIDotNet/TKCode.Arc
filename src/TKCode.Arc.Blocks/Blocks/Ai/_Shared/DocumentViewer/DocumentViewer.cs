@@ -608,8 +608,8 @@ internal sealed partial class DocumentViewer : TemplatedControl
             Alignment = MenuAlignment.Start,
             AnchorGap = 6,
             Padding = new Thickness(5),
-            CornerRadius = new CornerRadius(16)
         };
+        _menu.BindCornerRadius(ArcDesignTokenKind.RadiusStep16);
         _menu.ItemClicked += OnMenuItemClicked;
         _menu.Opened += OnMenuOpened;
         _menu.Closed += OnMenuClosed;

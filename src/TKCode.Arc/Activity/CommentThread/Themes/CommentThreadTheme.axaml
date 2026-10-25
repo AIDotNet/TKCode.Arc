@@ -328,7 +328,7 @@
         <Style Selector="^[Role=ComposerArea]">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource ComposerAreaMargin}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ComposerAreaPadding}" />
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         </Style>
         <Style Selector="^[Role=Replying]">

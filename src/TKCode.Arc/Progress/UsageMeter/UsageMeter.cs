@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -565,11 +566,10 @@ public partial class UsageMeter : TemplatedControl
                     {
                         Width = 10,
                         Height = 10,
-                        CornerRadius = new CornerRadius(3),
                         Background = isFree ? palette.Track : palette.Segments[Math.Min(i, palette.Segments.Length - 1)],
                         BorderBrush = isFree ? BorderStrongBrush : null,
                         BorderThickness = new Thickness(isFree ? 1 : 0)
-                    };
+                    }.BindCornerRadius(ArcDesignTokenKind.RadiusStep3);
             }
         }
     }

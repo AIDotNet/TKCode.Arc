@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -874,14 +875,14 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
             if (e.NameScope.Find<Border>(Select.TriggerPart) is { } trigger)
             {
                 trigger.MinHeight = 32;
-                trigger.CornerRadius = new CornerRadius(10);
+                trigger.BindCornerRadius(ArcDesignTokenKind.RadiusStep10);
                 trigger.Padding = new Thickness(9, 0, 8, 0);
             }
         }
         else if (e.NameScope.Find<FieldFrame>(FieldTextBox.FramePart) is { } frame)
         {
             frame.MinHeight = 32;
-            frame.CornerRadius = new CornerRadius(10);
+            frame.BindCornerRadius(ArcDesignTokenKind.RadiusStep10);
             frame.Padding = new Thickness(8, 0);
         }
     }

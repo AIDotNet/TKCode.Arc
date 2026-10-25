@@ -35,7 +35,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
                         <StackPanel Spacing="{arc:AvailabilityPickerTokenResource DayLineGap}" HorizontalAlignment="Center">
@@ -142,7 +142,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
                         <arc:AvailabilitySlotLayout Name="PART_Layout"
@@ -277,7 +277,7 @@
                                                   HighlightFill="{arc:ArcDesignTokenResource Accent}" />
                         <Border Name="PART_SlotsHead"
                                 Margin="{arc:AvailabilityPickerTokenResource HeadMargin}"
-                                BorderThickness="0,1,0,0">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                             <Grid ColumnDefinitions="*,Auto">
                                 <arc:AvailabilityTextSwap Name="PART_DayTitle"
                                                           VerticalAlignment="Bottom"
@@ -297,7 +297,7 @@
                                             TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
                                     <Border Width="{arc:AvailabilityPickerTokenResource MarkWidth}"
                                             Height="{arc:AvailabilityPickerTokenResource MarkHeight}"
-                                            CornerRadius="2"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                                             VerticalAlignment="Center"
                                             Background="{arc:ArcDesignTokenResource Success}" />
                                     <TextBlock Name="PART_FreeLegend"
@@ -305,7 +305,7 @@
                                                LineHeight="{arc:AvailabilityPickerTokenResource CaptionLineHeight}" />
                                     <Border Width="{arc:AvailabilityPickerTokenResource MarkWidth}"
                                             Height="{arc:AvailabilityPickerTokenResource MarkHeight}"
-                                            CornerRadius="2"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                                             Margin="{arc:AvailabilityPickerTokenResource LegendSecondMargin}"
                                             VerticalAlignment="Center"
                                             Background="{arc:ArcDesignTokenResource BorderStrong}" />
@@ -324,7 +324,7 @@
                                                           ItemGap="{arc:AvailabilityPickerTokenResource SlotGap}" />
                             </arc:SpringSizeDecorator>
                         </Border>
-                        <Border Name="PART_Footer" BorderThickness="0,1,0,0">
+                        <Border Name="PART_Footer" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                             <Grid Name="PART_FooterGrid" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
                                 <StackPanel Name="PART_Selection"
                                             VerticalAlignment="Center"

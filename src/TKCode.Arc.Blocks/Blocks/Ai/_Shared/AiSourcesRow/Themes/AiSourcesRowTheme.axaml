@@ -170,7 +170,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
@@ -217,7 +217,7 @@
                             MinWidth="18"
                             Height="18"
                             Padding="5,0"
-                            CornerRadius="9">
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep9}">
                         <TextBlock Name="PART_NumberText"
                                    Text="{TemplateBinding NumberText}"
                                    FontSize="{arc:ArcDesignTokenResource TypeXS}"
@@ -231,7 +231,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="18"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

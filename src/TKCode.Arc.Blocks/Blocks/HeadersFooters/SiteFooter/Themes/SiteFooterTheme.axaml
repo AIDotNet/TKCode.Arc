@@ -13,7 +13,7 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         <Setter Property="Padding" Value="{arc:SiteFooterTokenResource FooterPadding}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteFooter">
@@ -60,7 +60,7 @@
                         <Border Name="PART_Bottom"
                                 IsVisible="{TemplateBinding HasTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                BorderThickness="0,1,0,0">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                             <arc:SiteFooterSplitRow IsStacked="{TemplateBinding IsNarrow}">
                                 <WrapPanel Name="PART_BottomStart" VerticalAlignment="Center">
                                     <arc:SiteFooterLabel Kind="Copyright"
@@ -93,7 +93,7 @@
                             </arc:SiteFooterSplitRow>
                             <Border Name="PART_MinimalBottom"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                    BorderThickness="0,1,0,0">
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                                 <arc:SiteFooterSplitRow IsStacked="{TemplateBinding IsNarrow}">
                                     <arc:SiteFooterLabel Kind="Copyright"
                                                          Text="{TemplateBinding MinimalCopyright}"
@@ -324,7 +324,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="6"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -394,7 +394,7 @@
                                          IsVisible="{TemplateBinding HasTitle}" />
                     <Border Name="PART_Row"
                             Height="{arc:ArcDesignTokenResource ControlSizeMD}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                             Background="{arc:ArcDesignTokenResource Surface}"
                             Padding="{arc:SiteFooterTokenResource NewsletterRowPadding}">

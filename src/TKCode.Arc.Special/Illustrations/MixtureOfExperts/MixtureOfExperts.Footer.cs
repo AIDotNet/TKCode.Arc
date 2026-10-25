@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
@@ -139,7 +140,6 @@ public partial class MixtureOfExperts
             var chip = new Border
             {
                 Height = 24,
-                CornerRadius = new CornerRadius(7),
                 BorderThickness = new Thickness(1),
                 BorderBrush = p.Brush(p.BorderStrong),
                 Background = p.Brush(p.Surface),
@@ -147,6 +147,7 @@ public partial class MixtureOfExperts
                 VerticalAlignment = VerticalAlignment.Center,
                 Child = Label(_tokens[token].Text, p.Foreground, medium: true)
             };
+            chip.BindCornerRadius(ArcDesignTokenKind.RadiusStep7);
             row.Children.Add(chip);
             row.Children.Add(Glyph(ArcIcons.ArrowRight, p.TextMuted, 14));
         }
@@ -184,11 +185,11 @@ public partial class MixtureOfExperts
             var chip = new Border
             {
                 Background = p.Brush(p.SurfaceMuted),
-                CornerRadius = new CornerRadius(4),
                 Padding = new Thickness(4, 0),
                 Margin = new Thickness(0, 0, 0, -3),
                 Child = new TextBlock { Text = token, Foreground = p.Brush(p.Foreground), FontSize = 14 }
             };
+            chip.BindCornerRadius(ArcDesignTokenKind.RadiusStep4);
             inlines.Add(new InlineUIContainer(chip) { BaselineAlignment = BaselineAlignment.Center });
             var rest = text[(at + "{token}".Length)..];
             if (rest.Length > 0)

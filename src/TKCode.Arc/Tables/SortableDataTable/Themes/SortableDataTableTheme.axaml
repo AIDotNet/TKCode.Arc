@@ -38,7 +38,7 @@
                                 IsVisible="{TemplateBinding IsSelectable}"
                                 Height="{arc:SortableDataTableTokenResource FooterHeight}"
                                 Padding="{arc:SortableDataTableTokenResource FooterInset}"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{TemplateBinding BorderBrush}">
                             <Grid ColumnDefinitions="*,Auto">
                                 <Border Name="PART_CountHost"

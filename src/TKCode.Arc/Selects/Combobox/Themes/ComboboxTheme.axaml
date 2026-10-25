@@ -32,7 +32,7 @@
                         <Border Name="PART_Frame"
                                 MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:ComboboxTokenResource FieldPadding}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                                 Background="{arc:ArcDesignTokenResource Surface}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}">
@@ -108,7 +108,7 @@
                                   WindowManagerAddShadowHint="False">
                         <Border Name="PART_Surface"
                                 Padding="{arc:ComboboxTokenResource PopoverPadding}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                                 Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}">

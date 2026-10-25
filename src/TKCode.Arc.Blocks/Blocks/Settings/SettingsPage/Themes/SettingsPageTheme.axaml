@@ -31,7 +31,7 @@
                                     <Border Name="PART_FooterSlot"
                                             DockPanel.Dock="Bottom"
                                             IsVisible="False"
-                                            BorderThickness="0,1,0,0"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                             Padding="{arc:SettingsPageTokenResource FooterInset}">
                                         <ContentPresenter Name="PART_FooterPresenter" Content="{TemplateBinding Footer}" />
@@ -65,7 +65,7 @@
                                                   Margin="{arc:SettingsPageTokenResource SaveBarMargin}">
                                     <Border Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                            BorderThickness="1"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                             BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
                                             Padding="{arc:SettingsPageTokenResource SaveBarInset}">
@@ -110,7 +110,7 @@
             <Setter Property="DockPanel.Dock" Value="Left" />
             <Setter Property="Width" Value="{arc:SettingsPageTokenResource NavWidth}" />
             <Setter Property="Background" Value="{arc:SettingsPageTokenResource NavBackground}" />
-            <Setter Property="BorderThickness" Value="0,0,1,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessRight}" />
         </Style>
         <Style Selector="^ /template/ TextBlock#PART_Title">
             <Setter Property="Margin" Value="{arc:SettingsPageTokenResource TitleInset}" />
@@ -137,7 +137,7 @@
             <Style Selector="^ /template/ Border#PART_NavPane">
                 <Setter Property="DockPanel.Dock" Value="Top" />
                 <Setter Property="Width" Value="NaN" />
-                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
             </Style>
             <Style Selector="^ /template/ TextBlock#PART_Title">
                 <Setter Property="Margin" Value="{arc:SettingsPageTokenResource CompactTitleInset}" />

@@ -72,7 +72,7 @@
                                               VerticalScrollBarVisibility="Auto">
                                     <StackPanel Name="PART_Rows" />
                                 </ScrollViewer>
-                                <Border BorderThickness="0,1,0,0"
+                                <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                         Padding="{arc:CookieConsentTokenResource PanelActionsPadding}">
                                     <Grid Name="PART_PanelActions"

@@ -150,7 +150,7 @@
                         <Border Name="PART_Footer"
                                 Margin="{arc:DatePickerTokenResource FooterMargin}"
                                 Padding="{arc:DatePickerTokenResource FooterInset}"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                 TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                 TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">

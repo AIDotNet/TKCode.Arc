@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -288,12 +289,12 @@ internal sealed class MultiSelectChipRow : Panel
             {
                 Child = content,
                 BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(999),
                 RenderTransform = _scale,
                 RenderTransformOrigin = RelativePoint.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
+            _chip.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
             Child = _chip;
             ApplyStyle();
         }

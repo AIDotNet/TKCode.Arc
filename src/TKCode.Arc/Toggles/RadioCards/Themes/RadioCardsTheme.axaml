@@ -47,7 +47,7 @@
                             Opacity="0" />
                     <Border Name="PART_Card"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:RadioCardsTokenResource CardRadius}"
                             Padding="{TemplateBinding Padding}">
                         <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="*,Auto">

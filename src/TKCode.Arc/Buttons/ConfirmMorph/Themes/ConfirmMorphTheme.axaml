@@ -338,7 +338,7 @@
                         </Border>
                         <Border Name="PART_Outline"
                                 IsHitTestVisible="False"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
                     </Panel>

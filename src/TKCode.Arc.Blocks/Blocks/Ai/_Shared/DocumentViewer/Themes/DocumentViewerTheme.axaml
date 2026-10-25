@@ -19,7 +19,7 @@
                     <Border Name="PART_Toolbar"
                             Background="{arc:ArcDesignTokenResource Surface}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                            BorderThickness="0,0,0,1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                             Padding="8,0">
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <arc:DocumentViewerButton Name="PART_FileButton"
@@ -59,8 +59,8 @@
                                 <Border Name="PART_ZoomGroup"
                                         Height="30"
                                         Padding="1,0"
-                                        BorderThickness="1"
-                                        CornerRadius="10"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <arc:DocumentViewerButton Name="PART_ZoomOut"
@@ -195,12 +195,12 @@
         <Style Selector="^[Kind=File]">
             <Setter Property="Height" Value="32" />
             <Setter Property="Padding" Value="6,0,8,0" />
-            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
             </Style>
             <Style Selector="^:on /template/ Border#PART_Tint">
                 <Setter Property="Opacity" Value="0.05" />
@@ -210,10 +210,10 @@
         <Style Selector="^[Kind=Step]">
             <Setter Property="Width" Value="28" />
             <Setter Property="Height" Value="26" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
             <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
             </Style>
             <Style Selector="^:hover">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -223,21 +223,21 @@
         <Style Selector="^[Kind=Percent]">
             <Setter Property="Width" Value="46" />
             <Setter Property="Height" Value="26" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
             <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
             </Style>
         </Style>
 
         <Style Selector="^[Kind=Fit]">
             <Setter Property="Height" Value="30" />
             <Setter Property="Padding" Value="11,0" />
-            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
             <Style Selector="^ /template/ Border#PART_FocusRing">
-                <Setter Property="CornerRadius" Value="14" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
             </Style>
             <Style Selector="^:on">
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

@@ -117,7 +117,6 @@
                         </Border>
                         <arc:ArenaPromptForm Name="PART_Form" Text="{TemplateBinding PromptText, Mode=TwoWay}" />
                         <Border Name="PART_StageFrame"
-                                BorderThickness="0,1,0,0"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}">
                             <arc:ArenaStagePanel Name="PART_Stage">
                                 <arc:ArenaPaneTabs Name="PART_Tabs" IsVisible="False" />
@@ -159,6 +158,9 @@
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
 
+        <Style Selector="^ /template/ Border#PART_StageFrame">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
         <Style Selector="^.flat">
             <Setter Property="BorderThickness" Value="0" />
             <Style Selector="^ /template/ Border#PART_StageFrame">

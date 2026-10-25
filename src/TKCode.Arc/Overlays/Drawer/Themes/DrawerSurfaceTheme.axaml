@@ -86,7 +86,7 @@
                                 <Border Name="PART_Header"
                                         Background="Transparent"
                                         Padding="{arc:DrawerSurfaceTokenResource SectionPadding}"
-                                        BorderThickness="0,0,0,1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="{arc:DrawerSurfaceTokenResource HeaderGap}">
@@ -176,7 +176,7 @@
         <Style Selector="^[Side=Right]">
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="BorderThickness" Value="1,1,0,1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessNoRight}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusRight}" />
         </Style>
         <Style Selector="^[Side=Right]:narrow">
@@ -185,7 +185,7 @@
         <Style Selector="^[Side=Left]">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="BorderThickness" Value="0,1,1,1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessNoLeft}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusLeft}" />
         </Style>
         <Style Selector="^[Side=Left]:narrow">
@@ -194,7 +194,7 @@
         <Style Selector="^[Side=Top]">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusTop}" />
         </Style>
         <Style Selector="^[Side=Top]:narrow">
@@ -203,7 +203,7 @@
         <Style Selector="^[Side=Bottom]">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="CornerRadius" Value="{arc:DrawerSurfaceTokenResource RadiusBottom}" />
         </Style>
         <Style Selector="^[Side=Bottom]:narrow">

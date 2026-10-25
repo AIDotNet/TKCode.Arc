@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
@@ -431,7 +432,7 @@ public class SignaturePad : TemplatedControl
                 .Select(width =>
                 {
                     var size = SignatureExport.NibSize(width) + 2;
-                    var dot = new Border { Width = size, Height = size, CornerRadius = new CornerRadius(size / 2) };
+                    var dot = new Border { Width = size, Height = size }.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
                     if (_pad is not null)
                     {
                         dot.Bind(Border.BackgroundProperty, _pad.GetObservable(SignaturePadCanvas.InkBlackProperty));
@@ -489,7 +490,8 @@ public class SignaturePad : TemplatedControl
     /// <summary>A 16px swatch in the screen ink (it follows the theme with the pad's ink brushes).</summary>
     private Border Swatch(SignatureInkColor color)
     {
-        var swatch = new Border { Width = 16, Height = 16, CornerRadius = new CornerRadius(8) };
+        var swatch = new Border { Width = 16, Height = 16 };
+        swatch.BindCornerRadius(ArcDesignTokenKind.RadiusStep8);
         if (_pad is not null)
         {
             var property = color switch

@@ -18,7 +18,7 @@
                         <Border Name="PART_Header"
                                 MinHeight="{arc:CodeBlockTokenResource HeaderMinHeight}"
                                 CornerRadius="{arc:CodeBlockTokenResource HeaderCornerRadius}"
-                                BorderThickness="0,0,0,1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                 Background="{arc:ArcDesignTokenResource SurfaceRaised}">
                             <DockPanel VerticalAlignment="Center">
@@ -160,7 +160,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                            BorderThickness="0,1,0,0"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                             CornerRadius="{arc:CodeBlockTokenResource ExpandCornerRadius}"
                             Padding="{TemplateBinding Padding}">
                         <StackPanel Orientation="Horizontal"

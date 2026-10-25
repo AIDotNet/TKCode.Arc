@@ -399,7 +399,7 @@ public class FilterToolbar : TemplatedControl
         };
         ArcTokens.Bind(chip, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
         ArcTokens.Bind(chip, Border.BorderBrushProperty, ArcDesignTokenKind.Border);
-        ArcTokens.Bind(chip, Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPill);
+        chip.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
         ArcTokens.Bind(chip, Border.MinHeightProperty, ArcDesignTokenKind.ControlSizeSM);
         ArcTokens.Bind(chip, TextElement.FontSizeProperty, ArcDesignTokenKind.TypeXS);
         var slot = new FilterToolbarChipSlot { Mode = FilterToolbarSlotMode.Chip, Gap = 8, Key = filter.Id, Child = chip };

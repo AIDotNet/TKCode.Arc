@@ -36,7 +36,7 @@
                                                Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                                IsVisible="{TemplateBinding HasMark}" />
                                 <Border Name="PART_Initial"
-                                        CornerRadius="4"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep4}"
                                         Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                         IsVisible="{TemplateBinding HasMark, Converter={x:Static BoolConverters.Not}}">
                                     <TextBlock Text="{TemplateBinding Initial}"

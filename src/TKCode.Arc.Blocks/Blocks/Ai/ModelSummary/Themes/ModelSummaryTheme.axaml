@@ -22,7 +22,7 @@
                                         VerticalContentAlignment="Top" />
                     <Border Name="PART_FactsFrame"
                             Margin="{arc:ModelSummaryTokenResource FactsMargin}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
                         <arc:ModelSummaryFacts Name="PART_Facts">

@@ -29,7 +29,7 @@
                                 <Border Name="PART_StageFrame"
                                         Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                        BorderThickness="0,0,0,1">
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
                                     <arc:OnboardingArt Name="PART_Art"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Top"

@@ -19,6 +19,22 @@ public static class ArcTokens
                                    BindingPriority priority = BindingPriority.Template)
         => target.Bind(property, target.GetResourceObservable(kind), priority);
 
+    /// <summary>
+    /// Binds the <c>CornerRadius</c> of a code-built part to an ArcDesign token and returns the target, so it follows the
+    /// theme's radii (the pixel style zeroes them) and can sit in an expression:
+    /// <c>new Border { ... }.BindCornerRadius(ArcDesignTokenKind.RadiusStep12)</c>. Works for any control that registers a
+    /// <c>CornerRadius</c> property (Border, templated controls, GlidingIndicator, ...). Use <c>RadiusPill</c> for a capsule
+    /// or circle and the <c>RadiusStepN</c> token whose number is the radius the part had.
+    /// </summary>
+    public static TTarget BindCornerRadius<TTarget>(this TTarget target, ArcDesignTokenKind kind)
+        where TTarget : Control
+    {
+        var property = AvaloniaPropertyRegistry.Instance.FindRegistered(target, nameof(Border.CornerRadius))
+                       ?? throw new InvalidOperationException($"{target.GetType().Name} has no CornerRadius property to bind.");
+        Bind(target, property, kind);
+        return target;
+    }
+
     /// <summary>Reads the current value of an ArcDesign token for <paramref name="owner"/>'s theme scope.</summary>
     public static T Get<T>(Control owner, ArcDesignTokenKind kind)
         => ControlTokenAccessor.Capture<ArcDesign>(owner).GetOwn<T, ArcDesignTokenKind>(kind);

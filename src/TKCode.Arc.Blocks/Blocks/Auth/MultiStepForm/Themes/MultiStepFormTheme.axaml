@@ -22,13 +22,13 @@
                             VerticalAlignment="Top"
                             Background="{arc:ArcDesignTokenResource Surface}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
                             BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                             TextElement.LetterSpacing="-0.16">
                         <StackPanel>
                             <Border Name="PART_HeaderFrame"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <arc:MultiStepHeaderPanel Name="PART_Header">
                                     <ScrollViewer Name="PART_ProgressScroller"

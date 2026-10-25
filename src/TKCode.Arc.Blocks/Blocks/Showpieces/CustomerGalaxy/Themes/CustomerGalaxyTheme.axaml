@@ -39,7 +39,7 @@
                                 Grid.Row="1"
                                 Padding="{arc:CustomerGalaxyTokenResource ToolbarInset}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="0,0,0,1">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
                             <arc:GalaxyToolbarPanel ColumnGap="{arc:CustomerGalaxyTokenResource ToolbarColumnGap}"
                                                     RowGap="{arc:CustomerGalaxyTokenResource ToolbarRowGap}">
                                 <arc:GalaxyTabStrip Name="PART_Tabs" HorizontalAlignment="Left" />
@@ -98,8 +98,7 @@
                             </Panel>
                             <Border Name="PART_TotalsFrame"
                                     IsVisible="{TemplateBinding ShowTotals}"
-                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    BorderThickness="0,1,0,0">
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
                             <arc:GalaxyTotalsPanel Name="PART_Totals"
                                                    Padding="{arc:CustomerGalaxyTokenResource TotalsInset}"
                                                    ColumnGap="{arc:CustomerGalaxyTokenResource TotalsColumnGap}"
@@ -130,7 +129,7 @@
                                     </StackPanel>
                                     <Border Name="PART_Subtotals"
                                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                            BorderThickness="0,0,0,1"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                             Padding="{arc:CustomerGalaxyTokenResource SubtotalInset}">
                                         <Grid ColumnDefinitions="*,*,*" ColumnSpacing="{arc:CustomerGalaxyTokenResource SubtotalGap}">
                                             <StackPanel Spacing="{arc:CustomerGalaxyTokenResource SubtotalLabelGap}">
@@ -168,7 +167,7 @@
                                                 Margin="12,0,0,0"
                                                 Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                                BorderThickness="1"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                                 CornerRadius="{arc:CustomerGalaxyTokenResource SortTrackRadius}"
                                                 Padding="{arc:CustomerGalaxyTokenResource SortTrackInset}">
                                             <StackPanel Orientation="Horizontal" Spacing="2">
@@ -211,12 +210,15 @@
         <Style Selector="^ /template/ Border.subtotal-dot">
             <Setter Property="Width" Value="{arc:CustomerGalaxyTokenResource SubtotalDot}" />
             <Setter Property="Height" Value="{arc:CustomerGalaxyTokenResource SubtotalDot}" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <!-- The panel's 1px divider: on its left beside the stage, on top under it. -->
+        <Style Selector="^ /template/ Border#PART_TotalsFrame">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
         <Style Selector="^:side /template/ Border#PART_TotalsFrame">
-            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
         </Style>
         <Style Selector="^:empty /template/ TextBlock#PART_Empty">
             <Setter Property="IsVisible" Value="True" />
@@ -251,7 +253,7 @@
             <ControlTemplate TargetType="arc:GalaxyTabStrip">
                 <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:CustomerGalaxyTokenResource TabTrackRadius}">
                     <ScrollViewer Name="PART_Scroll"
                                   HorizontalScrollBarVisibility="Hidden"
@@ -341,7 +343,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter Name="PART_ContentPresenter"
@@ -659,7 +661,7 @@
                             Height="{arc:CustomerGalaxyTokenResource ChipExtent}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:CustomerGalaxyTokenResource ChipRadius}"
                             BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                             Padding="{arc:CustomerGalaxyTokenResource ChipInset}">

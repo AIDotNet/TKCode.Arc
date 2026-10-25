@@ -50,7 +50,7 @@
                             DockPanel.Dock="Bottom"
                             Margin="0,6,0,0"
                             Padding="0,4,0,0"
-                            BorderThickness="0,1,0,0"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <TextBlock Name="PART_Footnote"

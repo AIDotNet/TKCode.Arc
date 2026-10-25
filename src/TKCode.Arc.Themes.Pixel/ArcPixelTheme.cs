@@ -10,7 +10,7 @@ namespace TKCode.Arc.Themes.Pixel;
 
 /// <summary>
 /// The Arc pixel theme: token overrides only (design/architecture/theming/pixel-theme.md). Square corners, hard
-/// zero-blur shadows, a 16-colour hand-tuned palette, a pixel-first font stack. Motion is left as the app configures it (the stock springs still run; stepped motion needs Core support). It writes final
+/// zero-blur shadows, a 16-colour hand-tuned palette, a pixel font stack (Silkscreen, VT323). Motion is left as the app configures it (the stock springs still run; stepped motion needs Core support). It writes final
 /// values on the ArcDesign identity (and a few control identities) and never an Algorithm on them; the dark variant only
 /// adds the global Dark algorithm, like every Arc dark config.
 /// </summary>
@@ -26,11 +26,14 @@ public static class ArcPixelTheme
     private const string Catalog = "TKCode.Arc";
 
     /// <summary>
-    /// Pixel font stack. TODO(font): bundle an SIL OFL pixel font (Silkscreen / Press Start 2P / VT323) as
-    /// <c>fonts:ArcPixel</c> in an assets package and put its family first. Until then these are system fonts with a
-    /// monospaced, blocky look; the stack ends in the default font so nothing breaks when none is installed.
+    /// Pixel body and mono font stack: VT323 from <c>TKCode.Arc.Fonts</c> (register it with <c>WithArcPixelFonts()</c>), then
+    /// monospaced system fonts so the look degrades to blocky text when the collection is not registered. The stack ends
+    /// in the default font, which also covers CJK text the pixel fonts do not have.
     /// </summary>
-    public const string PixelFontStack = "Silkscreen, Press Start 2P, VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default";
+    public const string PixelFontStack = "fonts:ArcPixel#VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default";
+
+    /// <summary>Pixel display font stack: Silkscreen (caps-style bitmap face) for headings, then <see cref="PixelFontStack"/>.</summary>
+    public const string PixelDisplayFontStack = "fonts:ArcPixel#Silkscreen, " + PixelFontStack;
 
     /// <summary>Creates a theme config. <paramref name="dark"/> selects the hand-tuned dark palette.</summary>
     /// <param name="dark">True for the dark palette.</param>
@@ -128,7 +131,37 @@ public static class ArcPixelTheme
         (nameof(ArcDesignTokenKind.RadiusPanel), "0"),
         (nameof(ArcDesignTokenKind.RadiusSurface), "0"),
         (nameof(ArcDesignTokenKind.RadiusPill), "0"),
-        (nameof(ArcDesignTokenKind.DisplayFontFamily), PixelFontStack),
+        (nameof(ArcDesignTokenKind.RadiusStep1), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep1p25), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep1p5), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep2), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep3), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep4), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep5), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep6), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep7), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep8), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep9), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep10), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep12), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep13), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep14), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep14p5), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep15), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep16), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep17), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep18), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep19), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep19Top), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep20), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep20Top), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep21), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep22), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep24), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep25), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep28), "0"),
+        (nameof(ArcDesignTokenKind.RadiusStep33), "0"),
+        (nameof(ArcDesignTokenKind.DisplayFontFamily), PixelDisplayFontStack),
         (nameof(ArcDesignTokenKind.BodyFontFamily), PixelFontStack),
         (nameof(ArcDesignTokenKind.MonoFontFamily), PixelFontStack),
         (nameof(ArcDesignTokenKind.WeightMedium), "Normal"),
@@ -136,6 +169,14 @@ public static class ArcPixelTheme
         (nameof(ArcDesignTokenKind.TrackingBody), "0"),
         (nameof(ArcDesignTokenKind.EdgeThickness), "2"),
         (nameof(ArcDesignTokenKind.FocusEdgeThickness), "3"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessTop), "0,2,0,0"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessBottom), "0,0,0,2"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessLeft), "2,0,0,0"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessRight), "0,0,2,0"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessRightBottom), "0,0,2,2"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessNoBottom), "2,2,2,0"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessNoRight), "2,2,0,2"),
+        (nameof(ArcDesignTokenKind.EdgeThicknessNoLeft), "0,2,2,2"),
         (nameof(ArcDesignTokenKind.FocusRingWidth), "2"),
         (nameof(ArcDesignTokenKind.FocusRingOffset), "2"),
         (nameof(ArcDesignTokenKind.IconStrokeWidth), "2"),

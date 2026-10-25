@@ -15,7 +15,7 @@
                             IsHitTestVisible="False"
                             Margin="-4,-2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="8"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Content="{TemplateBinding Content}"
@@ -60,7 +60,7 @@
                             IsHitTestVisible="False"
                             Margin="-3"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
@@ -109,12 +109,12 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="24"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep24}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
                         <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
                                       Size="16"
@@ -173,7 +173,7 @@
                                               WindowManagerAddShadowHint="False">
                                     <Border Name="PART_SuggestionSurface"
                                             Padding="{arc:SearchResultsTokenResource SuggestionPadding}"
-                                            BorderThickness="1"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                             CornerRadius="{arc:SearchResultsTokenResource SuggestionSurfaceRadius}"
                                             Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                                             BorderBrush="{arc:ArcDesignTokenResource Border}">
@@ -189,7 +189,7 @@
                             <Border Name="PART_FiltersColumn"
                                     Grid.Column="0"
                                     Width="{arc:SearchResultsTokenResource FiltersWidth}"
-                                    BorderThickness="0,0,1,0"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessRight}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <ScrollViewer VerticalScrollBarVisibility="Auto"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -414,7 +414,7 @@
                 <Border Name="PART_Frame"
                         MinHeight="{arc:SearchResultsTokenResource FieldMinHeight}"
                         Padding="{arc:SearchResultsTokenResource FieldInset}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:SearchResultsTokenResource FieldRadius}"
                         Cursor="IBeam">
                     <DockPanel>
@@ -449,7 +449,7 @@
                             <Border Name="PART_Keycap"
                                     MinWidth="{arc:SearchResultsTokenResource KeycapSize}"
                                     Height="{arc:SearchResultsTokenResource KeycapSize}"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     CornerRadius="{arc:SearchResultsTokenResource KeycapRadius}"
                                     IsHitTestVisible="False">
                                 <TextBlock Text="{TemplateBinding ShortcutText}"
@@ -759,7 +759,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SearchResultsChipBar">
                 <Border Name="PART_Frame"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                         CornerRadius="{arc:SearchResultsTokenResource ChipBarRadius}"
                         Padding="{arc:SearchResultsTokenResource ChipBarPadding}">
@@ -788,7 +788,7 @@
                 <Border Name="PART_Frame"
                         MinHeight="{arc:SearchResultsTokenResource ChipHeight}"
                         Padding="{arc:SearchResultsTokenResource ChipInset}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
                     <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
                         <TextBlock Name="PART_Group"
@@ -948,7 +948,7 @@
                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
                     <Border Name="PART_Frame"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:SearchResultsTokenResource SurfaceRadius}"
                             ClipToBounds="True">
                         <Grid RowDefinitions="Auto,Auto,*,Auto">
@@ -959,7 +959,7 @@
                                     Height="{arc:SearchResultsTokenResource GrabberHeight}"
                                     Margin="0,10,0,0"
                                     HorizontalAlignment="Center"
-                                    CornerRadius="2"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                                     Background="{arc:ArcDesignTokenResource BorderStrong}" />
                             <Grid Grid.Row="1"
                                   ColumnDefinitions="*,Auto"
@@ -1033,7 +1033,7 @@
                                 Spacing="{arc:SearchResultsTokenResource DetailParagraphGap}" />
                     <Border Name="PART_TableFrame"
                             Margin="0,20,0,0"
-                            BorderThickness="0,0,0,1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                         <StackPanel Name="PART_Table" />
                     </Border>
@@ -1061,7 +1061,7 @@
     <ControlTheme x:Key="{x:Type arc:SearchResultsDetailRow}" TargetType="arc:SearchResultsDetailRow">
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SearchResultsDetailRow">
-                <Border BorderThickness="0,1,0,0"
+                <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                         MinHeight="{arc:SearchResultsTokenResource DetailTableRowHeight}">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">

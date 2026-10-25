@@ -63,7 +63,7 @@
                         <!-- A hairline keeps light photos from bleeding into the page. -->
                         <Border Name="PART_Hairline"
                                 IsHitTestVisible="False"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ImageCompareTokenResource HairlineColor}"
                                 CornerRadius="{TemplateBinding CornerRadius}" />
                     </Panel>

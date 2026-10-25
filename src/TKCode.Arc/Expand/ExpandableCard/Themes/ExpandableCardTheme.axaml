@@ -11,7 +11,7 @@
                 <Border Name="PART_Card"
                         Background="{arc:ArcDesignTokenResource Surface}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                         ClipToBounds="True">

@@ -70,7 +70,7 @@
                         <Border Name="PART_Footer"
                                 Grid.Row="2"
                                 IsVisible="{TemplateBinding AreControlsVisible}"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}">
                             <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
                                 <StackPanel Name="PART_Transport"

@@ -29,7 +29,7 @@
                         ClipToBounds="False">
                     <StackPanel>
                         <Panel>
-                            <Border Name="PART_Header" BorderThickness="0,0,0,1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <Border Name="PART_Header" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}" BorderBrush="{arc:ArcDesignTokenResource Border}">
                                 <StackPanel>
                                     <Panel Name="PART_HeadRow" />
                                     <TextBlock Name="PART_Goal"
@@ -45,7 +45,7 @@
                         <Border Name="PART_ListWrap">
                             <StackPanel Name="PART_ListHost" />
                         </Border>
-                        <Border Name="PART_Footer" BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource Border}" />
+                        <Border Name="PART_Footer" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}" BorderBrush="{arc:ArcDesignTokenResource Border}" />
                         <arc:ExplainerAnnouncer Name="PART_Announcer" />
                     </StackPanel>
                 </Border>
@@ -86,7 +86,7 @@
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="Padding" Value="7,3" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -158,7 +158,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AgentPlanGrip">
                 <Panel>
-                    <Border Name="PART_Frame" Background="{TemplateBinding Background}" CornerRadius="8">
+                    <Border Name="PART_Frame" Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}">
                         <arc:ArcGlyph Name="PART_Glyph"
                                       Data="{x:Static arc:ArcIcons.GripVertical}"
                                       Size="16"
@@ -170,7 +170,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="8"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -256,7 +256,7 @@
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Opacity" Value="0" />
             <Style Selector="^.revealed">
@@ -274,7 +274,7 @@
             <Setter Property="Height" Value="36" />
             <Setter Property="Padding" Value="12,8" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -287,7 +287,7 @@
         <Style Selector="^.retry, ^.skip">
             <Setter Property="Height" Value="28" />
             <Setter Property="Padding" Value="10,0" />
-            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />

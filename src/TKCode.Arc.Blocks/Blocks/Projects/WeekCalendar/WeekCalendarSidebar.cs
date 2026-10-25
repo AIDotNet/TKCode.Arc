@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -65,7 +66,7 @@ internal sealed class WeekCalendarMiniMonth : Control
         KeyboardNavigation.SetTabNavigation(this, KeyboardNavigationMode.Local);
     }
 
-    private static Button MonthButton(Geometry glyph) => new()
+    private static Button MonthButton(Geometry glyph) => new Button
     {
         Variant = ButtonVariant.Ghost,
         Content = new ArcGlyph { Data = glyph, Size = 16, StrokeThickness = 1.75 },
@@ -73,8 +74,7 @@ internal sealed class WeekCalendarMiniMonth : Control
         Height = 28,
         MinHeight = 0,
         Padding = default,
-        CornerRadius = new CornerRadius(10),
-    };
+    }.BindCornerRadius(ArcDesignTokenKind.RadiusStep10);
 
     internal WeekCalendar? Owner => _owner;
 

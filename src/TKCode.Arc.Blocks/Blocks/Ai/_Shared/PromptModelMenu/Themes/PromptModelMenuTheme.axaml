@@ -15,7 +15,7 @@
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Height" Value="38" />
         <Setter Property="Padding" Value="10,0" />
-        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PromptModelRow">
                 <Panel>
@@ -121,13 +121,13 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:PromptEffortStrip">
                 <Border Name="PART_Track"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                         Padding="2">
                     <Panel>
                         <arc:GlidingIndicator Name="PART_Thumb"
-                                              CornerRadius="15"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusStep15}"
                                               Spring="Quick"
                                               Fill="{arc:ArcDesignTokenResource SurfaceMuted}" />
                         <arc:PromptEffortColumns Name="PART_Cells" Spacing="2" />
@@ -165,7 +165,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="15"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep15}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

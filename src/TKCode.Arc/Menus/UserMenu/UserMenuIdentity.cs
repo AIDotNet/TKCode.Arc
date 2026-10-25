@@ -60,13 +60,13 @@ internal sealed class UserMenuIdentity : Grid
         {
             Height = 17,
             Padding = new Thickness(5, 0),
-            CornerRadius = new CornerRadius(4),
             BorderThickness = new Thickness(0.5),
             Margin = new Thickness(6, 0, 0, 0),
             MaxWidth = 96,
             VerticalAlignment = VerticalAlignment.Center,
             Child = planText
         };
+        _plan.BindCornerRadius(ArcDesignTokenKind.RadiusStep4);
         _plan.Bind(IsVisibleProperty, owner.GetObservable(UserMenu.PlanProperty, plan => !string.IsNullOrEmpty(plan)));
 
         var nameRow = new DockPanel();

@@ -58,7 +58,7 @@
                             <Border Name="PART_Card"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Center"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}">
                                 <Panel>
                                     <arc:LoginImmersiveGlass Name="PART_Glass"
@@ -124,7 +124,7 @@
         </Style>
         <Style Selector="^ /template/ arc|LoginImmersiveGlass#PART_Glass">
             <!-- The card's 34px corners less its 1px border. -->
-            <Setter Property="CornerRadius" Value="33" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep33}" />
         </Style>
 
         <Style Selector="^:fullscreen">
@@ -251,7 +251,7 @@
                     <Border Name="PART_AddressBox"
                             Padding="16,12"
                             Margin="0,0,0,16"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                             BorderBrush="{arc:LoginImmersiveTokenResource AddressBorder}">
                         <Grid ColumnDefinitions="Auto,*,Auto">
@@ -313,12 +313,12 @@
                                                 Margin="0,0,0,24"
                                                 Foreground="{arc:ArcDesignTokenResource Success}" />
                     <arc:LoginImmersiveHeading Name="PART_Heading" Margin="0,0,0,24" />
-                    <Border BorderThickness="0,1,0,0"
+                    <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                             Margin="0,0,0,24"
                             BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}"
                             TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}">
                         <StackPanel>
-                            <Border BorderThickness="0,0,0,1" Padding="0,12" BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}">
+                            <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}" Padding="0,12" BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}">
                                 <Grid ColumnDefinitions="Auto,*">
                                     <TextBlock Text="{TemplateBinding AccountLabel}"
                                                LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
@@ -333,7 +333,7 @@
                                                Foreground="{arc:ArcDesignTokenResource Foreground}" />
                                 </Grid>
                             </Border>
-                            <Border BorderThickness="0,0,0,1" Padding="0,12" BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}">
+                            <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}" Padding="0,12" BorderBrush="{arc:LoginImmersiveTokenResource DetailsRule}">
                                 <Grid ColumnDefinitions="Auto,*">
                                     <TextBlock Text="{TemplateBinding MethodLabel}"
                                                LineHeight="{arc:LoginImmersiveTokenResource BodyLineHeight}"
@@ -376,7 +376,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -412,7 +412,7 @@
             </ControlTemplate>
         </Setter>
         <Style Selector="^ /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
         </Style>
         <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
             <Setter Property="IsVisible" Value="True" />

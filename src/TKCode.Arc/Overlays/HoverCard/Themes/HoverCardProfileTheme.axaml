@@ -34,7 +34,7 @@
                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                     <Border Name="PART_Stats"
                             IsVisible="False"
-                            BorderThickness="0,1,0,0"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                             Padding="{arc:HoverCardProfileTokenResource StatsPadding}">
                         <ItemsControl ItemsSource="{TemplateBinding Stats}">

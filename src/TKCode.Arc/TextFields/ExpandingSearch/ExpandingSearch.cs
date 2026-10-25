@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Windows.Input;
@@ -834,7 +835,8 @@ public class ExpandingSearch : TemplatedControl
         {
             return;
         }
-        _highlight = new GlidingIndicator { CornerRadius = new CornerRadius(20), Spring = ArcSpring.Snappy };
+        _highlight = new GlidingIndicator { Spring = ArcSpring.Snappy };
+        _highlight.BindCornerRadius(ArcDesignTokenKind.RadiusStep20);
         ArcTokens.Bind(_highlight, GlidingIndicator.FillProperty, DesignTokens.ArcDesignTokenKind.Foreground);
         _highlight.Opacity = 0.06;
         _listStack = new StackPanel { Spacing = 4 };

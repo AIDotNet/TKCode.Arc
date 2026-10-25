@@ -27,8 +27,7 @@
                             Background="{arc:ArcDesignTokenResource SurfaceMuted}" />
                     <Border Name="PART_PanelHost"
                             Background="{arc:ArcDesignTokenResource Surface}"
-                            BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1,0,0,0">
+                            BorderBrush="{arc:ArcDesignTokenResource Border}">
                         <Border Name="PART_PanelClip" ClipToBounds="True">
                             <ContentPresenter Name="PART_Panel"
                                               Content="{TemplateBinding Panel}"
@@ -39,15 +38,18 @@
                 </arc:AiPanelDockLayout>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^ /template/ Border#PART_PanelHost">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
+        </Style>
         <Style Selector="^:sheet /template/ Border#PART_PanelHost">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
-            <Setter Property="BorderThickness" Value="1,1,1,0" />
-            <Setter Property="CornerRadius" Value="20,20,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessNoBottom}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20Top}" />
             <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
             <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
         </Style>
         <Style Selector="^:sheet /template/ Border#PART_PanelClip">
-            <Setter Property="CornerRadius" Value="19,19,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep19Top}" />
         </Style>
     </ControlTheme>
 

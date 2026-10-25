@@ -45,7 +45,7 @@
 
         <Style Selector="^ /template/ Border#PART_FocusRing">
             <Setter Property="Margin" Value="-4" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
         </Style>
         <Style Selector="^:framed /template/ Border#PART_FocusRing">
             <Setter Property="Margin" Value="{arc:ExplodedViewTokenResource FrameFocusRingMargin}" />

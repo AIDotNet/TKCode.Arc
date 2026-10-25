@@ -1161,7 +1161,7 @@ public class JsonViewer : TemplatedControl
             _panel.Highlight.Fill = HighlightFill;
             // Arc: scroll, row heights and the current-row highlight share the smooth spring.
             _panel.Highlight.Spring = ArcSpring.Smooth;
-            _panel.Highlight.CornerRadius = new CornerRadius(9);
+            _panel.Highlight.BindCornerRadius(ArcDesignTokenKind.RadiusStep9);
             _panel.HighlightInset = new Thickness(0, 1, 0, 1);
             _panel.PinnedKey = _active;
             _panel.SetRows(_rows, animate: false);

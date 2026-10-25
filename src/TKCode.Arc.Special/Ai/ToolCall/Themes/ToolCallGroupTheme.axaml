@@ -67,7 +67,7 @@
                                 </arc:ToolCallHeadButton>
                             </Border>
                             <arc:ToolCallCollapsible Name="PART_List">
-                                <Border BorderThickness="0,1,0,0"
+                                <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                         Padding="{arc:ToolCallGroupTokenResource ListPadding}">
                                     <StackPanel Name="PART_Rows" />

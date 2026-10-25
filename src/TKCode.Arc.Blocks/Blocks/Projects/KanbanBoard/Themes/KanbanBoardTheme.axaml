@@ -34,7 +34,6 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="18"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
@@ -89,8 +88,11 @@
             <Setter Property="VerticalContentAlignment" Value="Top" />
             <Setter Property="Height" Value="{arc:KanbanBoardTokenResource NotesHeight}" />
         </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
+        </Style>
         <Style Selector="^.notes /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
         </Style>
         <!-- The composer's box: two lines, BorderStrong whether focused or not, no ring (Arc). -->
         <Style Selector="^.composer">
@@ -112,7 +114,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep6}" />
             <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
             <Setter Property="LineHeight" Value="{arc:KanbanBoardTokenResource DrawerTitleLineHeight}" />
@@ -122,7 +124,7 @@
             <Setter Property="VerticalContentAlignment" Value="Top" />
         </Style>
         <Style Selector="^.title /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
         </Style>
         <Style Selector="^.title /template/ ScrollViewer#PART_ScrollViewer">
             <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
@@ -277,7 +279,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding FrameBorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:KanbanBoardTokenResource CardRadius}"
                             BoxShadow="{TemplateBinding FrameShadow}"
                             Padding="{arc:KanbanBoardTokenResource CardInset}">
@@ -510,7 +512,7 @@
                         <Border Name="PART_Nobody"
                                 IsVisible="False"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderStrong}">
                             <arc:ArcGlyph Data="{x:Static arc:ArcIcons.User}"
                                           Size="14"
@@ -563,7 +565,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="16"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
@@ -655,13 +657,13 @@
                                     IsHitTestVisible="False"
                                     Margin="-4"
                                     BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                    CornerRadius="10"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                             <Border Name="PART_Square"
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="6" />
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}" />
                             <arc:ArcGlyph Name="PART_Check"
                                           Data="{x:Static arc:ArcIcons.Check}"
                                           Size="14"
@@ -760,7 +762,7 @@
                 <Border Name="PART_Track"
                         Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                         Padding="{arc:KanbanBoardTokenResource SwitchInset}">
                     <Panel>
@@ -807,7 +809,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter Content="{TemplateBinding Content}"
@@ -845,7 +847,7 @@
                 <Border Name="PART_Surface"
                         Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">

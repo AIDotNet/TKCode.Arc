@@ -486,7 +486,7 @@ internal sealed class PromptProductionMarker : GlidingIndicator
     public PromptProductionMarker()
     {
         StrokeThickness = 1;
-        CornerRadius = new CornerRadius(PillHeight / 2);
+        this.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
         ActualThemeVariantChanged += (_, _) => RefreshTheme();
         AutomationProperties.SetAccessibilityView(this, AccessibilityView.Raw);
     }

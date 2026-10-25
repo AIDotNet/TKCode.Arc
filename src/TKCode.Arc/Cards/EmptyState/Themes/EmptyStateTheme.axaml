@@ -14,7 +14,7 @@
                                 HorizontalAlignment="Center"
                                 Width="{arc:EmptyStateTokenResource IconBlockSize}"
                                 Height="{arc:EmptyStateTokenResource IconBlockSize}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"

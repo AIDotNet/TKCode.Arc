@@ -57,7 +57,7 @@
                         <Border Name="PART_Footer"
                                 Grid.Row="1"
                                 Margin="0,20,0,0"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Padding="{TemplateBinding FooterPadding}"
                                 IsVisible="{TemplateBinding AreControlsVisible}">

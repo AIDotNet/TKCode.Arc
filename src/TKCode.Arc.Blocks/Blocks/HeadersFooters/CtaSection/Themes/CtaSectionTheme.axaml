@@ -21,7 +21,7 @@
                             VerticalAlignment="Top"
                             MaxWidth="{arc:CtaSectionTokenResource ContentMaxWidth}">
                         <Border Name="PART_CenteredCard"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Background="{arc:CtaSectionTokenResource CenteredBackground}">
                             <StackPanel Spacing="{arc:ArcDesignTokenResource Space4}">
@@ -100,7 +100,7 @@
                                                   HorizontalAlignment="Left" />
                             </StackPanel>
                             <Border Name="PART_Stage"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
                                     Background="{arc:CtaSectionTokenResource StageBackground}">
                                 <ContentPresenter Name="PART_StageContent"
@@ -114,7 +114,7 @@
                     <arc:CtaBannerHost Name="PART_BannerHost" IsVisible="False" VerticalAlignment="Top">
                         <Border Name="PART_BannerPad" MaxWidth="{arc:CtaSectionTokenResource BannerMaxWidth}">
                             <Border Name="PART_Banner"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
                                     Background="{arc:ArcDesignTokenResource Surface}">
                                 <arc:CtaBannerPanel Name="PART_BannerPanel">
@@ -324,7 +324,7 @@
                 <Panel>
                     <Border Name="PART_Circle"
                             Background="{TemplateBinding Background}"
-                            CornerRadius="18" />
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}" />
                     <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
                                   Size="16"
                                   StrokeThickness="1.75"
@@ -336,7 +336,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:CtaSectionTokenResource DismissFocusRingMargin}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="20"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -409,15 +409,15 @@
                 <Border Name="PART_Card"
                         Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}">
-                    <Border CornerRadius="25" ClipToBounds="True">
+                    <Border CornerRadius="{arc:ArcDesignTokenResource RadiusStep25}" ClipToBounds="True">
                         <StackPanel>
                             <Grid ColumnDefinitions="Auto,10,*,Auto" Margin="18,16,18,14">
                                 <Border Width="28"
                                         Height="28"
-                                        CornerRadius="8"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
                                         Background="{arc:ArcDesignTokenResource Foreground}">
                                     <TextBlock Text="{TemplateBinding Initial}"
                                                FontSize="{arc:ArcDesignTokenResource TypeSM}"

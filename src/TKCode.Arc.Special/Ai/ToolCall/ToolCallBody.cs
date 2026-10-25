@@ -396,7 +396,8 @@ internal static class ToolCallBodyBuilder
 
     private static Border Well(Control content, Thickness padding)
     {
-        var well = new Border { CornerRadius = new CornerRadius(10), Padding = padding, Child = content };
+        var well = new Border { Padding = padding, Child = content };
+        well.BindCornerRadius(ArcDesignTokenKind.RadiusStep10);
         ArcTokens.Bind(well, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
         return well;
     }

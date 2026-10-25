@@ -21,6 +21,15 @@ public sealed class GeistMonoFontCollection : EmbeddedFontCollection
     }
 }
 
+/// <summary>Silkscreen (400, 700) and VT323 (400) as the font collection <c>fonts:ArcPixel</c>; family names "Silkscreen" and "VT323". Used by the pixel theme.</summary>
+public sealed class ArcPixelFontCollection : EmbeddedFontCollection
+{
+    public ArcPixelFontCollection()
+        : base(new Uri("fonts:ArcPixel", UriKind.Absolute), new Uri("avares://TKCode.Arc.Fonts/Assets/ArcPixel", UriKind.Absolute))
+    {
+    }
+}
+
 public static class ArcFontsAppBuilderExtensions
 {
     /// <summary>
@@ -31,5 +40,11 @@ public static class ArcFontsAppBuilderExtensions
     {
         fontManager.AddFontCollection(new GeistFontCollection());
         fontManager.AddFontCollection(new GeistMonoFontCollection());
+    });
+
+    /// <summary>Registers the pixel fonts (Silkscreen, VT323) that <c>ArcPixelTheme.PixelFontStack</c> names first. Not part of <see cref="WithArcFonts"/> to keep its size out of apps that do not use the pixel theme.</summary>
+    public static AppBuilder WithArcPixelFonts(this AppBuilder builder) => builder.ConfigureFonts(fontManager =>
+    {
+        fontManager.AddFontCollection(new ArcPixelFontCollection());
     });
 }

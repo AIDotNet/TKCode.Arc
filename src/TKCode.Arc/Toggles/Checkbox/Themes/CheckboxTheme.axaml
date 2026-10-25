@@ -29,7 +29,7 @@
                                VerticalAlignment="Center"
                                RenderTransformOrigin="50%,50%">
                             <Border Name="PART_Square"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     CornerRadius="{arc:CheckboxTokenResource BoxRadius}"
                                     Background="{arc:ArcDesignTokenResource Surface}" />
                             <arc:CheckboxMark Name="PART_Mark"

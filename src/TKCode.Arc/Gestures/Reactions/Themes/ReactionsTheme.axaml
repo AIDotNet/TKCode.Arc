@@ -279,7 +279,7 @@
                     <Border Name="PART_AccentRing"
                             IsHitTestVisible="False"
                             Opacity="0"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource Accent}" />
                     <arc:ReactionsGlyph Name="PART_Glyph"

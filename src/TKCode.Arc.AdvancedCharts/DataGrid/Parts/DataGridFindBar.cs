@@ -34,7 +34,7 @@ internal sealed class DataGridFindBar : Border
     {
         _grid = grid;
         IsVisible = false;
-        CornerRadius = new CornerRadius(12);
+        this.BindCornerRadius(ArcDesignTokenKind.RadiusStep12);
         BorderThickness = new Thickness(1);
         Padding = new Thickness(6);
         ArcTokens.Bind(this, BackgroundProperty, ArcDesignTokenKind.SurfaceRaised);

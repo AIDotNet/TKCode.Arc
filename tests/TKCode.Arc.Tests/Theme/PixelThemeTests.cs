@@ -43,7 +43,8 @@ public class PixelThemeTests
                 shadows[0].OffsetX.ShouldBe(Math.Round(shadows[0].OffsetX));
             }
             var font = Find(host, ArcDesignTokenKind.BodyFontFamily).ShouldBeOfType<FontFamily>();
-            font.ToString().ShouldContain("Silkscreen");
+            font.ToString().ShouldContain("VT323");
+            Find(host, ArcDesignTokenKind.DisplayFontFamily).ShouldBeOfType<FontFamily>().ToString().ShouldContain("Silkscreen");
             Find(host, ArcDesignTokenKind.MotionMode).ShouldBe("full");
             Find(host, ArcDesignTokenKind.BlurSoft).ShouldBe(0.0);
             Find(host, ArcDesignTokenKind.ReduceTransparency).ShouldBe(true);
@@ -170,6 +171,84 @@ public class PixelThemeTests
             window.Close();
             await TestHelpers.ApplyAsync(null);
         }
+    }
+
+    [AvaloniaFact]
+    public async Task Pixel_Zeroes_Radius_Steps_And_Thickens_One_Sided_Edges_And_Default_Is_Restored()
+    {
+        var host = new Border();
+        var window = TestHelpers.Show(host);
+        try
+        {
+            var steps = Enum.GetNames<ArcDesignTokenKind>().Where(n => n.StartsWith("RadiusStep", StringComparison.Ordinal)).Select(Enum.Parse<ArcDesignTokenKind>).ToArray();
+            var edges = Enum.GetNames<ArcDesignTokenKind>().Where(n => n.StartsWith("EdgeThickness", StringComparison.Ordinal)).Select(Enum.Parse<ArcDesignTokenKind>).ToArray();
+            steps.Length.ShouldBeGreaterThan(20);
+            edges.Length.ShouldBe(9);
+
+            await ApplyPixelAsync(false);
+            foreach (var step in steps)
+            {
+                AsRadius(Find(host, step)).ShouldBe(new CornerRadius(0), step.ToString());
+            }
+            Find(host, ArcDesignTokenKind.EdgeThicknessTop).ShouldBe(new Thickness(0, 2, 0, 0));
+            Find(host, ArcDesignTokenKind.EdgeThicknessRightBottom).ShouldBe(new Thickness(0, 0, 2, 2));
+            Find(host, ArcDesignTokenKind.EdgeThicknessNoBottom).ShouldBe(new Thickness(2, 2, 2, 0));
+
+            await TestHelpers.ApplyAsync(null);
+            AsRadius(Find(host, ArcDesignTokenKind.RadiusStep12)).ShouldBe(new CornerRadius(12));
+            AsRadius(Find(host, ArcDesignTokenKind.RadiusStep14p5)).ShouldBe(new CornerRadius(14.5));
+            AsRadius(Find(host, ArcDesignTokenKind.RadiusStep19Top)).ShouldBe(new CornerRadius(19, 19, 0, 0));
+            Find(host, ArcDesignTokenKind.EdgeThickness).ShouldBe(new Thickness(1));
+            Find(host, ArcDesignTokenKind.EdgeThicknessTop).ShouldBe(new Thickness(0, 1, 0, 0));
+            Find(host, ArcDesignTokenKind.EdgeThicknessNoLeft).ShouldBe(new Thickness(0, 1, 1, 1));
+        }
+        finally
+        {
+            window.Close();
+            await TestHelpers.ApplyAsync(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task Code_Built_Parts_Follow_The_Radius_Tokens_Through_BindCornerRadius()
+    {
+        var border = new Border().BindCornerRadius(ArcDesignTokenKind.RadiusStep12);
+        var pill = new Border().BindCornerRadius(ArcDesignTokenKind.RadiusPill);
+        var glide = new TKCode.Arc.Primitives.GlidingIndicator().BindCornerRadius(ArcDesignTokenKind.RadiusStep18);
+        var window = TestHelpers.Show(new StackPanel { Children = { border, pill, glide } });
+        try
+        {
+            border.CornerRadius.ShouldBe(new CornerRadius(12));
+            pill.CornerRadius.ShouldBe(new CornerRadius(9999));
+            glide.CornerRadius.ShouldBe(new CornerRadius(18));
+
+            await ApplyPixelAsync(false);
+            border.CornerRadius.ShouldBe(new CornerRadius(0));
+            pill.CornerRadius.ShouldBe(new CornerRadius(0));
+            glide.CornerRadius.ShouldBe(new CornerRadius(0));
+
+            await TestHelpers.ApplyAsync(null);
+            border.CornerRadius.ShouldBe(new CornerRadius(12));
+            glide.CornerRadius.ShouldBe(new CornerRadius(18));
+            Should.Throw<InvalidOperationException>(() => new TextBlock().BindCornerRadius(ArcDesignTokenKind.RadiusStep12));
+        }
+        finally
+        {
+            window.Close();
+            await TestHelpers.ApplyAsync(null);
+        }
+    }
+
+    [AvaloniaFact]
+    public void Rendering_Helper_Sets_And_Clears_Hard_Edges()
+    {
+        var host = new Border();
+        ArcPixelRendering.Apply(host, true);
+        RenderOptions.GetEdgeMode(host).ShouldBe(EdgeMode.Aliased);
+        RenderOptions.GetBitmapInterpolationMode(host).ShouldBe(Avalonia.Media.Imaging.BitmapInterpolationMode.None);
+        ArcPixelRendering.Apply(host, false);
+        RenderOptions.GetEdgeMode(host).ShouldBe(EdgeMode.Unspecified);
+        RenderOptions.GetBitmapInterpolationMode(host).ShouldBe(Avalonia.Media.Imaging.BitmapInterpolationMode.Unspecified);
     }
 
     [Fact]

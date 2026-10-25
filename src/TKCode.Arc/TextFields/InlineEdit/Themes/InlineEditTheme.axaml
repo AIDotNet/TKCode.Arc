@@ -6,7 +6,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:InlineEditDisplay">
                 <Border Background="Transparent"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         BorderBrush="Transparent"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                         Padding="{TemplateBinding Padding}">
@@ -24,7 +24,7 @@
     <ControlTheme x:Key="{x:Type arc:InlineEditEditor}" TargetType="arc:InlineEditEditor">
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:InlineEditEditor">
-                <Border Background="Transparent" BorderThickness="1" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
+                <Border Background="Transparent" BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
                     <ScrollViewer Name="PART_ScrollViewer"
                                   HorizontalScrollBarVisibility="Hidden"
                                   VerticalScrollBarVisibility="Disabled">
@@ -73,7 +73,7 @@
                     <Border Name="PART_Surface"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
                         <ContentPresenter HorizontalContentAlignment="Center"
                                           VerticalContentAlignment="Center"
@@ -162,7 +162,7 @@
                                     Opacity="0" />
                             <Border Name="PART_Frame"
                                     IsHitTestVisible="False"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     BorderBrush="Transparent"
                                     Background="Transparent"
                                     CornerRadius="{arc:ArcDesignTokenResource RadiusControl}" />
@@ -278,7 +278,7 @@
         <Style Selector="^:text-focus:not(:editing) /template/ Border#PART_Ring">
             <Setter Property="Opacity" Value="1" />
             <Setter Property="BorderThickness" Value="2" />
-            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep22}" />
         </Style>
         <Style Selector="^:editing">
             <Style Selector="^ /template/ Border#PART_Frame">
@@ -289,7 +289,7 @@
                 <Setter Property="Opacity" Value="1" />
                 <Setter Property="Margin" Value="1" />
                 <Setter Property="BorderThickness" Value="3" />
-                <Setter Property="CornerRadius" Value="21" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep21}" />
             </Style>
         </Style>
         <Style Selector="^:invalid">

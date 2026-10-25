@@ -52,7 +52,7 @@
         <Setter Property="MinHeight" Value="48" />
         <Setter Property="Padding" Value="2,12" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
         <Setter Property="Template">

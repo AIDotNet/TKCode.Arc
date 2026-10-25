@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Globalization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
@@ -355,12 +356,11 @@ internal sealed class TreeTableRow : Grid
                 {
                     Height = 10,
                     Width = 72,
-                    CornerRadius = new CornerRadius(5),
                     Background = _owner.Palette.Skeleton,
                     VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
                     HorizontalAlignment = column.IsEndAligned ? Avalonia.Layout.HorizontalAlignment.Right : Avalonia.Layout.HorizontalAlignment.Left,
                     Margin = new Thickness(_owner.CellInlinePadding, 0)
-                };
+                }.BindCornerRadius(ArcDesignTokenKind.RadiusStep5);
             }
             return new Border();
         }

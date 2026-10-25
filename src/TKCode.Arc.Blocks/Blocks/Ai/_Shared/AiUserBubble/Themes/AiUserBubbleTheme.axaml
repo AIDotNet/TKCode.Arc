@@ -42,7 +42,7 @@
                     </StackPanel>
                     <Border Name="PART_Bubble"
                             Padding="16,10"
-                            CornerRadius="20"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
                             Background="{arc:ArcDesignTokenResource SurfaceMuted}">
                         <StackPanel>
                             <WrapPanel Name="PART_Attachments" ItemSpacing="6" LineSpacing="4" />
@@ -157,7 +157,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -165,7 +165,7 @@
         <Setter Property="Width" Value="30" />
         <Setter Property="Height" Value="30" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="Cursor" Value="Hand" />
@@ -221,9 +221,9 @@
                 <arc:AiUserBubbleLane Name="PART_Lane" FillsBubble="True" IsNarrow="{TemplateBinding IsNarrow}">
                     <Border Name="PART_Form"
                             Padding="10"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
-                            CornerRadius="20"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
                             Background="{arc:ArcDesignTokenResource Surface}">
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Bottom"

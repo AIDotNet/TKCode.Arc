@@ -28,8 +28,8 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AiAnswerCitation">
                 <Panel>
-                    <Border Name="PART_Fill" CornerRadius="9" Background="{TemplateBinding Background}" />
-                    <Border Name="PART_Tint" CornerRadius="9" Opacity="0" Background="{arc:ArcDesignTokenResource Accent}" />
+                    <Border Name="PART_Fill" CornerRadius="{arc:ArcDesignTokenResource RadiusStep9}" Background="{TemplateBinding Background}" />
+                    <Border Name="PART_Tint" CornerRadius="{arc:ArcDesignTokenResource RadiusStep9}" Opacity="0" Background="{arc:ArcDesignTokenResource Accent}" />
                     <TextBlock Name="PART_Number"
                                Text="{TemplateBinding Label}"
                                Margin="{TemplateBinding Padding}"
@@ -39,7 +39,7 @@
                                Foreground="{TemplateBinding Foreground}" />
                     <Border Name="PART_FocusRing"
                             Margin="-3"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
                             IsVisible="False"

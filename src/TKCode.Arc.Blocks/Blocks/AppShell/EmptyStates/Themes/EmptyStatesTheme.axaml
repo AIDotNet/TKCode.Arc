@@ -28,7 +28,7 @@
                                     MaxWidth="{arc:EmptyStatesTokenResource TabsMaxWidth}"
                                     Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     CornerRadius="{arc:EmptyStatesTokenResource TrackRadius}"
                                     Padding="{arc:EmptyStatesTokenResource TrackInset}">
                                 <arc:EmptyStatesTabPanel Name="PART_Tabs"

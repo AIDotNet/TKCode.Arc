@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Globalization;
 using AtomUI.Controls;
 using TKCode.Arc.Motion;
@@ -593,11 +594,11 @@ internal sealed class MentionInputSuggestionRow : Control
             {
                 Width = SlotSize,
                 Height = SlotSize,
-                CornerRadius = new CornerRadius(SlotSize / 2),
                 ClipToBounds = true,
                 IsHitTestVisible = false,
                 Child = _portrait
             };
+            _portraitHost.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
             VisualChildren.Add(_portraitHost);
             LogicalChildren.Add(_portraitHost);
         }

@@ -13,7 +13,7 @@
             <ControlTemplate TargetType="arc:MentionInput">
                 <Panel>
                     <Border Name="PART_Shell"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             VerticalAlignment="Top"
                             ClipToBounds="True">
                         <arc:TokenTextEditor Name="PART_TextBox"

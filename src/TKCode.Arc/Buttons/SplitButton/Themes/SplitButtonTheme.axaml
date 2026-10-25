@@ -52,7 +52,7 @@
         <Style Selector="^.trigger">
             <Setter Property="Width" Value="{arc:SplitButtonTokenResource TriggerExtentPrimary}" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
             <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource EndRadius}" />
             <Style Selector="^ /template/ Border#PART_FocusRing">
                 <Setter Property="CornerRadius" Value="{arc:SplitButtonTokenResource EndRingRadius}" />

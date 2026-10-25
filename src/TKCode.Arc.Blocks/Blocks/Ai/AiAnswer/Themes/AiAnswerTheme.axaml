@@ -144,7 +144,7 @@
                                        Margin="{arc:AiAnswerTokenResource ReasoningGap}"
                                        ContentMargin="{arc:AiAnswerTokenResource ReasoningPanelMargin}">
                         <Border Name="PART_Rule"
-                                BorderThickness="1,0,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessLeft}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Padding="14,0,0,0">
                             <arc:AiAnswerReasoningText Name="PART_Reasoning"
@@ -184,11 +184,11 @@
             <ControlTemplate TargetType="arc:AiStatusNote">
                 <arc:PresenceHost Name="PART_Presence" Mode="Fade" IsPresent="{TemplateBinding IsActive}">
                     <Panel>
-                        <Border Name="PART_Tint" CornerRadius="18" IsVisible="False" Opacity="0.05"
+                        <Border Name="PART_Tint" CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}" IsVisible="False" Opacity="0.05"
                                 Background="{arc:ArcDesignTokenResource Danger}" />
-                        <Border Name="PART_Edge" CornerRadius="18" BorderThickness="1"
+                        <Border Name="PART_Edge" CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}" BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}" />
-                        <Border Name="PART_DangerEdge" CornerRadius="18" IsVisible="False" BorderThickness="1" Opacity="0.26"
+                        <Border Name="PART_DangerEdge" CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}" IsVisible="False" BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}" Opacity="0.26"
                                 BorderBrush="{arc:ArcDesignTokenResource Danger}" />
                         <!-- Arc's padding 8 8 8 14 sits inside the 1px edge. -->
                         <DockPanel Name="PART_Row" Margin="15,9,9,9" MinHeight="32" VerticalAlignment="Center">
@@ -207,7 +207,7 @@
                                         Width="10"
                                         Height="10"
                                         Margin="1"
-                                        CornerRadius="2"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                                         IsVisible="False"
                                         Background="{arc:ArcDesignTokenResource TextMuted}" />
                                 <arc:ArcGlyph Name="PART_Alert"
@@ -400,7 +400,7 @@
                             <Border Name="PART_TopBar"
                                     Height="{arc:AiAnswerTokenResource TopBarHeight}"
                                     Padding="{arc:AiAnswerTokenResource TopBarPadding}"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                     BorderBrush="{TemplateBinding HairlineBrush}">
                                 <Grid ColumnDefinitions="Auto,*,Auto"
                                       ColumnSpacing="{arc:AiAnswerTokenResource TopBarGap}"

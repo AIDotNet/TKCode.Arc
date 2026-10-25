@@ -128,7 +128,7 @@
             <Setter Property="CornerRadius" Value="0" />
         </Style>
         <Style Selector="^:framed /template/ Border#PART_List, ^:framed /template/ Border#PART_FooterFrame">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         </Style>
         <Style Selector="^ /template/ Grid#PART_Header">
@@ -200,7 +200,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
-        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource RowPadding}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ReleaseReadinessRow">
@@ -279,7 +279,7 @@
                                 IsHitTestVisible="False"
                                 Margin="-4,-2"
                                 BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                                CornerRadius="6"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <TextBlock Name="PART_Text"
                                    Text="{TemplateBinding Text}"

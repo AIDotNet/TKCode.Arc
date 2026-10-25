@@ -101,6 +101,16 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
     /// <summary>Border thickness of the focus ring (2).</summary>
     public Thickness FocusEdgeThickness { get; set; }
 
+    /// <summary>One-sided and three-sided border thicknesses for dividers and joined edges (1 on the named side). They follow <see cref="EdgeThickness"/> in a theme that thickens edges.</summary>
+    public Thickness EdgeThicknessTop { get; set; }
+    public Thickness EdgeThicknessBottom { get; set; }
+    public Thickness EdgeThicknessLeft { get; set; }
+    public Thickness EdgeThicknessRight { get; set; }
+    public Thickness EdgeThicknessRightBottom { get; set; }
+    public Thickness EdgeThicknessNoBottom { get; set; }
+    public Thickness EdgeThicknessNoRight { get; set; }
+    public Thickness EdgeThicknessNoLeft { get; set; }
+
     #endregion
 
     #region Geometry
@@ -128,6 +138,38 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
     public double Space16 { get; set; }
     public double Space20 { get; set; }
     public double Space24 { get; set; }
+
+    /// <summary>Radius steps that block templates use as literals (the number is the default). Pixel-style themes zero them.</summary>
+    public CornerRadius RadiusStep1 { get; set; }
+    public CornerRadius RadiusStep1p25 { get; set; }
+    public CornerRadius RadiusStep1p5 { get; set; }
+    public CornerRadius RadiusStep2 { get; set; }
+    public CornerRadius RadiusStep3 { get; set; }
+    public CornerRadius RadiusStep4 { get; set; }
+    public CornerRadius RadiusStep5 { get; set; }
+    public CornerRadius RadiusStep6 { get; set; }
+    public CornerRadius RadiusStep7 { get; set; }
+    public CornerRadius RadiusStep8 { get; set; }
+    public CornerRadius RadiusStep9 { get; set; }
+    public CornerRadius RadiusStep10 { get; set; }
+    public CornerRadius RadiusStep12 { get; set; }
+    public CornerRadius RadiusStep13 { get; set; }
+    public CornerRadius RadiusStep14 { get; set; }
+    public CornerRadius RadiusStep14p5 { get; set; }
+    public CornerRadius RadiusStep15 { get; set; }
+    public CornerRadius RadiusStep16 { get; set; }
+    public CornerRadius RadiusStep17 { get; set; }
+    public CornerRadius RadiusStep18 { get; set; }
+    public CornerRadius RadiusStep19 { get; set; }
+    public CornerRadius RadiusStep19Top { get; set; }
+    public CornerRadius RadiusStep20 { get; set; }
+    public CornerRadius RadiusStep20Top { get; set; }
+    public CornerRadius RadiusStep21 { get; set; }
+    public CornerRadius RadiusStep22 { get; set; }
+    public CornerRadius RadiusStep24 { get; set; }
+    public CornerRadius RadiusStep25 { get; set; }
+    public CornerRadius RadiusStep28 { get; set; }
+    public CornerRadius RadiusStep33 { get; set; }
 
     #endregion
 
@@ -291,10 +333,48 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
     {
         EdgeThickness = new Thickness(1);
         FocusEdgeThickness = new Thickness(2);
+        EdgeThicknessTop = new Thickness(0, 1, 0, 0);
+        EdgeThicknessBottom = new Thickness(0, 0, 0, 1);
+        EdgeThicknessLeft = new Thickness(1, 0, 0, 0);
+        EdgeThicknessRight = new Thickness(0, 0, 1, 0);
+        EdgeThicknessRightBottom = new Thickness(0, 0, 1, 1);
+        EdgeThicknessNoBottom = new Thickness(1, 1, 1, 0);
+        EdgeThicknessNoRight = new Thickness(1, 1, 0, 1);
+        EdgeThicknessNoLeft = new Thickness(0, 1, 1, 1);
         RadiusControl = new CornerRadius(18);
         RadiusPanel = new CornerRadius(26);
         RadiusSurface = new CornerRadius(34);
         RadiusPill = new CornerRadius(9999);
+        RadiusStep1 = new CornerRadius(1);
+        RadiusStep1p25 = new CornerRadius(1.25);
+        RadiusStep1p5 = new CornerRadius(1.5);
+        RadiusStep2 = new CornerRadius(2);
+        RadiusStep3 = new CornerRadius(3);
+        RadiusStep4 = new CornerRadius(4);
+        RadiusStep5 = new CornerRadius(5);
+        RadiusStep6 = new CornerRadius(6);
+        RadiusStep7 = new CornerRadius(7);
+        RadiusStep8 = new CornerRadius(8);
+        RadiusStep9 = new CornerRadius(9);
+        RadiusStep10 = new CornerRadius(10);
+        RadiusStep12 = new CornerRadius(12);
+        RadiusStep13 = new CornerRadius(13);
+        RadiusStep14 = new CornerRadius(14);
+        RadiusStep14p5 = new CornerRadius(14.5);
+        RadiusStep15 = new CornerRadius(15);
+        RadiusStep16 = new CornerRadius(16);
+        RadiusStep17 = new CornerRadius(17);
+        RadiusStep18 = new CornerRadius(18);
+        RadiusStep19 = new CornerRadius(19);
+        RadiusStep19Top = new CornerRadius(19, 19, 0, 0);
+        RadiusStep20 = new CornerRadius(20);
+        RadiusStep20Top = new CornerRadius(20, 20, 0, 0);
+        RadiusStep21 = new CornerRadius(21);
+        RadiusStep22 = new CornerRadius(22);
+        RadiusStep24 = new CornerRadius(24);
+        RadiusStep25 = new CornerRadius(25);
+        RadiusStep28 = new CornerRadius(28);
+        RadiusStep33 = new CornerRadius(33);
         ControlSizeSM = 36;
         ControlSizeMD = 44;
         ControlSizeLG = 50;

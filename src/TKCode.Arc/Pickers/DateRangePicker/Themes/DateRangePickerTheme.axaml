@@ -22,7 +22,7 @@
                         <Border Name="PART_Trigger"
                                 Height="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:DateRangePickerTokenResource TriggerInset}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:DateRangePickerTokenResource TriggerRadius}"
                                 BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                                 Cursor="Hand">
@@ -142,7 +142,7 @@
                             </Panel>
                         </StackPanel>
                         <Border Name="PART_Footer"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                             <DockPanel>
                                 <StackPanel Name="PART_Actions"
@@ -199,7 +199,7 @@
         <Style Selector="^ /template/ Border#PART_RailFrame">
             <Setter Property="Width" Value="{arc:DateRangePickerTokenResource RailWidth}" />
             <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource RailInset}" />
-            <Setter Property="BorderThickness" Value="0,0,1,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessRight}" />
         </Style>
         <Style Selector="^ /template/ Panel#PART_Calendars">
             <Setter Property="Margin" Value="{arc:DateRangePickerTokenResource CalendarsInset}" />
@@ -218,7 +218,7 @@
                 <Setter Property="Width" Value="NaN" />
                 <Setter Property="Padding" Value="{arc:DateRangePickerTokenResource RailCompactInset}" />
                 <Setter Property="Margin" Value="{arc:DateRangePickerTokenResource RailCompactMargin}" />
-                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
             </Style>
             <Style Selector="^ /template/ Panel#PART_Calendars">
                 <Setter Property="HorizontalAlignment" Value="Center" />

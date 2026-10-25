@@ -6,10 +6,11 @@ src=open(root+"ArcPixelTheme.cs").read()
 def block(name):
     m=re.search(name+r" =\s*\[(.*?)\n    \];",src,re.S); return m.group(1)
 font=re.search(r'PixelFontStack = "([^"]*)"',src).group(1)
+display="fonts:ArcPixel#Silkscreen, "+font
 def toks(b):
     out=[]
-    for a,b2,v,f in re.findall(r'\((?:nameof\(ArcDesignTokenKind\.(\w+)\)|"(\w+)"), (?:"([^"]*)"|(PixelFontStack))\)',b):
-        out.append((a or b2, v if v else font))
+    for a,b2,v,f in re.findall(r'\((?:nameof\(ArcDesignTokenKind\.(\w+)\)|"(\w+)"), (?:"([^"]*)"|(PixelFontStack|PixelDisplayFontStack))\)',b):
+        out.append((a or b2, v if v else (display if f=="PixelDisplayFontStack" else font)))
     return out
 def ctl(name):
     b=block(name); res=[]

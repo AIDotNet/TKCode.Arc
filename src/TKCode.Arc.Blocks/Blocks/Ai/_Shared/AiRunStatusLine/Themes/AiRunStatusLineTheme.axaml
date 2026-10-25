@@ -12,7 +12,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Padding" Value="14,10,12,8" />
-        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -108,7 +108,7 @@
                             <Border Name="PART_Square"
                                     Width="9"
                                     Height="9"
-                                    CornerRadius="1.5"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep1p5}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Background="{arc:ArcDesignTokenResource TextMuted}"

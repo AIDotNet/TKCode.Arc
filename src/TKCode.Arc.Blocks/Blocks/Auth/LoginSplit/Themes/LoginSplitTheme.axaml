@@ -94,7 +94,7 @@
                                 Grid.Column="1"
                                 Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="1,0,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessLeft}"
                                 AutomationProperties.AccessibilityView="Raw">
                             <arc:LoginSplitBackdrop Name="PART_Backdrop"
                                                     Image="{TemplateBinding Photo}"
@@ -139,7 +139,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -173,7 +173,6 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="8"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -202,11 +201,14 @@
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
             <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
             <Setter Property="Padding" Value="{arc:LoginSplitTokenResource ForgotInset}" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
             <Setter Property="HorizontalContentAlignment" Value="Right" />
         </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        </Style>
         <Style Selector="^.forgot /template/ Border#PART_FocusRing">
-            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
         </Style>
         <Style Selector="^.forgot:pointerover:not(:inert)">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

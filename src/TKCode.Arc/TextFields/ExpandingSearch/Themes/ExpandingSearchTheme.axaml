@@ -87,7 +87,7 @@
                                 BorderThickness="3"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Shell"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 ClipToBounds="True">
                             <Panel>
                                 <arc:ExpandingSearchTrigger Name="PART_Trigger" />

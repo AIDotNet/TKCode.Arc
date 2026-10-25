@@ -134,7 +134,7 @@
                         <Border Name="PART_Toolbar"
                                 IsVisible="{TemplateBinding IsToolbarVisible}"
                                 Padding="{arc:JsonViewerTokenResource ToolbarPadding}"
-                                BorderThickness="0,0,0,1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                             <Grid ColumnDefinitions="*,Auto,Auto,Auto">
                                 <Border Name="PART_SearchPill"
@@ -228,7 +228,7 @@
                                 Grid.Row="2"
                                 IsVisible="{TemplateBinding IsPathBarVisible}"
                                 Padding="{arc:JsonViewerTokenResource PathBarPadding}"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                             <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="30">
                                 <TextBlock Name="PART_Path"

@@ -97,7 +97,7 @@
                                                 Height="36"
                                                 MinWidth="36"
                                                 Padding="0"
-                                                CornerRadius="18" />
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}" />
                                     <arc:Button Name="PART_RestartButton"
                                                 Variant="Ghost"
                                                 Size="Small"
@@ -105,7 +105,7 @@
                                                 Height="36"
                                                 MinWidth="36"
                                                 Padding="0"
-                                                CornerRadius="18">
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}">
                                         <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" />
                                     </arc:Button>
                                     <arc:SegmentedControl Name="PART_Speed" VerticalAlignment="Center" />
