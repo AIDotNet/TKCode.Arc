@@ -16,7 +16,7 @@
                                     IsVisible="False"
                                     IsHitTestVisible="False"
                                     Margin="{arc:CarouselTokenResource ViewportRingMargin}"
-                                    BorderThickness="2"
+                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                     CornerRadius="{arc:CarouselTokenResource ViewportRingRadius}"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         </Panel>

@@ -36,9 +36,12 @@ internal sealed class JsonViewerToken : AbstractControlDesignToken
     /// <summary>Pressed row action: foreground 8%.</summary>
     public Color ActionPressedFill { get; set; }
 
+    public CornerRadius ToolFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        ToolFocusRingRadius = new CornerRadius(16);
         RowSlotHeight = 30;
         IndentWidth = 16;
         IndentWidthCompact = 12;

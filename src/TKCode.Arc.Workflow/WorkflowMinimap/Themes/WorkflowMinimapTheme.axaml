@@ -12,7 +12,7 @@
         <Setter Property="CornerRadius" Value="{arc:WorkflowMinimapTokenResource MapRadius}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
         <Setter Property="NodeBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />

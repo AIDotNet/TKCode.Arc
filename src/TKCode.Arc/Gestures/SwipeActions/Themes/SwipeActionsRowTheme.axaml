@@ -23,7 +23,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:SwipeActionsRowTokenResource MoreRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:SwipeActionsRowTokenResource MoreRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

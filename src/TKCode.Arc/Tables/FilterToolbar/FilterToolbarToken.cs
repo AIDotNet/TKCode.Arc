@@ -21,9 +21,12 @@ internal sealed class FilterToolbarToken : AbstractControlDesignToken
     /// <summary>Below this width the toolbar stacks: chips, then the actions aligned to the end.</summary>
     public double StackBreakpoint { get; set; }
 
+    public CornerRadius SearchFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        SearchFocusRingRadius = new CornerRadius(21);
         ToolbarInset = new Thickness(16, 12);
         SectionGap = 16;
         ChipGap = 8;

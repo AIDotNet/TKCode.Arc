@@ -28,7 +28,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
         <Setter Property="BorderBrush" Value="{arc:TooltipTokenResource BubbleBorderColor}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         <Setter Property="Padding" Value="{arc:TooltipTokenResource BubblePadding}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />

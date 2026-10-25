@@ -16,7 +16,7 @@
                                 IsVisible="False"
                                 IsHitTestVisible="False"
                                 Margin="{arc:DateRangePickerTokenResource TriggerFocusRingMargin}"
-                                BorderThickness="2"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                 CornerRadius="{arc:DateRangePickerTokenResource TriggerFocusRingRadius}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Trigger"

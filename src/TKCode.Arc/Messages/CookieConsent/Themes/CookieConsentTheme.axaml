@@ -145,8 +145,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-3,-2"
-                            BorderThickness="2"
-                            CornerRadius="6"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:CookieConsentTokenResource LinkFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

@@ -25,9 +25,12 @@ internal sealed class UsageMeterToken : AbstractControlDesignToken
     public double LegendDimOpacity { get; set; }
     public Thickness CaptionMargin { get; set; }
 
+    public CornerRadius LegendFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        LegendFocusRingRadius = new CornerRadius(16);
         var n = ArcPalette.Neutrals(isDarkMode);
         TrackColor = Oklch.MixOklab(n.Surface, n.Foreground, 0.07);
         NearBadgeBackground = Oklch.MixOklab(n.Surface, n.Warning, 0.14);

@@ -12,7 +12,7 @@
         <Setter Property="Height" Value="{arc:WorkflowNodeCardTokenResource StandardHeight}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:WorkflowNodeCardTokenResource CardRadius}" />
         <Setter Property="Padding" Value="{arc:WorkflowNodeCardTokenResource InlinePadding}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -94,7 +94,7 @@
                         IsHitTestVisible="False"
                         Margin="{arc:WorkflowNodeCardTokenResource FocusRingMargin}"
                         CornerRadius="{arc:WorkflowNodeCardTokenResource FocusRingRadius}"
-                        BorderThickness="2"
+                        BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                         BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

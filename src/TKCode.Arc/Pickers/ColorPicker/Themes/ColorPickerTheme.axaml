@@ -16,7 +16,7 @@
                                 IsVisible="False"
                                 IsHitTestVisible="False"
                                 Margin="{arc:ColorPickerTokenResource TriggerFocusRingMargin}"
-                                BorderThickness="2"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                 CornerRadius="{arc:ColorPickerTokenResource TriggerFocusRingRadius}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Trigger"
@@ -343,8 +343,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="2"
-                            BorderThickness="2"
-                            CornerRadius="10"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ColorPickerTokenResource FormatFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -386,8 +386,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
-                            CornerRadius="999"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ColorPickerTokenResource AddFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

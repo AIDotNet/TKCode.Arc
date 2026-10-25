@@ -32,7 +32,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:PageHeaderTabTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:PageHeaderTabTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

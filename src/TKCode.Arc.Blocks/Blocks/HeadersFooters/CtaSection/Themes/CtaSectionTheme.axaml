@@ -335,7 +335,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:CtaSectionTokenResource DismissFocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="20"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

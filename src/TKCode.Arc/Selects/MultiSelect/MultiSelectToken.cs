@@ -52,9 +52,14 @@ internal sealed class MultiSelectToken : AbstractControlDesignToken
 
     public double SearchRowHeight { get; set; }
 
+    public CornerRadius ClearRingRadius { get; set; }
+    public CornerRadius ClearGlyphRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        ClearRingRadius = new CornerRadius(14);
+        ClearGlyphRadius = new CornerRadius(11);
         TriggerPadding = new Thickness(12, 5, 11, 5);
         ValueMinHeight = 26;
         ChevronMargin = new Thickness(8, 0, 0, 0);

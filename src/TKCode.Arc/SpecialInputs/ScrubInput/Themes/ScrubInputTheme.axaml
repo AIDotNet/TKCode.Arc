@@ -69,7 +69,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:ScrubInputTokenResource UnitFocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ScrubInputTokenResource UnitFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

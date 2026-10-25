@@ -283,8 +283,8 @@ public class GalleryLocalizationTests
         var window = TestHelpers.Show(panel);
         try
         {
-            // Mode and motion; the language has its own menu in the top bar (GalleryLanguagesTests).
-            panel.GetVisualDescendants().OfType<GallerySegmented>().Count().ShouldBe(2);
+            // Mode, style and motion; the language has its own menu in the top bar (GalleryLanguagesTests).
+            panel.GetVisualDescendants().OfType<GallerySegmented>().Count().ShouldBe(3);
             Texts(panel).ShouldNotContain("Language");
             Texts(panel).ShouldNotContain("English");
 

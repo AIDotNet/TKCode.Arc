@@ -104,7 +104,7 @@
                     <Border Name="PART_FocusRing"
                             IsVisible="False"
                             IsHitTestVisible="False"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

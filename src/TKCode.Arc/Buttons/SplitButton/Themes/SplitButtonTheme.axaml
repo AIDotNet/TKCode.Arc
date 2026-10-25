@@ -27,7 +27,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:SplitButtonTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -161,7 +161,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />

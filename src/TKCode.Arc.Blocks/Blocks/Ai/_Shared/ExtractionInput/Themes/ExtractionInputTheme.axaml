@@ -18,7 +18,7 @@
         <Setter Property="MinWidth" Value="0" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Padding" Value="8,0" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="9" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />

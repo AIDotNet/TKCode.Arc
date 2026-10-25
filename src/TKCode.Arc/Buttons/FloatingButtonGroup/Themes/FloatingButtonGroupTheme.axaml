@@ -30,7 +30,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:FloatingButtonGroupTokenResource TrayColor}" />
         <Setter Property="BorderBrush" Value="{arc:FloatingButtonGroupTokenResource TrayEdgeColor}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:FloatingButtonGroupTokenResource TrayRadiusMD}" />
         <Setter Property="Padding" Value="{arc:FloatingButtonGroupTokenResource TrayInsetMD}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />

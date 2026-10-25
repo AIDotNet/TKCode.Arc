@@ -12,6 +12,7 @@ public enum GalleryShellLangResourceKind
     ToggleAppearance,
     Mode,
     Accent,
+    Style,
     Motion,
     Language,
     Light,

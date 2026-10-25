@@ -101,7 +101,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:NotificationCenterTokenResource RingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:NotificationCenterTokenResource TextRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -126,7 +126,7 @@
             <Setter Property="Width" Value="{arc:NotificationCenterTokenResource TriggerSize}" />
             <Setter Property="Height" Value="{arc:NotificationCenterTokenResource TriggerSize}" />
             <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource TriggerRadius}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -189,7 +189,7 @@
         <Style Selector="^[Kind=Action]">
             <Setter Property="Height" Value="{arc:NotificationCenterTokenResource ActionHeight}" />
             <Setter Property="Padding" Value="{arc:NotificationCenterTokenResource ActionPadding}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="CornerRadius" Value="{arc:NotificationCenterTokenResource ActionRadius}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -250,7 +250,7 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />

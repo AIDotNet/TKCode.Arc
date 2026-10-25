@@ -10,7 +10,7 @@
         <Setter Property="MaxWidth" Value="744" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -125,7 +125,7 @@
     <!-- A chip: 1px border lit at its active station, dimmed to 62% while another station works (240ms). -->
     <ControlTheme x:Key="{x:Type arc:AgentLoopChip}" TargetType="arc:AgentLoopChip">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:AgentLoopTokenResource ChipCornerRadius}" />
         <Setter Property="Padding" Value="{arc:AgentLoopTokenResource ChipPadding}" />
         <Style Selector="^:motion-full">
@@ -141,7 +141,7 @@
     <!-- A context block: an accent border while it is new, easing back over 480ms when Gather is left. -->
     <ControlTheme x:Key="{x:Type arc:AgentLoopBlock}" TargetType="arc:AgentLoopBlock">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:AgentLoopTokenResource ChipCornerRadius}" />
         <Setter Property="Padding" Value="{arc:AgentLoopTokenResource ChipPadding}" />
         <Style Selector="^:motion-full">

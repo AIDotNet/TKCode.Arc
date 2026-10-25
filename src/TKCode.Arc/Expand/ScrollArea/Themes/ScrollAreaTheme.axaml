@@ -43,7 +43,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:ScrollAreaTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

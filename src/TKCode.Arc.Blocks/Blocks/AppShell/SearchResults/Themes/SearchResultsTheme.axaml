@@ -14,7 +14,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4,-2"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="8"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <ContentPresenter Name="PART_ContentPresenter"
@@ -59,7 +59,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-3"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="14"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -108,7 +108,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="24"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -328,7 +328,7 @@
 
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -353,7 +353,7 @@
         <Style Selector="^ /template/ Border.key">
             <Setter Property="MinWidth" Value="{arc:SearchResultsTokenResource HintKeySize}" />
             <Setter Property="Height" Value="{arc:SearchResultsTokenResource HintKeySize}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="CornerRadius" Value="{arc:SearchResultsTokenResource HintKeyRadius}" />

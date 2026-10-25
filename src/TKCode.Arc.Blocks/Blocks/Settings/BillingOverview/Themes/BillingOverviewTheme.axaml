@@ -199,7 +199,7 @@
             <Setter Property="CornerRadius" Value="{arc:BillingOverviewTokenResource CardMarkRadius}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         </Style>
         <Style Selector="^ /template/ TextBlock#PART_CardBrand">
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
