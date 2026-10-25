@@ -123,7 +123,7 @@
                     <Border Name="PART_Chrome"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             Padding="{TemplateBinding Padding}"
                             CornerRadius="{arc:CommandPaletteTokenResource KeyCapRadius}">
                         <ContentPresenter Content="{TemplateBinding Content}"
@@ -207,7 +207,7 @@
                                     Height="{arc:CommandPaletteTokenResource ShortcutHeight}"
                                     Padding="{arc:CommandPaletteTokenResource ShortcutPadding}"
                                     CornerRadius="{arc:CommandPaletteTokenResource ShortcutRadius}"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     BorderBrush="Transparent"
                                     Background="{arc:ArcDesignTokenResource SurfaceMuted}">
                                 <TextBlock Text="{TemplateBinding Shortcut}"
@@ -307,7 +307,7 @@
                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
                         RenderTransformOrigin="50%,0%">
                     <Border Name="PART_Frame"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                             ClipToBounds="True">
@@ -315,7 +315,7 @@
                             <Border Name="PART_SearchRow"
                                     DockPanel.Dock="Top"
                                     MinHeight="{arc:CommandPaletteTokenResource SearchRowMinHeight}"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <!-- Source order is the Tab order: the field, then the clear button, then the Esc button. -->
                                 <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
@@ -353,7 +353,7 @@
                                             Height="{arc:CommandPaletteTokenResource CommandKeyHeight}"
                                             Padding="{arc:CommandPaletteTokenResource CommandKeyPadding}"
                                             CornerRadius="{arc:CommandPaletteTokenResource KeyCapRadius}"
-                                            BorderThickness="1"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                             BorderBrush="{arc:ArcDesignTokenResource Border}"
                                             Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                                             VerticalAlignment="Center">

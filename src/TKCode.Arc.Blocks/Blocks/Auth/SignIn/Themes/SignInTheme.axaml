@@ -23,7 +23,7 @@
             <ControlTemplate TargetType="arc:SignIn">
                 <Border Name="PART_Card"
                         MaxWidth="{arc:SignInTokenResource CardMaxWidth}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
                         Background="{arc:ArcDesignTokenResource Surface}"
                         ClipToBounds="True"
@@ -35,7 +35,7 @@
                         <Border Name="PART_Footer"
                                 Grid.Row="1"
                                 MinHeight="48"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                 TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
@@ -199,7 +199,7 @@
                         </StackPanel>
                         <Border Name="PART_Identity"
                                 Margin="0,0,0,24"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
                             <Grid Name="PART_IdentityRow" ColumnDefinitions="Auto,*,Auto">
@@ -330,17 +330,17 @@
                         </StackPanel>
                         <Border Name="PART_Details"
                                 Margin="0,0,0,24"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}">
                             <StackPanel>
-                                <Border Padding="0,12" BorderThickness="0,0,0,1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <Border Padding="0,12" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}" BorderBrush="{arc:ArcDesignTokenResource Border}">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
                                         <TextBlock Name="PART_MethodLabel" LineHeight="19.6" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                                         <TextBlock Name="PART_MethodValue" Grid.Column="1" LineHeight="19.6" TextAlignment="Right" TextWrapping="Wrap" />
                                     </Grid>
                                 </Border>
-                                <Border Padding="0,12" BorderThickness="0,0,0,1" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <Border Padding="0,12" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}" BorderBrush="{arc:ArcDesignTokenResource Border}">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
                                         <TextBlock Name="PART_DeviceLabel" LineHeight="19.6" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                                         <TextBlock Name="PART_DeviceValue" Grid.Column="1" LineHeight="19.6" TextAlignment="Right" TextWrapping="Wrap" />
@@ -400,7 +400,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="8"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

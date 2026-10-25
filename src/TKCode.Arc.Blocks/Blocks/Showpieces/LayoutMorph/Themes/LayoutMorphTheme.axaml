@@ -88,7 +88,7 @@
                 <Border Name="PART_Track"
                         Background="{arc:ArcDesignTokenResource SurfaceMuted}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                         Padding="{arc:LayoutMorphTokenResource BarPadding}">
                     <Panel>
@@ -132,7 +132,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
                         <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
                                       Size="{arc:LayoutMorphTokenResource CloseGlyphSize}"
@@ -191,7 +191,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="22"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"

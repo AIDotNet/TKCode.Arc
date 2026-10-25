@@ -229,22 +229,22 @@
 
         <!-- Summary: a row of three under the plot with a rule above; from 880 a column beside it with a rule on its left. -->
         <Style Selector="^ /template/ Border#PART_StatsFrame">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="Padding" Value="0,16,0,0" />
         </Style>
         <Style Selector="^:wide /template/ Border#PART_StatsFrame">
-            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
             <Setter Property="Padding" Value="20,0,0,0" />
         </Style>
         <Style Selector="^:wide /template/ Border#PART_TotalBlock">
             <Setter Property="Padding" Value="0,0,0,16" />
         </Style>
         <Style Selector="^:wide /template/ Border#PART_PeaksBlock">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="Padding" Value="0,16" />
         </Style>
         <Style Selector="^:wide /template/ Border#PART_BusiestBlock">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="Padding" Value="0,16" />
         </Style>
         <Style Selector="^ /template/ TextBlock.stat-title">
@@ -342,7 +342,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -413,7 +413,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

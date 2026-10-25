@@ -45,6 +45,7 @@ internal sealed partial class Program
         AppBuilder.Configure<App>()
                   .WithInterFont()
                   .WithArcFonts()
+                  .WithArcPixelFonts()
                   .WithCjkFont()
                   .UseAtomUI(builder =>
                   {

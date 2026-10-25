@@ -141,7 +141,8 @@ public partial class PhoneInput
         ArcTokens.Bind(this, FloatingShadowProperty, ArcDesignTokenKind.ShadowFloating);
 
         // Lid: the trigger row as it appears on the surface, then the search row that takes its place.
-        _lidFill = new Border { Margin = new Thickness(3), CornerRadius = new CornerRadius(14), Opacity = 0, IsHitTestVisible = false };
+        _lidFill = new Border { Margin = new Thickness(3), Opacity = 0, IsHitTestVisible = false };
+        _lidFill.BindCornerRadius(ArcDesignTokenKind.RadiusStep14);
         ArcTokens.Bind(_lidFill, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
         _lidFace = new PhoneInputFace
         {
@@ -269,7 +270,7 @@ public partial class PhoneInput
             Focusable = false,
             Template = new Avalonia.Controls.Templates.FuncControlTemplate<AvaloniaButton>((b, _) =>
             {
-                var face = new Border { CornerRadius = new CornerRadius(size / 2) };
+                var face = new Border().BindCornerRadius(ArcDesignTokenKind.RadiusPill);
                 face.Bind(Border.BackgroundProperty, b.GetObservable(BackgroundProperty));
                 if (glyph is not null)
                 {

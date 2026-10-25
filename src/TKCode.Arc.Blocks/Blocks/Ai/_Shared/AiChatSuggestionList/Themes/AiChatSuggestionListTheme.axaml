@@ -69,7 +69,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="22"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

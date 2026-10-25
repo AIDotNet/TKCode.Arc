@@ -13,7 +13,7 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
         <Setter Property="Template">
@@ -29,7 +29,7 @@
                                 DockPanel.Dock="Top"
                                 Height="38"
                                 Padding="14,0,3,0"
-                                BorderThickness="0,0,0,1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                 BorderBrush="{TemplateBinding HairlineBrush}">
                             <DockPanel VerticalAlignment="Center">
                                 <arc:CopyButton Name="PART_Copy"
@@ -86,7 +86,7 @@
             <Setter Property="MinHeight" Value="30" />
             <Setter Property="Height" Value="30" />
             <Setter Property="Padding" Value="10,0" />
-            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
         </Style>
         <Style Selector="^:code-focus-visible /template/ Border#PART_CodeRing">
             <Setter Property="IsVisible" Value="True" />

@@ -15,7 +15,7 @@
                 <StackPanel Orientation="Vertical">
                     <Border Name="PART_ListShell"
                             HorizontalAlignment="Left"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                             Background="{arc:ArcDesignTokenResource SurfaceMuted}"

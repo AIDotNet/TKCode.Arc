@@ -41,7 +41,7 @@
                             <Panel>
                                 <Border Name="PART_Box"
                                         CornerRadius="{arc:ChatComposerTokenResource BoxRadius}"
-                                        BorderThickness="1">
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}">
                                     <DockPanel>
                                         <arc:ChatThreadButton Name="PART_Send"
                                                               Role="Send"
@@ -70,7 +70,7 @@
         </Setter>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
-        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         <Setter Property="Padding" Value="{arc:ChatComposerTokenResource ComposerPadding}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />

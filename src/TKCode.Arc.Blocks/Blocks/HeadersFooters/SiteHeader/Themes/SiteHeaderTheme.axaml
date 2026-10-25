@@ -19,7 +19,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SiteHeader">
                 <Border Name="PART_Surface"
-                        BorderThickness="0,0,0,1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                         ClipToBounds="False">
                     <Panel Name="PART_Root" ClipToBounds="False">
                         <Panel Name="PART_Inner"
@@ -43,7 +43,7 @@
                                         <arc:GlidingIndicator Name="PART_Underline"
                                                               FadeDuration="0"
                                                               Fill="{arc:ArcDesignTokenResource Accent}"
-                                                              CornerRadius="2" />
+                                                              CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}" />
                                         <arc:GlidingIndicator Name="PART_Capsule"
                                                               FadeDuration="0"
                                                               Fill="{arc:ArcDesignTokenResource Surface}"
@@ -158,7 +158,6 @@
                             IsHitTestVisible="False"
                             Margin="-2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -167,6 +166,9 @@
             <Setter Property="Height" Value="{arc:SiteHeaderTokenResource NavItemHeightCentered}" />
             <Setter Property="Padding" Value="{arc:SiteHeaderTokenResource NavItemPaddingCentered}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
         </Style>
         <Style Selector="^:capsule /template/ Border#PART_FocusRing">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
@@ -231,7 +233,7 @@
                             IsHitTestVisible="False"
                             Margin="-2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -263,7 +265,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
                         <TextBlock HorizontalAlignment="Center"
@@ -276,7 +278,7 @@
                             IsHitTestVisible="False"
                             Margin="-2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="20"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -347,7 +349,7 @@
                             IsHitTestVisible="False"
                             Margin="-2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -584,7 +586,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

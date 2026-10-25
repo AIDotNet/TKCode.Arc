@@ -47,7 +47,7 @@
                             <Border Name="PART_Row"
                                     Background="{arc:ArcDesignTokenResource Surface}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                                     BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                                     MinHeight="{arc:ReorderableListTokenResource RowMinHeight}"

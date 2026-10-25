@@ -37,7 +37,7 @@
                     </StackPanel>
                     <arc:AiCollapsible Name="PART_Body" ContentMargin="10,6,0,2">
                         <Border Name="PART_Rule"
-                                BorderThickness="1,0,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessLeft}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Padding="16,2,0,2">
                             <SelectableTextBlock Name="PART_Reasoning"

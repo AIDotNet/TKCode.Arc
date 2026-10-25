@@ -20,9 +20,9 @@
                 <arc:AiCollapsible Name="PART_Body" ContentMargin="0,8,0,0">
                     <Border Name="PART_Panel"
                             Padding="14,12"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                            CornerRadius="16">
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}">
                         <StackPanel Spacing="10">
                             <ItemsControl Name="PART_Queries" Focusable="False">
                                 <ItemsControl.ItemsPanel>
@@ -103,7 +103,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Template">
@@ -139,7 +139,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

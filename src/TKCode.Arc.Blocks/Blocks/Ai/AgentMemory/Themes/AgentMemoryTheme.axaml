@@ -62,10 +62,10 @@
                         <StackPanel Name="PART_Settings">
                             <arc:AgentMemorySettingRow Name="PART_SavedSetting" />
                             <arc:AgentMemorySettingRow Name="PART_HistorySetting"
-                                                       BorderThickness="0,1,0,0"
+                                                       BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
                         </StackPanel>
-                        <Border Name="PART_Section" BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                        <Border Name="PART_Section" BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}" BorderBrush="{arc:ArcDesignTokenResource Border}">
                             <StackPanel>
                                 <arc:AgentMemoryToolbar Name="PART_Toolbar" Height="{arc:AgentMemoryTokenResource ToolbarHeight}">
                                     <arc:PillFilterBar Name="PART_Filters" />
@@ -108,7 +108,7 @@
                             </StackPanel>
                         </Border>
                         <arc:AgentMemoryAddField Name="PART_AddField"
-                                                 BorderThickness="0,1,0,0"
+                                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                                  BorderBrush="{arc:ArcDesignTokenResource Border}" />
                         <arc:AiAnnouncer Name="PART_Announcer" />
                     </StackPanel>
@@ -279,12 +279,12 @@
         <Style Selector="^[Kind=RowAction]">
             <Setter Property="Width" Value="28" />
             <Setter Property="Height" Value="28" />
-            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
             <Setter Property="GlyphSize" Value="15" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             <Style Selector="^ /template/ Border#PART_FocusRing">
                 <Setter Property="Margin" Value="-4" />
-                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
             </Style>
             <Style Selector="^:hover, ^:pressed">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -307,7 +307,7 @@
         </Style>
         <Style Selector="^[Kind=Link]">
             <Setter Property="Padding" Value="6,4" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep6}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
             <Style Selector="^ /template/ ContentPresenter#PART_Content">
@@ -319,14 +319,14 @@
             </Style>
             <Style Selector="^ /template/ Border#PART_FocusRing">
                 <Setter Property="Margin" Value="-4" />
-                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
             </Style>
             <Style Selector="^:hover, ^:pressed">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
             </Style>
         </Style>
         <Style Selector="^[Kind=Source]">
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
             <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             <Style Selector="^ /template/ ContentPresenter#PART_Content">
@@ -338,7 +338,7 @@
             </Style>
             <Style Selector="^ /template/ Border#PART_FocusRing">
                 <Setter Property="Margin" Value="-4" />
-                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
             </Style>
             <Style Selector="^:hover, ^:pressed">
                 <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
@@ -435,7 +435,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AgentMemorySearchBox">
                 <Border Name="PART_Frame"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         Background="{arc:ArcDesignTokenResource Surface}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
@@ -549,7 +549,7 @@
                 <Panel>
                     <Border Name="PART_Tint"
                             Opacity="0"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             IsHitTestVisible="False"
                             Background="{arc:AgentMemoryTokenResource RowHoverBackground}" />
                     <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,8,8,8" Background="Transparent">

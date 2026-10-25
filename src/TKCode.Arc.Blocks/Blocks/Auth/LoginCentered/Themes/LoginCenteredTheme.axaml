@@ -84,7 +84,7 @@
                                         VerticalAlignment="Center"
                                         Background="{arc:ArcDesignTokenResource Surface}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                        BorderThickness="1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                                         ClipToBounds="True">
                                     <arc:LoginCenteredViewport Name="PART_Viewport" />
@@ -313,7 +313,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="8"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

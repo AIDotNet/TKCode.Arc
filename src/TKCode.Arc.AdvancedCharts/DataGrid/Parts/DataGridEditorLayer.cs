@@ -475,10 +475,10 @@ internal sealed class DataGridEditorLayer : Control
             {
                 Padding = new Thickness(4),
                 BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(12),
                 MinWidth = 160,
                 Child = _optionScroll
             };
+            surface.BindCornerRadius(ArcDesignTokenKind.RadiusStep12);
             ArcTokens.Bind(surface, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceRaised);
             ArcTokens.Bind(surface, Border.BorderBrushProperty, ArcDesignTokenKind.Border);
             ArcTokens.Bind(surface, TextElement.FontFamilyProperty, ArcDesignTokenKind.BodyFontFamily);
@@ -548,10 +548,10 @@ internal sealed class DataGridEditorLayer : Control
             var row = new Border
             {
                 Padding = new Thickness(10, 7),
-                CornerRadius = new CornerRadius(8),
                 Child = new TextBlock { Text = option, TextTrimming = TextTrimming.CharacterEllipsis },
                 Cursor = new Cursor(StandardCursorType.Hand)
             };
+            row.BindCornerRadius(ArcDesignTokenKind.RadiusStep8);
             if (i == _highlight)
             {
                 ArcTokens.Bind(row, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
@@ -607,9 +607,9 @@ internal sealed class DataGridEditorLayer : Control
             {
                 Padding = new Thickness(12, 12, 14, 14),
                 BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(20),
                 Child = _calendar
             };
+            surface.BindCornerRadius(ArcDesignTokenKind.RadiusStep20);
             ArcTokens.Bind(surface, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceRaised);
             ArcTokens.Bind(surface, Border.BorderBrushProperty, ArcDesignTokenKind.Border);
             _datePopup = new ArcPopup

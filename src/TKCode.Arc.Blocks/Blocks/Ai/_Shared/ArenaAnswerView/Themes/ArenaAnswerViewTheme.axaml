@@ -55,9 +55,9 @@
                                 <arc:ArenaAnswerErrorCard Name="PART_ErrorCard"
                                                           Margin="0,14,0,0"
                                                           Padding="14,12,14,14"
-                                                          BorderThickness="1"
+                                                          BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                                           BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                                          CornerRadius="14">
+                                                          CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}">
                                     <StackPanel Spacing="4">
                                         <DockPanel>
                                             <arc:ArcGlyph DockPanel.Dock="Left"

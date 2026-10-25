@@ -321,7 +321,7 @@
                         <Border Name="PART_Toolbar"
                                 Grid.Row="1"
                                 MinHeight="{arc:NotificationCenterTokenResource ToolbarMinHeight}"
-                                BorderThickness="0,0,0,1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                             <!-- Declared in tab order: the view switch, then "Mark all read" on the right. -->
                             <DockPanel Name="PART_ToolbarRow" VerticalAlignment="Center">
@@ -404,7 +404,7 @@
                         <arc:NotificationCenterReveal Name="PART_FooterReveal" Grid.Row="3" ClipToBounds="True">
                             <Border Name="PART_Footer"
                                     MinHeight="{arc:NotificationCenterTokenResource FooterMinHeight}"
-                                    BorderThickness="0,1,0,0"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <DockPanel VerticalAlignment="Center">
                                     <arc:NotificationCenterButton Name="PART_ClearRead"

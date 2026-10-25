@@ -27,7 +27,7 @@
             <ControlTemplate TargetType="arc:BreadcrumbMenu">
                 <Border Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                         Padding="{arc:BreadcrumbTokenResource MenuPadding}"
                         MinWidth="{arc:BreadcrumbTokenResource MenuMinWidth}">

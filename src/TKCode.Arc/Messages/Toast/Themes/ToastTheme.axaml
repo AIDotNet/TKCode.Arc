@@ -24,7 +24,7 @@
                                     Width="{arc:ToastTokenResource IconDiameter}"
                                     Height="{arc:ToastTokenResource IconDiameter}"
                                     VerticalAlignment="Top"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                     Background="{arc:ToastTokenResource IconFill}"
                                     BorderBrush="{arc:ToastTokenResource IconRing}">

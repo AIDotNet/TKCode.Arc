@@ -36,7 +36,7 @@
                                 <Border Name="PART_Trigger"
                                         Height="{arc:ArcDesignTokenResource ControlSizeMD}"
                                         Padding="13,0,35,0"
-                                        BorderThickness="1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         CornerRadius="{arc:MorphSelectTokenResource ShapeCornerRadius}"
                                         Background="{arc:ArcDesignTokenResource Surface}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}"

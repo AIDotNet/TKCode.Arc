@@ -41,7 +41,7 @@
                             <Grid Name="PART_Panel" RowDefinitions="Auto,*,Auto">
                                 <Border Name="PART_Header"
                                         Padding="{arc:AiSidePanelTokenResource HeaderPadding}"
-                                        BorderThickness="0,0,0,1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                     <StackPanel>
                                         <DockPanel Height="{arc:AiSidePanelTokenResource TitleRowHeight}">
@@ -183,7 +183,7 @@
                     <StackPanel Name="PART_Stopped" Orientation="Horizontal" Spacing="6" IsVisible="False">
                         <Border Width="10"
                                 Height="10"
-                                CornerRadius="2"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                                 Background="{arc:ArcDesignTokenResource TextMuted}"
                                 VerticalAlignment="Center" />
                         <TextBlock Name="PART_StoppedText"
@@ -250,7 +250,6 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="14"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -269,6 +268,9 @@
         </Style>
         <Style Selector="^.remove /template/ arc|ArcGlyph#PART_Icon">
             <Setter Property="Size" Value="12" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
         </Style>
         <Style Selector="^.remove /template/ Border#PART_FocusRing">
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
@@ -336,13 +338,13 @@
                 <Panel>
                     <Border Background="{arc:ArcDesignTokenResource Surface}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}" />
                     <Border Background="{arc:ArcDesignTokenResource Accent}"
                             Opacity="0.07"
                             CornerRadius="{TemplateBinding CornerRadius}" />
                     <Border BorderBrush="{arc:ArcDesignTokenResource Accent}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             Opacity="0.28"
                             CornerRadius="{TemplateBinding CornerRadius}" />
                     <DockPanel Margin="{TemplateBinding Padding}">
@@ -552,7 +554,7 @@
                         </DockPanel>
                         <Border Name="PART_Body" Padding="{arc:AiSidePanelTokenResource CardBodyPadding}" />
                         <Border Name="PART_Footer"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                 Height="{arc:AiSidePanelTokenResource CardFooterHeightWithEdge}"
                                 Padding="{arc:AiSidePanelTokenResource CardFooterPadding}">

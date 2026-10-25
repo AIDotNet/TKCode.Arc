@@ -18,7 +18,7 @@
                                 Grid.Row="0"
                                 Height="{arc:TreeTableTokenResource HeaderHeight}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="0,0,0,1" />
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
                         <ScrollViewer Name="PART_Scroll"
                                       Grid.Row="1"
                                       HorizontalScrollBarVisibility="Disabled"
@@ -44,7 +44,7 @@
         </Setter>
 
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />

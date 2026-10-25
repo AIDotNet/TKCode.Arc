@@ -57,9 +57,11 @@ public sealed class GalleryTheme
         {
             // The pixel style is a compiled theme pair; its config already carries light/dark and the palette.
             await manager.ApplyThemeAsync(ArcPixelTheme.CreateRequest(IsDark, scope: ArcPixelScope.All));
+            ArcPixelRendering.ApplyToApplication(true);
             Changed?.Invoke();
             return;
         }
+        ArcPixelRendering.ApplyToApplication(false);
         var builder = new ThemeConfigBuilder();
         builder = IsDark
             ? builder.WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)

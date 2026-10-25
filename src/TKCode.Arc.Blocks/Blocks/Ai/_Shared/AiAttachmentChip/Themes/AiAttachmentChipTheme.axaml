@@ -19,7 +19,7 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Padding" Value="12,6,8,6" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -49,15 +49,15 @@
                                         Width="38"
                                         Height="38"
                                         Margin="-6,0,0,0"
-                                        CornerRadius="10"
-                                        BorderThickness="1"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}" />
                                 <Border Name="PART_Thumbnail"
                                         IsVisible="False"
                                         Width="38"
                                         Height="38"
                                         Margin="-6,0,0,0"
-                                        CornerRadius="10"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
                                         ClipToBounds="True">
                                     <Image Stretch="UniformToFill" />
                                 </Border>
@@ -121,7 +121,7 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="Padding" Value="10,0,4,0" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
             <Setter Property="Template">
                 <ControlTemplate TargetType="arc:AiAttachmentChip">
@@ -155,8 +155,8 @@
                                 <arc:AiAttachmentChipButton Name="PART_Action"
                                                             Width="24"
                                                             Height="24"
-                                                            CornerRadius="8"
-                                                            RingCornerRadius="12">
+                                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                                                            RingCornerRadius="{arc:ArcDesignTokenResource RadiusStep12}">
                                     <arc:AiAttachmentStatusGlyph Name="PART_Glyph"
                                                                  IsCompact="True"
                                                                  Width="16"
@@ -169,7 +169,7 @@
                         <Border Name="PART_ErrorEdge"
                                 IsVisible="False"
                                 IsHitTestVisible="False"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 BorderBrush="{TemplateBinding ErrorBorderBrush}" />
                     </Panel>
@@ -198,8 +198,8 @@
         <Setter Property="Height" Value="28" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="CornerRadius" Value="14" />
-        <Setter Property="RingCornerRadius" Value="18" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep14}" />
+        <Setter Property="RingCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="Template">

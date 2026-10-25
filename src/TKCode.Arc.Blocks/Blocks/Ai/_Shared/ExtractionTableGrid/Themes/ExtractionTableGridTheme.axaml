@@ -14,7 +14,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
         <Setter Property="Padding" Value="8,4,4,6" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="Template">
@@ -58,10 +58,10 @@
                                                      AutomationText="{TemplateBinding SummaryAutomationText}" />
                         </Grid>
                         <Border Name="PART_Frame"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
                                 Background="{arc:ArcDesignTokenResource Surface}"
-                                CornerRadius="10"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
                                 ClipToBounds="True">
                             <arc:SpringSizeDecorator Name="PART_Size" Axis="Height" Spring="Smooth">
                                 <ScrollViewer Name="PART_Scroll"
@@ -70,7 +70,7 @@
                                     <StackPanel Name="PART_Body" HorizontalAlignment="Left">
                                         <Border Name="PART_HeaderLine"
                                                 Height="28"
-                                                BorderThickness="0,0,0,1"
+                                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                                 AutomationProperties.ControlTypeOverride="Header">
                                             <arc:ExtractionTableRowPanel Name="PART_HeaderRow" VerticalAlignment="Center" />
@@ -130,7 +130,7 @@
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="BorderThickness" Value="0" />
         <Style Selector="^:separated">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         </Style>
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">

@@ -311,7 +311,7 @@
                     <Border Name="PART_Field"
                             Height="48"
                             Padding="16,0,5,0"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                             Background="{arc:ArcDesignTokenResource Surface}">
                         <Grid ColumnDefinitions="*,Auto">

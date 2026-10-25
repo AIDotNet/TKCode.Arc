@@ -84,7 +84,7 @@
                             Grid.Row="1"
                             Background="{arc:ArcDesignTokenResource Surface}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                             ClipToBounds="True">
                         <Grid ColumnDefinitions="Auto,*">
@@ -140,12 +140,12 @@
         <Style Selector="^:stacked /template/ arc|Button#PART_Previous">
             <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
             <Setter Property="Height" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
-            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
         </Style>
         <Style Selector="^:stacked /template/ arc|Button#PART_Next">
             <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
             <Setter Property="Height" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
-            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
         </Style>
         <Style Selector="^:stacked /template/ arc|Button#PART_CalendarsButton">
             <Setter Property="MinHeight" Value="{arc:WeekCalendarTokenResource StackedItemHeight}" />
@@ -154,7 +154,7 @@
         <Style Selector="^:stacked /template/ arc|Button#PART_NewEvent">
             <Setter Property="MinHeight" Value="{arc:WeekCalendarTokenResource StackedItemHeight}" />
             <Setter Property="Width" Value="{arc:WeekCalendarTokenResource StackedStepButtonSize}" />
-            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
         </Style>
         <!-- Today stays on the surface when there is nothing to do; only its label dims (Arc). -->
         <Style Selector="^ /template/ arc|Button#PART_Today:disabled">
@@ -364,7 +364,7 @@
                                         CornerRadius="{arc:WeekCalendarTokenResource CheckboxRadius}"
                                         Opacity="0" />
                                 <Border BorderBrush="{TemplateBinding SwatchBrush}"
-                                        BorderThickness="1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         CornerRadius="{arc:WeekCalendarTokenResource CheckboxRadius}" />
                                 <arc:ArcGlyph Name="PART_Check"
                                               Data="{x:Static arc:ArcIcons.Check}"
@@ -540,7 +540,7 @@
                     <Border Name="PART_Chip"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
@@ -559,7 +559,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="19"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep19}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -604,7 +604,7 @@
                 <Border Name="PART_Surface"
                         Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:WeekCalendarTokenResource EditorRadius}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
                         Padding="{arc:WeekCalendarTokenResource EditorPadding}">
@@ -652,7 +652,7 @@
                 <Border Name="PART_Surface"
                         Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:WeekCalendarTokenResource EditorRadius}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
                         Padding="{arc:WeekCalendarTokenResource EditorPadding}">
@@ -662,7 +662,7 @@
                                     DockPanel.Dock="Left"
                                     Width="{arc:WeekCalendarTokenResource CalendarBarWidth}"
                                     Height="{arc:WeekCalendarTokenResource CalendarBarHeight}"
-                                    CornerRadius="2"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                                     Margin="0 0 6 0"
                                     VerticalAlignment="Center" />
                             <arc:Button Name="PART_Close"
@@ -803,7 +803,7 @@
                                                      DockPanel.Dock="Right"
                                                      Height="{arc:WeekCalendarTokenResource ToastActionHeight}"
                                                      Padding="{arc:WeekCalendarTokenResource ToastActionPadding}"
-                                                     CornerRadius="15"
+                                                     CornerRadius="{arc:ArcDesignTokenResource RadiusStep15}"
                                                      Background="{arc:WeekCalendarTokenResource ToastActionFill}"
                                                      Foreground="{arc:ArcDesignTokenResource Background}"
                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />

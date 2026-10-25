@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Controls;
@@ -32,7 +33,7 @@ internal sealed class ExpandingSearchOption : Border
         Background = Brushes.Transparent;
         MinHeight = 48;
         Padding = new Thickness(12, 6);
-        CornerRadius = new CornerRadius(20);
+        this.BindCornerRadius(ArcDesignTokenKind.RadiusStep20);
         Cursor = new Cursor(StandardCursorType.Hand);
         var row = new DockPanel { VerticalAlignment = VerticalAlignment.Center };
         if (item.Icon is { } icon)

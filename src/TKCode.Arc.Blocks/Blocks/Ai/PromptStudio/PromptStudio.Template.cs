@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Automation;
@@ -641,14 +642,13 @@ public partial class PromptStudio
         VerticalAlignment = VerticalAlignment.Center
     };
 
-    private static Border HintKey(string text, IBrush? foreground, IBrush? tint) => new()
+    private static Border HintKey(string text, IBrush? foreground, IBrush? tint) => new Border
     {
         Background = tint,
-        CornerRadius = new CornerRadius(4),
         Padding = new Thickness(5, 0),
         VerticalAlignment = VerticalAlignment.Center,
         Child = HintText(text, foreground)
-    };
+    }.BindCornerRadius(ArcDesignTokenKind.RadiusStep4);
 
     #endregion
 

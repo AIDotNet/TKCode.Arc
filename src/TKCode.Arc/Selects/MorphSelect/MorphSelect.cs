@@ -483,7 +483,6 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             RowHeight = 36,
             RowSpacing = 2,
-            RowCornerRadius = new CornerRadius(16),
             RowPadding = new Thickness(8, 0, 10, 0),
             ContentSpacing = 8,
             CheckMode = SelectCheckMode.ScaleIn,
@@ -496,6 +495,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             GroupSpacing = 4,
             Host = this
         };
+        ArcTokens.Bind(_options, SelectOptionView.RowCornerRadiusProperty, ArcDesignTokenKind.RadiusStep16);
         ArcTokens.Bind(_options, SelectOptionView.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
         ArcTokens.Bind(_options, SelectOptionView.EmphasisForegroundProperty, ArcDesignTokenKind.Foreground);
         ArcTokens.Bind(_options, SelectOptionView.MutedForegroundProperty, ArcDesignTokenKind.TextMuted);
@@ -579,7 +579,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             Focusable = false,
             Template = new Avalonia.Controls.Templates.FuncControlTemplate<AvaloniaButton>((b, _) =>
             {
-                var face = new Border { CornerRadius = new CornerRadius(size / 2) };
+                var face = new Border().BindCornerRadius(ArcDesignTokenKind.RadiusPill);
                 face.Bind(Border.BackgroundProperty, b.GetObservable(BackgroundProperty));
                 if (glyph is not null)
                 {

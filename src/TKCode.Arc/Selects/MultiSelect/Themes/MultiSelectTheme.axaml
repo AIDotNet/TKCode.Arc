@@ -32,7 +32,7 @@
                         <Border Name="PART_Trigger"
                                 MinHeight="{arc:ArcDesignTokenResource ControlSizeMD}"
                                 Padding="{arc:MultiSelectTokenResource TriggerPadding}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                                 Background="{arc:ArcDesignTokenResource Surface}"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
@@ -113,7 +113,7 @@
                                       WindowManagerAddShadowHint="False">
                             <Border Name="PART_Surface"
                                     Padding="{arc:MultiSelectTokenResource MenuPadding}"
-                                    BorderThickness="1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                     CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
                                     Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}">
@@ -124,7 +124,7 @@
                                             Height="{arc:MultiSelectTokenResource SearchRowHeight}"
                                             Margin="0,0,0,5"
                                             Padding="{arc:MultiSelectTokenResource OptionPadding}"
-                                            BorderThickness="0,0,0,1"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                             BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                         <DockPanel>
                                             <arc:ArcGlyph DockPanel.Dock="Left"

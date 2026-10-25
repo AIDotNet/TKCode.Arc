@@ -121,7 +121,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Height" Value="{arc:ContextWindowTokenResource LegendRowHeight}" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Template">
@@ -138,7 +138,7 @@
                                 CornerRadius="{arc:ContextWindowTokenResource SwatchRadius}"
                                 Background="{TemplateBinding SwatchFill}"
                                 BorderBrush="{TemplateBinding SwatchOutline}"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 VerticalAlignment="Center" />
                         <TextBlock Name="PART_Label"
                                    Grid.Column="1"
@@ -213,7 +213,7 @@
                     <Border Name="PART_Card"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
                             Padding="{arc:ContextWindowTokenResource CardPadding}">
                         <StackPanel Spacing="{arc:ContextWindowTokenResource SectionGap}">
@@ -279,7 +279,7 @@
                             </arc:ContextWindowBodyPanel>
 
                             <Border Name="PART_Footer"
-                                    BorderThickness="0,1,0,0"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
                                     Padding="{arc:ContextWindowTokenResource FooterPadding}">
                                 <StackPanel Spacing="{arc:ContextWindowTokenResource FooterGap}">

@@ -21,7 +21,7 @@
         <Setter Property="CitationFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
         <Setter Property="CodeSurfaceMuted" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="CodeSurface" Value="{arc:ArcDesignTokenResource Surface}" />
-        <Setter Property="CodeCornerRadius" Value="16" />
+        <Setter Property="CodeCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AiReplyText">
                 <Panel>

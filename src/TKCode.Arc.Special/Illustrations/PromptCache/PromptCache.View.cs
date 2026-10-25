@@ -455,7 +455,8 @@ public partial class PromptCache
         for (var i = 0; i < _segments.Length; i++)
         {
             var segment = _segments[i];
-            var swatch = new Border { Width = 10, Height = 10, CornerRadius = new CornerRadius(3), VerticalAlignment = VerticalAlignment.Center };
+            var swatch = new Border { Width = 10, Height = 10, VerticalAlignment = VerticalAlignment.Center };
+            swatch.BindCornerRadius(ArcDesignTokenKind.RadiusStep3);
             if (segment.Color is { } own)
             {
                 swatch.Background = own;
@@ -477,7 +478,8 @@ public partial class PromptCache
             ArcTokens.Bind(count, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextMuted);
             _legend.Children.Add(LegendItem(swatch, label, count));
         }
-        var messageSwatch = new Border { Width = 10, Height = 10, CornerRadius = new CornerRadius(3), VerticalAlignment = VerticalAlignment.Center };
+        var messageSwatch = new Border { Width = 10, Height = 10, VerticalAlignment = VerticalAlignment.Center };
+        messageSwatch.BindCornerRadius(ArcDesignTokenKind.RadiusStep3);
         messageSwatch.Bind(Border.BackgroundProperty, this.GetObservable(MessageInkProperty));
         var messageLabel = new TextBlock { Text = Labels.MessageLabel, FontSize = 12, LineHeight = 16.8, VerticalAlignment = VerticalAlignment.Center };
         ArcTokens.Bind(messageLabel, TextBlock.ForegroundProperty, ArcDesignTokenKind.TextSecondary);

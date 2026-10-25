@@ -146,7 +146,7 @@
         <Style Selector="^ /template/ Border#PART_Square">
             <Setter Property="Width" Value="8" />
             <Setter Property="Height" Value="8" />
-            <Setter Property="CornerRadius" Value="1.5" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep1p5}" />
         </Style>
 
         <Style Selector="^:compact">
@@ -165,7 +165,7 @@
         <Style Selector="^:compact /template/ Border#PART_Square">
             <Setter Property="Width" Value="7" />
             <Setter Property="Height" Value="7" />
-            <Setter Property="CornerRadius" Value="1.25" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep1p25}" />
         </Style>
 
         <!-- Busy: the turning loader and the shimmering word instead of the plain word. -->

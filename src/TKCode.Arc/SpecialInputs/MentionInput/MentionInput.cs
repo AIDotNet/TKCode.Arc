@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Windows.Input;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -898,11 +899,11 @@ public class MentionInput : TemplatedControl, ITokenTextEditorHost
         _surface = new Border
         {
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(18),
             ClipToBounds = true,
             Width = PanelWidth,
             Child = _list
         };
+        _surface.BindCornerRadius(ArcDesignTokenKind.RadiusStep18);
         ArcTokens.Bind(_surface, Border.BackgroundProperty, DesignTokens.ArcDesignTokenKind.SurfaceRaised);
         ArcTokens.Bind(_surface, Border.BorderBrushProperty, DesignTokens.ArcDesignTokenKind.Border);
         ArcTokens.Bind(_surface, TextElement.FontFamilyProperty, DesignTokens.ArcDesignTokenKind.BodyFontFamily);

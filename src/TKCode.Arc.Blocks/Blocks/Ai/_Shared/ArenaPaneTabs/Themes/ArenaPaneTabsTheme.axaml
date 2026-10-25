@@ -39,7 +39,7 @@
                             IsHitTestVisible="False"
                             Margin="-2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="17"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep17}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -88,7 +88,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep18}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ArenaPaneTabs">
                 <Border Background="{TemplateBinding Background}"
@@ -101,7 +101,7 @@
                                               Fill="{arc:ArcDesignTokenResource Surface}"
                                               Stroke="{arc:ArcDesignTokenResource Border}"
                                               StrokeThickness="1"
-                                              CornerRadius="14.5" />
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusStep14p5}" />
                         <Grid ColumnDefinitions="*,*">
                             <arc:ArenaPaneTab Name="PART_TabA" />
                             <arc:ArenaPaneTab Name="PART_TabB" Grid.Column="1" />

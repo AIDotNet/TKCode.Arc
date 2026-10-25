@@ -67,7 +67,7 @@
         <Setter Property="Height" Value="28" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AiVersionPagerButton">
@@ -87,7 +87,7 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="12"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

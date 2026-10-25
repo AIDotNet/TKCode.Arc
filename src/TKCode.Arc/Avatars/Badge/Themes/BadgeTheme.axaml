@@ -23,7 +23,7 @@
                     <Border Name="PART_ToneRing"
                             IsVisible="False"
                             IsHitTestVisible="False"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource Accent}" />
                     <Border Name="PART_Clip"

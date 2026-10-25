@@ -24,7 +24,7 @@
                             IsHitTestVisible="False"
                             Margin="2"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="6"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -141,7 +141,7 @@
                 <Border Name="PART_Background"
                         Background="{arc:ArcDesignTokenResource Surface}"
                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                        BorderThickness="0,0,1,1">
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessRightBottom}">
                     <Panel>
                         <Grid ColumnDefinitions="*,Auto">
                             <Button Name="PART_Sort"
@@ -202,7 +202,7 @@
                             <Border Name="PART_ResizerLine"
                                     Width="2"
                                     Margin="0,8"
-                                    CornerRadius="1"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep1}"
                                     HorizontalAlignment="Center"
                                     Opacity="0"
                                     Background="{arc:ArcDesignTokenResource Accent}" />
@@ -345,7 +345,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
         <Setter Property="Padding" Value="8,0" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -367,7 +367,7 @@
                 <Border Name="PART_Background"
                         Background="{arc:ArcDesignTokenResource Surface}"
                         BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                        BorderThickness="0,0,1,1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessRightBottom}"
                         Padding="5,5,6,5">
                     <Panel>
                         <arc:DataGridFilterBox Name="PART_Input"
@@ -382,8 +382,8 @@
                             <Border Name="PART_SelectField"
                                     Background="{arc:ArcDesignTokenResource SurfaceRaised}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                    BorderThickness="1"
-                                    CornerRadius="8"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
                                     Padding="8,0,6,0">
                                 <DockPanel>
                                     <arc:ArcGlyph DockPanel.Dock="Right"
@@ -513,7 +513,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="CornerRadius" Value="2" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep2}" />
         <Setter Property="Padding" Value="10,0" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -589,7 +589,7 @@
                             IsHitTestVisible="False"
                             Margin="-3"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="15"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep15}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -597,7 +597,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
         <Setter Property="Padding" Value="10,0" />
         <Setter Property="Width" Value="{arc:DataGridTokenResource SearchWidth}" />
         <Setter Property="Height" Value="{arc:DataGridTokenResource ToolButtonHeight}" />

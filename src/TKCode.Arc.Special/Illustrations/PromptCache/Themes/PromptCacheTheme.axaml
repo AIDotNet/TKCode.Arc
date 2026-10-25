@@ -26,12 +26,12 @@
                             IsHitTestVisible="False"
                             Margin="-4"
                             BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
-                            CornerRadius="22"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter Name="PART_ContentPresenter"
@@ -106,7 +106,7 @@
                     <Border Name="PART_Card"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
                             Padding="{arc:PromptCacheTokenResource CardPadding}">
                         <StackPanel Spacing="{arc:PromptCacheTokenResource SectionGap}">

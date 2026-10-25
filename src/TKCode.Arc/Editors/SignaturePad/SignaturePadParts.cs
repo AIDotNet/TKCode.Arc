@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
@@ -554,13 +555,14 @@ internal sealed class SignaturePadChoice : Panel
     public IBrush? HighlightFill { get => GetValue(HighlightFillProperty); set => SetValue(HighlightFillProperty, value); }
     public IBrush? HighlightStroke { get => GetValue(HighlightStrokeProperty); set => SetValue(HighlightStrokeProperty, value); }
 
-    private readonly Primitives.GlidingIndicator _indicator = new() { Spring = ArcSpring.Morph, CornerRadius = new CornerRadius(18), StrokeThickness = 1, IsHitTestVisible = false };
+    private readonly Primitives.GlidingIndicator _indicator = new() { Spring = ArcSpring.Morph, StrokeThickness = 1, IsHitTestVisible = false };
     private readonly List<SignaturePadOption> _options = new();
     private int _selected = -1;
     private bool _placed;
 
     public SignaturePadChoice()
     {
+        _indicator.BindCornerRadius(ArcDesignTokenKind.RadiusStep18);
         Children.Add(_indicator);
         KeyDown += OnKeyDown;
     }

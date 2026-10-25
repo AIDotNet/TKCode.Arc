@@ -63,7 +63,7 @@
         </Setter>
 
         <Setter Property="Padding" Value="{arc:AnnouncementBarTokenResource BarPadding}" />
-        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

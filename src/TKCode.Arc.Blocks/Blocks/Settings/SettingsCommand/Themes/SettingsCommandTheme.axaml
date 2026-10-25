@@ -80,7 +80,7 @@
                                 Grid.Row="3"
                                 Height="{arc:SettingsCommandTokenResource FooterHeight}"
                                 Padding="{arc:SettingsCommandTokenResource FooterInset}"
-                                BorderThickness="0,1,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                             <Grid ColumnDefinitions="*,Auto">
                                 <arc:SettingsCommandHintsPanel Name="PART_Hints"
@@ -362,7 +362,7 @@
                     <Grid ColumnDefinitions="Auto,*,Auto">
                         <Border Name="PART_Tile"
                                 VerticalAlignment="Center"
-                                BorderThickness="1"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                 Width="{arc:SettingsCommandTokenResource TileSide}"
                                 Height="{arc:SettingsCommandTokenResource TileSide}"
                                 CornerRadius="{arc:SettingsCommandTokenResource TileRadius}"

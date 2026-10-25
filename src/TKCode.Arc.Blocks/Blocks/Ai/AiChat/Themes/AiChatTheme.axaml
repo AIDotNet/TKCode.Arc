@@ -56,7 +56,7 @@
                         <Grid RowDefinitions="Auto,*,Auto">
                             <Border Name="PART_Header"
                                     Height="{arc:AiChatTokenResource HeaderHeight}"
-                                    BorderThickness="0,0,0,1"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <Grid ColumnDefinitions="*,Auto,Auto" VerticalAlignment="Center">
                                     <arc:AiConversationMenuButton Name="PART_TitlePill"

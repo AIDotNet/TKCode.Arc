@@ -174,7 +174,7 @@
                                 <Decorator Name="PART_MarkerContent" />
                                 <Border Name="PART_MarkerRing"
                                         IsHitTestVisible="False"
-                                        BorderThickness="1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                                         BorderBrush="{arc:TimelineTokenResource MarkerRingColor}" />
                             </Panel>

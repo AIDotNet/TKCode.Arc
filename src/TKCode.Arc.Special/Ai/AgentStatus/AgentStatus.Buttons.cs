@@ -82,7 +82,7 @@ public sealed partial class AgentStatus
         {
             button.MinHeight = 30;
             button.Height = 30;
-            button.CornerRadius = new CornerRadius(15);
+            button.BindCornerRadius(ArcDesignTokenKind.RadiusStep15);
             button.Padding = state.IconOnly ? default : new Thickness(12, 0);
             button.Width = state.IconOnly ? 30 : double.NaN;
         }

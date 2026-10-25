@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -185,7 +186,7 @@ internal abstract class SliderRailBase : Control, ICustomHitTest
             bubble.BoxShadow = BubbleShadow;
             bubble.MinHeight = BubbleMinHeight;
             bubble.Padding = BubblePadding;
-            bubble.CornerRadius = new CornerRadius(BubbleMinHeight / 2);
+            bubble.BindCornerRadius(ArcDesignTokenKind.RadiusPill);
             bubble.SetValue(Avalonia.Controls.Documents.TextElement.ForegroundProperty, BubbleForeground);
         }
     }

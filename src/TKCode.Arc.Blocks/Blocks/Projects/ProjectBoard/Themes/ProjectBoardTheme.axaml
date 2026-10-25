@@ -302,7 +302,7 @@
                 <Border Name="PART_Surface"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:ProjectBoardTokenResource CardRadius}"
                         BoxShadow="{arc:ProjectBoardTokenResource CardRestShadow}"
                         Padding="{TemplateBinding Padding}">

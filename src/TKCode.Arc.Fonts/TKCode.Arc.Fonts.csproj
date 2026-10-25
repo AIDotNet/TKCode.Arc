@@ -4,7 +4,7 @@
         <AssemblyName>TKCode.Arc.Fonts</AssemblyName>
         <RootNamespace>TKCode.Arc.Fonts</RootNamespace>
         <PackageId>TKCode.Arc.Fonts</PackageId>
-        <Description>Geist and Geist Mono (SIL OFL 1.1, Vercel) for TKCode.Arc, registered as fonts:Geist and fonts:GeistMono.</Description>
+        <Description>Geist and Geist Mono (SIL OFL 1.1, Vercel) for TKCode.Arc, registered as fonts:Geist and fonts:GeistMono; optional Silkscreen and VT323 pixel fonts (SIL OFL 1.1) as fonts:ArcPixel for the pixel theme.</Description>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" />
@@ -12,6 +12,9 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets/Geist/*.ttf" />
         <AvaloniaResource Include="Assets/GeistMono/*.ttf" />
+        <AvaloniaResource Include="Assets/ArcPixel/*.ttf" />
         <None Include="Assets/OFL.txt" Pack="true" PackagePath="licenses/Geist-OFL.txt" />
+        <None Include="Assets/Silkscreen-OFL.txt" Pack="true" PackagePath="licenses/Silkscreen-OFL.txt" />
+        <None Include="Assets/VT323-OFL.txt" Pack="true" PackagePath="licenses/VT323-OFL.txt" />
     </ItemGroup>
 </Project>

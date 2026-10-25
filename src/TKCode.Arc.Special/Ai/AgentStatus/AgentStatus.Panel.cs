@@ -217,14 +217,15 @@ public sealed partial class AgentStatus
         AutomationProperties.SetAccessibilityView(_body, AccessibilityView.Content);
 
         // The content is clipped to the rounded surface by an inner border, so the surface itself may draw its shadow outside.
-        _clip = new Border { ClipToBounds = true, CornerRadius = new CornerRadius(19), Child = new StackPanel { Children = { _row, _body } } };
+        _clip = new Border { ClipToBounds = true, Child = new StackPanel { Children = { _row, _body } } };
+        _clip.BindCornerRadius(ArcDesignTokenKind.RadiusStep19);
         _surface = new AgentStatusSurface
         {
             BorderThickness = new Thickness(1),
             ClipToBounds = false,
-            CornerRadius = new CornerRadius(20),
             Child = _clip
         };
+        _surface.BindCornerRadius(ArcDesignTokenKind.RadiusStep20);
         _surface.AddHandler(KeyDownEvent, OnSurfaceKeyDown, RoutingStrategies.Bubble);
         _surface.GotFocus += (_, e) =>
         {

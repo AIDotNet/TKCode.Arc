@@ -10,14 +10,52 @@
         <Token Name="RadiusPanel" Value="0" />
         <Token Name="RadiusSurface" Value="0" />
         <Token Name="RadiusPill" Value="0" />
-        <Token Name="DisplayFontFamily" Value="Silkscreen, Press Start 2P, VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" />
-        <Token Name="BodyFontFamily" Value="Silkscreen, Press Start 2P, VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" />
-        <Token Name="MonoFontFamily" Value="Silkscreen, Press Start 2P, VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" />
+        <Token Name="RadiusStep1" Value="0" />
+        <Token Name="RadiusStep1p25" Value="0" />
+        <Token Name="RadiusStep1p5" Value="0" />
+        <Token Name="RadiusStep2" Value="0" />
+        <Token Name="RadiusStep3" Value="0" />
+        <Token Name="RadiusStep4" Value="0" />
+        <Token Name="RadiusStep5" Value="0" />
+        <Token Name="RadiusStep6" Value="0" />
+        <Token Name="RadiusStep7" Value="0" />
+        <Token Name="RadiusStep8" Value="0" />
+        <Token Name="RadiusStep9" Value="0" />
+        <Token Name="RadiusStep10" Value="0" />
+        <Token Name="RadiusStep12" Value="0" />
+        <Token Name="RadiusStep13" Value="0" />
+        <Token Name="RadiusStep14" Value="0" />
+        <Token Name="RadiusStep14p5" Value="0" />
+        <Token Name="RadiusStep15" Value="0" />
+        <Token Name="RadiusStep16" Value="0" />
+        <Token Name="RadiusStep17" Value="0" />
+        <Token Name="RadiusStep18" Value="0" />
+        <Token Name="RadiusStep19" Value="0" />
+        <Token Name="RadiusStep19Top" Value="0" />
+        <Token Name="RadiusStep20" Value="0" />
+        <Token Name="RadiusStep20Top" Value="0" />
+        <Token Name="RadiusStep21" Value="0" />
+        <Token Name="RadiusStep22" Value="0" />
+        <Token Name="RadiusStep24" Value="0" />
+        <Token Name="RadiusStep25" Value="0" />
+        <Token Name="RadiusStep28" Value="0" />
+        <Token Name="RadiusStep33" Value="0" />
+        <Token Name="DisplayFontFamily" Value="fonts:ArcPixel#Silkscreen, fonts:ArcPixel#VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" />
+        <Token Name="BodyFontFamily" Value="fonts:ArcPixel#VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" />
+        <Token Name="MonoFontFamily" Value="fonts:ArcPixel#VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" />
         <Token Name="WeightMedium" Value="Normal" />
         <Token Name="TrackingDisplay" Value="0" />
         <Token Name="TrackingBody" Value="0" />
         <Token Name="EdgeThickness" Value="2" />
         <Token Name="FocusEdgeThickness" Value="3" />
+        <Token Name="EdgeThicknessTop" Value="0,2,0,0" />
+        <Token Name="EdgeThicknessBottom" Value="0,0,0,2" />
+        <Token Name="EdgeThicknessLeft" Value="2,0,0,0" />
+        <Token Name="EdgeThicknessRight" Value="0,0,2,0" />
+        <Token Name="EdgeThicknessRightBottom" Value="0,0,2,2" />
+        <Token Name="EdgeThicknessNoBottom" Value="2,2,2,0" />
+        <Token Name="EdgeThicknessNoRight" Value="2,2,0,2" />
+        <Token Name="EdgeThicknessNoLeft" Value="0,2,2,2" />
         <Token Name="FocusRingWidth" Value="2" />
         <Token Name="FocusRingOffset" Value="2" />
         <Token Name="IconStrokeWidth" Value="2" />

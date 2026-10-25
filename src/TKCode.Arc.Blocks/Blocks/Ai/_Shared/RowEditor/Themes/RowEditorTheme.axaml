@@ -81,7 +81,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
         <Setter Property="Padding" Value="10,7" />
         <Setter Property="MinHeight" Value="38" />
         <Setter Property="MaxHeight" Value="148" />

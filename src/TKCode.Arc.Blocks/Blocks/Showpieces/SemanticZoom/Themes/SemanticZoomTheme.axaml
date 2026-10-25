@@ -20,7 +20,7 @@
                     <Grid RowDefinitions="Auto,Auto">
                         <Border Name="PART_HeaderFrame"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="0,0,0,1">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
                             <StackPanel Margin="{arc:SemanticZoomTokenResource HeaderInset}"
                                         Spacing="{arc:SemanticZoomTokenResource HeaderGap}">
                                 <ContentPresenter Name="PART_Title"
@@ -67,7 +67,7 @@
                                         Margin="{arc:SemanticZoomTokenResource OverlayMargin}"
                                         Background="{arc:ArcDesignTokenResource Surface}"
                                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                        BorderThickness="1"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                                         CornerRadius="{arc:SemanticZoomTokenResource OverlayRadius}"
                                         BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                                         IsVisible="{TemplateBinding IsMinimapVisible}">
@@ -93,8 +93,7 @@
                                 <arc:SemanticZoomHiddenTable Name="PART_Table" />
                             </Panel>
                             <Border Name="PART_PanelFrame"
-                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    BorderThickness="0,1,0,0">
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
                                 <arc:SemanticZoomPanel Name="PART_Panel" />
                             </Border>
                         </arc:SemanticZoomBodyPanel>
@@ -112,8 +111,11 @@
         <Setter Property="ClipToBounds" Value="False" />
 
         <!-- The panel's 1px divider: on its left beside the map, on top under it. -->
+        <Style Selector="^ /template/ Border#PART_PanelFrame">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
         <Style Selector="^:side-panel /template/ Border#PART_PanelFrame">
-            <Setter Property="BorderThickness" Value="1,0,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
         </Style>
 
         <!-- Minimap: hidden at fit, rises in elsewhere. -->
@@ -170,7 +172,7 @@
             <ControlTemplate TargetType="arc:SemanticZoomCrumbs">
                 <Border Background="{arc:ArcDesignTokenResource Surface}"
                         BorderBrush="{arc:ArcDesignTokenResource Border}"
-                        BorderThickness="1"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                         CornerRadius="{arc:SemanticZoomTokenResource OverlayRadius}"
                         BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                         Height="{arc:SemanticZoomTokenResource OverlayExtent}">
@@ -255,7 +257,7 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="1"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
                             CornerRadius="{arc:SemanticZoomTokenResource OverlayRadius}"
                             BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
                             Padding="{TemplateBinding Padding}">
@@ -380,7 +382,7 @@
                                 DockPanel.Dock="Left"
                                 Width="{arc:SemanticZoomTokenResource CardDot}"
                                 Height="{arc:SemanticZoomTokenResource CardDot}"
-                                CornerRadius="3"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep3}"
                                 Margin="0,0,6,0"
                                 VerticalAlignment="Center" />
                         <TextBlock Name="PART_Subtitle"
@@ -390,7 +392,7 @@
                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />
                     </DockPanel>
                     <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                            BorderThickness="0,1,0,0"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                             Margin="{arc:SemanticZoomTokenResource CardRuleMargin}"
                             Padding="0,10,0,0">
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto"

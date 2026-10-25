@@ -21,14 +21,14 @@
             <ControlTemplate TargetType="arc:DocumentPage">
                 <Panel>
                     <Border Name="PART_Shadow"
-                            CornerRadius="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                             Background="White"
                             BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}" />
                     <Border Name="PART_Hairline"
-                            CornerRadius="2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}"
                             Background="White"
                             BoxShadow="0 0 0 0.5 #1F000000" />
-                    <Border Name="PART_Sheet" CornerRadius="2" ClipToBounds="True">
+                    <Border Name="PART_Sheet" CornerRadius="{arc:ArcDesignTokenResource RadiusStep2}" ClipToBounds="True">
                         <Decorator Name="PART_Content" />
                     </Border>
                 </Panel>

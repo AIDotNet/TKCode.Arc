@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -157,12 +158,12 @@ internal sealed partial class WeekCalendarGridView : Control
             MinHeight = 0,
             Width = 20,
             Height = 20,
-            CornerRadius = new CornerRadius(6),
             HorizontalAlignment = HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, 26, 6, 0),
             IsVisible = false,
         };
+        _expandButton.BindCornerRadius(ArcDesignTokenKind.RadiusStep6);
         _expandButton.Click += OnExpandClick;
         _allDayViewport = new Panel { ClipToBounds = true };
         _body = new WeekCalendarBody(owner);

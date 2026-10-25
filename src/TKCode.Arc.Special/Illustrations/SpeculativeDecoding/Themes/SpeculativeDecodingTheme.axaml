@@ -129,7 +129,7 @@
                         <Border Name="PART_Footer"
                                 Grid.Row="2"
                                 BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                BorderThickness="0,1,0,0">
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
                             <StackPanel Spacing="{arc:SpeculativeDecodingTokenResource FooterGap}">
                                 <Grid Name="PART_Stats" ColumnDefinitions="*,*,*">
                                     <arc:SpeculativeDecodingStat Name="PART_Speedup" Decimals="1" Suffix="×" />

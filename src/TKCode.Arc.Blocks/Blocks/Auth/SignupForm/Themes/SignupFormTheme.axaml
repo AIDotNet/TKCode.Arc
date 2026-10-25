@@ -244,12 +244,12 @@
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
         </Style>
         <Style Selector="^ /template/ Border#PART_Details">
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Margin" Value="0,0,0,24" />
         </Style>
         <Style Selector="^ /template/ Border.detail">
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Padding" Value="0,12" />
         </Style>
@@ -272,7 +272,7 @@
         <Style Selector="^ /template/ Border#PART_Footer">
             <Setter Property="MinHeight" Value="{arc:SignupFormTokenResource FooterMinHeight}" />
             <Setter Property="Padding" Value="{arc:SignupFormTokenResource FooterInset}" />
-            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         </Style>
         <Style Selector="^ /template/ arc|SignupFormSwap#PART_Status">

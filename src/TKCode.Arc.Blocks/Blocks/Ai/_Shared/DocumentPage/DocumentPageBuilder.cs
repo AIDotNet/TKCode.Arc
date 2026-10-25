@@ -1,3 +1,4 @@
+using TKCode.Arc.DesignTokens;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
@@ -220,11 +221,10 @@ internal sealed class DocumentPageBuilder
         {
             Width = 30,
             Height = 30,
-            CornerRadius = new CornerRadius(15),
             Background = header.AvatarColor ?? DocumentInk.InkBrush,
             VerticalAlignment = VerticalAlignment.Top,
             Child = initials
-        };
+        }.BindCornerRadius(ArcDesignTokenKind.RadiusStep15);
     }
 
     /// <summary>The first letters of the first two words, upper case ("Fernhill Books" → "FB").</summary>

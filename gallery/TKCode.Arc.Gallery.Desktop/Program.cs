@@ -28,6 +28,7 @@ internal static class Program
                   .UsePlatformDetect()
                   .WithInterFont()
                   .WithArcFonts()
+                  .WithArcPixelFonts()
                   .WithGalleryShots()
                   .WithGalleryContent()
                   .UseAtomUI(builder =>

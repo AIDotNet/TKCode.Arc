@@ -86,12 +86,12 @@ internal sealed class DataGridToolButton : Button
         {
             MinWidth = 18,
             Height = 18,
-            CornerRadius = new CornerRadius(9),
             Padding = new Thickness(5, 0),
             VerticalAlignment = VerticalAlignment.Center,
             IsVisible = false,
             Child = _badgeText
         };
+        _badge.BindCornerRadius(ArcDesignTokenKind.RadiusStep9);
         ArcTokens.Bind(_badge, Border.BackgroundProperty, ArcDesignTokenKind.SurfaceMuted);
         Content = new StackPanel
         {

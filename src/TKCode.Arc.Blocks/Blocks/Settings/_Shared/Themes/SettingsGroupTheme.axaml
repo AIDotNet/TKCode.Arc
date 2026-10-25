@@ -20,7 +20,7 @@
                             <Border Name="PART_Footer"
                                     DockPanel.Dock="Bottom"
                                     IsVisible="{TemplateBinding Footer, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                    BorderThickness="0,1,0,0"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                                 <ContentPresenter Name="PART_FooterPresenter"
                                                   Content="{TemplateBinding Footer}"

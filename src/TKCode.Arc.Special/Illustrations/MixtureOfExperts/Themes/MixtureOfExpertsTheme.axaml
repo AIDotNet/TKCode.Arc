@@ -69,7 +69,7 @@
                             <arc:MixtureOfExpertsStage Name="PART_Stage" />
                             <Border Name="PART_SequenceFrame"
                                     BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                    BorderThickness="0,1,0,0"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                     Padding="{arc:MixtureOfExpertsTokenResource SequencePadding}">
                                 <arc:MixtureOfExpertsSequence Name="PART_Sequence" />
                             </Border>
