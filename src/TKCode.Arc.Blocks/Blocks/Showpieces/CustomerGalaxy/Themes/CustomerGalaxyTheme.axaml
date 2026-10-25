@@ -188,7 +188,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:CustomerGalaxyTokenResource FrameRadius}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
@@ -294,7 +294,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
                             CornerRadius="{arc:CustomerGalaxyTokenResource TabFocusRadius}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -354,7 +354,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
                             CornerRadius="{arc:CustomerGalaxyTokenResource SortFocusRadius}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -443,7 +443,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
                             CornerRadius="{arc:CustomerGalaxyTokenResource RowFocusRadius}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -680,7 +680,7 @@
                             IsHitTestVisible="False"
                             Margin="{arc:CustomerGalaxyTokenResource FocusRingMargin}"
                             CornerRadius="{arc:CustomerGalaxyTokenResource ChipFocusRadius}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

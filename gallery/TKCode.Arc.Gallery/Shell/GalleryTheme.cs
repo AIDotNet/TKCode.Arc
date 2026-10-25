@@ -3,6 +3,7 @@ using TKCode.Arc.Motion;
 using AtomUI.Theme;
 using AtomUI.Theme.Algorithms;
 using AtomUI.Theme.Configuration;
+using TKCode.Arc.Themes.Pixel;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -13,6 +14,7 @@ public sealed class GalleryTheme
 {
     public bool IsDark { get; private set; }
     public ArcAccentPreset Accent { get; private set; } = ArcAccentPreset.Neutral;
+    public bool IsPixel { get; private set; }
     public ArcMotionLevel MotionLevel { get; private set; } = ArcMotionLevel.Full;
 
     public event Action? Changed;
@@ -31,6 +33,12 @@ public sealed class GalleryTheme
         return ApplyAsync();
     }
 
+    public Task SetPixelAsync(bool pixel)
+    {
+        IsPixel = pixel;
+        return ApplyAsync();
+    }
+
     public void SetMotion(Control owner, ArcMotionLevel level)
     {
         MotionLevel = level;
@@ -43,6 +51,13 @@ public sealed class GalleryTheme
         var manager = Application.Current?.GetThemeManager();
         if (manager is null)
         {
+            return;
+        }
+        if (IsPixel)
+        {
+            // The pixel style is a compiled theme pair; its config already carries light/dark and the palette.
+            await manager.ApplyThemeAsync(ArcPixelTheme.CreateRequest(IsDark, scope: ArcPixelScope.All));
+            Changed?.Invoke();
             return;
         }
         var builder = new ThemeConfigBuilder();

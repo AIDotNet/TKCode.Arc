@@ -36,7 +36,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ActionButtonTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -46,7 +46,7 @@
         <!-- Foreground fill with background text, like the primary Button (not accent). -->
         <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
         <Setter Property="Padding" Value="{arc:ActionButtonTokenResource InlinePadding}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />

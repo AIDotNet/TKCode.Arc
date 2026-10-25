@@ -23,7 +23,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:TabItemTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:TabItemTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

@@ -49,7 +49,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ProjectBoardTokenResource AddFocusRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -112,7 +112,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{TemplateBinding FocusRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -180,7 +180,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ProjectBoardTokenResource FilterFocusRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <TextBlock Name="PART_Label"
@@ -521,7 +521,7 @@
         <!-- Framed: Arc's docs preview, a 1px Border card with radius 24 that clips its content. -->
         <Style Selector="^:framed /template/ Border#PART_Frame">
             <Setter Property="BorderBrush" Value="{TemplateBinding BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="CornerRadius" Value="{arc:ProjectBoardTokenResource FramedRadius}" />
             <Setter Property="ClipToBounds" Value="True" />
         </Style>

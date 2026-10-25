@@ -60,9 +60,14 @@ internal sealed class ColorPickerToken : AbstractControlDesignToken
     public Color GradeLargeFill { get; set; }
     public Color GradeFailFill { get; set; }
 
+    public CornerRadius FormatFocusRingRadius { get; set; }
+    public CornerRadius AddFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        FormatFocusRingRadius = new CornerRadius(10);
+        AddFocusRingRadius = new CornerRadius(999);
         TriggerHeight = 44;
         TriggerRadius = new CornerRadius(22);
         TriggerInset = new Thickness(6, 5, 16, 5);

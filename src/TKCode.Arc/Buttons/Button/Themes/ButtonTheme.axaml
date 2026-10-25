@@ -38,7 +38,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:ButtonTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ButtonTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -47,7 +47,7 @@
 
         <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
         <Setter Property="Padding" Value="{arc:ButtonTokenResource InlinePaddingMD}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />

@@ -44,7 +44,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-3"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -52,7 +52,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
         <Setter Property="Padding" Value="20,20,20,14" />
         <Setter Property="ClipToBounds" Value="False" />

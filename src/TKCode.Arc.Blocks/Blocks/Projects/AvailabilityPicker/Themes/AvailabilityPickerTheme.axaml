@@ -30,7 +30,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:AvailabilityPickerTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
@@ -136,7 +136,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:AvailabilityPickerTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:AvailabilityPickerTokenResource SlotFocusRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -240,7 +240,7 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
         <Setter Property="CompactWidth" Value="{arc:AvailabilityPickerTokenResource CompactWidth}" />
         <Setter Property="NarrowWidth" Value="{arc:AvailabilityPickerTokenResource NarrowWidth}" />

@@ -188,7 +188,7 @@
 
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Padding" Value="{arc:CancelFlowTokenResource FrameInset}" />
         <Setter Property="MaxWidth" Value="{arc:CancelFlowTokenResource PreferredWidth}" />

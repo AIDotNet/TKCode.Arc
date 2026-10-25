@@ -23,7 +23,7 @@
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="arc:ArcSurface.Elevation" Value="Raised" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -413,7 +413,7 @@
         <Setter Property="Padding" Value="{arc:ModelMenuTokenResource EffortTrackPadding}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ModelMenuTokenResource EffortTrackRadius}" />
         <Setter Property="ThumbSpringDuration" Value="{arc:ModelMenuTokenResource EffortThumbSpringDuration}" />
         <Setter Property="ThumbSpringBounce" Value="{arc:ModelMenuTokenResource EffortThumbSpringBounce}" />

@@ -8,6 +8,7 @@
     <Project Path="src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
     <Project Path="src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     <Project Path="src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
+    <Project Path="src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/TKCode.Arc.Core.Tests/TKCode.Arc.Core.Tests.csproj" />

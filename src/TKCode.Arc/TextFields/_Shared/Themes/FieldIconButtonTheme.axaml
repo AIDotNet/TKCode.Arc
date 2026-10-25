@@ -22,7 +22,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:FieldIconButtonTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{TemplateBinding FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

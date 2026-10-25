@@ -21,6 +21,7 @@ public sealed class GalleryAppearancePanel : Border
     private readonly GalleryTheme _theme;
     private readonly Control _owner;
     private readonly GallerySegmented _mode = new(GalleryShellLangResourceKind.Light, GalleryShellLangResourceKind.Dark);
+    private readonly GallerySegmented _style = new("Arc", "Pixel");
     private readonly GallerySegmented _motion = new(GalleryShellLangResourceKind.MotionFull, GalleryShellLangResourceKind.MotionReduced, GalleryShellLangResourceKind.MotionOff);
     private readonly Dictionary<ArcAccentPreset, (Button Button, Ellipse Dot)> _swatches = new();
     private readonly Dictionary<ArcAccentPreset, IDisposable?> _rings = new();
@@ -32,6 +33,7 @@ public sealed class GalleryAppearancePanel : Border
 
         var stack = new StackPanel { Spacing = 16 };
         stack.Children.Add(Section(GalleryShellLangResourceKind.Mode, _mode));
+        stack.Children.Add(Section(GalleryShellLangResourceKind.Style, _style));
         stack.Children.Add(Section(GalleryShellLangResourceKind.Accent, BuildAccents()));
         stack.Children.Add(Section(GalleryShellLangResourceKind.Motion, _motion));
 
@@ -44,6 +46,7 @@ public sealed class GalleryAppearancePanel : Border
         ArcTokens.Bind(this, BorderBrushProperty, ArcDesignTokenKind.Border);
 
         _mode.SelectionChanged += async index => await _theme.SetDarkAsync(index == 1);
+        _style.SelectionChanged += async index => await _theme.SetPixelAsync(index == 1);
         _motion.SelectionChanged += index => _theme.SetMotion(_owner, index switch
         {
             0 => ArcMotionLevel.Full,
@@ -110,6 +113,7 @@ public sealed class GalleryAppearancePanel : Border
     private void Sync()
     {
         _mode.SelectedIndex = _theme.IsDark ? 1 : 0;
+        _style.SelectedIndex = _theme.IsPixel ? 1 : 0;
         _motion.SelectedIndex = _theme.MotionLevel switch
         {
             ArcMotionLevel.Full => 0,

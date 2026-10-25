@@ -45,9 +45,12 @@ internal sealed class CookieConsentToken : AbstractControlDesignToken
 
     public double TitleLineHeight { get; set; }
 
+    public CornerRadius LinkFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        LinkFocusRingRadius = new CornerRadius(6);
         LayerMargin = new Thickness(16, 0, 16, 16);
         BarPadding = new Thickness(18, 10, 10, 10);
         PanelPadding = new Thickness(18);

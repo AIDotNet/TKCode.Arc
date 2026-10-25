@@ -40,9 +40,14 @@ internal sealed class CodeBlockToken : AbstractControlDesignToken
     public Color SyntaxPunctuation { get; set; }
     public Color LineNumberForeground { get; set; }
 
+    public CornerRadius FocusRingRadius { get; set; }
+    public CornerRadius ExpandFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        FocusRingRadius = new CornerRadius(12);
+        ExpandFocusRingRadius = new CornerRadius(12);
         HeaderMinHeight = 52;
         HeaderPadding = new Thickness(16, 8, 12, 8);
         HeaderPaddingCompact = new Thickness(12, 8, 12, 8);

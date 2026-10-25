@@ -36,7 +36,7 @@
                             <Border Name="PART_EmptyRing"
                                     VerticalAlignment="Top"
                                     IsHitTestVisible="False"
-                                    BorderThickness="2"
+                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                     Margin="{arc:CardStackTokenResource CardFocusRingMargin}"
                                     CornerRadius="{arc:CardStackTokenResource CardFocusRingRadius}"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
@@ -127,7 +127,7 @@
                             </Border>
                             <Border Name="PART_FocusRing"
                                     IsHitTestVisible="False"
-                                    BorderThickness="2"
+                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                     Margin="{arc:CardStackTokenResource CardFocusRingMargin}"
                                     CornerRadius="{arc:CardStackTokenResource CardFocusRingRadius}"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
@@ -150,7 +150,7 @@
                     <Setter Property="Margin" Value="{arc:CardStackTokenResource StampMargin}" />
                     <Setter Property="Height" Value="{arc:CardStackTokenResource StampHeight}" />
                     <Setter Property="Padding" Value="{arc:CardStackTokenResource StampPadding}" />
-                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
                     <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
                     <Setter Property="Opacity" Value="0" />
                     <Setter Property="AutomationProperties.AccessibilityView" Value="Raw" />

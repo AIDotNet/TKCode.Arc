@@ -19,7 +19,7 @@
                                 IsVisible="False"
                                 IsHitTestVisible="False"
                                 Margin="{arc:CheckboxTokenResource FocusRingMargin}"
-                                BorderThickness="2"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                 CornerRadius="{arc:CheckboxTokenResource FocusRingRadius}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Panel Name="PART_Visual"

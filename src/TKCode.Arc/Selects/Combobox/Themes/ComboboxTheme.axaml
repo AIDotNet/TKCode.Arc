@@ -73,10 +73,10 @@
                                                 <Panel>
                                                     <Border Name="PART_ClearRing"
                                                             Margin="-3"
-                                                            CornerRadius="14"
-                                                            BorderThickness="2"
+                                                            CornerRadius="{arc:ComboboxTokenResource ClearRingRadius}"
+                                                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                                             BorderBrush="{TemplateBinding BorderBrush}" />
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="11">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="{arc:ComboboxTokenResource ClearGlyphRadius}">
                                                         <arc:ArcGlyph Data="{x:Static arc:SelectGlyphs.X}"
                                                                       Size="16"
                                                                       HorizontalAlignment="Center"

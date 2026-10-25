@@ -58,7 +58,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="MinHeight" Value="{arc:BadgeTokenResource PillHeightMD}" />
         <Setter Property="Padding" Value="{arc:BadgeTokenResource InlinePaddingMD}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />

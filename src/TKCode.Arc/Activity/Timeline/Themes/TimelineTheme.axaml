@@ -115,7 +115,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:TimelineTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:TimelineTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

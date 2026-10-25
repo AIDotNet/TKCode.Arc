@@ -18,7 +18,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Padding" Value="11,0,9,0" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
@@ -68,7 +68,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

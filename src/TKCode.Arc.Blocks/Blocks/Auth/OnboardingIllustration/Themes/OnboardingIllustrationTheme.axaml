@@ -101,7 +101,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource CardRadius}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -203,7 +203,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:OnboardingIllustrationTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -219,7 +219,7 @@
             <Setter Property="Height" Value="{arc:OnboardingIllustrationTokenResource ActionHeight}" />
             <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource ActionRadius}" />
             <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource BackInset}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
@@ -239,7 +239,7 @@
             <Setter Property="Height" Value="{arc:OnboardingIllustrationTokenResource ActionHeight}" />
             <Setter Property="CornerRadius" Value="{arc:OnboardingIllustrationTokenResource ActionRadius}" />
             <Setter Property="Padding" Value="{arc:OnboardingIllustrationTokenResource PrimaryInset}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
@@ -320,7 +320,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:OnboardingIllustrationTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

@@ -40,9 +40,12 @@ internal sealed class AnnouncementBarToken : AbstractControlDesignToken
 
     public Color InvertedIconPressedFill { get; set; }
 
+    public CornerRadius LinkFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        LinkFocusRingRadius = new CornerRadius(8);
         BarPadding = new Thickness(16, 6, 8, 6);
         NarrowBarPadding = new Thickness(14, 6, 8, 6);
         ColumnGap = 12;

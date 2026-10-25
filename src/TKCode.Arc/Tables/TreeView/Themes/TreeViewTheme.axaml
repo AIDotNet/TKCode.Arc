@@ -27,7 +27,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Padding" Value="{arc:TreeViewTokenResource TreePadding}" />
         <Setter Property="CornerRadius" Value="{arc:TreeViewTokenResource TreeCornerRadius}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

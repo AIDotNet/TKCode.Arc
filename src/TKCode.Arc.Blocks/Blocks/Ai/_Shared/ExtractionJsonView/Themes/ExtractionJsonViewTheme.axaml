@@ -14,7 +14,7 @@
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="14" />
         <Setter Property="Padding" Value="0,10" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
@@ -45,7 +45,7 @@
                     <Border Name="PART_FocusRing"
                             Margin="2"
                             CornerRadius="12"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
                             IsVisible="False"
                             IsHitTestVisible="False" />

@@ -40,7 +40,7 @@
                     <Border Name="PART_FocusRing"
                             Margin="-3"
                             CornerRadius="12"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
                             IsVisible="False"
                             IsHitTestVisible="False" />

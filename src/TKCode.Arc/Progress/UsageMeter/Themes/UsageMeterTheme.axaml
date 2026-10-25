@@ -162,8 +162,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
-                            CornerRadius="16"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:UsageMeterTokenResource LegendFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

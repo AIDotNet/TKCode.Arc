@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Themes.Pixel</AssemblyName>
+        <RootNamespace>TKCode.Arc.Themes.Pixel</RootNamespace>
+        <PackageId>TKCode.Arc.Themes.Pixel</PackageId>
+        <Description>Pixel-art theme (token overrides only, no controls) for TKCode.Arc: square corners, hard shadows, limited palette, light and dark.</Description>
+            <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
+    </PropertyGroup>
+    <ItemGroup>
+        <AtomUIThemeDefinition Include="Themes/*.xml" />
+        <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+    </ItemGroup>
+</Project>

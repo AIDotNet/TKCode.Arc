@@ -83,7 +83,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:ExpandableTextTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ExpandableTextTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

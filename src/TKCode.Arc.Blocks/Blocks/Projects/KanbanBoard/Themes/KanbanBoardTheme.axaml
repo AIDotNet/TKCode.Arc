@@ -14,7 +14,7 @@
         <Setter Property="Cursor" Value="IBeam" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:KanbanBoardTokenResource StepFieldRadius}" />
         <Setter Property="Padding" Value="12,0" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -33,7 +33,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="18"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -148,7 +148,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -213,7 +213,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -271,7 +271,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:KanbanBoardTokenResource CardFocusRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -401,7 +401,7 @@
     <ControlTheme x:Key="{x:Type arc:KanbanCellView}" TargetType="arc:KanbanCellView">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="CornerRadius" Value="{arc:KanbanBoardTokenResource CellRadius}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
@@ -562,7 +562,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="16"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -654,7 +654,7 @@
                                     IsVisible="False"
                                     IsHitTestVisible="False"
                                     Margin="-4"
-                                    BorderThickness="2"
+                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                     CornerRadius="10"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                             <Border Name="PART_Square"
@@ -723,7 +723,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <ContentPresenter Content="{TemplateBinding Content}"
@@ -801,7 +801,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:KanbanBoardTokenResource FocusRingOutset}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"

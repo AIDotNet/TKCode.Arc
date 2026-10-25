@@ -15,7 +15,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="14"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -84,7 +84,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="12"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -160,7 +160,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:RevenueGlobeTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="12"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"
@@ -440,7 +440,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:RevenueGlobeTokenResource BlockRadius}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />

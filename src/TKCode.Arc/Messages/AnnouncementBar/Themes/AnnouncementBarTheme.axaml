@@ -175,7 +175,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -223,8 +223,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4,-2"
-                            BorderThickness="2"
-                            CornerRadius="8"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:AnnouncementBarTokenResource LinkFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

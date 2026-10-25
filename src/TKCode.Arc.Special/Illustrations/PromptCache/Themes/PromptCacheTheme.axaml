@@ -25,7 +25,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="22"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame"

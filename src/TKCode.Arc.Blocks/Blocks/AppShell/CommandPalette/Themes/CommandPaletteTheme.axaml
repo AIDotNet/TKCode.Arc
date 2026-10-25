@@ -69,7 +69,7 @@
                             Opacity="0"
                             Margin="{arc:CommandPaletteTokenResource KeyFocusRingMargin}"
                             CornerRadius="{arc:CommandPaletteTokenResource KeyFocusRingRadius}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Chrome"
                             Background="{TemplateBinding Background}"
@@ -118,7 +118,7 @@
                             Opacity="0"
                             Margin="{arc:CommandPaletteTokenResource KeyFocusRingMargin}"
                             CornerRadius="{arc:CommandPaletteTokenResource KeyFocusRingRadius}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Chrome"
                             Background="{TemplateBinding Background}"
