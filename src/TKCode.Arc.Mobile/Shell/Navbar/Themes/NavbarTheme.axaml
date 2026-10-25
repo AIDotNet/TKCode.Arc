@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Navbar: 44 high, Surface fill with a Border hairline under it; leading / centered title / trailing. -->
+    <ControlTheme x:Key="{x:Type arcm:Navbar}" TargetType="arcm:Navbar">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Navbar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,Auto,*">
+                        <ContentPresenter Name="PART_Leading"
+                                          Grid.Column="0"
+                                          MinWidth="{arcm:NavbarTokenResource SlotMinWidth}"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Leading}" />
+                        <TextBlock Name="PART_Title"
+                                   Grid.Column="1"
+                                   Text="{TemplateBinding Title}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                        <ContentPresenter Name="PART_Trailing"
+                                          Grid.Column="2"
+                                          MinWidth="{arcm:NavbarTokenResource SlotMinWidth}"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Trailing}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arcm:NavbarTokenResource BarHeight}" />
+        <Setter Property="Padding" Value="{arcm:NavbarTokenResource BarPadding}" />
+        <Setter Property="BorderThickness" Value="{arcm:NavbarTokenResource BarBorderThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

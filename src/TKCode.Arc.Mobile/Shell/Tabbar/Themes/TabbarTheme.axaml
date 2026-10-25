@@ -1,0 +1,87 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Tabbar: 49 high, Surface fill with a Border hairline above it; items share the width equally. -->
+    <ControlTheme x:Key="{x:Type arcm:Tabbar}" TargetType="arcm:Tabbar">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Tabbar">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <UniformGrid Rows="1" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arcm:TabbarTokenResource BarHeight}" />
+        <Setter Property="BorderThickness" Value="{arcm:TabbarTokenResource BarBorderThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <!-- Item: TextMuted icon over label; selected Foreground; press dims; no hover state. -->
+    <ControlTheme x:Key="{x:Type arcm:TabbarItem}" TargetType="arcm:TabbarItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:TabbarItem">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arcm:TabbarItemTokenResource IconGap}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Size="{arcm:TabbarItemTokenResource IconExtent}"
+                                      HorizontalAlignment="Center" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Center"
+                                          FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="MinHeight" Value="{arcm:TabbarItemTokenResource TouchTarget}" />
+        <Setter Property="Padding" Value="{arcm:TabbarItemTokenResource ItemPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+        <!-- No :pointerover style on purpose. -->
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Opacity" Value="{arcm:TabbarItemTokenResource PressedOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

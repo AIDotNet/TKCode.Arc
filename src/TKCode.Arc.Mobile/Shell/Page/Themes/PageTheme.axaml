@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Page: Background fill, the safe area as padding, header / content / footer in three rows. -->
+    <ControlTheme x:Key="{x:Type arcm:Page}" TargetType="arcm:Page">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Page">
+                <Border Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding SafeArea}">
+                    <Grid RowDefinitions="Auto,*,Auto">
+                        <ContentPresenter Name="PART_Header"
+                                          Grid.Row="0"
+                                          Content="{TemplateBinding Header}" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Grid.Row="1"
+                                          Padding="{arcm:PageTokenResource ContentInset}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        <ContentPresenter Name="PART_Footer"
+                                          Grid.Row="2"
+                                          Content="{TemplateBinding Footer}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+
+        <!-- The background follows light / dark on the standard curve; reduced motion switches at once. -->
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

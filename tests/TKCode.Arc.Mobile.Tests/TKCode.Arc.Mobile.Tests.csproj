@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Avalonia.Headless.XUnit" />
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
+        <!-- Only Core and Mobile: TKCode.Arc must not be on this test app's reference path, or Button would clash. -->
+        <ProjectReference Include="../../src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
+    </ItemGroup>
+</Project>
