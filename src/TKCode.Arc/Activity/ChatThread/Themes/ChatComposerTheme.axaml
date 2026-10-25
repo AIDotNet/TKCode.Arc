@@ -177,7 +177,7 @@
         <Setter Property="Width" Value="{arc:ChatComposerTokenResource FileTileWidth}" />
         <Setter Property="Height" Value="{arc:ChatComposerTokenResource TileSize}" />
         <Setter Property="CornerRadius" Value="{arc:ChatComposerTokenResource TileRadius}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="Padding" Value="12,0" />

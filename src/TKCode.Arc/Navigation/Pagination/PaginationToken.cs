@@ -1,3 +1,4 @@
+using Avalonia;
 using AtomUI.Theme.DesignTokens;
 
 namespace TKCode.Arc;
@@ -14,9 +15,12 @@ internal sealed class PaginationToken : AbstractControlDesignToken
     /// <summary>Width reserved for the boundary ellipsis.</summary>
     public double EllipsisWidth { get; set; }
 
+    public CornerRadius ButtonFocusRingRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        ButtonFocusRingRadius = new CornerRadius(22);
         StepGlyphSize = 16;
         DisabledOpacity = 0.4;
         EllipsisWidth = 24;

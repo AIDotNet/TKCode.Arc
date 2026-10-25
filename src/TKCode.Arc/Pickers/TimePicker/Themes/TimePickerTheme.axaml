@@ -115,7 +115,7 @@
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Padding" Value="{arc:TimePickerTokenResource ListInset}" />
     </ControlTheme>

@@ -14,7 +14,7 @@
                     <Border Name="PART_FocusRing"
                             IsVisible="False"
                             IsHitTestVisible="False"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Frame" ClipToBounds="True">
                         <arc:ExplodedViewScrollViewer Name="PART_Scroll"
@@ -57,7 +57,7 @@
         <Style Selector="^:framed /template/ Border#PART_Frame">
             <Setter Property="Background" Value="{arc:ExplodedViewTokenResource FrameBackground}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
         </Style>
 
@@ -105,7 +105,7 @@
         <Style Selector="^:plate /template/ Border#PART_Plate">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         </Style>
         <!-- The plate's border and the outline's dash switch at once; the outline's color eases. -->
         <Style Selector="^:plate:active /template/ Border#PART_Plate">
@@ -222,7 +222,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:ExplodedViewTokenResource StopFocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ExplodedViewTokenResource StopFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                     <Border Name="PART_Background"

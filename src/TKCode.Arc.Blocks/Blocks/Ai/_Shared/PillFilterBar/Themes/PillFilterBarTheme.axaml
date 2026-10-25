@@ -77,7 +77,7 @@
                     <Border Name="PART_FocusRing"
                             IsVisible="False"
                             IsHitTestVisible="False"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

@@ -73,7 +73,7 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="MaxToastWidth" Value="{arc:ToastTokenResource MaxToastWidth}" />
         <Setter Property="Padding" Value="{arc:ToastTokenResource SurfacePadding}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Background" Value="{arc:ToastTokenResource SurfaceColor}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />

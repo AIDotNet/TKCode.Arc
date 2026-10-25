@@ -26,7 +26,7 @@
                                 IsVisible="False"
                                 IsHitTestVisible="False"
                                 Margin="{arc:MultiSelectTokenResource FocusRingMargin}"
-                                BorderThickness="2"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                 CornerRadius="{arc:MultiSelectTokenResource FocusRingRadius}"
                                 BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         <Border Name="PART_Trigger"
@@ -88,10 +88,10 @@
                                     <ControlTemplate TargetType="Button">
                                         <Panel>
                                             <Border Margin="-3"
-                                                    CornerRadius="14"
-                                                    BorderThickness="2"
+                                                    CornerRadius="{arc:MultiSelectTokenResource ClearRingRadius}"
+                                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                                     BorderBrush="{TemplateBinding BorderBrush}" />
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="11">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="{arc:MultiSelectTokenResource ClearGlyphRadius}">
                                                 <arc:ArcGlyph Data="{x:Static arc:SelectGlyphs.X}"
                                                               Size="{arc:MultiSelectTokenResource ClearGlyphSize}"
                                                               HorizontalAlignment="Center"

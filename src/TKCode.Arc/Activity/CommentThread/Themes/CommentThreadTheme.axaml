@@ -24,7 +24,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="MinWidth" Value="0" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
@@ -78,7 +78,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -123,7 +123,7 @@
         <Style Selector="^[Kind=Pill]">
             <Setter Property="Height" Value="{arc:CommentThreadTokenResource ResolveHeight}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource ResolvePadding}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -266,7 +266,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -340,7 +340,7 @@
         <Style Selector="^[Role=Suggestions]">
             <Setter Property="Margin" Value="{arc:CommentThreadTokenResource SuggestionsMargin}" />
             <Setter Property="Padding" Value="{arc:CommentThreadTokenResource SuggestionsPadding}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="CornerRadius" Value="{arc:CommentThreadTokenResource SuggestionsRadius}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
@@ -552,7 +552,7 @@
         <Setter Property="MaxHeight" Value="{arc:CommentThreadTokenResource FieldMaxHeight}" />
         <Setter Property="Padding" Value="{arc:CommentThreadTokenResource FieldPadding}" />
         <Setter Property="CornerRadius" Value="{arc:CommentThreadTokenResource FieldRadius}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

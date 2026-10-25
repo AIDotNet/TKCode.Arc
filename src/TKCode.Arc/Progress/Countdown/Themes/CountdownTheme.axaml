@@ -82,7 +82,7 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
             <Setter Property="Padding" Value="{arc:CountdownTokenResource CompactPadding}" />
             <Style Selector="^ /template/ Border#PART_Shell">

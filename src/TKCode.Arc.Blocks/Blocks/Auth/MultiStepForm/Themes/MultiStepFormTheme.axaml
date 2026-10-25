@@ -301,7 +301,7 @@
         <Setter Property="Height" Value="{arc:MultiStepFormTokenResource ButtonHeight}" />
         <Setter Property="Padding" Value="{arc:MultiStepFormTokenResource ButtonPadding}" />
         <Setter Property="CornerRadius" Value="{arc:MultiStepFormTokenResource ButtonRadius}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
@@ -357,7 +357,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:MultiStepFormTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:MultiStepFormTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

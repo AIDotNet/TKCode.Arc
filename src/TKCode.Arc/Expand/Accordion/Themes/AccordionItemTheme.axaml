@@ -117,7 +117,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:AccordionItemTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:AccordionItemTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

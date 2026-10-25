@@ -83,8 +83,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
-                            CornerRadius="22"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:PaginationTokenResource ButtonFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>
@@ -92,7 +92,7 @@
         <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
         <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />

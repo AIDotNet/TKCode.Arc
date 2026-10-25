@@ -12,7 +12,7 @@
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="18" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AiAnswerTable">
@@ -32,7 +32,7 @@
                     <Border Name="PART_FocusRing"
                             Margin="-4"
                             CornerRadius="22"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
                             IsVisible="False"
                             IsHitTestVisible="False" />

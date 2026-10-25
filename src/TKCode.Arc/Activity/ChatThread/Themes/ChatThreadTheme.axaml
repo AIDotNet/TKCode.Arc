@@ -272,7 +272,7 @@
     <!-- The picker: a pill of emoji (4px padding, 2px apart) on the raised surface with the floating shadow (popup). -->
     <ControlTheme x:Key="{x:Type arc:ChatThreadPickerSurface}" TargetType="arc:ChatThreadPickerSurface">
         <Setter Property="Padding" Value="{arc:ChatThreadTokenResource PickerPadding}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
@@ -300,7 +300,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-2"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -345,7 +345,7 @@
 
         <Style Selector="^[Role=Retry]">
             <Setter Property="Padding" Value="{arc:ChatThreadTokenResource RetryPadding}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -358,7 +358,7 @@
         <Style Selector="^[Role=Pill]">
             <Setter Property="Height" Value="{arc:ChatThreadTokenResource PillHeight}" />
             <Setter Property="Padding" Value="{arc:ChatThreadTokenResource PillPadding}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
@@ -399,7 +399,7 @@
 
         <Style Selector="^[Role=File]">
             <Setter Property="Padding" Value="{arc:ChatThreadTokenResource FilePadding}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

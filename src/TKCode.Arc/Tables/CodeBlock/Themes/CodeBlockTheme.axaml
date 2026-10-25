@@ -69,8 +69,8 @@
                                     IsVisible="False"
                                     IsHitTestVisible="False"
                                     Margin="4"
-                                    BorderThickness="2"
-                                    CornerRadius="12"
+                                    BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                    CornerRadius="{arc:CodeBlockTokenResource FocusRingRadius}"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                         </Panel>
                         <arc:CodeBlockExpandButton Name="PART_Expand"
@@ -84,7 +84,7 @@
         </Setter>
 
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
@@ -189,8 +189,8 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="4"
-                            BorderThickness="2"
-                            CornerRadius="12"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:CodeBlockTokenResource ExpandFocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
             </ControlTemplate>

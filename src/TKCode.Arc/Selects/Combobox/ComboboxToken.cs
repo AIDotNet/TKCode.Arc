@@ -39,9 +39,14 @@ internal sealed class ComboboxToken : AbstractControlDesignToken
 
     public double DisabledOpacity { get; set; }
 
+    public CornerRadius ClearRingRadius { get; set; }
+    public CornerRadius ClearGlyphRadius { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
+        ClearRingRadius = new CornerRadius(14);
+        ClearGlyphRadius = new CornerRadius(11);
         FieldPadding = new Thickness(12, 0);
         FieldGap = 8;
         ClearButtonSize = 22;

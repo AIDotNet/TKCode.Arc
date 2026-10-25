@@ -95,6 +95,12 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
     public double FocusRingWidth { get; set; }
     public double FocusRingOffset { get; set; }
 
+    /// <summary>Border thickness of controls and surfaces (1). Pixel-style themes raise it.</summary>
+    public Thickness EdgeThickness { get; set; }
+
+    /// <summary>Border thickness of the focus ring (2).</summary>
+    public Thickness FocusEdgeThickness { get; set; }
+
     #endregion
 
     #region Geometry
@@ -283,6 +289,8 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
 
     private void ApplyGeometry()
     {
+        EdgeThickness = new Thickness(1);
+        FocusEdgeThickness = new Thickness(2);
         RadiusControl = new CornerRadius(18);
         RadiusPanel = new CornerRadius(26);
         RadiusSurface = new CornerRadius(34);

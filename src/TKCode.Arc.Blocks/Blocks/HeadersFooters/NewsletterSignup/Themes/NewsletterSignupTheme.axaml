@@ -279,7 +279,7 @@
         <!-- The pill: 58 high, 1px strong border, pill radius, padding 5 5 5 22 on the surface. -->
         <Style Selector="^ /template/ arc|NewsletterPill#PART_Pill">
             <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource PillHeight}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
             <Setter Property="Padding" Value="{arc:NewsletterSignupTokenResource PillInset}" />
@@ -410,7 +410,7 @@
         <!-- Below 300 the field is a 52 high pill of its own and the border colors move onto it. -->
         <Style Selector="^:stacked">
             <Setter Property="Height" Value="{arc:NewsletterSignupTokenResource StackedInputHeight}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
             <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
             <Setter Property="Padding" Value="20,0" />
@@ -461,7 +461,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>
@@ -533,7 +533,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="-4"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="6"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

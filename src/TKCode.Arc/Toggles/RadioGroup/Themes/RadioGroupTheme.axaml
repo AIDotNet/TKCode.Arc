@@ -101,7 +101,7 @@
                             IsVisible="False"
                             IsHitTestVisible="False"
                             Margin="{arc:RadioGroupTokenResource FocusRingMargin}"
-                            BorderThickness="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                             CornerRadius="{arc:RadioGroupTokenResource FocusRingRadius}"
                             BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
                 </Panel>

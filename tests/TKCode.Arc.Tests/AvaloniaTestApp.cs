@@ -2,6 +2,7 @@ using AtomUI;
 using TKCode.Arc;
 using TKCode.Arc.Gallery;
 using TKCode.Arc.Gallery.Shell;
+using TKCode.Arc.Themes.Pixel;
 using AtomUI.Desktop.Controls;
 using AtomUI.Localization;
 using Avalonia;
@@ -21,6 +22,8 @@ public static class TestAppBuilder
     {
         // The top bar's GitHub button asks GitHub for the star count; tests have no network and no use for it.
         GalleryGitHub.StarsProvider = static () => Task.FromResult<int?>(null);
+        // The runtime XAML loader reads the xmlns definitions of the assemblies loaded when it first runs; the guide tests parse Lucide XAML.
+        _ = typeof(TKCode.Arc.Icons.Lucide.LucideIcon).Assembly;
         return Build();
     }
 

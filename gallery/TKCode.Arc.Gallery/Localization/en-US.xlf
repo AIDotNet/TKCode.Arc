@@ -371,6 +371,11 @@
         <source>Show implemented components</source>
       </segment>
     </unit>
+    <unit id="Style">
+      <segment>
+        <source>Style</source>
+      </segment>
+    </unit>
     <unit id="ToggleAppearance">
       <segment>
         <source>Toggle light and dark appearance</source>
