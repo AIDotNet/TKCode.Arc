@@ -6,12 +6,14 @@
     <Project Path="src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
     <Project Path="src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
     <Project Path="src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
+    <Project Path="src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
     <Project Path="src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     <Project Path="src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/TKCode.Arc.Core.Tests/TKCode.Arc.Core.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Tests/TKCode.Arc.Tests.csproj" />
+    <Project Path="tests/TKCode.Arc.Mobile.Tests/TKCode.Arc.Mobile.Tests.csproj" />
   </Folder>
   <Folder Name="/gallery/">
     <Project Path="gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />

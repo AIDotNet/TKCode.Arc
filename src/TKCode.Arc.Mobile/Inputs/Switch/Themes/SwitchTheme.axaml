@@ -1,0 +1,93 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Mobile switch: 51 x 31 pill track, 27px thumb that glides on a spring; 44 x 44 hit area; no hover state. -->
+    <ControlTheme x:Key="{x:Type arcm:Switch}" TargetType="arcm:Switch">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Switch">
+                <Panel Background="Transparent">
+                    <Panel Name="PART_TrackHost"
+                           Width="{arcm:SwitchTokenResource TrackWidth}"
+                           Height="{arcm:SwitchTokenResource TrackHeight}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center">
+                        <Border Name="PART_Track" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        <Border Name="PART_TrackOn"
+                                Opacity="0"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                Background="{arc:ArcDesignTokenResource ControlOn}" />
+                        <Panel Margin="{arcm:SwitchTokenResource TrackInset}">
+                            <Border Name="PART_Thumb"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="{TemplateBinding ThumbMargin}"
+                                    Width="{arcm:SwitchTokenResource ThumbSize}"
+                                    Height="{arcm:SwitchTokenResource ThumbSize}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ControlThumbShadow}" />
+                        </Panel>
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinWidth" Value="{arcm:SwitchTokenResource TouchTarget}" />
+        <Setter Property="MinHeight" Value="{arcm:SwitchTokenResource TouchTarget}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Style Selector="^ /template/ Border#PART_Track">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Thumb">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlThumb}" />
+        </Style>
+
+        <Style Selector="^:checked">
+            <Setter Property="ThumbMargin" Value="{arcm:SwitchTokenResource ThumbOnMargin}" />
+            <Style Selector="^ /template/ Border#PART_TrackOn">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Thumb">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlThumbOn}" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:SwitchTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringThicknessTransition Property="ThumbMargin" VisualDuration="0.3" Bounce="0" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_TrackOn">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Thumb">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- Reduced motion: the thumb jumps and colors change at once. -->
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
