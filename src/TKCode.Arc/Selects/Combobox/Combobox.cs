@@ -586,11 +586,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         SetCurrentValue(SelectedIndexProperty, -1);
         SearchText = string.Empty;
         _input?.Focus(NavigationMethod.Pointer);
-        if (!IsOpen)
-        {
-            SetCurrentValue(IsOpenProperty, true);
-        }
-        else
+        if (IsOpen)
         {
             Refilter();
         }

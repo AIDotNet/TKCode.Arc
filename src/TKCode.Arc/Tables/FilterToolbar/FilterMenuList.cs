@@ -381,6 +381,8 @@ internal sealed class FilterMenuList : Control
     {
         EnsureText();
         var width = Bounds.Width;
+        // Transparent fill so the empty part of a row takes pointer input too.
+        context.DrawRectangle(Brushes.Transparent, null, new Rect(Bounds.Size));
         var foreground = TablesBDrawing.ColorOf(Foreground, Colors.Black);
         var secondary = TablesBDrawing.ColorOf(SecondaryForeground, Colors.Gray);
         var muted = TablesBDrawing.ColorOf(MutedForeground, Colors.Gray);

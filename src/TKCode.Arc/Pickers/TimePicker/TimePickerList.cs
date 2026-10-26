@@ -231,6 +231,8 @@ internal sealed class TimePickerList : Control
         {
             return;
         }
+        // Transparent fill so the empty part of a row takes pointer input too.
+        context.DrawRectangle(Brushes.Transparent, null, new Rect(Bounds.Size));
         // Only the rows inside the viewport are drawn.
         var top = 0.0;
         var height = Bounds.Height;
