@@ -180,6 +180,7 @@ public sealed class GallerySidebar : Border
         ArcTokens.Bind(this, BackgroundProperty, ArcDesignTokenKind.Background);
         AddHandler(KeyDownEvent, OnKeyDown, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         _filter.SelectionChanged += _ => ApplyFilter();
+        _search.AddHandler(TextInputEvent, OnSearchTextInput, Avalonia.Interactivity.RoutingStrategies.Tunnel);
         _search.PropertyChanged += (_, e) =>
         {
             if (e.Property == TextBox.TextProperty)
@@ -622,6 +623,25 @@ public sealed class GallerySidebar : Border
     #endregion
 
     #region Keyboard
+
+    private string? _lastCommit;
+    private long _lastCommitTick;
+
+    // Windows IMEs commit the raw letters when Shift is pressed mid-composition, and the platform layer can
+    // deliver that commit twice (IME result, then character input). Real typing never repeats a multi-character
+    // chunk within a few milliseconds, so the immediate repeat is dropped.
+    private void OnSearchTextInput(object? sender, TextInputEventArgs e)
+    {
+        var text = e.Text;
+        var now = Environment.TickCount64;
+        if (text is { Length: > 1 } && text == _lastCommit && now - _lastCommitTick < 100)
+        {
+            e.Handled = true;
+            return;
+        }
+        _lastCommit = text;
+        _lastCommitTick = now;
+    }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
