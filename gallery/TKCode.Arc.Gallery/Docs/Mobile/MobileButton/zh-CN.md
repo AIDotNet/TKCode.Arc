@@ -1,7 +1,7 @@
 ---
 title: 移动端按钮
 summary: 触控优先的按钮：用按压状态代替悬停状态，最小触控目标 44 px。
-source-hash: 1cdfa285426e
+source-hash: 19fcda420f7e
 ---
 
 <Demo name="Basic" />
@@ -35,6 +35,15 @@ source-hash: 1cdfa285426e
 ```
 
 禁用的按钮变暗到 0.5。
+
+### 变体
+
+`Variant` 决定按钮的显著程度：`Filled`（默认，实心胶囊，用于主操作）、`Tinted`（浅强调色胶囊，用于次要操作）和 `Plain`（强调色文字、无背景，用于栏上的操作）。每个页面只放一个 `Filled` 按钮。
+
+```xml
+<arcm:Button Variant="Tinted" Content="更多" />
+<arcm:Button Variant="Plain" Content="完成" />
+```
 
 ### Token
 

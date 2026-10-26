@@ -220,7 +220,7 @@ internal sealed class WeekCalendarHeadDay : AvaloniaButton
         var pill = new Rect((size.Width - pillWidth) / 2, top + 15.4, pillWidth, pillHeight);
         if (IsToday)
         {
-            context.DrawRectangle(paint.Accent, null, new RoundedRect(pill, pillHeight / 2));
+            context.DrawRectangle(paint.Accent, null, new RoundedRect(pill, Math.Min(pillHeight / 2, paint.RadiusPill)));
         }
         else
         {
@@ -229,7 +229,7 @@ internal sealed class WeekCalendarHeadDay : AvaloniaButton
             {
                 using (context.PushOpacity(amount))
                 {
-                    context.DrawRectangle(paint.SurfaceMuted, null, new RoundedRect(pill, pillHeight / 2));
+                    context.DrawRectangle(paint.SurfaceMuted, null, new RoundedRect(pill, Math.Min(pillHeight / 2, paint.RadiusPill)));
                 }
             }
         }
@@ -502,8 +502,8 @@ internal sealed class WeekCalendarAllDayBar : AvaloniaButton
         // Arc's ::before: inset 0 2 0 3, radius 6, the fill and a 3px calendar stripe.
         var body = new Rect(3, 0, Math.Max(0, size.Width - 5), size.Height);
         var fill = HoverAmount > 0.5 ? brushes.HoverFill : brushes.Fill;
-        context.DrawRectangle(fill, null, new RoundedRect(body, 6));
-        using (context.PushClip(new RoundedRect(body, 6)))
+        context.DrawRectangle(fill, null, new RoundedRect(body, paint.Radius6));
+        using (context.PushClip(new RoundedRect(body, paint.Radius6)))
         {
             context.FillRectangle(brushes.Bar, new Rect(body.X, 0, 3, body.Height));
             var title = string.IsNullOrWhiteSpace(e.Title) ? _owner.Labels.Untitled : e.Title;
@@ -577,7 +577,7 @@ internal sealed class WeekCalendarMoreChip : AvaloniaButton
         var size = Bounds.Size;
         context.FillRectangle(Brushes.Transparent, new Rect(size));
         var body = new Rect(3, 0, Math.Max(0, size.Width - 5), size.Height);
-        context.DrawRectangle(HoverAmount > 0.5 ? paint.Border : paint.SurfaceMuted, null, new RoundedRect(body, 6));
+        context.DrawRectangle(HoverAmount > 0.5 ? paint.Border : paint.SurfaceMuted, null, new RoundedRect(body, paint.Radius6));
         var layout = _text.Get(_label, paint.BodyMedium, 12, paint.TextSecondary, Math.Max(0, body.Width - 12), 1, 12);
         layout?.Draw(context, new Point(body.X + 8, (size.Height - 12) / 2));
         if (Classes.Contains(":focus-visible"))

@@ -133,7 +133,7 @@
                     <Grid RowDefinitions="Auto,*,Auto">
                         <Border Name="PART_Toolbar"
                                 IsVisible="{TemplateBinding IsToolbarVisible}"
-                                Padding="{arc:JsonViewerTokenResource ToolbarPadding}"
+                                Padding="{TemplateBinding ToolbarPadding}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}"
                                 BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
                             <Grid ColumnDefinitions="*,Auto,Auto,Auto">
@@ -213,7 +213,7 @@
                                       HorizontalScrollBarVisibility="Disabled"
                                       VerticalScrollBarVisibility="Auto">
                             <arc:JsonViewerRowsPanel Name="PART_Rows"
-                                                     Margin="{arc:JsonViewerTokenResource TreePadding}"
+                                                     Margin="{TemplateBinding TreePadding}"
                                                      AutomationProperties.ControlTypeOverride="Tree" />
                         </ScrollViewer>
                         <TextBlock Name="PART_Error"
@@ -277,6 +277,8 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ToolbarPadding" Value="{arc:JsonViewerTokenResource ToolbarPadding}" />
+        <Setter Property="TreePadding" Value="{arc:JsonViewerTokenResource TreePadding}" />
         <Setter Property="MaxTreeHeight" Value="{arc:JsonViewerTokenResource TreeMaxHeight}" />
         <Setter Property="RowForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />

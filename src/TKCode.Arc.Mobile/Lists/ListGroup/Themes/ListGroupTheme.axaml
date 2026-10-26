@@ -1,0 +1,50 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- List group: an optional header, a Surface card with a Border outline and Panel radius that clips its rows, an optional footer. -->
+    <ControlTheme x:Key="{x:Type arcm:ListGroup}" TargetType="arcm:ListGroup">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:ListGroup">
+                <StackPanel Margin="{TemplateBinding Padding}">
+                    <TextBlock Name="PART_Header"
+                               Text="{TemplateBinding Header}"
+                               IsVisible="{TemplateBinding Header, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               Margin="{arcm:ListGroupTokenResource HeaderMargin}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                               TextWrapping="Wrap" />
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Border>
+                    <TextBlock Name="PART_Footer"
+                               Text="{TemplateBinding Footer}"
+                               IsVisible="{TemplateBinding Footer, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               Margin="{arcm:ListGroupTokenResource FooterMargin}"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Padding" Value="{arcm:ListGroupTokenResource GroupPadding}" />
+        <Setter Property="BorderThickness" Value="{arcm:ListGroupTokenResource CardBorderThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+</ResourceDictionary>

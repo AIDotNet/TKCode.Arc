@@ -1,5 +1,5 @@
 # Regenerates src/TKCode.Arc.Themes.Pixel/Themes/*.xml (compiled theme definitions) from the token tables in ArcPixelTheme.cs.
-# Control overrides stay C#-only: a compiled theme may not name controls of another assembly.
+# The ArcDesign radii are read from the Corners package's CornerTable.g.cs. Control overrides stay C#-only: a compiled theme may not name controls of another assembly.
 import re,os
 root=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "src", "TKCode.Arc.Themes.Pixel") + "/"
 src=open(root+"ArcPixelTheme.cs").read()
@@ -27,7 +27,10 @@ def xml(id,name,app,dark,toks_,ctls):
         for k,v in tt: s+=f'        <Token Name="{k}" Value="{v}" />\n'
         s+='      </Tokens>\n    </Control>\n'
     return s+'  </Controls>\n</Theme>\n'
-shared=toks(block("Shared"))
+# The ArcDesign radii (all zero in the pixel theme) come from the Corners package table.
+corners=open(os.path.join(root,"..","TKCode.Arc.Themes.Corners","CornerTable.g.cs")).read()
+radii=[(t,"0") for t in re.findall(r'new\("ArcDesign", "(\w+)"',corners)]
+shared=radii+toks(block("Shared"))
 os.makedirs(root+"Themes",exist_ok=True)
 open(root+"Themes/ArcPixel.xml","w").write(xml("ArcPixel","Arc Pixel","Light",False,shared+toks(block("Light")),[]))
 open(root+"Themes/ArcPixelDark.xml","w").write(xml("ArcPixelDark","Arc Pixel Dark","Dark",True,shared+toks(block("Dark")),[]))

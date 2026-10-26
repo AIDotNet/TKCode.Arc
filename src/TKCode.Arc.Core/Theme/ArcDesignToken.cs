@@ -152,11 +152,13 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
     public CornerRadius RadiusStep8 { get; set; }
     public CornerRadius RadiusStep9 { get; set; }
     public CornerRadius RadiusStep10 { get; set; }
+    public CornerRadius RadiusStep11 { get; set; }
     public CornerRadius RadiusStep12 { get; set; }
     public CornerRadius RadiusStep13 { get; set; }
     public CornerRadius RadiusStep14 { get; set; }
     public CornerRadius RadiusStep14p5 { get; set; }
     public CornerRadius RadiusStep15 { get; set; }
+    public CornerRadius RadiusStep15Bottom { get; set; }
     public CornerRadius RadiusStep16 { get; set; }
     public CornerRadius RadiusStep17 { get; set; }
     public CornerRadius RadiusStep18 { get; set; }
@@ -168,8 +170,10 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
     public CornerRadius RadiusStep22 { get; set; }
     public CornerRadius RadiusStep24 { get; set; }
     public CornerRadius RadiusStep25 { get; set; }
+    public CornerRadius RadiusStep25Bottom { get; set; }
     public CornerRadius RadiusStep28 { get; set; }
     public CornerRadius RadiusStep33 { get; set; }
+    public CornerRadius RadiusStep33Bottom { get; set; }
 
     #endregion
 
@@ -357,11 +361,13 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
         RadiusStep8 = new CornerRadius(8);
         RadiusStep9 = new CornerRadius(9);
         RadiusStep10 = new CornerRadius(10);
+        RadiusStep11 = new CornerRadius(11);
         RadiusStep12 = new CornerRadius(12);
         RadiusStep13 = new CornerRadius(13);
         RadiusStep14 = new CornerRadius(14);
         RadiusStep14p5 = new CornerRadius(14.5);
         RadiusStep15 = new CornerRadius(15);
+        RadiusStep15Bottom = new CornerRadius(0, 0, 15, 15);
         RadiusStep16 = new CornerRadius(16);
         RadiusStep17 = new CornerRadius(17);
         RadiusStep18 = new CornerRadius(18);
@@ -373,8 +379,10 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
         RadiusStep22 = new CornerRadius(22);
         RadiusStep24 = new CornerRadius(24);
         RadiusStep25 = new CornerRadius(25);
+        RadiusStep25Bottom = new CornerRadius(0, 0, 25, 25);
         RadiusStep28 = new CornerRadius(28);
         RadiusStep33 = new CornerRadius(33);
+        RadiusStep33Bottom = new CornerRadius(0, 0, 33, 33);
         ControlSizeSM = 36;
         ControlSizeMD = 44;
         ControlSizeLG = 50;

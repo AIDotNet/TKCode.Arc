@@ -578,7 +578,7 @@ internal class ArenaAnswerView : TemplatedControl
         var resources = markdown.Resources;
         SetResource(resources, MarkdownResourceKeys.CodeBackground, new MarkdownResourceAlias(ArcDesignTokenKind.SurfaceMuted));
         SetResource(resources, MarkdownResourceKeys.CodeBorderBrush, new MarkdownResourceAlias(ArcDesignTokenKind.Border));
-        SetResource(resources, MarkdownResourceKeys.CornerRadius, new CornerRadius(14));
+        SetResource(resources, MarkdownResourceKeys.CornerRadius, new MarkdownResourceAlias(ArcDesignTokenKind.RadiusStep14));
     }
 
     private static void SetResource(IResourceDictionary resources, string key, object value)

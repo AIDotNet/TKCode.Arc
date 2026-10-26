@@ -9,6 +9,7 @@
     <Project Path="src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
     <Project Path="src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     <Project Path="src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
+    <Project Path="src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
     <Project Path="src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
   </Folder>
   <Folder Name="/tests/">

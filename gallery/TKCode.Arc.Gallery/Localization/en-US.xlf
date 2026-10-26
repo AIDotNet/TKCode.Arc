@@ -226,6 +226,26 @@
         <source>Copy page</source>
       </segment>
     </unit>
+    <unit id="Corners">
+      <segment>
+        <source>Corners</source>
+      </segment>
+    </unit>
+    <unit id="CornersDefault">
+      <segment>
+        <source>Default</source>
+      </segment>
+    </unit>
+    <unit id="CornersHalf">
+      <segment>
+        <source>Half</source>
+      </segment>
+    </unit>
+    <unit id="CornersSquare">
+      <segment>
+        <source>Square</source>
+      </segment>
+    </unit>
     <unit id="Dark">
       <segment>
         <source>Dark</source>

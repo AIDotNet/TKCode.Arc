@@ -12,6 +12,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Themes.Corners;
 using SkiaSharp;
 using ArcWindow = AtomUI.Desktop.Controls.Window;
 
@@ -256,11 +257,11 @@ internal static class Shooter
         }
     }
 
-    public static void ApplyTheme(bool dark)
+    public static void ApplyTheme(bool dark, ArcCornerStyle corners = default)
     {
         var builder = new ThemeConfigBuilder();
         builder = dark ? builder.WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark) : builder.WithAlgorithms(ThemeAlgorithm.Default);
-        builder = builder.WithArc(arc => arc.Accent(ArcAccentPreset.Neutral));
+        builder = builder.WithArc(arc => arc.Accent(ArcAccentPreset.Neutral).Corners(corners, ArcCornerScope.All));
         var manager = Application.Current!.GetThemeManager()!;
         var task = manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(), ThemeTransitionReason.UserRequest),
                                            CancellationToken.None);

@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileSheetBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Photos" />
+        </arcm:Page.Header>
+        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+            <arcm:Button Content="Share" HorizontalAlignment="Stretch" Click="OnShare" />
+            <TextBlock Text="Tap the scrim, press Escape or pull the handle down to close the sheet."
+                       TextWrapping="Wrap"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arcm:Page.Overlay>
+            <arcm:Sheet Name="ShareSheet" Title="Share">
+                <arcm:ListGroup>
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.User}" Content="Send to a person" ShowChevron="True" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Bell}" Content="Copy link" />
+                </arcm:ListGroup>
+            </arcm:Sheet>
+        </arcm:Page.Overlay>
+    </arcm:Page>
+</UserControl>

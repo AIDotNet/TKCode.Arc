@@ -278,6 +278,42 @@ Change as little as possible. A token change applies everywhere: overriding `Dan
 destructive button and failed status in the application. Overrides of colors should be checked in both appearances,
 because the override is not recalculated for dark mode.
 
+## Corner style
+
+Arc's corners are round: 18 for controls, 26 for panels, 34 for surfaces. If your product wants squarer corners, change
+the corner style instead of overriding the four `Radius*` tokens. Those four are only the top layer: the radius steps
+used inside templates, the radius tokens of about 300 control properties (a checkbox box, a combobox option, the
+highlight behind a hovered menu row) and the radii that some controls compute while they animate are separate values.
+Setting only the four leaves popups, hover backgrounds and checkboxes round.
+
+The `TKCode.Arc.Themes.Corners` package sets all of them with one call and changes nothing but corners: colors, borders,
+shadows and motion stay as they are.
+
+```csharp
+using TKCode.Arc.Themes.Corners;
+
+builder = builder.WithArc(arc => arc
+    .Accent(ArcAccentPreset.Blue)
+    .Corners(ArcCornerStyle.Square, ArcCornerScope.All));
+```
+
+| Style | Result |
+|---|---|
+| `ArcCornerStyle.Default` | Arc as shipped. Nothing is written. |
+| `ArcCornerStyle.Scale(0.5)` | Every radius is multiplied by the factor. `Scale(0)` is `Square`, `Scale(1)` is `Default`, a factor above 1 rounds more. |
+| `ArcCornerStyle.Square` | Every corner is square. |
+
+- **Pills and circles.** Radii of 999 and more (pill buttons, round avatars, dots) keep their shape under `Scale`. Only
+  `Square` flattens them, so a square style turns round avatars into squares. Use `Scale` to keep them round.
+- **Scope.** `ArcCornerScope` names the control packages the application registers: `Controls`, `Blocks`, `Special`,
+  `AdvancedCharts`, `Workflow`, or `All`. Naming a package the application has not registered fails the whole theme
+  change, so list only the ones you use.
+- **One call.** `WithArc` replaces what an earlier `WithArc` call wrote, so put the accent and the corner style in the same
+  call, as above. `builder.WithArcCorners(style, scope)` is a shortcut for a call that only sets corners.
+- **Scroll bars.** The thumb of AtomUI's scroll bar sits inside every Arc popup and scrolling surface, so the
+  corner style also changes the scroll bar thumb of the whole application, including AtomUI controls that are not Arc's.
+- **Pixel.** The Pixel style is built on the same package and is always square.
+
 ## Styling a single control
 
 For local adjustments, use Avalonia's normal tools instead of tokens:

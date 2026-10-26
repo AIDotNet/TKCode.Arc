@@ -1,7 +1,7 @@
 ---
 title: 移動端頁面
 summary: 手機螢幕：頁首、內容和頁尾，排佈在裝置的安全區之內。
-source-hash: c254a865ba00
+source-hash: 7d6d0372a19d
 ---
 
 <Demo name="Basic" />
@@ -53,6 +53,19 @@ source-hash: c254a865ba00
 沒有頁首和頁尾的頁面，內容可以使用整個安全區。
 
 <Demo name="ContentOnly" />
+
+### 捲動內容
+
+預設情況下，內容直接得到頁面的高度，鋪滿頁面的介面可以自己排版。內容可能比頁面高時，設定 `IsScrollable="True"`：內容會在頁首和頁尾之間縱向捲動。`Header` 裡帶大標題的 `Navbar` 會隨內容捲動而摺疊。
+
+```xml
+<arcm:Page IsScrollable="True">
+    <arcm:Page.Header>
+        <arcm:Navbar Title="照片" LargeTitle="True" />
+    </arcm:Page.Header>
+    <!-- 較長的內容 -->
+</arcm:Page>
+```
 
 ### Token
 

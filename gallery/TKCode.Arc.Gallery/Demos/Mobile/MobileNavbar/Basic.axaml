@@ -5,12 +5,9 @@
              x:Class="TKCode.Arc.Gallery.Demos.MobileNavbarBasicDemo">
     <arcm:Page>
         <arcm:Page.Header>
-            <arcm:Navbar Title="Settings">
-                <arcm:Navbar.Leading>
-                    <arcm:Button Content="Back" />
-                </arcm:Navbar.Leading>
+            <arcm:Navbar Title="Settings" ShowBack="True" BackText="Home">
                 <arcm:Navbar.Trailing>
-                    <arcm:Button Content="Done" />
+                    <arcm:Button Variant="Plain" Content="Done" />
                 </arcm:Navbar.Trailing>
             </arcm:Navbar>
         </arcm:Page.Header>

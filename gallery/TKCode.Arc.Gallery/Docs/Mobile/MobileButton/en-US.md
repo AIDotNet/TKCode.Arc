@@ -35,6 +35,15 @@ The mobile `Button` is in the `https://github.com/AIDotNet/TKCode.Arc.Mobile` XA
 
 A disabled button is dimmed to 0.5.
 
+### Variants
+
+`Variant` sets how prominent the button is: `Filled` (default, a solid pill for the main action), `Tinted` (a soft accent pill for a secondary action) and `Plain` (accent text with no background, for bar actions). Use one `Filled` button per screen.
+
+```xml
+<arcm:Button Variant="Tinted" Content="More" />
+<arcm:Button Variant="Plain" Content="Done" />
+```
+
 ### Tokens
 
 `ButtonToken` holds the geometry: `TouchTarget` (44), `ContentPadding` (16 by 10), `PressedScale` (0.97), `PressedOpacity` (0.85) and `DisabledOpacity` (0.5). Colors, radii and type come from the ArcDesign tokens, so the button follows light and dark, the accent and the Pixel style.

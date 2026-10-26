@@ -6,13 +6,14 @@ using Avalonia.Headless;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using StreamMark.Avalonia;
+using TKCode.Arc.Themes.Corners;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Shell;
 
 namespace TKCode.Arc.DocShots;
 
 /// <summary>
-/// <c>page &lt;ClassName&gt; &lt;language&gt; &lt;out.png&gt; [dark] [scroll=&lt;y&gt;|find=&lt;text&gt;]</c>: the component's
+/// <c>page &lt;ClassName&gt; &lt;language&gt; &lt;out.png&gt; [dark] [corners=square|half] [scroll=&lt;y&gt;|find=&lt;text&gt;]</c>: the component's
 /// page in the gallery window as people see it, to review a page or how its screenshots sit in it.
 /// </summary>
 internal static class PageShot
@@ -21,7 +22,7 @@ internal static class PageShot
     {
         if (args.Length < 3)
         {
-            Console.Error.WriteLine("usage: DocShots page <ClassName> <language> <out.png> [dark] [scroll=<y>|find=<text>]");
+            Console.Error.WriteLine("usage: DocShots page <ClassName> <language> <out.png> [dark] [corners=square|half] [scroll=<y>|find=<text>]");
             return 2;
         }
         var (className, language, output) = (args[0], args[1], Path.GetFullPath(args[2]));
@@ -34,7 +35,9 @@ internal static class PageShot
         }
 
         Application.Current!.GetLanguageManager()!.ChangeLanguage(LanguageTag.Parse(language));
-        Shooter.ApplyTheme(options.Contains("dark"));
+        var corners = options.Contains("corners=square") ? ArcCornerStyle.Square
+            : options.Contains("corners=half") ? ArcCornerStyle.Scale(0.5) : ArcCornerStyle.Default;
+        Shooter.ApplyTheme(options.Contains("dark"), corners);
         var window = new GalleryWindow { Width = 1480, Height = 1400 };
         window.Show();
         window.Select(entry);

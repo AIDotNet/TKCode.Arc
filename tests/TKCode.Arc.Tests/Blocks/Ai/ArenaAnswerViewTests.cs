@@ -290,8 +290,9 @@ public class ArenaAnswerViewTests
         origin.X.ShouldBe(20, 0.01);
         origin.Y.ShouldBe(8, 0.01);
         body.Bounds.Width.ShouldBe(391 - 40, 0.01);
-        // The arena's code block: SurfaceMuted, 1px Border, radius 14.
-        body.Resources[StreamMark.Avalonia.MarkdownResourceKeys.CornerRadius].ShouldBe(new CornerRadius(14));
+        // The arena's code block: SurfaceMuted, 1px Border, radius 14 (the RadiusStep14 token, so a corner style reaches it).
+        var radius = body.Resources[StreamMark.Avalonia.MarkdownResourceKeys.CornerRadius].ShouldBeOfType<StreamMark.Avalonia.MarkdownResourceAlias>();
+        radius.Key.ShouldBe(TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep14);
     }
 
     #endregion

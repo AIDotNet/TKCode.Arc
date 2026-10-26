@@ -6892,6 +6892,14 @@
         <source>Height of the scrolling tree area.</source>
         <target>可捲動樹狀區域的高度。</target>
       </trans-unit>
+      <trans-unit id="JsonViewer.ToolbarPadding">
+        <source>Padding around the search toolbar.</source>
+        <target>搜尋工具列的內距。</target>
+      </trans-unit>
+      <trans-unit id="JsonViewer.TreePadding">
+        <source>Padding around the rows of the tree.</source>
+        <target>樹列區域的內距。</target>
+      </trans-unit>
       <trans-unit id="JsonViewer.PageSize">
         <source>Children shown per page in a long array or object.</source>
         <target>長陣列或物件中每頁顯示的子項數。</target>
@@ -8389,16 +8397,80 @@
         <target>模型所見的 token（保留空格，因此 " the" 與 "the" 是不同的 token）。它顯示在輸入、輸出和序列標籤塊中，並在頁尾中被點名。</target>
       </trans-unit>
       <trans-unit id="MobileButton">
-        <source>Mobile button: a touch-first filled button with a press state (it scales down and dims while a finger is on it) and no hover state. It is at least 44 by 44 so it is easy to hit.</source>
-        <target>移動端按鈕：觸控優先的填滿按鈕，有按壓狀態（手指按在上面時縮小並變暗），沒有懸停狀態。它至少 44 乘 44，便於點中。</target>
+        <source>Mobile button: a touch-first button with a press state (it scales down and dims while a finger is on it) and no hover state. It is at least 44 by 44 so it is easy to hit. `Variant` picks how prominent it is.</source>
+        <target>移動端按鈕：觸控優先的按鈕，有按壓狀態（手指按在上面時縮小並變暗），沒有懸停狀態。它至少 44 乘 44，便於點中。`Variant` 決定它的顯著程度。</target>
+      </trans-unit>
+      <trans-unit id="MobileButton.Variant">
+        <source>How prominent the button is: filled, tinted or plain text.</source>
+        <target>移動端按鈕的顯著程度：實心、淺色填充或純文字。</target>
+      </trans-unit>
+      <trans-unit id="MobileListGroup">
+        <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`.</source>
+        <target>一張由 `ListItem` 列組成的卡片，上方可有 `Header`，下方可有 `Footer`，就像設定頁替列分組的方式。把它放進可捲動的 `Page`。</target>
+      </trans-unit>
+      <trans-unit id="MobileListGroup.Footer">
+        <source>A note under the card, for example what the settings in it do.</source>
+        <target>卡片下方的說明，例如其中的設定有什麼作用。</target>
+      </trans-unit>
+      <trans-unit id="MobileListGroup.Header">
+        <source>A short label above the card.</source>
+        <target>卡片上方的簡短標籤。</target>
+      </trans-unit>
+      <trans-unit id="MobileListItem">
+        <source>One row of a `ListGroup`: an optional `Icon`, the title (the content), an optional `Subtitle`, optional `Trailing` content and an optional chevron. It is a button: give it a `Command` or handle `Click` and a finger on it shades the row. It has no hover state.</source>
+        <target>`ListGroup` 的一列：可有 `Icon`、標題（內容）、`Subtitle`、`Trailing` 內容和箭頭。它是一個按鈕：給它 `Command` 或處理 `Click`，手指按在上面時列會變暗。它沒有懸停狀態。</target>
+      </trans-unit>
+      <trans-unit id="MobileListItem.Icon">
+        <source>The glyph geometry shown before the title, for example a Lucide icon.</source>
+        <target>標題前顯示的圖示幾何，例如 Lucide 圖示。</target>
+      </trans-unit>
+      <trans-unit id="MobileListItem.ShowChevron">
+        <source>Whether a chevron at the end of the row shows that it opens another screen.</source>
+        <target>列尾是否顯示箭頭，表示它會開啟另一個頁面。</target>
+      </trans-unit>
+      <trans-unit id="MobileListItem.Subtitle">
+        <source>A second, smaller line under the title.</source>
+        <target>標題下方第二行較小的文字。</target>
+      </trans-unit>
+      <trans-unit id="MobileListItem.Trailing">
+        <source>The content at the end of the row: a value, a badge or a control such as a `Switch`.</source>
+        <target>列尾的內容：值、徽章或 `Switch` 這樣的控制項。</target>
       </trans-unit>
       <trans-unit id="MobileNavbar">
         <source>The top bar of a `Page`: a `Leading` slot (usually a back button), a centered `Title` and a `Trailing` slot for actions. It is 44 high, and the slots are at least 44 wide.</source>
         <target>`Page` 的頂部列：起始的 `Leading` 槽（通常是返回按鈕）、置中的 `Title` 和放操作的 `Trailing` 槽。列高 44，槽的寬度至少 44。</target>
       </trans-unit>
+      <trans-unit id="MobileNavbar.BackCommand">
+        <source>The command the back button runs.</source>
+        <target>返回按鈕執行的命令。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.BackText">
+        <source>The back button's label, usually the previous screen's title. Empty shows the chevron alone.</source>
+        <target>返回按鈕的文字，通常是上一頁的標題。為空時只顯示箭頭。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.BarTitleOpacity">
+        <source>The opacity of the title in the bar: 1 normally, and with a large title it fades in as the large one collapses.</source>
+        <target>列裡標題的不透明度：平時為 1，有大標題時隨大標題收起而淡入。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.CollapseProgress">
+        <source>How far the large title has collapsed into the bar, from 0 (fully shown) to 1 (gone, the bar's own title is shown). Bind it to the page's scroll offset divided by `LargeTitleExtent`. It does nothing without `LargeTitle`.</source>
+        <target>大標題收進列裡的程度，從 0（完全顯示）到 1（已收起，顯示列自己的標題）。把它綁定到頁面捲動位移除以 `LargeTitleExtent`。沒有 `LargeTitle` 時不起作用。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.LargeTitle">
+        <source>Whether the title also shows as a large heading under the bar, like a root screen in iOS.</source>
+        <target>標題是否同時在列下方顯示為大標題，類似 iOS 的根頁面。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.LargeTitleHeight">
+        <source>The current height of the large title row, between 0 and `LargeTitleExtent`.</source>
+        <target>大標題列目前的高度，在 0 到 `LargeTitleExtent` 之間。</target>
+      </trans-unit>
       <trans-unit id="MobileNavbar.Leading">
         <source>The content at the start of the bar, usually a back button.</source>
         <target>列起始處的內容，通常是返回按鈕。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavbar.ShowBack">
+        <source>Whether the bar shows a back button (a chevron and `BackText`) before `Leading`.</source>
+        <target>列是否在 `Leading` 之前顯示返回按鈕（箭頭加 `BackText`）。</target>
       </trans-unit>
       <trans-unit id="MobileNavbar.Title">
         <source>The bar's title.</source>
@@ -8407,6 +8479,26 @@
       <trans-unit id="MobileNavbar.Trailing">
         <source>The content at the end of the bar, usually action buttons.</source>
         <target>列末端的內容，通常是操作按鈕。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavigationStack">
+        <source>A stack of pages, one on top. `Push` slides a page in from the right over the one below, which shifts left and dims; `Pop` and the back swipe from the left edge slide it away again. The swipe follows the finger, and on release the finger's speed decides whether the page leaves or springs back. Pages are usually `Page`s; only the top one is in the visual tree while the stack is at rest, and a page that is not on top keeps its state. Bind a `Navbar`'s `BackCommand` to `BackCommand`. The slide is a `MotionValue`, not a ControlTheme transition: the swipe writes it on every move and a release hands the finger's velocity to the spring. Under reduced motion pages change at once.</source>
+        <target>頁面堆疊，頂部一個頁面。`Push` 讓頁面從右側滑入，蓋住下面的頁面，下面的頁面向左移動並變暗；`Pop` 和從左邊緣的返回滑動把它滑走。滑動跟隨手指，放開時由手指的速度決定頁面離開還是彈回。頁面通常是 `Page`；堆疊靜止時只有頂部的頁面在視覺樹裡，不在頂部的頁面保持狀態。把 `Navbar` 的 `BackCommand` 繫結到 `BackCommand`。滑動是 `MotionValue`，不是 ControlTheme 過渡：滑動時每次移動都會寫入它，放開時手指的速度交給彈簧。減弱動效時，頁面直接切換。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavigationStack.CanGoBack">
+        <source>Whether there is a page to go back to.</source>
+        <target>是否有可以返回的頁面。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavigationStack.IsSwipeBackEnabled">
+        <source>Whether a swipe from the left edge pops the top page: true.</source>
+        <target>從左邊緣滑動是否會彈出頂部頁面：true。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavigationStack.Navigated">
+        <source>Raised when a page is pushed or popped, as soon as the stack changes (the slide may still be running).</source>
+        <target>推入或彈出頁面時觸發，堆疊一變化就觸發（此時滑動可能還在進行）。</target>
+      </trans-unit>
+      <trans-unit id="MobileNavigationStack.Root">
+        <source>The first page of the stack. Setting it resets the stack to that one page.</source>
+        <target>堆疊的第一個頁面。設定它會把堆疊重設為只有這一頁。</target>
       </trans-unit>
       <trans-unit id="MobilePage">
         <source>A mobile page: an optional `Header` (usually a `Navbar`), the content, and an optional `Footer` (usually a `Tabbar`), laid out inside the device's safe area. The safe area is the space the notch, rounded corners and gesture bar take; on desktop and in tests it is zero unless set by hand.</source>
@@ -8420,6 +8512,14 @@
         <source>The slot above the content, usually a `Navbar`.</source>
         <target>內容上方的槽，通常是 `Navbar`。</target>
       </trans-unit>
+      <trans-unit id="MobilePage.IsScrollable">
+        <source>Whether the content scrolls vertically inside the page. Off, the content gets the page's height as it is. On, a `Navbar` in `Header` that has a large title collapses it as the content scrolls.</source>
+        <target>內容是否在頁面內縱向捲動。關閉時，內容直接得到頁面的高度。開啟時，`Header` 裡帶大標題的 `Navbar` 會隨內容捲動而摺疊。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.Overlay">
+        <source>The slot over the whole page, header and footer included, for a `Sheet`.</source>
+        <target>整頁之上的槽，包括頁首和頁尾，用來放 `Sheet`。</target>
+      </trans-unit>
       <trans-unit id="MobilePage.SafeArea">
         <source>The insets the page keeps free on each edge. With `UsePlatformSafeArea` the platform sets it (zero where there is no insets manager); otherwise set it yourself.</source>
         <target>頁面在每條邊上保留的空白。啟用 `UsePlatformSafeArea` 時由平台設定（沒有 insets 管理員時為零）；否則請自行設定。</target>
@@ -8427,6 +8527,34 @@
       <trans-unit id="MobilePage.UsePlatformSafeArea">
         <source>Whether `SafeArea` follows the platform's safe area padding.</source>
         <target>`SafeArea` 是否跟隨平台的安全區邊距。</target>
+      </trans-unit>
+      <trans-unit id="MobileSearchbar">
+        <source>Mobile search bar: a `TextField` with a search glyph before the text and a pill shape. Enter raises `Submitted`, and the soft keyboard offers a Search key.</source>
+        <target>移動端搜尋列：文字前帶搜尋圖示、膠囊形狀的 `TextField`。按 Enter 會觸發 `Submitted`，軟鍵盤提供搜尋鍵。</target>
+      </trans-unit>
+      <trans-unit id="MobileSearchbar.Submitted">
+        <source>Raised when the person presses Enter or the keyboard's Search key.</source>
+        <target>使用者按 Enter 或鍵盤的搜尋鍵時觸發。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet">
+        <source>A bottom sheet: a panel that rises over a `Page` with a scrim behind it. The person closes it by tapping the scrim, pulling the handle down or flicking it, or with Escape. Put it in `Overlay` and open it with `IsOpen`; it sizes to its content, up to `MaxHeightFraction` of the page, and the content scrolls beyond that. Closed, it does not catch touches. The panel's position is a `MotionValue`, not a ControlTheme transition: a drag writes it on every move, a release hands the finger's velocity to the spring, and the scrim is computed from the position each frame. Under reduced motion the panel jumps instead of gliding.</source>
+        <target>底部面板：從 `Page` 上方升起、背後帶遮罩的面板。點遮罩、下拉把手、快速下滑或按 Esc 都能關閉它。把它放進 `Overlay`，用 `IsOpen` 開啟；它的高度隨內容而定，最高到頁面的 `MaxHeightFraction`，超出後內容捲動。關閉時它不攔截觸控。面板的位置是 `MotionValue`，不是 ControlTheme 過渡：拖曳時每次移動都會寫入它，放開時手指的速度交給彈簧，遮罩由每幀的位置計算。減弱動效時，面板直接跳到位置而不滑動。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.IsDismissible">
+        <source>Whether the person can close the sheet by tapping the scrim, pulling the panel down or pressing Escape.</source>
+        <target>使用者能否透過點遮罩、下拉面板或按 Esc 關閉面板。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.IsOpen">
+        <source>Whether the sheet is open.</source>
+        <target>面板是否開啟。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.MaxHeightFraction">
+        <source>The tallest the panel gets, as a fraction of the sheet's height: 0.9.</source>
+        <target>面板最高的高度，按面板所在區域高度的比例計：0.9。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.Title">
+        <source>The title shown in the handle area, under the grabber.</source>
+        <target>把手區域裡、拖曳條下方顯示的標題。</target>
       </trans-unit>
       <trans-unit id="MobileSwitch">
         <source>Mobile switch: a 51 by 31 toggle for settings that take effect immediately. The thumb glides on a spring, the hit area is at least 44 by 44, and there is no hover state. The track fills with the on color when checked.</source>
@@ -8443,6 +8571,22 @@
       <trans-unit id="MobileTabbarItem.Icon">
         <source>The glyph geometry shown above the label, for example a Lucide icon.</source>
         <target>顯示在標籤文字上方的圖示幾何，例如 Lucide 圖示。</target>
+      </trans-unit>
+      <trans-unit id="MobileTextField">
+        <source>Mobile text field: a 44px filled field with an optional `Icon` before the text and a clear button that shows while the field has focus and text. The border takes the accent color while focused; there is no hover state. It derives from Avalonia's `TextBox`, so text, selection and binding work as they do there. Show a placeholder with `PlaceholderText`.</source>
+        <target>移動端文字方塊：44px 高的填充文字方塊，文字前可有 `Icon`，有焦點且有文字時顯示清除按鈕。取得焦點時邊框變為強調色；沒有懸停狀態。它衍生自 Avalonia 的 `TextBox`，所以文字、選取和繫結都和那裡一樣。用 `PlaceholderText` 顯示預留位置提示。</target>
+      </trans-unit>
+      <trans-unit id="MobileTextField.Icon">
+        <source>The glyph geometry shown before the text, for example a Lucide icon.</source>
+        <target>文字前顯示的圖示幾何，例如 Lucide 圖示。</target>
+      </trans-unit>
+      <trans-unit id="MobileTextField.IsClearVisible">
+        <source>Whether the clear button is showing now.</source>
+        <target>清除按鈕此刻是否顯示。</target>
+      </trans-unit>
+      <trans-unit id="MobileTextField.ShowClearButton">
+        <source>Whether a clear button shows while the field has focus and text: true.</source>
+        <target>文字方塊有焦點且有文字時是否顯示清除按鈕：true。</target>
       </trans-unit>
       <trans-unit id="ModalOverlay.Actions">
         <source>Footer content, usually buttons; give them `arc:Dialog.Result` to close with a result.</source>
@@ -14063,6 +14207,10 @@
       <trans-unit id="Tabs.ActivationMode">
         <source>Whether arrow keys select the tab they move to (`Automatic`, Arc default).</source>
         <target>方向鍵是否同時選取移動到的分頁（`Automatic`，Arc 預設）。</target>
+      </trans-unit>
+      <trans-unit id="Tabs.ContentMargin">
+        <source>Margin around the panel; its top edge is the space between the trigger list and the panel (Arc: 16px).</source>
+        <target>面板外邊距；其上邊距即觸發器列表與面板之間的間距（Arc：16px）。</target>
       </trans-unit>
       <trans-unit id="Tabs.ContentTemplate">
         <source>Template for the panel of data items (the trigger uses `ItemTemplate`).</source>

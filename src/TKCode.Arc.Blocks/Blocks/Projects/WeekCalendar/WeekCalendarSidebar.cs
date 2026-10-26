@@ -418,7 +418,7 @@ internal sealed class WeekCalendarMiniDay : AvaloniaButton
             var left = IsRangeStart ? 2 : 0;
             var right = IsRangeEnd ? size.Width - 2 : size.Width;
             var band = new Rect(left, 1, Math.Max(0, right - left), size.Height - 2);
-            var r = new RoundedRect(band, new CornerRadius(IsRangeStart ? 14 : 0, IsRangeEnd ? 14 : 0, IsRangeEnd ? 14 : 0, IsRangeStart ? 14 : 0));
+            var r = new RoundedRect(band, new CornerRadius(IsRangeStart ? paint.Radius14 : 0, IsRangeEnd ? paint.Radius14 : 0, IsRangeEnd ? paint.Radius14 : 0, IsRangeStart ? paint.Radius14 : 0));
             context.DrawRectangle(paint.SurfaceMuted, null, r);
         }
         var center = new Point(size.Width / 2, size.Height / 2);

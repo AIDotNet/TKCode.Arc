@@ -4,7 +4,8 @@
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                     x:ClassModifier="internal">
 
-    <!-- Mobile button: filled Foreground / Background pill, no hover state, press scales to 0.97 and dims, min 44 x 44. -->
+    <!-- Mobile button: Filled (Foreground / Background pill), Tinted (AccentSubtle pill) or Plain (accent text) by Variant;
+         no hover state, press scales to 0.97 and dims, min 44 x 44. -->
     <ControlTheme x:Key="{x:Type arcm:Button}" TargetType="arcm:Button">
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
@@ -42,6 +43,15 @@
         <Setter Property="ClipToBounds" Value="False" />
 
         <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:tinted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Padding" Value="{arcm:ButtonTokenResource PlainPadding}" />
+        </Style>
         <Style Selector="^:pressed">
             <Setter Property="RenderTransform" Value="scale(0.97)" />
             <Setter Property="Opacity" Value="{arcm:ButtonTokenResource PressedOpacity}" />

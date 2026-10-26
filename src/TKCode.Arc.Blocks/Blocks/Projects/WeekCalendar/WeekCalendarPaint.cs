@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.DesignTokens;
@@ -96,6 +97,11 @@ internal sealed class WeekCalendarPaint
     public IBrush Surface { get; private set; } = Brushes.White;
 
     public IBrush SurfaceMuted { get; private set; } = Brushes.WhiteSmoke;
+
+    /// <summary>The 14 and 6 radius steps and the pill radius.</summary>
+    public double Radius14 { get; private set; } = 14;
+    public double Radius6 { get; private set; } = 6;
+    public double RadiusPill { get; private set; } = 9999;
 
     public IBrush Foreground { get; private set; } = Brushes.Black;
 
@@ -212,6 +218,11 @@ internal sealed class WeekCalendarPaint
             DisplayFamily = FontFamily.Default;
             _ready = false;
         }
+        // The radii the calendar draws itself (range band, agenda rows, small chips, header pill) follow the radius steps, so a
+        // corner style reaches them. The fallbacks are the values Arc ships.
+        Radius14 = ArcTokens.GetCornerRadius(owner, ArcDesignTokenKind.RadiusStep14, new CornerRadius(14)).TopLeft;
+        Radius6 = ArcTokens.GetCornerRadius(owner, ArcDesignTokenKind.RadiusStep6, new CornerRadius(6)).TopLeft;
+        RadiusPill = ArcTokens.GetCornerRadius(owner, ArcDesignTokenKind.RadiusPill, new CornerRadius(9999)).TopLeft;
         Body = new Typeface(BodyFamily);
         BodyMedium = new Typeface(BodyFamily, FontStyle.Normal, FontWeight.Medium);
         DisplayMedium = new Typeface(DisplayFamily, FontStyle.Normal, FontWeight.Medium);

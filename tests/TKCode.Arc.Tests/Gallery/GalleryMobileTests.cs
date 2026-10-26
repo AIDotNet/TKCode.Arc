@@ -22,7 +22,7 @@ public class GalleryMobileTests
     public void Mobile_Section_Lists_The_Catalog_Components_In_Order_And_Is_Not_Counted_As_Arc()
     {
         Mobile.Entries.Select(e => e.ClassName).ShouldBe(MobileCatalog.Components.Select(c => c.ClassName));
-        Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileTabbar", "MobileButton", "MobileSwitch"]);
+        Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileTabbar", "MobileNavigationStack", "MobileListGroup", "MobileSheet", "MobileButton", "MobileSwitch", "MobileTextField", "MobileSearchbar"]);
         Mobile.Entries.ShouldAllBe(e => !e.IsArc && e.ArcUrl == null);
         GalleryCatalog.Count.ShouldBe(111);
         GalleryCatalog.AllCategories.ShouldNotContain(Mobile);
@@ -58,7 +58,7 @@ public class GalleryMobileTests
         // MobileButton / MobileSwitch are TKCode.Arc.Mobile.Button / Switch; the desktop Button and Switch have their own tables.
         var mobileButton = GalleryDocs.ApiReference("MobileButton", "en-US");
         mobileButton.ShouldContain("### MobileButton");
-        mobileButton.ShouldContain("Mobile button: a touch-first filled button");
+        mobileButton.ShouldContain("Mobile button: a touch-first button");
         mobileButton.ShouldContain("Derives from `Button`");
         GalleryDocs.ApiReference("Button", "en-US").ShouldNotContain("touch-first");
 

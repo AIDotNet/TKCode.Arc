@@ -1056,6 +1056,21 @@ internal sealed class RichTextEditorSurface : Control
         {
             return;
         }
+        if (OperatingSystem.IsBrowser() && !IsComposing && !_composed && e.Text!.Length == 1 && !char.IsWhiteSpace(e.Text[0]))
+        {
+            // The browser host also sends the keydown's letter as text while the input method starts composing it; the
+            // composition events arrive just after, so wait for them and drop the letter when one began.
+            e.Handled = true;
+            var letter = e.Text;
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (!IsComposing && !_composed)
+                {
+                    Owner?.HandleTextInput(letter, false);
+                }
+            }, DispatcherPriority.Background);
+            return;
+        }
         var composition = _composed || IsComposing;
         if (IsComposing)
         {

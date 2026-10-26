@@ -47,9 +47,33 @@ Without slot content the title stays centered.
 
 <Demo name="TitleOnly" />
 
+### Back button
+
+Set `ShowBack` to show a plain back button (a chevron and `BackText`, usually the previous screen's title) before `Leading`, and give it a `BackCommand`. Bar actions in `Trailing` should use `Variant="Plain"` so the title stays the focus.
+
+```xml
+<arcm:Navbar Title="Settings" ShowBack="True" BackText="Home" BackCommand="{Binding GoBack}" />
+```
+
+
+### Large title
+
+Set `LargeTitle` on a root screen to show the title again as a large heading under the bar. Put the navbar in the `Header` of a `Page` with `IsScrollable="True"` and it collapses by itself as the content scrolls. Outside a scrolling page, drive `CollapseProgress` (0 to 1) yourself from a scroll offset divided by `LargeTitleExtent` (52): the large row shrinks and the bar's own title fades in, so the title is never shown twice at full size.
+
+<Demo name="LargeTitle" />
+
+```xml
+<arcm:Page IsScrollable="True">
+    <arcm:Page.Header>
+        <arcm:Navbar Title="Photos" LargeTitle="True" />
+    </arcm:Page.Header>
+    <!-- long content -->
+</arcm:Page>
+```
+
 ### Tokens
 
-`NavbarToken` holds the geometry: `BarHeight` (44), `BarPadding` (8 at the sides), `SlotMinWidth` (44) and `BarBorderThickness` (a 1 px hairline under the bar). Colors and type come from the ArcDesign tokens.
+`NavbarToken` holds the geometry: `BarHeight` (44, hairline included), `BarPadding` (8 at the sides), `SlotMinWidth` (44), `BarBorderThickness` (a 1 px hairline under the bar), `LargeTitleFontSize` (30) and `LargeTitleMargin`. Colors and type come from the ArcDesign tokens.
 
 ## API reference
 

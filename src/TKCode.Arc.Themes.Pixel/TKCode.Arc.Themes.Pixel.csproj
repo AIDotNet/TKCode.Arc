@@ -10,5 +10,6 @@
     <ItemGroup>
         <AtomUIThemeDefinition Include="Themes/*.xml" />
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
     </ItemGroup>
 </Project>

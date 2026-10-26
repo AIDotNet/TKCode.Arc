@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileListGroupBasicDemo">
+    <arcm:Page IsScrollable="True">
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Settings" LargeTitle="True" />
+        </arcm:Page.Header>
+        <StackPanel>
+            <arcm:ListGroup Header="Account" Footer="Your name and email are shown to people you share with.">
+                <arcm:ListItem Icon="{x:Static arc:ArcIcons.User}" Content="Profile" Subtitle="Ada Lovelace" ShowChevron="True" />
+                <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Search history" ShowChevron="True" />
+            </arcm:ListGroup>
+            <arcm:ListGroup Header="Notifications">
+                <arcm:ListItem Icon="{x:Static arc:ArcIcons.Bell}" Content="Push notifications">
+                    <arcm:ListItem.Trailing>
+                        <arcm:Switch IsChecked="True" />
+                    </arcm:ListItem.Trailing>
+                </arcm:ListItem>
+                <arcm:ListItem Content="Weekly summary" Trailing="Sundays" ShowChevron="True" />
+            </arcm:ListGroup>
+        </StackPanel>
+    </arcm:Page>
+</UserControl>

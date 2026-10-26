@@ -1,0 +1,68 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Sheet: fills its parent; a scrim and a Surface panel anchored to the bottom with rounded top corners, a grabber and
+         title as the handle a finger drags, and the content scrolling in the rest. The panel's position and the scrim's
+         opacity are driven by the Sheet's code (a drag writes them each move), not by transitions. -->
+    <ControlTheme x:Key="{x:Type arcm:Sheet}" TargetType="arcm:Sheet">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Sheet">
+                <Grid>
+                    <Border Name="PART_Scrim"
+                            Background="{arcm:SheetTokenResource ScrimColor}"
+                            Opacity="0" />
+                    <Border Name="PART_Panel"
+                            VerticalAlignment="Bottom"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arcm:SheetTokenResource PanelRadius}"
+                            ClipToBounds="True"
+                            IsVisible="False">
+                        <DockPanel>
+                            <StackPanel Name="PART_Handle"
+                                        DockPanel.Dock="Top"
+                                        Background="Transparent"
+                                        Spacing="8"
+                                        Margin="{arcm:SheetTokenResource HandlePadding}">
+                                <Border Width="{arcm:SheetTokenResource GrabberWidth}"
+                                        Height="{arcm:SheetTokenResource GrabberHeight}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource BorderStrong}"
+                                        HorizontalAlignment="Center" />
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <ScrollViewer Name="PART_Body"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  Padding="{TemplateBinding Padding}" />
+                            </ScrollViewer>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1,1,1,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -124,6 +124,8 @@ public sealed partial class AgentStatus
     {
         base.OnAttachedToVisualTree(e);
         _attached = true;
+        ResourcesChanged += OnResourcesChanged;
+        RefreshRadii();
         if (Simulation is null && !HasHostData())
         {
             _autoSim = new AgentRunSimulation(AgentStatusSamples.Coding, TimeProvider);
@@ -144,6 +146,7 @@ public sealed partial class AgentStatus
     {
         base.OnDetachedFromVisualTree(e);
         _attached = false;
+        ResourcesChanged -= OnResourcesChanged;
         WatchData(false);
         StopTick();
         StopSettle();

@@ -283,14 +283,16 @@ public class GalleryLocalizationTests
         var window = TestHelpers.Show(panel);
         try
         {
-            // Mode, style and motion; the language has its own menu in the top bar (GalleryLanguagesTests).
-            panel.GetVisualDescendants().OfType<GallerySegmented>().Count().ShouldBe(3);
+            // Mode, style, corners and motion; the language has its own menu in the top bar (GalleryLanguagesTests).
+            panel.GetVisualDescendants().OfType<GallerySegmented>().Count().ShouldBe(4);
             Texts(panel).ShouldNotContain("Language");
             Texts(panel).ShouldNotContain("English");
 
             GalleryText.SetLanguage("zh-CN");
             Dispatcher.UIThread.RunJobs();
             Texts(panel).ShouldContain("浅色");
+            Texts(panel).ShouldContain("圆角");
+            Texts(panel).ShouldContain("直角");
             // The accent swatches are named for assistive technology and in their tooltips.
             panel.GetVisualDescendants().OfType<Button>()
                  .Select(Avalonia.Automation.AutomationProperties.GetName).ShouldContain("珊瑚");

@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileNavigationStackBasicDemo">
+    <arcm:NavigationStack Name="Stack">
+        <arcm:Page IsScrollable="True">
+            <arcm:Page.Header>
+                <arcm:Navbar Title="Inbox" LargeTitle="True" />
+            </arcm:Page.Header>
+            <arcm:ListGroup Footer="Tap a row to push its page. Swipe from the left edge to go back.">
+                <arcm:ListItem Icon="{x:Static arc:ArcIcons.User}" Content="Ada Lovelace" Subtitle="Notes on the engine" ShowChevron="True" Click="OnOpen" />
+                <arcm:ListItem Icon="{x:Static arc:ArcIcons.User}" Content="Grace Hopper" Subtitle="The compiler is ready" ShowChevron="True" Click="OnOpen" />
+                <arcm:ListItem Icon="{x:Static arc:ArcIcons.User}" Content="Alan Turing" Subtitle="About that machine" ShowChevron="True" Click="OnOpen" />
+            </arcm:ListGroup>
+        </arcm:Page>
+    </arcm:NavigationStack>
+</UserControl>

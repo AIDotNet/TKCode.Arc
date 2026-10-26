@@ -13,6 +13,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Shots/TKCode.Arc.Gallery.Shots.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Content/TKCode.Arc.Gallery.Content.csproj" />

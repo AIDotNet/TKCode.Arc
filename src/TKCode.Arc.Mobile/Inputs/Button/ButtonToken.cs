@@ -16,6 +16,9 @@ internal sealed class ButtonToken : AbstractControlDesignToken
     /// <summary>Inner padding: 16 by 10.</summary>
     public Thickness ContentPadding { get; set; }
 
+    /// <summary>Inner padding of the plain variant, which has no pill to fill: 8 by 10.</summary>
+    public Thickness PlainPadding { get; set; }
+
     /// <summary>Scale while pressed: 0.97.</summary>
     public double PressedScale { get; set; }
 
@@ -30,6 +33,7 @@ internal sealed class ButtonToken : AbstractControlDesignToken
         base.CalculateTokenValues(isDarkMode);
         TouchTarget = 44;
         ContentPadding = new Thickness(16, 10);
+        PlainPadding = new Thickness(8, 10);
         PressedScale = 0.97;
         PressedOpacity = 0.85;
         DisabledOpacity = 0.5;

@@ -1,7 +1,7 @@
 ---
 title: 移动端导航栏
 summary: 页面顶部 44 px 高的栏：起始槽、居中的标题和放操作的末端槽。
-source-hash: 50823e765d24
+source-hash: ffc2bdba0872
 ---
 
 <Demo name="Basic" />
@@ -48,9 +48,33 @@ source-hash: 50823e765d24
 
 <Demo name="TitleOnly" />
 
+### 返回按钮
+
+设置 `ShowBack` 会在 `Leading` 之前显示一个朴素的返回按钮（箭头加 `BackText`，通常是上一页的标题），用 `BackCommand` 指定动作。`Trailing` 里的操作建议用 `Variant="Plain"`，让标题保持视觉焦点。
+
+```xml
+<arcm:Navbar Title="设置" ShowBack="True" BackText="首页" BackCommand="{Binding GoBack}" />
+```
+
+
+### 大标题
+
+在根页面设置 `LargeTitle`，标题会在栏下方再以大字显示一次。把导航栏放在 `IsScrollable="True"` 的 `Page` 的 `Header` 里，内容滚动时它会自己折叠。不在可滚动页面里时，请自己用滚动偏移量除以 `LargeTitleExtent`（52）来驱动 `CollapseProgress`（0 到 1）：大标题行逐渐收起，栏里的标题同时淡入，所以标题不会同时以大字出现两次。
+
+<Demo name="LargeTitle" />
+
+```xml
+<arcm:Page IsScrollable="True">
+    <arcm:Page.Header>
+        <arcm:Navbar Title="照片" LargeTitle="True" />
+    </arcm:Page.Header>
+    <!-- 较长的内容 -->
+</arcm:Page>
+```
+
 ### Token
 
-`NavbarToken` 保存几何：`BarHeight`（44）、`BarPadding`（两侧 8）、`SlotMinWidth`（44）和 `BarBorderThickness`（栏下方 1 px 的细线）。颜色和字体来自 ArcDesign token。
+`NavbarToken` 保存几何：`BarHeight`（44，含细线）、`BarPadding`（两侧 8）、`SlotMinWidth`（44）、`BarBorderThickness`（栏下方 1 px 的细线）、`LargeTitleFontSize`（30）和 `LargeTitleMargin`。颜色和字体来自 ArcDesign token。
 
 ## API 参考
 

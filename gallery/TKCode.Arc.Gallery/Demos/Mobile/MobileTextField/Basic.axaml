@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileTextFieldBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="New contact" />
+        </arcm:Page.Header>
+        <StackPanel Margin="16" Spacing="12">
+            <arcm:TextField PlaceholderText="Name" Icon="{x:Static arc:ArcIcons.User}" Text="Ada Lovelace" />
+            <arcm:TextField PlaceholderText="Email" Icon="{x:Static arc:ArcIcons.Bell}" />
+            <arcm:TextField PlaceholderText="Notes (read only)" Text="Managed by your team" IsReadOnly="True" />
+            <arcm:TextField PlaceholderText="Not available" IsEnabled="False" />
+            <TextBlock Text="Tap a field and type: the border takes the accent color and a clear button appears."
+                       TextWrapping="Wrap"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </arcm:Page>
+</UserControl>

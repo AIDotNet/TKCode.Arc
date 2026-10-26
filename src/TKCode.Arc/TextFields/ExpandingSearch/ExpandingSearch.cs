@@ -155,8 +155,10 @@ public class ExpandingSearch : TemplatedControl
         Empty
     }
 
-    private const double CollapsedRadiusFallback = 22;
-    private const double OpenRadius = 18;
+    // The shell morphs between a pill (collapsed) and RadiusControl (open); both come from the tokens, so a square corner
+    // style flattens it. The defaults apply until the tokens are read.
+    private double _openRadius = 18;
+    private double _pillRadius = double.PositiveInfinity;
 
     private Panel? _shellHost;
     private Border? _shell;
@@ -378,12 +380,28 @@ public class ExpandingSearch : TemplatedControl
         return result;
     }
 
+    private void RefreshRadii()
+    {
+        _openRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusControl, new CornerRadius(18)).TopLeft;
+        _pillRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusPill, new CornerRadius(9999)).TopLeft;
+    }
+
+    private void OnResourcesChanged(object? sender, ResourcesChangedEventArgs e)
+    {
+        RefreshRadii();
+        if (_width is not null)
+        {
+            SyncShape(_width.Value);
+        }
+    }
+
     private void EnsureWidth(double initial)
     {
         if (_width is not null)
         {
             return;
         }
+        RefreshRadii();
         _width = new MotionValue<double>(this, initial, MotionVectors.Double);
         _width.Changed += SyncShape;
         SyncShape(initial);
@@ -397,15 +415,15 @@ public class ExpandingSearch : TemplatedControl
             _shellHost.Width = Math.Max(_collapsed, width);
         }
         var open = Math.Clamp((width - _collapsed) / Math.Max(1, _full - _collapsed), 0, 1);
-        var half = _collapsed / 2;
-        var radius = half - (half - OpenRadius) * open;
+        var half = Math.Min(_collapsed / 2, _pillRadius);
+        var radius = half - (half - Math.Min(_openRadius, half)) * open;
         if (_shell is not null)
         {
             _shell.CornerRadius = new CornerRadius(radius);
         }
         if (_focusRing is not null)
         {
-            _focusRing.CornerRadius = new CornerRadius(radius + 3);
+            _focusRing.CornerRadius = new CornerRadius(radius > 0 ? radius + 3 : 0);
         }
         if (_panelSurface is not null)
         {
@@ -943,9 +961,17 @@ public class ExpandingSearch : TemplatedControl
         _lastHighlight = null;
     }
 
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        ResourcesChanged += OnResourcesChanged;
+        RefreshRadii();
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        ResourcesChanged -= OnResourcesChanged;
         ClosePanel();
     }
 }

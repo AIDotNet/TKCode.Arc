@@ -63,6 +63,6 @@ public class PackageTests
     {
         var controls = typeof(Button).Assembly.GetExportedTypes()
             .Where(t => typeof(Avalonia.Controls.Control).IsAssignableFrom(t)).Select(t => t.Name).Order().ToList();
-        controls.ShouldBe(["Button", "Navbar", "Page", "Switch", "Tabbar", "TabbarItem"]);
+        controls.ShouldBe(["Button", "ListGroup", "ListItem", "Navbar", "NavigationStack", "Page", "Searchbar", "Sheet", "Switch", "Tabbar", "TabbarItem", "TextField"]);
     }
 }

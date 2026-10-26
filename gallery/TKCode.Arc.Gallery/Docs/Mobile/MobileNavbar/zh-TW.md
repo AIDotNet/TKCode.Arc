@@ -1,7 +1,7 @@
 ---
 title: 移動端導覽列
 summary: 頁面頂部 44 px 高的列：起始槽、置中的標題和放操作的末端槽。
-source-hash: 50823e765d24
+source-hash: ffc2bdba0872
 ---
 
 <Demo name="Basic" />
@@ -48,9 +48,33 @@ source-hash: 50823e765d24
 
 <Demo name="TitleOnly" />
 
+### 返回按鈕
+
+設定 `ShowBack` 會在 `Leading` 之前顯示一個樸素的返回按鈕（箭頭加 `BackText`，通常是上一頁的標題），用 `BackCommand` 指定動作。`Trailing` 裡的操作建議用 `Variant="Plain"`，讓標題保持視覺焦點。
+
+```xml
+<arcm:Navbar Title="設定" ShowBack="True" BackText="首頁" BackCommand="{Binding GoBack}" />
+```
+
+
+### 大標題
+
+在根頁面設定 `LargeTitle`，標題會在列下方再以大字顯示一次。把導覽列放在 `IsScrollable="True"` 的 `Page` 的 `Header` 裡，內容捲動時它會自己摺疊。不在可捲動頁面裡時，請自己用捲動位移除以 `LargeTitleExtent`（52）來驅動 `CollapseProgress`（0 到 1）：大標題列逐漸收起，列裡的標題同時淡入，所以標題不會同時以大字出現兩次。
+
+<Demo name="LargeTitle" />
+
+```xml
+<arcm:Page IsScrollable="True">
+    <arcm:Page.Header>
+        <arcm:Navbar Title="照片" LargeTitle="True" />
+    </arcm:Page.Header>
+    <!-- 較長的內容 -->
+</arcm:Page>
+```
+
 ### Token
 
-`NavbarToken` 保存幾何：`BarHeight`（44）、`BarPadding`（兩側 8）、`SlotMinWidth`（44）和 `BarBorderThickness`（列下方 1 px 的細線）。顏色和字型來自 ArcDesign token。
+`NavbarToken` 保存幾何：`BarHeight`（44，含細線）、`BarPadding`（兩側 8）、`SlotMinWidth`（44）、`BarBorderThickness`（列下方 1 px 的細線）、`LargeTitleFontSize`（30）和 `LargeTitleMargin`。顏色和字型來自 ArcDesign token。
 
 ## API 參考
 

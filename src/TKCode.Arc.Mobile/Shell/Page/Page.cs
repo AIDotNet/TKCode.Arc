@@ -19,6 +19,10 @@ public class Page : ContentControl
     public static readonly StyledProperty<object?> FooterProperty =
         AvaloniaProperty.Register<Page, object?>(nameof(Footer));
 
+    /// <summary>The slot over the whole page, header and footer included, for a <see cref="Sheet"/>.</summary>
+    public static readonly StyledProperty<object?> OverlayProperty =
+        AvaloniaProperty.Register<Page, object?>(nameof(Overlay));
+
     /// <summary>
     /// The insets the page keeps free on each edge. With <see cref="UsePlatformSafeArea"/> the platform sets it
     /// (zero where there is no insets manager); otherwise set it yourself.
@@ -30,6 +34,20 @@ public class Page : ContentControl
     public static readonly StyledProperty<bool> UsePlatformSafeAreaProperty =
         AvaloniaProperty.Register<Page, bool>(nameof(UsePlatformSafeArea), true);
 
+    /// <summary>
+    /// Whether the content scrolls vertically inside the page. Off, the content gets the page's height as it is.
+    /// On, a <see cref="Navbar"/> in <see cref="Header"/> that has a large title collapses it as the content scrolls.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsScrollableProperty =
+        AvaloniaProperty.Register<Page, bool>(nameof(IsScrollable));
+
+    static Page()
+    {
+        IsScrollableProperty.Changed.AddClassHandler<Page>((page, _) => page.PseudoClasses.Set(":scrollable", page.IsScrollable));
+        HeaderProperty.Changed.AddClassHandler<Page>((page, _) => page.UpdateLargeTitle());
+    }
+
+    private ScrollViewer? _scroller;
     private TopLevel? _topLevel;
     private Avalonia.Controls.Platform.IInsetsManager? _insets;
 
@@ -47,6 +65,20 @@ public class Page : ContentControl
         set => SetValue(FooterProperty, value);
     }
 
+    /// <inheritdoc cref="OverlayProperty"/>
+    public object? Overlay
+    {
+        get => GetValue(OverlayProperty);
+        set => SetValue(OverlayProperty, value);
+    }
+
+    /// <inheritdoc cref="IsScrollableProperty"/>
+    public bool IsScrollable
+    {
+        get => GetValue(IsScrollableProperty);
+        set => SetValue(IsScrollableProperty, value);
+    }
+
     /// <inheritdoc cref="SafeAreaProperty"/>
     public Thickness SafeArea
     {
@@ -62,6 +94,21 @@ public class Page : ContentControl
     }
 
     protected override Type StyleKeyOverride => typeof(Page);
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        if (_scroller is not null)
+        {
+            _scroller.ScrollChanged -= OnScrollChanged;
+        }
+        _scroller = e.NameScope.Find<ScrollViewer>("PART_Scroller");
+        if (_scroller is not null)
+        {
+            _scroller.ScrollChanged += OnScrollChanged;
+        }
+        UpdateLargeTitle();
+    }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -107,4 +154,15 @@ public class Page : ContentControl
     }
 
     private void OnSafeAreaChanged(object? sender, Avalonia.Controls.Platform.SafeAreaChangedArgs e) => SafeArea = e.SafeAreaPadding;
+
+    private void OnScrollChanged(object? sender, ScrollChangedEventArgs e) => UpdateLargeTitle();
+
+    /// <summary>Collapses the header navbar's large title by how far the content has scrolled.</summary>
+    private void UpdateLargeTitle()
+    {
+        if (Header is Navbar { LargeTitle: true } navbar && _scroller is not null && IsScrollable)
+        {
+            navbar.CollapseProgress = _scroller.Offset.Y / Navbar.LargeTitleExtent;
+        }
+    }
 }

@@ -562,8 +562,9 @@ public class MenuSurface : HeaderedItemsControl
         {
             return;
         }
-        // Presses on the anchor pass through so its own click can toggle (or, for context menus, reopen) the menu.
-        if (PlacementTarget is { } target && e.Source is Visual visual &&
+        // Presses on the anchor pass through so its own click can toggle the menu. A menu opened at a point (context menu)
+        // has a large anchor such as a whole grid body, so a press there closes it and a context request reopens it.
+        if (_anchorPoint is null && PlacementTarget is { } target && e.Source is Visual visual &&
             (ReferenceEquals(visual, target) || target.IsVisualAncestorOf(visual)))
         {
             return;

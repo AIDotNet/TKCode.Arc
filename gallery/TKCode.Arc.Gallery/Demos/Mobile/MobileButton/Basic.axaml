@@ -5,7 +5,8 @@
              x:Class="TKCode.Arc.Gallery.Demos.MobileButtonBasicDemo">
     <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
         <arcm:Button Content="Continue" HorizontalAlignment="Stretch" />
-        <arcm:Button Content="Save draft" HorizontalAlignment="Center" />
+        <arcm:Button Variant="Tinted" Content="Save draft" HorizontalAlignment="Stretch" />
+        <arcm:Button Variant="Plain" Content="Skip for now" HorizontalAlignment="Center" />
         <arcm:Button Content="Not available" IsEnabled="False" HorizontalAlignment="Center" />
         <TextBlock Text="Press and hold a button: it scales down and dims while a finger is on it."
                    TextWrapping="Wrap"

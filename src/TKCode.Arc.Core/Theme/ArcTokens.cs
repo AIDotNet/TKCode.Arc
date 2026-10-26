@@ -39,6 +39,13 @@ public static class ArcTokens
     public static T Get<T>(Control owner, ArcDesignTokenKind kind)
         => ControlTokenAccessor.Capture<ArcDesign>(owner).GetOwn<T, ArcDesignTokenKind>(kind);
 
+    /// <summary>
+    /// Reads a corner radius token like <see cref="Get{T}"/>, but returns <paramref name="fallback"/> instead of throwing when
+    /// the owner is not in a themed tree yet (a control that reads its radii when it attaches may be built before that).
+    /// </summary>
+    public static CornerRadius GetCornerRadius(Control owner, ArcDesignTokenKind kind, CornerRadius fallback)
+        => owner.TryFindResource(kind, owner.ActualThemeVariant, out var value) && value is CornerRadius radius ? radius : fallback;
+
     /// <summary>Reads a color token (brush tokens are unwrapped).</summary>
     public static Color GetColor(Control owner, ArcDesignTokenKind kind)
     {

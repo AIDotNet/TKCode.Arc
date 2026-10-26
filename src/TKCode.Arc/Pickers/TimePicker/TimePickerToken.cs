@@ -30,7 +30,7 @@ internal sealed class TimePickerToken : AbstractControlDesignToken
         ListInset = new Thickness(5);
         OptionHeight = 36;
         OptionInset = 12;
-        OptionRadius = 26 - 5;
+        OptionRadius = 21;
         DotDiameter = 6;
         ValueLineHeight = 14 * 1.4;
     }

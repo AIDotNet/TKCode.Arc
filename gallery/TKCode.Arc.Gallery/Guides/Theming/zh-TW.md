@@ -1,6 +1,6 @@
 ---
 title: 主題
-source-hash: bab5ca82d051
+source-hash: 8f4d6266eb37
 ---
 
 # 主題
@@ -253,6 +253,38 @@ builder = builder.WithArc(arc => arc
 ```
 
 請盡量少改。權杖的修改會套用到所有地方：覆寫 `Danger` 會改變應用程式中每一則錯誤訊息、每一個破壞性按鈕和每一個失敗狀態。顏色的覆寫值應在兩種外觀下檢查，因為深色模式不會重新計算該覆寫值。
+
+## 圓角風格
+
+Arc 的圓角偏大：控制項 18、面板 26、表面 34。如果產品想要更方的外觀，請改用圓角風格，而不是只覆寫四個 `Radius*`
+權杖。這四個只是最上層：範本內部使用的圓角階梯、約 300 個控制項屬性各自的圓角權杖（核取方塊的方框、Combobox 的選項、
+懸停選單列後面的高亮），以及某些控制項在動畫中自己計算的圓角，都是另外的值。只改那四個，彈層、懸停背景和核取方塊仍然是圓的。
+
+`TKCode.Arc.Themes.Corners` 套件用一次呼叫改掉全部，並且只改圓角：顏色、描邊、陰影和動效保持不變。
+
+```csharp
+using TKCode.Arc.Themes.Corners;
+
+builder = builder.WithArc(arc => arc
+    .Accent(ArcAccentPreset.Blue)
+    .Corners(ArcCornerStyle.Square, ArcCornerScope.All));
+```
+
+| 風格 | 結果 |
+|---|---|
+| `ArcCornerStyle.Default` | 保持 Arc 原樣，不寫入任何值。 |
+| `ArcCornerStyle.Scale(0.5)` | 每個圓角乘以係數。`Scale(0)` 等於 `Square`，`Scale(1)` 等於 `Default`，大於 1 則更圓。 |
+| `ArcCornerStyle.Square` | 所有圓角變為直角。 |
+
+- **藥丸與圓形。** 半徑達到 999 及以上的（藥丸按鈕、圓形頭像、圓點）在 `Scale` 下保持形狀，只有 `Square` 會把它們變平，
+  所以直角風格會把圓形頭像變成方形。想保留圓形，請用 `Scale`。
+- **範圍。** `ArcCornerScope` 指明應用程式註冊了哪些控制項套件：`Controls`、`Blocks`、`Special`、`AdvancedCharts`、`Workflow`，
+  或 `All`。點名了應用程式沒有註冊的套件，整次主題切換會失敗，所以只列實際使用的。
+- **一次呼叫。** 後一次 `WithArc` 會取代前一次寫入的內容，所以像上面這樣把強調色和圓角風格放在同一次呼叫裡。
+  只設定圓角時，可以用 `builder.WithArcCorners(style, scope)` 簡寫。
+- **捲軸。** AtomUI 捲軸的滑塊出現在每個 Arc 彈層和捲動區域裡，所以圓角風格也會改變整個應用程式的捲軸滑塊，
+  包括不屬於 Arc 的 AtomUI 控制項。
+- **Pixel。** Pixel 風格建立在同一個套件上，始終是直角。
 
 ## 單一控制項的樣式
 

@@ -4,33 +4,45 @@
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                     x:ClassModifier="internal">
 
-    <!-- Page: Background fill, the safe area as padding, header / content / footer in three rows. -->
+    <!-- Page: Background fill, the safe area as padding, header / content (optionally scrolling) / footer in three rows, and an overlay slot over all of it. -->
     <ControlTheme x:Key="{x:Type arcm:Page}" TargetType="arcm:Page">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arcm:Page">
+                <Grid>
                 <Border Background="{TemplateBinding Background}"
                         Padding="{TemplateBinding SafeArea}">
                     <Grid RowDefinitions="Auto,*,Auto">
                         <ContentPresenter Name="PART_Header"
                                           Grid.Row="0"
                                           Content="{TemplateBinding Header}" />
-                        <ContentPresenter Name="PART_ContentPresenter"
-                                          Grid.Row="1"
-                                          Padding="{arcm:PageTokenResource ContentInset}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        <ScrollViewer Name="PART_Scroller"
+                                      Grid.Row="1"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Disabled">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Padding="{arcm:PageTokenResource ContentInset}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </ScrollViewer>
                         <ContentPresenter Name="PART_Footer"
                                           Grid.Row="2"
                                           Content="{TemplateBinding Footer}" />
                     </Grid>
                 </Border>
+                <ContentPresenter Name="PART_Overlay" Content="{TemplateBinding Overlay}" />
+                </Grid>
             </ControlTemplate>
         </Setter>
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+
+        <!-- Scrollable: the content scrolls vertically inside the page. Otherwise the scroller only passes the page's height on. -->
+        <Style Selector="^:scrollable /template/ ScrollViewer#PART_Scroller">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
 
         <!-- The background follows light / dark on the standard curve; reduced motion switches at once. -->
         <Style Selector="^:motion-full">

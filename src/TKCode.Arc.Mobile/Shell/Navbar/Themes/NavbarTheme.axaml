@@ -4,7 +4,7 @@
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                     x:ClassModifier="internal">
 
-    <!-- Navbar: 44 high, Surface fill with a Border hairline under it; leading / centered title / trailing. -->
+    <!-- Navbar: 44 high, Surface fill with a Border hairline under it; back button + leading / centered title / trailing, and an optional large title row under it that collapses into the bar. -->
     <ControlTheme x:Key="{x:Type arcm:Navbar}" TargetType="arcm:Navbar">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -13,13 +13,32 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Padding="{TemplateBinding Padding}">
-                    <Grid ColumnDefinitions="*,Auto,*">
-                        <ContentPresenter Name="PART_Leading"
-                                          Grid.Column="0"
-                                          MinWidth="{arcm:NavbarTokenResource SlotMinWidth}"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Center"
-                                          Content="{TemplateBinding Leading}" />
+                    <StackPanel>
+                    <Grid ColumnDefinitions="*,Auto,*" Height="{arcm:NavbarTokenResource BarContentHeight}">
+                        <StackPanel Name="PART_LeadingHost"
+                                    Grid.Column="0"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center">
+                            <arcm:Button Name="PART_Back"
+                                         Variant="Plain"
+                                         Command="{TemplateBinding BackCommand}"
+                                         IsVisible="{TemplateBinding ShowBack}">
+                                <StackPanel Orientation="Horizontal" Spacing="2">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                                  Foreground="{Binding $parent[arcm:Button].Foreground}"
+                                                  Size="{arcm:NavbarTokenResource BackIconExtent}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Text="{TemplateBinding BackText}"
+                                               IsVisible="{Binding !!BackText, RelativeSource={RelativeSource TemplatedParent}}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </arcm:Button>
+                            <ContentPresenter Name="PART_Leading"
+                                              MinWidth="{arcm:NavbarTokenResource SlotMinWidth}"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Leading}" />
+                        </StackPanel>
                         <TextBlock Name="PART_Title"
                                    Grid.Column="1"
                                    Text="{TemplateBinding Title}"
@@ -27,6 +46,7 @@
                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                    TextTrimming="CharacterEllipsis"
                                    VerticalAlignment="Center"
+                                   Opacity="{TemplateBinding BarTitleOpacity}"
                                    HorizontalAlignment="Center" />
                         <ContentPresenter Name="PART_Trailing"
                                           Grid.Column="2"
@@ -35,10 +55,22 @@
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Trailing}" />
                     </Grid>
+                    <Border Name="PART_LargeTitleHost"
+                            Height="{TemplateBinding LargeTitleHeight}"
+                            ClipToBounds="True"
+                            IsHitTestVisible="False">
+                        <TextBlock Name="PART_LargeTitle"
+                                   Text="{TemplateBinding Title}"
+                                   Margin="{arcm:NavbarTokenResource LargeTitleMargin}"
+                                   FontSize="{arcm:NavbarTokenResource LargeTitleFontSize}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    </StackPanel>
                 </Border>
             </ControlTemplate>
         </Setter>
-        <Setter Property="Height" Value="{arcm:NavbarTokenResource BarHeight}" />
         <Setter Property="Padding" Value="{arcm:NavbarTokenResource BarPadding}" />
         <Setter Property="BorderThickness" Value="{arcm:NavbarTokenResource BarBorderThickness}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />

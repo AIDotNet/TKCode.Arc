@@ -53,6 +53,19 @@ A page without a header or footer lets the content use the whole safe area.
 
 <Demo name="ContentOnly" />
 
+### Scrolling content
+
+By default the content gets the page's height as it is, so a screen that fills the page can lay itself out. Set `IsScrollable="True"` when the content can be taller than the page: it then scrolls vertically inside the page, between the header and the footer. A `Navbar` with a large title in the `Header` collapses it as the content scrolls.
+
+```xml
+<arcm:Page IsScrollable="True">
+    <arcm:Page.Header>
+        <arcm:Navbar Title="Photos" LargeTitle="True" />
+    </arcm:Page.Header>
+    <!-- long content -->
+</arcm:Page>
+```
+
 ### Tokens
 
 `PageToken` holds the geometry: `ContentInset` (the padding around the content slot, 0). The background, foreground, font and size come from the ArcDesign tokens (`Background`, `Foreground`, `BodyFontFamily`, `TypeBase`), so the page follows light and dark and the accent.

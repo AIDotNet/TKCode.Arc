@@ -78,6 +78,10 @@ public class Tabs : SelectingItemsControl
     public static readonly StyledProperty<TabsActivationMode> ActivationModeProperty =
         AvaloniaProperty.Register<Tabs, TabsActivationMode>(nameof(ActivationMode));
 
+    /// <summary>Margin around the panel; its top edge is the space between the trigger list and the panel (Arc: 16px).</summary>
+    public static readonly StyledProperty<Thickness> ContentMarginProperty =
+        AvaloniaProperty.Register<Tabs, Thickness>(nameof(ContentMargin));
+
     /// <summary>Accessible name of the left scroll button.</summary>
     public static readonly StyledProperty<string> ScrollLeftLabelProperty =
         AvaloniaProperty.Register<Tabs, string>(nameof(ScrollLeftLabel), "Scroll tabs left");
@@ -93,6 +97,13 @@ public class Tabs : SelectingItemsControl
     /// <summary>The template of the selected tab's panel.</summary>
     public static readonly DirectProperty<Tabs, IDataTemplate?> SelectedContentTemplateProperty =
         AvaloniaProperty.RegisterDirect<Tabs, IDataTemplate?>(nameof(SelectedContentTemplate), o => o.SelectedContentTemplate);
+
+    /// <inheritdoc cref="ContentMarginProperty"/>
+    public Thickness ContentMargin
+    {
+        get => GetValue(ContentMarginProperty);
+        set => SetValue(ContentMarginProperty, value);
+    }
 
     /// <inheritdoc cref="ContentTemplateProperty"/>
     public IDataTemplate? ContentTemplate

@@ -5,6 +5,7 @@
     <ControlTheme x:Key="{x:Type arc:Tabs}" TargetType="arc:Tabs">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ContentMargin" Value="{arc:TabsTokenResource ContentMargin}" />
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal" Spacing="{arc:ArcDesignTokenResource Space1}" />
@@ -61,7 +62,7 @@
                         </Panel>
                     </Border>
                     <arc:TabsPanelHost Name="PART_ContentHost"
-                                       Margin="{arc:TabsTokenResource ContentMargin}"
+                                       Margin="{TemplateBinding ContentMargin}"
                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
                                        TextBlock.LineHeight="{arc:TabsTokenResource ContentLineHeight}"

@@ -642,7 +642,7 @@ internal sealed class WeekCalendarAgendaRow : AvaloniaButton
         {
             using (context.PushOpacity(HoverAmount))
             {
-                context.DrawRectangle(paint.SurfaceMuted, null, new RoundedRect(bounds, WeekCalendarMetrics.AgendaRowRadius));
+                context.DrawRectangle(paint.SurfaceMuted, null, new RoundedRect(bounds, Math.Min(WeekCalendarMetrics.AgendaRowRadius, paint.Radius14)));
             }
         }
         var cy = size.Height / 2;
@@ -705,7 +705,7 @@ internal sealed class WeekCalendarAgendaRow : AvaloniaButton
         }
         if (Classes.Contains(":focus-visible"))
         {
-            context.DrawRectangle(null, paint.FocusRing, new RoundedRect(bounds.Inflate(3), WeekCalendarMetrics.AgendaRowRadius + 3));
+            context.DrawRectangle(null, paint.FocusRing, new RoundedRect(bounds.Inflate(3), paint.Radius14 > 0 ? paint.Radius14 + 3 : 0));
         }
     }
 }

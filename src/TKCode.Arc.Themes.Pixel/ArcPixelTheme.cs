@@ -5,6 +5,7 @@ using AtomUI.Theme.Schema;
 using Avalonia.Media;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Themes.Corners;
 
 namespace TKCode.Arc.Themes.Pixel;
 
@@ -57,7 +58,11 @@ public static class ArcPixelTheme
     public static ThemeConfigBuilder WithArcPixel(this ThemeConfigBuilder builder, bool dark, ArcPixelScope scope = ArcPixelScope.Controls)
     {
         var p = dark ? Dark : Light;
-        builder = builder.WithArc(arc =>
+        // Every override goes through one WithArc call: WithControl replaces the whole config of an identity, so the tokens
+        // of each control are merged by the accumulator. The corners are the shared Corners package (square in all
+        // packages of the scope); the compiled XML themes get the ArcDesign radii from the same table
+        // (tools/pixel/generate_pixel_themes.py).
+        return builder.WithArc(arc =>
         {
             foreach (var (name, value) in Shared)
             {
@@ -67,100 +72,23 @@ public static class ArcPixelTheme
             {
                 arc.Token(name, value);
             }
+            arc.Corners(ArcCornerStyle.Square, (ArcCornerScope)(int)scope);
+            if (scope.HasFlag(ArcPixelScope.Controls))
+            {
+                foreach (var (id, tokens) in DerivedColors(dark ? DarkRoles : LightRoles))
+                {
+                    foreach (var (name, value) in tokens)
+                    {
+                        arc.ControlToken(Catalog, id, name, value);
+                    }
+                }
+            }
         });
-
-        // WithControl replaces the whole config of an identity, so the tokens of each control are merged first.
-        var controls = new Dictionary<(string Catalog, string Id), Dictionary<string, string>>();
-        void Add(string catalog, string id, string name, string value)
-        {
-            if (!controls.TryGetValue((catalog, id), out var tokens))
-            {
-                tokens = new Dictionary<string, string>(StringComparer.Ordinal);
-                controls[(catalog, id)] = tokens;
-            }
-            tokens[name] = value;
-        }
-
-        void AddRadii(ArcPixelScope flag, string catalog, (string Control, string[] Tokens)[] table)
-        {
-            if (!scope.HasFlag(flag))
-            {
-                return;
-            }
-            foreach (var (control, names) in table)
-            {
-                foreach (var name in names)
-                {
-                    Add(catalog, control, name, "0");
-                }
-            }
-        }
-
-        AddRadii(ArcPixelScope.Controls, Catalog, PixelRadiusTable.Controls);
-        AddRadii(ArcPixelScope.Blocks, "TKCode.Arc.Blocks", PixelRadiusTable.Blocks);
-        AddRadii(ArcPixelScope.Special, "TKCode.Arc.Special", PixelRadiusTable.Special);
-        AddRadii(ArcPixelScope.AdvancedCharts, "TKCode.Arc.AdvancedCharts", PixelRadiusTable.AdvancedCharts);
-        AddRadii(ArcPixelScope.Workflow, "TKCode.Arc.Workflow", PixelRadiusTable.Workflow);
-        if (scope.HasFlag(ArcPixelScope.Controls))
-        {
-            foreach (var (id, tokens) in DerivedColors(dark ? DarkRoles : LightRoles))
-            {
-                foreach (var (name, value) in tokens)
-                {
-                    Add(Catalog, id, name, value);
-                }
-            }
-        }
-
-        foreach (var ((catalog, id), tokens) in controls)
-        {
-            var control = new ControlThemeConfigBuilder();
-            foreach (var (name, value) in tokens)
-            {
-                control.WithToken(name, value);
-            }
-            builder = builder.WithControl(new ControlTokenIdentity(catalog, id), control.Build());
-        }
-        return builder;
     }
 
     // Palette: Sweetie-16 style, ink #1A1C2C, paper #F4F4F4, grays #94B0C2 #566C86 #333C57.
     private static readonly (string, string)[] Shared =
     [
-        (nameof(ArcDesignTokenKind.RadiusControl), "0"),
-        (nameof(ArcDesignTokenKind.RadiusPanel), "0"),
-        (nameof(ArcDesignTokenKind.RadiusSurface), "0"),
-        (nameof(ArcDesignTokenKind.RadiusPill), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep1), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep1p25), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep1p5), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep2), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep3), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep4), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep5), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep6), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep7), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep8), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep9), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep10), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep12), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep13), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep14), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep14p5), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep15), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep16), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep17), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep18), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep19), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep19Top), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep20), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep20Top), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep21), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep22), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep24), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep25), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep28), "0"),
-        (nameof(ArcDesignTokenKind.RadiusStep33), "0"),
         (nameof(ArcDesignTokenKind.DisplayFontFamily), PixelDisplayFontStack),
         (nameof(ArcDesignTokenKind.BodyFontFamily), PixelFontStack),
         (nameof(ArcDesignTokenKind.MonoFontFamily), PixelFontStack),

@@ -1,5 +1,6 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
+using AtomUI.Theme.Schema;
 using AtomUI.Theme.Configuration;
 using Avalonia.Media;
 
@@ -9,6 +10,7 @@ namespace TKCode.Arc;
 public sealed class ArcThemeConfigBuilder
 {
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
+    private readonly Dictionary<(string Catalog, string Control), Dictionary<string, string>> _controls = new();
 
     /// <summary>Uses one of Arc's accent presets.</summary>
     public ArcThemeConfigBuilder Accent(ArcAccentPreset preset) => Accent(ArcPalette.GetSeed(preset));
@@ -27,6 +29,22 @@ public sealed class ArcThemeConfigBuilder
         return this;
     }
 
+    /// <summary>
+    /// Overrides the final value of a control token (for example <c>Checkbox.BoxRadius</c> in catalog <c>TKCode.Arc</c>).
+    /// Overrides of the same control are merged, so helpers that each write some tokens of a control do not replace one
+    /// another. Naming a control of a package the app has not registered fails the whole theme change.
+    /// </summary>
+    public ArcThemeConfigBuilder ControlToken(string catalog, string control, string name, string value)
+    {
+        if (!_controls.TryGetValue((catalog, control), out var tokens))
+        {
+            tokens = new Dictionary<string, string>(StringComparer.Ordinal);
+            _controls[(catalog, control)] = tokens;
+        }
+        tokens[name] = value;
+        return this;
+    }
+
     public ArcThemeConfigBuilder MotionMode(ArcMotionLevel level)
     {
         _tokens[nameof(ArcDesignTokenKind.MotionMode)] = level switch
@@ -38,11 +56,23 @@ public sealed class ArcThemeConfigBuilder
         return this;
     }
 
-    internal ControlThemeConfig Build()
+    internal ControlThemeConfig Build() => Build(_tokens);
+
+    internal ThemeConfigBuilder ApplyTo(ThemeConfigBuilder target)
+    {
+        target = target.WithControl(ArcDesignTokens.Identity, Build(_tokens));
+        foreach (var ((catalog, control), tokens) in _controls)
+        {
+            target = target.WithControl(new ControlTokenIdentity(catalog, control), Build(tokens));
+        }
+        return target;
+    }
+
+    private static ControlThemeConfig Build(Dictionary<string, string> tokens)
     {
         // No WithAlgorithm: the mode stays Disabled so ColorPrimary passes through unchanged in dark mode.
         var builder = new ControlThemeConfigBuilder();
-        foreach (var (name, value) in _tokens)
+        foreach (var (name, value) in tokens)
         {
             builder.WithToken(name, value);
         }
@@ -52,11 +82,14 @@ public sealed class ArcThemeConfigBuilder
 
 public static class ArcThemeConfigExtensions
 {
-    /// <summary>Applies Arc overrides (accent, token values, motion mode) to the ArcDesign identity.</summary>
+    /// <summary>
+    /// Applies Arc overrides (accent, token values, motion mode) to the ArcDesign identity, and control token overrides to
+    /// their controls. Put every override in one call: a second call replaces the configs the first one wrote.
+    /// </summary>
     public static ThemeConfigBuilder WithArc(this ThemeConfigBuilder builder, Action<ArcThemeConfigBuilder> configure)
     {
         var arc = new ArcThemeConfigBuilder();
         configure(arc);
-        return builder.WithControl(ArcDesignTokens.Identity, arc.Build());
+        return arc.ApplyTo(builder);
     }
 }

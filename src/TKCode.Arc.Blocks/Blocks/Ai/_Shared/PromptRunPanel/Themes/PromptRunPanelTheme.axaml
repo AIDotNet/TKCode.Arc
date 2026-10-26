@@ -16,7 +16,7 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Padding" Value="16,0" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
-        <Setter Property="CornerRadius" Value="0,0,33,33" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep33Bottom}" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

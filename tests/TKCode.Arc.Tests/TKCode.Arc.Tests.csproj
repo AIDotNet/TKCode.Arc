@@ -18,6 +18,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <ProjectReference Include="../../gallery/TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
         <ProjectReference Include="../../gallery/TKCode.Arc.Gallery.Llms/TKCode.Arc.Gallery.Llms.csproj" />

@@ -1,0 +1,119 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Text field: a SurfaceMuted fill with a transparent 1px border that turns Accent while focused; an optional icon before the
+         text and a clear button after it while the field has focus and text. No hover state. The Searchbar is this theme with :search. -->
+    <ControlTheme x:Key="{x:Type arcm:TextField}" TargetType="arcm:TextField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:TextField">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        MinHeight="{arcm:TextFieldTokenResource FieldHeight}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Grid.Column="0"
+                                      Data="{TemplateBinding Icon}"
+                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      Size="{arcm:TextFieldTokenResource GlyphExtent}"
+                                      Margin="{arcm:TextFieldTokenResource IconMargin}"
+                                      VerticalAlignment="Center" />
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      Grid.Column="1"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      VerticalAlignment="Center">
+                            <Panel>
+                                <TextBlock Name="PART_Placeholder"
+                                           Foreground="{TemplateBinding PlaceholderForeground}"
+                                           Text="{TemplateBinding PlaceholderText}"
+                                           VerticalAlignment="Center">
+                                    <TextBlock.IsVisible>
+                                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                            <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        </MultiBinding>
+                                    </TextBlock.IsVisible>
+                                </TextBlock>
+                                <TextPresenter Name="PART_TextPresenter"
+                                               Text="{TemplateBinding Text, Mode=TwoWay}"
+                                               CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                               CaretIndex="{TemplateBinding CaretIndex}"
+                                               SelectionStart="{TemplateBinding SelectionStart}"
+                                               SelectionEnd="{TemplateBinding SelectionEnd}"
+                                               TextWrapping="NoWrap"
+                                               PasswordChar="{TemplateBinding PasswordChar}"
+                                               RevealPassword="{TemplateBinding RevealPassword}"
+                                               SelectionBrush="{TemplateBinding SelectionBrush}"
+                                               SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                               CaretBrush="{TemplateBinding CaretBrush}"
+                                               VerticalAlignment="Center" />
+                            </Panel>
+                        </ScrollViewer>
+                        <arcm:Button Name="PART_Clear"
+                                     Grid.Column="2"
+                                     Variant="Plain"
+                                     Focusable="False"
+                                     IsVisible="{TemplateBinding IsClearVisible}"
+                                     Padding="4"
+                                     Margin="4,0,-8,0">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleX}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          Size="{arcm:TextFieldTokenResource GlyphExtent}" />
+                        </arcm:Button>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="{arcm:TextFieldTokenResource BorderWidth}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Padding" Value="{arcm:TextFieldTokenResource ContentPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+
+        <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:focus">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:TextFieldTokenResource DisabledOpacity}" />
+        </Style>
+        <Style Selector="^:search">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

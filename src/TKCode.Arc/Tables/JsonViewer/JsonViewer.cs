@@ -145,6 +145,14 @@ public class JsonViewer : TemplatedControl
     public static readonly StyledProperty<double> MaxTreeHeightProperty =
         AvaloniaProperty.Register<JsonViewer, double>(nameof(MaxTreeHeight), 420);
 
+    /// <summary>Padding around the search toolbar.</summary>
+    public static readonly StyledProperty<Thickness> ToolbarPaddingProperty =
+        AvaloniaProperty.Register<JsonViewer, Thickness>(nameof(ToolbarPadding));
+
+    /// <summary>Padding around the rows of the tree.</summary>
+    public static readonly StyledProperty<Thickness> TreePaddingProperty =
+        AvaloniaProperty.Register<JsonViewer, Thickness>(nameof(TreePadding));
+
     public static readonly DirectProperty<JsonViewer, string?> CurrentPathProperty =
         AvaloniaProperty.RegisterDirect<JsonViewer, string?>(nameof(CurrentPath), o => o.CurrentPath);
 
@@ -224,6 +232,12 @@ public class JsonViewer : TemplatedControl
     public int PageSize { get => GetValue(PageSizeProperty); set => SetValue(PageSizeProperty, value); }
     public bool IsCopyable { get => GetValue(IsCopyableProperty); set => SetValue(IsCopyableProperty, value); }
     public bool IsPathVisible { get => GetValue(IsPathVisibleProperty); set => SetValue(IsPathVisibleProperty, value); }
+    /// <inheritdoc cref="ToolbarPaddingProperty"/>
+    public Thickness ToolbarPadding { get => GetValue(ToolbarPaddingProperty); set => SetValue(ToolbarPaddingProperty, value); }
+
+    /// <inheritdoc cref="TreePaddingProperty"/>
+    public Thickness TreePadding { get => GetValue(TreePaddingProperty); set => SetValue(TreePaddingProperty, value); }
+
     public double MaxTreeHeight { get => GetValue(MaxTreeHeightProperty); set => SetValue(MaxTreeHeightProperty, value); }
 
     private IReadOnlyList<string> _expandedPaths = Array.Empty<string>();

@@ -71,7 +71,7 @@
                             </ScrollViewer>
                             <Border Name="PART_CodeRing"
                                     Margin="2"
-                                    CornerRadius="0,0,15,15"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep15Bottom}"
                                     BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
                                     BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
                                     IsVisible="False"

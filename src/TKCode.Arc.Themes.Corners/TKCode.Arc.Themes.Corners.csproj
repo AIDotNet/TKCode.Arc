@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Themes.Corners</AssemblyName>
+        <RootNamespace>TKCode.Arc.Themes.Corners</RootNamespace>
+        <PackageId>TKCode.Arc.Themes.Corners</PackageId>
+        <Description>Global corner style for TKCode.Arc (token overrides only, no controls): square corners or scaled corners for every Arc control, with colors, borders, shadows and motion unchanged.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+    </ItemGroup>
+</Project>

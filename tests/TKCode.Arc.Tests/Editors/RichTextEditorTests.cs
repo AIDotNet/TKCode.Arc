@@ -423,6 +423,29 @@ public class RichTextEditorTests
     }
 
     [AvaloniaFact]
+    public void Composition_Commits_Chinese_Text()
+    {
+        var (editor, window) = Show();
+        try
+        {
+            Focus(editor);
+            var surface = Surface(editor);
+            surface.Ime.SetPreeditText("nin h", 5);
+            Dispatcher.UIThread.RunJobs();
+            surface.Views[0].Preedit.ShouldBe("nin h");
+            surface.Ime.SetPreeditText(null);
+            window.KeyTextInput("您好");
+            Dispatcher.UIThread.RunJobs();
+            editor.Engine.Blocks[0].Text.ShouldBe("您好");
+            surface.IsComposing.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Paste_Content_Follows_Arc_Rules()
     {
         var (editor, window) = Show("ab");

@@ -346,6 +346,24 @@ public sealed partial class AgentStatus
         }
     }
 
+    // The corners ride the open progress between two radius steps (pill 20 and 19, open panel 22 and 21), so a corner style
+    // that changes the steps changes the panel too. The defaults apply until the tokens are read.
+    private double _surfaceClosedRadius = 20, _surfaceOpenRadius = 22, _clipClosedRadius = 19, _clipOpenRadius = 21;
+
+    private void RefreshRadii()
+    {
+        _surfaceClosedRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusStep20, new CornerRadius(20)).TopLeft;
+        _surfaceOpenRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusStep22, new CornerRadius(22)).TopLeft;
+        _clipClosedRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusStep19, new CornerRadius(19)).TopLeft;
+        _clipOpenRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusStep21, new CornerRadius(21)).TopLeft;
+    }
+
+    private void OnResourcesChanged(object? sender, ResourcesChangedEventArgs e)
+    {
+        RefreshRadii();
+        ApplyGeometry();
+    }
+
     private void ApplyGeometry()
     {
         if (!_built)
@@ -356,8 +374,8 @@ public sealed partial class AgentStatus
         var pill = _pillWidth.Value;
         _surface.Width = pill + (_panelWidth - pill) * p;
         _surface.Height = PillHeight + (Math.Max(PillHeight, _panelHeight.Value) - PillHeight) * p;
-        _surface.CornerRadius = new CornerRadius(20 + 2 * p);
-        _clip.CornerRadius = new CornerRadius(19 + 2 * p);
+        _surface.CornerRadius = new CornerRadius(_surfaceClosedRadius + (_surfaceOpenRadius - _surfaceClosedRadius) * p);
+        _clip.CornerRadius = new CornerRadius(_clipClosedRadius + (_clipOpenRadius - _clipClosedRadius) * p);
         if (_slot is not null)
         {
             _slot.Width = pill;

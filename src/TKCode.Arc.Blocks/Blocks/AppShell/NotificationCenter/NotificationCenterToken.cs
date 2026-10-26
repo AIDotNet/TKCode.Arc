@@ -238,7 +238,7 @@ internal sealed class NotificationCenterToken : AbstractControlDesignToken
         ListPaddingNarrow = new Thickness(5, 8);
         RowPadding = new Thickness(10);
         RowPaddingNarrow = new Thickness(7, 10);
-        RowRadius = new CornerRadius(26 - 12);
+        RowRadius = new CornerRadius(14);
         RowColumnGap = new Thickness(11, 0);
         RowColumnGapNarrow = new Thickness(7, 0);
         EventIconSize = 36;

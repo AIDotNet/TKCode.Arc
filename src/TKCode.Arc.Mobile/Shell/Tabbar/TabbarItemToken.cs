@@ -16,10 +16,13 @@ internal sealed class TabbarItemToken : AbstractControlDesignToken
     /// <summary>Gap between icon and label: 2.</summary>
     public double IconGap { get; set; }
 
+    /// <summary>Padding of the selection pill behind the icon: 16 by 2.</summary>
+    public Thickness IndicatorPadding { get; set; }
+
     /// <summary>Opacity while a finger is on the item: 0.6.</summary>
     public double PressedOpacity { get; set; }
 
-    /// <summary>Padding inside an item: 4.</summary>
+    /// <summary>Padding inside an item: 4 at the sides, 2 above and below, so the icon pill, label and padding fit the 49px bar.</summary>
     public Thickness ItemPadding { get; set; }
 
     public override void CalculateTokenValues(bool isDarkMode)
@@ -28,7 +31,8 @@ internal sealed class TabbarItemToken : AbstractControlDesignToken
         TouchTarget = 44;
         IconExtent = 24;
         IconGap = 2;
+        IndicatorPadding = new Thickness(16, 2);
         PressedOpacity = 0.6;
-        ItemPadding = new Thickness(4);
+        ItemPadding = new Thickness(4, 2);
     }
 }

@@ -1,7 +1,7 @@
 ---
 title: 移動端按鈕
 summary: 觸控優先的按鈕：用按壓狀態取代懸停狀態，最小觸控目標 44 px。
-source-hash: 1cdfa285426e
+source-hash: 19fcda420f7e
 ---
 
 <Demo name="Basic" />
@@ -35,6 +35,15 @@ source-hash: 1cdfa285426e
 ```
 
 停用的按鈕變暗到 0.5。
+
+### 變體
+
+`Variant` 決定按鈕的顯著程度：`Filled`（預設，實心膠囊，用於主操作）、`Tinted`（淺強調色膠囊，用於次要操作）與 `Plain`（強調色文字、無背景，用於列上的操作）。每個頁面只放一個 `Filled` 按鈕。
+
+```xml
+<arcm:Button Variant="Tinted" Content="更多" />
+<arcm:Button Variant="Plain" Content="完成" />
+```
 
 ### Token
 

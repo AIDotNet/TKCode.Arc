@@ -27,7 +27,7 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
     </ControlTheme>
 
-    <!-- Item: TextMuted icon over label; selected Foreground; press dims; no hover state. -->
+    <!-- Item: TextMuted icon over label; selected Foreground with an AccentSubtle pill behind the icon; press dims; no hover state. -->
     <ControlTheme x:Key="{x:Type arcm:TabbarItem}" TargetType="arcm:TabbarItem">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -36,11 +36,17 @@
                     <StackPanel Spacing="{arcm:TabbarItemTokenResource IconGap}"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center">
-                        <arc:ArcGlyph Name="PART_Icon"
-                                      Data="{TemplateBinding Icon}"
-                                      Foreground="{TemplateBinding Foreground}"
-                                      Size="{arcm:TabbarItemTokenResource IconExtent}"
-                                      HorizontalAlignment="Center" />
+                        <Border Name="PART_Indicator"
+                                Background="Transparent"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                Padding="{arcm:TabbarItemTokenResource IndicatorPadding}"
+                                HorizontalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Data="{TemplateBinding Icon}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          Size="{arcm:TabbarItemTokenResource IconExtent}"
+                                          HorizontalAlignment="Center" />
+                        </Border>
                         <ContentPresenter Name="PART_ContentPresenter"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -62,6 +68,9 @@
         <!-- No :pointerover style on purpose. -->
         <Style Selector="^:selected">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ Border#PART_Indicator">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            </Style>
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="Opacity" Value="{arcm:TabbarItemTokenResource PressedOpacity}" />

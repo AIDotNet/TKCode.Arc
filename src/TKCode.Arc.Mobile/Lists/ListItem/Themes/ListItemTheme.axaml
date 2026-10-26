@@ -1,0 +1,99 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- List item: icon, title over subtitle, trailing content and a chevron in one 48+ high row; a hairline under it
+         (hidden on the last row); a finger on it shades the row with SurfaceMuted; no hover state. -->
+    <ControlTheme x:Key="{x:Type arcm:ListItem}" TargetType="arcm:ListItem">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:ListItem">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}">
+                    <Grid>
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                              Margin="{TemplateBinding Padding}">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Grid.Column="0"
+                                          Data="{TemplateBinding Icon}"
+                                          IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          Size="{arcm:ListItemTokenResource IconExtent}"
+                                          Margin="0,0,12,0"
+                                          VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Text="{TemplateBinding Subtitle}"
+                                           IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <ContentPresenter Name="PART_Trailing"
+                                              Grid.Column="2"
+                                              Content="{TemplateBinding Trailing}"
+                                              Margin="{arcm:ListItemTokenResource TrailingMargin}"
+                                              TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Grid.Column="3"
+                                          Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                          IsVisible="{TemplateBinding ShowChevron}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          Size="{arcm:ListItemTokenResource ChevronExtent}"
+                                          Margin="{arcm:ListItemTokenResource TrailingMargin}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Name="PART_Separator"
+                                Height="1"
+                                Margin="{arcm:ListItemTokenResource SeparatorInset}"
+                                Background="{arc:ArcDesignTokenResource Border}"
+                                VerticalAlignment="Bottom" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arcm:ListItemTokenResource RowHeight}" />
+        <Setter Property="Padding" Value="{arcm:ListItemTokenResource ContentPadding}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:nth-last-child(1) /template/ Border#PART_Separator">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

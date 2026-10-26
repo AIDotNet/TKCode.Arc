@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileNavigationStackTabsWithStacksDemo">
+    <arcm:Page Name="Shell">
+        <arcm:Page.Footer>
+            <arcm:Tabbar Name="Tabs" SelectedIndex="0" SelectionChanged="OnTabChanged">
+                <arcm:TabbarItem Content="Home" Icon="{x:Static arc:ArcIcons.House}" />
+                <arcm:TabbarItem Content="Search" Icon="{x:Static arc:ArcIcons.Search}" />
+                <arcm:TabbarItem Content="Profile" Icon="{x:Static arc:ArcIcons.User}" />
+            </arcm:Tabbar>
+        </arcm:Page.Footer>
+    </arcm:Page>
+</UserControl>

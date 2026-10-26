@@ -582,7 +582,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
                     Icon = new DocumentFileMark { Kind = document.EffectiveKind == DocumentKind.Email ? DocumentKind.Email : DocumentKind.Pdf },
                     Header = new DocumentMenuRowText(document),
                     Padding = new Thickness(10, 6),
-                    CornerRadius = new CornerRadius(MenuRowRadius),
+                    CornerRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusStep11, new CornerRadius(MenuRowRadius)),
                     Tag = document
                 };
                 AutomationProperties.SetName(entry, document.Name);
@@ -711,7 +711,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
         {
             _menuHighlight.Fill = _highlightBrush;
         }
-        _menuHighlight.CornerRadius = new CornerRadius(MenuRowRadius);
+        _menuHighlight.CornerRadius = ArcTokens.GetCornerRadius(this, ArcDesignTokenKind.RadiusStep11, new CornerRadius(MenuRowRadius));
     }
 
     #endregion

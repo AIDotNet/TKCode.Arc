@@ -1,7 +1,7 @@
 ---
 title: 移动端页面
 summary: 手机屏幕：页头、内容和页脚，排布在设备的安全区之内。
-source-hash: c254a865ba00
+source-hash: 7d6d0372a19d
 ---
 
 <Demo name="Basic" />
@@ -53,6 +53,19 @@ source-hash: c254a865ba00
 没有页头和页脚的页面，内容可以使用整个安全区。
 
 <Demo name="ContentOnly" />
+
+### 滚动内容
+
+默认情况下，内容直接得到页面的高度，铺满页面的界面可以自己排版。内容可能比页面高时，设置 `IsScrollable="True"`：内容会在页眉和页脚之间纵向滚动。`Header` 里带大标题的 `Navbar` 会随内容滚动而折叠。
+
+```xml
+<arcm:Page IsScrollable="True">
+    <arcm:Page.Header>
+        <arcm:Navbar Title="照片" LargeTitle="True" />
+    </arcm:Page.Header>
+    <!-- 较长的内容 -->
+</arcm:Page>
+```
 
 ### Token
 
