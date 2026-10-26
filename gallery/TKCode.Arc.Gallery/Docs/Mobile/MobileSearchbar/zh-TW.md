@@ -1,7 +1,7 @@
 ---
 title: 移動端搜尋列
 summary: 帶搜尋圖示的膠囊形文字方塊，有清除按鈕和會觸發 Submitted 的搜尋鍵。
-source-hash: 59e3b10344e7
+source-hash: 9e28f90235b4
 ---
 
 <Demo name="Basic" />
@@ -28,8 +28,11 @@ source-hash: 59e3b10344e7
 <arcm:Searchbar xmlns="https://github.com/avaloniaui"
                 xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                 PlaceholderText="搜尋訊息"
-                Text="{Binding Query}"
-                Submitted="OnSubmitted" />
+                Text="{Binding Query}" />
+```
+
+```csharp
+searchbar.Submitted += (_, _) => Search(searchbar.Text);
 ```
 
 搜尋圖示是文字方塊的 `Icon`，預設已設定；清除按鈕在文字方塊有焦點且有文字時顯示。要在輸入時就篩選，請繫結 `Text` 並回應它的變化。

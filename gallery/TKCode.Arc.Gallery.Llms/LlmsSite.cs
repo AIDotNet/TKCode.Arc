@@ -32,8 +32,11 @@ public static partial class LlmsSite
 
     private const string Repository = "https://github.com/AIDotNet/TKCode.Arc";
 
-    /// <summary>The packages on nuget.org; the others are built from the repository (see the Push step of .github/workflows/ci.yml).</summary>
-    private static readonly HashSet<string> s_onNuGet = ["TKCode.Arc", "TKCode.Arc.Core", "TKCode.Arc.Fonts", "TKCode.Arc.Icons.Lucide"];
+    /// <summary>The packages on nuget.org; the others are built from the repository (the Push step of .github/workflows/ci.yml lists them).</summary>
+    private static readonly HashSet<string> s_onNuGet = [
+        "TKCode.Arc", "TKCode.Arc.Core", "TKCode.Arc.Fonts", "TKCode.Arc.Icons.Lucide", "TKCode.Arc.Blocks", "TKCode.Arc.AdvancedCharts",
+        "TKCode.Arc.Special", "TKCode.Arc.Workflow", "TKCode.Arc.Themes.Pixel", "TKCode.Arc.Themes.Corners", "TKCode.Arc.Mobile",
+    ];
 
     /// <summary>The builder call that registers each package's controls.</summary>
     private static readonly Dictionary<string, string> s_registration = new()

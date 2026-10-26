@@ -1,7 +1,7 @@
 ---
 title: 移动端搜索栏
 summary: 带搜索图标的胶囊形文本框，有清除按钮和会触发 Submitted 的搜索键。
-source-hash: 59e3b10344e7
+source-hash: 9e28f90235b4
 ---
 
 <Demo name="Basic" />
@@ -28,8 +28,11 @@ source-hash: 59e3b10344e7
 <arcm:Searchbar xmlns="https://github.com/avaloniaui"
                 xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                 PlaceholderText="搜索消息"
-                Text="{Binding Query}"
-                Submitted="OnSubmitted" />
+                Text="{Binding Query}" />
+```
+
+```csharp
+searchbar.Submitted += (_, _) => Search(searchbar.Text);
 ```
 
 搜索图标是文本框的 `Icon`，默认已设置；清除按钮在文本框有焦点且有文字时显示。要在输入时就筛选，请绑定 `Text` 并响应它的变化。

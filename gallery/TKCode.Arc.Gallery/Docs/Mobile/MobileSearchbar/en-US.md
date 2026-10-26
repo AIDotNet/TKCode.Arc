@@ -27,8 +27,11 @@ The live demo runs inside a phone frame, a desktop simulation; the soft keyboard
 <arcm:Searchbar xmlns="https://github.com/avaloniaui"
                 xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                 PlaceholderText="Search messages"
-                Text="{Binding Query}"
-                Submitted="OnSubmitted" />
+                Text="{Binding Query}" />
+```
+
+```csharp
+searchbar.Submitted += (_, _) => Search(searchbar.Text);
 ```
 
 The search glyph is the field's `Icon`, set by default; the clear button shows while the field has focus and text. To filter as the person types, bind `Text` and react to its changes instead.

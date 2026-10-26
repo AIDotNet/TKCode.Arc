@@ -1,0 +1,115 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Mobile checkbox: a 22px box (outlined, ControlOn fill when checked) with a check or a dash, and the label beside it; the
+         whole 44px row is the touch target; a finger dims it; no hover state. -->
+    <ControlTheme x:Key="{x:Type arcm:Checkbox}" TargetType="arcm:Checkbox">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Checkbox">
+                <Border Background="Transparent">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Panel Width="{arcm:CheckboxTokenResource BoxSize}"
+                               Height="{arcm:CheckboxTokenResource BoxSize}"
+                               VerticalAlignment="Center">
+                            <Border Name="PART_Box"
+                                    Background="Transparent"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                    BorderThickness="{arcm:CheckboxTokenResource BoxBorderWidth}"
+                                    CornerRadius="{arcm:CheckboxTokenResource BoxRadius}" />
+                            <arc:ArcGlyph Name="PART_Check"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Foreground="{arc:ArcDesignTokenResource ControlThumbOn}"
+                                          Size="{arcm:CheckboxTokenResource CheckExtent}"
+                                          Opacity="0"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Dash"
+                                          Data="{x:Static arc:ArcIcons.Minus}"
+                                          Foreground="{arc:ArcDesignTokenResource ControlThumbOn}"
+                                          Size="{arcm:CheckboxTokenResource CheckExtent}"
+                                          Opacity="0"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Panel>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{arcm:CheckboxTokenResource LabelMargin}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arcm:CheckboxTokenResource TouchTarget}" />
+        <Setter Property="MinWidth" Value="{arcm:CheckboxTokenResource TouchTarget}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:checked">
+            <Style Selector="^ /template/ Border#PART_Box">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:indeterminate">
+            <Style Selector="^ /template/ Border#PART_Box">
+                <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Dash">
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Opacity" Value="{arcm:CheckboxTokenResource PressedOpacity}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:CheckboxTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Box">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

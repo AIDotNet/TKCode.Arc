@@ -22,7 +22,7 @@ public class GalleryMobileTests
     public void Mobile_Section_Lists_The_Catalog_Components_In_Order_And_Is_Not_Counted_As_Arc()
     {
         Mobile.Entries.Select(e => e.ClassName).ShouldBe(MobileCatalog.Components.Select(c => c.ClassName));
-        Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileTabbar", "MobileNavigationStack", "MobileListGroup", "MobileSheet", "MobileButton", "MobileSwitch", "MobileTextField", "MobileSearchbar"]);
+        Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileTabbar", "MobileNavigationStack", "MobileListGroup", "MobileSheet", "MobileButton", "MobileSwitch", "MobileTextField", "MobileSearchbar", "MobileCheckbox", "MobileSegmented"]);
         Mobile.Entries.ShouldAllBe(e => !e.IsArc && e.ArcUrl == null);
         GalleryCatalog.Count.ShouldBe(111);
         GalleryCatalog.AllCategories.ShouldNotContain(Mobile);

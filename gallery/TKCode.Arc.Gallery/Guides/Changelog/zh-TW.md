@@ -7,7 +7,24 @@ source-hash: ebb66486ef60
 
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
-每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel` 與 `TKCode.Arc.Mobile`。
+每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners` 與 `TKCode.Arc.Mobile`。
+
+## 0.3.1-preview.2 (2026-10-26)
+
+### 新增
+
+- **圓角主題**：新套件 `TKCode.Arc.Themes.Corners`（`WithArcCorners(style, scope)`），僅透過令牌覆寫為所有 Arc 控制項切換直角或縮放圓角；顏色、邊框、陰影與動態維持不變。
+- **行動端**：`ListGroup` / `ListItem`、`Sheet`、`TextField` 與 `Searchbar`，大標題 `Navbar` 以及更多 `Button` 變體；Gallery 新增列表分組、導覽堆疊與底部面板的頁面與範例。
+- **Core**：新增更多設計令牌與 `ArcTokens` 輔助方法，用於繫結圓角半徑。
+
+### 變更
+
+- **像素主題**：圓角與主題資源改由共用的圓角表重新產生。
+- **Blocks**：`WeekCalendar` 使用新的邊線令牌繪製邊緣。
+
+### 修復
+
+- **Stepper**：目前步驟的光暈不再被裁切 (#19)。
 
 ## 0.3.1-preview.1 (2026-10-26)
 

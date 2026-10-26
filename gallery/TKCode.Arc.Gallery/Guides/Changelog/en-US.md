@@ -9,7 +9,24 @@ version carries a `-preview` suffix, the API may still change between releases; 
 keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel` and `TKCode.Arc.Mobile`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners` and `TKCode.Arc.Mobile`.
+
+## 0.3.1-preview.2 (2026-10-26)
+
+### Added
+
+- **Corners theme**: the new `TKCode.Arc.Themes.Corners` package (`WithArcCorners(style, scope)`): square or scaled corners for every Arc control through token overrides only; colors, borders, shadows and motion are unchanged.
+- **Mobile**: `ListGroup` / `ListItem`, `Sheet`, `TextField` and `Searchbar`, a large-title `Navbar` and more `Button` variants, with Gallery pages and demos for list groups, navigation stacks and sheets.
+- **Core**: more design tokens and `ArcTokens` helpers for binding corner radii.
+
+### Changed
+
+- **Pixel theme**: radii and theme resources are regenerated from the shared corner table.
+- **Blocks**: `WeekCalendar` draws its edges with the new edge tokens.
+
+### Fixed
+
+- **Stepper**: the glow of the current step is no longer clipped (#19).
 
 ## 0.3.1-preview.1 (2026-10-26)
 

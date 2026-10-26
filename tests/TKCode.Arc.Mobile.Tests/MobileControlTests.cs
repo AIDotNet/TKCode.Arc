@@ -762,6 +762,68 @@ public class MobileControlTests
         }
     }
 
+    [AvaloniaFact]
+    public void Checkbox_Whole_Row_Toggles_And_Shows_Check_Dash_And_No_Hover()
+    {
+        var box = new Checkbox { Content = "Remember me", IsThreeState = true };
+        var window = Show(new StackPanel { Children = { box } });
+        try
+        {
+            box.Bounds.Height.ShouldBeGreaterThanOrEqualTo(44);
+            double Opacity(string name) => box.GetVisualDescendants().OfType<Control>().Single(c => c.Name == name).Opacity;
+            Opacity("PART_Check").ShouldBe(0);
+
+            // A tap on the label, far from the box, still toggles: the whole row is the target.
+            var onLabel = box.TranslatePoint(new Point(box.Bounds.Width - 4, box.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(onLabel, MouseButton.Left);
+            box.Opacity.ShouldBeLessThan(1); // pressed
+            window.MouseUp(onLabel, MouseButton.Left);
+            box.IsChecked.ShouldBe(true);
+            Opacity("PART_Check").ShouldBe(1);
+
+            box.IsChecked = null;
+            box.Classes.Contains(":indeterminate").ShouldBeTrue();
+            Opacity("PART_Dash").ShouldBe(1);
+            Opacity("PART_Check").ShouldBe(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Segmented_Shares_The_Width_And_Tapping_A_Segment_Selects_It()
+    {
+        var control = new Segmented
+        {
+            SelectedIndex = 0,
+            Items = { new SegmentedItem { Content = "Day" }, new SegmentedItem { Content = "Week" }, new SegmentedItem { Content = "Month" } },
+        };
+        var window = Show(new StackPanel { Children = { control } });
+        try
+        {
+            var items = control.GetVisualDescendants().OfType<SegmentedItem>().ToList();
+            items.Count.ShouldBe(3);
+            items.Select(i => i.Bounds.Width).Distinct().Count().ShouldBe(1);
+            items.ShouldAllBe(i => i.Bounds.Height >= 36);
+            control.Bounds.Height.ShouldBe(40, 0.5);
+
+            var unselected = items[1].Foreground;
+            var point = items[1].TranslatePoint(new Point(items[1].Bounds.Width / 2, items[1].Bounds.Height / 2), window)!.Value;
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            control.SelectedIndex.ShouldBe(1);
+            items[1].Classes.Contains(":selected").ShouldBeTrue();
+            items[0].Classes.Contains(":selected").ShouldBeFalse();
+            items[1].Foreground.ShouldNotBe(unselected);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private sealed class RelayCommand(Action action) : System.Windows.Input.ICommand
     {
         public event EventHandler? CanExecuteChanged { add { } remove { } }

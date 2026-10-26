@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileSegmentedBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Activity" />
+        </arcm:Page.Header>
+        <StackPanel Margin="16" Spacing="12">
+            <arcm:Segmented SelectedIndex="1">
+                <arcm:SegmentedItem Content="Day" />
+                <arcm:SegmentedItem Content="Week" />
+                <arcm:SegmentedItem Content="Month" />
+            </arcm:Segmented>
+            <TextBlock Text="The segments share the width; the selected one is raised."
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </arcm:Page>
+</UserControl>

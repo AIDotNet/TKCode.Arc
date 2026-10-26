@@ -8404,6 +8404,10 @@
         <source>How prominent the button is: filled, tinted or plain text.</source>
         <target>移动端按钮的显著程度：实心、浅色填充或纯文字。</target>
       </trans-unit>
+      <trans-unit id="MobileCheckbox">
+        <source>Mobile checkbox: a 22px rounded box with a check, and the label (the content) beside it, in a row at least 44 high so the whole row is the touch target. A finger on it dims it; there is no hover state. With `IsThreeState` it also has an indeterminate state, shown as a dash.</source>
+        <target>移动端复选框：22px 的圆角框，带对勾，标签（内容）在旁边，整行至少 44 高，所以整行都是触摸目标。手指按在上面时会变暗；没有悬停状态。设置 `IsThreeState` 时还有不确定状态，显示为短横。</target>
+      </trans-unit>
       <trans-unit id="MobileListGroup">
         <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`.</source>
         <target>一张由 `ListItem` 行组成的卡片，上方可有 `Header`，下方可有 `Footer`，就像设置页给行分组的方式。把它放进可滚动的 `Page`。</target>
@@ -8535,6 +8539,14 @@
       <trans-unit id="MobileSearchbar.Submitted">
         <source>Raised when the person presses Enter or the keyboard's Search key.</source>
         <target>用户按 Enter 或键盘的搜索键时触发。</target>
+      </trans-unit>
+      <trans-unit id="MobileSegmented">
+        <source>Mobile segmented control: a short row of `SegmentedItem`s that share the width, one selected, for switching between a few views of the same content. It derives from Avalonia's `ListBox`, so `SelectedIndex`, `SelectionChanged` and binding work as they do there. It has no hover state.</source>
+        <target>移动端分段控件：一排共享宽度的 `SegmentedItem`，选中其中一个，用于在同一内容的几个视图之间切换。它派生自 Avalonia 的 `ListBox`，所以 `SelectedIndex`、`SelectionChanged` 和绑定都和那里一样。没有悬停状态。</target>
+      </trans-unit>
+      <trans-unit id="MobileSegmentedItem">
+        <source>One segment of a `Segmented`: its label is the content. The selected one is raised on a Surface fill.</source>
+        <target>`Segmented` 的一个分段：标签就是内容。选中的一个浮在 Surface 填充上。</target>
       </trans-unit>
       <trans-unit id="MobileSheet">
         <source>A bottom sheet: a panel that rises over a `Page` with a scrim behind it. The person closes it by tapping the scrim, pulling the handle down or flicking it, or with Escape. Put it in `Overlay` and open it with `IsOpen`; it sizes to its content, up to `MaxHeightFraction` of the page, and the content scrolls beyond that. Closed, it does not catch touches. The panel's position is a `MotionValue`, not a ControlTheme transition: a drag writes it on every move, a release hands the finger's velocity to the spring, and the scrim is computed from the position each frame. Under reduced motion the panel jumps instead of gliding.</source>

@@ -43,5 +43,9 @@ public static class MobileCatalog
             "A 44 px filled text field with an optional icon and a clear button, whose border takes the accent color while focused."),
         new("MobileSearchbar", "Mobile search bar", "mobile-searchbar",
             "A pill-shaped text field with a search glyph, a clear button and a Search key that raises Submitted."),
+        new("MobileCheckbox", "Mobile checkbox", "mobile-checkbox",
+            "A 22 px rounded checkbox in a 44 px row, with a check, an indeterminate dash and no hover state."),
+        new("MobileSegmented", "Mobile segmented control", "mobile-segmented",
+            "A short row of segments that share the width, one selected, for switching between views of the same content."),
     ];
 }

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileCheckboxBasicDemo">
+    <StackPanel Margin="24" Spacing="4" VerticalAlignment="Center">
+        <arcm:Checkbox Content="Remember this device" IsChecked="True" />
+        <arcm:Checkbox Content="Send me a weekly summary" />
+        <arcm:Checkbox Content="Select all" IsThreeState="True" IsChecked="{x:Null}" />
+        <arcm:Checkbox Content="Managed by your team" IsChecked="True" IsEnabled="False" />
+        <TextBlock Text="The whole row is the touch target. A finger on it dims it."
+                   Margin="0,8,0,0"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -5,7 +5,28 @@ while the version carries a `-preview` suffix the API may still change between r
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
-`TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel` and `TKCode.Arc.Mobile`.
+`TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners` and `TKCode.Arc.Mobile`.
+
+## 0.3.1-preview.2 - 2026-10-26
+
+### Added
+
+- **Corners theme** (new package `TKCode.Arc.Themes.Corners`, `WithArcCorners(style, scope)`): a global corner style
+  made of token overrides only, square or scaled corners for every Arc control, with colors, borders, shadows and
+  motion unchanged. The Gallery's Appearance panel and the Theming guide cover it.
+- **Mobile**: `ListGroup` / `ListItem`, `Sheet`, `TextField` and `Searchbar`; `Navbar` gets a large-title mode and
+  `Button` more variants. Gallery pages and demos for `MobileListGroup`, `MobileNavigationStack` (including tabs with
+  stacks) and `MobileSheet`.
+- **Core tokens**: further design tokens and `ArcTokens` helpers so themes can bind corner radii.
+
+### Changed
+
+- **Pixel theme**: the radii and theme resources are regenerated from the shared corner table.
+- **Blocks**: `WeekCalendar` draws its head and grid edges with the new edge tokens.
+
+### Fixed
+
+- **Stepper**: the glow of the current step is no longer clipped (#19).
 
 ## 0.3.1-preview.1 - 2026-10-26
 
@@ -501,6 +522,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.1...v0.3.1-preview.2
 [0.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.5...v0.3.1-preview.1
 [0.3.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.4...v0.3.0-preview.5
 [0.3.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.3...v0.3.0-preview.4
