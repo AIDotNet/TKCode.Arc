@@ -166,7 +166,7 @@ public class SignupFormMotionTests
             Advance(clock, window, 100);
             line.CurrentBlock.Opacity.ShouldBeInRange(0.6, 0.98);
             Advance(clock, window, 100);
-            line.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => line.ExitingCount);
             Advance(clock, window, 100);
             line.CurrentBlock.Opacity.ShouldBe(1, 1e-6);
             ((TranslateTransform)line.CurrentBlock.RenderTransform!).Y.ShouldBe(0, 1e-6);

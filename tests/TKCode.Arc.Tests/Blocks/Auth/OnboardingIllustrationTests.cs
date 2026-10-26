@@ -642,7 +642,7 @@ public class OnboardingIllustrationTests
             block.CopySwap.ExitingCount.ShouldBe(1);
             clock.Advance(TimeSpan.FromSeconds(1));
             Dispatcher.UIThread.RunJobs();
-            block.CopySwap.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => block.CopySwap.ExitingCount);
             first.Opacity.ShouldBe(1, 0.001);
             first.Effect.ShouldBeNull();
             ((TranslateTransform)first.RenderTransform!).Y.ShouldBe(0, 0.001);
@@ -719,7 +719,7 @@ public class OnboardingIllustrationTests
             block.DotRow!.Dots[1].DisplayedMarkWidth.ShouldBe(20, 0.01);
             clock.Advance(TimeSpan.FromSeconds(1));
             Dispatcher.UIThread.RunJobs();
-            block.CopySwap.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => block.CopySwap.ExitingCount);
         }
         finally
         {

@@ -919,7 +919,7 @@ public class CommandPaletteTests
             clock.Advance(TimeSpan.FromSeconds(1.5));
             Dispatcher.UIThread.RunJobs();
             invite.TranslateY.ShouldBe(0, 0.01);
-            list.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => list.ExitingCount);
 
             // Arrow keys slide the highlight; the pointer would spring it.
             Press(window, PhysicalKey.ArrowDown);

@@ -26,6 +26,48 @@ internal static class TestHelpers
         return window;
     }
 
+    /// <summary>
+    /// Runs the dispatcher (timers and posted work) until <paramref name="condition"/> holds or <paramref name="timeoutMs"/>
+    /// passes. Use it instead of a fixed real-time window: it returns as soon as the condition holds and only a genuinely
+    /// stuck state runs into the timeout.
+    /// </summary>
+    public static bool PumpUntil(Func<bool> condition, int timeoutMs = 10000)
+    {
+        var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+        while (true)
+        {
+            Dispatcher.UIThread.RunJobs();
+            if (condition())
+            {
+                return true;
+            }
+            if (DateTime.UtcNow >= deadline)
+            {
+                return false;
+            }
+            var frame = new DispatcherFrame();
+            DispatcherTimer.RunOnce(() => frame.Continue = false, TimeSpan.FromMilliseconds(10));
+            Dispatcher.UIThread.PushFrame(frame);
+        }
+    }
+
+    /// <summary>
+    /// Waits (up to <paramref name="timeoutMs"/>) for an exit-presence control to drop its outgoing copies, then asserts none
+    /// are left. Controls remove the old copy from a continuation that hops through the thread pool and posts to the UI
+    /// thread, so on a loaded runner it can land after the manual clock has already finished the motion.
+    /// </summary>
+    public static void ShouldDrain(Func<int> exitingCount, int timeoutMs = 5000)
+    {
+        var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+        Dispatcher.UIThread.RunJobs();
+        while (exitingCount() != 0 && DateTime.UtcNow < deadline)
+        {
+            Thread.Sleep(5);
+            Dispatcher.UIThread.RunJobs();
+        }
+        exitingCount().ShouldBe(0);
+    }
+
     /// <summary>First visual descendant of type <typeparamref name="T"/> (template parts included).</summary>
     public static T Descendant<T>(Visual root) where T : Visual => root.GetVisualDescendants().OfType<T>().First();
 

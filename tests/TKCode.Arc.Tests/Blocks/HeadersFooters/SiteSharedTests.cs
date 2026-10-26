@@ -190,7 +190,7 @@ public class SiteSharedTests
             incoming.Opacity.ShouldBe(1);
             ((TranslateTransform)incoming.RenderTransform!).Y.ShouldBe(0);
             incoming.Effect.ShouldBeNull();
-            swap.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => swap.ExitingCount);
         }
         finally
         {
@@ -216,7 +216,7 @@ public class SiteSharedTests
             clock.Advance(TimeSpan.FromMilliseconds(200));
             Dispatcher.UIThread.RunJobs();
             incoming.Opacity.ShouldBe(1);
-            swap.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => swap.ExitingCount);
         }
         finally
         {

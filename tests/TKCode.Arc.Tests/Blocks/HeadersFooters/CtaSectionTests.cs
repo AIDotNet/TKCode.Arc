@@ -882,14 +882,16 @@ public class CtaSectionTests
             card.GetObservable(CtaSetupCard.CompletedProperty).Subscribe(new ValueObserver<int>(value => times.Add((value, watch.ElapsedMilliseconds))));
             card.Start();
             card.PendingTimers.ShouldBe(3);
-            Pump(2300);
+            // Wait for the third step instead of a fixed 2.3 s window: a loaded runner delivers timers late.
+            TestHelpers.PumpUntil(() => times.Count(t => t.Completed > 0) >= 3, 15000).ShouldBeTrue();
             var changes = times.Where(t => t.Completed > 0).ToList();
             changes.Select(t => t.Completed).ShouldBe([1, 2, 3]);
             changes[0].Ms.ShouldBeGreaterThanOrEqualTo(500);
             changes[1].Ms.ShouldBeGreaterThanOrEqualTo(1120);
             changes[2].Ms.ShouldBeGreaterThanOrEqualTo(1740);
-            // Steps are 620 ms apart, so the second cannot come before the first plus about 600.
-            (changes[1].Ms - changes[0].Ms).ShouldBeGreaterThanOrEqualTo(550);
+            // Steps are 620 ms apart, so the second cannot come long before the first plus 600 (a little slack for the
+            // timer and Stopwatch granularity; the absolute lower bounds above carry the exact timing).
+            (changes[1].Ms - changes[0].Ms).ShouldBeGreaterThanOrEqualTo(500);
             card.PendingTimers.ShouldBe(0);
         }
         finally

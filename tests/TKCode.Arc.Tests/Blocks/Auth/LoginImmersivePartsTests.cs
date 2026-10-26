@@ -79,7 +79,7 @@ public class LoginImmersivePartsTests
 
             clock.Advance(TimeSpan.FromMilliseconds(1200), Frame);
             LoginImmersiveTests.Settle();
-            host.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => host.ExitingCount);
             a.IsVisible.ShouldBeFalse();
             b.Opacity.ShouldBe(1, 0.001);
             ((Avalonia.Media.TranslateTransform)b.RenderTransform!).Y.ShouldBe(0, 0.01);

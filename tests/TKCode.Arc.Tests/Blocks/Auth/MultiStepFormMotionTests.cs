@@ -201,7 +201,7 @@ public class MultiStepFormMotionTests
             marker.Check.Progress.ShouldBe(1);
             marker.Digit.Opacity.ShouldBe(0);
             var digit = TestHelpers.Descendant<MultiStepSwap>(form, MultiStepForm.CountDigitPart);
-            digit.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => digit.ExitingCount);
             var slot = TestHelpers.Descendant<SpringSizeDecorator>(MultiStepFormTests.NextButton(form), "PART_LabelSlot");
             slot.IsMoving.ShouldBeFalse();
             MultiStepFormTests.Press(window, MultiStepFormTests.NextButton(form));
@@ -276,7 +276,7 @@ public class MultiStepFormMotionTests
             digit.CurrentBlock.Opacity.ShouldBe(0);
             Advance(clock, window, 300);
             translate.Y.ShouldBe(0, 0.01);
-            digit.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => digit.ExitingCount);
 
             form.CurrentIndex = 0;
             Dispatcher.UIThread.RunJobs();

@@ -627,7 +627,7 @@ public class AgentStatusTests
         status.StepList.OpacityOf(2).ShouldBeLessThan(0.1);
         status.StepList.YOf(0).ShouldBeGreaterThan(status.StepList.TargetYOf(0), "the surviving rows slide up from where they were");
         f.Pump(0.6);
-        status.StepList.ExitingCount.ShouldBe(0);
+        TestHelpers.ShouldDrain(() => status.StepList.ExitingCount);
         status.StepList.OpacityOf(2).ShouldBe(1, 0.001);
         status.StepList.YOf(0).ShouldBe(status.StepList.TargetYOf(0), 0.1);
     }

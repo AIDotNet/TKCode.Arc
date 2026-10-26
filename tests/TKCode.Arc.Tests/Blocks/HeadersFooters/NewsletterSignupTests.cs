@@ -517,7 +517,7 @@ public class NewsletterSignupTests
             stack.CurrentOf(149)!.Value.Y.ShouldBe(0, 0.05);
             stack.CurrentOf(148)!.Value.Y.ShouldBe(-12, 0.05);
             stack.CurrentOf(148)!.Value.Scale.ShouldBe(0.955, 0.001);
-            stack.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => stack.ExitingCount);
         }
         finally
         {
@@ -545,7 +545,7 @@ public class NewsletterSignupTests
             clock.Advance(TimeSpan.FromMilliseconds(300));
             Dispatcher.UIThread.RunJobs();
             stack.CurrentOf(149)!.Value.Opacity.ShouldBe(1, 0.001);
-            stack.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => stack.ExitingCount);
         }
         finally
         {

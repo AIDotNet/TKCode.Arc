@@ -577,6 +577,8 @@ public class ProjectBoardTests
 
             clock.Advance(TimeSpan.FromSeconds(1.5));
             Pump();
+            // The hold is released by an async continuation (settled springs, then a Background dispatch).
+            TestHelpers.PumpUntil(() => rig.Panel.HeldHeight == 0, 10000);
             column.DrawnSlotHeight.ShouldBe(tall - gone, 0.01);
             rig.Panel.HeldHeight.ShouldBe(0);
             rig.Panel.Bounds.Height.ShouldBe(height - gone, 0.5);

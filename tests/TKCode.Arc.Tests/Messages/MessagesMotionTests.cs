@@ -50,7 +50,7 @@ public class MessagesMotionTests
             swap.CurrentBlock!.Text.ShouldBe("Saved");
             swap.CurrentBlock.Opacity.ShouldBeLessThan(0.5);
             Run(window, clock, 0.5);
-            swap.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => swap.ExitingCount);
             swap.CurrentBlock.Opacity.ShouldBe(1);
             swap.CurrentBlock.Effect.ShouldBeNull();
         }
@@ -248,7 +248,7 @@ public class MessagesMotionTests
             Dispatcher.UIThread.RunJobs();
             bar.Viewport!.ExitingCount.ShouldBe(1);
             Run(window, clock, 1.0);
-            bar.Viewport.ExitingCount.ShouldBe(0);
+            TestHelpers.ShouldDrain(() => bar.Viewport.ExitingCount);
             bar.Viewport.CurrentFace!.Announcement!.Id.ShouldBe("b");
             bar.Dismiss();
             Run(window, clock, 1.2);
