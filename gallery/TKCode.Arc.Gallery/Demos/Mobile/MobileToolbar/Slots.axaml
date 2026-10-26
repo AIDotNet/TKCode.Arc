@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileToolbarSlotsDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Inbox" />
+        </arcm:Page.Header>
+        <TextBlock Margin="16"
+                   Text="Leading and trailing actions sit at the edges, and the middle shows a status."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arcm:Page.Footer>
+            <arcm:Toolbar>
+                <arcm:Toolbar.Leading>
+                    <arcm:Button Variant="Plain" Content="Mark all" />
+                </arcm:Toolbar.Leading>
+                <arcm:Toolbar.Center>
+                    <TextBlock Text="3 unread"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </arcm:Toolbar.Center>
+                <arcm:Toolbar.Trailing>
+                    <arcm:Button Variant="Plain" Content="Compose" />
+                </arcm:Toolbar.Trailing>
+            </arcm:Toolbar>
+        </arcm:Page.Footer>
+    </arcm:Page>
+</UserControl>

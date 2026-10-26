@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileActionSheetBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Photos" />
+        </arcm:Page.Header>
+        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+            <arcm:Button Content="Photo options" HorizontalAlignment="Stretch" Click="OnShow" />
+            <TextBlock Name="Result"
+                       Text="Nothing chosen yet"
+                       HorizontalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arcm:Page.Overlay>
+            <arcm:ActionSheet Name="Options"
+                              Title="Photo"
+                              Message="IMG_2041.jpg"
+                              ActionInvoked="OnAction">
+                <arcm:ActionSheetItem Content="Share" />
+                <arcm:ActionSheetItem Content="Add to album" />
+                <arcm:ActionSheetItem Content="Delete photo" IsDestructive="True" />
+            </arcm:ActionSheet>
+        </arcm:Page.Overlay>
+    </arcm:Page>
+</UserControl>

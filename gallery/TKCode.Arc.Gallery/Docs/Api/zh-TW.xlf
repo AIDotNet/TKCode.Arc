@@ -8396,6 +8396,26 @@
         <source>The token as the model sees it (spaces are kept, so " the" and "the" are different tokens). It is shown in the input, output and sequence chips and named in the footer.</source>
         <target>模型所見的 token（保留空格，因此 " the" 與 "the" 是不同的 token）。它顯示在輸入、輸出和序列標籤塊中，並在頁尾中被點名。</target>
       </trans-unit>
+      <trans-unit id="MobileActionSheet">
+        <source>A bottom list of actions: an optional `Title` and `Message`, a card of `ActionSheetItem` rows and, set apart under it, a Cancel row. Choosing a row raises `ActionInvoked` (and runs the row's own `Command`) and closes the sheet; so does Cancel. It is a `Sheet`, so it opens with `IsOpen` in `Overlay`, closes on a scrim tap, a pull down or Escape, and moves by the same physics: its position is a motion value written on every drag move, not a ControlTheme transition, and it jumps instead of gliding under reduced motion. Rows shade while pressed.</source>
+        <target>底部操作清單：可選的 `Title` 和 `Message`，一張由 `ActionSheetItem` 列組成的卡片，以及與它分開的取消列。選擇一列會觸發 `ActionInvoked`（並執行該列自己的 `Command`）並關閉面板，取消也一樣。它是一個 `Sheet`，所以在 `Overlay` 裡用 `IsOpen` 開啟，點遮罩、下拉或按 Esc 即可關閉，並遵循同樣的物理效果：它的位置是拖曳時每次移動都會寫入的運動值，不是 ControlTheme 過渡，減弱動效時直接跳到位置而不滑動。列在按下時變深。</target>
+      </trans-unit>
+      <trans-unit id="MobileActionSheet.ActionInvoked">
+        <source>The person chose an action; the sheet is closing.</source>
+        <target>使用者選擇了一個操作；面板正在關閉。</target>
+      </trans-unit>
+      <trans-unit id="MobileActionSheet.CancelText">
+        <source>The label of the Cancel row: "Cancel". Null or empty hides the row.</source>
+        <target>取消列的文字：「Cancel」。為 null 或空時隱藏該列。</target>
+      </trans-unit>
+      <trans-unit id="MobileActionSheet.HasHeader">
+        <source>Whether there is a title or a message, so the header shows.</source>
+        <target>是否有標題或說明，從而顯示頭部。</target>
+      </trans-unit>
+      <trans-unit id="MobileActionSheet.Message">
+        <source>A second, smaller line under the title.</source>
+        <target>標題下方的第二行較小文字。</target>
+      </trans-unit>
       <trans-unit id="MobileButton">
         <source>Mobile button: a touch-first button with a press state (it scales down and dims while a finger is on it) and no hover state. It is at least 44 by 44 so it is easy to hit. `Variant` picks how prominent it is.</source>
         <target>移動端按鈕：觸控優先的按鈕，有按壓狀態（手指按在上面時縮小並變暗），沒有懸停狀態。它至少 44 乘 44，便於點中。`Variant` 決定它的顯著程度。</target>
@@ -8405,8 +8425,48 @@
         <target>移動端按鈕的顯著程度：實心、淺色填充或純文字。</target>
       </trans-unit>
       <trans-unit id="MobileCheckbox">
-        <source>Mobile checkbox: a 22px rounded box with a check, and the label (the content) beside it, in a row at least 44 high so the whole row is the touch target. A finger on it dims it; there is no hover state. With `IsThreeState` it also has an indeterminate state, shown as a dash.</source>
-        <target>移動端核取方塊：22px 的圓角框，帶勾選，標籤（內容）在旁邊，整列至少 44 高，所以整列都是觸控目標。手指按在上面時會變暗；沒有懸停狀態。設定 `IsThreeState` 時還有不確定狀態，顯示為短橫。</target>
+        <source>Mobile checkbox: a 22px rounded box with a check, and the label (the content) beside it, in a row at least 44 high so the whole row is the touch target. A finger on the box shrinks it on a spring (the row itself does not move); there is no hover state. The check draws itself in when it appears, and with `IsThreeState` it also has an indeterminate state, shown as a dash that morphs into the check and back. With reduced motion the marks appear at once.</source>
+        <target>移動端核取方塊：22px 的圓角框，帶勾選，標籤（內容）在旁邊，整列至少 44 高，所以整列都是觸控目標。手指按在框上時，框沿彈簧縮小（整列不動）；沒有懸停狀態。勾選出現時自己畫出來；設定 `IsThreeState` 時還有不確定狀態，顯示為短橫，並與勾選互相形變。減少動效時標記立即出現。</target>
+      </trans-unit>
+      <trans-unit id="MobileIconButton">
+        <source>Mobile icon button: a 44 by 44 icon-only button with a press state (it scales down while a finger is on it) and no hover state. `Variant` picks plain, tinted, filled or floating (`Fab`). An icon-only button has no visible text, so always set `AutomationProperties.Name`.</source>
+        <target>移動端圖示按鈕：44 乘 44 的純圖示按鈕，有按壓狀態（手指按在上面時縮小），沒有懸停狀態。`Variant` 選擇樸素、淺色、實心或懸浮（`Fab`）。純圖示按鈕沒有可見文字，所以一定要設定 `AutomationProperties.Name`。</target>
+      </trans-unit>
+      <trans-unit id="MobileIconButton.Icon">
+        <source>The glyph geometry shown in the button, for example a Lucide icon.</source>
+        <target>按鈕中顯示的圖示幾何，例如 Lucide 圖示。</target>
+      </trans-unit>
+      <trans-unit id="MobileIconButton.Variant">
+        <source>How prominent the button is: plain, tinted, filled or a floating action button.</source>
+        <target>按鈕的顯著程度：樸素、淺色、實心或懸浮操作按鈕。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog">
+        <source>A centered alert or confirmation dialog: a `Title`, a `Message` and up to three actions (the items, usually mobile `Button`s) over a scrim. Put it in `Overlay` and open it with `IsOpen`. Two actions share a row when each fits its half; three, or narrow widths, stack them at the full width. Pressing an action button closes the dialog (see `CloseOnAction`) after the button's own click handler or command has run. Tapping the scrim and Escape close it only when `IsDismissible` is on. Set Dialog.IsDestructive on an action button for a danger-colored action. Closed, it does not catch touches. Several overlays (a dialog, a sheet, a toast host) share the one `Overlay` slot: put them together in a `Grid`. The dialog's presence is one `MotionValue` (0 gone, 1 shown) that drives the scrim's opacity and the panel's opacity and scale, so a dialog closed while it is still appearing reverses from where it is. It is not a ControlTheme transition because the exit must finish before the dialog stops catching touches.</source>
+        <target>置中的提示或確認對話框：`Title`、`Message` 和最多三個操作（子項，通常是移動端 `Button`），位於遮罩之上。把它放進 `Overlay`，用 `IsOpen` 開啟。兩個操作在各自放得進半寬時同排顯示；三個操作或寬度較窄時，按全寬縱向堆疊。按下操作按鈕會在按鈕自己的點擊處理或命令執行之後關閉對話框（見 `CloseOnAction`）。僅當 `IsDismissible` 開啟時，點遮罩和按 Esc 才會關閉它。在操作按鈕上設定 Dialog.IsDestructive 可得到危險色的操作。關閉時它不攔截觸控。多個浮層（對話框、底部面板、Toast 宿主）共用同一個 `Overlay` 槽：把它們一起放進一個 `Grid`。對話框的出現程度是一個 `MotionValue`（0 為消失，1 為完全顯示），它同時驅動遮罩的不透明度以及面板的不透明度和縮放，所以在對話框還在出現時關閉它，會從目前狀態反向運動。它不是 ControlTheme 過渡，因為必須等退出結束後，對話框才能停止攔截觸控。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog.CloseOnAction">
+        <source>Whether pressing an action button closes the dialog: true.</source>
+        <target>按下操作按鈕是否關閉對話框：true。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog.IsDestructive">
+        <source>Attached to an action `Button`: whether it is a destructive action, drawn with the Danger color (filled: a Danger pill, tinted: Danger text on a soft pill, plain: Danger text).</source>
+        <target>附加到操作 `Button` 上：它是否是破壞性操作，用危險色繪製（實心：危險色膠囊；淡色：淺底上的危險色文字；純文字：危險色文字）。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog.IsDismissible">
+        <source>Whether tapping the scrim or pressing Escape closes the dialog: false, so the person has to choose an action.</source>
+        <target>點遮罩或按 Esc 是否關閉對話框：false，這樣使用者必須選擇一個操作。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog.IsOpen">
+        <source>Whether the dialog is open.</source>
+        <target>對話框是否開啟。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog.Message">
+        <source>The message under the title.</source>
+        <target>標題下方的訊息。</target>
+      </trans-unit>
+      <trans-unit id="MobileDialog.Title">
+        <source>The title, shown in bold above the message.</source>
+        <target>標題，以粗體顯示在訊息上方。</target>
       </trans-unit>
       <trans-unit id="MobileListGroup">
         <source>A card of `ListItem` rows with an optional `Header` above it and `Footer` under it, the way settings screens group their rows. Put it in a scrolling `Page`.</source>
@@ -8508,6 +8568,10 @@
         <source>A mobile page: an optional `Header` (usually a `Navbar`), the content, and an optional `Footer` (usually a `Tabbar`), laid out inside the device's safe area. The safe area is the space the notch, rounded corners and gesture bar take; on desktop and in tests it is zero unless set by hand.</source>
         <target>移動端頁面：可選的 `Header`（通常是 `Navbar`）、內容，以及可選的 `Footer`（通常是 `Tabbar`），排佈在裝置的安全區之內。安全區是瀏海、圓角和手勢列佔用的空間；在桌面和測試中，除非手動設定，否則為零。</target>
       </trans-unit>
+      <trans-unit id="MobilePage.AvoidKeyboard">
+        <source>Whether the page lays out above the soft keyboard: the content shrinks by the keyboard's height, so the focused input stays visible, and the footer (a `Tabbar`) goes behind the keyboard the way iOS does. Off, the keyboard covers the page and only `KeyboardInset` reports it.</source>
+        <target>頁面是否排布在軟體鍵盤之上：內容依鍵盤高度縮小，使取得焦點的輸入框保持可見，頁尾（`Tabbar`）像 iOS 那樣退到鍵盤後面。關閉時，鍵盤會遮住頁面，只有 `KeyboardInset` 會回報它。</target>
+      </trans-unit>
       <trans-unit id="MobilePage.Footer">
         <source>The slot below the content, usually a `Tabbar`.</source>
         <target>內容下方的槽，通常是 `Tabbar`。</target>
@@ -8519,6 +8583,14 @@
       <trans-unit id="MobilePage.IsScrollable">
         <source>Whether the content scrolls vertically inside the page. Off, the content gets the page's height as it is. On, a `Navbar` in `Header` that has a large title collapses it as the content scrolls.</source>
         <target>內容是否在頁面內縱向捲動。關閉時，內容直接得到頁面的高度。開啟時，`Header` 裡帶大標題的 `Navbar` 會隨內容捲動而摺疊。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.KeyboardInset">
+        <source>The height the soft keyboard covers at the bottom edge, read from the page or from any control inside it with `GetKeyboardInset` (it is inherited), so an overlay such as a `Sheet` can lift itself. It is the target height, not the animated one: it is 0 when the keyboard is hidden.</source>
+        <target>軟體鍵盤在底邊遮住的高度，可從頁面或頁面內任意控制項用 `GetKeyboardInset` 讀取（它會被繼承），讓 `Sheet` 這樣的浮層能自己抬起。它是目標高度，而不是動畫中的高度：鍵盤隱藏時為 0。</target>
+      </trans-unit>
+      <trans-unit id="MobilePage.KeyboardInsetSource">
+        <source>Where the pages below a control get the keyboard's height when the platform has no input pane: set it on a host (inherited). Null uses `TopLevel.InputPane`.</source>
+        <target>平台沒有輸入面板時，控制項之下的頁面從哪裡取得鍵盤高度：設定在宿主上（會被繼承）。為 null 時使用 `TopLevel.InputPane`。</target>
       </trans-unit>
       <trans-unit id="MobilePage.Overlay">
         <source>The slot over the whole page, header and footer included, for a `Sheet`.</source>
@@ -8532,6 +8604,34 @@
         <source>Whether `SafeArea` follows the platform's safe area padding.</source>
         <target>`SafeArea` 是否跟隨平台的安全區邊距。</target>
       </trans-unit>
+      <trans-unit id="MobileRadio">
+        <source>Mobile radio: a 22px circle with an accent dot that springs in when the item is chosen, and the label (the content) beside it, in a row at least 44 high so the whole row is the touch target. Items that share a `GroupName` are mutually exclusive: choosing one clears the others. The arrow keys move the choice to the previous or next enabled item of the same group among the siblings. A finger on it dims it; there is no hover state.</source>
+        <target>移動端單選：22px 的圓，選取時強調色圓點以彈簧彈入，標籤（內容）在旁邊，整列至少 44 高，所以整列都是觸控目標。`GroupName` 相同的項互斥：選取一項會清除其他項。方向鍵把選擇移到同組、同層的上一個或下一個可用項。手指按在上面時會變暗；沒有懸停狀態。</target>
+      </trans-unit>
+      <trans-unit id="MobilePullToRefresh">
+        <source>Pull to refresh: wraps scrollable content. Pulling down while the content is at its top drags the content along with rubber-band resistance and shows an arrow that turns over as the pull nears `PullThreshold`. Releasing past it raises `RefreshRequested` and runs `Command`; the content rests below the indicator, which spins, until `IsRefreshing` is false again (set it, or take a deferral from the event data). Releasing early springs the content back. A pull that starts while the inner scroll viewer is scrolled, or that goes sideways or up, is left to the content. The content's position is a `MotionValue`, not a ControlTheme transition: a pull writes it on every move, and a release hands the finger's velocity to the spring, which a new pull can catch mid-flight. Under reduced motion the content does not stretch with the finger; the refresh still runs and the content jumps.</source>
+        <target>下拉重新整理：包住可捲動的內容。內容在頂部時向下拉，內容會帶著橡皮筋阻尼跟手，並顯示一個箭頭，下拉接近 `PullThreshold` 時箭頭翻轉。越過閾值放開會觸發 `RefreshRequested` 並執行 `Command`；內容停在指示器下方，指示器轉動，直到 `IsRefreshing` 再次為 false（可以自己設定，也可以從事件資料裡取一個延遲）。提前放開，內容彈回。手勢開始時內部的捲動檢視已經捲動過，或手勢向側面或向上，就交給內容處理。內容的位置是 `MotionValue`，不是 ControlTheme 過渡：下拉時每次移動都會寫入它，放開時手指的速度交給彈簧，新的下拉可以在途中接住它。減弱動態效果時，內容不隨手指拉伸；重新整理照常進行，內容直接跳轉。</target>
+      </trans-unit>
+      <trans-unit id="MobilePullToRefresh.Command">
+        <source>The command a refresh runs, with `CommandParameter`.</source>
+        <target>重新整理時執行的命令，參數為 `CommandParameter`。</target>
+      </trans-unit>
+      <trans-unit id="MobilePullToRefresh.CommandParameter">
+        <source>The parameter passed to `Command`.</source>
+        <target>傳給 `Command` 的參數。</target>
+      </trans-unit>
+      <trans-unit id="MobilePullToRefresh.IsRefreshing">
+        <source>Whether a refresh is in progress. Two-way: a release past the threshold sets it, and setting it false ends the refresh.</source>
+        <target>重新整理是否正在進行。雙向：越過閾值放開會把它設為 true，把它設為 false 則結束重新整理。</target>
+      </trans-unit>
+      <trans-unit id="MobilePullToRefresh.PullThreshold">
+        <source>How far the content has to be pulled down, in px, for a release to start a refresh: 64.</source>
+        <target>內容要被下拉多遠（單位 px），放開才會開始重新整理：64。</target>
+      </trans-unit>
+      <trans-unit id="MobilePullToRefresh.RefreshRequested">
+        <source>Raised when a release past the threshold starts a refresh. Take a deferral if the work is asynchronous.</source>
+        <target>越過閾值放開而開始重新整理時觸發。如果工作是非同步的，就取一個延遲（deferral）。</target>
+      </trans-unit>
       <trans-unit id="MobileSearchbar">
         <source>Mobile search bar: a `TextField` with a search glyph before the text and a pill shape. Enter raises `Submitted`, and the soft keyboard offers a Search key.</source>
         <target>移動端搜尋列：文字前帶搜尋圖示、膠囊形狀的 `TextField`。按 Enter 會觸發 `Submitted`，軟鍵盤提供搜尋鍵。</target>
@@ -8541,16 +8641,32 @@
         <target>使用者按 Enter 或鍵盤的搜尋鍵時觸發。</target>
       </trans-unit>
       <trans-unit id="MobileSegmented">
-        <source>Mobile segmented control: a short row of `SegmentedItem`s that share the width, one selected, for switching between a few views of the same content. It derives from Avalonia's `ListBox`, so `SelectedIndex`, `SelectionChanged` and binding work as they do there. It has no hover state.</source>
-        <target>移動端分段控制項：一排共享寬度的 `SegmentedItem`，選中其中一個，用於在同一內容的幾個檢視之間切換。它衍生自 Avalonia 的 `ListBox`，所以 `SelectedIndex`、`SelectionChanged` 和繫結都和那裡一樣。沒有懸停狀態。</target>
+        <source>Mobile segmented control: a short row of `SegmentedItem`s that share the width, one selected, for switching between a few views of the same content. It derives from Avalonia's `ListBox`, so `SelectedIndex`, `SelectionChanged` and binding work as they do there. It has no hover state. The selected block slides between segments on a spring (and jumps with reduced motion) while the label colors cross-fade.</source>
+        <target>移動端分段控制項：一排共享寬度的 `SegmentedItem`，選中其中一個，用於在同一內容的幾個檢視之間切換。它衍生自 Avalonia 的 `ListBox`，所以 `SelectedIndex`、`SelectionChanged` 和繫結都和那裡一樣。沒有懸停狀態。選中的區塊沿彈簧在各段之間滑動（減少動效時直接跳轉），文字顏色交叉淡化。</target>
       </trans-unit>
       <trans-unit id="MobileSegmentedItem">
         <source>One segment of a `Segmented`: its label is the content. The selected one is raised on a Surface fill.</source>
         <target>`Segmented` 的一個分段：標籤就是內容。選中的一個浮在 Surface 填充上。</target>
       </trans-unit>
       <trans-unit id="MobileSheet">
-        <source>A bottom sheet: a panel that rises over a `Page` with a scrim behind it. The person closes it by tapping the scrim, pulling the handle down or flicking it, or with Escape. Put it in `Overlay` and open it with `IsOpen`; it sizes to its content, up to `MaxHeightFraction` of the page, and the content scrolls beyond that. Closed, it does not catch touches. The panel's position is a `MotionValue`, not a ControlTheme transition: a drag writes it on every move, a release hands the finger's velocity to the spring, and the scrim is computed from the position each frame. Under reduced motion the panel jumps instead of gliding.</source>
-        <target>底部面板：從 `Page` 上方升起、背後帶遮罩的面板。點遮罩、下拉把手、快速下滑或按 Esc 都能關閉它。把它放進 `Overlay`，用 `IsOpen` 開啟；它的高度隨內容而定，最高到頁面的 `MaxHeightFraction`，超出後內容捲動。關閉時它不攔截觸控。面板的位置是 `MotionValue`，不是 ControlTheme 過渡：拖曳時每次移動都會寫入它，放開時手指的速度交給彈簧，遮罩由每幀的位置計算。減弱動效時，面板直接跳到位置而不滑動。</target>
+        <source>A bottom sheet: a panel that rises over a `Page` with a scrim behind it. The person closes it by tapping the scrim, pulling the handle down or flicking it, or with Escape. Put it in `Overlay` and open it with `IsOpen`; it sizes to its content, up to `MaxHeightFraction` of the page, and the content scrolls beyond that. Closed, it does not catch touches. With `Detents` the sheet rests at several heights instead (a peek and a full view): a pull follows the finger, stretches like a rubber band past the tallest detent, and on release looks 0.2 s ahead to pick the nearest detent or close; a flick always moves at least one detent. The content scrolls only at the tallest detent, and a pull down from its top moves the sheet. The scrim follows the position. The panel's position is a `MotionValue`, not a ControlTheme transition: a drag writes it on every move, a release hands the finger's velocity to the spring, and the scrim is computed from the position each frame. Under reduced motion the panel jumps instead of gliding.</source>
+        <target>底部面板：從 `Page` 上方升起、背後帶遮罩的面板。點遮罩、下拉把手、快速下滑或按 Esc 都能關閉它。把它放進 `Overlay`，用 `IsOpen` 開啟；它的高度隨內容而定，最高到頁面的 `MaxHeightFraction`，超出後內容捲動。關閉時它不攔截觸控。設定 `Detents` 後，面板改為停在多個高度（先露出一部分，再展開）：拖曳時一比一跟隨手指，越過最高的停靠高度後像橡皮筋一樣有阻力，放開時向前看 0.2 秒，停在最近的停靠高度或關閉；快速滑動至少會移動一個停靠高度。內容只在最高的停靠高度捲動，從內容頂部下拉會移動面板。遮罩跟隨位置。面板的位置是 `MotionValue`，不是 ControlTheme 過渡：拖曳時每次移動都會寫入它，放開時手指的速度交給彈簧，遮罩由每幀的位置計算。減弱動效時，面板直接跳到位置而不滑動。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.DetentChanged">
+        <source>The sheet came to rest on another detent.</source>
+        <target>面板停到了另一個停靠高度。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.DetentIndex">
+        <source>The detent the sheet rests on (index into the sorted detents).</source>
+        <target>面板所停的停靠高度（已排序停靠高度中的索引）。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.Detents">
+        <source>The resting heights as fractions of the sheet's height, for example "0.4, 0.9". Null or empty: the panel sizes to its content. One value is a fixed height.</source>
+        <target>停靠高度，按面板所在區域高度的比例計，例如「0.4, 0.9」。為 null 或空時，面板高度隨內容而定。只有一個值時是固定高度。</target>
+      </trans-unit>
+      <trans-unit id="MobileSheet.InitialDetentIndex">
+        <source>Index into the sorted detents the sheet opens at (default 0, the lowest).</source>
+        <target>面板開啟時所在的停靠高度，是已排序停靠高度中的索引（預設 0，最低的一個）。</target>
       </trans-unit>
       <trans-unit id="MobileSheet.IsDismissible">
         <source>Whether the person can close the sheet by tapping the scrim, pulling the panel down or pressing Escape.</source>
@@ -8564,6 +8680,10 @@
         <source>The tallest the panel gets, as a fraction of the sheet's height: 0.9.</source>
         <target>面板最高的高度，按面板所在區域高度的比例計：0.9。</target>
       </trans-unit>
+      <trans-unit id="MobileSheet.SafeAreaBottom">
+        <source>The height of the bottom safe area (the home indicator) in px, kept free under the content. The sheet does not read the platform: bind it to the page, for example `SafeAreaBottom="{Binding SafeArea.Bottom, ElementName=Page}"`.</source>
+        <target>底部安全區（Home 指示條）的高度，單位 px，保留在內容下方。面板不會讀取平台資訊：請把它繫結到頁面，例如 `SafeAreaBottom="{Binding SafeArea.Bottom, ElementName=Page}"`。</target>
+      </trans-unit>
       <trans-unit id="MobileSheet.Title">
         <source>The title shown in the handle area, under the grabber.</source>
         <target>把手區域裡、拖曳條下方顯示的標題。</target>
@@ -8573,8 +8693,8 @@
         <target>移動端開關：51 乘 31 的切換控制項，用於立即生效的設定。滑塊沿彈簧滑動，點按區域至少 44 乘 44，沒有懸停狀態。選取時滑軌填滿為開啟色。</target>
       </trans-unit>
       <trans-unit id="MobileTabbar">
-        <source>The bottom tab bar of a `Page`. Put `TabbarItem`s in it; the selected one is highlighted and the items share the width equally.</source>
-        <target>`Page` 的底部標籤列。把 `TabbarItem` 放進去；選中的一項醒目顯示，各項平分寬度。</target>
+        <source>The bottom tab bar of a `Page`. Put `TabbarItem`s in it; the selected one is highlighted and the items share the width equally. One accent pill glides behind the icon of the selected item on a spring, and jumps with reduced motion.</source>
+        <target>`Page` 的底部標籤列。把 `TabbarItem` 放進去；選中的一項醒目顯示，各項平分寬度。一個強調色膠囊沿彈簧在選中項的圖示後面滑動，減少動效時直接跳轉。</target>
       </trans-unit>
       <trans-unit id="MobileTabbarItem">
         <source>One tab of a `Tabbar`: an `Icon` above its label (the content). It is at least 44 high and has no hover state.</source>
@@ -8599,6 +8719,46 @@
       <trans-unit id="MobileTextField.ShowClearButton">
         <source>Whether a clear button shows while the field has focus and text: true.</source>
         <target>文字方塊有焦點且有文字時是否顯示清除按鈕：true。</target>
+      </trans-unit>
+      <trans-unit id="MobileToolbar">
+        <source>The bottom action bar of a `Page`: 44 high with a hairline above it. Put plain `Button`s in it as items and they share the width equally, or fill the `Leading`, `Center` and `Trailing` slots. It is meant for `Footer`, alone or in a stack above a `Tabbar`. `IsOpen` shows and hides the bar: it slides down and fades out (faster than it came), and slides up and fades in. The position is a `MotionValue`, not a ControlTheme transition, because a toggle that flips mid-flight must continue from where the bar is rather than restart. Under reduced motion the bar jumps. A closed bar keeps its place in the layout, so the content does not jump; set IsVisible to false to remove it.</source>
+        <target>底部操作列：屬於 `Page`，高 44，上方有一條髮絲線。把樸素的 `Button` 作為項目放進去，它們等分寬度；也可以填充 `Leading`、`Center` 和 `Trailing` 槽。它用於 `Footer`，可以單獨使用，也可以疊在 `Tabbar` 上方。`IsOpen` 顯示和隱藏這個列：隱藏時向下滑出並淡出（比出現時更快），顯示時向上滑入並淡入。位置是 `MotionValue`，不是 ControlTheme 過渡，因為在途中被再次切換時，必須從列目前的位置繼續，而不是重新開始。減弱動態效果時，列直接跳轉。關閉的列仍佔著版面中的位置，內容不會跳動；要移除它，把 IsVisible 設為 false。</target>
+      </trans-unit>
+      <trans-unit id="MobileToolbar.Center">
+        <source>The content in the middle of the bar, next to the items.</source>
+        <target>列中間的內容，和項目放在一起。</target>
+      </trans-unit>
+      <trans-unit id="MobileToolbar.IsOpen">
+        <source>Whether the bar is shown. False slides it away and stops it catching touches.</source>
+        <target>是否顯示這個列。為 false 時把它滑走，並且不再攔截觸控。</target>
+      </trans-unit>
+      <trans-unit id="MobileToolbar.Leading">
+        <source>The content at the start of the bar, usually one action.</source>
+        <target>列起始處的內容，通常是一個操作。</target>
+      </trans-unit>
+      <trans-unit id="MobileToolbar.Trailing">
+        <source>The content at the end of the bar, usually one action.</source>
+        <target>列末端的內容，通常是一個操作。</target>
+      </trans-unit>
+      <trans-unit id="MobileToast">
+        <source>Transient messages near the bottom of the page. Put one `Toast` in `Overlay` and call `Show`: the message slides up and fades in above the page's footer and bottom safe area, stays for `DefaultDuration` and leaves by itself. A finger on a toast holds its countdown; a swipe to either side sends it away. `ToastPolicy` chooses between a short stack and one at a time. The host does not catch touches except on the toasts themselves, so the page under it stays usable. Several overlays (a toast, a dialog, a sheet) share the one `Overlay` slot: put them together in a `Grid` with the toast last, so it shows above the others. Each toast's presence and swipe offset are `MotionValue`s rather than ControlTheme transitions: a swipe writes the offset on every move and a release hands the finger's velocity to the spring. The countdown is a `MotionTimeline`, so it can be paused and still ends on time. Under reduced motion a toast only fades, and with motion off it appears and disappears at once.</source>
+        <target>頁面底部附近的短暫訊息。在 `Overlay` 裡放一個 `Toast` 並呼叫 `Show`：訊息在頁面頁尾和底部安全區之上滑入並淡入，停留 `DefaultDuration` 後自行離開。手指按住 Toast 會暫停它的倒數計時；向任一側滑動會把它送走。`ToastPolicy` 在簡短的堆疊和一次一則之間選擇。宿主除了 Toast 本身之外不攔截觸控，所以它下面的頁面仍可使用。多個浮層（Toast、對話框、底部面板）共用同一個 `Overlay` 槽：把它們一起放進一個 `Grid`，Toast 放在最後，這樣它顯示在其他浮層之上。每個 Toast 的出現程度和滑動位移是 `MotionValue`，而不是 ControlTheme 過渡：滑動時每次移動都會寫入位移，放手時手指的速度交給彈簧。倒數計時是 `MotionTimeline`，所以可以暫停，並且仍然準時結束。減弱動效時 Toast 只淡入淡出，關閉動效時它立即出現和消失。</target>
+      </trans-unit>
+      <trans-unit id="MobileToast.BottomOffset">
+        <source>Space between the toasts and whatever is below them: the page's footer and bottom safe area plus this value: 16.</source>
+        <target>Toast 與其下方內容之間的間距：頁面頁尾和底部安全區再加上這個值：16。</target>
+      </trans-unit>
+      <trans-unit id="MobileToast.DefaultDuration">
+        <source>How long a toast stays when `Show` is not given a duration: 3 seconds. `Zero` keeps it until dismissed.</source>
+        <target>`Show` 沒有指定時長時，Toast 停留多久：3 秒。`Zero` 表示一直保留到被關閉。</target>
+      </trans-unit>
+      <trans-unit id="MobileToast.MaxVisible">
+        <source>The most toasts shown at once under `Stack`: 3.</source>
+        <target>在 `Stack` 策略下同時顯示的 Toast 最多幾則：3。</target>
+      </trans-unit>
+      <trans-unit id="MobileToast.Policy">
+        <source>How toasts that are showing are treated when a new one arrives: `Stack`.</source>
+        <target>新 Toast 到來時，如何處理正在顯示的 Toast：`Stack`。</target>
       </trans-unit>
       <trans-unit id="ModalOverlay.Actions">
         <source>Footer content, usually buttons; give them `arc:Dialog.Result` to close with a result.</source>

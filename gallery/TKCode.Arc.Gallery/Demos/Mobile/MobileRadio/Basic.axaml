@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileRadioBasicDemo">
+    <StackPanel Margin="24" Spacing="4" VerticalAlignment="Center">
+        <TextBlock Text="Delivery"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <arcm:Radio GroupName="delivery" Content="Standard, free" IsChecked="True" />
+        <arcm:Radio GroupName="delivery" Content="Express, 2 days" />
+        <arcm:Radio GroupName="delivery" Content="Pick up in store" />
+        <arcm:Radio GroupName="delivery" Content="Not available here" IsEnabled="False" />
+        <TextBlock Text="Choosing one clears the others. The dot springs in; the whole row is the touch target."
+                   Margin="0,8,0,0"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

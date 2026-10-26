@@ -52,7 +52,7 @@ Segments are selectable list items named by their labels. Keep the labels short 
 
 ## Motion
 
-The fill, outline and text color change on the fast curve, and at once with reduced motion.
+The selected block (a Surface fill with an outline) slides behind the labels on a spring (P7, `GlidingIndicator`): it fades in place the first time, snaps when the control is resized, and jumps with reduced motion. The label colors cross-fade on the fast curve, and switch at once with reduced motion.
 
 ## Related
 

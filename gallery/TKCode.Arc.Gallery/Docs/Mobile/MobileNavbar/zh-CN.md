@@ -1,7 +1,7 @@
 ---
 title: 移动端导航栏
 summary: 页面顶部 44 px 高的栏：起始槽、居中的标题和放操作的末端槽。
-source-hash: ffc2bdba0872
+source-hash: bd5a14d5e8d1
 ---
 
 <Demo name="Basic" />
@@ -86,7 +86,7 @@ source-hash: ffc2bdba0872
 
 ## 动效
 
-栏本身没有动效；槽里的按钮按下与松开的表现与 `MobileButton` 相同。
+标题变化时，新标题从轻微模糊中升起，旧标题上移淡出（P2，`ArcContentSwap` 模糊交叉淡化）；第一个标题和减少动效时不播放。大标题一比一跟随滚动偏移，自身没有动画。槽里的按钮按下与松开的表现与 `MobileButton` 相同。
 
 ## 相关组件
 

@@ -54,7 +54,7 @@ Items are selectable list items with a label, so they are named by their content
 
 ## Motion
 
-The item's color and opacity change on the fast curve, and switch at once with reduced motion.
+One accent pill glides between the items on a spring (P7, `GlidingIndicator`): it fades in where it lands the first time, snaps instead of gliding when the bar is resized, and jumps with reduced motion. The icon and label colors change on the fast curve. A finger dims the item and shrinks its content to 0.96 on a snappy spring (P1). With reduced motion nothing scales and everything switches at once.
 
 ## Related
 

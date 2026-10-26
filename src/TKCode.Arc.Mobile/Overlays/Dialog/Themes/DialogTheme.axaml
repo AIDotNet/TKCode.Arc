@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Dialog: fills its parent; a scrim and a centered Surface panel with the title, the message and the actions.
+         The panel's scale and opacity and the scrim's opacity are driven by the Dialog's code (one presence value that an
+         exit must be able to wait for), not by transitions. A button with Dialog.IsDestructive takes the Danger color (set in code: the actions are logical children of the Dialog, not of its template). -->
+    <ControlTheme x:Key="{x:Type arcm:Dialog}" TargetType="arcm:Dialog">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Dialog">
+                <Grid>
+                    <Border Name="PART_Scrim"
+                            Background="{arcm:DialogTokenResource ScrimColor}"
+                            IsVisible="False"
+                            Opacity="0" />
+                    <Border Name="PART_Panel"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            MaxWidth="{arcm:DialogTokenResource PanelMaxWidth}"
+                            Margin="{arcm:DialogTokenResource PanelMargin}"
+                            Padding="{arcm:DialogTokenResource PanelPadding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                            RenderTransformOrigin="50%,50%"
+                            IsVisible="False"
+                            Opacity="0">
+                        <StackPanel Spacing="8">
+                            <TextBlock Name="PART_Title"
+                                       Text="{TemplateBinding Title}"
+                                       IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Name="PART_Message"
+                                       Text="{TemplateBinding Message}"
+                                       IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap" />
+                            <ItemsPresenter Name="PART_ItemsPresenter"
+                                            Margin="0,12,0,0"
+                                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+
+    </ControlTheme>
+</ResourceDictionary>

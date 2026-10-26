@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileToastBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Inbox" />
+        </arcm:Page.Header>
+        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+            <arcm:Button Content="Archive message" HorizontalAlignment="Stretch" Click="OnArchive" />
+            <arcm:Button Content="Show with an icon" Variant="Tinted" HorizontalAlignment="Stretch" Click="OnIcon" />
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="One at a time" VerticalAlignment="Center" />
+                <arcm:Switch Name="ReplaceSwitch" Grid.Column="1" />
+            </Grid>
+            <TextBlock Text="Hold a toast to pause its countdown; swipe it sideways to send it away."
+                       TextWrapping="Wrap"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arcm:Page.Footer>
+            <arcm:Tabbar SelectedIndex="0">
+                <arcm:TabbarItem Content="Inbox" Icon="{x:Static arc:ArcIcons.Mail}" />
+                <arcm:TabbarItem Content="Alerts" Icon="{x:Static arc:ArcIcons.Bell}" />
+            </arcm:Tabbar>
+        </arcm:Page.Footer>
+        <arcm:Page.Overlay>
+            <arcm:Toast Name="Toasts" />
+        </arcm:Page.Overlay>
+    </arcm:Page>
+</UserControl>

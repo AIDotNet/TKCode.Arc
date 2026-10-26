@@ -1,7 +1,7 @@
 ---
 title: 移動端導覽列
 summary: 頁面頂部 44 px 高的列：起始槽、置中的標題和放操作的末端槽。
-source-hash: ffc2bdba0872
+source-hash: bd5a14d5e8d1
 ---
 
 <Demo name="Basic" />
@@ -86,7 +86,7 @@ source-hash: ffc2bdba0872
 
 ## 動態效果
 
-列本身沒有動態效果；槽裡的按鈕按下與放開的表現與 `MobileButton` 相同。
+標題變化時，新標題從輕微模糊中升起，舊標題上移淡出（P2，`ArcContentSwap` 模糊交叉淡化）；第一個標題和減少動效時不播放。大標題一比一跟隨捲動偏移，自身沒有動畫。槽裡的按鈕按下與放開的表現與 `MobileButton` 相同。
 
 ## 相關元件
 

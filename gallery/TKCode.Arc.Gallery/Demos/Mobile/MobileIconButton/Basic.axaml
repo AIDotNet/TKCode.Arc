@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileIconButtonBasicDemo">
+    <StackPanel Margin="24" Spacing="16" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <arcm:IconButton Icon="{x:Static arc:ArcIcons.Search}" AutomationProperties.Name="Search" />
+            <arcm:IconButton Icon="{x:Static arc:ArcIcons.Heart}" Variant="Tinted" AutomationProperties.Name="Like" />
+            <arcm:IconButton Icon="{x:Static arc:ArcIcons.Share}" Variant="Filled" AutomationProperties.Name="Share" />
+            <arcm:IconButton Icon="{x:Static arc:ArcIcons.Settings}" IsEnabled="False" AutomationProperties.Name="Settings" />
+        </StackPanel>
+        <TextBlock Text="Plain, tinted, filled and disabled. Press and hold one: it scales down and dims while a finger is on it."
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

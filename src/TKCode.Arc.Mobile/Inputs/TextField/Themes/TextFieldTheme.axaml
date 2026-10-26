@@ -5,7 +5,7 @@
                     x:ClassModifier="internal">
 
     <!-- Text field: a SurfaceMuted fill with a transparent 1px border that turns Accent while focused; an optional icon before the
-         text and a clear button after it while the field has focus and text. No hover state. The Searchbar is this theme with :search. -->
+         text and a clear button after it (a PresenceHost pop) while the field has focus and text. No hover state. The Searchbar is this theme with :search. -->
     <ControlTheme x:Key="{x:Type arcm:TextField}" TargetType="arcm:TextField">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -58,17 +58,22 @@
                                                VerticalAlignment="Center" />
                             </Panel>
                         </ScrollViewer>
-                        <arcm:Button Name="PART_Clear"
-                                     Grid.Column="2"
-                                     Variant="Plain"
-                                     Focusable="False"
-                                     IsVisible="{TemplateBinding IsClearVisible}"
-                                     Padding="4"
-                                     Margin="4,0,-8,0">
-                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleX}"
-                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
-                                          Size="{arcm:TextFieldTokenResource GlyphExtent}" />
-                        </arcm:Button>
+                        <!-- S3 / P26: the clear button pops in from 0.6 with a fade and leaves faster; hidden at rest. -->
+                        <arc:PresenceHost Name="PART_ClearHost"
+                                          Grid.Column="2"
+                                          Mode="Pop"
+                                          EnterScale="0.6"
+                                          IsPresent="{TemplateBinding IsClearVisible}">
+                            <arcm:Button Name="PART_Clear"
+                                         Variant="Plain"
+                                         Focusable="False"
+                                         Padding="4"
+                                         Margin="4,0,-8,0">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleX}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                              Size="{arcm:TextFieldTokenResource GlyphExtent}" />
+                            </arcm:Button>
+                        </arc:PresenceHost>
                     </Grid>
                 </Border>
             </ControlTemplate>

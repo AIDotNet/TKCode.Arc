@@ -49,7 +49,7 @@ It is a toggle button: it can be focused and toggled with the keyboard, and expo
 
 ## Motion
 
-The thumb glides on a spring and the track fades to the on color; both are declared in the control theme and switch at once with reduced motion.
+The thumb glides on a spring and the track fades to the on color. A finger stretches the thumb to 1.18 times its width toward where it will go on a snappy spring and releases on the same spring (P24). All of it is declared in the control theme; with reduced motion the thumb jumps, does not stretch, and the colors switch at once.
 
 ## Related
 

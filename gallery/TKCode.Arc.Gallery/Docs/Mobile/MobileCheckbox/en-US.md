@@ -48,7 +48,7 @@ The row is a toggle button named by its label, so always give it content; a box 
 
 ## Motion
 
-The fill and the check change on the fast curve, and at once with reduced motion.
+A finger shrinks the box to 0.92 on a snappy spring and releases on the same spring (P1; the row and its label stay still). The check draws itself from start to end (P15, `StrokeDrawGlyph`, 240ms on the enter curve), and the dash morphs into the check and back on a snappy spring (P16, `MorphGlyph`). The box fill and border cross-fade on the fast curve. With reduced motion the marks and colors switch at once and the box does not shrink.
 
 ## Related
 

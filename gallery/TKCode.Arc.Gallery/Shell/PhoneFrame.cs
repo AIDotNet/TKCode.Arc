@@ -13,12 +13,14 @@ namespace TKCode.Arc.Gallery.Shell;
 /// <summary>
 /// A phone on the gallery's stage, for the demos of TKCode.Arc.Mobile: a bezel around a screen of a <see cref="PhoneDevice"/>'s
 /// size, a simulated status bar (time, signal, battery), a simulated safe area, a home indicator and an optional soft
-/// keyboard that shrinks the content area. A toolbar above it switches the device, the orientation and the keyboard.
+/// keyboard that the page lays out above. A toolbar above it switches the device, the orientation and the keyboard.
 /// It is a desktop simulation: it does not run the platform's insets or keyboard, and what it draws is an approximation.
 /// </summary>
 /// <remarks>
 /// The safe area (<see cref="SafeArea"/>) is the device's insets for the orientation, with no bottom inset while the keyboard
-/// is up. A <see cref="Screen"/> that holds a mobile <c>Page</c> gets it through <c>Page.SafeArea</c> (the frame turns the
+/// is up. The keyboard covers the bottom of the screen and is reported to the screen's pages as a <c>KeyboardInsetSource</c>, the
+/// seam a platform input pane feeds on a device, so a <c>Page</c> lays out above it. A <see cref="Screen"/> that holds a mobile
+/// <c>Page</c> gets the safe area through <c>Page.SafeArea</c> (the frame turns the
 /// page's <c>UsePlatformSafeArea</c> off, so the page's background runs under the status bar, as on a device); any other
 /// screen is padded by it. Chrome colors, radii and shadows are ArcDesign tokens, so the frame follows light and dark, the
 /// accent and the Pixel style.
@@ -62,6 +64,7 @@ public sealed class PhoneFrame : UserControl
     private readonly Border _cutout;
     private readonly Border _homeIndicator;
     private readonly Border _keyboard;
+    private readonly global::TKCode.Arc.Mobile.KeyboardInsetSource _keyboardSource = new();
     private bool _syncing;
 
     public PhoneFrame()
@@ -112,10 +115,13 @@ public sealed class PhoneFrame : UserControl
         content.Children.Add(_homeIndicator);
 
         _keyboard = BuildKeyboard();
-        _screenGrid = new Grid { RowDefinitions = new RowDefinitions("*,Auto") };
+        // The keyboard covers the bottom of the screen like a real one; the page under it lays out above it because the
+        // frame reports its height as the keyboard inset source (the same path as a platform's input pane).
+        _keyboard.VerticalAlignment = VerticalAlignment.Bottom;
+        _screenGrid = new Grid();
         _screenGrid.Children.Add(content);
-        Grid.SetRow(_keyboard, 1);
         _screenGrid.Children.Add(_keyboard);
+        TKCode.Arc.Mobile.Page.SetKeyboardInsetSource(_host, _keyboardSource);
 
         _screen = new Border { ClipToBounds = true, Child = _screenGrid };
         ArcTokens.Bind(_screen, Border.BackgroundProperty, ArcDesignTokenKind.Background);
@@ -264,6 +270,7 @@ public sealed class PhoneFrame : UserControl
         _keyboard.Height = device.KeyboardHeight(landscape);
 
         ApplySafeArea();
+        _keyboardSource.Set(IsKeyboardVisible ? device.KeyboardHeight(landscape) : 0);
         SyncToolbar();
     }
 
@@ -276,13 +283,16 @@ public sealed class PhoneFrame : UserControl
         }
         if (page is null)
         {
-            _host.Padding = SafeArea;
+            // Any other screen is padded by the safe area, with the keyboard's height at the bottom while it is up.
+            var area = SafeArea;
+            _host.Padding = IsKeyboardVisible ? new Thickness(area.Left, area.Top, area.Right, Device.KeyboardHeight(IsLandscape)) : area;
             return;
         }
         // The page keeps the space itself and paints its background under the status bar.
         _host.Padding = default;
         page.UsePlatformSafeArea = false;
-        page.SafeArea = SafeArea;
+        // The page gets the device's own insets and the keyboard through the inset source: it keeps the larger of the two.
+        page.SafeArea = Device.SafeArea(IsLandscape);
     }
 
     private void SyncToolbar()

@@ -1,7 +1,7 @@
 ---
 title: 移动端分段控件
 summary: 一排共享宽度的分段，选中其中一个，用于在同一内容的几个视图之间切换。
-source-hash: e4bee4b6bafb
+source-hash: 4217bcd3c97c
 ---
 
 <Demo name="Basic" />
@@ -53,7 +53,7 @@ source-hash: e4bee4b6bafb
 
 ## 动效
 
-填充、描边和文字颜色按快速曲线变化；减弱动效时立即变化。
+选中的块（Surface 填充加描边）在文字后面沿弹簧滑动（P7，`GlidingIndicator`）：第一次显示时原地淡入，控件尺寸变化时直接吸附，减少动效时直接跳到目标。文字颜色按快速曲线交叉淡化；减少动效时立即变化。
 
 ## 相关组件
 

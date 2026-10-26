@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileIconButtonFabDemo">
+    <Panel>
+        <TextBlock Text="The floating action button sits over the content, at the bottom right, and springs down when pressed."
+                   Margin="24"
+                   VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <arcm:IconButton Icon="{x:Static arc:ArcIcons.Plus}"
+                         Variant="Fab"
+                         AutomationProperties.Name="New message"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Bottom"
+                         Margin="24" />
+    </Panel>
+</UserControl>

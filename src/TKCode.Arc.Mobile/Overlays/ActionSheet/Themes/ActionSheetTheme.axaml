@@ -1,0 +1,90 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Action sheet: the Sheet's scrim and panel parts, but the panel is transparent and holds two floating cards: the
+         title, message and actions, and under them a separate Cancel row. The Sheet's code moves PART_Panel and fades
+         PART_Scrim; PART_Handle (title and message) is what a finger drags. -->
+    <ControlTheme x:Key="{x:Type arcm:ActionSheet}" TargetType="arcm:ActionSheet">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:ActionSheet">
+                <Grid>
+                    <Border Name="PART_Scrim"
+                            Background="{arcm:SheetTokenResource ScrimColor}"
+                            Opacity="0" />
+                    <Border Name="PART_Panel"
+                            VerticalAlignment="Bottom"
+                            Padding="{arcm:ActionSheetTokenResource PanelPadding}"
+                            IsVisible="False">
+                        <Grid RowDefinitions="*,Auto,Auto">
+                            <Border Grid.Row="0"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                    ClipToBounds="True">
+                                <DockPanel>
+                                    <StackPanel Name="PART_Handle"
+                                                DockPanel.Dock="Top"
+                                                Background="Transparent"
+                                                Spacing="2"
+                                                IsVisible="{TemplateBinding HasHeader}"
+                                                Margin="{arcm:ActionSheetTokenResource HeaderPadding}">
+                                        <TextBlock Name="PART_Title"
+                                                   Text="{TemplateBinding Title}"
+                                                   IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   TextAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Name="PART_Message"
+                                                   Text="{TemplateBinding Message}"
+                                                   IsVisible="{TemplateBinding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                    <ScrollViewer Name="PART_Body"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl ItemsSource="{Binding Actions, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </Border>
+                            <Border Grid.Row="1"
+                                    Margin="{arcm:ActionSheetTokenResource CancelMargin}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                    ClipToBounds="True"
+                                    IsVisible="{TemplateBinding CancelText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <arcm:ActionSheetItem Name="PART_Cancel"
+                                                      Content="{TemplateBinding CancelText}"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                            </Border>
+                            <Border Name="PART_SafeArea"
+                                    Grid.Row="2"
+                                    Height="{TemplateBinding SafeAreaBottom}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

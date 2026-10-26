@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileSheetDetentsDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Places" />
+        </arcm:Page.Header>
+        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+            <arcm:Button Content="Show nearby" HorizontalAlignment="Stretch" Click="OnShow" />
+            <TextBlock Name="State"
+                       Text="Closed"
+                       HorizontalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <TextBlock Text="Pull the handle up to open the sheet fully, down to peek or close."
+                       TextWrapping="Wrap"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arcm:Page.Overlay>
+            <arcm:Sheet Name="PlacesSheet" Title="Nearby" Detents="0.4, 0.9" DetentChanged="OnDetentChanged">
+                <arcm:ListGroup>
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Corner cafe" Subtitle="120 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Bakery" Subtitle="200 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Bookshop" Subtitle="350 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Pharmacy" Subtitle="400 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Park" Subtitle="450 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Metro station" Subtitle="600 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Museum" Subtitle="800 m" />
+                    <arcm:ListItem Icon="{x:Static arc:ArcIcons.Search}" Content="Library" Subtitle="900 m" />
+                </arcm:ListGroup>
+            </arcm:Sheet>
+        </arcm:Page.Overlay>
+    </arcm:Page>
+</UserControl>

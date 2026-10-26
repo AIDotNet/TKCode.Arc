@@ -1,0 +1,55 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- PullToRefresh: fills its parent and clips; an indicator (an arrow that turns over with the pull, then a spinner) sits
+         above the content, and the content is pushed down by the pull. The offsets are driven by the control's code (a pull
+         writes them each move), not by transitions. -->
+    <ControlTheme x:Key="{x:Type arcm:PullToRefresh}" TargetType="arcm:PullToRefresh">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:PullToRefresh">
+                <Border Name="PART_Root"
+                        Background="Transparent"
+                        ClipToBounds="True">
+                    <Grid>
+                        <Border Name="PART_Indicator"
+                                Height="{arcm:PullToRefreshTokenResource IndicatorExtent}"
+                                VerticalAlignment="Top"
+                                IsHitTestVisible="False"
+                                Opacity="0">
+                            <Panel>
+                                <arc:ArcGlyph Name="PART_Arrow"
+                                              Data="{x:Static arc:ArcIcons.ArrowDown}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                              Size="{arcm:PullToRefreshTokenResource ArrowSize}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RenderTransformOrigin="50%,50%" />
+                                <arc:ArcSpinner Name="PART_Spinner"
+                                                Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                Width="{arcm:PullToRefreshTokenResource SpinnerSize}"
+                                                Height="{arcm:PullToRefreshTokenResource SpinnerSize}"
+                                                Thickness="{arcm:PullToRefreshTokenResource SpinnerThickness}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                IsVisible="False" />
+                            </Panel>
+                        </Border>
+                        <ContentPresenter Name="PART_Content"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    </ControlTheme>
+</ResourceDictionary>

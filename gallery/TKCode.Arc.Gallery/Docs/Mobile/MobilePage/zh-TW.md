@@ -1,7 +1,7 @@
 ---
 title: 移動端頁面
 summary: 手機螢幕：頁首、內容和頁尾，排佈在裝置的安全區之內。
-source-hash: 7d6d0372a19d
+source-hash: 7d668709675d
 ---
 
 <Demo name="Basic" />
@@ -46,7 +46,7 @@ source-hash: 7d6d0372a19d
 
 `SafeArea` 是頁面在每條邊上保留的空間。`UsePlatformSafeArea` 開啟時（預設），頁面跟隨頂層視窗 insets 管理員的安全區邊距，沒有該管理員（例如桌面）時為零。關閉 `UsePlatformSafeArea` 並自行設定 `SafeArea` 即可覆寫。背景鋪滿整個頁面，所以它延伸到狀態列之下，而頁首和內容留在安全區之內。
 
-手機框為範例做了這件事：它依模擬的裝置設定 `SafeArea`，並關閉 `UsePlatformSafeArea`。用手機上方的切換器可以看到類似 iPhone 的瀏海和主畫面指示條、手勢列、小螢幕手機和平板，用鍵盤開關可以看到內容區縮小。
+手機框為範例做了這件事：它依模擬的裝置設定 `SafeArea`，並關閉 `UsePlatformSafeArea`。用手機上方的切換器可以看到類似 iPhone 的瀏海和主畫面指示條、手勢列、小螢幕手機和平板，用鍵盤開關可以看到頁面排布在鍵盤之上。
 
 ### 僅內容
 
@@ -67,6 +67,23 @@ source-hash: 7d6d0372a19d
 </arcm:Page>
 ```
 
+### 鍵盤
+
+軟體鍵盤彈出時，頁面會自己排布在鍵盤之上：內容依鍵盤高度縮小，頁尾退到鍵盤後面（就像 iOS 隱藏標籤列那樣），取得焦點的輸入框會捲動到可見位置。`AvoidKeyboard`（預設開啟）控制這個行為；對允許鍵盤遮擋的頁面可以關閉它。`KeyboardInset` 是鍵盤遮住的高度，隱藏時為 0，它與 `SafeArea` 合併：頁面在底部取兩者中較大的一個。表單請設定 `IsScrollable="True"`，讓輸入框在鍵盤上方捲動。
+
+<Demo name="Keyboard" />
+
+有平台輸入面板（`TopLevel.InputPane`）時，高度來自它。沒有的宿主（例如本頁的手機框）用 `KeyboardInsetSource` 回報，把它設定在頁面之上的任意控制項上。
+
+```csharp
+var keyboard = new KeyboardInsetSource();
+Page.SetKeyboardInsetSource(host, keyboard); // host 之下的每個頁面都會繼承
+keyboard.Set(291);                            // 鍵盤彈出，高 291
+keyboard.Set(0);                              // 再收起
+```
+
+`Sheet` 這樣的浮層可以在頁面內任意位置用 `Page.GetKeyboardInset(visual)` 讀取該高度，讓自己抬到鍵盤之上。
+
 ### Token
 
 `PageToken` 保存幾何：`ContentInset`（內容槽四周的內距，0）。背景、前景、字型和字級來自 ArcDesign token（`Background`、`Foreground`、`BodyFontFamily`、`TypeBase`），因此頁面跟隨明暗與強調色。
@@ -82,6 +99,8 @@ source-hash: 7d6d0372a19d
 ## 動態效果
 
 背景依標準曲線跟隨明暗切換。減少動態效果時立即切換。
+
+頁面用底部內距上的 `MotionValue` 跟隨鍵盤，因為該內距是版面輸入，ControlTheme 轉場無法表達。平台回報了鍵盤自己的時長時使用該時長，否則升起時用平滑彈簧，收起時用俐落的彈簧。減少動態效果或關閉動態效果時，版面直接跳到鍵盤的位置。鍵盤到達時以及穩定後，取得焦點的輸入框都會捲動到可見位置。
 
 ## 相關元件
 

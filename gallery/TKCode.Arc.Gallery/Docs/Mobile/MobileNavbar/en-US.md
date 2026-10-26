@@ -85,7 +85,7 @@ The title is plain text; give every screen one. The slot buttons are normal butt
 
 ## Motion
 
-The bar has no motion of its own; the buttons in its slots press and release as `MobileButton` does.
+A changed title rises out of a soft blur while the old one lifts away (P2, `ArcContentSwap` blur swap); the first title and reduced motion do not animate. The large title follows the scroll offset one to one and has no animation of its own. The buttons in the slots press and release as `MobileButton` does.
 
 ## Related
 

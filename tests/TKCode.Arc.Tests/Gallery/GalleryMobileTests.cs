@@ -22,7 +22,7 @@ public class GalleryMobileTests
     public void Mobile_Section_Lists_The_Catalog_Components_In_Order_And_Is_Not_Counted_As_Arc()
     {
         Mobile.Entries.Select(e => e.ClassName).ShouldBe(MobileCatalog.Components.Select(c => c.ClassName));
-        Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileTabbar", "MobileNavigationStack", "MobileListGroup", "MobileSheet", "MobileButton", "MobileSwitch", "MobileTextField", "MobileSearchbar", "MobileCheckbox", "MobileSegmented"]);
+        Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileToolbar", "MobileTabbar", "MobileNavigationStack", "MobileListGroup", "MobilePullToRefresh", "MobileDialog", "MobileToast", "MobileSheet", "MobileActionSheet", "MobileButton", "MobileSwitch", "MobileTextField", "MobileSearchbar", "MobileCheckbox", "MobileRadio", "MobileIconButton", "MobileSegmented"]);
         Mobile.Entries.ShouldAllBe(e => !e.IsArc && e.ArcUrl == null);
         GalleryCatalog.Count.ShouldBe(111);
         GalleryCatalog.AllCategories.ShouldNotContain(Mobile);
@@ -189,12 +189,16 @@ public class GalleryMobileTests
             frame.IsLandscape = true;
             page.SafeArea.ShouldBe(new Thickness(59, 0, 59, 21));
 
-            // The keyboard covers the home indicator's room and takes its height from the content area.
+            // The keyboard covers the home indicator's room; the page keeps its safe area and takes the keyboard's height
+            // through the inset source, the way it does from a platform input pane.
             frame.IsLandscape = false;
             frame.IsKeyboardVisible = true;
-            page.SafeArea.ShouldBe(new Thickness(0, 59, 0, 0));
+            frame.SafeArea.ShouldBe(new Thickness(0, 59, 0, 0));
+            page.SafeArea.ShouldBe(new Thickness(0, 59, 0, 34));
+            page.KeyboardInset.ShouldBe(291);
             frame.ContentSize.ShouldBe(new Size(390, 844 - 291));
             frame.IsKeyboardVisible = false;
+            page.KeyboardInset.ShouldBe(0);
             page.SafeArea.ShouldBe(new Thickness(0, 59, 0, 34));
             frame.ContentSize.ShouldBe(new Size(390, 844));
         }

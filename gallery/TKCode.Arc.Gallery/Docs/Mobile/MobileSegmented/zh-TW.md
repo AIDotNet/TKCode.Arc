@@ -1,7 +1,7 @@
 ---
 title: 移動端分段控制項
 summary: 一排共享寬度的分段，選中其中一個，用於在同一內容的幾個檢視之間切換。
-source-hash: e4bee4b6bafb
+source-hash: 4217bcd3c97c
 ---
 
 <Demo name="Basic" />
@@ -53,7 +53,7 @@ source-hash: e4bee4b6bafb
 
 ## 動效
 
-填充、描邊和文字顏色按快速曲線變化；減弱動效時立即變化。
+選中的區塊（Surface 填充加描邊）在文字後面沿彈簧滑動（P7，`GlidingIndicator`）：第一次顯示時原地淡入，控制項尺寸變化時直接吸附，減少動效時直接跳到目標。文字顏色按快速曲線交叉淡化；減少動效時立即變化。
 
 ## 相關元件
 

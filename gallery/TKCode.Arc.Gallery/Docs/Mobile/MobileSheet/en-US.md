@@ -1,9 +1,11 @@
 ---
 title: Mobile sheet
-summary: A bottom sheet that rises over a page with a scrim, closed by tapping the scrim, pulling the handle down or flicking it.
+summary: A bottom sheet that rises over a page with a scrim and can rest at several heights, closed by tapping the scrim, pulling the handle down or flicking it.
 ---
 
 <Demo name="Basic" />
+
+<Demo name="Detents" />
 
 ## When to use
 
@@ -43,7 +45,35 @@ Put the sheet in the page's `Overlay` slot, which covers the header and the foot
 
 A pull follows the finger one to one. On release the sheet looks ahead 0.2 s at the finger's speed: past the middle it closes, and a downward flick faster than 500 px/s closes it from anywhere. Otherwise it springs back to its open position.
 
-The bottom safe area is not accounted for yet: on a phone with a home indicator, add the space to the sheet's `Padding`.
+### Detents
+
+Set `Detents` (fractions of the sheet's height, parsed from text such as `"0.4, 0.9"`) and the sheet rests at several heights: a peek, then the full view. It opens at `InitialDetentIndex` (0, the lowest). `DetentIndex` says where it rests and `DetentChanged` is raised when it comes to rest on another one. `SnapTo(index)`, `Expand()` and `Collapse()` move an open sheet from code.
+
+```xml
+<arcm:Sheet Title="Nearby" Detents="0.4, 0.9" InitialDetentIndex="0">
+    ...
+</arcm:Sheet>
+```
+
+```csharp
+nearby.DetentChanged += (_, e) => Log($"{e.Index}: {e.Fraction}");
+```
+
+A pull follows the finger one to one and stretches like a rubber band past the tallest detent. On release the sheet looks 0.2 s ahead at the finger's speed and rests on the nearest detent, or closes when that is nearest to the bottom; a flick faster than 500 px/s always moves at least one detent. A single value is a fixed height. The content scrolls only at the tallest detent: below it a finger or the wheel raises the sheet instead, and at the top of the content a pull down moves the sheet again. Without `Detents` the sheet keeps its single content-sized height.
+
+### Bottom safe area
+
+The sheet does not read the platform. Give it the space under the content with `SafeAreaBottom` (a number in px), for example bound to the page's safe area:
+
+```xml
+<arcm:Page x:Name="Screen">
+    <arcm:Page.Overlay>
+        <arcm:Sheet SafeAreaBottom="{Binding SafeArea.Bottom, ElementName=Screen}" Title="Share">
+            ...
+        </arcm:Sheet>
+    </arcm:Page.Overlay>
+</arcm:Page>
+```
 
 ### Tokens
 
@@ -55,14 +85,15 @@ The bottom safe area is not accounted for yet: on a phone with a home indicator,
 
 ## Accessibility
 
-Escape closes a dismissible sheet. Give the sheet a `Title`: it is the first text in the handle area. Opening moves the focus to the panel. Tapping the scrim is a shortcut, not the only way: keep a visible way to close inside the sheet when it holds a form. The handle area is the only part that drags, so scrolling the content never moves the sheet.
+Escape closes a dismissible sheet. Give the sheet a `Title`: it is the first text in the handle area. Opening moves the focus to the panel. Tapping the scrim is a shortcut, not the only way: keep a visible way to close inside the sheet when it holds a form. The handle area drags with any pointer, and the content drags the sheet by touch only, so a mouse wheel or a scroll bar never moves it. With detents, `DetentIndex` and `DetentChanged` tell the app which height the sheet rests at.
 
 ## Motion
 
-The panel's position is a code-driven motion value: a drag writes it on every move, and on release the finger's speed goes into a spring (0.4 s smooth to open, 0.3 s to close), which a transition declared in the theme cannot do. The scrim's opacity follows the panel's position. With reduced motion the panel jumps instead of gliding.
+The panel's position is a code-driven motion value: a drag writes it on every move, and on release the finger's speed goes into a spring (0.4 s smooth to open, 0.3 s to close), which a transition declared in the theme cannot do. The scrim's opacity follows the panel's position each frame: full at the tallest detent, a little lighter at the lowest of several, clear when closed. Moving between detents is one spring from wherever the panel is, so a new tap or drag interrupts it without a seam. With reduced motion the panel jumps to the detent instead of gliding.
 
 ## Related
 
 - `MobilePage`: the `Overlay` slot holds the sheet.
 - `MobileListGroup`: the usual content of an action sheet.
 - `MobileButton`: the usual way to open it.
+- `MobileActionSheet`: a ready-made list of actions with a Cancel row.

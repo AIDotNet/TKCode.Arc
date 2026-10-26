@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobilePullToRefreshBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Messages" />
+        </arcm:Page.Header>
+        <arcm:PullToRefresh Name="Refresher">
+            <ScrollViewer>
+                <StackPanel>
+                    <TextBlock Name="Status"
+                               Margin="16,12"
+                               Text="Pull down from the top to refresh."
+                               TextWrapping="Wrap"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arcm:ListGroup Name="Rows" />
+                </StackPanel>
+            </ScrollViewer>
+        </arcm:PullToRefresh>
+    </arcm:Page>
+</UserControl>

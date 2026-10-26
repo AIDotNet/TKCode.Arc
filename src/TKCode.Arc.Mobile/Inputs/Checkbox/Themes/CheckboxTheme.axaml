@@ -5,7 +5,7 @@
                     x:ClassModifier="internal">
 
     <!-- Mobile checkbox: a 22px box (outlined, ControlOn fill when checked) with a check or a dash, and the label beside it; the
-         whole 44px row is the touch target; a finger dims it; no hover state. -->
+         whole 44px row is the touch target; a finger shrinks the box; no hover state. -->
     <ControlTheme x:Key="{x:Type arcm:Checkbox}" TargetType="arcm:Checkbox">
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
@@ -13,28 +13,35 @@
             <ControlTemplate TargetType="arcm:Checkbox">
                 <Border Background="Transparent">
                     <Grid ColumnDefinitions="Auto,*">
-                        <Panel Width="{arcm:CheckboxTokenResource BoxSize}"
+                        <Panel Name="PART_BoxHost"
+                               Width="{arcm:CheckboxTokenResource BoxSize}"
                                Height="{arcm:CheckboxTokenResource BoxSize}"
-                               VerticalAlignment="Center">
+                               VerticalAlignment="Center"
+                               RenderTransformOrigin="50%,50%"
+                               RenderTransform="scale(1)">
                             <Border Name="PART_Box"
                                     Background="Transparent"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
                                     BorderThickness="{arcm:CheckboxTokenResource BoxBorderWidth}"
                                     CornerRadius="{arcm:CheckboxTokenResource BoxRadius}" />
-                            <arc:ArcGlyph Name="PART_Check"
-                                          Data="{x:Static arc:ArcIcons.Check}"
-                                          Foreground="{arc:ArcDesignTokenResource ControlThumbOn}"
-                                          Size="{arcm:CheckboxTokenResource CheckExtent}"
-                                          Opacity="0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                            <arc:ArcGlyph Name="PART_Dash"
-                                          Data="{x:Static arc:ArcIcons.Minus}"
-                                          Foreground="{arc:ArcDesignTokenResource ControlThumbOn}"
-                                          Size="{arcm:CheckboxTokenResource CheckExtent}"
-                                          Opacity="0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
+                            <!-- P15: the check draws itself in (code, see Checkbox). -->
+                            <arc:StrokeDrawGlyph Name="PART_Check"
+                                                 Data="{x:Static arc:ArcIcons.Check}"
+                                                 Foreground="{arc:ArcDesignTokenResource ControlThumbOn}"
+                                                 Size="{arcm:CheckboxTokenResource CheckExtent}"
+                                                 StrokeThickness="2.25"
+                                                 Opacity="0"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" />
+                            <!-- P16: the dash, which morphs to the check and back. -->
+                            <arc:MorphGlyph Name="PART_Mark"
+                                            Foreground="{arc:ArcDesignTokenResource ControlThumbOn}"
+                                            Size="{arcm:CheckboxTokenResource CheckExtent}"
+                                            StrokeThickness="2.25"
+                                            Spring="Snappy"
+                                            Opacity="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
                         </Panel>
                         <ContentPresenter Name="PART_ContentPresenter"
                                           Grid.Column="1"
@@ -62,32 +69,29 @@
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
                 <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
             </Style>
-            <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
-                <Setter Property="Opacity" Value="1" />
-            </Style>
         </Style>
         <Style Selector="^:indeterminate">
             <Style Selector="^ /template/ Border#PART_Box">
                 <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
                 <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
             </Style>
-            <Style Selector="^ /template/ arc|ArcGlyph#PART_Dash">
-                <Setter Property="Opacity" Value="1" />
-            </Style>
-        </Style>
-        <Style Selector="^:pressed">
-            <Setter Property="Opacity" Value="{arcm:CheckboxTokenResource PressedOpacity}" />
         </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arcm:CheckboxTokenResource DisabledOpacity}" />
         </Style>
 
         <Style Selector="^:motion-full">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
-                </Transitions>
-            </Setter>
+            <!-- P1: a finger shrinks the box (the row is not a button face, so the label stays put). -->
+            <Style Selector="^:pressed /template/ Panel#PART_BoxHost">
+                <Setter Property="RenderTransform" Value="scale(0.92)" />
+            </Style>
+            <Style Selector="^ /template/ Panel#PART_BoxHost">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
             <Style Selector="^ /template/ Border#PART_Box">
                 <Setter Property="Transitions">
                     <Transitions>
@@ -96,20 +100,20 @@
                     </Transitions>
                 </Setter>
             </Style>
-            <Style Selector="^ /template/ arc|ArcGlyph">
+            <Style Selector="^ /template/ arc|StrokeDrawGlyph#PART_Check">
                 <Setter Property="Transitions">
                     <Transitions>
                         <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
                     </Transitions>
                 </Setter>
             </Style>
-        </Style>
-        <Style Selector="^:motion-reduced">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
-                </Transitions>
-            </Setter>
+            <Style Selector="^ /template/ arc|MorphGlyph#PART_Mark">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
         </Style>
     </ControlTheme>
 </ResourceDictionary>

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileToolbarWithTabbarDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Files" />
+        </arcm:Page.Header>
+        <StackPanel Margin="16" Spacing="12">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <arcm:Switch Name="BarSwitch" IsChecked="True" VerticalAlignment="Center" />
+                <TextBlock Text="Show the toolbar"
+                           VerticalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+            <TextBlock Text="The toolbar slides down and fades out when it closes, and comes back the same way."
+                       TextWrapping="Wrap"
+                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arcm:Page.Footer>
+            <StackPanel>
+                <arcm:Toolbar IsOpen="{Binding #BarSwitch.IsChecked}">
+                    <arcm:Button Variant="Plain" Content="Move" />
+                    <arcm:Button Variant="Plain" Content="Copy" />
+                    <arcm:Button Variant="Plain" Content="Delete" />
+                </arcm:Toolbar>
+                <arcm:Tabbar SelectedIndex="0">
+                    <arcm:TabbarItem Content="Recent" Icon="{x:Static arc:ArcIcons.Search}" />
+                    <arcm:TabbarItem Content="Browse" Icon="{x:Static arc:ArcIcons.Bell}" />
+                </arcm:Tabbar>
+            </StackPanel>
+        </arcm:Page.Footer>
+    </arcm:Page>
+</UserControl>

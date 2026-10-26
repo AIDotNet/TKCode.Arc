@@ -39,15 +39,24 @@
                                               VerticalAlignment="Center"
                                               Content="{TemplateBinding Leading}" />
                         </StackPanel>
-                        <TextBlock Name="PART_Title"
-                                   Grid.Column="1"
-                                   Text="{TemplateBinding Title}"
-                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
-                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                   TextTrimming="CharacterEllipsis"
-                                   VerticalAlignment="Center"
-                                   Opacity="{TemplateBinding BarTitleOpacity}"
-                                   HorizontalAlignment="Center" />
+                        <!-- P2: a new title rises out of a soft blur while the old one lifts away (first title and reduced motion: no swap). -->
+                        <arc:ArcContentSwap Name="PART_Title"
+                                            Grid.Column="1"
+                                            Mode="BlurSwap"
+                                            Content="{TemplateBinding Title}"
+                                            HorizontalContentAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Opacity="{TemplateBinding BarTitleOpacity}"
+                                            HorizontalAlignment="Center">
+                            <arc:ArcContentSwap.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </arc:ArcContentSwap.ContentTemplate>
+                        </arc:ArcContentSwap>
                         <ContentPresenter Name="PART_Trailing"
                                           Grid.Column="2"
                                           MinWidth="{arcm:NavbarTokenResource SlotMinWidth}"
@@ -59,13 +68,21 @@
                             Height="{TemplateBinding LargeTitleHeight}"
                             ClipToBounds="True"
                             IsHitTestVisible="False">
-                        <TextBlock Name="PART_LargeTitle"
-                                   Text="{TemplateBinding Title}"
-                                   Margin="{arcm:NavbarTokenResource LargeTitleMargin}"
-                                   FontSize="{arcm:NavbarTokenResource LargeTitleFontSize}"
-                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                   TextTrimming="CharacterEllipsis"
-                                   VerticalAlignment="Center" />
+                        <arc:ArcContentSwap Name="PART_LargeTitle"
+                                            Mode="BlurSwap"
+                                            Content="{TemplateBinding Title}"
+                                            Margin="{arcm:NavbarTokenResource LargeTitleMargin}"
+                                            HorizontalContentAlignment="Left"
+                                            VerticalAlignment="Center">
+                            <arc:ArcContentSwap.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               FontSize="{arcm:NavbarTokenResource LargeTitleFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </arc:ArcContentSwap.ContentTemplate>
+                        </arc:ArcContentSwap>
                     </Border>
                     </StackPanel>
                 </Border>

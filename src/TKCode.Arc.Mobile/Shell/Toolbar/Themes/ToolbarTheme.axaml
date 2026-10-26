@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Toolbar: 44 high, Surface fill with a Border hairline above it; leading / items sharing the width / center / trailing.
+         Showing and hiding the bar (slide + fade) is driven by the Toolbar's code, so a toggle mid-flight continues from where the bar is. -->
+    <ControlTheme x:Key="{x:Type arcm:Toolbar}" TargetType="arcm:Toolbar">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Toolbar">
+                <Border Name="PART_Bar"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" Height="{arcm:ToolbarTokenResource BarContentHeight}">
+                        <ContentPresenter Name="PART_Leading"
+                                          Grid.Column="0"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Leading}" />
+                        <Grid Grid.Column="1">
+                            <ItemsPresenter Name="PART_ItemsPresenter"
+                                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            <ContentPresenter Name="PART_Center"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Center}" />
+                        </Grid>
+                        <ContentPresenter Name="PART_Trailing"
+                                          Grid.Column="2"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Trailing}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <UniformGrid Rows="1" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Height" Value="{arcm:ToolbarTokenResource BarHeight}" />
+        <Setter Property="Padding" Value="{arcm:ToolbarTokenResource BarPadding}" />
+        <Setter Property="BorderThickness" Value="{arcm:ToolbarTokenResource BarBorderThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+</ResourceDictionary>

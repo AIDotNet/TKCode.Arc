@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Toast: fills its parent without catching touches (the template's Grid has no background); the toasts are built
+         in code into PART_Stack, anchored to the bottom, and styled here as Border.toast: an inverted pill (Foreground fill,
+         Background text). Their position, opacity and swipe are driven by the host's code, not by transitions. -->
+    <ControlTheme x:Key="{x:Type arcm:Toast}" TargetType="arcm:Toast">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Toast">
+                <Grid Margin="{arcm:ToastTokenResource SideInset}">
+                    <Grid.Styles>
+                        <Style Selector="Border.toast">
+                            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+                            <Setter Property="MinHeight" Value="{arcm:ToastTokenResource BodyMinHeight}" />
+                            <Setter Property="MaxWidth" Value="{arcm:ToastTokenResource BodyMaxWidth}" />
+                            <Setter Property="Padding" Value="{arcm:ToastTokenResource BodyPadding}" />
+                            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+                        <Style Selector="Border.toast TextBlock">
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+                            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+                            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+                            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style Selector="Border.toast PathIcon">
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+                            <Setter Property="Width" Value="{arcm:ToastTokenResource GlyphSize}" />
+                            <Setter Property="Height" Value="{arcm:ToastTokenResource GlyphSize}" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                    </Grid.Styles>
+                    <StackPanel Name="PART_Stack"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center"
+                                Spacing="{arcm:ToastTokenResource StackGap}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+</ResourceDictionary>

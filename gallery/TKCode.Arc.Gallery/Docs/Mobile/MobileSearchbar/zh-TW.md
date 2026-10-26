@@ -1,7 +1,7 @@
 ---
 title: 移動端搜尋列
 summary: 帶搜尋圖示的膠囊形文字方塊，有清除按鈕和會觸發 Submitted 的搜尋鍵。
-source-hash: 9e28f90235b4
+source-hash: d86e958fc965
 ---
 
 <Demo name="Basic" />
@@ -51,7 +51,7 @@ searchbar.Submitted += (_, _) => Search(searchbar.Text);
 
 ## 動效
 
-文字方塊取得或失去焦點時，邊框按快速曲線變色；減弱動效時立即變色。
+文字方塊取得或失去焦點時，邊框按快速曲線變色。清除按鈕從 0.6 縮放加淡入彈出（P26，透過 `PresenceHost`），離開比出現更快。減弱動效時，邊框立即變色，清除按鈕也立即出現和消失。
 
 ## 相關元件
 

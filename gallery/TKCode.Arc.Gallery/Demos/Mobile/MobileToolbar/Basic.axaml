@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileToolbarBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Photo" ShowBack="True" BackText="Library" />
+        </arcm:Page.Header>
+        <TextBlock Margin="16"
+                   Text="The toolbar's actions share the width, and a finger on one dims it."
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        <arcm:Page.Footer>
+            <arcm:Toolbar>
+                <arcm:Button Variant="Plain" Content="Share" />
+                <arcm:Button Variant="Plain" Content="Edit" />
+                <arcm:Button Variant="Plain" Content="Favorite" />
+                <arcm:Button Variant="Plain" Content="Delete" />
+            </arcm:Toolbar>
+        </arcm:Page.Footer>
+    </arcm:Page>
+</UserControl>

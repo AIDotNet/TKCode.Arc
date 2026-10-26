@@ -45,7 +45,7 @@ Register the controls with `UseArcMobile()` next to `UseArcCore()` or `UseArc()`
 
 `SafeArea` is the space the page keeps free on each edge. While `UsePlatformSafeArea` is on (the default), the page follows the safe area padding of the top level's insets manager and uses zero where there is none, such as on desktop. Turn `UsePlatformSafeArea` off and set `SafeArea` yourself to override it. The background fills the whole page, so it runs under the status bar while the header and content stay inside the safe area.
 
-The phone frame does this for the demos: it sets `SafeArea` from the simulated device and turns `UsePlatformSafeArea` off. Use the switcher above the phone to see an iPhone-like notch and home indicator, a gesture bar, a small phone and a tablet, and the keyboard toggle to see the content area shrink.
+The phone frame does this for the demos: it sets `SafeArea` from the simulated device and turns `UsePlatformSafeArea` off. Use the switcher above the phone to see an iPhone-like notch and home indicator, a gesture bar, a small phone and a tablet, and the keyboard toggle to see the page lay out above the keyboard.
 
 ### Content only
 
@@ -66,6 +66,23 @@ By default the content gets the page's height as it is, so a screen that fills t
 </arcm:Page>
 ```
 
+### Keyboard
+
+When the soft keyboard is up, the page lays itself out above it: the content shrinks by the keyboard's height, the footer goes behind the keyboard (the way iOS hides a tab bar) and the focused input is scrolled into view. `AvoidKeyboard` (default on) controls this; turn it off for a page the keyboard may cover. `KeyboardInset` is the height the keyboard covers, 0 when it is hidden, and it combines with `SafeArea`: the page keeps the larger of the two at the bottom. Put `IsScrollable="True"` on a form so the fields scroll above the keyboard.
+
+<Demo name="Keyboard" />
+
+The height comes from the platform's input pane (`TopLevel.InputPane`) when there is one. A host without it, such as the phone frame on this page, reports it with a `KeyboardInsetSource`, set on any control above the page.
+
+```csharp
+var keyboard = new KeyboardInsetSource();
+Page.SetKeyboardInsetSource(host, keyboard); // inherited by every page below host
+keyboard.Set(291);                            // the keyboard is up, 291 high
+keyboard.Set(0);                              // and down again
+```
+
+An overlay such as a `Sheet` reads the height from anywhere inside the page with `Page.GetKeyboardInset(visual)`, to lift itself above the keyboard.
+
 ### Tokens
 
 `PageToken` holds the geometry: `ContentInset` (the padding around the content slot, 0). The background, foreground, font and size come from the ArcDesign tokens (`Background`, `Foreground`, `BodyFontFamily`, `TypeBase`), so the page follows light and dark and the accent.
@@ -81,6 +98,8 @@ The page adds no keyboard behavior or role of its own; its header, content and f
 ## Motion
 
 The background follows light and dark on the standard curve. With reduced motion it switches at once.
+
+The page follows the keyboard with a `MotionValue` on the bottom inset, because the inset is a layout input that a ControlTheme transition cannot express. It uses the platform's own keyboard duration when the platform reports one, otherwise a smooth spring on the way up and a snappy one on the way down. With reduced motion, or with motion off, the layout jumps to the keyboard. The focused input is scrolled into view when the keyboard arrives and again when it has settled.
 
 ## Related
 

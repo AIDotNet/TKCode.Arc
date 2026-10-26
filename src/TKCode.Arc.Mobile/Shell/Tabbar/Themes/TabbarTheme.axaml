@@ -11,7 +11,13 @@
                 <Border Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <Panel>
+                        <!-- P7: one AccentSubtle pill glides behind the selected item's icon (drawn in render, never relayouts). -->
+                        <arc:GlidingIndicator Name="PART_Glider"
+                                              Fill="{arc:ArcDesignTokenResource AccentSubtle}"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -27,15 +33,18 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
     </ControlTheme>
 
-    <!-- Item: TextMuted icon over label; selected Foreground with an AccentSubtle pill behind the icon; press dims; no hover state. -->
+    <!-- Item: TextMuted icon over label; selected Foreground (the AccentSubtle pill is the bar's glider); press scales and dims; no hover state. -->
     <ControlTheme x:Key="{x:Type arcm:TabbarItem}" TargetType="arcm:TabbarItem">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arcm:TabbarItem">
                 <Border Background="Transparent" Padding="{TemplateBinding Padding}">
-                    <StackPanel Spacing="{arcm:TabbarItemTokenResource IconGap}"
+                    <StackPanel Name="PART_Content"
+                                Spacing="{arcm:TabbarItemTokenResource IconGap}"
                                 HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
+                                VerticalAlignment="Center"
+                                RenderTransformOrigin="50%,50%"
+                                RenderTransform="scale(1)">
                         <Border Name="PART_Indicator"
                                 Background="Transparent"
                                 CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
@@ -68,21 +77,29 @@
         <!-- No :pointerover style on purpose. -->
         <Style Selector="^:selected">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
-            <Style Selector="^ /template/ Border#PART_Indicator">
-                <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
-            </Style>
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="Opacity" Value="{arcm:TabbarItemTokenResource PressedOpacity}" />
         </Style>
 
         <Style Selector="^:motion-full">
+            <!-- P1: a tab is not a row, so a finger also shrinks its content to 0.96; the selection pill is the Tabbar's glider. -->
+            <Style Selector="^:pressed /template/ StackPanel#PART_Content">
+                <Setter Property="RenderTransform" Value="scale(0.96)" />
+            </Style>
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
                 </Transitions>
             </Setter>
+            <Style Selector="^ /template/ StackPanel#PART_Content">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    </Transitions>
+                </Setter>
+            </Style>
         </Style>
         <Style Selector="^:motion-reduced">
             <Setter Property="Transitions">

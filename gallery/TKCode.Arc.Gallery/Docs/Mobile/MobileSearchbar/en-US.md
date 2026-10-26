@@ -50,7 +50,7 @@ Give the field a placeholder that says what is searched, such as "Search message
 
 ## Motion
 
-The border changes color on the fast curve when the field gains or loses focus, and at once with reduced motion.
+The border changes color on the fast curve when the field gains or loses focus. The clear button pops in from scale 0.6 with a fade (P26 through `PresenceHost`) and leaves faster than it arrived. With reduced motion the border changes at once and the clear button appears and disappears at once.
 
 ## Related
 

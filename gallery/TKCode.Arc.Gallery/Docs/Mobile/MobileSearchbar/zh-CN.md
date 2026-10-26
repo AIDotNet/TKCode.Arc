@@ -1,7 +1,7 @@
 ---
 title: 移动端搜索栏
 summary: 带搜索图标的胶囊形文本框，有清除按钮和会触发 Submitted 的搜索键。
-source-hash: 9e28f90235b4
+source-hash: d86e958fc965
 ---
 
 <Demo name="Basic" />
@@ -51,7 +51,7 @@ searchbar.Submitted += (_, _) => Search(searchbar.Text);
 
 ## 动效
 
-文本框获得或失去焦点时，边框按快速曲线变色；减弱动效时立即变色。
+文本框获得或失去焦点时，边框按快速曲线变色。清除按钮从 0.6 缩放加淡入弹出（P26，通过 `PresenceHost`），离开比出现更快。减弱动效时，边框立即变色，清除按钮也立即出现和消失。
 
 ## 相关组件
 

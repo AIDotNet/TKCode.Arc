@@ -4,14 +4,22 @@
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
                     x:ClassModifier="internal">
 
-    <!-- Segmented: a SurfaceMuted track; the segments share the width; the selected one is a Surface fill with an outline. -->
+    <!-- Segmented: a SurfaceMuted track; the segments share the width; the selected one is marked by the track's glider (a Surface block with an outline) and Foreground text. -->
     <ControlTheme x:Key="{x:Type arcm:Segmented}" TargetType="arcm:Segmented">
         <Setter Property="Template">
             <ControlTemplate TargetType="arcm:Segmented">
                 <Border Background="{TemplateBinding Background}"
                         CornerRadius="{arcm:SegmentedTokenResource TrackRadius}"
                         Padding="{TemplateBinding Padding}">
-                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <Panel>
+                        <!-- P7: one raised block glides behind the labels (drawn in render, never relayouts). -->
+                        <arc:GlidingIndicator Name="PART_Glider"
+                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="{arcm:SegmentedItemTokenResource ItemRadius}" />
+                        <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </Panel>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -58,8 +66,6 @@
 
         <!-- No :pointerover style on purpose. -->
         <Style Selector="^:selected">
-            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
-            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         </Style>
         <Style Selector="^:pressed:not(:selected)">
@@ -69,8 +75,6 @@
         <Style Selector="^:motion-full">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
-                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
                     <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
                 </Transitions>
@@ -79,8 +83,6 @@
         <Style Selector="^:motion-reduced">
             <Setter Property="Transitions">
                 <Transitions>
-                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
-                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
                     <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
                     <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
                 </Transitions>

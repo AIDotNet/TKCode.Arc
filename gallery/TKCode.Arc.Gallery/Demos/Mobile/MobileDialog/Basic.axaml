@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+             x:Class="TKCode.Arc.Gallery.Demos.MobileDialogBasicDemo">
+    <arcm:Page>
+        <arcm:Page.Header>
+            <arcm:Navbar Title="Photos" />
+        </arcm:Page.Header>
+        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+            <arcm:Button Content="Delete photo" HorizontalAlignment="Stretch" Click="OnDelete" />
+            <arcm:Button Content="Share options" Variant="Tinted" HorizontalAlignment="Stretch" Click="OnShare" />
+            <TextBlock Text="Two actions share a row; three stack. The scrim does not close the first dialog: choose an action."
+                       TextWrapping="Wrap"
+                       FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+        <arcm:Page.Overlay>
+            <Grid>
+                <arcm:Dialog Name="DeleteDialog"
+                             Title="Delete this photo?"
+                             Message="It will be removed from all your devices. This cannot be undone.">
+                    <arcm:Button Content="Cancel" Variant="Tinted" />
+                    <arcm:Button Content="Delete" arcm:Dialog.IsDestructive="True" />
+                </arcm:Dialog>
+                <arcm:Dialog Name="ShareDialog"
+                             Title="Share photo"
+                             Message="Choose how to send it."
+                             IsDismissible="True">
+                    <arcm:Button Content="Send a link" />
+                    <arcm:Button Content="Send a copy" Variant="Tinted" />
+                    <arcm:Button Content="Cancel" Variant="Plain" />
+                </arcm:Dialog>
+            </Grid>
+        </arcm:Page.Overlay>
+    </arcm:Page>
+</UserControl>

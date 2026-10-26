@@ -1,0 +1,98 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Mobile icon button: Plain (accent icon), Tinted, Filled or Fab (56px, floating shadow) by Variant; no hover state,
+         press scales to 0.97 and dims (the Fab scales to 0.92), 44 x 44 minimum. -->
+    <ControlTheme x:Key="{x:Type arcm:IconButton}" TargetType="arcm:IconButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:IconButton">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <arc:ArcGlyph Name="PART_Icon"
+                                  Data="{TemplateBinding Icon}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Width" Value="{arcm:IconButtonTokenResource TouchTarget}" />
+        <Setter Property="Height" Value="{arcm:IconButtonTokenResource TouchTarget}" />
+        <Setter Property="MinWidth" Value="{arcm:IconButtonTokenResource TouchTarget}" />
+        <Setter Property="MinHeight" Value="{arcm:IconButtonTokenResource TouchTarget}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Size" Value="{arcm:IconButtonTokenResource IconExtent}" />
+        </Style>
+
+        <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:tinted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:filled">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:fab">
+            <Setter Property="Width" Value="{arcm:IconButtonTokenResource FabSize}" />
+            <Setter Property="Height" Value="{arcm:IconButtonTokenResource FabSize}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Style Selector="^ /template/ Border#PART_Frame">
+                <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Size" Value="{arcm:IconButtonTokenResource FabIconExtent}" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+            <Setter Property="Opacity" Value="{arcm:IconButtonTokenResource PressedOpacity}" />
+        </Style>
+        <Style Selector="^:fab:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:IconButtonTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+            <Style Selector="^:fab:pressed">
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

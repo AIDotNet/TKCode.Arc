@@ -488,8 +488,9 @@ public class MobileControlTests
             var start = CenterOf(handle, window);
             window.MouseDown(start, MouseButton.Left);
             window.MouseMove(start + new Point(0, 8), RawInputModifiers.LeftMouseButton);
+            Thread.Sleep(10); // a real time step, so the velocity is measured (32px in about 10ms) instead of read as zero
             window.MouseMove(start + new Point(0, 40), RawInputModifiers.LeftMouseButton);
-            window.MouseUp(start + new Point(0, 40), MouseButton.Left); // no pause: the headless moves are instantaneous
+            window.MouseUp(start + new Point(0, 40), MouseButton.Left); // lifted while still moving fast: a flick
             sheet.IsOpen.ShouldBeFalse();
         }
         finally
@@ -776,14 +777,14 @@ public class MobileControlTests
             // A tap on the label, far from the box, still toggles: the whole row is the target.
             var onLabel = box.TranslatePoint(new Point(box.Bounds.Width - 4, box.Bounds.Height / 2), window)!.Value;
             window.MouseDown(onLabel, MouseButton.Left);
-            box.Opacity.ShouldBeLessThan(1); // pressed
+            box.Classes.Contains(":pressed").ShouldBeTrue(); // the box shrinks; the row no longer dims
             window.MouseUp(onLabel, MouseButton.Left);
             box.IsChecked.ShouldBe(true);
             Opacity("PART_Check").ShouldBe(1);
 
             box.IsChecked = null;
             box.Classes.Contains(":indeterminate").ShouldBeTrue();
-            Opacity("PART_Dash").ShouldBe(1);
+            Opacity("PART_Mark").ShouldBe(1);
             Opacity("PART_Check").ShouldBe(0);
         }
         finally

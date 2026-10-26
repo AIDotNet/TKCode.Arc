@@ -1,0 +1,103 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal">
+
+    <!-- Mobile radio: a 22px circle (ControlOn outline when chosen) with a dot that springs in, and the label beside it;
+         the whole 44px row is the touch target; a finger dims it; no hover state. -->
+    <ControlTheme x:Key="{x:Type arcm:Radio}" TargetType="arcm:Radio">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:Radio">
+                <Border Background="Transparent">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Panel Width="{arcm:RadioTokenResource CircleSize}"
+                               Height="{arcm:RadioTokenResource CircleSize}"
+                               VerticalAlignment="Center">
+                            <Border Name="PART_Circle"
+                                    Background="Transparent"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                    BorderThickness="{arcm:RadioTokenResource CircleBorderWidth}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                            <Border Name="PART_Dot"
+                                    Width="{arcm:RadioTokenResource DotSize}"
+                                    Height="{arcm:RadioTokenResource DotSize}"
+                                    Background="{arc:ArcDesignTokenResource ControlOn}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    RenderTransformOrigin="50%,50%"
+                                    RenderTransform="scale(0.2)"
+                                    Opacity="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
+                        </Panel>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{arcm:RadioTokenResource LabelMargin}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="MinHeight" Value="{arcm:RadioTokenResource TouchTarget}" />
+        <Setter Property="MinWidth" Value="{arcm:RadioTokenResource TouchTarget}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+
+        <!-- No :pointerover style on purpose: a finger does not hover. -->
+        <Style Selector="^:checked">
+            <Style Selector="^ /template/ Border#PART_Circle">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Opacity" Value="{arcm:RadioTokenResource PressedOpacity}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:RadioTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Circle">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <!-- The dot springs in and out; the spring keeps its speed if the choice flips mid-way. -->
+            <Style Selector="^ /template/ Border#PART_Dot">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

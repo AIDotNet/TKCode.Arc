@@ -10,7 +10,9 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arcm:Page">
                 <Grid>
-                <Border Background="{TemplateBinding Background}"
+                <!-- PART_Safe: Page.cs sets its padding to the safe area, or to the keyboard's height while it is up. -->
+                <Border Name="PART_Safe"
+                        Background="{TemplateBinding Background}"
                         Padding="{TemplateBinding SafeArea}">
                     <Grid RowDefinitions="Auto,*,Auto">
                         <ContentPresenter Name="PART_Header"

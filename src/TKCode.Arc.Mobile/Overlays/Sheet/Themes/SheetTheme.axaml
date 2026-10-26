@@ -42,6 +42,9 @@
                                            TextAlignment="Center"
                                            TextTrimming="CharacterEllipsis" />
                             </StackPanel>
+                            <Border Name="PART_SafeArea"
+                                    DockPanel.Dock="Bottom"
+                                    Height="{TemplateBinding SafeAreaBottom}" />
                             <ScrollViewer Name="PART_Body"
                                           HorizontalScrollBarVisibility="Disabled"
                                           VerticalScrollBarVisibility="Auto">
