@@ -8,6 +8,7 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Interactivity;
+using Avalonia.Input;
 
 namespace TKCode.Arc;
 
@@ -17,6 +18,7 @@ namespace TKCode.Arc;
 /// every switch between dots and characters resolves in place from a light blur. Enter or Space on the toggle
 /// shows or hides the password; the toggle reports its pressed state and switches its name between
 /// <see cref="ShowPasswordText"/> and <see cref="HidePasswordText"/>.
+/// The explicit reveal selection persists across focus changes until the user or caller changes <see cref="IsRevealed"/>.
 /// </summary>
 [TemplatePart(RevealButtonPart, typeof(FieldIconButton))]
 public class PasswordField : FieldTextBox
@@ -73,6 +75,14 @@ public class PasswordField : FieldTextBox
     {
         SetCurrentValue(IsRevealedProperty, !IsRevealed);
         e.Handled = true;
+    }
+
+    protected override void OnLostFocus(FocusChangedEventArgs e)
+    {
+        base.OnLostFocus(e);
+        // TextBox remasks on lost focus, including the reveal button's bubbled event when returning to type.
+        // Arc's explicit toggle owns the reveal state until the caller or user changes it.
+        SetCurrentValue(RevealPasswordProperty, IsRevealed);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
