@@ -3,6 +3,8 @@
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     x:ClassModifier="internal">
     <ControlTheme x:Key="{x:Type arc:Stepper}" TargetType="arc:Stepper">
+        <!-- The first and last marker halos extend beyond the stepper's layout slot. -->
+        <Setter Property="ClipToBounds" Value="False" />
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Template">
@@ -59,6 +61,8 @@
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:StepperItem}" TargetType="arc:StepperItem">
+        <!-- The marker halo and the item's focus ring extend beyond the layout slot. -->
+        <Setter Property="ClipToBounds" Value="False" />
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />

@@ -1,11 +1,14 @@
 using TKCode.Arc.Motion;
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Collections;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Progress;
 
@@ -16,6 +19,53 @@ public class StepperTests
         new("Account", "Create your login"), new("Shipping", "Where should we send it"),
         new("Payment", "Card or invoice"), new("Review", "Check and confirm")
     ];
+
+    [AvaloniaTheory]
+    [InlineData(Orientation.Horizontal, false, 0)]
+    [InlineData(Orientation.Horizontal, false, 2)]
+    [InlineData(Orientation.Horizontal, true, 0)]
+    [InlineData(Orientation.Horizontal, true, 3)]
+    [InlineData(Orientation.Vertical, false, 0)]
+    [InlineData(Orientation.Vertical, false, 3)]
+    public void Current_Marker_Halo_Is_Not_Clipped_By_The_Stepper_Tree(Orientation orientation, bool compact, int current)
+    {
+        var stepper = new Stepper
+        {
+            ItemsSource = Steps(), CurrentIndex = current, Orientation = orientation, IsCompact = compact,
+            Width = 640, Margin = new Thickness(16), VerticalAlignment = VerticalAlignment.Top
+        };
+        var window = TestHelpers.Show(stepper);
+        window.Width = 700;
+        window.Height = 600;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var marker = stepper.Items[current].Marker!;
+            // Record the real marker drawing, including the halo extending outside its 28-DIP layout slot.
+            var drawing = new DrawingGroup();
+            using (var context = drawing.Open())
+            {
+                marker.Render(context);
+            }
+            var paintedBounds = drawing.GetBounds();
+            paintedBounds.Left.ShouldBeLessThan(0);
+            paintedBounds.Top.ShouldBeLessThan(0);
+            foreach (var ancestor in marker.GetVisualAncestors().Prepend(marker))
+            {
+                if (ancestor.ClipToBounds)
+                {
+                    var origin = marker.TranslatePoint(default, ancestor)!.Value;
+                    var painted = paintedBounds.Translate(origin - default(Point));
+                    new Rect(ancestor.Bounds.Size).Contains(painted).ShouldBeTrue(
+                        $"{ancestor.GetType().Name} clips the current marker halo: {painted}");
+                }
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 
     [Fact]
     public void Connectors_Fill_One_After_Another_From_The_Previous_Step()
