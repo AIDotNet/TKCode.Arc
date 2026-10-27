@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LineReplayPreviewDemo">
+    <!-- A release day against a typical Wednesday; press Replay. Data: LineReplayDemoData. -->
+    <arc:LineReplay x:Name="Replay"
+                    Margin="0,12"
+                    SeriesLabel="Release day"
+                    BaselineLabel="Typical Wednesday"
+                    ValueLabel="Active" />
+</UserControl>

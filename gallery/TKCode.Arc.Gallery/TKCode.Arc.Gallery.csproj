@@ -28,6 +28,7 @@
         <AvaloniaResource Include="Assets/*.png" />
     </ItemGroup>
 
+
     <!-- Docs screenshots (GalleryShotView): Docs/<Category>/<Component>/images/<Name>.png and <Name>.dark.png, captured
          by tools/docshots from the XAML block under each ![caption](images/<Name>.png) line. They are resources of
          TKCode.Arc.Gallery.Shots (GalleryDocs.ScreenshotUri), which reads them from this folder. -->

@@ -23,7 +23,7 @@ header menus, filter row, totals row and status bar, so the table itself is the 
 
 ## When not to use
 
-- **Read-only records with sorting and row selection**, such as support tickets or users: use `SortableDataTable`. It
+- **Read-only records with sorting and row selection**, such as support tickets or users: use `Table`. It
   needs no editing machinery.
 - **Editing one record at a time**, such as a customer profile or an invoice header: use a form built from `Input`,
   `Select` and `DatePicker`, which validate each field.
@@ -697,7 +697,7 @@ left, and Escape cancels. On a header, Alt+Left and Alt+Right narrow and widen t
 
 | Component | Choose it when |
 |---|---|
-| `SortableDataTable` | The records are read-only, and people sort, select and page through them |
+| `Table` | The records are read-only, and people sort, select and page through them |
 | `Input` / `Select` / `DatePicker` | People edit one record at a time, with validation per field |
 | `Card` / `ReorderableList` | Each item has its own content, images or actions |
 | `TreeView` | The data is hierarchical and people expand branches |

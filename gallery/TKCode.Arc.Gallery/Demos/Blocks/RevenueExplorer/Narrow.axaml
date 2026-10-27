@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueExplorerNarrowDemo">
+    <!--
+        In a 380-wide card the block reads its own width: paddings tighten to 16, the range buttons take their own row and
+        share it equally, the headline numbers stack with the value on the right, the chips shrink and the plot is 216 high.
+    -->
+    <Border Width="380"
+            HorizontalAlignment="Left"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <arc:RevenueExplorer x:Name="Revenue" Title="Subscription revenue" />
+    </Border>
+</UserControl>

@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueExplorerEuroDemo">
+    <!--
+        A smaller product in euros with German month names, other series names and a custom range text. Every word and
+        format is a property; the axis, the readout, the headline numbers and the table all follow.
+    -->
+    <arc:RevenueExplorer x:Name="Revenue"
+                         Title="Studio subscriptions"
+                         CurrencySymbol="€"
+                         CultureName="de-DE"
+                         NewLabel="Signups"
+                         ExpansionLabel="Upgrades"
+                         ChurnLabel="Cancellations"
+                         NetNewLabel="Net change"
+                         MrrLabel="Recurring revenue"
+                         NetNewKpiLabel="Net change per month"
+                         ChurnRateLabel="Cancellation rate"
+                         CompareText="Compare with last period"
+                         EmptyText="Pick at least one series" />
+</UserControl>

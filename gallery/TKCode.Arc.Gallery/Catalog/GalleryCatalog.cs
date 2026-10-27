@@ -34,7 +34,33 @@ public static partial class GalleryCatalog
     public const int NewWindowDays = 60;
 
     /// <summary>
-    /// TKCode components with no Arc original, listed after Arc's groups. They are not part of the 111 Arc components
+    /// The dates the Blocks and Mobile entries joined the gallery (<see cref="GalleryEntry.AddedOn"/>): their catalogs
+    /// (<see cref="BlockCatalog"/>, <see cref="MobileCatalog"/>) carry none. Declared before <see cref="Blocks"/> and
+    /// <see cref="Mobile"/>, which read it while they initialize.
+    /// </summary>
+    private static readonly Dictionary<string, string> s_addedOn = new (string Date, string[] Classes)[]
+    {
+        ("2026-10-21", ["Sidebar", "PageHeader", "CommandPalette", "NotificationCenter", "EmptyStates", "SearchResults",
+            "SettingsPage", "SettingsCommand", "SecuritySettings", "BillingOverview", "UsageBilling", "CancelFlow"]),
+        ("2026-10-23", ["ModelPicker", "AiSidePanel", "PromptStudio", "DocumentExtraction", "ModelArena", "AiAnswer", "AiChat",
+            "AiComposer", "AgentMemory", "ActivityTerrain", "RevenueGlobe", "CustomerGalaxy", "SemanticZoom", "LayoutMorph",
+            "ExplodedView", "WeekCalendar", "AvailabilityPicker", "ProjectBoard", "ReleaseReadiness", "KanbanBoard", "SiteHeader",
+            "SiteFooter", "CtaSection", "NewsletterSignup"]),
+        ("2026-10-24", ["Login", "OnboardingIllustration", "OtpInput", "MultiStepForm"]),
+        ("2026-10-25", ["MobilePage", "MobileNavbar", "MobileTabbar", "MobileButton", "MobileSwitch"]),
+        ("2026-10-26", ["MetricsDashboard", "KpiDrilldown", "MetricExplorer", "RevenueExplorer", "MrrWaterfall", "CohortRetention",
+            "UsageForecast", "JourneyFlow", "UptimeStatus", "ChoroplethExplorer", "ConnectedScatter", "HorizonChart",
+            "MarketTerminal", "BudgetVariance", "SmallMultiples", "LineReplay", "TeamMembers", "InvitePeople", "TeamDirectory",
+            "RolesPermissions", "ProfilePage", "ApiKeys", "Webhooks", "Integrations", "EnvVariables",
+            "MobileToolbar", "MobileNavigationStack", "MobileListGroup", "MobilePullToRefresh", "MobileDialog", "MobileToast",
+            "MobileSheet", "MobileActionSheet", "MobileTextField", "MobileSearchbar", "MobileCheckbox", "MobileRadio",
+            "MobileIconButton", "MobileSegmented"]),
+    }.SelectMany(g => g.Classes.Select(c => (c, g.Date))).ToDictionary(e => e.c, e => e.Date);
+
+    private static string? AddedOnOf(string className) => s_addedOn.GetValueOrDefault(className);
+
+    /// <summary>
+    /// TKCode components with no Arc original, listed after Arc's groups. They are not part of the 112 Arc components
     /// (<see cref="Categories"/> / <see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory[] Extras =
@@ -49,7 +75,7 @@ public static partial class GalleryCatalog
         [
             new("WorkflowCanvas", "Workflow canvas", "workflow-canvas", 0,
                 "Show a workflow on a dotted canvas and play its runs: each step lights up in turn, the data draws along the edges, and every step reports its result and time.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-24"),
         ], IsArc: false),
         new("Content", "Extras", "扩展",
         [
@@ -64,7 +90,7 @@ public static partial class GalleryCatalog
 
     /// <summary>
     /// The groups of the Special components section, listed after Blocks as on uiarc.dev. Their pages live under
-    /// <c>/components/</c> like any component, but they are not part of the 111 Arc components (<see cref="Count"/>).
+    /// <c>/components/</c> like any component, but they are not part of the 112 Arc components (<see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory[] Special =
     [
@@ -72,70 +98,71 @@ public static partial class GalleryCatalog
         [
             new("AgentStatus", "Agent status", "agent-status", 0,
                 "A live status pill for a running agent: its mark in a spinning ring, the current step and a timer, opening into the recent steps with pause, stop and approval controls.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("ToolCall", "Tool call", "tool-call", 0,
                 "A tool call row for an agent transcript: the tool, what it did and how it went, opening into the call's input and output, with approval and retry in place.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("AgentPlan", "Agent plan", "agent-plan", 0,
                 "An agent's plan as an editable checklist: reorder, rename and add steps while it is a draft, then follow the run step by step once it is approved.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("AgentTimeline", "Agent timeline", "agent-timeline", 0,
                 "A replay of a multi-agent run on one time axis: each agent's thinking, tool calls and waiting, the handoffs between them, and the time, tokens and cost.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("ContextWindow", "Context window", "context-window", 0,
                 "A model's context window as a grid of 200 cells that fills part by part, with a compaction threshold, a legend and actions that show what still fits.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
         ], IsArc: false),
         new("Illustrations", "Illustrations", "插图",
         [
             new("DataFlow", "Data flow", "data-flow", 0,
                 "Events stream from their sources through a queue and a batch transform into a warehouse and live dashboards.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-21"),
             new("PaymentFlow", "Payment flow", "payment-flow", 0,
                 "A card payment from checkout through tokenization, authorization and the issuer's decision to settlement.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-21"),
             new("MultiRegionFailover", "Multi-region failover", "multi-region-failover", 0,
                 "A global load balancer shifts traffic to a standby region and promotes its database when the primary region goes down.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-21"),
             new("VectorSearch", "Vector search", "vector-search", 0,
                 "A question is embedded as a vector and answered with its nearest documents by cosine similarity.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-21"),
             new("AgentLoop", "Agent loop", "agent-loop", 0,
                 "An agent gathers context, calls tools and checks the result, going round the loop until the task is done.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("MixtureOfExperts", "Mixture of experts", "mixture-of-experts", 0,
                 "A router scores every expert for each token and sends it to its top choices, whose outputs blend into the result.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("SpeculativeDecoding", "Speculative decoding", "speculative-decoding", 0,
                 "A small draft model guesses a few tokens ahead and the large model checks them in one pass, keeping the ones it agrees with.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("PromptCache", "Prompt cache", "prompt-cache", 0,
                 "Requests that share a prompt prefix read it from the cache instead of processing it again, and the savings add up.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
             new("ReasoningTree", "Reasoning tree", "reasoning-tree", 0,
                 "A search over candidate thoughts: each is scored, weak branches are pruned, the best expand and the winning path draws in.",
-                IsArc: false),
+                IsArc: false, AddedOn: "2026-10-23"),
         ], IsArc: false),
     ];
 
     /// <summary>
     /// The Blocks group under Components, with its subgroups and blocks from the TKCode.Arc.Blocks catalog. Not part of
-    /// the 111 Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
+    /// the 112 Arc components (<see cref="Categories"/> / <see cref="Count"/>). Ports of free Arc blocks link to their
     /// uiarc.dev page; original blocks have none.
     /// </summary>
     public static readonly GalleryCategory Blocks = new("Blocks", "Blocks", "区块", [],
         Subcategories: BlockCatalog.Groups.Select(g => new GalleryCategory(g.Code, g.Title, g.ChineseTitle,
             BlockCatalog.Blocks.Where(b => b.Group == g.Code)
-                .Select(b => new GalleryEntry(b.ClassName, b.Title, b.Slug, 0, b.Description, IsArc: b.IsArcPort, ArcPath: $"blocks/{b.Slug}"))
+                .Select(b => new GalleryEntry(b.ClassName, b.Title, b.Slug, 0, b.Description, IsArc: b.IsArcPort, ArcPath: $"blocks/{b.Slug}",
+                    AddedOn: AddedOnOf(b.ClassName)))
                 .ToArray())).ToArray());
 
     /// <summary>
     /// The Mobile section of the sidebar: the components of TKCode.Arc.Mobile, whose live demos run inside a phone frame
     /// (<see cref="Shell.PhoneFrame"/>). Their pages live under <c>/components/</c> like the Special components, and they
-    /// are not part of the 111 Arc components (<see cref="Count"/>).
+    /// are not part of the 112 Arc components (<see cref="Count"/>).
     /// </summary>
     public static readonly GalleryCategory Mobile = new(MobileCatalog.Folder, "Mobile", "移动端",
-        MobileCatalog.Components.Select(c => new GalleryEntry(c.ClassName, c.Title, c.Slug, 0, c.Description, IsArc: false)).ToArray(),
+        MobileCatalog.Components.Select(c => new GalleryEntry(c.ClassName, c.Title, c.Slug, 0, c.Description, IsArc: false, AddedOn: AddedOnOf(c.ClassName))).ToArray(),
         IsArc: false);
 
     /// <summary>
@@ -152,10 +179,10 @@ public static partial class GalleryCatalog
         new("DocsChangelog", "Changelog", "changelog", 0, "Release notes.", IsArc: false),
     ], IsArc: false);
 
-    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 111 Arc components.</summary>
+    /// <summary>The advanced charts group (TKCode.Arc.AdvancedCharts); listed after Charts, but not part of the 112 Arc components.</summary>
     public static GalleryCategory AdvancedCharts => Extras[0];
 
-    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 111 Arc components.</summary>
+    /// <summary>The workflow group (TKCode.Arc.Workflow); listed after Advanced charts, not part of the 112 Arc components.</summary>
     public static GalleryCategory Workflow => Extras[1];
 
     /// <summary>The Components section of the sidebar: Arc's groups with Advanced charts and Workflow after Charts, then the other extras.</summary>

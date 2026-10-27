@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.JourneyFlowPreviewDemo">
+    <!-- October's course trials in four segments (all learners, then three channels). Data: JourneyFlowDemoData. -->
+    <arc:JourneyFlow x:Name="Journey"
+                     Margin="0,12"
+                     Title="Trial to paid journeys"
+                     SubtitleFormat="{}{0} visits in October, from first page to plan"
+                     SegmentsLabel="Channel"
+                     OverviewHint="Pick a step to trace where its learners came from and where they went"
+                     GoalCaption="of visitors picked a paid plan"
+                     OutcomesHeader="Plan at trial end"
+                     CountFormat="{}{0} learners"
+                     TableCaptionFormat="Flows for {0}, October"
+                     AnnouncementFormat="{}{0}: {1} visits and {2} paid plans." />
+</UserControl>

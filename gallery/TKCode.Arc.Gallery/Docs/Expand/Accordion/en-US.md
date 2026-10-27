@@ -30,7 +30,7 @@ opens and the others stay closed.
   `ExpandableText`, which clamps the text to a number of lines.
 - **Steps that must be completed in order**, such as a setup wizard: use `Stepper`, which shows progress and the
   current step.
-- **Rows of records that people compare or sort**, such as invoices or usage by day: use `SortableDataTable`, whose
+- **Rows of records that people compare or sort**, such as invoices or usage by day: use `Table`, whose
   columns line up across rows.
 
 ## Usage
@@ -429,4 +429,4 @@ arrow keys.
 | `Tabs` | The reader switches between sibling views of the same content |
 | `Stepper` | The reader works through ordered steps with a visible position |
 | `Card` | The content needs no disclosure and should stay visible |
-| `SortableDataTable` | The rows are records that people compare or sort |
+| `Table` | The rows are records that people compare or sort |

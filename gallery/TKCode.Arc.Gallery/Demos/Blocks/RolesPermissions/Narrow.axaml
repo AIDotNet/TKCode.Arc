@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RolesPermissionsNarrowDemo">
+    <!-- A 400-wide container: compact columns, wrapped names, a sticky label column while the roles scroll sideways. -->
+    <arc:RolesPermissions x:Name="Matrix" Width="400" HorizontalAlignment="Center" Margin="0,12" />
+</UserControl>

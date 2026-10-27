@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ApiKeysPreviewDemo">
+    <!-- Five keys and four scopes (ApiKeysDemoData). No GenerateAction: the block simulates a server (about 730ms). -->
+    <arc:ApiKeys x:Name="Block"
+                 Margin="0,12"
+                 Description="Keys let your backend call the Northwind Relay API. Store them in a vault, never in client code."
+                 CurrentUserName="Lena Ortiz" />
+</UserControl>

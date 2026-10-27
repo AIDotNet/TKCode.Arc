@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionSwapTonesDemo">
+    <arc:ActionSwap HorizontalAlignment="Center">
+        <arc:ActionSwap.States>
+            <arc:ActionSwapState Id="neutral" Label="Neutral" Tone="Neutral" />
+            <arc:ActionSwapState Id="accent" Label="Accent" Tone="Accent" />
+            <arc:ActionSwapState Id="success" Label="Success" Icon="{x:Static arc:ArcIcons.Check}" Tone="Success" />
+            <arc:ActionSwapState Id="warning" Label="Warning" Icon="{x:Static arc:ArcIcons.CircleAlert}" Tone="Warning" />
+            <arc:ActionSwapState Id="quiet" Label="Quiet" Tone="Quiet" />
+        </arc:ActionSwap.States>
+    </arc:ActionSwap>
+</UserControl>

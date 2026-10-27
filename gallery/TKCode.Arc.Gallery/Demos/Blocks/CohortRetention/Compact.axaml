@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CohortRetentionCompactDemo">
+    <!--
+        In a 400-wide card the block reads its own width: the metrics stack, the view switch moves above the legend, the
+        chart uses short cohort names and smaller rows, and the numbers leave the cells once the columns get too thin.
+    -->
+    <Border Width="400"
+            HorizontalAlignment="Left"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <arc:CohortRetention x:Name="Retention"
+                             Title="Space retention"
+                             Subtitle="Team spaces still editing each month."
+                             FirstMetricLabel="First month"
+                             SecondMetricLabel="Half year"
+                             TotalLabel="Spaces created"
+                             AxisTitle="Months since creation" />
+    </Border>
+</UserControl>

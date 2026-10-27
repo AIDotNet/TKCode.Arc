@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.JourneyFlowTicketsDemo">
+    <!-- One segment (no switch), three stages, no table; counts written compactly ("38.4k") by ValueFormatter. -->
+    <arc:JourneyFlow x:Name="Journey"
+                     Margin="0,12"
+                     Title="Support tickets in May"
+                     SubtitleFormat="{}{0} tickets opened"
+                     CountFormat="{}{0} tickets"
+                     VisitorsShareText="Share of all tickets"
+                     VisitorsCaption="of all tickets"
+                     GoalCaption="of tickets solved after a reply"
+                     OverviewHint="Pick a step to see where its tickets came from and went"
+                     IsTableVisible="False" />
+</UserControl>

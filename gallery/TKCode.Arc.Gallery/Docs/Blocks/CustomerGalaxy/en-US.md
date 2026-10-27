@@ -29,7 +29,7 @@ that splits each one by health. Use it when the question is where revenue and ri
 
 - **Comparing a handful of numbers.** Use `BarChart` or `DonutChart`; a galaxy pays off with hundreds or thousands of
   accounts, not with five.
-- **Reading exact values of many accounts side by side.** Use `SortableDataTable` or `DataGrid`; the galaxy shows one
+- **Reading exact values of many accounts side by side.** Use `Table` or `DataGrid`; the galaxy shows one
   account at a time in its card.
 - **Trends over time.** Use `LineChart` or `Streamgraph`. The galaxy is a snapshot: its clusters do not move with dates.
 - **A small widget in a sidebar or a card.** The block needs at least 360 px of stage height to be read; use
@@ -338,7 +338,7 @@ Every text has an English default and a property to change it. Formats use `{0}`
 ## Related
 
 - `BarChart`, `DonutChart` and `Treemap` for a few exact values or parts of a whole.
-- `DataGrid` and `SortableDataTable` for reading and comparing accounts row by row.
+- `DataGrid` and `Table` for reading and comparing accounts row by row.
 - `MetricCard` and `AnimatedCounter` for one headline number.
 - `SegmentedControl`, which the grouping tabs resemble.
 

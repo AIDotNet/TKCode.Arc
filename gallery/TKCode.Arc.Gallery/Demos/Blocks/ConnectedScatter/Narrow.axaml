@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectedScatterNarrowDemo">
+    <!--
+        The block reads its own width. In a 400-wide column the readouts are a 2 x 2 grid, the chart is 300 high without notes,
+        the target label and the zone label, the horizontal ticks skip every other one, the legend wraps, the paddings are 16
+        and the scrubber sits under the play button.
+    -->
+    <Border Width="400" HorizontalAlignment="Left">
+        <arc:ConnectedScatter x:Name="Scatter"
+                              Title="Unit economics by channel"
+                              TargetRatio="3" />
+    </Border>
+</UserControl>

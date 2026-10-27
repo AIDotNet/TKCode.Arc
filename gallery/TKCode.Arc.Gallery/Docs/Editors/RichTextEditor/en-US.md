@@ -29,8 +29,7 @@ back later.
 - **Mentions of people or tags inside a text field**: use `MentionInput`, which suggests and stores the mentions.
 - **A single line that is renamed in place on a page**: use `InlineEdit`, which looks like text until it is edited.
 - **Source code or a read-only code listing**: use `CodeBlock`, which shows the code with its own copy action.
-- **Images, tables or underlined text**: the editor supports none of them (it has no image, table or underline
-  block). Use `FileDropzone` to attach images beside the text, or a document editor for layout-heavy content.
+- **Layout-heavy documents**: tables hold inline text only (no nested blocks), and images sit in their own block. For page layout, columns or files that must be uploaded with progress, use a document editor or `FileDropzone`.
 
 ## Usage
 
@@ -74,7 +73,8 @@ the block menu use these values with `ToggleMark`, `SetBlockType` and the `Forma
 | Type | Written as | Notes |
 |---|---|---|
 | `Paragraph` | Plain text | The default block |
-| `Heading1`, `Heading2`, `Heading3` | `# `, `## `, `### ` | Imported h4 to h6 become `Heading3` |
+| `Heading1`, `Heading2`, `Heading3` | `# `, `## `, `### ` | The `Arc` profile imports h4 to h6 as `Heading3` |
+| `Heading4`, `Heading5`, `Heading6` | `#### `, `##### `, `###### ` | `Docs` profile only; `Heading6` is drawn in the secondary text color |
 | `BulletedList`, `NumberedList` | `- `, `1. ` | Nest with Tab; a level holds the same list kind |
 | `Quote` | `> ` | A block quote with a bar at its start |
 | `CodeBlock` | Three backticks | Holds plain text only; lines do not wrap |
@@ -108,6 +108,129 @@ The editor writes and reads a fixed subset: paragraphs, three heading levels, ne
 quotes, code blocks, dividers, and the four inline marks and links. Pasted HTML is sanitized to this subset, so
 unknown tags and styles disappear while their text is kept. Use the subset as the content contract for the feature:
 a document that needs anything else must be stored elsewhere.
+
+### The Docs profile
+
+Set `Profile="Docs"` for a document-style editor. The default profile, `Arc`, stays exactly as described above; `Docs`
+adds the features a longer document needs:
+
+<Demo name="DocsProfile" />
+
+| Feature | How to use it | Written as |
+|---|---|---|
+| Underline | `Ctrl+U`, the toolbar button, `ToggleMark(RichTextMark.Underline)` | `<u>` in HTML |
+| Superscript and subscript | `Ctrl+.` and `Ctrl+,`, the toolbar buttons, `ToggleMark(RichTextMark.Superscript)` or `ToggleMark(RichTextMark.Subscript)`; turning one on turns the other off | `<sup>`, `<sub>` |
+| Text size | The toolbar's size button (small, default, large, extra large, relative to the block's text); `SetTextSize` | `<span data-size="large">` |
+| Line spacing | The block menu's Line spacing entries (compact, default, relaxed, loose); `SetLineSpacing` for the selected blocks. Code blocks and table cells keep their own | `data-spacing="relaxed"` on `p`, headings, list items, quotes and callout paragraphs |
+| Headings 4 to 6 | `#### `, `##### ` or `###### ` at the start of a line, the slash menu, the block menu, `SetBlockType(RichTextBlockType.Heading4)` | `<h4>` to `<h6>`, `####` to `######` in Markdown |
+| Text and highlight color | The toolbar's color button opens a palette of seven colors; `SetTextColor`, `SetHighlight` | `<span data-color="red">`, `<mark data-bg="yellow">` |
+| To-do list | `[] ` or `[x] ` at the start of a line, the slash menu, `SetBlockType(RichTextBlockType.TodoList)`; click the checkbox to check it | `<ul data-todo="true"><li data-checked="true">`, `- [x] ` in Markdown |
+| Toggle list | The slash menu or the block menu, `SetBlockType(RichTextBlockType.Toggle)`. Click the arrow, press `Ctrl+Enter` or call `ToggleFold()` to fold away the items nested under it; Enter at the end of an open toggle starts a nested item, and `Tab` nests any list item under the toggle above it. Folded items take no room, the caret skips them, and an edit that reaches into them (indenting under the toggle, Delete at its end) opens it | `<ul data-toggle="true"><li data-collapsed="true">`; a plain `- ` item in Markdown |
+| Text alignment | `Ctrl+Shift+L`, `Ctrl+Shift+E`, `Ctrl+Shift+R`; `SetAlign` | `data-align="center"` or `"end"` on `p`, headings and quotes |
+| `Ctrl+Shift+Up`, `Ctrl+Shift+Down` | Move the block that holds the caret up or down (`Docs` profile) |
+| `Ctrl+Enter` on a toggle item | Fold or unfold it (`Docs` profile) |
+| Code language | The label above a code block opens a list of languages; `SetCodeLanguage("csharp")`. The code is highlighted in that language (Plain text, or a language without a grammar, stays plain) | `<pre data-lang="csharp">`, a fenced block with an info string in Markdown |
+| Callout | The `/` menu or the block menu; the block menu sets its color and icon; `SetCalloutColor`, `SetCalloutIcon`. Enter continues the box, an empty line leaves it | `<aside data-callout="blue" data-icon="💡">`, a GitHub alert (`> [!NOTE]`) in Markdown, which keeps only the five alert kinds |
+
+The colors come from a fixed palette (`RichTextColor`: gray, red, orange, yellow, green, blue and purple) that follows
+the theme in light and dark mode, so stored content never holds a raw color value. `Formats` also reports
+`IsUnderline`, `IsSuperscript`, `IsSubscript`, `TextColor`, `Highlight`, `Size`, `Align`, `LineSpacing` and `CodeLanguage` for your own toolbar.
+A line is as tall as the largest text on it needs, so a large word opens up its whole block.
+
+```xml
+<arc:RichTextEditor Profile="Docs" Html="{Binding Body, Mode=TwoWay}" />
+```
+
+- **Markdown is lossy for color, size and spacing.** Markdown has none of them, so `GetMarkdown()` keeps the text and drops them. Underline,
+  superscript and subscript have no Markdown syntax either; they are written as inline `<u>`, `<sup>` and `<sub>` tags,
+  which the `Docs` profile reads back. Store `Html` when the content must keep its colors.
+- **Assign `Profile` first or in any order.** Content assigned before the profile is read again under the Docs rules.
+- **Your own languages.** The language list ends with a "Custom…" row that takes any name, and `CodeLanguages` replaces the list with your own labels and ids, such as `new RichTextCodeLanguage("Zig", "zig")`. Highlighting needs a grammar for the id; a name without one is kept and shown, and the code stays plain.
+- **Task lists from elsewhere import.** Markdown `- [ ]` and `- [x]` items and HTML lists whose items begin with a
+  checkbox input become to-do items; in the `Arc` profile they stay plain list items.
+- **Nothing else changes.** Dividers, quotes, links, the slash menu and the undo history behave as in the `Arc`
+  profile, and a document written by the `Arc` profile loads unchanged.
+
+### Images and tables
+
+The `Docs` profile also stores images and tables. An image is one block that holds an address and a description; a
+table is a grid of cells; a new one starts with a header row. Both come in and go out through Markdown (`![alt](src)` on
+its own line, pipe tables) and HTML (`img`, `table`). The `Arc` profile keeps both out of the document.
+
+<Demo name="ImagesAndTables" />
+
+| Feature | How to use it |
+|---|---|
+| Insert an image | `/` then Image (a file picker), paste an image file or a screenshot, drop image files on the editor, paste a bare image address, type `![alt](address)`, or call `InsertImage(address, alt)` |
+| Resize an image | Click it, then drag the grip at its bottom-right corner; the proportions stay, and the width is stored (`width` in HTML; Markdown writes a resized image as an `<img>` tag). |
+| Select and remove an image | Click it, then press Backspace or Delete; Backspace at the start of the next paragraph removes it too |
+| Insert a table | `/` then Table (3 by 3), or `InsertTable(rows, columns)` |
+| Move in a table | Tab and Shift+Tab move between cells (Tab in the last cell adds a row); Enter moves down the column; Up and Down stay in the column |
+| Edit rows and columns | Right-click a cell, or call `AddTableRow`, `AddTableColumn`, `DeleteTableRow`, `DeleteTableColumn`, `DeleteTable` |
+| Merge and split cells | Drag across the cells, right-click and choose Merge cells, or call `MergeTableCells`; right-click a merged cell and choose Split cell, or call `SplitTableCell`. `CanMergeTableCells` and `CanSplitTableCell` tell your own toolbar whether either applies |
+| Resize columns | Drag the border between two columns; double-click it, choose Distribute columns or call `DistributeTableColumns` to share the width evenly again |
+| Header row and column | Right-click and toggle Header row or Header column, or call `SetTableHeaderRow` and `SetTableHeaderColumn`; `TableHasHeaderRow` and `TableHasHeaderColumn` read them |
+| Color cells | Select the cells, right-click and choose a color, or call `SetTableCellColor`; `TableCellColor` reads the shared color |
+| Select cells, rows and columns | Drag from one cell to another to select the rectangle between them; click a grip (top of a column, left of a row) or call `SelectTableRow` and `SelectTableColumn` |
+| Move rows and columns | Drag a grip to a new place, right-click and choose Move row up, Move row down, Move column left or Move column right, or call `MoveTableRow` and `MoveTableColumn` (`CanMoveTableRow` and `CanMoveTableColumn` tell your toolbar whether they can) |
+| Copy and paste cells | Copy a rectangle to get tab-separated text, which spreadsheets read; paste a table or tab-separated text into a cell to fill cells from there, adding rows and columns as needed |
+| Align a column | `Ctrl+Shift+L`, `Ctrl+Shift+E`, `Ctrl+Shift+R` or `SetAlign` aligns the whole column of the caret's cell |
+
+**You decide where pictures live.** The editor never uploads anything. When a person picks, pastes or drops a picture,
+it raises `ImageSourceRequested` with the file name, the media type and the bytes (`OpenReadAsync`,
+`ReadAllBytesAsync`). Answer with `Source` when you already know the address, or with `SourceTask` while an upload is
+in progress; the editor inserts the image when the task finishes, and a task that fails or returns null inserts
+nothing. Set `Cancel` to refuse the picture. With no handler the picture is embedded as a `data:` address, which keeps
+the document self-contained but large.
+
+```csharp
+editor.ImageSourceRequested += (_, e) =>
+{
+    e.SourceTask = UploadAsync(e.FileName, e.ContentType, e.OpenReadAsync());   // returns the CDN address
+};
+```
+
+**You can also decide how pictures are loaded.** `ImageLoading` is raised when the editor needs the pixels of an
+address. Set `Bitmap` or `StreamTask` to load it yourself, for example from a store that needs a token or from your own
+scheme; with no answer the editor reads `data:`, http(s), `avares:` and local file addresses. `ReloadImages()` forgets
+what was loaded.
+
+- **Addresses are checked.** Script schemes and `data:` addresses that are not raster images are refused when
+  content loads and when an image is inserted; your own schemes (`app://files/1`) pass.
+- **Images shrink to the editor's width** and keep their proportions. While a picture loads, or when it fails, a
+  placeholder of the same width stands in.
+- **Table cells hold inline text**: marks, links and line breaks (Shift+Enter), not lists or nested blocks. Imported
+  cells with such content are flattened to lines. Short rows are padded.
+- **Merged cells** span several rows and columns, and the texts they join become lines. HTML stores them as `colspan` and `rowspan`. Markdown has no merged cells, so it writes the covered cells empty; keep `Html` when merges must survive. Tab skips the covered cells, and Enter moves below the merged cell.
+- **Column widths** are proportions: the table always fills the editor's width, and a column without a width shares what the others leave (at least 48 px). HTML stores widths as `<col width>` and cell colors as `data-bg`, and writes header cells as `th`; a `table` without `th` cells in its first row reads with no header row. Markdown keeps none of these, and its tables always have a header row.
+- **A rectangle of selected cells** draws as a block. Deleting or typing empties those cells and never merges them, and pasting fills them from the first one; covered cells are skipped. A selection from the table's first character to its last, or one that runs out of the table, still deletes whole tables.
+- **A merged cell holds its rows or columns together**: a row cannot move while a merged cell spans rows through it or across the place it would land, and the same goes for columns. The first row stays the header row whatever moves there.
+
+### The block handle
+
+In the `Docs` profile, hovering a block shows two buttons in a gutter to its left. The grip (⋮⋮) drags the block to a new
+place: a line shows where it will land, and a list item takes its nested items along while a table moves whole. A click on
+the grip opens the block menu, which turns the block into another type (text, headings, lists, to-do, quote, code) or
+duplicates or deletes it. The plus button adds an empty paragraph below and opens the block menu there. From the keyboard,
+`Ctrl+Shift+Up` and `Ctrl+Shift+Down` move the block that holds the caret. Every move is one undo step.
+
+The handle is not shown in `IsReadOnly` mode or in the `Arc` profile, which keeps the editor's text flush with its edge.
+The gutter is a left margin of 56 px on the writing surface.
+
+### Find and replace
+
+`Ctrl+F` opens a find bar at the top right of the editor, with the selected text (a piece of one line) already in it. Every
+match is highlighted as you type and the first one at or after the selection is selected; Enter and Shift+Enter (or `F3`
+and `Shift+F3`) step through the rest, and the bar shows where you are ("2 of 5"). `Ctrl+H`, or the bar's replace button,
+adds the replace row: Enter in it replaces the current match and moves to the next one, and Replace all changes every match
+as one undo step. Escape closes the bar and returns to the text with the last match selected.
+
+- **Matches stay inside one block.** A paragraph, list item, table cell or code block is searched on its own, so a phrase
+  broken across two blocks is not found.
+- **A replacement takes the style of the text it replaces**: the marks, color and link of the match's first character.
+- **Case.** The search ignores case until you turn on Match case.
+- **From code**: `OpenFind(replace)`, `CloseFind()`, `IsFindOpen`, `CountMatches(text, matchCase)` and
+  `ReplaceAll(text, replacement, matchCase)`, which returns how many it replaced. A read-only editor finds but never replaces.
 
 ### Placeholder and block hint
 
@@ -165,14 +288,14 @@ if (!editor.TrySetMarkdown(fileText, out var report))
 
 | Reported as a loss | Why |
 |---|---|
-| Heading level 4 to 6 | The editor has three heading levels; they become Heading 3 |
+| Heading level 4 to 6 (`Arc` profile) | The `Arc` profile has three heading levels; they become Heading 3 |
 | A code fence's info string | The editor does not store a code block's language |
 | A tilde fence | The editor reads only backtick fences |
-| A table | The editor has no table block; the cells become one paragraph |
+| A table | Kept by the `Docs` profile; in the `Arc` profile the cells become one paragraph |
 | A setext heading | The editor reads only `#` headings |
 | Indented code | The editor reads only fenced code |
 | A list starting above 1 | The editor numbers lists from 1 |
-| A hard line break, block HTML, an image, a reference link, a footnote, a backslash escape | The editor keeps the source as text |
+| A hard line break, block HTML, an image inside a line of text (or any image in the `Arc` profile), a reference link, a footnote, a backslash escape | The editor keeps the source as text |
 
 Markers written another way are reported as `RichTextImportSeverity.Normalized` and do not block the import: `*` and
 `+` bullets, `1)` numbering, `__bold__`, `*italic*` and `***` dividers are written back as `-`, `1.`, `**`, `_` and
@@ -349,7 +472,7 @@ sits beneath it at the default size. The text in the editor is the same Markdown
 
 - Storing HTML from another editor and expecting its styling to survive. The loader keeps only the editor's subset,
   so unknown tags and inline styles are dropped and the layout changes.
-- Using the editor for images, tables or underlined text. The editor cannot store them, so the content loses them on
+- Using images and tables in the `Arc` profile. Only the `Docs` profile stores them, so the content loses them on
   the next save.
 - Reading `GetHtml()` on every keystroke in a long document. Serialization on each key costs more than the edit.
 - Replacing the document you are editing by assigning `Markdown` on each change. Use `SetMarkdown()` or `Clear()`,
@@ -359,8 +482,9 @@ sits beneath it at the default size. The text in the editor is the same Markdown
 
 ### Common questions
 
-**Why does Ctrl+U (Cmd+U on macOS) do nothing?** Underline is not part of the editor's subset. The key is swallowed,
-so the text does not change, and the Markdown output has no underline syntax either.
+**Why does Ctrl+U (Cmd+U on macOS) do nothing?** In the default `Arc` profile underline is not part of the editor's subset. The key is
+swallowed, so the text does not change, and the Markdown output has no underline syntax either. Set
+`Profile="Docs"` to make `Ctrl+U` underline the selection.
 
 **How do I add or change a link from code?** Call `SetLink(url)` to link the selection, or the link at the caret.
 Pass `null` or an empty string to remove the link. `EditLink()` opens the same link field the toolbar uses, for the
@@ -403,6 +527,11 @@ leave it.
 | `Ctrl+Shift+X` | Toggle strikethrough |
 | `Ctrl+E` | Toggle inline code, within one block |
 | `Ctrl+K` | Open the link field for the selection or the link at the caret; `Enter` applies it, `Escape` closes it |
+| `Ctrl+F`, `Ctrl+H` | Open the find bar, or the find bar with its replace row |
+| `F3`, `Shift+F3` | Next and previous match while the find bar is open (`Enter` and `Shift+Enter` in its search field) |
+| `Ctrl+U` | Toggle underline (`Docs` profile) |
+| `Ctrl+.`, `Ctrl+,` | Toggle superscript, subscript (`Docs` profile) |
+| `Ctrl+Shift+L`, `Ctrl+Shift+E`, `Ctrl+Shift+R` | Align left, center, right (`Docs` profile) |
 | `Ctrl+Z`, `Ctrl+Shift+Z` (or `Ctrl+Y`) | Undo, redo |
 | `Ctrl+A` | Select all |
 | `Enter` | New block; leaves an empty list item or quote; twice at the end of a code block leaves the code |
@@ -413,7 +542,7 @@ leave it.
 | `Alt+F10` | Moves focus into the floating toolbar; `Left` and `Right` move between its buttons, `Escape` returns to the text |
 
 Ctrl is Command on macOS and Control on other platforms. Word movement follows the platform's text navigation
-(Option on macOS, Control elsewhere). `Ctrl+U` is swallowed because underline is not supported.
+(Option on macOS, Control elsewhere). `Ctrl+U` is swallowed in the `Arc` profile because it has no underline; the `Docs` profile underlines with it.
 
 ## Motion
 

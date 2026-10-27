@@ -1,7 +1,7 @@
 ---
 title: 滑动操作
 summary: 通过滑动显示行操作，或从菜单中的同一组操作执行。
-source-hash: dba84e3d06a7
+source-hash: 11d333739abd
 ---
 
 <Demo name="Inbox" />
@@ -19,7 +19,7 @@ source-hash: dba84e3d06a7
 
 - **桌面表格或主要用鼠标操作的列表**：在行上使用 `ContextMenu`，或在行按钮上使用 `DropdownMenu`。滑动手势不适合作为鼠标的主要操作路径，而且每一行本来就有菜单。
 - **通过上下拖动调整行顺序**：用 `ReorderableList`。滑动手势锁定在水平方向，永远不会改变行的顺序。
-- **大量列、分页或排序的长数据集**：用 `SortableDataTable`。滑动行不做虚拟化，因此数千行的列表在此显示前应先分页。
+- **大量列、分页或排序的长数据集**：用 `Table`。滑动行不做虚拟化，因此数千行的列表在此显示前应先分页。
 - **列表之外的单个破坏性操作**，例如在设置页面删除项目：用 `HoldToConfirm`，它需要刻意的长按，而不是行上可能被误触发的手势。
 - **一侧超过两个快捷操作**：露出的宽度会随每个操作增加。把两个最常用的操作放在滑动上，其余的移入该行的“更多操作”菜单，或用 `ContextMenu` 显示完整列表。
 
@@ -346,13 +346,13 @@ inbox.LeadingActions.Add(unread);
 - `ContextMenu` 与 `DropdownMenu`：桌面端的行操作。
 - `ReorderableList`：通过拖动把行重新排序。
 - `HoldToConfirm`：列表之外的单个破坏性操作。
-- `SortableDataTable`：大型、可排序的数据集。
+- `Table`：大型、可排序的数据集。
 
 | 组件 | 适用场景 |
 |---|---|
 | `ContextMenu` / `DropdownMenu` | 主要输入方式是鼠标，或行上有很多操作 |
 | `ReorderableList` | 人通过拖动改变行的顺序 |
-| `SortableDataTable` | 数据有列、排序或数量很多的行 |
+| `Table` | 数据有列、排序或数量很多的行 |
 | `HoldToConfirm` | 一个破坏性操作需要刻意长按，且不在列表中 |
 | `Dialog` | 操作执行前必须先阅读后果 |
 | `Toast` | 操作已执行，应报告结果并提供撤销 |

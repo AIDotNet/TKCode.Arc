@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChoroplethExplorerPreviewDemo">
+    <!-- Eight countries, three metrics; ten US states, every UK region, French region and Italian region have finer detail.
+         Outlines: Maps/*.txt (public domain); values: ChoroplethExplorerDemoData (invented, seeded). -->
+    <arc:ChoroplethExplorer x:Name="Explorer" Description="Fiscal year ending March 31, 2027" />
+</UserControl>

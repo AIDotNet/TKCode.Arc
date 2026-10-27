@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamMembersBoundDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:TeamMembers x:Name="Block" Title="Members" />
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock x:Name="Seats" FontWeight="Medium" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:Button x:Name="AddSeat" Variant="Secondary" Size="Small" Content="Add a seat" />
+                    <arc:Button x:Name="Join" Variant="Secondary" Size="Small" Content="Owen accepts" />
+                    <arc:Button x:Name="Find" Variant="Secondary" Size="Small" Content="Search “coastal”" />
+                </StackPanel>
+            </StackPanel>
+            <TextBlock Grid.Column="1" x:Name="Log" TextWrapping="Wrap" MaxHeight="120" />
+        </Grid>
+    </StackPanel>
+</UserControl>

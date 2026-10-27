@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProfilePageNarrowDemo">
+    <!-- 390 wide: one column, a 128 cover, cards in one column; the sheet spans the page and stacks Location and Website. -->
+    <arc:ProfilePage x:Name="Page" Width="390" PageHeight="700" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

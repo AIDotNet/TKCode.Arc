@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageForecastWordsDemo">
+    <!-- Another language for the same data: dates in day-month order, every sentence and label replaced, the legend and alerts left out. -->
+    <arc:UsageForecast x:Name="Forecast"
+                       Title="Cycle forecast"
+                       Subtitle="Harborline Studio · renews 1 Jul"
+                       DateFormat="d MMM"
+                       IsLegendVisible="False" />
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 用量计费
 summary: 按用量计费的周期，显示已花费金额、预计总额、每日花费、各计量项的超额以及花费上限。
-source-hash: b00692525948
+source-hash: 6b25f373b4b6
 ---
 
 <Demo name="Period" />
@@ -21,7 +21,7 @@ source-hash: b00692525948
 - **没有按量计费的套餐**：套餐、付款方式和账单请用 `BillingOverview`。
 - **没有价格的配额**，例如相对于套餐空间或剩余席位已用的存储：用 `UsageMeter` 或 `Progress`，它们显示占上限的比例，但不为超额定价。
 - **跨多个周期的用量**：单独使用 `BarChart` 或 `LineChart` 查看趋势。本区块只显示一个周期。
-- **历史账单列表**：用 `SortableDataTable`，它可以对行排序和筛选；本区块保留给进行中的周期。
+- **历史账单列表**：用 `Table`，它可以对行排序和筛选；本区块保留给进行中的周期。
 
 ## 用法
 
@@ -367,5 +367,5 @@ billing.Labels = new UsageBillingLabels
 | `UsageMeter` / `Progress` | 配额有上限但没有价格，例如席位或存储空间 |
 | `BarChart` / `LineChart` | 跨多个周期的趋势比单个周期的总额更重要 |
 | `MoneyInput` | 单独输入一个金额，位于花费上限卡片之外 |
-| `SortableDataTable` | 历史账单或用量明细需要排序和筛选 |
+| `Table` | 历史账单或用量明细需要排序和筛选 |
 | `CancelFlow` | 所有者要结束套餐，并需要填写原因和提供优惠的步骤 |

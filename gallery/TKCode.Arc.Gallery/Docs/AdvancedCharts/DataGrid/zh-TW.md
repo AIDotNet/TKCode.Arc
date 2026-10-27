@@ -1,7 +1,7 @@
 ---
 title: 資料表格
 summary: 試算表式的表格：範圍選取、就地編輯、填滿控點、剪貼簿、復原、排序、篩選、分組、總計與匯出。
-source-hash: 8460a974ab30
+source-hash: 6f5dd7d44970
 ---
 
 <Demo name="Renewals" />
@@ -18,7 +18,7 @@ source-hash: 8460a974ab30
 
 ## 何時不用
 
-- **附排序與列選取的唯讀記錄**，例如客服工單或使用者：用 `SortableDataTable`，它不需要編輯相關機制。
+- **附排序與列選取的唯讀記錄**，例如客服工單或使用者：用 `Table`，它不需要編輯相關機制。
 - **一次只編輯一筆記錄**，例如客戶資料或發票抬頭：用由 `Input`、`Select` 和 `DatePicker` 組成的表單，它們會逐一欄位驗證。
 - **含圖片、長文字或操作的列**：用 `Card` 或 `ReorderableList`，每個項目都有容納內容的空間。
 - **資料夾或會計科目表等階層資料**：用 `TreeView`。分組依鍵值折疊列，不會根據父子記錄建立樹狀結構。
@@ -565,7 +565,7 @@ public partial class RenewalsViewModel : ObservableObject
 
 | 元件 | 適用情境 |
 |---|---|
-| `SortableDataTable` | 記錄是唯讀的，使用者需要對其排序、選取和翻頁 |
+| `Table` | 記錄是唯讀的，使用者需要對其排序、選取和翻頁 |
 | `Input` / `Select` / `DatePicker` | 使用者一次編輯一筆記錄，並需要逐一欄位驗證 |
 | `Card` / `ReorderableList` | 每個項目都有自己的內容、圖片或操作 |
 | `TreeView` | 資料是階層式的，使用者需要展開分支 |

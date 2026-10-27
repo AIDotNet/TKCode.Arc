@@ -1,7 +1,7 @@
 ---
 title: 動畫計數器
 summary: 讓變動的總數具有清楚的動感。
-source-hash: 7a4f420e754b
+source-hash: 87248781031b
 ---
 
 <Demo name="RollingDigits" />
@@ -21,7 +21,7 @@ source-hash: 7a4f420e754b
 - **需要卡片、標籤和變動指示的數字**：用 `MetricCard`，它把這樣的計數器放進帶趨勢的卡片中。
 - **變動的是文字而非數字**：用 `TextMorph`，它為詞語和片語做動畫，而不是數位欄。
 - **圖表的主要數字**：`BarChart`、`LineChart` 等圖表控制項會自行更新其主要數值，因此在圖表旁另放計數器只會重複同一個數字。
-- **表格列中的大量數字**：用 `SortableDataTable`。每個計數器都為自己的數位欄做動畫，適合少量主要數字，而不適合讓人掃視和排序的一欄數值。
+- **表格列中的大量數字**：用 `Table`。每個計數器都為自己的數位欄做動畫，適合少量主要數字，而不適合讓人掃視和排序的一欄數值。
 - **由使用者輸入或編輯的值**：用 `NumberField` 或 `MoneyInput`。計數器只負責顯示數字，沒有輸入、解析和驗證。
 
 ## 用法
@@ -249,4 +249,4 @@ public partial class BillingOverviewViewModel : ObservableObject
 | `Sparkline` | 數字旁邊需要一個精簡的趨勢 |
 | `TextMorph` | 變動的內容是詞語或片語，而不是數字 |
 | `NumberField` / `MoneyInput` | 由使用者輸入或編輯數字 |
-| `SortableDataTable` | 大量數字以列的形式呈現，供人掃視和排序 |
+| `Table` | 大量數字以列的形式呈現，供人掃視和排序 |

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChoroplethExplorerSingleAreaDemo">
+    <!-- One area: no country switch. Growth is diverging: declines in amber, gains in blue, split at zero. -->
+    <arc:ChoroplethExplorer x:Name="Explorer"
+                            SelectedMetricKey="growth"
+                            Description="Change in recurring revenue on last year" />
+</UserControl>

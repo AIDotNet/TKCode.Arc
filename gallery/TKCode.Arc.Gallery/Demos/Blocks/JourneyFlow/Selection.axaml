@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.JourneyFlowSelectionDemo">
+    <!-- The selected step and segment are ordinary two-way properties; the buttons set them from code and the log shows the events. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="SelectHooked" Content="Select Hooked" Size="Small" Variant="Secondary" />
+            <arc:Button x:Name="ShowSocial" Content="Show Social" Size="Small" Variant="Secondary" />
+            <arc:Button x:Name="Clear" Content="Clear selection" Size="Small" Variant="Ghost" />
+        </StackPanel>
+        <arc:JourneyFlow x:Name="Journey"
+                         Title="Trial to paid journeys"
+                         SubtitleFormat="{}{0} visits in October"
+                         SegmentsLabel="Channel"
+                         GoalCaption="of visitors picked a paid plan"
+                         CountFormat="{}{0} learners"
+                         IsTableVisible="False" />
+        <TextBlock x:Name="Log" Text="Point at a step or a flow, or click a step." TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

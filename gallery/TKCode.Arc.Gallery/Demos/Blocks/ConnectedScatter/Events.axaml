@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectedScatterEventsDemo">
+    <!--
+        The month and the series are two-way properties and every settled change is an event: it is raised when the head is
+        released, a key moves it, a point is tapped or playback ends, never while it moves. The buttons drive the block from
+        outside; the log shows what it reports.
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="Play" Variant="Secondary" Size="Small" Content="Play" />
+            <arc:Button x:Name="Pause" Variant="Secondary" Size="Small" Content="Pause" />
+            <arc:Button x:Name="Replay" Variant="Secondary" Size="Small" Content="Replay the first run" />
+            <arc:Button x:Name="Middle" Variant="Secondary" Size="Small" Content="Go to Mar 2025" />
+        </StackPanel>
+        <arc:ConnectedScatter x:Name="Scatter"
+                              Title="Unit economics by channel"
+                              TargetRatio="3" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

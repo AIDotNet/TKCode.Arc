@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamMembersReadOnlyDemo">
+    <!-- What a member who cannot manage the team sees: no invite form, roles as text, no remove, resend or revoke. Flat on
+         the page, without the card. -->
+    <arc:TeamMembers x:Name="Block"
+                     Title="People"
+                     IsReadOnly="True"
+                     IsFramed="False"
+                     IsFooterVisible="False"
+                     MaxWidth="760"
+                     Margin="0,12" />
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 筛选工具栏
 summary: 让集合筛选条件保持在近处，并便于重置。
-source-hash: c9a11d7afb0d
+source-hash: 4154959d2573
 ---
 
 <Demo name="Filters" />
@@ -22,7 +22,7 @@ source-hash: c9a11d7afb0d
 - **没有分面、只有自由文本搜索**：用 `SearchField`。工具栏的搜索框是为了与筛选条件并列而存在的；没有筛选的页面不会从筛选标签中获得任何好处。
 - **需要接受多个值的表单字段**，例如编辑器中任务的负责人：用 `MultiSelect`。筛选工具栏将值应用于列表；表单字段则将值保存到记录中。
 - **从长列表中选择一个值**，例如从数千名客户中选择一位：用带有自身搜索的 `Combobox`。「添加筛选」菜单会列出每个选项，因此只适合较短的列表。
-- **对表格的行进行排序**：使用 `SortableDataTable` 的列标题。筛选会移除行，排序则决定行的顺序，两者应放在不同的位置。
+- **对表格的行进行排序**：使用 `Table` 的列标题。筛选会移除行，排序则决定行的顺序，两者应放在不同的位置。
 
 ## 用法
 
@@ -192,7 +192,7 @@ public partial class InvoicesViewModel : ObservableObject
             <arc:Button Content="导出 CSV" Variant="Secondary" Command="{Binding ExportCommand}" />
         </arc:FilterToolbar.Actions>
     </arc:FilterToolbar>
-    <arc:SortableDataTable ItemsSource="{Binding VisibleInvoices}" />
+    <arc:Table ItemsSource="{Binding VisibleInvoices}" />
 </StackPanel>
 ```
 
@@ -354,13 +354,13 @@ public partial class InvoicesViewModel : ObservableObject
 
 - `ChipGroup`：一小组固定的切换项。
 - `SearchField`：不带筛选的自由文本搜索。
-- `SortableDataTable`：被筛选缩小范围的表格。
+- `Table`：被筛选缩小范围的表格。
 - `MultiSelect`：需要接收多个值的表单字段。
 
 | 组件 | 适用场景 |
 |---|---|
 | `ChipGroup` | 选项是一小组固定的值，人们在其间切换，且全部可见 |
 | `SearchField` | 页面只搜索文字，没有需要缩小范围的分面 |
-| `SortableDataTable` | 筛选后剩余的行以表格形式显示并可排序 |
+| `Table` | 筛选后剩余的行以表格形式显示并可排序 |
 | `MultiSelect` | 表单在一条记录上保存多个值 |
 | `Combobox` | 必须从需要自身搜索的长列表中选择一个值 |

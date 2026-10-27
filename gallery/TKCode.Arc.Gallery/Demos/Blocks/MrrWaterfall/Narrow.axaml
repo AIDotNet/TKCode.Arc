@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MrrWaterfallNarrowDemo">
+    <!--
+        The block reads its own width: here a 380 wide container, where the panel sits under the chart, the headline and
+        statistics shrink, bar names shorten and the labels lose the currency symbol.
+    -->
+    <Border Width="380" HorizontalAlignment="Left">
+        <arc:MrrWaterfall x:Name="Bridge"
+                          Title="Recurring revenue bridge"
+                          Scope="All tiers" />
+    </Border>
+</UserControl>

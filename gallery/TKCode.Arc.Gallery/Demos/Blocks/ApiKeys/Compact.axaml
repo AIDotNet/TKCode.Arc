@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ApiKeysCompactDemo">
+    <!-- 390 wide: rows keep the name and the last use; scopes and the creation date move into the details, which stack. -->
+    <arc:ApiKeys x:Name="Block"
+                 Width="390"
+                 Margin="0,12"
+                 HorizontalAlignment="Center"
+                 Description="Keys let your backend call the Northwind Relay API. Store them in a vault, never in client code."
+                 CurrentUserName="Lena Ortiz" />
+</UserControl>

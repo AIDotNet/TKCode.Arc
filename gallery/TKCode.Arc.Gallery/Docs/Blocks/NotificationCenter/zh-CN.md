@@ -1,7 +1,7 @@
 ---
 title: 通知中心
 summary: 集中查看通知，支持已读状态、分组信息和带动画的展开与收起。
-source-hash: fb27fb8a344d
+source-hash: bf8420de3c62
 ---
 
 <Demo name="Preview" />
@@ -20,7 +20,7 @@ source-hash: fb27fb8a344d
 
 - **无需跟进的确认**，例如 "Invoice saved"：用 `Toast`，它会自行消失。
 - **当前页面上用户必须立即修复的问题**，例如结账表单中的支付失败：在问题所在处用 `Alert`，使它在页面被修正前一直可见。
-- **可搜索、可筛选的事件历史**，例如审计日志：在页面上用 `SortableDataTable`。单条记录的有序事件用 `Timeline`。
+- **可搜索、可筛选的事件历史**，例如审计日志：在页面上用 `Table`。单条记录的有序事件用 `Timeline`。
 - **带回复的对话**：用 `ChatThread`，它有输入框和回复流程。面板对一条更新只提供 "Mark read"、"Mark unread" 和 "Dismiss"。
 - **待办工作的计数**，例如导航项上的 14 个未完成任务：用 `Badge`。面板列出的是更新，而不是计数器。
 

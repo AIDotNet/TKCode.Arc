@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UptimeStatusAllGreenDemo">
+    <!-- No incident at all and 30 bars per service: every bar is full height and every uptime reads 100.00%. -->
+    <arc:UptimeStatus x:Name="Status" PageName="Larkspur status" DayCount="30" />
+</UserControl>

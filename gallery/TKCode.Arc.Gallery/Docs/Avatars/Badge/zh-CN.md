@@ -1,7 +1,7 @@
 ---
 title: 徽标
 summary: 用于状态、类别或元数据的小型标签。
-source-hash: 1c6cc3318c3c
+source-hash: 56cf17fb22a3
 ---
 
 <Demo name="Tones" />
@@ -279,4 +279,4 @@ public partial class DeploymentViewModel : ObservableObject
 | `ChipGroup` | 用户选择或清除值 |
 | `MetricCard` | 大号数字需要配上标签、趋势和上下文 |
 | `Avatar` | 状态属于某个人，以头像上的圆点显示 |
-| `SortableDataTable` | 徽标位于用户会排序和比较的列中 |
+| `Table` | 徽标位于用户会排序和比较的列中 |

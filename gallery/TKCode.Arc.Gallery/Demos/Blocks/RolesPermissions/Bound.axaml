@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RolesPermissionsBoundDemo">
+    <!-- The grants live in the page: buttons change them from outside and the log lists every event. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="GrantAll" Content="Give Guest everything" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="FoldAll" Content="Fold all groups" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Copy" Content="Copy Member" Variant="Secondary" Size="Small" />
+        </StackPanel>
+        <arc:RolesPermissions x:Name="Matrix" Title="Roles &amp; access" />
+        <TextBlock x:Name="Status" Opacity="0.7" />
+        <TextBlock x:Name="Log" TextWrapping="Wrap" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

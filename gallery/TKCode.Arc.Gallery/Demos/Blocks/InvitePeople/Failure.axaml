@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InvitePeopleFailureDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:InvitePeople x:Name="Block" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Every second send fails after a second, as a busy mail service could; so does revoking Theo's invite." />
+    </StackPanel>
+</UserControl>

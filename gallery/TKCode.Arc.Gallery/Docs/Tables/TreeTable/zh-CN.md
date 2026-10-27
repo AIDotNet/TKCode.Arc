@@ -1,7 +1,7 @@
 ---
 title: 树表格
 summary: 带嵌套行、三态选择、保持层级的排序和按需加载子行的表格。
-source-hash: e68b6051b4a0
+source-hash: ee6c67ae7e45
 ---
 
 <Demo name="Budget" />
@@ -19,7 +19,7 @@ source-hash: e68b6051b4a0
 ## 何时不用
 
 - **没有列的导航树**：使用 `TreeView`，它每个节点只绘制一个标签，并能虚拟化数千行。
-- **按列比较的扁平记录**：使用 `SortableDataTable`。在没有嵌套时，树表格给第一列增加缩进和箭头没有任何好处。
+- **按列比较的扁平记录**：使用 `Table`。在没有嵌套时，树表格给第一列增加缩进和箭头没有任何好处。
 - **逐个单元格编辑的电子表格**：使用 `DataGrid`，它支持范围选择和行内编辑。
 - **展开后是自由格式内容的条目**：使用 `Accordion`。树表格展开后得到的是更多具有相同列的行。
 - **同时展开几千行**：每一个可见的行都真实存在并带有动画。展开的树请保持在几百行以内，更深的层级按需加载。
@@ -160,7 +160,7 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 
 **为什么父行无法展开？** 当选择器至少返回一个子行，或者 `HasChildrenSelector` 为 true 且设置了 `ChildrenLoader` 时，行才可以展开。空列表表示叶子。
 
-**列可以把树排成平铺吗？** 不可以。排序只对每个父行内部的兄弟行排序，层级永远不会被破坏。平铺列表请使用 `SortableDataTable`。
+**列可以把树排成平铺吗？** 不可以。排序只对每个父行内部的兄弟行排序，层级永远不会被破坏。平铺列表请使用 `Table`。
 
 **为什么重新加载数据后展开状态丢失了？** `ExpandedKeys` 保存的是键。如果 `KeySelector` 每次加载都返回新值，行就对不上了。请使用重新加载后依然不变的 id。
 
@@ -222,13 +222,13 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 ## 相关组件
 
 - `TreeView`：没有列的导航树。
-- `SortableDataTable`：带可排序列的扁平记录。
+- `Table`：带可排序列的扁平记录。
 - `DataGrid`：支持范围选择和行内编辑的电子表格式网格。
 - `Checkbox`：每一行选择背后的二元控件。
 
 | 组件 | 何时选择 |
 |---|---|
 | `TreeView` | 层级是导航，每个节点只有一个标签 |
-| `SortableDataTable` | 记录是扁平的，并按列比较 |
+| `Table` | 记录是扁平的，并按列比较 |
 | `DataGrid` | 用户要编辑单元格并选择范围 |
 | `Accordion` | 少量区块展开后是自由格式的内容 |

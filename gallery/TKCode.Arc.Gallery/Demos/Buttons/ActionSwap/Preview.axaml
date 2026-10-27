@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionSwapPreviewDemo">
+    <StackPanel Width="352" Spacing="0" HorizontalAlignment="Center">
+        <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+            <StackPanel VerticalAlignment="Center" Spacing="2">
+                <TextBlock Text="Emma Collins" FontSize="14" FontWeight="SemiBold" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Design lead at Arc" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+            <arc:ActionSwap Grid.Column="1" Size="Small" ValueChanged="OnFollowChanged">
+                <arc:ActionSwap.States>
+                    <arc:ActionSwapState Id="follow" Label="Follow" Tone="Neutral"
+                                         Icon="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M19 8v6 M22 11h-6" />
+                    <arc:ActionSwapState Id="following" Label="Following" Tone="Quiet" Icon="{x:Static arc:ArcIcons.Check}" />
+                </arc:ActionSwap.States>
+            </arc:ActionSwap>
+        </Grid>
+        <Border BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" Padding="0,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="Designing calm interfaces" FontSize="14" FontWeight="SemiBold" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="Article · 8 min read" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+                <arc:ActionSwap x:Name="Library" Grid.Column="1" Size="Small" ValueChanged="OnLibraryChanged">
+                    <arc:ActionSwap.States>
+                        <arc:ActionSwapState Id="add" Label="Add to library" Tone="Quiet" Icon="{x:Static arc:ArcIcons.Plus}" />
+                        <arc:ActionSwapState Id="added" Label="Added" Tone="Success" Icon="{x:Static arc:ArcIcons.Check}" />
+                    </arc:ActionSwap.States>
+                </arc:ActionSwap>
+            </Grid>
+        </Border>
+        <Border BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" Padding="0,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="Ava Mitchell" FontSize="14" FontWeight="SemiBold" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="ava@example.com" FontSize="13" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+                <arc:ActionSwap x:Name="Invite" Grid.Column="1" Size="Small" ValueChanged="OnInviteChanged">
+                    <arc:ActionSwap.States>
+                        <arc:ActionSwapState Id="send" Label="Send invite" Tone="Accent" Icon="{x:Static arc:ArcIcons.Send}" />
+                        <arc:ActionSwapState Id="sent" Label="Sent" Tone="Success" Icon="{x:Static arc:ArcIcons.Check}"
+                                             PendingLabel="Sending" HoldFor="0:0:2.2" />
+                    </arc:ActionSwap.States>
+                </arc:ActionSwap>
+            </Grid>
+        </Border>
+        <Border BorderThickness="0,1,0,0" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}" Padding="0,16,0,0">
+            <StackPanel Spacing="8">
+                <arc:Switch x:Name="Offline" Content="Simulate a lost connection" IsCheckedChanged="OnOfflineChanged" />
+                <TextBlock x:Name="Status" FontSize="13" MinHeight="18" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

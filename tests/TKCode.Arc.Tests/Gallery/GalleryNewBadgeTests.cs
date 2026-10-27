@@ -38,8 +38,21 @@ public class GalleryNewBadgeTests
     [Fact]
     public void The_Arc_Component_Count_Includes_Tree_Table()
     {
-        GalleryCatalog.Count.ShouldBe(111);
+        GalleryCatalog.Count.ShouldBe(112);
         GalleryCatalog.Categories.Length.ShouldBe(22);
+    }
+
+    [Fact]
+    public void Every_Block_Mobile_Special_And_Workflow_Entry_Carries_The_Date_It_Was_Added()
+    {
+        var entries = GalleryCatalog.Blocks.AllEntries
+            .Concat(GalleryCatalog.Mobile.AllEntries)
+            .Concat(GalleryCatalog.Special.SelectMany(c => c.AllEntries))
+            .Concat(GalleryCatalog.Workflow.AllEntries)
+            .ToList();
+        entries.Count.ShouldBeGreaterThan(0);
+        entries.Where(e => !DateOnly.TryParseExact(e.AddedOn, "yyyy-MM-dd", out _)).Select(e => e.ClassName).ShouldBeEmpty();
+        GalleryCatalog.Mobile.Entries.First(e => e.ClassName == "MobileDialog").IsNewOn(new DateOnly(2026, 10, 27)).ShouldBeTrue();
     }
 
     [AvaloniaFact]
@@ -55,7 +68,7 @@ public class GalleryNewBadgeTests
             window.Sidebar.SearchText = "tree";
             Dispatcher.UIThread.RunJobs();
 
-            var badges = window.Sidebar.GetVisualDescendants().OfType<GalleryNewBadge>().Count();
+            var badges = window.Sidebar.GetVisualDescendants().OfType<GalleryNewBadge>().Count(b => b.IsEffectivelyVisible);
             badges.ShouldBe(GalleryCatalog.AllEntries.Count(e => e.IsNew && e.Title.Contains("tree", StringComparison.OrdinalIgnoreCase)));
         }
         finally

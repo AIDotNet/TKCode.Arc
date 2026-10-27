@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EnvVariablesFailingRedeployDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:EnvVariables x:Name="Block" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Text="Every first deployment fails, as a busy build queue could. Turn a switch, then press Redeploy." />
+    </StackPanel>
+</UserControl>

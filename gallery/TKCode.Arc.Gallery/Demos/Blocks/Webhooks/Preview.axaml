@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WebhooksPreviewDemo">
+    <!-- Three endpoints, one with three failed deliveries; retries, new endpoints and test events are simulated. Data: WebhooksDemoData. -->
+    <Border Margin="0,12"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+            ClipToBounds="True">
+        <arc:Webhooks x:Name="Hooks" />
+    </Border>
+</UserControl>

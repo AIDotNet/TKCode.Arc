@@ -25,7 +25,7 @@ decision from the viewer.
 
 - **Deciding on each item in turn**: use `CardStack`, which asks for a keep or pass on each card and records it.
 - **Comparing two images**: use `ImageCompare`, which puts a before and after on the same frame with a divider.
-- **Long lists of records that people scan or sort**: use `SortableDataTable`. A carousel shows one slide at a time, so
+- **Long lists of records that people scan or sort**: use `Table`. A carousel shows one slide at a time, so
   a reader cannot compare fields across rows.
 - **Text that must be read in full, such as terms, instructions or a checklist**: use `Accordion` or `ExpandableText`.
   Slides move on and hide the text the reader has not reached.
@@ -418,4 +418,4 @@ box.
 | `Tabs` | The row switches between sections with different content |
 | `Accordion` / `ExpandableText` | The reader must read the content in full, in order |
 | `Alert` / `AnnouncementBar` | A message must stay visible until the user reads it |
-| `SortableDataTable` | The reader scans, sorts or compares many records |
+| `Table` | The reader scans, sorts or compares many records |

@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SmallMultiplesSignupsDemo">
+    <!--
+        Weekly signups of four plans over 26 weeks: growth compares with four weeks earlier, values are plain counts, and
+        the block is 560 wide, so it shows two columns.
+    -->
+    <arc:SmallMultiples x:Name="Chart"
+                        Width="560"
+                        Margin="0,12"
+                        HorizontalAlignment="Center"
+                        Title="Signups by plan"
+                        Description="Weekly signups, last 26 weeks"
+                        GrowthLag="4"
+                        SeriesLegendText="Plan"
+                        GhostLegendText="All plans, scaled to fit" />
+</UserControl>

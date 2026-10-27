@@ -36,7 +36,7 @@ a result opens a detail without leaving the page.
   list of a few dozen rows does not need filters, counts or a detail.
 - **Choosing one value from a short known list**, such as a status or a country. Use `Select` or `Combobox`; a search
   page with filters is too much for a choice of five.
-- **Browsing records by column with sorting and filters.** Use `SortableDataTable` with `FilterToolbar`. Results in
+- **Browsing records by column with sorting and filters.** Use `Table` with `FilterToolbar`. Results in
   `SearchResults` are read and opened, not compared across columns.
 
 ## Usage
@@ -714,4 +714,4 @@ entries to `Recent` before the page shows.
 | `SearchField` | The text filters a list that is already on the page |
 | `FilterToolbar` | Filters sit above a table or a list, as chips, without a search page |
 | `Tabs` | The kinds are views of one page rather than filters of a query |
-| `SortableDataTable` | The results are records to compare by column |
+| `Table` | The results are records to compare by column |

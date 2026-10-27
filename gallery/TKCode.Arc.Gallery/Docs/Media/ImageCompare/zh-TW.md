@@ -1,7 +1,7 @@
 ---
 title: 圖片比較
 summary: 拖曳分隔線橫跨兩張圖片，查看變化之處。
-source-hash: f705f5fa1e20
+source-hash: 6180b170d57e
 ---
 
 <Demo name="BeforeAndAfter" />
@@ -21,7 +21,7 @@ source-hash: f705f5fa1e20
 - **逐一決定佇列中的每張圖片**：用 `CardStack`，它要求對每一項做出保留或略過的決定。
 - **把即時應用程式內容拆分為兩個窗格**：用 `ResizablePanels`。那裡的分隔線調整的是真實內容，而不是圖片。
 - **同一張圖片的三個或更多版本**：用 `Tabs` 在版本之間切換，因為分隔線只能比較兩側。
-- **比較數字或記錄**：用 `SortableDataTable`。圖片無法顯示兩個數值之間的差異。
+- **比較數字或記錄**：用 `Table`。圖片無法顯示兩個數值之間的差異。
 
 ## 用法
 
@@ -327,4 +327,4 @@ public partial class ListingPhotoViewModel : ObservableObject
 | `Tabs` | 在同一張圖片的三個或更多版本之間切換 |
 | `ResizablePanels` | 兩個即時應用程式內容窗格需要互相調整大小 |
 | `Slider` | 在軌道上選擇數值，沒有圖片 |
-| `SortableDataTable` | 比較兩組數字或記錄 |
+| `Table` | 比較兩組數字或記錄 |

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricExplorerFinanceDemo">
+    <!--
+        Three finance metrics. Monthly burn sets IsHigherBetter="False": its rise is red and its fall green, whichever way
+        the arrow points. Rates (gross margin) use ChangeMode="Points" and read "+0.5 pts" instead of a percentage.
+    -->
+    <arc:MetricExplorer x:Name="Explorer"
+                        Title="Finance"
+                        Caption="Quarter to date"
+                        SelectedRangeIndex="1" />
+</UserControl>

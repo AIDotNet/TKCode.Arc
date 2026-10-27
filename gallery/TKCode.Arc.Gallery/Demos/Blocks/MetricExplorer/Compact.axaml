@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricExplorerCompactDemo">
+    <!--
+        In a 400-wide card the block reads its own width: the cards take two columns with smaller padding and a two-line
+        label, and the open chart gives the tabs a full row, moves the close button to the readout and tightens the axis.
+        The chart starts open so the compact layout is visible.
+    -->
+    <Border Width="400"
+            HorizontalAlignment="Left"
+            BorderThickness="1"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Background}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            Padding="16">
+        <arc:MetricExplorer x:Name="Explorer"
+                            Title="Workspace health"
+                            Caption="Refreshed Oct 14"
+                            IsOpen="True" />
+    </Border>
+</UserControl>

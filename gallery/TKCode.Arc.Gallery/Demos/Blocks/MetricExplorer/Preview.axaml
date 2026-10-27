@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricExplorerPreviewDemo">
+    <!--
+        Four KPI cards over two years of daily data. Click a card (or press Enter) to open its chart, switch metric and
+        range, drag across the chart to read single days. Data: MetricExplorerDemoData.
+    -->
+    <arc:MetricExplorer x:Name="Explorer"
+                        Title="Workspace health"
+                        Caption="Northwind Labs · refreshed Oct 14, 2026 at 08:30 UTC" />
+</UserControl>

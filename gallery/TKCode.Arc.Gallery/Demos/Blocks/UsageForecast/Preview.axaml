@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageForecastPreviewDemo">
+    <!-- Three metrics of one cycle, read on Jun 21: drag the budget line, press the arrow keys on it, switch the metric or toggle an alert. Data: UsageForecastDemoData. -->
+    <arc:UsageForecast x:Name="Forecast"
+                       Title="Usage outlook"
+                       Subtitle="Harborline Studio · Growth plan · Renews Jul 1" />
+</UserControl>

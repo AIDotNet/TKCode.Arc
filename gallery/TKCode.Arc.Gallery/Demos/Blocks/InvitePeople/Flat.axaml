@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InvitePeopleFlatDemo">
+    <!-- Laid flat inside a surface of your own (a dialog, a settings pane): no card, no lines above the footer and the list. -->
+    <Border Margin="0,12"
+            MaxWidth="680"
+            Padding="0,4"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="1">
+        <arc:InvitePeople x:Name="Block" IsFramed="False" />
+    </Border>
+</UserControl>

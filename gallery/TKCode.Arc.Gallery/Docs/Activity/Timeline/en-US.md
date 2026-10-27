@@ -24,7 +24,7 @@ reader needs it, a detail that expands in place.
 
 ## When not to use
 
-- **Records the reader sorts or compares**, such as invoices by amount or users by last login: use `SortableDataTable`.
+- **Records the reader sorts or compares**, such as invoices by amount or users by last login: use `Table`.
 - **Fixed steps with a current position**, such as checkout or onboarding: use `Stepper`.
 - **A threaded discussion on one object**: use `CommentThread`. For a live two-way conversation, use `ChatThread`.
 - **One current status of one item**, such as "Payment failed" on an invoice: use `Alert` next to the item. A timeline of
@@ -294,7 +294,7 @@ time labels move with `Now`.
   is hidden until the reader expands it.
 - Leaving `HeaderBackground` at its default on a feed placed on a colored panel. The day labels then cover the rows with the
   wrong color.
-- Using a timeline for records a reader compares. Sorting and filtering belong in `SortableDataTable`.
+- Using a timeline for records a reader compares. Sorting and filtering belong in `Table`.
 
 ### Common questions
 
@@ -351,13 +351,13 @@ Rows with a detail take focus in the Tab order; rows without one do not. Arrow k
 ## Related
 
 - `CommentThread` for replies on one object, and `ChatThread` for a live two-way conversation.
-- `SortableDataTable` when the reader needs to sort or compare records.
+- `Table` when the reader needs to sort or compare records.
 - `Stepper` for fixed steps with a current position.
 
 | Component | Choose it when |
 |---|---|
 | `CommentThread` | Replies hang off one object and can be resolved |
 | `ChatThread` | People talk in turns, with typing and read receipts |
-| `SortableDataTable` | The reader sorts or compares the records |
+| `Table` | The reader sorts or compares the records |
 | `Stepper` | The steps are fixed and one of them is current |
 | `Alert` | A single current status belongs next to one item |

@@ -166,4 +166,6 @@ public enum GalleryShellLangResourceKind
     PhoneDevicePixel,
     PhoneDeviceSmall,
     PhoneDeviceTablet,
+    UpdateAvailable,
+    UpdateDownload,
 }

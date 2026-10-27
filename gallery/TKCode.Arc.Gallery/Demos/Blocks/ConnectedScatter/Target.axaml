@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectedScatterTargetDemo">
+    <!--
+        A stricter target (4x) and a zoomed horizontal axis: the ranges and the step are used exactly as given, so the plot
+        can start at $600 and the target line enters through the left edge instead of the bottom.
+    -->
+    <arc:ConnectedScatter x:Name="Scatter"
+                          Title="Channels against a 4x target"
+                          TargetRatio="4"
+                          SelectedSeriesKey="resellers" />
+</UserControl>

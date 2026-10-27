@@ -1,7 +1,7 @@
 ---
 title: 卡片堆疊
 summary: 逐張審閱卡片，支援划走與復原。
-source-hash: ea242c8f3b5b
+source-hash: 19ea9efed1b2
 ---
 
 <Demo name="Shortlist" />
@@ -17,7 +17,7 @@ source-hash: ea242c8f3b5b
 
 ## 何時不用
 
-- **並排比較或排序項目**：用 `SortableDataTable`。欄位與排序讓人一次比較多筆記錄；卡片堆疊一次只顯示一筆記錄。
+- **並排比較或排序項目**：用 `Table`。欄位與排序讓人一次比較多筆記錄；卡片堆疊一次只顯示一筆記錄。
 - **只瀏覽而不做決定**：用 `Carousel`，適合一排人們只需查看、不需保留或略過的投影片、橫幅或照片。
 - **清單列上的快速操作**：用 `SwipeActions`，對每一列執行封存、稍後提醒或標為已讀。列是用來操作的地方，而不是一個會向前推進的佇列。
 - **重新排列使用者擁有的清單**：用 `ReorderableList`，它在移動時讓每個項目保持可見。
@@ -342,11 +342,11 @@ stack.LabelSelector = item => ((Destination)item!).Name;
 
 - `Carousel` 用於瀏覽一排項目，而不對每一項做決定。
 - `SwipeActions` 用於清單列上的快速操作。
-- `SortableDataTable` 用於並排審閱大量記錄。
+- `Table` 用於並排審閱大量記錄。
 
 | 元件 | 適用情境 |
 |---|---|
-| `SortableDataTable` | 讀者依欄位比較或排序大量記錄 |
+| `Table` | 讀者依欄位比較或排序大量記錄 |
 | `Carousel` | 人們只瀏覽投影片、橫幅或照片，無需做決定 |
 | `SwipeActions` | 清單的每一列需要封存或稍後提醒等快速操作 |
 | `ReorderableList` | 使用者調整自己擁有的清單順序 |

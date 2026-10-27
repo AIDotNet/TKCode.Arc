@@ -25,7 +25,7 @@ branch, and select a whole branch with one checkbox.
 
 - **A navigation tree without columns**: use `TreeView`, which draws one label per node and virtualizes thousands of
   rows.
-- **Flat records that people compare by column**: use `SortableDataTable`. A tree table adds indent and a
+- **Flat records that people compare by column**: use `Table`. A tree table adds indent and a
   chevron to the first column for no benefit when nothing nests.
 - **A spreadsheet that people edit cell by cell**: use `DataGrid`, which has range selection and inline editing.
 - **Items that open into free-form content**: use `Accordion`. A tree table opens into more rows with the same
@@ -201,7 +201,7 @@ The demo at the top rolls spend up through three levels. The Owner column hides 
 `HasChildrenSelector` is true and a `ChildrenLoader` is set. An empty list means a leaf.
 
 **Can a column sort the tree flat?** No. Sorting orders the siblings inside each parent, so the hierarchy never
-breaks. Use `SortableDataTable` for a flat list.
+breaks. Use `Table` for a flat list.
 
 **Why are the expanded rows lost when I reload the data?** `ExpandedKeys` holds keys. If `KeySelector` returns new
 values on every load, the rows no longer match. Use ids that survive a reload.
@@ -267,13 +267,13 @@ values on every load, the rows no longer match. Use ids that survive a reload.
 ## Related
 
 - `TreeView` for navigation trees without columns.
-- `SortableDataTable` for flat records with sortable columns.
+- `Table` for flat records with sortable columns.
 - `DataGrid` for a spreadsheet-style grid with range selection and inline editing.
 - `Checkbox`, the binary control behind each row's selection.
 
 | Component | Choose it when |
 |---|---|
 | `TreeView` | The hierarchy is navigation with one label per node |
-| `SortableDataTable` | The records are flat and compared by column |
+| `Table` | The records are flat and compared by column |
 | `DataGrid` | People edit cells and select ranges |
 | `Accordion` | A few sections open into free-form content |

@@ -32,7 +32,7 @@ downloading an invoice.
   plan a customer already has, not the options they can pick from.
 - **Collecting card details**: the block shows the card on file and never takes card numbers. Open your payment
   provider's form in a `Dialog` from `UpdatePaymentMethodRequested`.
-- **A long, searchable payment history**: use `SortableDataTable`, which sorts, filters and pages rows. The invoice
+- **A long, searchable payment history**: use `Table`, which sorts, filters and pages rows. The invoice
   table here shows a short, newest-first list with "Show all invoices" for the rest.
 - **A cancellation with questions or a retention offer**: use `CancelFlow`, a multi-step flow that you can start from
   `CancelPlanRequested`. `BillingOverview` only raises the request.
@@ -443,7 +443,7 @@ plan's `Currency`.
 |---|---|
 | `UsageBilling` | The charge depends on metered usage this period, with a spending limit |
 | `CancelFlow` | The cancellation needs steps, reasons or a retention offer |
-| `SortableDataTable` | The payment history is long and must be sorted, filtered or paged |
+| `Table` | The payment history is long and must be sorted, filtered or paged |
 | `SettingsGroup` / `SettingsRow` | You build a settings card that is not a billing summary |
 | `BillingToggle` / `BillingPrice` | The customer chooses between plans or billing periods |
 | `Dialog` | A plan change, card update or download needs a confirmation or a form |

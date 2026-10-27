@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricExplorerRangesDemo">
+    <!--
+        Your own ranges (a week, two months, half a year) and no dashed previous period. Each range says how many days it
+        shows, what the cards call it, and what the readout compares with; the chart zooms its window between them.
+    -->
+    <arc:MetricExplorer x:Name="Explorer"
+                        Title="Custom ranges"
+                        Caption="Seven days, two months, half a year"
+                        ShowPreviousPeriod="False"
+                        IsOpen="True" />
+</UserControl>

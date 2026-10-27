@@ -11,13 +11,13 @@
             <TextBlock Text="Turn on Keyboard above the phone, then tap a field."
                        TextWrapping="Wrap"
                        Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-            <arcm:TextField Watermark="First name" />
-            <arcm:TextField Watermark="Last name" />
-            <arcm:TextField Watermark="Company" />
-            <arcm:TextField Watermark="Phone" />
-            <arcm:TextField Watermark="Email" />
-            <arcm:TextField Watermark="Address" />
-            <arcm:TextField Watermark="Notes" />
+            <arcm:TextField PlaceholderText="First name" />
+            <arcm:TextField PlaceholderText="Last name" />
+            <arcm:TextField PlaceholderText="Company" />
+            <arcm:TextField PlaceholderText="Phone" />
+            <arcm:TextField PlaceholderText="Email" />
+            <arcm:TextField PlaceholderText="Address" />
+            <arcm:TextField PlaceholderText="Notes" />
             <arcm:Button Content="Save" />
         </StackPanel>
         <arcm:Page.Footer>

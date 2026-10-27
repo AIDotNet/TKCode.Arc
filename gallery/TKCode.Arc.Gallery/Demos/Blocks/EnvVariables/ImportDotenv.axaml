@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EnvVariablesImportDotenvDemo">
+    <!-- Opens on the .env form with a sample that shows every line status: new keys, a repeated key, a bad key and a replacement. -->
+    <arc:EnvVariables x:Name="Block" Margin="0,12" />
+</UserControl>

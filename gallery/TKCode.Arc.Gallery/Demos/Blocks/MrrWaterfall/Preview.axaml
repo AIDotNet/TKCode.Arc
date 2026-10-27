@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MrrWaterfallPreviewDemo">
+    <!-- A quarter of recurring revenue split into three months and the quarter itself. Data: MrrWaterfallDemoData. -->
+    <arc:MrrWaterfall x:Name="Bridge"
+                      Title="Recurring revenue bridge"
+                      Scope="All tiers" />
+</UserControl>

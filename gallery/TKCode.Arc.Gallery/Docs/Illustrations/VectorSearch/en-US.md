@@ -32,7 +32,7 @@ a search feature, where a reader needs to see why an answer matched a question t
 - **Plotting real measurements**: the map is a two-dimensional projection of text similarity, with no units or axes.
   Use `LineChart` or `BarChart` for values that people compare.
 - **Long result lists people act on**: rank, score and document metadata in columns are easier to scan, sort and export
-  in `SortableDataTable`.
+  in `Table`.
 - **Explaining a pipeline rather than a search**: when the picture should show how documents are collected, validated
   and stored, use `DataFlow`, which is built for that story.
 - **Dense dashboards or pages with several animated pictures**: each illustration redraws its canvas every frame while
@@ -379,13 +379,13 @@ source, in the order of the primary constructor.
 
 - `SearchField` for the question input in an app, and for showing your own results.
 - `DataFlow` for how the documents that feed a search are collected and stored.
-- `SortableDataTable` for showing a long list of results with their scores.
+- `Table` for showing a long list of results with their scores.
 
 | Component | Choose it when |
 |---|---|
 | `SearchField` | The reader types a question into your product and your own search service answers it |
 | `ExpandingSearch` | Search sits in a page header and opens on demand |
-| `SortableDataTable` | The results are a long list that people sort, filter or export |
+| `Table` | The results are a long list that people sort, filter or export |
 | `DataFlow` | The story is how documents are collected, validated and stored |
 | `LineChart` | The values are measurements that people compare over time |
 | `Card` | A static explanation is enough and an illustration would compete with the page |

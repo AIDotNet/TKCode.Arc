@@ -1,7 +1,7 @@
 ---
 title: 客户星系
 summary: 每位客户都是一个点：点的面积随收入变化，颜色表示健康度，整体如星系般旋转；可将它们分成簇，飞入其中，并查看合计。
-source-hash: de95bcccc15c
+source-hash: 2005b60c7240
 ---
 
 <Demo name="Preview" />
@@ -19,7 +19,7 @@ source-hash: de95bcccc15c
 ## 何时不用
 
 - **比较少量数字。** 使用 `BarChart` 或 `DonutChart`；星系只有在数百或数千个账户时才物有所值，五个数字时并不适合。
-- **并排读取许多账户的精确数值。** 使用 `SortableDataTable` 或 `DataGrid`；星系一次只在提示卡中展示一个账户。
+- **并排读取许多账户的精确数值。** 使用 `Table` 或 `DataGrid`；星系一次只在提示卡中展示一个账户。
 - **随时间变化的趋势。** 使用 `LineChart` 或 `Streamgraph`。星系是一个快照：它的簇不会随日期移动。
 - **侧边栏或卡片中的小部件。** 该区块至少需要 360 px 的舞台高度才能看清；请改用 `MetricCard` 搭配 `Sparkline`。
 - **仅按一个维度展示整体的一部分。** 使用 `Treemap` 或 `WaffleChart`，它们能保持精确的面积，没有堆叠留下的空隙。
@@ -258,7 +258,7 @@ galaxy.GroupFocused += (_, e) =>
 ## 相关组件
 
 - `BarChart`、`DonutChart` 和 `Treemap`，用于少量精确数值或整体的各部分。
-- `DataGrid` 和 `SortableDataTable`，用于逐行阅读和比较账户。
+- `DataGrid` 和 `Table`，用于逐行阅读和比较账户。
 - `MetricCard` 和 `AnimatedCounter`，用于一个醒目的数字。
 - `SegmentedControl`，分组标签页与它相似。
 

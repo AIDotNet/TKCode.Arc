@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BudgetVariancePreviewDemo">
+    <!-- September, the third quarter and the year so far; Engineering opens with its lines. Data: BudgetVarianceDemoData. -->
+    <arc:BudgetVariance x:Name="Budget" Margin="0,12" SelectedPeriod="month" ExpandedDepartment="engineering" />
+</UserControl>

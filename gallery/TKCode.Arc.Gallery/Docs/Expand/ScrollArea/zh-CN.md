@@ -1,7 +1,7 @@
 ---
 title: 滚动区域
 summary: 原生滚动容器，配有细长的浮层滚动条，仅在内容溢出时才显示边缘渐隐。
-source-hash: 066258a5ccd4
+source-hash: 2cfcd7524730
 ---
 
 <Demo name="Vertical" />
@@ -20,7 +20,7 @@ source-hash: 066258a5ccd4
 
 - **逐项翻页**：用 `Carousel`，它在幻灯片之间切换并显示位置。
 - **应当缩短的长文本**：用 `ExpandableText`，它截断到几行并提供“阅读更多”。
-- **带列和排序的表格数据**：用 `SortableDataTable`，数据量大时用 `DataGrid`。把 `ScrollArea` 套在普通 `StackPanel` 外面会测量每一行，因此数千行的表格会很慢。
+- **带列和排序的表格数据**：用 `Table`，数据量大时用 `DataGrid`。把 `ScrollArea` 套在普通 `StackPanel` 外面会测量每一行，因此数千行的表格会很慢。
 - **带键盘导航的嵌套树**：用 `TreeView`，它处理展开与层级之间的方向键移动。
 - **从长列表中选择一个值**：用 `Select` 或 `Combobox`，它们自己管理列表、筛选与键盘模型。
 
@@ -294,5 +294,5 @@ CRM 中一条客户记录，旁边是固定高度的活动面板。标题写明�
 | `Carousel` | 用户逐项切换内容，并需要位置指示器 |
 | `ExpandableText` | 一段文字较长，应先显示几行并提供“阅读更多” |
 | `ResizablePanels` | 用户需要决定每个窗格获得多少空间 |
-| `SortableDataTable` / `DataGrid` | 内容是用户需要排序或浏览的行与列 |
+| `Table` / `DataGrid` | 内容是用户需要排序或浏览的行与列 |
 | `TreeView` | 条目有层级，用户用键盘在层级之间移动 |

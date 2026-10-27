@@ -1,7 +1,7 @@
 ---
 title: 数据表格
 summary: 电子表格式的表格：范围选择、就地编辑、填充柄、剪贴板、撤销、排序、筛选、分组、合计与导出。
-source-hash: 8460a974ab30
+source-hash: 6f5dd7d44970
 ---
 
 <Demo name="Renewals" />
@@ -18,7 +18,7 @@ source-hash: 8460a974ab30
 
 ## 何时不用
 
-- **带排序与行选择的只读记录**，例如客服工单或用户：用 `SortableDataTable`，它不需要编辑相关机制。
+- **带排序与行选择的只读记录**，例如客服工单或用户：用 `Table`，它不需要编辑相关机制。
 - **一次只编辑一条记录**，例如客户资料或发票抬头：用由 `Input`、`Select` 和 `DatePicker` 组成的表单，它们会逐个字段校验。
 - **含图片、长文本或操作的行**：用 `Card` 或 `ReorderableList`，每个项目都有容纳内容的空间。
 - **文件夹或会计科目表等层级数据**：用 `TreeView`。分组按键值折叠行，不会根据父子记录构建树。
@@ -565,7 +565,7 @@ public partial class RenewalsViewModel : ObservableObject
 
 | 组件 | 适用场景 |
 |---|---|
-| `SortableDataTable` | 记录是只读的，人们需要对其排序、选择和翻页 |
+| `Table` | 记录是只读的，人们需要对其排序、选择和翻页 |
 | `Input` / `Select` / `DatePicker` | 人们一次编辑一条记录，并需要逐个字段校验 |
 | `Card` / `ReorderableList` | 每个项目都有自己的内容、图片或操作 |
 | `TreeView` | 数据是层级结构，人们需要展开分支 |

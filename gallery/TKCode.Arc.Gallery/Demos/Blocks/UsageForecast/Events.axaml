@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageForecastEventsDemo">
+    <!--
+        Everything the block reports is an event and the budget, the metric and the inspected day are two-way properties.
+        Two buttons drive the block from outside; the log shows the events, with the budget saved only when it is let go of.
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="Raise" Variant="Secondary" Size="Small" Content="Set the budget to 30M" />
+            <arc:Button x:Name="Today" Variant="Secondary" Size="Small" Content="Inspect today" />
+            <arc:Button x:Name="Clear" Variant="Secondary" Size="Small" Content="Clear the card" />
+        </StackPanel>
+        <arc:UsageForecast x:Name="Forecast"
+                           Title="Usage outlook"
+                           Subtitle="Drag the line, toggle a chip, point at the chart." />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

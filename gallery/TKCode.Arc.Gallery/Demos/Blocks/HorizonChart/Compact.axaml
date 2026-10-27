@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HorizonChartCompactDemo">
+    <!-- The breakpoints follow the block's own width: at 360 the rows shrink and the switches and the scale take whole lines. -->
+    <Border Width="360" HorizontalAlignment="Left">
+        <arc:HorizonChart x:Name="Chart"
+                          Title="Orders against forecast"
+                          Description="Daily orders at each fulfilment hub compared with its winter forecast"
+                          BaselineLabel="winter forecast" />
+    </Border>
+</UserControl>

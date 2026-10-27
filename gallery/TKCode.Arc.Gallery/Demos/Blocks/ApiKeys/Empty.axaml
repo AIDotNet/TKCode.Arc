@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ApiKeysEmptyDemo">
+    <!-- No keys yet. The empty state's button brings the samples back; all five grow in at once. -->
+    <arc:ApiKeys x:Name="Block"
+                 Margin="0,12"
+                 IsFramed="False"
+                 Description="Keys let your backend call the Northwind Relay API. Store them in a vault, never in client code."
+                 CurrentUserName="Lena Ortiz"
+                 EmptyActionText="Bring back sample keys" />
+</UserControl>

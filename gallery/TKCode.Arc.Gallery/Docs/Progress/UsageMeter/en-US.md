@@ -31,7 +31,7 @@ no limit.
   always measures against an allowance.
 - **A single headline metric**, such as this month's active users: use `Gauge` for a value on a scale or `MetricCard`
   for a number with a trend.
-- **More than a handful of categories**, such as a ledger of fifty cost centers: use `Treemap` or a sorted `SortableDataTable`. The
+- **More than a handful of categories**, such as a ledger of fifty cost centers: use `Treemap` or a sorted `Table`. The
   bar is readable with about four accent steps, and a legend of fifty entries does not help a person decide.
 - **A share of a whole with no allowance**, such as the mix of traffic sources: use `DonutChart`, which shows proportions
   without a limit line.

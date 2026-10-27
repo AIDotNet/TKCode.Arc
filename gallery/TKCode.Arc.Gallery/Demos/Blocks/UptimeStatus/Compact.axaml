@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UptimeStatusCompactDemo">
+    <!-- The block reads its own width: here it sits in a 420 wide column, so the bars are 3 wide, the sections stack and the header action drops under the text. -->
+    <Border Width="420" HorizontalAlignment="Left">
+        <arc:UptimeStatus x:Name="Status" PageName="Larkspur status" />
+    </Border>
+</UserControl>

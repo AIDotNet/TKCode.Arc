@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamDirectoryFlatDemo">
+    <!-- No frame, a fixed team order and a search that also looks at email addresses. -->
+    <Border BorderBrush="{arc:ArcDesignTokenResource Border}" BorderThickness="0,1" Margin="0,12">
+        <arc:TeamDirectory x:Name="Directory" IsFramed="False">
+            <arc:TeamDirectory.Teams>
+                <x:String>Engineering</x:String>
+                <x:String>Support</x:String>
+                <x:String>Design</x:String>
+                <x:String>Operations</x:String>
+            </arc:TeamDirectory.Teams>
+        </arc:TeamDirectory>
+    </Border>
+</UserControl>

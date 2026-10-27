@@ -1,7 +1,7 @@
 ---
 title: 滑動操作
 summary: 透過滑動顯示列操作，或從選單中的同一組操作執行。
-source-hash: dba84e3d06a7
+source-hash: 11d333739abd
 ---
 
 <Demo name="Inbox" />
@@ -19,7 +19,7 @@ source-hash: dba84e3d06a7
 
 - **桌面表格或主要用滑鼠操作的清單**：在列上使用 `ContextMenu`，或在列按鈕上使用 `DropdownMenu`。滑動手勢不適合作為滑鼠的主要操作路徑，而且每一列本來就有選單。
 - **透過上下拖曳調整列的順序**：用 `ReorderableList`。滑動手勢鎖定在水平方向，永遠不會改變列的順序。
-- **大量欄位、分頁或排序的長資料集**：用 `SortableDataTable`。滑動列不做虛擬化，因此數千列的清單在此顯示前應先分頁。
+- **大量欄位、分頁或排序的長資料集**：用 `Table`。滑動列不做虛擬化，因此數千列的清單在此顯示前應先分頁。
 - **清單之外的單一破壞性操作**，例如在設定頁面刪除專案：用 `HoldToConfirm`，它需要刻意的長按，而不是列上可能被誤觸發的手勢。
 - **一側超過兩個快速操作**：露出的寬度會隨每個操作增加。把兩個最常用的操作放在滑動上，其餘的移入該列的「更多操作」選單，或用 `ContextMenu` 顯示完整清單。
 
@@ -346,13 +346,13 @@ inbox.LeadingActions.Add(unread);
 - `ContextMenu` 與 `DropdownMenu`：桌面端的列操作。
 - `ReorderableList`：透過拖曳把列重新排序。
 - `HoldToConfirm`：清單之外的單一破壞性操作。
-- `SortableDataTable`：大型、可排序的資料集。
+- `Table`：大型、可排序的資料集。
 
 | 元件 | 適用情境 |
 |---|---|
 | `ContextMenu` / `DropdownMenu` | 主要輸入方式是滑鼠，或列上有很多操作 |
 | `ReorderableList` | 使用者透過拖曳改變列的順序 |
-| `SortableDataTable` | 資料有欄位、排序或數量很多的列 |
+| `Table` | 資料有欄位、排序或數量很多的列 |
 | `HoldToConfirm` | 一個破壞性操作需要刻意長按，且不在清單中 |
 | `Dialog` | 操作執行前必須先閱讀後果 |
 | `Toast` | 操作已執行，應回報結果並提供復原 |

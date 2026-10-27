@@ -1,7 +1,7 @@
 ---
 title: 用量計費
 summary: 按用量計費的週期，顯示已花費金額、預估總額、每日花費、各計量項目的超額以及支出上限。
-source-hash: b00692525948
+source-hash: 6b25f373b4b6
 ---
 
 <Demo name="Period" />
@@ -21,7 +21,7 @@ source-hash: b00692525948
 - **沒有按量計費的方案**：方案、付款方式和帳單請用 `BillingOverview`。
 - **沒有價格的配額**，例如相對於方案空間或剩餘席次已用的儲存空間：用 `UsageMeter` 或 `Progress`，它們顯示佔上限的比例，但不為超額定價。
 - **跨多個週期的用量**：單獨使用 `BarChart` 或 `LineChart` 查看趨勢。本區塊只顯示一個週期。
-- **歷史帳單清單**：用 `SortableDataTable`，它可以對列排序和篩選；本區塊保留給進行中的週期。
+- **歷史帳單清單**：用 `Table`，它可以對列排序和篩選；本區塊保留給進行中的週期。
 
 ## 用法
 
@@ -367,5 +367,5 @@ billing.Labels = new UsageBillingLabels
 | `UsageMeter` / `Progress` | 配額有上限但沒有價格，例如席次或儲存空間 |
 | `BarChart` / `LineChart` | 跨多個週期的趨勢比單一週期的總額更重要 |
 | `MoneyInput` | 單獨輸入一個金額，位於支出上限卡片之外 |
-| `SortableDataTable` | 歷史帳單或用量明細需要排序和篩選 |
+| `Table` | 歷史帳單或用量明細需要排序和篩選 |
 | `CancelFlow` | 擁有者要結束方案，並需要填寫原因和提供優惠的步驟 |

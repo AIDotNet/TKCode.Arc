@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamDirectoryPreviewDemo">
+    <!-- Six people in three teams; copying an address uses the system clipboard. Data: TeamDirectoryDemoData. -->
+    <arc:TeamDirectory x:Name="Directory" Margin="0,12" />
+</UserControl>

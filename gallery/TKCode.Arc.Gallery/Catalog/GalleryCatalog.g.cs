@@ -11,6 +11,7 @@ public static partial class GalleryCatalog
         [
             new("Button", "Button", "button", 0, "A clear, responsive action with quiet secondary states."),
             new("ActionButton", "Action button", "action-button", 3, "A compact button for frequent toolbar actions."),
+            new("ActionSwap", "Action swap", "action-swap", 5, "Swap an action label while preserving its place and intent.", AddedOn: "2026-10-26"),
             new("SplitButton", "Split button", "split-button", 5, "A primary action with a menu of nearby alternatives."),
             new("ButtonGroup", "Button group", "button-group", 5, "Related actions joined into one surface with hairline dividers: a hover highlight glides between segments, the pressed one answers in place, and an attached menu can close the row."),
             new("FloatingButtonGroup", "Floating button group", "floating-button-group", 2, "Separate soft buttons in a quiet tray, with one shared highlight that morphs from button to button as you move, and a pressed state that settles in place."),
@@ -157,7 +158,7 @@ public static partial class GalleryCatalog
         ]),
         new("Tables", "Tables", "表格与数据",
         [
-            new("SortableDataTable", "Sortable data table", "sortable-data-table", 9, "Compare structured records with sortable columns."),
+            new("Table", "Table", "table", 9, "Compare structured records with sortable columns.", ArcPath: "sortable-data-table"),
             new("TreeTable", "Tree table", "tree-table", 9, "A table with nested rows, tri-state selection, hierarchy-preserving sort, and lazy-loaded children.", AddedOn: "2026-10-25"),
             new("TreeView", "Tree view", "tree-view", 9, "Navigate nested folders and structured content."),
             new("ReorderableList", "Reorderable list", "reorderable-list", 7, "Organize items with direct drag and drop."),

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MrrWaterfallPercentDemo">
+    <!--
+        ValueMode starts as PercentOfStart: the start bar is 100%, steps are shares of it, the panel shows two decimals.
+        The headline always stays in currency.
+    -->
+    <arc:MrrWaterfall x:Name="Bridge"
+                      Title="Recurring revenue bridge"
+                      Scope="All tiers"
+                      ValueMode="PercentOfStart" />
+</UserControl>

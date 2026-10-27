@@ -30,7 +30,7 @@ see that a figure moved and by roughly how much, without the page flashing or th
 - **Text that changes instead of a number**: use `TextMorph`, which animates words and phrases rather than digit columns.
 - **The headline of a chart**: `BarChart`, `LineChart` and the other chart controls update their own headline values, so
   a separate counter next to a chart repeats the same number.
-- **Many numbers in rows**: use `SortableDataTable`. Each counter animates its own digit columns, which suits a few
+- **Many numbers in rows**: use `Table`. Each counter animates its own digit columns, which suits a few
   headline numbers, not a column of values that people scan and sort.
 - **A value that a person types or edits**: use `NumberField` or `MoneyInput`. A counter only displays a number; it has no
   input, no parsing and no validation.
@@ -316,4 +316,4 @@ needs the rounded number itself.
 | `Sparkline` | The number needs a compact trend next to it |
 | `TextMorph` | The changing content is a word or a phrase, not a number |
 | `NumberField` / `MoneyInput` | The person types or edits the number |
-| `SortableDataTable` | Many numbers are shown in rows that people scan and sort |
+| `Table` | Many numbers are shown in rows that people scan and sort |

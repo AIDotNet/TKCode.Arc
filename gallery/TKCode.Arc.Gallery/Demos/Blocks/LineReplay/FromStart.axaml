@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LineReplayFromStartDemo">
+    <!--
+        A sale morning without a comparison line: the legend entry and the ratio are gone. The playhead rests at the start,
+        a full replay takes 12 seconds at 1×, and it opens at 2×.
+    -->
+    <arc:LineReplay x:Name="Replay"
+                    Margin="0,12"
+                    Title="Sale morning"
+                    Description="Shoppers on site every two minutes, 5 am to noon."
+                    SeriesLabel="Sale day"
+                    ValueLabel="Shoppers"
+                    DefaultPosition="Start"
+                    Duration="0:0:12"
+                    Speed="2" />
+</UserControl>

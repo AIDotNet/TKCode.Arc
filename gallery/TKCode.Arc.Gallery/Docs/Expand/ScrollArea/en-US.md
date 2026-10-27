@@ -25,7 +25,7 @@ set and the content inside it grows with the data.
 
 - **Paging through items one at a time**: use `Carousel`, which moves between slides and shows position.
 - **Long text that should be shortened**: use `ExpandableText`, which clamps to a few lines and offers Read more.
-- **Tabular data with columns and sorting**: use `SortableDataTable`, or `DataGrid` for large data sets. A `ScrollArea`
+- **Tabular data with columns and sorting**: use `Table`, or `DataGrid` for large data sets. A `ScrollArea`
   around a plain `StackPanel` measures every row, so a table of thousands of rows is slow.
 - **A tree of nested items with keyboard navigation**: use `TreeView`, which handles expansion and arrow-key
   movement between levels.
@@ -354,5 +354,5 @@ The keys apply when the area itself has focus. `Shift` changes the direction of 
 | `Carousel` | People move between items one at a time and need a position indicator |
 | `ExpandableText` | One block of text is long and should show a few lines with Read more |
 | `ResizablePanels` | The person needs to decide how much room each pane gets |
-| `SortableDataTable` / `DataGrid` | The content is rows and columns that people sort or scan |
+| `Table` / `DataGrid` | The content is rows and columns that people sort or scan |
 | `TreeView` | Items nest and people move between levels with the keyboard |

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricsDashboardExportDemo">
+    <!-- Export hands the view to a command (here it builds a CSV in memory); the button confirms for 1.8 seconds. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <Border BorderThickness="1" CornerRadius="12" ClipToBounds="True"
+                BorderBrush="{arc:ArcDesignTokenResource Border}">
+            <arc:MetricsDashboard x:Name="Dashboard"
+                                  Title="Insights"
+                                  Source="northwind.dev"
+                                  SelectedRange="90"
+                                  PrimaryListTitle="Top paths"
+                                  SecondaryListTitle="Referrers"
+                                  ListValueHeader="Sessions" />
+        </Border>
+        <TextBlock x:Name="Log" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="560" />
+    </StackPanel>
+</UserControl>

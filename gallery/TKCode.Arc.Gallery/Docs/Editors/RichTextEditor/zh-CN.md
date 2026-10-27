@@ -1,7 +1,7 @@
 ---
 title: 富文本编辑器
 summary: 轻量编辑器，支持 Markdown 快捷输入、浮动工具栏、斜杠菜单，并可输出 HTML 与 Markdown。
-source-hash: f24f2d654941
+source-hash: b7c2d44c1172
 ---
 
 <Demo name="Shortcuts" />
@@ -22,7 +22,7 @@ source-hash: f24f2d654941
 - **在文本框中提及人员或标签**：用 `MentionInput`，它会给出提示并保存提及内容。
 - **在页面上原位重命名的单行文本**：用 `InlineEdit`，编辑前它看起来就是普通文字。
 - **源代码或只读的代码清单**：用 `CodeBlock`，它自带复制操作。
-- **图片、表格或带下划线的文字**：编辑器都不支持（它没有图片、表格或下划线块）。需要在文字旁附加图片时用 `FileDropzone`，内容需要复杂排版时用文档编辑器。
+- **排版复杂的文档**：表格只保存行内文字（无嵌套块），图片独占一个块。需要页面排版、分栏，或需要带进度上传文件时，请用文档编辑器或 `FileDropzone`。
 
 ## 用法
 
@@ -54,7 +54,8 @@ source-hash: f24f2d654941
 | 类型 | 书写方式 | 说明 |
 |---|---|---|
 | `Paragraph` | 纯文本 | 默认块 |
-| `Heading1`、`Heading2`、`Heading3` | `# `、`## `、`### ` | 导入的 h4 到 h6 会变为 `Heading3` |
+| `Heading1`、`Heading2`、`Heading3` | `# `、`## `、`### ` | `Arc` 配置会把导入的 h4 到 h6 变为 `Heading3` |
+| `Heading4`、`Heading5`、`Heading6` | `#### `、`##### `、`###### ` | 仅 `Docs` 配置；`Heading6` 以次要文字颜色显示 |
 | `BulletedList`、`NumberedList` | `- `、`1. ` | 用 Tab 嵌套；同一层级保持相同的列表类型 |
 | `Quote` | `> ` | 起始处带竖条的引用块 |
 | `CodeBlock` | 三个反引号 | 只保存纯文本；行不换行 |
@@ -84,6 +85,97 @@ source-hash: f24f2d654941
 | `**text**`、`_text_`、`~~text~~`、`` `text` `` | 加粗、斜体、删除线、行内代码 |
 
 编辑器只读写一个固定的子集：段落、三级标题、可嵌套的有序和无序列表、引用、代码块、分隔线，以及四种行内标记和链接。粘贴的 HTML 会被净化为该子集：未知的标签与样式会被移除，其中的文字保留。请把这个子集当作该功能的内容约定：需要其他内容的文档必须存放在别处。
+
+### Docs 配置
+
+设置 `Profile="Docs"` 即可得到文档风格的编辑器。默认的 `Arc` 配置与上文所述完全一致；`Docs` 增加较长文档所需的功能：
+
+<Demo name="DocsProfile" />
+
+| 功能 | 用法 | 写出形式 |
+|---|---|---|
+| 下划线 | `Ctrl+U`、工具栏按钮、`ToggleMark(RichTextMark.Underline)` | HTML 中的 `<u>` |
+| 上标和下标 | `Ctrl+.` 和 `Ctrl+,`、工具栏按钮、`ToggleMark(RichTextMark.Superscript)` 或 `ToggleMark(RichTextMark.Subscript)`；开启其中一个会关闭另一个 | `<sup>`、`<sub>` |
+| 文字大小 | 工具栏的字号按钮（小、默认、大、特大，相对于所在块的文字）；`SetTextSize` | `<span data-size="large">` |
+| 行距 | 块菜单中的“Line spacing”选项（紧凑、默认、宽松、加宽）；`SetLineSpacing` 作用于选中的块。代码块和表格单元格保持自己的行距 | 段落、标题、列表项、引用和标注段落上的 `data-spacing="relaxed"` |
+| 4 到 6 级标题 | 行首输入 `#### `、`##### ` 或 `###### `、斜杠菜单、块菜单、`SetBlockType(RichTextBlockType.Heading4)` | `<h4>` 到 `<h6>`，Markdown 中为 `####` 到 `######` |
+| 文字色与高亮色 | 工具栏的颜色按钮打开七色调色板；`SetTextColor`、`SetHighlight` | `<span data-color="red">`、`<mark data-bg="yellow">` |
+| 待办列表 | 行首输入 `[] ` 或 `[x] `、斜杠菜单、`SetBlockType(RichTextBlockType.TodoList)`；点击复选框即可勾选 | `<ul data-todo="true"><li data-checked="true">`，Markdown 中为 `- [x] ` |
+| 折叠列表 | 斜杠菜单或块菜单、`SetBlockType(RichTextBlockType.Toggle)`。点击箭头、按 `Ctrl+Enter` 或调用 `ToggleFold()`，可把嵌套在它下面的项折叠起来；在展开的折叠项末尾按 Enter 会新建一个嵌套项，`Tab` 可把任何列表项嵌套到上方的折叠项下。折叠的项不占空间，插入点会跳过它们；伸入折叠内容的编辑（缩进到折叠项下、在其末尾按 Delete）会把它展开 | `<ul data-toggle="true"><li data-collapsed="true">`；Markdown 中为普通的 `- ` 项 |
+| 文本对齐 | `Ctrl+Shift+L`、`Ctrl+Shift+E`、`Ctrl+Shift+R`；`SetAlign` | 段落、标题和引用上的 `data-align="center"` 或 `"end"` |
+| `Ctrl+Shift+上箭头`、`Ctrl+Shift+下箭头` | 上移或下移插入点所在的块（`Docs` 配置） |
+| 在折叠项上按 `Ctrl+Enter` | 折叠或展开它（`Docs` 配置） |
+| 代码语言 | 点击代码块上方的标签打开语言列表；`SetCodeLanguage("csharp")`。代码按所选语言高亮（纯文本或没有语法的语言保持原样） | `<pre data-lang="csharp">`，Markdown 中为带信息串的围栏 |
+| 高亮块 | `/` 菜单或块菜单；块菜单可设置颜色和图标；`SetCalloutColor`、`SetCalloutIcon`。回车延续同一个框，空行回车则离开 | `<aside data-callout="blue" data-icon="💡">`，Markdown 中为 GitHub 提示语法（`> [!NOTE]`），只保留五种提示类型 |
+
+颜色来自固定的调色板（`RichTextColor`：灰、红、橙、黄、绿、蓝、紫），在浅色和深色模式下随主题变化，因此保存的内容不含原始颜色值。`Formats` 还会报告 `IsUnderline`、`IsSuperscript`、`IsSubscript`、`TextColor`、`Highlight`、`Size`、`Align`、`LineSpacing` 和 `CodeLanguage`，供您自己的工具栏使用。每行的高度取该行最大文字所需的高度，所以一个大号的词会让整个块的行距变大。
+
+```xml
+<arc:RichTextEditor Profile="Docs" Html="{Binding Body, Mode=TwoWay}" />
+```
+
+- **Markdown 对颜色、字号和行距是有损的。** Markdown 没有这些设置，所以 `GetMarkdown()` 保留文字、丢弃它们。下划线、上标和下标在 Markdown 中也没有语法，会写成行内 `<u>`、`<sup>` 和 `<sub>` 标签，`Docs` 配置读取时会还原。内容必须保留颜色时，请保存 `Html`。
+- **`Profile` 的赋值顺序无关紧要。** 在配置之前赋入的内容，会按 Docs 规则重新读取。
+- **自定义语言。** 语言列表末尾有一行“自定义…”，可输入任何名称；`CodeLanguages` 可用您自己的名称和 id 替换整个列表，例如 `new RichTextCodeLanguage("Zig", "zig")`。高亮需要该 id 有对应的语法；没有语法的名称会被保留并显示，代码保持原样。
+- **别处的任务列表可以导入。** Markdown 的 `- [ ]`、`- [x]` 项，以及以复选框 input 开头的 HTML 列表项，会成为待办项；在 `Arc` 配置下它们仍是普通列表项。
+- **其余行为不变。** 分隔线、引用、链接、斜杠菜单和撤销历史与 `Arc` 配置一致，`Arc` 配置写出的文档可原样加载。
+
+### 图片与表格
+
+`Docs` 配置还能保存图片和表格。图片是一个块，保存地址和描述；表格是单元格网格，新建的表格带一行表头。两者都可通过 Markdown（单独一行的 `![alt](src)`、管道表格）和 HTML（`img`、`table`）读入和写出。`Arc` 配置不把它们放进文档。
+
+<Demo name="ImagesAndTables" />
+
+| 功能 | 用法 |
+|---|---|
+| 插入图片 | `/` 后选择 Image（文件选择器）、粘贴图片文件或截图、把图片文件拖入编辑器、粘贴单独的图片地址、输入 `![alt](地址)`，或调用 `InsertImage(地址, alt)` |
+| 调整图片大小 | 单击图片，然后拖动右下角的手柄；比例保持不变，宽度会被保存（HTML 中的 `width`；Markdown 会把调整过的图片写成 `<img>` 标签） |
+| 选中并删除图片 | 单击图片，然后按 Backspace 或 Delete；在下一段开头按 Backspace 也会删除 |
+| 插入表格 | `/` 后选择 Table（3×3），或 `InsertTable(行数, 列数)` |
+| 在表格中移动 | Tab 和 Shift+Tab 在单元格间移动（在最后一格按 Tab 会新增一行）；Enter 向下移动一格；上下方向键保持在同一列 |
+| 编辑行和列 | 右键单击单元格，或调用 `AddTableRow`、`AddTableColumn`、`DeleteTableRow`、`DeleteTableColumn`、`DeleteTable` |
+| 合并与拆分单元格 | 拖选多个单元格后右键选择“Merge cells”，或调用 `MergeTableCells`；右键单击合并后的单元格选择“Split cell”，或调用 `SplitTableCell`。`CanMergeTableCells` 与 `CanSplitTableCell` 可告诉您自己的工具栏当前是否可用 |
+| 调整列宽 | 拖动两列之间的边框；双击边框、选择“Distribute columns”或调用 `DistributeTableColumns` 可重新平分宽度 |
+| 表头行与表头列 | 右键切换“Header row”或“Header column”，或调用 `SetTableHeaderRow` 和 `SetTableHeaderColumn`；用 `TableHasHeaderRow` 和 `TableHasHeaderColumn` 读取 |
+| 单元格颜色 | 选中单元格后右键选择颜色，或调用 `SetTableCellColor`；`TableCellColor` 读取它们共同的颜色 |
+| 选择单元格、行和列 | 从一个单元格拖到另一个单元格即可选中两者之间的矩形；单击手柄（列的顶部、行的左侧），或调用 `SelectTableRow` 和 `SelectTableColumn` |
+| 移动行和列 | 把手柄拖到新位置，右键选择“Move row up”“Move row down”“Move column left”或“Move column right”，或调用 `MoveTableRow` 和 `MoveTableColumn`（`CanMoveTableRow` 和 `CanMoveTableColumn` 告诉您的工具栏能否移动） |
+| 复制和粘贴单元格 | 复制矩形选区得到以制表符分隔的文本，电子表格可直接读取；把表格或以制表符分隔的文本粘贴到单元格中，会从该单元格开始填充，并按需添加行和列 |
+| 列对齐 | `Ctrl+Shift+L`、`Ctrl+Shift+E`、`Ctrl+Shift+R` 或 `SetAlign` 会让光标所在单元格的整列对齐 |
+
+**图片存放在哪里由你决定。** 编辑器从不上传任何内容。当用户选择、粘贴或拖入图片时，它会触发 `ImageSourceRequested`，携带文件名、媒体类型和字节（`OpenReadAsync`、`ReadAllBytesAsync`）。已知地址时用 `Source` 回答，上传进行中时用 `SourceTask` 回答；任务完成后编辑器才插入图片，任务失败或返回 null 则不插入。设置 `Cancel` 可拒绝该图片。没有处理程序时，图片会以 `data:` 地址嵌入，文档自包含但体积较大。
+
+```csharp
+editor.ImageSourceRequested += (_, e) =>
+{
+    e.SourceTask = UploadAsync(e.FileName, e.ContentType, e.OpenReadAsync());   // 返回 CDN 地址
+};
+```
+
+**图片如何加载也可以由你决定。** 编辑器需要某个地址的像素时会触发 `ImageLoading`。设置 `Bitmap` 或 `StreamTask` 即可自行加载，例如来自需要令牌的存储或自定义协议；没有回答时，编辑器会读取 `data:`、http(s)、`avares:` 和本地文件地址。`ReloadImages()` 会清除已加载的内容。
+
+- **地址会被检查。** 内容加载和插入图片时，脚本协议以及非位图的 `data:` 地址会被拒绝；自定义协议（`app://files/1`）可以通过。
+- **图片会缩小到编辑器宽度**并保持比例。图片加载中或加载失败时，会显示同宽的占位。
+- **单元格只保存行内文字**：标记、链接和换行（Shift+Enter），不含列表或嵌套块。导入的这类内容会被压平成多行。较短的行会被补齐。
+- **合并单元格**可跨越多行多列，被合并的文字会连成多行。HTML 以 `colspan` 和 `rowspan` 保存；Markdown 没有合并单元格，会把被覆盖的单元格写成空的，合并必须保留时请保存 `Html`。Tab 会跳过被覆盖的单元格，Enter 会移到合并单元格的下方。
+- **列宽是比例**：表格始终占满编辑器宽度，没有设置宽度的列平分其余列留下的空间（每列至少 48 px）。HTML 以 `<col width>` 保存列宽、以 `data-bg` 保存单元格颜色，并把表头单元格写成 `th`；第一行没有 `th` 单元格的 `table` 读入后没有表头行。Markdown 不保留这些设置，其表格总有表头行。
+- **选中的矩形单元格**以整块显示。删除或输入会清空这些单元格，不会合并它们；粘贴会从第一个单元格开始填充，并跳过被覆盖的单元格。从表格第一个字符选到最后一个字符，或选区超出表格时，仍会删除整个表格。
+- **合并单元格会把它跨越的行或列连在一起**：如果有合并单元格跨过某一行，或跨过它要移到的位置，这一行就不能移动；列也一样。无论哪一行移到最上面，第一行始终是表头行。
+
+### 块手柄
+
+在 `Docs` 配置下，鼠标悬停在某个块上时，其左侧的边栏会出现两个按钮。拖动手柄（⋮⋮）可把块移到新位置：一条线指示落点，列表项会带着嵌套项一起移动，表格则整体移动。点击手柄会打开块菜单，可把块转为其他类型（文本、标题、列表、待办、引用、代码），或复制、删除。加号按钮会在下方添加一个空段落，并在那里打开块菜单。键盘上，`Ctrl+Shift+上箭头` 和 `Ctrl+Shift+下箭头` 移动插入点所在的块。每次移动都是一个撤销步骤。
+
+在 `IsReadOnly` 模式和 `Arc` 配置下不显示手柄，文字与编辑器边缘齐平。边栏是书写面左侧 56 px 的外边距。
+
+### 查找与替换
+
+`Ctrl+F` 会在编辑器右上角打开查找栏，并填入当前选中的文字（限一行之内的片段）。输入时所有匹配项都会高亮，选区处或之后的第一个匹配项会被选中；`Enter` 和 `Shift+Enter`（或 `F3` 和 `Shift+F3`）在其余匹配项之间跳转，查找栏会显示当前位置（如“2 of 5”）。`Ctrl+H` 或查找栏上的替换按钮会展开替换行：在其中按 `Enter` 会替换当前匹配项并跳到下一个，“全部替换”会把所有匹配项作为一步撤销一起替换。`Escape` 关闭查找栏并回到正文，最后一个匹配项保持选中。
+
+- **匹配不跨块。** 段落、列表项、表格单元格和代码块各自单独搜索，所以被拆在两个块里的短语找不到。
+- **替换后的文字沿用被替换文字的样式**：即匹配项第一个字符的标记、颜色和链接。
+- **大小写。** 默认不区分大小写，打开“Match case”后才区分。
+- **在代码中使用**：`OpenFind(replace)`、`CloseFind()`、`IsFindOpen`、`CountMatches(text, matchCase)` 和 `ReplaceAll(text, replacement, matchCase)`，后者返回替换的数量。只读编辑器可以查找，但不会替换。
 
 ### 占位文字与块提示
 
@@ -132,14 +224,14 @@ if (!editor.TrySetMarkdown(fileText, out var report))
 
 | 报告为损失 | 原因 |
 |---|---|
-| 4 到 6 级标题 | 编辑器只有三级标题，它们会变成三级标题 |
+| 4 到 6 级标题（`Arc` 配置） | `Arc` 配置只有三级标题，它们会变成三级标题 |
 | 代码围栏的信息串 | 编辑器不保存代码块的语言 |
 | 波浪线围栏 | 编辑器只识别反引号围栏 |
-| 表格 | 编辑器没有表格块，单元格会合并为一个段落 |
+| 表格 | `Docs` 配置会保存；`Arc` 配置下单元格会合并为一个段落 |
 | setext 标题 | 编辑器只识别 `#` 标题 |
 | 缩进代码 | 编辑器只识别围栏代码 |
 | 起始编号大于 1 的列表 | 编辑器从 1 开始编号 |
-| 硬换行、块级 HTML、图片、引用式链接、脚注、反斜杠转义 | 编辑器把源文本保留为文字 |
+| 硬换行、块级 HTML、行内文字中的图片（`Arc` 配置下的所有图片）、引用式链接、脚注、反斜杠转义 | 编辑器把源文本保留为文字 |
 
 用其他写法表示的标记会报告为 `RichTextImportSeverity.Normalized`，不阻止导入：`*` 与 `+` 项目符号、`1)` 编号、`__粗体__`、`*斜体*` 和 `***` 分隔线会分别写回为 `-`、`1.`、`**`、`_` 和 `---`。支持的子集内的内容不会产生任何问题。宽松路径保持不变：`Markdown`、`SetMarkdown` 与形似 Markdown 的粘贴文本仍按原来的方式转换，只有主动调用 `TrySetMarkdown` 的调用方会经过这道门。
 
@@ -287,14 +379,14 @@ Editor.ContentChanged += (_, args) => vm.HasContent = !args.Value.IsEmpty;
 **避免**
 
 - 保存来自其他编辑器的 HTML 并期望其样式得以保留。加载器只保留编辑器的子集，未知标签与行内样式会被丢弃，版式随之改变。
-- 用编辑器处理图片、表格或带下划线的文字。编辑器无法保存它们，下次保存时内容会丢失。
+- 在 `Arc` 配置下使用图片和表格。只有 `Docs` 配置会保存它们，下次保存时内容会丢失。
 - 在长文档中每次按键都读取 `GetHtml()`。每次按键时的序列化比编辑本身更耗时。
 - 通过在每次变化时赋值 `Markdown` 来替换正在编辑的文档。请使用 `SetMarkdown()` 或 `Clear()`，它们各占一个撤销步骤，用户可以撤销这次替换。
 - 期望屏幕阅读器用户按字符、词或行浏览文字。辅助技术会把整个文档当作一个值读取，因此文字较长时应提供 `GetText()` 的输出供审阅。
 
 ### 常见问题
 
-**为什么 Ctrl+U（macOS 上为 Cmd+U）没有任何作用？** 下划线不属于编辑器的子集。该按键会被吞掉，因此文字不会改变，而 Markdown 输出中也没有下划线语法。
+**为什么 Ctrl+U（macOS 上为 Cmd+U）没有任何作用？** 在默认的 `Arc` 配置下，下划线不属于编辑器的子集。该按键会被吞掉，因此文字不会改变，而 Markdown 输出中也没有下划线语法。设置 `Profile="Docs"` 后，`Ctrl+U` 会为选区加下划线。
 
 **如何在代码中添加或修改链接？** 调用 `SetLink(url)` 为选区或插入符处的链接设置链接。传入 `null` 或空字符串可以移除链接。`EditLink()` 打开与工具栏相同的链接字段，作用于选区或插入符处的链接。键盘上的 Ctrl+K（macOS 上为 Cmd+K）效果相同。
 
@@ -325,6 +417,11 @@ Editor.ContentChanged += (_, args) => vm.HasContent = !args.Value.IsEmpty;
 | `Ctrl+Shift+X` | 切换删除线 |
 | `Ctrl+E` | 切换行内代码，限于一个块内 |
 | `Ctrl+K` | 为选区或插入符处的链接打开链接字段；`Enter` 应用，`Escape` 关闭 |
+| `Ctrl+F`、`Ctrl+H` | 打开查找栏，或打开带替换行的查找栏 |
+| `F3`、`Shift+F3` | 查找栏打开时跳到下一个、上一个匹配项（在搜索框中为 `Enter` 和 `Shift+Enter`） |
+| `Ctrl+U` | 切换下划线（`Docs` 配置） |
+| `Ctrl+.`、`Ctrl+,` | 切换上标、下标（`Docs` 配置） |
+| `Ctrl+Shift+L`、`Ctrl+Shift+E`、`Ctrl+Shift+R` | 左对齐、居中、右对齐（`Docs` 配置） |
 | `Ctrl+Z`、`Ctrl+Shift+Z`（或 `Ctrl+Y`） | 撤销、重做 |
 | `Ctrl+A` | 全选 |
 | `Enter` | 新建块；在空的列表项或引用上离开列表；在代码块末尾连按两次则离开代码 |
@@ -334,7 +431,7 @@ Editor.ContentChanged += (_, args) => vm.HasContent = !args.Value.IsEmpty;
 | 行首或空格之后的 `/` | 打开块菜单；输入即可筛选，`Up` 与 `Down` 移动，`Enter` 或 `Tab` 选择，`Escape` 关闭 |
 | `Alt+F10` | 将焦点移入浮动工具栏；`Left` 与 `Right` 在其按钮之间移动，`Escape` 返回文字 |
 
-Ctrl 在 macOS 上为 Command，在其他平台上为 Control。单词移动遵循平台的文本导航（macOS 上为 Option，其他平台为 Control）。`Ctrl+U` 会被吞掉，因为不支持下划线。
+Ctrl 在 macOS 上为 Command，在其他平台上为 Control。单词移动遵循平台的文本导航（macOS 上为 Option，其他平台为 Control）。在 `Arc` 配置下 `Ctrl+U` 会被吞掉，因为该配置不支持下划线；`Docs` 配置则用它加下划线。
 
 ## 动效
 

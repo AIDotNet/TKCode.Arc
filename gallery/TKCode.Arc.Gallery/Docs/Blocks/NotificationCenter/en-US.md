@@ -28,7 +28,7 @@ has passed: a toast disappears, while the notification stays until the person re
 - **A confirmation that needs no follow-up**, such as "Invoice saved": use `Toast`, which goes away by itself.
 - **A problem on the current page that people must fix now**, such as a failed payment on a checkout form: use
   `Alert` where the problem is, so it stays visible until the page is corrected.
-- **A searchable, filterable history of events**, such as an audit log: use `SortableDataTable` on a page. Use
+- **A searchable, filterable history of events**, such as an audit log: use `Table` on a page. Use
   `Timeline` for the ordered events of one record.
 - **A conversation with replies**: use `ChatThread`, which has a composer and a reply flow. The panel offers only
   "Mark read", "Mark unread" and "Dismiss" on an update.

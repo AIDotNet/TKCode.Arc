@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MarketTerminalOrderApiDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:MarketTerminal x:Name="Terminal" Ticker="KLVN" Range="FiveDays" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Text="Orders go through a pretend broker that answers in 0.8 seconds and turns down every third order." />
+    </StackPanel>
+</UserControl>

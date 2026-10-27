@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ProfilePageReadOnlyDemo">
+    <!-- Someone else's profile: no Edit profile, Projects first; Share still copies the link. -->
+    <arc:ProfilePage x:Name="Page" Margin="0,12" IsEditable="False" Tab="Projects" PageHeight="640" />
+</UserControl>

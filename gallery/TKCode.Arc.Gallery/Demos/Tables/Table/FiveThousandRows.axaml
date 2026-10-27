@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TableFiveThousandRowsDemo">
+    <arc:Table x:Name="Table"
+                           IsSelectable="True"
+                           IsSortClearable="True"
+                           MaxHeight="420"
+                           ItemNameOne="workstream"
+                           ItemNameOther="workstreams" />
+</UserControl>

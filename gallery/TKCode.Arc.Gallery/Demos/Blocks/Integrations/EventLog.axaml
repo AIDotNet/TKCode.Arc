@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IntegrationsEventLogDemo">
+    <!-- Flat on the page, with the filter and search bound to the controls beside it and every event written below. -->
+    <StackPanel Spacing="16" Margin="0,12">
+        <WrapPanel ItemSpacing="12" LineSpacing="8" HorizontalAlignment="Center">
+            <TextBlock VerticalAlignment="Center" Text="{Binding #Directory.ConnectedCount, StringFormat='{}{0} connected'}" />
+            <TextBlock VerticalAlignment="Center" Text="{Binding #Directory.VisibleCount, StringFormat='{}{0} shown'}" />
+            <arc:Button Content="Show connected" Variant="Secondary" Size="Small" Click="OnShowConnected" />
+            <arc:Button Content="Connect all" Variant="Secondary" Size="Small" Click="OnConnectAll" />
+        </WrapPanel>
+        <arc:Integrations x:Name="Directory"
+                          IsFramed="False"
+                          Title="Connected apps"
+                          Subtitle="Every event of the block is written below." />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Text="Search, filter, connect or change a sync frequency." />
+    </StackPanel>
+</UserControl>

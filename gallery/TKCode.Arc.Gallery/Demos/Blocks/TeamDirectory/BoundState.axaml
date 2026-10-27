@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamDirectoryBoundStateDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:TeamDirectory x:Name="Directory" />
+        <WrapPanel HorizontalAlignment="Center">
+            <arc:Button x:Name="ShowFiona" Variant="Secondary" Size="Small" Content="Show Fiona" Margin="4" />
+            <arc:Button x:Name="ShowEngineering" Variant="Secondary" Size="Small" Content="Engineering only" Margin="4" />
+            <arc:Button x:Name="SearchMunich" Variant="Secondary" Size="Small" Content="Search &quot;munich&quot;" Margin="4" />
+            <arc:Button x:Name="Reset" Variant="Ghost" Size="Small" Content="Clear filters" Margin="4" />
+        </WrapPanel>
+        <TextBlock x:Name="State" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+        <ItemsControl x:Name="Log" HorizontalAlignment="Center" />
+    </StackPanel>
+</UserControl>

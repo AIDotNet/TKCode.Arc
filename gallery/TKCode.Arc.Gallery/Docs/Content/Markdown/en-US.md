@@ -32,7 +32,7 @@ text in a panel, a chat bubble or a document view looks like the rest of the app
   content and has no scrollbar of its own. For long conversations, use the transcript view of the StreamMark library.
 - **Editing Markdown source in place**: use `Textarea`, which holds the raw text, wraps it and lets the person edit it.
   `Markdown` shows the rendered result only.
-- **Structured records such as a table of invoices**: use `SortableDataTable` from the Tables group, which sorts and
+- **Structured records such as a table of invoices**: use `Table` from the Tables group, which sorts and
   keeps the columns aligned as the rows change. A Markdown table is read-only and has no sorting.
 - **Math, diagrams or other embedded formats**: `Markdown` renders text, code and tables. Add StreamMark's math or
   diagram plugins to your own `MarkdownServices` when you need them, instead of pasting images into the text.
@@ -339,4 +339,4 @@ The `MarkdownHighlightPlugin` constructor takes the language names to prewarm, s
 |---|---|
 | `CodeBlock` | One code sample with its own copy action |
 | `Textarea` | The person edits multi-line text, and the raw source is what matters |
-| `SortableDataTable` | The records must be sorted, such as a table of invoices |
+| `Table` | The records must be sorted, such as a table of invoices |

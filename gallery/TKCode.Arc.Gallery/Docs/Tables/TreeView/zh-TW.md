@@ -1,7 +1,7 @@
 ---
 title: 樹狀檢視
 summary: 瀏覽巢狀的資料夾與結構化內容。
-source-hash: 0943bca6a572
+source-hash: 3a486b8c5441
 ---
 
 <Demo name="FileTree" />
@@ -22,7 +22,7 @@ source-hash: 0943bca6a572
 - **頁面階層中的目前位置**：用 `Breadcrumb`，它顯示路徑並可返回上層。
 - **一份 JSON 文件的鍵與值**：用 `JsonViewer`，它在鍵旁顯示值，並支援搜尋和複製。
 - **使用者會重新排序的扁平清單**：用 `ReorderableList`。樹的同層節點之間沒有拖曳排序。
-- **使用者依欄位比較、欄位相同的紀錄**：用 `SortableDataTable`。樹每個節點只顯示一個標籤，沒有欄位。
+- **使用者依欄位比較、欄位相同的紀錄**：用 `Table`。樹每個節點只顯示一個標籤，沒有欄位。
 
 ## 用法
 
@@ -244,7 +244,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 **避免**
 
 - 用樹來顯示幾段文章：`Accordion` 的閱讀體驗更好，也不需要鍵盤模型。
-- 把大小和日期等資料欄位放進標籤中。紀錄請使用 `SortableDataTable`。
+- 把大小和日期等資料欄位放進標籤中。紀錄請使用 `Table`。
 - 期望多選。樹只有一個 `SelectedItem`，修飾鍵也不會選取一個範圍。
 - 預設展開過多層級。同時展開的深層資料夾會使結構難以掃視。
 - 每次按鍵都從資料的新副本重建樹。應在明確的操作後重新整理。
@@ -255,7 +255,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 
 **如何將樹開啟到某個特定檔案？** 將 `SelectedItem` 設為該節點。樹會展開其上層節點並將該列捲動到可見位置。若只想顯示節點而不選取它，請使用 `ScrollIntoView`。
 
-**樹能選取多個節點嗎？** 不能。`SelectedItem` 只保存一個節點，鍵盤會忽略 Control、Alt 和 Meta 等修飾鍵。當使用者必須選取多筆紀錄時，請使用設定了 `IsSelectable` 的 `SortableDataTable`。
+**樹能選取多個節點嗎？** 不能。`SelectedItem` 只保存一個節點，鍵盤會忽略 Control、Alt 和 Meta 等修飾鍵。當使用者必須選取多筆紀錄時，請使用設定了 `IsSelectable` 的 `Table`。
 
 **樹會對節點排序嗎？** 不會。它依你提供的順序顯示節點，因此繫結前請先對來源資料排序。
 
@@ -321,5 +321,5 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 | `Breadcrumb` | 頁面需顯示其在階層中的位置，並可返回上層 |
 | `JsonViewer` | 巢狀資料是使用者需要檢視和複製的一份文件 |
 | `CodeBlock` | 所選檔案的原始碼需與樹並排顯示 |
-| `SortableDataTable` | 紀錄的欄位相同，使用者需要依欄位比較 |
+| `Table` | 紀錄的欄位相同，使用者需要依欄位比較 |
 | `ReorderableList` | 使用者透過拖曳對扁平清單排序 |

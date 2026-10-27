@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueExplorerPreviewDemo">
+    <!-- Two years of invented subscription revenue; the newest twelve months show. Data: RevenueExplorerDemoData. -->
+    <arc:RevenueExplorer x:Name="Revenue" Title="Subscription revenue" />
+</UserControl>

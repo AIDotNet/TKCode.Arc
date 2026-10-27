@@ -24,7 +24,7 @@ public class GalleryMobileTests
         Mobile.Entries.Select(e => e.ClassName).ShouldBe(MobileCatalog.Components.Select(c => c.ClassName));
         Mobile.Entries.Select(e => e.ClassName).ShouldBe(["MobilePage", "MobileNavbar", "MobileToolbar", "MobileTabbar", "MobileNavigationStack", "MobileListGroup", "MobilePullToRefresh", "MobileDialog", "MobileToast", "MobileSheet", "MobileActionSheet", "MobileButton", "MobileSwitch", "MobileTextField", "MobileSearchbar", "MobileCheckbox", "MobileRadio", "MobileIconButton", "MobileSegmented"]);
         Mobile.Entries.ShouldAllBe(e => !e.IsArc && e.ArcUrl == null);
-        GalleryCatalog.Count.ShouldBe(111);
+        GalleryCatalog.Count.ShouldBe(112);
         GalleryCatalog.AllCategories.ShouldNotContain(Mobile);
         GalleryCatalog.AllEntries.Select(e => e.ClassName).ShouldBeUnique();
         // The desktop Button and Switch keep their own entries: the mobile ones carry a prefix.

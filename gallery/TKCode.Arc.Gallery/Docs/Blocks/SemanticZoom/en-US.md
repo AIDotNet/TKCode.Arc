@@ -31,7 +31,7 @@ where you are while you fly.
 - **Browsing a deep hierarchy item by item.** Use `TreeView`; it shows any depth as rows and is faster to scan than a map.
 - **Working through tasks.** Use a board or a task list; the map is for orientation, not for moving work.
 - **Flat data clustered by an attribute.** Use `CustomerGalaxy`; semantic zoom needs a hierarchy of containers.
-- **Exact comparisons across many projects.** Use `DataGrid` or `SortableDataTable`; the map shows one node's numbers at a
+- **Exact comparisons across many projects.** Use `DataGrid` or `Table`; the map shows one node's numbers at a
   time.
 - **A small card or a sidebar.** The map needs at least 400 px of height and room around it for the page to scroll (the
   wheel always zooms the map).
@@ -233,7 +233,7 @@ percentages ("59%") come from `Formatter` (`ISemanticZoomFormatter`; `SemanticZo
 
 - `TreeView` for browsing any hierarchy as rows.
 - `CustomerGalaxy` for flat data grouped into clusters by an attribute.
-- `DataGrid` and `SortableDataTable` for comparing projects side by side.
+- `DataGrid` and `Table` for comparing projects side by side.
 - `Breadcrumb` for a path outside a map.
 
 | Component | Choose it when |

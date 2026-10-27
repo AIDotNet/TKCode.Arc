@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BudgetVarianceToleranceDemo">
+    <!-- The quarter first, every department closed, a tighter 95 to 105% band and a wider on-plan threshold. -->
+    <arc:BudgetVariance x:Name="Budget"
+                        Margin="0,12"
+                        Title="Operating budget"
+                        SelectedPeriod="quarter"
+                        RangeLow="0.95"
+                        RangeHigh="1.05"
+                        OnPlanThreshold="0.01" />
+</UserControl>

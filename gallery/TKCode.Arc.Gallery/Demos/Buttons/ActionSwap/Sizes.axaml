@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionSwapSizesDemo">
+    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <arc:ActionSwap Size="Small">
+            <arc:ActionSwap.States>
+                <arc:ActionSwapState Id="save" Label="Save" Icon="{x:Static arc:ArcIcons.Bookmark}" />
+                <arc:ActionSwapState Id="saved" Label="Saved" Icon="{x:Static arc:ArcIcons.Check}" Tone="Quiet" />
+            </arc:ActionSwap.States>
+        </arc:ActionSwap>
+        <arc:ActionSwap Size="Medium">
+            <arc:ActionSwap.States>
+                <arc:ActionSwapState Id="save" Label="Save" Icon="{x:Static arc:ArcIcons.Bookmark}" />
+                <arc:ActionSwapState Id="saved" Label="Saved" Icon="{x:Static arc:ArcIcons.Check}" Tone="Quiet" />
+            </arc:ActionSwap.States>
+        </arc:ActionSwap>
+        <arc:ActionSwap Size="Large">
+            <arc:ActionSwap.States>
+                <arc:ActionSwapState Id="save" Label="Save" Icon="{x:Static arc:ArcIcons.Bookmark}" />
+                <arc:ActionSwapState Id="saved" Label="Saved" Icon="{x:Static arc:ArcIcons.Check}" Tone="Quiet" />
+            </arc:ActionSwap.States>
+        </arc:ActionSwap>
+    </StackPanel>
+</UserControl>

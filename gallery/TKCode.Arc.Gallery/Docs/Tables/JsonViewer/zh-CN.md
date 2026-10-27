@@ -1,7 +1,7 @@
 ---
 title: JSON 查看器
 summary: 可折叠的 JSON 树，支持搜索、长数组分页，以及复制值或路径。
-source-hash: 8f6dd4e939e6
+source-hash: 99a6f9248630
 ---
 
 <Demo name="WebhookPayload" />
@@ -20,7 +20,7 @@ source-hash: 8f6dd4e939e6
 
 - **把整个文档当作可复制的源代码**，例如 README 中的片段或客服回复：用 `CodeBlock`，它把文本显示为一个代码块，并提供一个复制操作。
 - **人们需要选择的嵌套分类**，例如文件夹、文件或组织架构图：用 `TreeView`，它为选择而设计，且不解析 JSON。
-- **结构相同的表格记录**，例如人们按列排序和筛选的发票列表：用 `SortableDataTable`。JSON 树展示结构，表格用于比较行。
+- **结构相同的表格记录**，例如人们按列排序和筛选的发票列表：用 `Table`。JSON 树展示结构，表格用于比较行。
 - **不是 JSON 的值**，例如任意 .NET 对象：先把它们转换为 `JsonNode` 或 `JsonElement`。查看器只读取 System.Text.Json 数据。
 - **编辑文档**：查看器是只读的。当人们需要修改文本时，使用 `Textarea` 或 `RichTextEditor`。
 
@@ -352,12 +352,12 @@ viewer.Copied += (_, e) => vm.Status = $"已复制{(e.Kind == JsonViewerCopyKind
 
 - `CodeBlock` 把整个 JSON 显示为可复制的源代码，提供一个复制操作。
 - `TreeView` 用于人们选择而非检查的嵌套记录。
-- `SortableDataTable` 用于人们按列排序和筛选的同一结构记录。
+- `Table` 用于人们按列排序和筛选的同一结构记录。
 - `CopyButton` 在树之外复制单个值。
 
 | 组件 | 适用场景 |
 |---|---|
 | `CodeBlock` | JSON 是人们以文本形式复制的代码片段，例如示例请求 |
 | `TreeView` | 嵌套项是人们选择的文件夹、文件或分类 |
-| `SortableDataTable` | 记录结构相同，人们按列比较它们 |
+| `Table` | 记录结构相同，人们按列比较它们 |
 | `CopyButton` | 需要在旁边提供复制操作的单个值，例如 ID 或键 |

@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.JourneyFlowLiveDemo">
+    <!-- Changing the counts of the shown segment morphs the chart, the labels and the panel in place. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:Button x:Name="NextWeek" Content="Next week" Size="Small" Variant="Secondary" HorizontalAlignment="Left" />
+        <arc:JourneyFlow x:Name="Journey"
+                         Title="Trial to paid, this week"
+                         SubtitleFormat="{}{0} visits this week"
+                         GoalCaption="of visitors picked a paid plan"
+                         CountFormat="{}{0} learners" />
+    </StackPanel>
+</UserControl>

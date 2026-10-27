@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionSwapFailureDemo">
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:ActionSwap x:Name="Publish" FailureLabel="Try again" HorizontalAlignment="Center">
+            <arc:ActionSwap.States>
+                <arc:ActionSwapState Id="draft" Label="Publish" Icon="{x:Static arc:ArcIcons.Send}" />
+                <arc:ActionSwapState Id="live" Label="Published" Icon="{x:Static arc:ArcIcons.Check}" Tone="Success"
+                                     PendingLabel="Publishing" HoldFor="0:0:2" />
+            </arc:ActionSwap.States>
+        </arc:ActionSwap>
+        <TextBlock x:Name="Message"
+                   FontSize="13"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

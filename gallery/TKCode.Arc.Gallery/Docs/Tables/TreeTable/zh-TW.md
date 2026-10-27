@@ -1,7 +1,7 @@
 ---
 title: 樹狀表格
 summary: 帶巢狀列、三態選取、保持階層的排序，以及按需載入子列的表格。
-source-hash: e68b6051b4a0
+source-hash: ee6c67ae7e45
 ---
 
 <Demo name="Budget" />
@@ -19,7 +19,7 @@ source-hash: e68b6051b4a0
 ## 何時不用
 
 - **沒有欄位的導覽樹**：用 `TreeView`，它每個節點只繪製一個標籤，並能虛擬化數千列。
-- **依欄位比較的扁平紀錄**：用 `SortableDataTable`。在沒有巢狀時，樹狀表格為第一欄增加縮排和箭頭並沒有任何好處。
+- **依欄位比較的扁平紀錄**：用 `Table`。在沒有巢狀時，樹狀表格為第一欄增加縮排和箭頭並沒有任何好處。
 - **逐個儲存格編輯的試算表**：用 `DataGrid`，它支援範圍選取和就地編輯。
 - **展開後是自由格式內容的項目**：用 `Accordion`。樹狀表格展開後得到的是更多具有相同欄位的列。
 - **同時展開幾千列**：每一個可見的列都真實存在並帶有動畫。展開的樹請保持在幾百列以內，更深的層級按需載入。
@@ -160,7 +160,7 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 
 **為什麼父列無法展開？** 當選擇器至少傳回一個子列，或者 `HasChildrenSelector` 為 true 且設定了 `ChildrenLoader` 時，列才可以展開。空清單表示葉節點。
 
-**欄位可以把樹排成平鋪嗎？** 不可以。排序只對每個父列內部的同層列排序，階層永遠不會被破壞。平鋪清單請使用 `SortableDataTable`。
+**欄位可以把樹排成平鋪嗎？** 不可以。排序只對每個父列內部的同層列排序，階層永遠不會被破壞。平鋪清單請使用 `Table`。
 
 **為什麼重新載入資料後展開狀態遺失了？** `ExpandedKeys` 儲存的是索引鍵。如果 `KeySelector` 每次載入都傳回新值，列就對不上了。請使用重新載入後依然不變的 id。
 
@@ -222,13 +222,13 @@ table.ChildrenLoader = async item => await api.GetChildrenAsync(((Account)item).
 ## 相關元件
 
 - `TreeView`：沒有欄位的導覽樹。
-- `SortableDataTable`：帶可排序欄位的扁平紀錄。
+- `Table`：帶可排序欄位的扁平紀錄。
 - `DataGrid`：支援範圍選取和就地編輯的試算表式格線。
 - `Checkbox`：每一列選取背後的二元控制項。
 
 | 元件 | 何時選擇 |
 |---|---|
 | `TreeView` | 階層是導覽，每個節點只有一個標籤 |
-| `SortableDataTable` | 紀錄是扁平的，並依欄位比較 |
+| `Table` | 紀錄是扁平的，並依欄位比較 |
 | `DataGrid` | 使用者要編輯儲存格並選取範圍 |
 | `Accordion` | 少量區塊展開後是自由格式的內容 |

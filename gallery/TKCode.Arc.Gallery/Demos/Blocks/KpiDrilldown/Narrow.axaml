@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KpiDrilldownNarrowDemo">
+    <!-- The layout follows the block's own width: 3 columns from 760, 2 from 520, one column with an icon-only Compare below. -->
+    <Border Width="400" HorizontalAlignment="Left">
+        <arc:KpiDrilldown x:Name="Block" Title="Studio pulse" />
+    </Border>
+</UserControl>

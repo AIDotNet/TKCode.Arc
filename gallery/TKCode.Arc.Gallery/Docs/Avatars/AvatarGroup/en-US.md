@@ -26,10 +26,10 @@ names or the list the group summarizes.
 ## When not to use
 
 - **One person**: use `Avatar`, which carries the name and the status of a single person.
-- **A list where each person's name and role must be read or compared**: use `SortableDataTable` or a plain list.
+- **A list where each person's name and role must be read or compared**: use `Table` or a plain list.
 - **A person's account actions** such as sign out or switch workspace: use `UserMenu`.
 - **Choosing several people from a directory**: use `MultiSelect`, which searches and selects. A group only shows people.
-- **Each person needs an action of their own**, such as Remove or Message: use `SortableDataTable`, where each row can
+- **Each person needs an action of their own**, such as Remove or Message: use `Table`, where each row can
   hold its own controls. The group is not focusable and has no per-person actions.
 
 ## Usage
@@ -327,13 +327,13 @@ table or form that the group summarizes, where each person can be focused and ac
 
 - `Avatar` for one person.
 - `UserMenu` when the group member's avatar opens account actions.
-- `SortableDataTable` when names, roles and other columns must be compared.
+- `Table` when names, roles and other columns must be compared.
 
 | Component | Choose it when |
 |---|---|
 | `Avatar` | One person is shown next to a name, a comment or a record |
 | `UserMenu` | An avatar opens sign out, profile or workspace actions |
-| `SortableDataTable` | Names, roles and other columns must be read and compared |
+| `Table` | Names, roles and other columns must be read and compared |
 | `MultiSelect` | People are searched and selected from a directory |
 | `Badge` | The label is a status or category rather than a set of people |
 | `ChatThread` | The people are the authors of a conversation |

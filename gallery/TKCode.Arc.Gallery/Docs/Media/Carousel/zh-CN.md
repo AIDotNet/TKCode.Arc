@@ -1,7 +1,7 @@
 ---
 title: 轮播
 summary: 通过拖动、轻扫或方向键浏览一排幻灯片。
-source-hash: 58a2880480f8
+source-hash: 4a960604b2d2
 ---
 
 <Demo name="Slides" />
@@ -19,7 +19,7 @@ source-hash: 58a2880480f8
 
 - **需要逐项做出决定**：用 `CardStack`，它会对每张卡片要求保留或跳过，并记录下来。
 - **比较两张图片**：用 `ImageCompare`，它把前后对比放在同一画面上，并以分隔线区分。
-- **需要扫读或排序的长记录列表**：用 `SortableDataTable`。轮播一次只显示一张幻灯片，读者无法跨行比较字段。
+- **需要扫读或排序的长记录列表**：用 `Table`。轮播一次只显示一张幻灯片，读者无法跨行比较字段。
 - **必须完整阅读的文字，例如条款、说明或清单**：用 `Accordion` 或 `ExpandableText`。幻灯片会自行切换，把读者尚未读到的文字隐藏起来。
 - **在内容各不相同的面板之间切换**：用 `Tabs`。轮播意味着幻灯片是同一类的同级条目，而标签页则代表不同的分区。
 - **用户不能错过的消息，例如账单警告或服务中断**：用 `Alert` 或 `AnnouncementBar`。自动播放会把消息移走，轮播并不适合承载这类内容。
@@ -348,4 +348,4 @@ carousel.SlideLabelFormatter = (index, count) => $"档案照片 {index + 1}，�
 | `Tabs` | 这一排在内容不同的分区之间切换 |
 | `Accordion` / `ExpandableText` | 读者必须按顺序完整阅读内容 |
 | `Alert` / `AnnouncementBar` | 消息必须保持可见直到用户阅读 |
-| `SortableDataTable` | 读者扫读、排序或比较大量记录 |
+| `Table` | 读者扫读、排序或比较大量记录 |

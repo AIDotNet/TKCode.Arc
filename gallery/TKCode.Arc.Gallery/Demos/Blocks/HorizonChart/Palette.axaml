@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HorizonChartPaletteDemo">
+    <!--
+        Your own colours for the two sides, four bands, the switches hidden so the state comes from the page: here the
+        buttons drive Sort and Bands, and the chart is read by the pointer, touch or the keyboard as usual.
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="ByName" Variant="Secondary" Size="Small" Content="By name" />
+            <arc:Button x:Name="ByPeak" Variant="Secondary" Size="Small" Content="By peak" />
+            <arc:Button x:Name="OneBand" Variant="Secondary" Size="Small" Content="One band" />
+            <arc:Button x:Name="FourBands" Variant="Secondary" Size="Small" Content="Four bands" />
+        </StackPanel>
+        <arc:HorizonChart x:Name="Chart"
+                          Title="Orders against forecast"
+                          BaselineLabel="winter forecast"
+                          Bands="4"
+                          IsSortSwitchVisible="False"
+                          IsBandSwitchVisible="False" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UptimeStatusPreviewDemo">
+    <!-- Four services, five past incidents and a button that walks an incident on Events through start, resolution and reset. Data: UptimeStatusDemoData. -->
+    <arc:UptimeStatus x:Name="Status" PageName="Larkspur status">
+        <arc:UptimeStatus.ActionContent>
+            <arc:Button x:Name="Simulate" Variant="Secondary" Size="Small" Content="Simulate incident" />
+        </arc:UptimeStatus.ActionContent>
+    </arc:UptimeStatus>
+</UserControl>

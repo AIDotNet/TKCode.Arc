@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChoroplethExplorerEventsDemo">
+    <!-- The zoom, the metric and the pins are two-way properties; the events report what the person did. -->
+    <StackPanel Spacing="16">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Open California" Variant="Secondary" Size="Small" Click="OnOpenCalifornia" />
+            <arc:Button Content="Open Florida" Variant="Secondary" Size="Small" Click="OnOpenFlorida" />
+            <arc:Button Content="Zoom out" Variant="Ghost" Size="Small" Click="OnZoomOut" />
+        </StackPanel>
+        <arc:ChoroplethExplorer x:Name="Explorer"
+                                Description="Fiscal year ending March 31, 2027"
+                                RegionOpened="OnRegionOpened"
+                                MetricChanged="OnMetricChanged"
+                                SubregionPinned="OnSubregionPinned" />
+        <StackPanel Spacing="4">
+            <TextBlock FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="{Binding #Explorer.OpenRegionKey, StringFormat='OpenRegionKey: {0}', TargetNullValue='OpenRegionKey: none'}" />
+            <TextBlock x:Name="Log" FontSize="13" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

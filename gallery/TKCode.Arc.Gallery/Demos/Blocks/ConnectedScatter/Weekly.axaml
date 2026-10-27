@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectedScatterWeeklyDemo">
+    <!--
+        Nothing is tied to dollars or months: weeks, euros and a 2.5x target with its own formats and words. Month names that
+        are not "Jan 2025" style get about six evenly spaced labels under the scrubber.
+    -->
+    <arc:ConnectedScatter x:Name="Scatter"
+                          Title="Paid social: spend and revenue"
+                          MonthName="Week"
+                          TargetRatio="2.5"
+                          PlayOnFirstAppear="False"
+                          AboveTargetFormat="{}Paying back above {0}"
+                          BelowTargetFormat="{}Under the {0} goal"
+                          ZoneLabelFormat="{}On target, above {0}"
+                          TargetLegendFormat="{}Revenue = {0} spend"
+                          TargetLabelFormat="{}{0} spend"
+                          ZoneLegendText="On target"
+                          PlayText="Run" />
+</UserControl>

@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HorizonChartEventsDemo">
+    <!--
+        Sort, Bands and SelectedDayIndex are two-way properties and every change is an event. Here buttons set the crosshair
+        and the band count from outside, and the log shows what the block reports (pointer, touch and keys included).
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="FirstDay" Variant="Secondary" Size="Small" Content="Go to the first day" />
+            <arc:Button x:Name="LastWeek" Variant="Secondary" Size="Small" Content="Go to the last week" />
+            <arc:Button x:Name="Clear" Variant="Secondary" Size="Small" Content="Clear the crosshair" />
+        </StackPanel>
+        <arc:HorizonChart x:Name="Chart"
+                          Title="Orders against forecast"
+                          BaselineLabel="winter forecast" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InvitePeopleEventLogDemo">
+    <!-- The seat count and the over-limit flag are bound; every event the block raises is written to the log. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:InvitePeople x:Name="Block" />
+        <TextBlock HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="{Binding #Block.SeatsUsed, StringFormat='Seats used: {0}'}" />
+        <TextBlock HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="{Binding #Block.IsOverLimit, StringFormat='Over the limit: {0}'}" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Add people, change a role, send, resend or revoke: the latest events show here." />
+    </StackPanel>
+</UserControl>

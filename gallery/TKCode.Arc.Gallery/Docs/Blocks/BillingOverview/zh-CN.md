@@ -1,7 +1,7 @@
 ---
 title: 账单概览
 summary: 在一页中展示当前套餐、下次扣款、付款方式和发票记录，每项旁边都有对应的操作。
-source-hash: 79d1bdc4cda1
+source-hash: f2c9dc50b8bb
 ---
 
 <Demo name="Overview" />
@@ -21,7 +21,7 @@ source-hash: 79d1bdc4cda1
 - **本期总额取决于计量用量的按量计费**：使用 `UsageBilling`，它显示当前已产生的费用、预计总额、每个计量项的用量以及消费上限。
 - **在定价页选择或比较套餐**：使用 `BillingToggle` 和 `BillingPrice`。`BillingOverview` 显示客户已有的套餐，而不是可供选择的选项。
 - **收集银行卡信息**：该区块只显示已存档的银行卡，从不接收卡号。请在 `UpdatePaymentMethodRequested` 中打开 `Dialog`，再放入支付服务商的表单。
-- **很长且可搜索的付款记录**：使用 `SortableDataTable`，它可以排序、筛选和分页。此处的发票表格只显示简短的、从新到旧的列表，其余发票通过“显示全部发票”查看。
+- **很长且可搜索的付款记录**：使用 `Table`，它可以排序、筛选和分页。此处的发票表格只显示简短的、从新到旧的列表，其余发票通过“显示全部发票”查看。
 - **需要询问原因或提供挽留优惠的取消**：使用 `CancelFlow`，它是可以从 `CancelPlanRequested` 启动的多步骤流程。`BillingOverview` 只发出请求。
 
 ## 用法
@@ -363,7 +363,7 @@ billing.Labels = new BillingOverviewLabels
 |---|---|
 | `UsageBilling` | 本期费用取决于计量用量，并设有消费上限 |
 | `CancelFlow` | 取消需要多个步骤、原因选择或挽留优惠 |
-| `SortableDataTable` | 付款记录较长，必须排序、筛选或分页 |
+| `Table` | 付款记录较长，必须排序、筛选或分页 |
 | `SettingsGroup` / `SettingsRow` | 你要构建的设置卡片不是账单摘要 |
 | `BillingToggle` / `BillingPrice` | 客户要在多个套餐或计费周期之间选择 |
 | `Dialog` | 更改套餐、更新银行卡或下载需要确认或表单 |

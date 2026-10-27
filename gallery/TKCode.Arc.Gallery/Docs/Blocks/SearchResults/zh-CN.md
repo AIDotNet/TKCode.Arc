@@ -1,7 +1,7 @@
 ---
 title: 搜索结果
 summary: 工作区搜索页：带建议弹层的搜索框、数量随查询变化的筛选器、日期范围、排序、可移除的筛选标签、高亮的结果，以及结果详情面板。
-source-hash: eb3de9ba7c69
+source-hash: d29f53165daa
 ---
 
 <Demo name="Preview" />
@@ -22,7 +22,7 @@ source-hash: eb3de9ba7c69
 - **页头或工具栏中的紧凑搜索。** 用 `ExpandingSearch`，它平时只是一个图标，打开之前不占用页面空间。
 - **筛选页面上已有的列表。** 在列表上方使用 `SearchField`，并在代码中筛选列表。几十行的列表不需要筛选器、数量或详情。
 - **从短小的已知列表中选择一个值**，例如状态或国家。用 `Select` 或 `Combobox`；只有五个选项时，带筛选器的搜索页面就太重了。
-- **按列排序和筛选地浏览记录。** 用 `SortableDataTable` 配合 `FilterToolbar`。`SearchResults` 中的结果是用来阅读和打开的，而不是跨列比较的。
+- **按列排序和筛选地浏览记录。** 用 `Table` 配合 `FilterToolbar`。`SearchResults` 中的结果是用来阅读和打开的，而不是跨列比较的。
 
 ## 用法
 
@@ -562,4 +562,4 @@ search.DetailActionInvoked += (_, e) =>
 | `SearchField` | 文字用于筛选页面上已有的列表 |
 | `FilterToolbar` | 筛选器位于表格或列表上方，以标签形式呈现，不需要搜索页面 |
 | `Tabs` | 这些类型是同一页面的不同视图，而不是查询的筛选器 |
-| `SortableDataTable` | 结果是需要按列比较的记录 |
+| `Table` | 结果是需要按列比较的记录 |

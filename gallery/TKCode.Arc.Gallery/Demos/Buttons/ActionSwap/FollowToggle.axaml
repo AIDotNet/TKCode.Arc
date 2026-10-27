@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ActionSwapFollowToggleDemo">
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:ActionSwap x:Name="Follow" HorizontalAlignment="Center" ValueChanged="OnValueChanged">
+            <arc:ActionSwap.States>
+                <arc:ActionSwapState Id="follow" Label="Follow" Tone="Accent" />
+                <arc:ActionSwapState Id="following" Label="Following" Tone="Quiet" PendingLabel="Following" />
+            </arc:ActionSwap.States>
+        </arc:ActionSwap>
+        <TextBlock x:Name="Message"
+                   Text="Not following"
+                   FontSize="13"
+                   HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

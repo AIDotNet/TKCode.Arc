@@ -1,7 +1,7 @@
 ---
 title: 捲動區域
 summary: 原生捲動容器，配有細長的浮層捲軸與僅在內容溢出時才出現的邊緣漸隱。
-source-hash: 066258a5ccd4
+source-hash: 2cfcd7524730
 ---
 
 <Demo name="Vertical" />
@@ -20,7 +20,7 @@ source-hash: 066258a5ccd4
 
 - **逐項翻頁**：用 `Carousel`，它在投影片之間切換並顯示位置。
 - **應當縮短的長文字**：用 `ExpandableText`，它截斷到幾行並提供「閱讀更多」。
-- **帶欄與排序的表格資料**：用 `SortableDataTable`，資料量大時用 `DataGrid`。把 `ScrollArea` 套在一般 `StackPanel` 外面會量測每一列，因此數千列的表格會很慢。
+- **帶欄與排序的表格資料**：用 `Table`，資料量大時用 `DataGrid`。把 `ScrollArea` 套在一般 `StackPanel` 外面會量測每一列，因此數千列的表格會很慢。
 - **帶鍵盤導覽的巢狀樹狀結構**：用 `TreeView`，它處理展開與層級之間的方向鍵移動。
 - **從長清單中選擇一個值**：用 `Select` 或 `Combobox`，它們自行管理清單、篩選與鍵盤模型。
 
@@ -294,5 +294,5 @@ CRM 中一筆客戶紀錄，旁邊是固定高度的活動面板。標題寫明�
 | `Carousel` | 使用者逐項切換內容，並需要位置指示器 |
 | `ExpandableText` | 一段文字較長，應先顯示幾行並提供「閱讀更多」 |
 | `ResizablePanels` | 使用者需要決定每個窗格獲得多少空間 |
-| `SortableDataTable` / `DataGrid` | 內容是使用者需要排序或瀏覽的列與欄 |
+| `Table` / `DataGrid` | 內容是使用者需要排序或瀏覽的列與欄 |
 | `TreeView` | 項目有層級，使用者用鍵盤在層級之間移動 |

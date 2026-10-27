@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IntegrationsFailingDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:Integrations x:Name="Directory"
+                          Title="Connected apps"
+                          Subtitle="Ledgerline refuses the first attempt; Retry goes through." />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="520"
+                   Text="Connect Ledgerline, then open it to read why it failed." />
+    </StackPanel>
+</UserControl>

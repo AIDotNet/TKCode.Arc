@@ -28,7 +28,7 @@ on an account or billing page, above the invoice history, and it is the place wh
 - **A quota without prices**, such as storage used against a plan's space or seats left: use `UsageMeter` or
   `Progress`, which show a share of a limit and do not price the overage.
 - **Usage across many periods**: use `BarChart` or `LineChart` on their own for a trend. This block shows one period.
-- **A list of past invoices**: use `SortableDataTable`, which sorts and filters rows, and keep this block for the
+- **A list of past invoices**: use `Table`, which sorts and filters rows, and keep this block for the
   period in progress.
 
 ## Usage
@@ -442,5 +442,5 @@ they move through the days.
 | `UsageMeter` / `Progress` | A quota has a limit but no price, such as seats or storage space |
 | `BarChart` / `LineChart` | The trend over several periods matters more than one period's total |
 | `MoneyInput` | A single amount is entered on its own, outside the spending limit card |
-| `SortableDataTable` | Past invoices or usage lines need sorting and filtering |
+| `Table` | Past invoices or usage lines need sorting and filtering |
 | `CancelFlow` | An owner wants to end the plan, with its reasons and offer step |

@@ -1,7 +1,7 @@
 ---
 title: Markdown
 summary: 以 Arc 的风格渲染 Markdown 文档与流式回复，代码块使用 Arc 的语法配色高亮。
-source-hash: a32d466da5e0
+source-hash: 3772d30a3cad
 ---
 
 <Demo name="Document" />
@@ -21,7 +21,7 @@ source-hash: a32d466da5e0
 - **带复制按钮的单个代码示例**：用 `CodeBlock`，它是一个带有自己标题栏和操作的代码块。`Markdown` 用于混合了段落、列表和代码的文档。
 - **需要自身滚动的长文档**：将控件包裹在 `ScrollViewer` 中。文档随内容增长，自身没有滚动条。对于很长的对话，请使用 StreamMark 库的对话记录视图。
 - **原位编辑 Markdown 源码**：用 `Textarea`，它保存原始文本、自动换行，并允许用户编辑。`Markdown` 只显示渲染结果。
-- **发票等结构化记录**：用“表格”分组中的 `SortableDataTable`，它会排序，并在行变化时保持列对齐。Markdown 表格是只读的，没有排序功能。
+- **发票等结构化记录**：用“表格”分组中的 `Table`，它会排序，并在行变化时保持列对齐。Markdown 表格是只读的，没有排序功能。
 - **数学公式、图表或其他嵌入式格式**：`Markdown` 渲染文字、代码和表格。需要时，请把 StreamMark 的数学或图表插件加入你自己的 `MarkdownServices`，而不是在文字中粘贴图片。
 
 ## 用法
@@ -265,4 +265,4 @@ StreamMark 服务决定文档如何解析以及代码块如何表现。控件按
 |---|---|
 | `CodeBlock` | 一个带有自己复制操作的代码示例 |
 | `Textarea` | 用户编辑多行文字，且原始源码才是重点 |
-| `SortableDataTable` | 记录必须排序，例如发票表格 |
+| `Table` | 记录必须排序，例如发票表格 |

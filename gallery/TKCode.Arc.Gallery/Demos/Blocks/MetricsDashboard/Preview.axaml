@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricsDashboardPreviewDemo">
+    <!-- A site's last 30 days: four metrics, two ranked lists. Data: MetricsDashboardDemoData (invented). -->
+    <Border BorderThickness="1" CornerRadius="12" ClipToBounds="True" Margin="0,12"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:MetricsDashboard x:Name="Dashboard"
+                              Title="Insights"
+                              Source="northwind.dev"
+                              PrimaryListTitle="Top paths"
+                              SecondaryListTitle="Referrers"
+                              ListValueHeader="Sessions" />
+    </Border>
+</UserControl>

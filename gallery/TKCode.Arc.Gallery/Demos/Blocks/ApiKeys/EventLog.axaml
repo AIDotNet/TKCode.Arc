@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ApiKeysEventLogDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:ApiKeys x:Name="Block"
+                     Description="Keys let your backend call the Northwind Relay API. Store them in a vault, never in client code." />
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <StackPanel Spacing="4" VerticalAlignment="Top">
+                <TextBlock x:Name="State" FontWeight="Medium" />
+                <TextBlock x:Name="Expanded" />
+                <TextBlock x:Name="Count" />
+            </StackPanel>
+            <TextBlock x:Name="Log" Grid.Column="1" TextWrapping="Wrap" />
+        </Grid>
+    </StackPanel>
+</UserControl>

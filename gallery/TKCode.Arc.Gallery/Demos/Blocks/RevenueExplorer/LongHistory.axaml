@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueExplorerLongHistoryDemo">
+    <!--
+        Thirty-six months and your own presets: the last quarter, half year, year, two years, and everything. The window
+        opens on the newest two years; with so many months the axis shows every other label while they are close together.
+    -->
+    <arc:RevenueExplorer x:Name="Revenue"
+                         Title="Subscription revenue, three years"
+                         DefaultRangeMonths="24">
+        <arc:RevenueExplorer.Presets>
+            <arc:RevenueRangePreset Months="3" />
+            <arc:RevenueRangePreset Months="6" />
+            <arc:RevenueRangePreset Months="12" />
+            <arc:RevenueRangePreset Months="24" Label="2Y" AccessibleName="Last two years" />
+            <arc:RevenueRangePreset Months="0" Label="All" />
+        </arc:RevenueExplorer.Presets>
+    </arc:RevenueExplorer>
+</UserControl>

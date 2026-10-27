@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MarketTerminalNarrowDemo">
+    <!-- A 560 wide container: everything stacks, the stats get their own row and the toolbar buttons grow to 44. -->
+    <Border Width="560" Margin="0,12" HorizontalAlignment="Center">
+        <arc:MarketTerminal x:Name="Terminal" Ticker="LUMA" Range="OneYear" IsLive="False" />
+    </Border>
+</UserControl>

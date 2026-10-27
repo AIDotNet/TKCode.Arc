@@ -29,7 +29,7 @@ It is display only: it never takes focus, never opens anything and never writes 
   "+N" chip.
 - **An avatar that opens account actions** such as sign out or switch workspace: use `UserMenu`, which owns the menu,
   focus and the keyboard model.
-- **A list where names, roles and dates must be compared**: use `SortableDataTable`. An avatar alone does not carry
+- **A list where names, roles and dates must be compared**: use `Table`. An avatar alone does not carry
   the text a reader needs.
 - **A conversation where each message has an author and a time**: use `ChatThread` or `CommentThread`, which lay out
   the author beside the message text.
@@ -340,7 +340,7 @@ the failure memory for the old one, so the new photo is loaded even if the previ
 |---|---|
 | `AvatarGroup` | A short team or set of editors must fit in a header, a card or a table cell |
 | `UserMenu` | The avatar opens sign out, profile or workspace actions |
-| `SortableDataTable` | Names, roles and dates must be read and compared as columns |
+| `Table` | Names, roles and dates must be read and compared as columns |
 | `ChatThread` / `CommentThread` | Each message needs its author and time beside the text |
 | `Badge` | The label is a status or category, not a person |
 | `Input` | The person's name or email must be typed or edited |

@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RolesPermissionsFailureDemo">
+    <!-- Every other save is refused: the changes stay, the bar shows the error and Try again saves them. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:RolesPermissions x:Name="Matrix" Title="Roles &amp; access" />
+        <TextBlock x:Name="Log" Opacity="0.7" />
+    </StackPanel>
+</UserControl>

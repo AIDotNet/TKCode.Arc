@@ -26,7 +26,7 @@ matters but should not take space until someone looks for it.
 
 - **A short fixed choice with no explanation**, such as Small, Medium and Large: use `SegmentedControl` or `Select`.
 - **A comparison of several models side by side**: the picker shows one model at a time. Build a table with
-  `SortableDataTable` when people need to compare prices and limits.
+  `Table` when people need to compare prices and limits.
 - **A choice among hundreds of models that people search by name**: the menu has no search field. Use `Combobox` and
   filter your own list.
 - **A model setting that is not about the model**, such as temperature or stop words: put those in a form with

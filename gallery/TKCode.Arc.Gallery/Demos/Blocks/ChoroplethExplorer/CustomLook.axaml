@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChoroplethExplorerCustomLookDemo">
+    <!-- Own hues, title and words; values written by a formatter of your own. -->
+    <arc:ChoroplethExplorer x:Name="Explorer"
+                            Title="Bookings by region"
+                            Description="Signed contracts, calendar year 2026"
+                            PositiveColor="#0E8F7E"
+                            NegativeColor="#D1495B" />
+</UserControl>

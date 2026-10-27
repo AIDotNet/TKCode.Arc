@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InvitePeopleNarrowDemo">
+    <!--
+        In a 380 wide container: the paddings tighten to 16, the team avatars move under the title, the hint wraps, the
+        pending rows put their status under the name and suggestions leave out the job titles.
+    -->
+    <arc:InvitePeople x:Name="Block" Width="380" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 徽章
 summary: 用於狀態、類別或中繼資料的小型標籤。
-source-hash: 1c6cc3318c3c
+source-hash: 56cf17fb22a3
 ---
 
 <Demo name="Tones" />
@@ -279,4 +279,4 @@ public partial class DeploymentViewModel : ObservableObject
 | `ChipGroup` | 使用者選取或清除值 |
 | `MetricCard` | 大型數字需要搭配標籤、趨勢與上下文 |
 | `Avatar` | 狀態屬於某個人，以大頭照上的圓點顯示 |
-| `SortableDataTable` | 徽章位於使用者會排序與比較的欄中 |
+| `Table` | 徽章位於使用者會排序與比較的欄中 |

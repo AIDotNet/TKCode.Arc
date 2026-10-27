@@ -1,7 +1,7 @@
 ---
 title: 客戶星系
 summary: 每位客戶都是一個點，大小依營收、顏色依健康度，像星系一樣緩緩轉動；將它們分成叢集、飛入其中，並查看總計。
-source-hash: de95bcccc15c
+source-hash: 2005b60c7240
 ---
 
 <Demo name="Preview" />
@@ -19,7 +19,7 @@ source-hash: de95bcccc15c
 ## 何時不用
 
 - **比較少數幾個數字。** 請使用 `BarChart` 或 `DonutChart`；星系要在有數百或數千個帳戶時才有價值，五個帳戶不適合。
-- **並排讀取許多帳戶的精確數值。** 請使用 `SortableDataTable` 或 `DataGrid`；星系一次只在卡片中顯示一個帳戶。
+- **並排讀取許多帳戶的精確數值。** 請使用 `Table` 或 `DataGrid`；星系一次只在卡片中顯示一個帳戶。
 - **隨時間的趨勢。** 請使用 `LineChart` 或 `Streamgraph`。星系是一個快照：它的叢集不會隨日期移動。
 - **側邊欄或卡片中的小型小工具。** 此元件的舞台至少需要 360 px 高才看得清楚；請改用搭配 `Sparkline` 的 `MetricCard`。
 - **只依單一維度呈現整體的部分。** 請使用 `Treemap` 或 `WaffleChart`，它們能保留精確的面積，不會有封裝的空隙。
@@ -258,7 +258,7 @@ galaxy.GroupFocused += (_, e) =>
 ## 相關元件
 
 - `BarChart`、`DonutChart` 與 `Treemap`，用於少數精確數值或整體的部分。
-- `DataGrid` 與 `SortableDataTable`，用於逐列閱讀與比較帳戶。
+- `DataGrid` 與 `Table`，用於逐列閱讀與比較帳戶。
 - `MetricCard` 與 `AnimatedCounter`，用於單一的主要數字。
 - `SegmentedControl`，分組分頁與它很相似。
 

@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UptimeStatusEventsDemo">
+    <!--
+        The charted service is a two-way property and every inspection is an event. Buttons drive the block from outside
+        (chart a service, open every incident, clear the inspection) and the log shows what it reports: days and samples
+        you point at, the service you choose and the incidents you open.
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="ChartIdentity" Variant="Secondary" Size="Small" Content="Chart Identity" />
+            <arc:Button x:Name="OpenAll" Variant="Secondary" Size="Small" Content="Open every incident" />
+            <arc:Button x:Name="Clear" Variant="Secondary" Size="Small" Content="Clear inspection" />
+        </StackPanel>
+        <arc:UptimeStatus x:Name="Status" PageName="Larkspur status" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

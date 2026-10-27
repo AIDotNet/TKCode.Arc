@@ -30,7 +30,7 @@ stays responsive.
 - **The keys and values of one JSON document**: use `JsonViewer`, which shows the values beside their keys and
   supports search and copy.
 - **A flat list that the user reorders**: use `ReorderableList`. A tree has no drag order between siblings.
-- **Records with the same fields that people compare by column**: use `SortableDataTable`. A tree shows one label per
+- **Records with the same fields that people compare by column**: use `Table`. A tree shows one label per
   node and no columns.
 
 ## Usage
@@ -279,7 +279,7 @@ Node labels are names that people search for, so show them exactly as the source
 **Avoid**
 
 - Using the tree for a few sections of prose: an `Accordion` reads better and needs no keyboard model.
-- Putting columns of data into the labels, such as sizes and dates. Use a `SortableDataTable` for records.
+- Putting columns of data into the labels, such as sizes and dates. Use a `Table` for records.
 - Expecting multiple selection. The tree has one `SelectedItem`, and a modifier key does not select a range.
 - Nesting more than a few levels by default. Deep folders expanded at once make the structure hard to scan.
 - Building the tree from a fresh copy of the data on every keystroke. Refresh it on a deliberate action.
@@ -293,7 +293,7 @@ node is a file. Return the child collection from the selector, or return null or
 scrolls the row into view. Use `ScrollIntoView` when you want to reveal a node without selecting it.
 
 **Can the tree select several nodes?** No. `SelectedItem` holds one node, and the keyboard ignores modifier keys
-such as Control, Alt and Meta. Use a `SortableDataTable` with `IsSelectable` when people must pick several records.
+such as Control, Alt and Meta. Use a `Table` with `IsSelectable` when people must pick several records.
 
 **Does the tree sort its nodes?** No. It shows the nodes in the order you supply them, so sort the source before you
 bind it.
@@ -360,5 +360,5 @@ The selection highlight glides between rows at full motion only.
 | `Breadcrumb` | The page shows its place in a hierarchy and links back up it |
 | `JsonViewer` | The nested data is one document that people inspect and copy |
 | `CodeBlock` | The selected file's source is shown beside the tree |
-| `SortableDataTable` | The records share fields that people compare by column |
+| `Table` | The records share fields that people compare by column |
 | `ReorderableList` | The person orders a flat list by dragging |

@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageForecastAlreadyPassedDemo">
+    <!-- A budget below what is already used: the measured line turns red above it, the headline names the day it was passed. All three alerts are on. -->
+    <arc:UsageForecast x:Name="Forecast"
+                       Title="Usage outlook"
+                       Subtitle="Harborline Studio · Growth plan · Renews Jul 1" />
+</UserControl>

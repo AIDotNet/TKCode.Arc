@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamDirectoryCopyFailureDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:TeamDirectory x:Name="Directory" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Text="Copying goes through a slow service here, and every second attempt fails. Press Copy a few times." />
+    </StackPanel>
+</UserControl>

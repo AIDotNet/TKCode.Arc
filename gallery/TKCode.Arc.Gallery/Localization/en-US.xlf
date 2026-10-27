@@ -801,5 +801,15 @@
         <source>Tablet</source>
       </segment>
     </unit>
+    <unit id="UpdateAvailable">
+      <segment>
+        <source>Version {0} is available</source>
+      </segment>
+    </unit>
+    <unit id="UpdateDownload">
+      <segment>
+        <source>Download</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

@@ -98,16 +98,11 @@ public sealed class GalleryHomeView : UserControl
         var badge = new Badge { Tone = BadgeTone.Info, Icon = new ArcGlyph { Data = ArcIcons.Sparkles, Size = 12 }, HorizontalAlignment = HorizontalAlignment.Center };
         GalleryText.Bind(badge, ContentControl.ContentProperty, GalleryShellLangResourceKind.HomeBadge);
 
-        var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 52, FontWeight.Medium);
-        title.TextAlignment = TextAlignment.Center;
-        title.MaxWidth = 720;
-        title.TextWrapping = TextWrapping.Wrap;
-        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeTitle);
+        var title = Reveal(GalleryShellLangResourceKind.HomeTitle, TextLevel.H1, TimeSpan.Zero, center: true);
 
-        var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 16);
-        subtitle.TextAlignment = TextAlignment.Center;
-        subtitle.MaxWidth = 520;
-        GalleryText.BindFormat(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeSubtitle,
+        var subtitle = new TextReveal { Level = TextLevel.Paragraph, Delay = TimeSpan.FromMilliseconds(200), HorizontalAlignment = HorizontalAlignment.Center };
+        ArcTokens.Bind(subtitle, TextReveal.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
+        GalleryText.BindFormat(subtitle, TextReveal.TextProperty, GalleryShellLangResourceKind.HomeSubtitle,
             GalleryCatalog.Count, GalleryCatalog.Categories.Length, GalleryCatalog.Blocks.AllEntries.Count());
 
         var explore = new Button { Variant = ButtonVariant.Primary, Size = ControlSize.Medium, Content = WithArrow(GalleryShellLangResourceKind.HomeExplore) };
@@ -146,6 +141,18 @@ public sealed class GalleryHomeView : UserControl
         return hero;
     }
 
+    /// <summary>A heading that reveals word by word when it scrolls into view; its text follows the language.</summary>
+    private static TextReveal Reveal(GalleryShellLangResourceKind kind, TextLevel level, TimeSpan delay, bool center)
+    {
+        var reveal = new TextReveal { Level = level, Delay = delay, MaxWidthInChars = center ? 22 : 0 };
+        if (center)
+        {
+            reveal.HorizontalAlignment = HorizontalAlignment.Center;
+        }
+        GalleryText.Bind(reveal, TextReveal.TextProperty, kind);
+        return reveal;
+    }
+
     private static Control WithArrow(GalleryShellLangResourceKind label)
     {
         var text = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
@@ -162,8 +169,7 @@ public sealed class GalleryHomeView : UserControl
 
     private Control BuildLive()
     {
-        var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 30, FontWeight.Medium);
-        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeWallTitle);
+        var title = Reveal(GalleryShellLangResourceKind.HomeWallTitle, TextLevel.H2, TimeSpan.Zero, center: false);
         var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
         GalleryText.Bind(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeWallSubtitle);
         var heading = new StackPanel { Spacing = 6 };
@@ -284,8 +290,7 @@ public sealed class GalleryHomeView : UserControl
     /// <summary>The section that takes a screen apart as the page scrolls.</summary>
     private Control BuildExplode()
     {
-        var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 30, FontWeight.Medium);
-        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeExplodeTitle);
+        var title = Reveal(GalleryShellLangResourceKind.HomeExplodeTitle, TextLevel.H2, TimeSpan.Zero, center: false);
         var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
         GalleryText.Bind(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeExplodeSubtitle);
 
@@ -330,8 +335,7 @@ public sealed class GalleryHomeView : UserControl
 
     private Control BuildFriends()
     {
-        var title = GalleryUi.Text(string.Empty, ArcDesignTokenKind.Foreground, 30, FontWeight.Medium);
-        GalleryText.Bind(title, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeFriendsTitle);
+        var title = Reveal(GalleryShellLangResourceKind.HomeFriendsTitle, TextLevel.H2, TimeSpan.Zero, center: false);
         var subtitle = GalleryUi.Text(string.Empty, ArcDesignTokenKind.TextSecondary, 14);
         GalleryText.Bind(subtitle, TextBlock.TextProperty, GalleryShellLangResourceKind.HomeFriendsSubtitle);
 

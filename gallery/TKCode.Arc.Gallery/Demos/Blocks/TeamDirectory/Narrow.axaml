@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamDirectoryNarrowDemo">
+    <!-- 380 wide: the profile stacks under the list, the search box moves under the title and the team counts hide. -->
+    <arc:TeamDirectory x:Name="Directory" Width="380" HorizontalAlignment="Center" Margin="0,12" />
+</UserControl>

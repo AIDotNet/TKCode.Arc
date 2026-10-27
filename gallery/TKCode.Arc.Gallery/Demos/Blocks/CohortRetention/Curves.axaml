@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CohortRetentionCurvesDemo">
+    <!-- The same cohorts opened on the curves view, Business plan selected; the size column is left out. -->
+    <arc:CohortRetention x:Name="Retention"
+                         Title="Space retention by plan"
+                         Subtitle="One line per monthly cohort; the thick line is the average weighted by cohort size."
+                         View="Curves"
+                         ShowSizeColumn="False"
+                         FirstMetricLabel="First-month retention"
+                         SecondMetricLabel="Half-year retention"
+                         TotalLabel="Spaces created"
+                         TotalContextFormat="Created {0} – {1}"
+                         AxisTitle="Months since creation"
+                         StillActiveText="Still editing" />
+</UserControl>

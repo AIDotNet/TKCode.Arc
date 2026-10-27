@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IntegrationsCompactDemo">
+    <!-- 390 wide: the search sits under the title, the filters scroll sideways, rows stack and the settings button hides. -->
+    <arc:Integrations x:Name="Directory"
+                      Width="390"
+                      HorizontalAlignment="Center"
+                      Margin="0,12"
+                      Title="Connected apps"
+                      Subtitle="Link the services your workspace relies on." />
+</UserControl>

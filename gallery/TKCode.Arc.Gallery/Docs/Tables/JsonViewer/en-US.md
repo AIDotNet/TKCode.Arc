@@ -31,7 +31,7 @@ so a page only supplies the JSON and places the control in its layout.
 - **Nested categories that people select**, such as folders, files or an organization chart: use `TreeView`, which
   is built for selection and does not parse JSON.
 - **Tabular records of one shape**, such as a list of invoices people sort and filter by column: use
-  `SortableDataTable`. A JSON tree shows structure; a table compares rows.
+  `Table`. A JSON tree shows structure; a table compares rows.
 - **Values that are not JSON**, such as arbitrary .NET objects: convert them to `JsonNode` or `JsonElement` first.
   The viewer reads only System.Text.Json data.
 - **Editing a document**: the viewer is read-only. Use a `Textarea` or `RichTextEditor` when people change the text.
@@ -438,12 +438,12 @@ order, so the keyboard shortcuts are the reliable path.
 
 - `CodeBlock` shows the whole JSON as copyable source, with one copy action.
 - `TreeView` is for nested records that people select rather than inspect.
-- `SortableDataTable` is for records of one shape that people sort and filter by column.
+- `Table` is for records of one shape that people sort and filter by column.
 - `CopyButton` copies a single value outside the tree.
 
 | Component | Choose it when |
 |---|---|
 | `CodeBlock` | The JSON is a snippet people copy as text, such as a sample request |
 | `TreeView` | The nested items are folders, files or categories that people select |
-| `SortableDataTable` | The records share one shape and people compare them by column |
+| `Table` | The records share one shape and people compare them by column |
 | `CopyButton` | A single value, such as an ID or a key, needs a copy action beside it |

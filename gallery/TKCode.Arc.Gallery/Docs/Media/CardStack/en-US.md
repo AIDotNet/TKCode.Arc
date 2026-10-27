@@ -24,7 +24,7 @@ Place it in the main area of a focused task, and show the running result, such a
 
 ## When not to use
 
-- **Comparing items side by side or sorting them**: use `SortableDataTable`. Columns and sorting let people compare
+- **Comparing items side by side or sorting them**: use `Table`. Columns and sorting let people compare
   many records at once; a deck shows one record at a time.
 - **Browsing without deciding**: use `Carousel` for a row of slides, banners or photos that people look at but do not
   need to keep or pass.
@@ -416,11 +416,11 @@ reaches the app.
 
 - `Carousel` for browsing a row of items without deciding on each.
 - `SwipeActions` for quick actions on a row in a list.
-- `SortableDataTable` for reviewing many records side by side.
+- `Table` for reviewing many records side by side.
 
 | Component | Choose it when |
 |---|---|
-| `SortableDataTable` | The reader compares many records by column or sorts them |
+| `Table` | The reader compares many records by column or sorts them |
 | `Carousel` | People browse slides, banners or photos without a decision |
 | `SwipeActions` | Each row of a list needs a quick action such as archive or snooze |
 | `ReorderableList` | The person changes the order of a list they own |

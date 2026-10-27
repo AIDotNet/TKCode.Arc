@@ -1,7 +1,7 @@
 ---
 title: 搜尋結果
 summary: 工作區搜尋頁：附建議彈出視窗的搜尋欄位、數量隨查詢變化的篩選器、日期範圍、排序、可移除的篩選標籤、醒目提示的結果，以及結果詳情面板。
-source-hash: eb3de9ba7c69
+source-hash: d29f53165daa
 ---
 
 <Demo name="Preview" />
@@ -22,7 +22,7 @@ source-hash: eb3de9ba7c69
 - **頁首或工具列中的精簡搜尋。** 用 `ExpandingSearch`，它平時只是一個圖示，開啟前不佔用頁面空間。
 - **篩選頁面上已有的清單。** 在清單上方使用 `SearchField`，並在程式碼中篩選清單。幾十列的清單不需要篩選器、數量或詳情。
 - **從短小的已知清單中選擇一個值**，例如狀態或國家。用 `Select` 或 `Combobox`；只有五個選項時，帶篩選器的搜尋頁面就太重了。
-- **依欄位排序和篩選地瀏覽記錄。** 用 `SortableDataTable` 搭配 `FilterToolbar`。`SearchResults` 中的結果是用來閱讀和開啟的，而不是跨欄位比較的。
+- **依欄位排序和篩選地瀏覽記錄。** 用 `Table` 搭配 `FilterToolbar`。`SearchResults` 中的結果是用來閱讀和開啟的，而不是跨欄位比較的。
 
 ## 用法
 
@@ -562,4 +562,4 @@ search.DetailActionInvoked += (_, e) =>
 | `SearchField` | 文字用於篩選頁面上已有的清單 |
 | `FilterToolbar` | 篩選器位於表格或清單上方，以標籤形式呈現，不需要搜尋頁面 |
 | `Tabs` | 這些類型是同一頁面的不同檢視，而不是查詢的篩選器 |
-| `SortableDataTable` | 結果是需要依欄位比較的記錄 |
+| `Table` | 結果是需要依欄位比較的記錄 |

@@ -13,7 +13,7 @@ place. It fits the places where an object or a view has several commands, and th
 their own.
 
 - **Row actions in a data table**: Rename, Duplicate, Archive and Delete behind the more button of an invoice or
-  customer row in a `SortableDataTable`. Each row gets one trigger, and the destructive row sits last behind a divider.
+  customer row in a `Table`. Each row gets one trigger, and the destructive row sits last behind a divider.
 - **Page header actions in an admin console**: Export, Share and Print for a report page. The page keeps one visible
   entry point for the secondary commands, and the primary action stays a button beside it.
 - **Sort and view options in a list toolbar**: Sort by Newest, Oldest or Name as radio rows, and View options as

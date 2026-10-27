@@ -27,7 +27,7 @@ the gap without a separate confirmation.
   button. Swipe gestures are the wrong primary path for a pointer, and the menu is already on every row.
 - **Reordering rows by dragging them up and down**: use `ReorderableList`. Swipe gestures lock to the horizontal axis
   and never change the order of the rows.
-- **Long, paged or sorted datasets with many columns**: use `SortableDataTable`. Swipe rows are not virtualized, so a
+- **Long, paged or sorted datasets with many columns**: use `Table`. Swipe rows are not virtualized, so a
   list of thousands of rows should be paginated before it is shown here.
 - **One destructive action outside a list**, such as deleting a project from its settings page: use `HoldToConfirm`,
   which needs a deliberate hold instead of a gesture a row can trigger by accident.
@@ -419,13 +419,13 @@ the spring on release to show where the row will stop, and skip decorative movem
 - `ContextMenu` and `DropdownMenu` for row actions on desktop.
 - `ReorderableList` for dragging rows into a new order.
 - `HoldToConfirm` for a single destructive action outside a list.
-- `SortableDataTable` for large, sortable datasets.
+- `Table` for large, sortable datasets.
 
 | Component | Choose it when |
 |---|---|
 | `ContextMenu` / `DropdownMenu` | The primary input is a mouse, or the row has many actions |
 | `ReorderableList` | The person changes the order of the rows by dragging them |
-| `SortableDataTable` | The data has columns, sorting or a large number of rows |
+| `Table` | The data has columns, sorting or a large number of rows |
 | `HoldToConfirm` | One destructive action needs a deliberate hold, outside a list |
 | `Dialog` | The consequences must be read before the action runs |
 | `Toast` | An action ran and the result should be reported with an undo |

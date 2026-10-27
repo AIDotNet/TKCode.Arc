@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CohortRetentionPreviewDemo">
+    <!-- Twelve monthly cohorts of team spaces in three segments (all, Starter, Business). Data: CohortRetentionDemoData. -->
+    <arc:CohortRetention x:Name="Retention"
+                         Title="Space retention"
+                         Subtitle="Team spaces still editing each month after creation. Updated through Jun 30, 2027."
+                         FirstMetricLabel="First-month retention"
+                         SecondMetricLabel="Half-year retention"
+                         TotalLabel="Spaces created"
+                         TotalContextFormat="Created {0} – {1}"
+                         LegendTitle="% still editing"
+                         AxisTitle="Months since creation"
+                         StillActiveText="Still editing" />
+</UserControl>

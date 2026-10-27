@@ -1,7 +1,7 @@
 ---
 title: 头像
 summary: 用于人员与账号的紧凑身份标识。
-source-hash: ac97c0bbaae5
+source-hash: 8daf63eb82c4
 ---
 
 <Demo name="Initials" />
@@ -20,7 +20,7 @@ source-hash: ac97c0bbaae5
 
 - **小空间内显示多人并带有剩余人数**：用 `AvatarGroup`，它会把溢出的人折叠成 "+N" 标签。
 - **点击后打开账号操作（如退出登录或切换工作区）的头像**：用 `UserMenu`，由它负责菜单、焦点与键盘操作。
-- **需要比较姓名、角色和日期的列表**：用 `SortableDataTable`。单靠头像无法承载读者需要的文字信息。
+- **需要比较姓名、角色和日期的列表**：用 `Table`。单靠头像无法承载读者需要的文字信息。
 - **每条消息都有作者和时间的对话**：用 `ChatThread` 或 `CommentThread`，它们会把作者与消息文字排在一起。
 - **不是人员的状态或类别**，例如进行中、草稿或失败：用 `Badge`。
 - **编辑人员的姓名或邮箱**：用 `Input`。头像只显示值，没有可编辑的文字。
@@ -278,7 +278,7 @@ public partial class OnCallMemberViewModel : ObservableObject
 |---|---|
 | `AvatarGroup` | 一小组团队成员或编辑者需要放进页头、卡片或表格单元格 |
 | `UserMenu` | 头像需要打开退出登录、个人资料或工作区操作 |
-| `SortableDataTable` | 姓名、角色和日期需要以列的形式阅读和比较 |
+| `Table` | 姓名、角色和日期需要以列的形式阅读和比较 |
 | `ChatThread` / `CommentThread` | 每条消息都需要作者和时间与文字并列显示 |
 | `Badge` | 标签是状态或类别，而非人员 |
 | `Input` | 人员的姓名或邮箱需要输入或编辑 |

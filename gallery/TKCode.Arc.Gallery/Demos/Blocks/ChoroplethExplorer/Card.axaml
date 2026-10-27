@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ChoroplethExplorerCardDemo">
+    <!-- The card look in a narrow column: the compact layout stacks the controls and puts the list under the map. -->
+    <arc:ChoroplethExplorer x:Name="Explorer"
+                            MaxWidth="520"
+                            HorizontalAlignment="Center"
+                            IsCardChrome="True"
+                            Description="Fiscal year ending March 31, 2027" />
+</UserControl>

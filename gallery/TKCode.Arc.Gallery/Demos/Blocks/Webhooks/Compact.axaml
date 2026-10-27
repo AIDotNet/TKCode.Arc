@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WebhooksCompactDemo">
+    <!-- A 420 wide container: rows keep the name, the rate and the badge; deliveries take two lines; the inspector sits below. -->
+    <Border Margin="0,12"
+            Width="420"
+            HorizontalAlignment="Center"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+            ClipToBounds="True">
+        <arc:Webhooks x:Name="Hooks" />
+    </Border>
+</UserControl>

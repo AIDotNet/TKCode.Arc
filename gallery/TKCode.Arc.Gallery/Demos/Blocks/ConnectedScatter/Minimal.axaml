@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectedScatterMinimalDemo">
+    <!--
+        The smallest useful block: two series without notes and no axis settings. The axes take their ranges and ticks from the
+        data, the description is written from the axis names and the first and last month, and the first run is left out
+        (PlayOnFirstAppear is false), so the head rests on the last month.
+    -->
+    <arc:ConnectedScatter x:Name="Scatter"
+                          Title="Cost against value"
+                          PlayOnFirstAppear="False" />
+</UserControl>

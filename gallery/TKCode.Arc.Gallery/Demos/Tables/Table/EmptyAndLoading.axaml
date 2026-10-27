@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TableEmptyAndLoadingDemo">
+    <StackPanel Spacing="12">
+        <arc:Switch x:Name="LoadingSwitch" Content="Loading" />
+        <arc:Table EmptyMessage="No projects match these filters"
+                               IsLoading="{Binding #LoadingSwitch.IsChecked}">
+            <arc:DataTableColumn Header="Project" />
+            <arc:DataTableColumn Header="Owner" />
+            <arc:DataTableColumn Header="Status" />
+            <arc:DataTableColumn Header="Budget" />
+            <arc:DataTableColumn Header="Due" />
+        </arc:Table>
+    </StackPanel>
+</UserControl>

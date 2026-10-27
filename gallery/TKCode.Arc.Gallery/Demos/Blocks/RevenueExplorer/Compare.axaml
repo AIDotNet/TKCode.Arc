@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RevenueExplorerCompareDemo">
+    <!--
+        Opened on the last six months with the comparison on: two dashed lines trace the six months before (the stacked
+        new and expansion top, and churn). Point at a month to see the previous period's net new in the readout.
+    -->
+    <arc:RevenueExplorer x:Name="Revenue"
+                         Title="Subscription revenue"
+                         IsCompareEnabled="True"
+                         RangeStart="18"
+                         RangeEnd="23" />
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IntegrationsCategoriesOnlyDemo">
+    <!-- No Connected filter and no sync options: the drawer shows only the permissions and the disconnect button. -->
+    <arc:Integrations x:Name="Directory"
+                      Margin="0,12"
+                      ShowConnectedFilter="False"
+                      Title="Add-ons"
+                      Subtitle="Turn on the services this project uses." />
+</UserControl>

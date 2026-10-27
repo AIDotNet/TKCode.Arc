@@ -1,7 +1,7 @@
 ---
 title: 树视图
 summary: 浏览嵌套的文件夹与结构化内容。
-source-hash: 0943bca6a572
+source-hash: 3a486b8c5441
 ---
 
 <Demo name="FileTree" />
@@ -22,7 +22,7 @@ source-hash: 0943bca6a572
 - **页面层级中的当前位置**：用 `Breadcrumb`，它显示路径并可返回上级。
 - **一份 JSON 文档的键与值**：用 `JsonViewer`，它在键旁显示值，并支持搜索和复制。
 - **用户会重新排序的扁平列表**：用 `ReorderableList`。树的同级节点之间没有拖动排序。
-- **人们按列比较、字段相同的记录**：用 `SortableDataTable`。树每个节点只显示一个标签，没有列。
+- **人们按列比较、字段相同的记录**：用 `Table`。树每个节点只显示一个标签，没有列。
 
 ## 用法
 
@@ -244,7 +244,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 **避免**
 
 - 用树来展示几段文章：`Accordion` 的阅读体验更好，也不需要键盘模型。
-- 把大小和日期等数据列放进标签中。记录请使用 `SortableDataTable`。
+- 把大小和日期等数据列放进标签中。记录请使用 `Table`。
 - 期望多选。树只有一个 `SelectedItem`，修饰键也不会选中一个范围。
 - 默认展开过多层级。同时展开的深层文件夹会使结构难以扫视。
 - 每次按键都从数据的新副本重建树。应在明确的操作后刷新。
@@ -255,7 +255,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 
 **如何将树打开到某个特定文件？** 将 `SelectedItem` 设为该节点。树会展开其祖先并将该行滚动到可见位置。若只想显示节点而不选中它，请使用 `ScrollIntoView`。
 
-**树能选中多个节点吗？** 不能。`SelectedItem` 只保存一个节点，键盘会忽略 Control、Alt 和 Meta 等修饰键。当人们必须选择多条记录时，请使用设置了 `IsSelectable` 的 `SortableDataTable`。
+**树能选中多个节点吗？** 不能。`SelectedItem` 只保存一个节点，键盘会忽略 Control、Alt 和 Meta 等修饰键。当人们必须选择多条记录时，请使用设置了 `IsSelectable` 的 `Table`。
 
 **树会对节点排序吗？** 不会。它按你提供的顺序显示节点，因此绑定前请先对源数据排序。
 
@@ -321,5 +321,5 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 | `Breadcrumb` | 页面需显示其在层级中的位置，并可返回上级 |
 | `JsonViewer` | 嵌套数据是人们需要检查和复制的一份文档 |
 | `CodeBlock` | 所选文件的源代码需与树并排显示 |
-| `SortableDataTable` | 记录的字段相同，人们需要按列比较 |
+| `Table` | 记录的字段相同，人们需要按列比较 |
 | `ReorderableList` | 人们通过拖动对扁平列表排序 |

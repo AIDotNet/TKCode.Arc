@@ -1,7 +1,7 @@
 ---
 title: 輪播
 summary: 透過拖曳、輕掃或方向鍵瀏覽一排投影片。
-source-hash: 58a2880480f8
+source-hash: 4a960604b2d2
 ---
 
 <Demo name="Slides" />
@@ -19,7 +19,7 @@ source-hash: 58a2880480f8
 
 - **需要逐一對每個項目做出決定**：用 `CardStack`，它會對每張卡片要求保留或略過，並記錄下來。
 - **比較兩張圖片**：用 `ImageCompare`，它把前後對比放在同一畫面上，並以分隔線區分。
-- **需要掃讀或排序的長記錄清單**：用 `SortableDataTable`。輪播一次只顯示一張投影片，讀者無法跨列比較欄位。
+- **需要掃讀或排序的長記錄清單**：用 `Table`。輪播一次只顯示一張投影片，讀者無法跨列比較欄位。
 - **必須完整閱讀的文字，例如條款、說明或檢核表**：用 `Accordion` 或 `ExpandableText`。投影片會自行切換，把讀者尚未讀到的文字隱藏起來。
 - **在內容各不相同的面板之間切換**：用 `Tabs`。輪播意味著投影片是同一類的同級項目，而標籤頁則代表不同的區段。
 - **使用者不能錯過的訊息，例如帳單警告或服務中斷**：用 `Alert` 或 `AnnouncementBar`。自動播放會把訊息移走，輪播並不適合承載這類內容。
@@ -348,4 +348,4 @@ carousel.SlideLabelFormatter = (index, count) => $"檔案照片 {index + 1}，�
 | `Tabs` | 這一列在內容不同的區段之間切換 |
 | `Accordion` / `ExpandableText` | 讀者必須按順序完整閱讀內容 |
 | `Alert` / `AnnouncementBar` | 訊息必須保持可見直到使用者閱讀 |
-| `SortableDataTable` | 讀者掃讀、排序或比較大量記錄 |
+| `Table` | 讀者掃讀、排序或比較大量記錄 |

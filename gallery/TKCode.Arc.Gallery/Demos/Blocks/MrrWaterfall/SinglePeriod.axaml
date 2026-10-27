@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MrrWaterfallSinglePeriodDemo">
+    <!--
+        One period of a different product: the period switch disappears by itself, the unit switch is hidden too, and the
+        euro symbol replaces the dollar. The quarter lost more than it won, so the headline change points down.
+    -->
+    <arc:MrrWaterfall x:Name="Bridge"
+                      Title="Legacy plan revenue"
+                      Scope="Legacy plans"
+                      CurrencySymbol="€"
+                      IsValueModeSwitchVisible="False"
+                      MaxNamedAccounts="3" />
+</UserControl>

@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KpiDrilldownFourMetricsDemo">
+    <!-- Four metrics, no dimensions (the breakdown is left out), Compare off to begin with, a 14 / 28 day range pair. -->
+    <arc:KpiDrilldown x:Name="Block" Title="Weekly check" IsCompareEnabled="False" RangeDays="14" />
+</UserControl>

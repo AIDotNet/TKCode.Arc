@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MetricsDashboardProductUsageDemo">
+    <!--
+        Another product, other words: seat utilization is an exact ratio of seats used to seats paid, failed jobs are better
+        when lower and use their own two-decimal formatters; 14, 28 and 84 day ranges, weeks from 60 days.
+    -->
+    <Border BorderThickness="1" CornerRadius="12" ClipToBounds="True" Margin="0,12"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:MetricsDashboard x:Name="Dashboard"
+                              Title="Workspace usage"
+                              Source="Fieldnote Cloud"
+                              SubtitleFormat="{}{0} · {1}-day window"
+                              SelectedRange="28"
+                              CompareText="Prior window"
+                              PreviousLegendText="Prior window"
+                              PreviousValueFormat="{}{0} before"
+                              ExportText="Download"
+                              ExportedText="Saved"
+                              PrimaryListTitle="Busiest workspaces"
+                              SecondaryListTitle="Plans"
+                              ListValueHeader="Active seats" />
+    </Border>
+</UserControl>

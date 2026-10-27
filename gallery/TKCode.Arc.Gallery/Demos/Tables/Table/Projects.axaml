@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TableProjectsDemo">
+    <StackPanel Spacing="12">
+        <arc:Table x:Name="Table"
+                               IsSelectable="True"
+                               ItemNameOne="project"
+                               ItemNameOther="projects"
+                               Caption="Projects"
+                               SortChanged="OnSortChanged"
+                               SelectionChanged="OnSelectionChanged" />
+        <TextBlock x:Name="Status"
+                   Text="Click a header to sort; click rows or press Space to select."
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

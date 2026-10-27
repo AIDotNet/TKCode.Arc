@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectedScatterPreviewDemo">
+    <!-- Three channels over eighteen months, July 2024 to December 2025. Data: ConnectedScatterDemoData. -->
+    <arc:ConnectedScatter x:Name="Scatter"
+                          Title="Unit economics by channel"
+                          TargetRatio="3" />
+</UserControl>

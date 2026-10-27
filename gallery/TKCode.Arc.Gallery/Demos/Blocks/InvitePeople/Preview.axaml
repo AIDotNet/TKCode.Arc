@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InvitePeoplePreviewDemo">
+    <!--
+        The Lumen Labs workspace (InvitePeopleDemoData): five on the team, Theo invited three days ago, ten people who can
+        be invited and the Basic plan with ten seats. Sending is simulated (InvitePeopleSimulation): invites are delivered
+        after 680 ms, 160 ms apart, and the first person of the first send accepts after 3.5 s. The reset button starts over.
+    -->
+    <arc:InvitePeople x:Name="Block" Margin="0,12" IsResetVisible="True" />
+</UserControl>

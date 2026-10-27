@@ -23,12 +23,12 @@ new order through the `Reordered` event.
 
 ## When not to use
 
-- **The order comes from column values**, such as sorting invoices by due date or amount: use `SortableDataTable`,
+- **The order comes from column values**, such as sorting invoices by due date or amount: use `Table`,
   which sorts by the column and keeps the data in a grid.
 - **Quick actions on a row** such as archive, snooze or delete, with no reordering: use `SwipeActions`, which reveals
   actions from a swipe without moving the row.
 - **Long lists** of hundreds of items: rows are not virtualized and each row runs a layout animation when another
-  row moves, so split the list or use `SortableDataTable` with a sort control.
+  row moves, so split the list or use `Table` with a sort control.
 - **Nested items** such as folders, categories or subtasks: use `TreeView`, which shows the hierarchy and lets people
   expand each level.
 - **A choice from a fixed set** that people toggle and do not rank, such as filter chips or channels: use
@@ -317,12 +317,12 @@ press moves the same row again. Tab leaves the list as it does for any other con
 
 ## Related
 
-- `SortableDataTable` when the order comes from column values, not from a person's choice.
+- `Table` when the order comes from column values, not from a person's choice.
 - `SwipeActions` for quick actions on a row without reordering it.
 
 | Component | Choose it when |
 |---|---|
-| `SortableDataTable` | The order comes from the values in a column, and people sort by it |
+| `Table` | The order comes from the values in a column, and people sort by it |
 | `SwipeActions` | A row needs quick actions such as archive or snooze, not a new place |
 | `TreeView` | The items nest, and people expand folders or categories to find them |
 | `ChipGroup` | People pick from a fixed set of options and the order is not theirs to set |

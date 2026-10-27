@@ -961,5 +961,17 @@
         <target state="translated">平板</target>
       </segment>
     </unit>
+    <unit id="UpdateAvailable">
+      <segment>
+        <source>Version {0} is available</source>
+        <target state="translated">發現新版本 {0}</target>
+      </segment>
+    </unit>
+    <unit id="UpdateDownload">
+      <segment>
+        <source>Download</source>
+        <target state="translated">下載</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

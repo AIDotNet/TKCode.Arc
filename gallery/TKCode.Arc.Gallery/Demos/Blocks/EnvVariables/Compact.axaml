@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.EnvVariablesCompactDemo">
+    <!-- In a 420 wide container: stacked rows with labelled environment pills, buttons across the width. -->
+    <arc:EnvVariables x:Name="Block" Width="420" HorizontalAlignment="Center" Margin="0,12" />
+</UserControl>

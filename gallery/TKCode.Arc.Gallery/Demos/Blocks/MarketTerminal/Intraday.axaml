@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MarketTerminalIntradayDemo">
+    <!-- Today in 5 minute candles, only the 20 candle average, and ticks every 600 ms. -->
+    <arc:MarketTerminal x:Name="Terminal"
+                        Margin="0,12"
+                        Ticker="TIDE"
+                        Range="OneDay"
+                        ShowMa50="False"
+                        TickInterval="0:0:0.6" />
+</UserControl>

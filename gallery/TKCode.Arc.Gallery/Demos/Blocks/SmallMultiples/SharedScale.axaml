@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SmallMultiplesSharedScaleDemo">
+    <!-- Opens on the shared scale, fastest growth first, with flat trends at full strength. -->
+    <arc:SmallMultiples x:Name="Chart"
+                        Margin="0,12"
+                        Scale="Shared"
+                        Sort="Growth"
+                        IsFlatDimmed="False"
+                        SeriesLegendText="Market"
+                        GhostLegendText="All markets, scaled to fit" />
+</UserControl>

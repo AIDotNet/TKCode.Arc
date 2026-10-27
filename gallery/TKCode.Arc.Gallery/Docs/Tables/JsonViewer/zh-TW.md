@@ -1,7 +1,7 @@
 ---
 title: JSON 檢視器
 summary: 可摺疊的 JSON 樹狀結構，支援搜尋、長陣列分頁，以及複製值或路徑。
-source-hash: 8f6dd4e939e6
+source-hash: 99a6f9248630
 ---
 
 <Demo name="WebhookPayload" />
@@ -20,7 +20,7 @@ source-hash: 8f6dd4e939e6
 
 - **把整份文件當作可複製的原始碼**，例如 README 中的片段或客服回覆：用 `CodeBlock`，它把文字顯示為一個區塊，並提供一個複製操作。
 - **使用者需要選取的巢狀分類**，例如資料夾、檔案或組織圖：用 `TreeView`，它為選取而設計，且不解析 JSON。
-- **結構相同的表格記錄**，例如使用者依欄位排序和篩選的發票清單：用 `SortableDataTable`。JSON 樹顯示結構，表格用於比較列。
+- **結構相同的表格記錄**，例如使用者依欄位排序和篩選的發票清單：用 `Table`。JSON 樹顯示結構，表格用於比較列。
 - **不是 JSON 的值**，例如任意 .NET 物件：先把它們轉換為 `JsonNode` 或 `JsonElement`。檢視器只讀取 System.Text.Json 資料。
 - **編輯文件**：檢視器是唯讀的。使用者需要修改文字時，使用 `Textarea` 或 `RichTextEditor`。
 
@@ -352,12 +352,12 @@ viewer.Copied += (_, e) => vm.Status = $"已複製{(e.Kind == JsonViewerCopyKind
 
 - `CodeBlock` 把整份 JSON 顯示為可複製的原始碼，提供一個複製操作。
 - `TreeView` 用於使用者選取而非檢查的巢狀記錄。
-- `SortableDataTable` 用於使用者依欄位排序和篩選的同一結構記錄。
+- `Table` 用於使用者依欄位排序和篩選的同一結構記錄。
 - `CopyButton` 在樹狀區域之外複製單一值。
 
 | 元件 | 適用情境 |
 |---|---|
 | `CodeBlock` | JSON 是使用者以文字形式複製的程式碼片段，例如範例請求 |
 | `TreeView` | 巢狀項目是使用者選取的資料夾、檔案或分類 |
-| `SortableDataTable` | 記錄結構相同，使用者依欄位比較它們 |
+| `Table` | 記錄結構相同，使用者依欄位比較它們 |
 | `CopyButton` | 需要在旁邊提供複製操作的單一值，例如 ID 或鍵 |

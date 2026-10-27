@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UsageForecastStaysUnderDemo">
+    <!-- A budget above the forecast: the headline says it stays under, the overage is $0 and has no marker, and the 100% chip is "Not on track". -->
+    <arc:UsageForecast x:Name="Forecast"
+                       Title="Usage outlook"
+                       Subtitle="Harborline Studio · Growth plan · Renews Jul 1" />
+</UserControl>

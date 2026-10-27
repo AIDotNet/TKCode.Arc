@@ -1,7 +1,7 @@
 ---
 title: Markdown
 summary: 以 Arc 的風格渲染 Markdown 文件與串流回覆，程式碼區塊使用 Arc 的語法配色高亮。
-source-hash: a32d466da5e0
+source-hash: 3772d30a3cad
 ---
 
 <Demo name="Document" />
@@ -21,7 +21,7 @@ source-hash: a32d466da5e0
 - **附複製按鈕的單一程式碼區塊**：用 `CodeBlock`，它是一個帶有自己標題列和操作的區塊。`Markdown` 用於混合了段落、清單和程式碼的文件。
 - **需要自身捲動的長文件**：將控制項包裹在 `ScrollViewer` 中。文件隨內容增長，自身沒有捲軸。對於很長的對話，請使用 StreamMark 函式庫的對話記錄檢視。
 - **原地編輯 Markdown 原始碼**：用 `Textarea`，它保存原始文字、自動換行，並允許使用者編輯。`Markdown` 只顯示渲染結果。
-- **發票等結構化紀錄**：用「表格」分組中的 `SortableDataTable`，它會排序，並在列變化時保持欄位對齊。Markdown 表格是唯讀的，沒有排序功能。
+- **發票等結構化紀錄**：用「表格」分組中的 `Table`，它會排序，並在列變化時保持欄位對齊。Markdown 表格是唯讀的，沒有排序功能。
 - **數學公式、圖表或其他嵌入式格式**：`Markdown` 渲染文字、程式碼和表格。需要時，請把 StreamMark 的數學或圖表外掛加入你自己的 `MarkdownServices`，而不是在文字中貼上圖片。
 
 ## 用法
@@ -265,4 +265,4 @@ StreamMark 服務決定文件如何解析以及程式碼區塊如何表現。控
 |---|---|
 | `CodeBlock` | 一個帶有自己複製操作的程式碼範例 |
 | `Textarea` | 使用者編輯多行文字，且原始碼才是重點 |
-| `SortableDataTable` | 紀錄必須排序，例如發票表格 |
+| `Table` | 紀錄必須排序，例如發票表格 |

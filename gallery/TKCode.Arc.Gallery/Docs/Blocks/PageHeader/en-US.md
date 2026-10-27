@@ -29,7 +29,7 @@ scrolls.
 - **Switching views inside a card or a panel**: use `Tabs`, which needs no page frame.
 - **A dialog or a settings form with its own title**: use the title of `Dialog`, or a plain heading.
 - **A single path with no tabs or actions**: use `Breadcrumb` alone, which does not reserve the height of a header.
-- **A list or a table with its own toolbar**: use `FilterToolbar` above a `SortableDataTable`. A page header takes its
+- **A list or a table with its own toolbar**: use `FilterToolbar` above a `Table`. A page header takes its
   height from the body, so a table inside it gets less room than the page needs.
 
 ## Usage

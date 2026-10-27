@@ -33,7 +33,7 @@ header instead of a set of loose dropdowns.
   filter toolbar applies a value to a list; a form field stores it on a record.
 - **Choosing one value from a long list**, such as a customer among thousands: use `Combobox` with its own search.
   The Add filter menu lists every option, so it suits short lists only.
-- **Sorting the rows of a table**: use the column headers of `SortableDataTable`. A filter removes rows; a sort orders
+- **Sorting the rows of a table**: use the column headers of `Table`. A filter removes rows; a sort orders
   them, and the two belong in different places.
 
 ## Usage
@@ -233,7 +233,7 @@ public partial class InvoicesViewModel : ObservableObject
             <arc:Button Content="Export CSV" Variant="Secondary" Command="{Binding ExportCommand}" />
         </arc:FilterToolbar.Actions>
     </arc:FilterToolbar>
-    <arc:SortableDataTable ItemsSource="{Binding VisibleInvoices}" />
+    <arc:Table ItemsSource="{Binding VisibleInvoices}" />
 </StackPanel>
 ```
 
@@ -425,13 +425,13 @@ call that matches what your handlers need.
 
 - `ChipGroup` for a small fixed set of toggles.
 - `SearchField` for free text search without filters.
-- `SortableDataTable` for the table that the filters narrow.
+- `Table` for the table that the filters narrow.
 - `MultiSelect` for a form field that takes several values.
 
 | Component | Choose it when |
 |---|---|
 | `ChipGroup` | The options are a short fixed set that people switch between, and all are visible |
 | `SearchField` | The page searches text and has no facets to narrow |
-| `SortableDataTable` | The rows the filters leave are shown and sorted in a table |
+| `Table` | The rows the filters leave are shown and sorted in a table |
 | `MultiSelect` | A form stores several values on a record |
 | `Combobox` | One value must be chosen from a long list that needs its own search |

@@ -1,7 +1,7 @@
 ---
 title: 大頭貼
 summary: 用於人員與帳號的精簡身分標示。
-source-hash: ac97c0bbaae5
+source-hash: 8daf63eb82c4
 ---
 
 <Demo name="Initials" />
@@ -20,7 +20,7 @@ source-hash: ac97c0bbaae5
 
 - **小空間內顯示多人並附上其餘人數**：用 `AvatarGroup`，它會把溢出的人摺疊成 "+N" 標籤。
 - **點擊後開啟帳號操作（例如登出或切換工作區）的大頭貼**：用 `UserMenu`，由它負責選單、焦點與鍵盤模型。
-- **需要比較姓名、角色與日期的清單**：用 `SortableDataTable`。單靠大頭貼無法承載讀者需要的文字資訊。
+- **需要比較姓名、角色與日期的清單**：用 `Table`。單靠大頭貼無法承載讀者需要的文字資訊。
 - **每則訊息都有作者與時間的對話**：用 `ChatThread` 或 `CommentThread`，它們會把作者與訊息文字並排排版。
 - **不是人員的狀態或類別**，例如進行中、草稿或失敗：用 `Badge`。
 - **編輯人員的姓名或電子郵件**：用 `Input`。大頭貼只顯示值，沒有可編輯的文字。
@@ -278,7 +278,7 @@ public partial class OnCallMemberViewModel : ObservableObject
 |---|---|
 | `AvatarGroup` | 一小組團隊成員或編輯者需要放進頁首、卡片或表格儲存格 |
 | `UserMenu` | 大頭貼需要開啟登出、個人資料或工作區操作 |
-| `SortableDataTable` | 姓名、角色與日期需要以欄位形式閱讀與比較 |
+| `Table` | 姓名、角色與日期需要以欄位形式閱讀與比較 |
 | `ChatThread` / `CommentThread` | 每則訊息都需要作者與時間與文字並排顯示 |
 | `Badge` | 標籤是狀態或類別，而非人員 |
 | `Input` | 人員的姓名或電子郵件需要輸入或編輯 |

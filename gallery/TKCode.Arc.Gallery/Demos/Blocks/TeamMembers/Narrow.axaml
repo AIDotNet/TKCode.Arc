@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamMembersNarrowDemo">
+    <!-- 400 wide: the header and the invite row stack, the search takes its own line, member rows split into two tiers and
+         the pending invites' buttons go under the address. The block reads its own width, not the window's. -->
+    <arc:TeamMembers x:Name="Block" Title="Members" Width="400" HorizontalAlignment="Center" Margin="0,12" />
+</UserControl>

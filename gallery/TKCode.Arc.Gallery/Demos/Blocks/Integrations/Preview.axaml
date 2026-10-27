@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.IntegrationsPreviewDemo">
+    <!-- Nine invented apps in three categories, two connected; connecting takes 1.4 seconds. Data: IntegrationsDemoData. -->
+    <arc:Integrations x:Name="Directory"
+                      Margin="0,12"
+                      Title="Connected apps"
+                      Subtitle="Link the services your workspace relies on." />
+</UserControl>

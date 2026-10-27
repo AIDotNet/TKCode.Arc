@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SmallMultiplesCrosshairDemo">
+    <!-- CrosshairIndexChanged follows the synced crosshair; the buttons move it from code. -->
+    <StackPanel Margin="0,12" Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <arc:Button x:Name="First" Content="First month" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="YearAgo" Content="A year ago" Variant="Secondary" Size="Small" />
+            <arc:Button x:Name="Clear" Content="Clear" Variant="Ghost" Size="Small" />
+        </StackPanel>
+        <TextBlock x:Name="Status" HorizontalAlignment="Center" Text="Crosshair hidden" />
+        <arc:SmallMultiples x:Name="Chart"
+                            SeriesLegendText="Market"
+                            GhostLegendText="All markets, scaled to fit" />
+    </StackPanel>
+</UserControl>

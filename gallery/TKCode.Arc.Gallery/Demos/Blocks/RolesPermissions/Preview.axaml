@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RolesPermissionsPreviewDemo">
+    <!-- Five roles, four groups; Save waits 900 ms like a server call. Data: RolesPermissionsDemoData. -->
+    <arc:RolesPermissions x:Name="Matrix" Margin="0,12">
+        <arc:RolesPermissions.Members>
+            <arc:AvatarGroupMember DisplayName="Lena Hart" Source="https://i.pravatar.cc/160?img=47" />
+            <arc:AvatarGroupMember DisplayName="Omar Diaz" Source="https://i.pravatar.cc/160?img=12" />
+            <arc:AvatarGroupMember DisplayName="Priya Rao" Source="https://i.pravatar.cc/160?img=32" />
+            <arc:AvatarGroupMember DisplayName="Kai Moreno" Source="https://i.pravatar.cc/160?img=68" />
+        </arc:RolesPermissions.Members>
+    </arc:RolesPermissions>
+</UserControl>

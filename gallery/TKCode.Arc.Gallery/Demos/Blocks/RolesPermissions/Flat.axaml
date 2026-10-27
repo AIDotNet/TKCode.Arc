@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RolesPermissionsFlatDemo">
+    <!-- No card: the block lies on the page with a page margin, as a full settings page would show it. -->
+    <arc:RolesPermissions x:Name="Matrix" IsFramed="False" Title="Workspace roles" />
+</UserControl>

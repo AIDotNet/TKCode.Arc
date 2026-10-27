@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.KpiDrilldownControlledDemo">
+    <!-- SelectedKey, RangeDays and IsCompareEnabled are two-way: the buttons drive the block, the log reports what the person did. -->
+    <StackPanel Spacing="16">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Open refund rate" Variant="Secondary" Size="Small" Click="OnOpenRefunds" />
+            <arc:Button Content="Open run rate" Variant="Secondary" Size="Small" Click="OnOpenRunRate" />
+            <arc:Button Content="Back to cards" Variant="Ghost" Size="Small" Click="OnClose" />
+            <arc:Button Content="90 days" Variant="Ghost" Size="Small" Click="OnNinety" />
+        </StackPanel>
+        <arc:KpiDrilldown x:Name="Block"
+                          Title="Studio pulse"
+                          SelectedChanged="OnSelectedChanged"
+                          RangeChanged="OnRangeChanged"
+                          CompareChanged="OnCompareChanged"
+                          DimensionChanged="OnDimensionChanged" />
+        <StackPanel Spacing="4">
+            <TextBlock FontSize="13"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                       Text="{Binding #Block.SelectedKey, StringFormat='SelectedKey: {0}', TargetNullValue='SelectedKey: none'}" />
+            <TextBlock x:Name="Log" FontSize="13" TextWrapping="Wrap" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

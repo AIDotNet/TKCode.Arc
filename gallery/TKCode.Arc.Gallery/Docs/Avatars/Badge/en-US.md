@@ -334,4 +334,4 @@ full motion the colors crossfade; with reduced motion the change is instant.
 | `ChipGroup` | The user selects or clears values |
 | `MetricCard` | A large number needs its label, trend and context |
 | `Avatar` | The status belongs to a person, shown as a dot on the photo |
-| `SortableDataTable` | The badges sit in columns that the person sorts and compares |
+| `Table` | The badges sit in columns that the person sorts and compares |

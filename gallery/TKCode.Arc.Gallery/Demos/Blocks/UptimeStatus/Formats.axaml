@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UptimeStatusFormatsDemo">
+    <!--
+        Everything the block writes is a property: the three titles, the words (Labels), how a response time, an uptime and a
+        day are written. Here a French-flavoured page shows response times in seconds, uptimes with three decimals and the
+        longer headroom of a chart that is allowed to show more empty space above the target.
+    -->
+    <arc:UptimeStatus x:Name="Status"
+                      PageName="Statut de Larkspur"
+                      OperationalTitle="Tous les systèmes fonctionnent"
+                      DegradedTitle="Performances dégradées"
+                      OutageTitle="Panne majeure"
+                      ChartHeadroom="1.5" />
+</UserControl>

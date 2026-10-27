@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.JourneyFlowNarrowDemo">
+    <!-- 380 wide: the switch takes the full width, the panel moves under the chart, top nodes show only their count and stages use short names. -->
+    <arc:JourneyFlow x:Name="Journey"
+                     Width="380"
+                     HorizontalAlignment="Left"
+                     Margin="0,12"
+                     Title="Trial to paid journeys"
+                     SubtitleFormat="{}{0} visits in October"
+                     SegmentsLabel="Channel"
+                     GoalCaption="of visitors picked a paid plan"
+                     OutcomesHeader="Plan at trial end"
+                     CountFormat="{}{0} learners" />
+</UserControl>

@@ -30,7 +30,7 @@ they open a table or a chart.
 - **A bare number inside running text or a heading**, with no frame and no context: use `AnimatedCounter`.
 - **A quota or a progress toward a limit**, such as seats used out of 50: use `UsageMeter`, which draws the fraction.
 - **A card with media, an owner and actions**: use `Card`. A metric card holds a number, not a tile of content.
-- **Many values to compare by attributes**, such as revenue per region and per plan: use `SortableDataTable` or
+- **Many values to compare by attributes**, such as revenue per region and per plan: use `Table` or
   `DataGrid`, where each row can carry its own columns.
 - **A time to reach a deadline**, such as a renewal or a trial end: use `Countdown`, which counts down on its own.
 
@@ -357,4 +357,4 @@ To open a detail view, place the card in a control that your page owns and handl
 | `UsageMeter` | The value is a fraction of a limit, such as seats used |
 | `Card` | The tile holds media, an owner or actions beside the number |
 | `Countdown` | The number is a time left until a deadline |
-| `SortableDataTable` | The values are rows that need sorting and comparison by attribute |
+| `Table` | The values are rows that need sorting and comparison by attribute |

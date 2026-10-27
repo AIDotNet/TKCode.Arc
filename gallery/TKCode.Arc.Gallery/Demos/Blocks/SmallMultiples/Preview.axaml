@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SmallMultiplesPreviewDemo">
+    <!-- Eight markets over 24 months; hover a panel to move the crosshair in all of them. Data: SmallMultiplesDemoData. -->
+    <arc:SmallMultiples x:Name="Chart"
+                        Margin="0,12"
+                        GrowthLag="12"
+                        SeriesLegendText="Market"
+                        GhostLegendText="All markets, scaled to fit" />
+</UserControl>

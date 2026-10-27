@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.RichTextEditorDocsProfileDemo">
+    <Border Padding="24,20"
+            CornerRadius="26"
+            BorderThickness="1"
+            MaxWidth="680"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}">
+        <arc:RichTextEditor Profile="Docs"
+                            Placeholder="Plan the launch"
+                            Html="&lt;h2&gt;Launch checklist&lt;/h2&gt;&lt;p data-spacing=&quot;relaxed&quot;&gt;Select text for &lt;span data-size=&quot;large&quot;&gt;size&lt;/span&gt;, &lt;u&gt;underline&lt;/u&gt;, &lt;span data-color=&quot;red&quot;&gt;text color&lt;/span&gt; and &lt;mark data-bg=&quot;yellow&quot;&gt;highlight&lt;/mark&gt;, or for x&lt;sup&gt;2&lt;/sup&gt; and H&lt;sub&gt;2&lt;/sub&gt;O.&lt;/p&gt;&lt;h4&gt;Before the release&lt;/h4&gt;&lt;ul data-todo=&quot;true&quot;&gt;&lt;li data-checked=&quot;true&quot;&gt;Freeze the release branch&lt;/li&gt;&lt;li&gt;Write the announcement&lt;/li&gt;&lt;li&gt;Notify support&lt;/li&gt;&lt;/ul&gt;&lt;ul data-toggle=&quot;true&quot;&gt;&lt;li data-collapsed=&quot;true&quot;&gt;Rollback plan&lt;ul&gt;&lt;li&gt;Revert the tag&lt;/li&gt;&lt;li&gt;Post in the incident channel&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p data-align=&quot;center&quot;&gt;Type [] and a space for a to-do item.&lt;/p&gt;&lt;pre data-lang=&quot;bash&quot;&gt;git tag v4.2.0&lt;/pre&gt;" />
+    </Border>
+</UserControl>

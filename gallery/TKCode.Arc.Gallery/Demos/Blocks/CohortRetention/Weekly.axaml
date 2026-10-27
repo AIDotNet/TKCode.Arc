@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CohortRetentionWeeklyDemo">
+    <!--
+        Sixteen weekly cohorts of app installs: the columns follow the data, the thresholds are lower (10 / 25 / 40 / 55 /
+        70%) and every "month" text says "week". With one segment the segment switch is hidden.
+    -->
+    <arc:CohortRetention x:Name="Retention"
+                         Title="Weekly install retention"
+                         Subtitle="Installs still opening the app each week after install."
+                         MetricLabelFormat="Week {0} retention"
+                         SecondMetricMonth="4"
+                         TotalLabel="Installs"
+                         MonthFormat="Week {0}"
+                         AxisTitle="Weeks since install"
+                         AxisTitleShort="Week"
+                         CellAnnouncementFormat="{}{0}, week {1}: {2} still active, {3} of {4}."
+                         AverageAnnouncementFormat="Average of {0}, week {1}: {2} still active." />
+</UserControl>

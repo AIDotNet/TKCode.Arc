@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.UptimeStatusOutageDemo">
+    <!-- A major outage that is still going: Console is down, so the header, its row, today's bar and the incident list all say so. -->
+    <arc:UptimeStatus x:Name="Status" PageName="Larkspur status" StatusSummary="Console unavailable since 13:43 UTC" />
+</UserControl>

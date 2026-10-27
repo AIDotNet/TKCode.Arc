@@ -1,7 +1,7 @@
 ---
 title: 页头
 summary: 项目页头会随滚动收拢为紧凑栏，标签页的数量会滚动更新。
-source-hash: a7ba8b1b618a
+source-hash: de9e8f154f51
 ---
 
 <Demo name="Preview" />
@@ -22,7 +22,7 @@ source-hash: a7ba8b1b618a
 - **在卡片或面板内切换视图**：用 `Tabs`，它不需要页面框架。
 - **带有自身标题的对话框或设置表单**：使用 `Dialog` 的标题，或普通的标题。
 - **只有单一路径，没有标签页或操作**：只用 `Breadcrumb`，它不会占用页头的高度。
-- **带有自身工具栏的列表或表格**：在 `SortableDataTable` 上方使用 `FilterToolbar`。页头的高度由主体决定，因此放在其中的表格可用的空间会少于页面所需。
+- **带有自身工具栏的列表或表格**：在 `Table` 上方使用 `FilterToolbar`。页头的高度由主体决定，因此放在其中的表格可用的空间会少于页面所需。
 
 ## 用法
 

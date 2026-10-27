@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MrrWaterfallEventsDemo">
+    <!--
+        The period, the unit and the selected bar are two-way properties and every change is an event. Buttons drive the
+        block from outside; the log shows what it reports. Formatters and words are replaced to show the hooks.
+    -->
+    <StackPanel Spacing="12">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="Churn" Variant="Secondary" Size="Small" Content="Select churn" />
+            <arc:Button x:Name="Wrap" Variant="Secondary" Size="Small" Content="Select the next bar (wraps)" />
+            <arc:Button x:Name="Percent" Variant="Secondary" Size="Small" Content="Toggle unit" />
+        </StackPanel>
+        <arc:MrrWaterfall x:Name="Bridge"
+                          Title="Recurring revenue bridge"
+                          Scope="All tiers" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                   Text="Events appear here." />
+    </StackPanel>
+</UserControl>

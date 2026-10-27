@@ -29,7 +29,7 @@ controls that produced the change.
   picture.
 - **Three or more versions of one picture**: use `Tabs` to switch between versions, since a divider compares only two
   sides.
-- **Comparing numbers or records**: use `SortableDataTable`. A picture cannot show the difference between two values.
+- **Comparing numbers or records**: use `Table`. A picture cannot show the difference between two values.
 
 ## Usage
 
@@ -388,4 +388,4 @@ been reached.
 | `Tabs` | Three or more versions of one picture are switched between |
 | `ResizablePanels` | Two panes of live app content are resized against each other |
 | `Slider` | A value is chosen on a track, with no picture |
-| `SortableDataTable` | Two sets of numbers or records are compared |
+| `Table` | Two sets of numbers or records are compared |

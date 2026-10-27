@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.HorizonChartLatencyDemo">
+    <!--
+        Twenty services, 90 days, in milliseconds above or below each service's latency target. ValueFormatter writes the
+        unit, the extent is set by hand (a 60 ms band edge), two bands are enough for this many rows and the rows start in
+        order of their latest value.
+    -->
+    <arc:HorizonChart x:Name="Chart"
+                      Title="Latency against target"
+                      Description="Median response time per service, June to August 2027"
+                      BaselineLabel="latency target"
+                      Bands="2"
+                      Sort="Latest"
+                      Extent="60" />
+</UserControl>
