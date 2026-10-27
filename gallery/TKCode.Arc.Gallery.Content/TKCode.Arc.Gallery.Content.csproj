@@ -16,4 +16,11 @@
         <AvaloniaResource Include="../TKCode.Arc.Gallery/Docs/**/*.md" Link="Docs/%(RecursiveDir)%(Filename)%(Extension)" />
         <AvaloniaResource Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="Guides/%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
+
+    <!-- The outlines of the Choropleth explorer demos (public domain: US Census cartographic boundaries, Natural Earth admin-1),
+         read and parsed on demand by ChoroplethExplorerDemoData; the block itself contains no map. The WebAssembly host serves
+         them as files (wwwroot/content/Demos/...) and reads one when its area is first shown. -->
+    <ItemGroup>
+        <AvaloniaResource Include="../TKCode.Arc.Gallery/Demos/Blocks/ChoroplethExplorer/Maps/*.txt" Link="Demos/Blocks/ChoroplethExplorer/Maps/%(Filename)%(Extension)" />
+    </ItemGroup>
 </Project>

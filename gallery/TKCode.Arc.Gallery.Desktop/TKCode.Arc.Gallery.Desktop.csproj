@@ -27,6 +27,10 @@
         <TrimmerRootAssembly Include="TKCode.Arc.Gallery.Shots" />
         <TrimmerRootAssembly Include="TKCode.Arc.Gallery.Content" />
     </ItemGroup>
+    <!-- The Dock icon of an unbundled run on macOS (MacDockIcon); a .app bundle carries the same file as its own icon. -->
+    <ItemGroup>
+        <AvaloniaResource Include="Assets/AppIcon.icns" />
+    </ItemGroup>
     <!-- The logos of the Friends page: the files the WebAssembly host serves from wwwroot/friends, here as resources (AssetLogoSource). -->
     <ItemGroup>
         <AvaloniaResource Include="../TKCode.Arc.Gallery.Browser/wwwroot/friends/*.png" Link="Friends/%(Filename)%(Extension)" />

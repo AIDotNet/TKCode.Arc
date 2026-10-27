@@ -6,6 +6,7 @@ using Avalonia.Browser;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
 using TKCode.Arc.Gallery;
+using TKCode.Arc.Gallery.Demos;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
@@ -35,6 +36,7 @@ internal sealed partial class Program
         if (AppContext.TryGetSwitch("Arc.Gallery.TextsOverHttp", out var textsOverHttp) && textsOverHttp && args.Length > 1)
         {
             GalleryTexts.Source = new HttpTextSource(new Uri(args[1]));
+            ChoroplethExplorerDemoData.ReadMap = new HttpMapSource(new Uri(args[1])).Read;
         }
         // The language chosen in the top bar is kept in local storage; until there is one, the browser's languages decide.
         GalleryLanguages.Store = new BrowserLanguageStore();

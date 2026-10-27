@@ -125,6 +125,8 @@
     <ItemGroup>
         <Content Include="../TKCode.Arc.Gallery/Docs/**/*.md" Link="wwwroot/content/Docs/%(RecursiveDir)%(Filename)%(Extension)" />
         <Content Include="../TKCode.Arc.Gallery/Guides/**/*.md" Link="wwwroot/content/Guides/%(RecursiveDir)%(Filename)%(Extension)" />
+        <!-- The map outlines of the Choropleth explorer demos (HttpMapSource): wwwroot/content/Demos/Blocks/ChoroplethExplorer/Maps/map-*.txt. -->
+        <Content Include="../TKCode.Arc.Gallery/Demos/Blocks/ChoroplethExplorer/Maps/*.txt" Link="wwwroot/content/Demos/Blocks/ChoroplethExplorer/Maps/%(Filename)%(Extension)" />
     </ItemGroup>
 
     <Target Name="ArcCopyLazyAssemblies" AfterTargets="Publish" Condition="'$(WasmBuildingForNestedPublish)' != 'true' And '@(_ArcWasmLazyFile)' != ''">

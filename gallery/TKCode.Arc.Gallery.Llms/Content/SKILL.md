@@ -136,7 +136,7 @@ declares transitions under `^:motion-full` and `^:motion-reduced` with `arc:ArcM
 | A short confirmation of finished work | `Toast`; several at once or app-wide `ToastStack` |
 | A message that stays until someone acts | `Alert` |
 | A number with context | `MetricCard`; a trend `Sparkline` or `LineChart`; part of a whole `DonutChart` |
-| Records to compare and sort | `SortableDataTable`; spreadsheet editing `DataGrid`; nested items `TreeView` |
+| Records to compare and sort | `Table`; spreadsheet editing `DataGrid`; nested items `TreeView` |
 | Filters over a collection | `FilterToolbar`, or `ChipGroup` for a few facets |
 | Content still loading | `Skeleton`; a known amount of work `Progress` |
 | Nothing to show yet | `EmptyState` |

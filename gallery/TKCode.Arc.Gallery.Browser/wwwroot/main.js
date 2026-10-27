@@ -115,6 +115,21 @@ dotnetRuntime.setModuleImports('arc-texts', {
     }
 });
 
+// A map outline of the Choropleth explorer demos (HttpMapSource.cs). The demo data is read by synchronous code, so the file is
+// requested synchronously; it is one small same-origin file per area, read once and kept by the demo data. '' when missing.
+dotnetRuntime.setModuleImports('arc-maps', {
+    loadSync: url => {
+        try {
+            const request = new XMLHttpRequest();
+            request.open('GET', url, false);
+            request.send();
+            return request.status === 200 && !/^text\/html\b/.test(request.getResponseHeader('content-type') ?? '') ? request.responseText : '';
+        } catch {
+            return '';
+        }
+    }
+});
+
 // The GitHub star count of the top bar, kept for an hour (BrowserStarCache.cs); -1 when there is none.
 const starsKey = 'arc.gallery.stars';
 dotnetRuntime.setModuleImports('arc-stars', {
