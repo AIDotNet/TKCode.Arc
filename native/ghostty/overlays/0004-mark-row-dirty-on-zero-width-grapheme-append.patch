@@ -1,0 +1,13 @@
+diff --git a/src/terminal/Terminal.zig b/src/terminal/Terminal.zig
+--- a/src/terminal/Terminal.zig
++++ b/src/terminal/Terminal.zig
+@@ -1528,6 +1528,9 @@
+             if (!emoji) return;
+         }
+ 
++        // TKCode overlay O6: the previous cell (same row as the cursor) gains
++        // a codepoint, the row must be redrawn.
++        self.screens.active.cursorMarkDirty();
+         try self.screens.active.appendGrapheme(prev, c);
+         return;
+     }

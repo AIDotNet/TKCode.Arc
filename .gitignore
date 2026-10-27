@@ -35,3 +35,6 @@ blog/*
 # Python bytecode from the tools/ scripts
 __pycache__/
 *.pyc
+
+# libghostty-vt binaries for TKCode.Arc.Terminal (tools/terminal/sync-native.sh)
+src/TKCode.Arc.Terminal/runtimes/

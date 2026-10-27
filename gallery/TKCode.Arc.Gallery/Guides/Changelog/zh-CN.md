@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: ebb66486ef60
+source-hash: d0068be03287
 ---
 
 # 更新日志
@@ -8,6 +8,12 @@ source-hash: ebb66486ef60
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners` 和 `TKCode.Arc.Mobile`。
+
+## 0.3.1-preview.4 (2026-10-27)
+
+### 新增
+
+- **Terminal**(新包 `TKCode.Arc.Terminal`,net10.0 与 net11.0):`TerminalView` 控件和 libghostty-vt 的托管封装(VT 解析、屏幕状态、选区、输入编码)。原生库随包放在 `runtimes/<rid>/native`,覆盖 Windows、macOS 和 Linux。
 
 ## 0.3.1-preview.3 (2026-10-27)
 

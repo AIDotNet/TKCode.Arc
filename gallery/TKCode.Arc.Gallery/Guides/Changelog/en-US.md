@@ -9,7 +9,13 @@ version carries a `-preview` suffix, the API may still change between releases; 
 keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners` and `TKCode.Arc.Mobile`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile` and `TKCode.Arc.Terminal`.
+
+## 0.3.1-preview.4 (2026-10-27)
+
+### Added
+
+- **Terminal** (new package `TKCode.Arc.Terminal`, net10.0 and net11.0): the `TerminalView` control and a managed facade over libghostty-vt (VT parsing, screen state, selection, input encoding). The native library ships under `runtimes/<rid>/native` for Windows, macOS and Linux.
 
 ## 0.3.1-preview.3 (2026-10-27)
 

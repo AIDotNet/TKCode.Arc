@@ -1,0 +1,98 @@
+diff --git a/src/terminal/Screen.zig b/src/terminal/Screen.zig
+index 820455e..7d56d96 100644
+--- a/src/terminal/Screen.zig
++++ b/src/terminal/Screen.zig
+@@ -813,6 +813,14 @@ pub fn cursorCellEndOfPrev(self: *Screen) *pagepkg.Cell {
+     return page_rac.cell;
+ }
+ 
++/// TKCode overlay O5: mark the row above the cursor dirty (its last cell was
++/// changed, e.g. a stale spacer_head cleared when overwriting a wrapped wide char).
++pub fn cursorPrevRowMarkDirty(self: *Screen) void {
++    assert(self.cursor.y > 0);
++    const page_pin = self.cursor.page_pin.up(1).?;
++    page_pin.rowAndCell().row.dirty = true;
++}
++
+ /// Move the cursor right. This is a specialized function that is very fast
+ /// if the caller can guarantee we have space to move right (no wrapping).
+ pub fn cursorRight(self: *Screen, n: size.CellCountInt) void {
+@@ -1646,9 +1654,12 @@ pub fn cursorResetWrap(self: *Screen) void {
+ 
+     // This row does not wrap and the next row is not wrapped to
+     page_row.wrap = false;
++    page_row.dirty = true; // TKCode overlay O5
+ 
+     if (self.cursor.page_pin.down(1)) |next_row| {
+-        next_row.rowAndCell().row.wrap_continuation = false;
++        const next = next_row.rowAndCell().row;
++        next.wrap_continuation = false;
++        next.dirty = true; // TKCode overlay O5
+     }
+ 
+     // If the last cell in the row is a spacer head we need to clear it.
+@@ -2974,6 +2985,8 @@ pub fn cursorSetSemanticContent(self: *Screen, t: union(enum) {
+                 .initial, .right => .prompt,
+                 .continuation, .secondary => .prompt_continuation,
+             };
++            // TKCode overlay O5: row metadata changed, the row must be redrawn.
++            cursor.page_row.dirty = true;
+         },
+     }
+ }
+diff --git a/src/terminal/Terminal.zig b/src/terminal/Terminal.zig
+index 2667c51..d27eae5 100644
+--- a/src/terminal/Terminal.zig
++++ b/src/terminal/Terminal.zig
+@@ -1684,7 +1684,10 @@ fn writeCell(
+                 // doesn't keep a stale spacer_head.
+                 if (self.screens.active.cursor.y > 0 and self.screens.active.cursor.x <= 1) {
+                     const head_cell = self.screens.active.cursorCellEndOfPrev();
+-                    if (head_cell.wide == .spacer_head) head_cell.wide = .narrow;
++                    if (head_cell.wide == .spacer_head) {
++                        head_cell.wide = .narrow;
++                        self.screens.active.cursorPrevRowMarkDirty(); // TKCode overlay O5
++                    }
+                 }
+             },
+ 
+@@ -1709,7 +1712,10 @@ fn writeCell(
+                 // doesn't keep a stale spacer_head.
+                 if (self.screens.active.cursor.y > 0 and self.screens.active.cursor.x <= 1) {
+                     const head_cell = self.screens.active.cursorCellEndOfPrev();
+-                    if (head_cell.wide == .spacer_head) head_cell.wide = .narrow;
++                    if (head_cell.wide == .spacer_head) {
++                        head_cell.wide = .narrow;
++                        self.screens.active.cursorPrevRowMarkDirty(); // TKCode overlay O5
++                    }
+                 }
+             },
+ 
+@@ -1819,7 +1825,10 @@ fn printWrap(self: *Terminal) !void {
+     cursor.semantic_content_clear_eol = old_semantic_clear;
+     switch (old_semantic) {
+         .output, .input => {},
+-        .prompt => cursor.page_row.semantic_prompt = .prompt_continuation,
++        .prompt => {
++            cursor.page_row.semantic_prompt = .prompt_continuation;
++            cursor.page_row.dirty = true; // TKCode overlay O5
++        },
+     }
+ 
+     if (mark_wrap) {
+@@ -2227,6 +2236,7 @@ pub fn semanticPrompt(
+                 self.screens.active.cursor.x == 0)
+             {
+                 self.screens.active.cursor.page_row.semantic_prompt = .none;
++                self.screens.active.cursor.page_row.dirty = true; // TKCode overlay O5
+             }
+         },
+ 
+@@ -2382,6 +2392,7 @@ pub fn index(self: *Terminal) !void {
+             // type later and outputs something. We handle that in the
+             // semanticPrompt function.
+             screen.cursor.page_row.semantic_prompt = .prompt_continuation;
++            screen.cursor.page_row.dirty = true; // TKCode overlay O5
+         }
+     } else {
+         // This should never be set in the output mode.

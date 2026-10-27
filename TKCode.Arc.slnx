@@ -4,6 +4,7 @@
     <Project Path="src/TKCode.Arc/TKCode.Arc.csproj" />
     <Project Path="src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
     <Project Path="src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
+    <Project Path="src/TKCode.Arc.Terminal/TKCode.Arc.Terminal.csproj" />
     <Project Path="src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
     <Project Path="src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
     <Project Path="src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />

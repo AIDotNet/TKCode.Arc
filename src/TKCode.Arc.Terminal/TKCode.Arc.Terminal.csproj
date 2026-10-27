@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- GCHandle<T> and by-ref-like generics need .NET 9+, so no net8.0 asset. -->
+        <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Terminal</AssemblyName>
+        <RootNamespace>TKCode.Terminal</RootNamespace>
+        <PackageId>TKCode.Arc.Terminal</PackageId>
+        <Description>Terminal emulator for Avalonia: the TerminalView control and a managed facade over libghostty-vt (VT parsing, screen state, selection, input encoding). The native library ships in the package under runtimes/&lt;rid&gt;/native.</Description>
+        <PackageTags>$(PackageTags);terminal;ghostty;vt</PackageTags>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The terminal test suites stay with the TKCode app, which owns the native build and the pty host. -->
+        <InternalsVisibleTo Include="TKCode.Terminal.Core.Tests" />
+        <InternalsVisibleTo Include="TKCode.Terminal.Avalonia.Tests" />
+    </ItemGroup>
+    <!-- libghostty-vt per RID. The binaries are not committed: tools/terminal/sync-native.sh copies them in from the TKCode build. -->
+    <ItemGroup>
+        <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" />
+    </ItemGroup>
+    <Target Name="WarnMissingTerminalNative" BeforeTargets="Pack">
+        <ItemGroup>
+            <_TerminalNative Include="$(MSBuildProjectDirectory)/runtimes/*/native/*" />
+        </ItemGroup>
+        <Warning Condition="'@(_TerminalNative)' == ''" Text="No libghostty-vt under runtimes/&lt;rid&gt;/native: the package would ship without the native library. Run tools/terminal/sync-native.sh." />
+    </Target>
+</Project>

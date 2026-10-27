@@ -80,8 +80,67 @@ jobs:
       - name: Test (controls, headless Avalonia)
         run: dotnet test tests/TKCode.Arc.Tests --no-build
 
+  # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
+  # the Zig in native/toolchain.json. Linux cross-compiles the Linux and Windows targets; the macOS targets need the
+  # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native.
+  native:
+    name: Native (${{ matrix.host }})
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: linux
+            os: ubuntu-24.04
+            rids: linux-x64 linux-arm64 win-x64 win-arm64
+          - host: macos
+            os: macos-15
+            rids: osx-arm64 osx-x64
+    env:
+      ZIG_GLOBAL_CACHE_DIR: ${{ github.workspace }}/.zig-cache-global
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Install llvm-strip
+        if: matrix.host == 'linux'
+        run: sudo apt-get update -q && sudo apt-get install -y -q llvm
+
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/tkcode/zig
+            ${{ github.workspace }}/.zig-cache-global
+          key: zig-${{ matrix.host }}-${{ hashFiles('native/toolchain.json', 'native/ghostty/ghostty-upstream.json') }}
+
+      - name: Build libghostty-vt
+        run: for rid in ${{ matrix.rids }}; do tools/terminal/build-ghostty.sh "$rid"; done
+
+      # The Linux libraries must load on glibc 2.28 and newer.
+      - name: Check the glibc floor (2.28)
+        if: matrix.host == 'linux'
+        run: |
+          for f in artifacts/native/linux-*/lib*.so; do
+            max=$(objdump -T "$f" | grep -o 'GLIBC_[0-9.]*' | sort -uV | tail -1)
+            echo "$f requires $max"
+            [ "$(printf '%s\nGLIBC_2.28\n' "$max" | sort -V | tail -1)" = "GLIBC_2.28" ]
+          done
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: native-${{ matrix.host }}
+          path: |
+            artifacts/native/*/*ghostty-vt.*
+            artifacts/native/*/ghostty-commit.txt
+          if-no-files-found: error
+          retention-days: 7
+
   pack:
     name: Pack
+    needs: native
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -128,6 +187,16 @@ jobs:
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: native-*
+          path: artifacts/native
+          merge-multiple: true
+
+      # artifacts/native/<rid>/ -> src/TKCode.Arc.Terminal/runtimes/<rid>/native/
+      - name: Stage the native libraries
+        run: tools/terminal/sync-native.sh
+
       # Build the whole solution once, then pack without rebuilding.
       - name: Build
         run: >
@@ -146,7 +215,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
+          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -154,6 +223,13 @@ jobs:
                 exit 1
               fi
             done
+          done
+          # TKCode.Arc.Terminal must carry libghostty-vt for every RID.
+          terminal="artifacts/nupkg/TKCode.Arc.Terminal.$VERSION.nupkg"
+          for entry in runtimes/linux-x64/native/libghostty-vt.so runtimes/linux-arm64/native/libghostty-vt.so \
+                       runtimes/win-x64/native/ghostty-vt.dll runtimes/win-arm64/native/ghostty-vt.dll \
+                       runtimes/osx-x64/native/libghostty-vt.dylib runtimes/osx-arm64/native/libghostty-vt.dylib; do
+            unzip -l "$terminal" | grep -q " $entry\$" || { echo "::error::$terminal lacks $entry"; exit 1; }
           done
           ls -l artifacts/nupkg
           for pkg in artifacts/nupkg/*.nupkg; do
@@ -211,7 +287,7 @@ jobs:
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
+          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

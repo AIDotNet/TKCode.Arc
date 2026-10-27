@@ -1,0 +1,112 @@
+diff --git a/src/build/GhosttyLibVt.zig b/src/build/GhosttyLibVt.zig
+index 690f864..982d1e9 100644
+--- a/src/build/GhosttyLibVt.zig
++++ b/src/build/GhosttyLibVt.zig
+@@ -389,7 +389,7 @@ fn initLibApple(
+     // native link, so explicitly expose only libghostty-vt's public C ABI.
+     const exports = b.addWriteFiles().add(
+         "libghostty-vt.exports",
+-        "_ghostty_*\n",
++        "_ghostty_*\n_tkcode_ghostty_*\n", // TKCode overlay: also export tkcode_ghostty_* extensions
+     );
+ 
+     // Match Zig's versioned dylib naming so existing consumers and packaging
+diff --git a/src/lib_vt.zig b/src/lib_vt.zig
+index 517ccce..f347102 100644
+--- a/src/lib_vt.zig
++++ b/src/lib_vt.zig
+@@ -328,6 +328,10 @@ comptime {
+         @export(&c.terminal_scroll_viewport, .{ .name = "ghostty_terminal_scroll_viewport" });
+         @export(&c.terminal_compression_activity, .{ .name = "ghostty_terminal_compression_activity" });
+         @export(&c.terminal_compress, .{ .name = "ghostty_terminal_compress" });
++        // TKCode overlays O3 / O4
++        @export(&c.tkcode_set_clipboard_read_deferred, .{ .name = "tkcode_ghostty_set_clipboard_read_deferred" });
++        @export(&c.tkcode_clipboard_read_terminator, .{ .name = "tkcode_ghostty_clipboard_read_terminator" });
++        @export(&c.tkcode_modify_other_keys_2, .{ .name = "tkcode_ghostty_modify_other_keys_2" });
+         @export(&c.terminal_get, .{ .name = "ghostty_terminal_get" });
+         @export(&c.terminal_get_multi, .{ .name = "ghostty_terminal_get_multi" });
+         @export(&c.terminal_continuation_write, .{ .name = "ghostty_terminal_continuation_write" });
+diff --git a/src/terminal/c/main.zig b/src/terminal/c/main.zig
+index 5248c2c..c79936b 100644
+--- a/src/terminal/c/main.zig
++++ b/src/terminal/c/main.zig
+@@ -191,6 +191,9 @@ pub const terminal_vt_write_until_ground = terminal.vt_write_until_ground;
+ pub const terminal_scroll_viewport = terminal.scroll_viewport;
+ pub const terminal_compression_activity = terminal.compression_activity;
+ pub const terminal_compress = terminal.compress;
++pub const tkcode_set_clipboard_read_deferred = terminal.tkcode_set_clipboard_read_deferred;
++pub const tkcode_clipboard_read_terminator = terminal.tkcode_clipboard_read_terminator;
++pub const tkcode_modify_other_keys_2 = terminal.tkcode_modify_other_keys_2;
+ pub const terminal_get = terminal.get;
+ pub const terminal_get_multi = terminal.get_multi;
+ pub const terminal_continuation_write = terminal.continuation_write;
+diff --git a/src/terminal/c/terminal.zig b/src/terminal/c/terminal.zig
+index 06cab9b..45d3cda 100644
+--- a/src/terminal/c/terminal.zig
++++ b/src/terminal/c/terminal.zig
+@@ -7415,3 +7415,28 @@ test "get mouse_shape" {
+     try testing.expectEqual(Result.success, get(t, .mouse_shape, @ptrCast(&shape)));
+     try testing.expectEqual(mouse.Shape.wait, shape);
+ }
++
++// ---------------------------------------------------------------------------
++// TKCode overlays O3 / O4. Exported with a `tkcode_ghostty_` prefix so they never
++// collide with upstream symbols. See TKCode docs/terminal/02-core-ghostty.md §2.4.
++
++/// O3: enable or disable deferred OSC 52 clipboard read replies.
++pub fn tkcode_set_clipboard_read_deferred(terminal_: Terminal, deferred: bool) callconv(lib.calling_conv) void {
++    const wrapper = terminal_ orelse return;
++    wrapper.stream.handler.clipboard_read_deferred = deferred;
++}
++
++/// O3: terminator of the most recent clipboard read request: 0 = ST, 1 = BEL.
++pub fn tkcode_clipboard_read_terminator(terminal_: Terminal) callconv(lib.calling_conv) u8 {
++    const wrapper = terminal_ orelse return 0;
++    return switch (wrapper.stream.handler.clipboard_read_terminator) {
++        .st => 0,
++        .bel => 1,
++    };
++}
++
++/// O4: whether xterm modifyOtherKeys level 2 is active (CSI > 4 ; 2 m).
++pub fn tkcode_modify_other_keys_2(terminal_: Terminal) callconv(lib.calling_conv) bool {
++    const wrapper = terminal_ orelse return false;
++    return wrapper.terminal.flags.modify_other_keys_2;
++}
+diff --git a/src/terminal/stream_terminal.zig b/src/terminal/stream_terminal.zig
+index 1261b4a..62900ad 100644
+--- a/src/terminal/stream_terminal.zig
++++ b/src/terminal/stream_terminal.zig
+@@ -68,6 +68,15 @@ pub const Handler = struct {
+     /// inject text into the input stream of the foreground process.
+     title_report: bool = false,
+ 
++    /// TKCode overlay O3: when true, a clipboard read callback that returns
++    /// without replying is not answered with an empty clipboard. The embedder
++    /// answers later by writing the OSC 52 reply itself, using
++    /// `clipboard_read_terminator` as the string terminator.
++    clipboard_read_deferred: bool = false,
++
++    /// TKCode overlay O3: terminator of the most recent clipboard read request.
++    clipboard_read_terminator: osc.Terminator = .st,
++
+     /// Whether DECRQCRA may report the checksum of an area of the screen,
+     /// and XTCHECKSUM may change how it's calculated. This is disabled by
+     /// default because a program can checksum one cell at a time and so
+@@ -1075,6 +1084,7 @@ pub const Handler = struct {
+         terminator: osc.Terminator,
+     ) void {
+         const func = self.effects.clipboard_read orelse return;
++        self.clipboard_read_terminator = terminator;
+ 
+         var state: ClipboardReadState = .{
+             .handler = self,
+@@ -1095,7 +1105,7 @@ pub const Handler = struct {
+         // The program is waiting on us, so a callback that returned
+         // without a (successful) reply gets an empty clipboard rather
+         // than silence.
+-        if (!state.replied) state.respond("") catch |err| {
++        if (!state.replied and !self.clipboard_read_deferred) state.respond("") catch |err| {
+             log.warn("error replying to clipboard read err={}", .{err});
+         };
+     }
