@@ -3,7 +3,7 @@
 English | [简体中文](README.zh-CN.md)
 
 Arc-style components for Avalonia, built on [AtomUI](https://github.com/AtomUI/AtomUI).
-TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 111 components in 22 groups —
+TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 112 components in 22 groups —
 with Arc's visual language and spring motion.
 
 - Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
