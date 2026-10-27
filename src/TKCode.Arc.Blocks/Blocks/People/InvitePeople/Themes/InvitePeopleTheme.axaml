@@ -1,0 +1,602 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The invite form (Arc Invite people, design reference). Framed: a card at most 600 wide, 1px Border, radius 16,
+        Surface, no shadow; the footer and the pending section get a top line. Flat: no card and no lines. From the top:
+        header (title, description, team avatars), the chip field (radius 18, its height on Smooth), the hint row, the
+        error panel (opens on Smooth with a 240ms fade), the seats (count, plan, 6px meter, legend, over-limit line),
+        the footer (reset, send) and the pending section flush with the card's edges. Paddings 20, or 16 when the
+        control is 480 wide or less (:compact). Chips, rows, menus and flights are built in code (InvitePeopleParts.cs).
+    -->
+    <ControlTheme x:Key="{x:Type arc:InvitePeople}" TargetType="arc:InvitePeople">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:InvitePeopleTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:InvitePeopleTokenResource CardRadius}" />
+        <Setter Property="CompactWidth" Value="{arc:InvitePeopleTokenResource CompactWidth}" />
+        <Setter Property="NarrowContentWidth" Value="{arc:InvitePeopleTokenResource NarrowContentWidth}" />
+        <Setter Property="HoverBrush" Value="{arc:InvitePeopleTokenResource HoverTint}" />
+        <Setter Property="ArmedBrush" Value="{arc:InvitePeopleTokenResource ArmedFill}" />
+        <Setter Property="ErrorFillBrush" Value="{arc:InvitePeopleTokenResource ErrorChipFill}" />
+        <Setter Property="ErrorStrokeBrush" Value="{arc:InvitePeopleTokenResource ErrorChipStroke}" />
+        <Setter Property="ErrorGlyphBrush" Value="{arc:InvitePeopleTokenResource ErrorChipGlyph}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InvitePeople">
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <StackPanel>
+                            <StackPanel Name="PART_Body">
+                                <arc:InvitePeopleHeaderPanel Name="PART_Header">
+                                    <StackPanel Name="PART_Titles" Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Name="PART_Title"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:InvitePeopleTokenResource TitleLineHeight}"
+                                                   LetterSpacing="{arc:InvitePeopleTokenResource TitleLetterSpacing}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   AutomationProperties.HeadingLevel="2"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_Description"
+                                                   LineHeight="{arc:InvitePeopleTokenResource CopyLineHeight}"
+                                                   LetterSpacing="{arc:InvitePeopleTokenResource CopyLetterSpacing}"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <arc:InvitePeopleTeamStack Name="PART_Team" VerticalAlignment="Center" />
+                                </arc:InvitePeopleHeaderPanel>
+
+                                <Panel Name="PART_FieldHost" Margin="0,16,0,0" Background="Transparent" Cursor="IBeam">
+                                    <Border Name="PART_FieldSkin"
+                                            Background="{arc:ArcDesignTokenResource Surface}"
+                                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                            CornerRadius="{arc:InvitePeopleTokenResource FieldRadius}" />
+                                    <arc:SpringSizeDecorator Name="PART_FieldSize"
+                                                             Axis="Height"
+                                                             Spring="Smooth"
+                                                             CrossClipOverflow="6">
+                                        <arc:InvitePeopleChipPanel Name="PART_Chips"
+                                                                   Margin="{arc:InvitePeopleTokenResource FieldPadding}" />
+                                    </arc:SpringSizeDecorator>
+                                </Panel>
+
+                                <Grid Name="PART_HintRow" ColumnDefinitions="*,Auto" Margin="6,6,0,0">
+                                    <arc:ArcContentSwap Name="PART_Hint"
+                                                        Grid.Column="0"
+                                                        Mode="BlurSwap"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:InvitePeopleButton Name="PART_PasteSample"
+                                                            Grid.Column="1"
+                                                            Classes="text"
+                                                            Margin="12,0,0,0"
+                                                            VerticalAlignment="Center" />
+                                </Grid>
+
+                                <arc:SpringSizeDecorator Name="PART_ErrorsHost"
+                                                         Axis="Height"
+                                                         Spring="Smooth"
+                                                         IsExpanded="False">
+                                    <Border Name="PART_Errors"
+                                            Margin="{arc:InvitePeopleTokenResource ErrorsMargin}"
+                                            Padding="{arc:InvitePeopleTokenResource ErrorsPadding}"
+                                            CornerRadius="{arc:InvitePeopleTokenResource ErrorsRadius}"
+                                            Background="{arc:InvitePeopleTokenResource ErrorPanelFill}">
+                                        <StackPanel Spacing="6">
+                                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                                <arc:ArcGlyph Grid.Column="0"
+                                                              Size="16"
+                                                              Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                              Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                              VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_ErrorsTitle"
+                                                           Grid.Column="1"
+                                                           Margin="8,0,0,0"
+                                                           VerticalAlignment="Center"
+                                                           LineHeight="{arc:InvitePeopleTokenResource CopyLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                                <arc:InvitePeopleButton Name="PART_RemoveInvalid"
+                                                                        Grid.Column="2"
+                                                                        Classes="text"
+                                                                        Margin="0,-5,-8,-5"
+                                                                        VerticalAlignment="Center" />
+                                            </Grid>
+                                            <StackPanel Name="PART_ErrorLines" Spacing="2" Margin="24,0,0,0" />
+                                            <TextBlock Name="PART_ErrorsHelp"
+                                                       Margin="24,0,0,0"
+                                                       FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                       LineHeight="{arc:InvitePeopleTokenResource SmallLineHeight}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </Border>
+                                </arc:SpringSizeDecorator>
+
+                                <StackPanel Name="PART_Seats" Margin="0,16,0,0" Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" Height="19">
+                                        <StackPanel Name="PART_SeatLine"
+                                                    Grid.Column="0"
+                                                    Orientation="Horizontal"
+                                                    Spacing="4"
+                                                    VerticalAlignment="Center">
+                                            <arc:RollingDigits Name="PART_SeatTotal"
+                                                               UseGrouping="False"
+                                                               GlyphPitch="1"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_SeatOf"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <arc:RollingDigits Name="PART_SeatLimit"
+                                                               UseGrouping="False"
+                                                               GlyphPitch="1"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                               VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_SeatWord"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <arc:SpringSizeDecorator Name="PART_PlanSize"
+                                                                 Grid.Column="1"
+                                                                 Axis="Width"
+                                                                 CrossClipOverflow="12"
+                                                                 VerticalAlignment="Center">
+                                            <arc:ArcContentSwap Name="PART_Plan"
+                                                                Mode="BlurSwap"
+                                                                HorizontalContentAlignment="Right"
+                                                                TextElement.FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </arc:SpringSizeDecorator>
+                                    </Grid>
+                                    <arc:InvitePeopleSeatBar Name="PART_Meter"
+                                                             Height="{arc:InvitePeopleTokenResource MeterHeight}" />
+                                    <StackPanel Name="PART_Legend"
+                                                Orientation="Horizontal"
+                                                Spacing="16"
+                                                Height="17"
+                                                AutomationProperties.AccessibilityView="Raw">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Ellipse Name="PART_LegendMembersDot" Width="8" Height="8" VerticalAlignment="Center"
+                                                     Fill="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_LegendMembers" VerticalAlignment="Center" FontFeatures="tnum"
+                                                       FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Ellipse Name="PART_LegendPendingDot" Width="8" Height="8" VerticalAlignment="Center"
+                                                     Fill="{arc:ArcDesignTokenResource BorderStrong}" />
+                                            <TextBlock Name="PART_LegendPending" VerticalAlignment="Center" FontFeatures="tnum"
+                                                       FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Ellipse Name="PART_LegendNewDot" Width="8" Height="8" VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_LegendNew" VerticalAlignment="Center" FontFeatures="tnum"
+                                                       FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <arc:SpringSizeDecorator Name="PART_OverHost"
+                                                             Axis="Height"
+                                                             Spring="Smooth"
+                                                             IsExpanded="False"
+                                                             Margin="0,-8,0,0">
+                                        <Grid Name="PART_Over"
+                                              ColumnDefinitions="*,Auto"
+                                              Height="{arc:InvitePeopleTokenResource OverLineHeight}"
+                                              Margin="0,8,0,0">
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <arc:ArcGlyph Size="16"
+                                                              Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                              Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                              VerticalAlignment="Center" />
+                                                <arc:RollingDigits Name="PART_OverCount"
+                                                                   Margin="10,0,4,0"
+                                                                   UseGrouping="False"
+                                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                   Foreground="{arc:ArcDesignTokenResource Danger}"
+                                                                   VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_OverText"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                            </StackPanel>
+                                            <arc:InvitePeopleButton Name="PART_Upgrade"
+                                                                    Grid.Column="1"
+                                                                    Classes="outline"
+                                                                    Margin="12,0,0,0"
+                                                                    VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_RemoveToSend"
+                                                       Grid.Column="1"
+                                                       Margin="12,0,0,0"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </Grid>
+                                    </arc:SpringSizeDecorator>
+                                </StackPanel>
+
+                                <Border Name="PART_Footer">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="6">
+                                        <arc:InvitePeopleButton Name="PART_Reset" Classes="icon" Width="36" Height="36">
+                                            <arc:ArcGlyph Size="16" Data="{x:Static arc:ArcIcons.RotateCcw}" />
+                                        </arc:InvitePeopleButton>
+                                        <arc:InvitePeopleButton Name="PART_Send" Classes="send" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                            <Border Name="PART_PendingSection" Margin="0,16,0,0">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,2">
+                                        <TextBlock Name="PART_PendingHeading"
+                                                   Focusable="True"
+                                                   IsTabStop="False"
+                                                   FocusAdorner="{x:Null}"
+                                                   AutomationProperties.HeadingLevel="3"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:InvitePeopleTokenResource HeadingLineHeight}"
+                                                   LetterSpacing="{arc:InvitePeopleTokenResource HeadingLetterSpacing}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:RollingDigits Name="PART_PendingCount"
+                                                           UseGrouping="False"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_PendingRows" />
+                                    <arc:SpringSizeDecorator Name="PART_PendingEmptyHost"
+                                                             Axis="Height"
+                                                             Spring="Smooth"
+                                                             IsExpanded="False">
+                                        <TextBlock Name="PART_PendingEmpty"
+                                                   Margin="0,8"
+                                                   LineHeight="{arc:InvitePeopleTokenResource CopyLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </arc:SpringSizeDecorator>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:InvitePeopleFlightLayer Name="PART_Flights" />
+                    <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with :framed / :compact are styles (template values would win). -->
+        <Style Selector="^:framed /template/ Border#PART_Card">
+            <Setter Property="MaxWidth" Value="{arc:InvitePeopleTokenResource CardMaxWidth}" />
+        </Style>
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Body">
+            <Setter Property="Margin" Value="{arc:InvitePeopleTokenResource BodyPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Body">
+            <Setter Property="Margin" Value="{arc:InvitePeopleTokenResource CompactBodyPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_PendingSection">
+            <Setter Property="Padding" Value="{arc:InvitePeopleTokenResource PendingPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_PendingSection">
+            <Setter Property="Padding" Value="{arc:InvitePeopleTokenResource CompactPendingPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Margin" Value="0,16,0,0" />
+            <Setter Property="Padding" Value="0,16,0,0" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_Footer, ^:framed /template/ Border#PART_PendingSection">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FieldSkin">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:field-focused /template/ Border#PART_FieldSkin">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|RollingDigits#PART_SeatTotal">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:over /template/ arc|RollingDigits#PART_SeatTotal">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#PART_LegendNewDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:over /template/ Ellipse#PART_LegendNewDot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_FieldSkin, ^:motion-reduced /template/ Border#PART_FieldSkin">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Errors, ^:motion-reduced /template/ Border#PART_Errors">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Grid#PART_Over, ^:motion-reduced /template/ Grid#PART_Over">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Exit" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Ellipse#PART_LegendNewDot, ^:motion-reduced /template/ Ellipse#PART_LegendNewDot">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Fill" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The block's own buttons. Default (.text): a 28 high pill, padding 0 10, 12/500 TextSecondary, the foreground at 6%
+        on hover. .icon: a circle (its size set where it is used), TextMuted glyph that turns Foreground on hover.
+        .chip-role: 24 high, padding 0 6 0 8, 12 TextSecondary. .outline: 32 high, radius 18, Surface with a 1px Border.
+        .send: 36 high, Accent with AccentForeground when :ready, otherwise SurfaceMuted with TextMuted (still focusable).
+        .danger tints the glyph with the error color. Keyboard focus draws a 2px FocusRing 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:InvitePeopleButton}" TargetType="arc:InvitePeopleButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontSize" Value="{arc:InvitePeopleTokenResource SmallSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InvitePeopleButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            IsVisible="False" />
+                    <Border Name="PART_Back"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:InvitePeopleTokenResource HoverTint}" />
+        </Style>
+        <Style Selector="^.icon">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^.icon:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.danger, ^.danger:pointerover">
+            <Setter Property="Foreground" Value="{arc:InvitePeopleTokenResource ErrorChipGlyph}" />
+        </Style>
+        <Style Selector="^.chip-role">
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Padding" Value="8,0,6,0" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^.chip-role:open">
+            <Setter Property="Background" Value="{arc:InvitePeopleTokenResource HoverTint}" />
+        </Style>
+        <Style Selector="^.chip-edit">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="9,0,2,0" />
+            <Setter Property="Cursor" Value="IBeam" />
+            <Setter Property="FontSize" Value="{arc:InvitePeopleTokenResource CopySize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^.chip-edit:pointerover">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^.outline">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.outline:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.send">
+            <Setter Property="Height" Value="{arc:InvitePeopleTokenResource SendHeight}" />
+            <Setter Property="Padding" Value="{arc:InvitePeopleTokenResource SendPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+            <Setter Property="FontSize" Value="{arc:InvitePeopleTokenResource CopySize}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^.send:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.send:ready, ^.send:ready:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^.send:ready:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full, ^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A chip's pill: fill and outline cross-fade in 160ms when it is marked by Backspace. -->
+    <ControlTheme x:Key="{x:Type arc:InvitePeopleChipFace}" TargetType="arc:InvitePeopleChipFace">
+        <Style Selector="^:motion-full, ^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The field's text box: no frame of its own (the field draws it), 32 high, padding 0 9, placeholder in TextMuted. -->
+    <ControlTheme x:Key="{x:Type arc:InvitePeopleInput}" TargetType="arc:InvitePeopleInput">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Padding" Value="9,0" />
+        <Setter Property="FontSize" Value="{arc:InvitePeopleTokenResource CopySize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InvitePeopleInput">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <TextBlock Name="PART_Placeholder"
+                                   Text="{TemplateBinding PlaceholderText}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   IsHitTestVisible="False"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <ScrollViewer Name="PART_ScrollViewer"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      VerticalContentAlignment="Center">
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </ScrollViewer>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:has-text /template/ TextBlock#PART_Placeholder">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A line of the role menu: 51 high, padding 8 10, radius 20, name (13/500) over the description (12, TextSecondary)
+        and a 15px check in Accent for the current role; the foreground at 6% on hover, focus and the current role.
+    -->
+    <ControlTheme x:Key="{x:Type arc:InvitePeopleMenuItem}" TargetType="arc:InvitePeopleMenuItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="MinHeight" Value="51" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:InvitePeopleMenuItem">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid ColumnDefinitions="*,16" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:InvitePeopleTokenResource CopyLineHeight}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       FontSize="{arc:InvitePeopleTokenResource SmallSize}"
+                                       LineHeight="{arc:InvitePeopleTokenResource SmallLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <arc:ArcGlyph Name="PART_Check"
+                                      Grid.Column="1"
+                                      Size="15"
+                                      StrokeThickness="2"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Foreground="{arc:ArcDesignTokenResource Accent}"
+                                      VerticalAlignment="Center"
+                                      IsVisible="{TemplateBinding IsChecked}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover, ^:focus, ^:checked">
+            <Setter Property="Background" Value="{arc:InvitePeopleTokenResource HoverTint}" />
+        </Style>
+        <Style Selector="^:motion-full, ^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

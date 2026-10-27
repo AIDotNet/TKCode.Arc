@@ -1,0 +1,690 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Market terminal: three cards in a grid the control arranges by width (chart beside a 340 column from 1080, the
+        watchlist and the ticket side by side under the chart from 720, stacked below). The chart card holds the header,
+        the toolbar and the self-drawn chart; the watchlist rows and the order rows are added in code.
+        Values that the compact layout changes (grid placement, stretch, button size) are set by styles, not in the template.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MarketTerminal}" TargetType="arc:MarketTerminal">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="WideThreshold" Value="{arc:MarketTerminalTokenResource WideThreshold}" />
+        <Setter Property="MediumThreshold" Value="{arc:MarketTerminalTokenResource MediumThreshold}" />
+        <Setter Property="CompactThreshold" Value="{arc:MarketTerminalTokenResource CompactThreshold}" />
+        <Setter Property="SideColumnWidth" Value="{arc:MarketTerminalTokenResource SideColumnWidth}" />
+        <Setter Property="ChartHeight" Value="{arc:MarketTerminalTokenResource ChartHeight}" />
+        <Setter Property="CompactChartHeight" Value="{arc:MarketTerminalTokenResource CompactChartHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MarketTerminal">
+                <Panel>
+                    <Grid Name="PART_Layout"
+                          ColumnSpacing="{arc:MarketTerminalTokenResource CardGap}"
+                          RowSpacing="{arc:MarketTerminalTokenResource CardGap}">
+                        <!-- Chart card: header, toolbar, chart. -->
+                        <Border Name="PART_ChartCard"
+                                Padding="{arc:MarketTerminalTokenResource ChartCardPadding}"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                            <DockPanel>
+                                <Grid Name="PART_Header"
+                                      DockPanel.Dock="Top"
+                                      ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto,Auto">
+                                    <StackPanel VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Name="PART_TickerText"
+                                                       VerticalAlignment="Bottom"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            <TextBlock Name="PART_NameText"
+                                                       VerticalAlignment="Bottom"
+                                                       Margin="0,0,0,1"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </StackPanel>
+                                        <TextBlock Name="PART_ExchangeText"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <arc:MarketLiveButton Name="PART_Live"
+                                                          Grid.Column="1"
+                                                          HorizontalAlignment="Right"
+                                                          VerticalAlignment="Top" />
+                                    <WrapPanel Grid.Row="1" Margin="0,4,0,0" VerticalAlignment="Bottom">
+                                        <arc:AnimatedCounter Name="PART_Price"
+                                                             Prefix="$"
+                                                             Decimals="2"
+                                                             Margin="0,0,12,0"
+                                                             VerticalAlignment="Bottom"
+                                                             FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                             FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                                                             FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <StackPanel Name="PART_ChangeLine"
+                                                    Orientation="Horizontal"
+                                                    Spacing="4"
+                                                    Margin="0,0,0,4"
+                                                    VerticalAlignment="Bottom">
+                                            <arc:ArcGlyph Name="PART_ChangeGlyph" Size="14" StrokeThickness="1.75" VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_ChangeText"
+                                                       FontFeatures="tnum"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            <TextBlock Name="PART_TodayText"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                    </WrapPanel>
+                                    <UniformGrid Name="PART_Stats"
+                                                 Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Columns="4"
+                                                 ColumnSpacing="24"
+                                                 Margin="24,8,0,0"
+                                                 HorizontalAlignment="Right"
+                                                 VerticalAlignment="Bottom">
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_OpenLabel" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_OpenValue" FontFeatures="tnum" />
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_HighLabel" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_HighValue" FontFeatures="tnum" />
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_LowLabel" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_LowValue" FontFeatures="tnum" />
+                                        </StackPanel>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Name="PART_VolumeLabel" FontSize="{arc:ArcDesignTokenResource TypeXS}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <TextBlock Name="PART_VolumeValue" FontFeatures="tnum" />
+                                        </StackPanel>
+                                    </UniformGrid>
+                                </Grid>
+                                <Grid Name="PART_Toolbar"
+                                      DockPanel.Dock="Top"
+                                      Margin="0,16,0,0"
+                                      ColumnDefinitions="Auto,*,Auto"
+                                      RowDefinitions="Auto,Auto">
+                                    <arc:SegmentedControl Name="PART_Ranges" VerticalAlignment="Center" />
+                                    <StackPanel Name="PART_Tools"
+                                                Grid.Column="2"
+                                                Orientation="Horizontal"
+                                                Spacing="8"
+                                                VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <arc:MarketAverageToggle Name="PART_Ma20" Swatch="{arc:MarketTerminalTokenResource Ma20Color}" />
+                                            <arc:MarketAverageToggle Name="PART_Ma50" Swatch="{arc:MarketTerminalTokenResource Ma50Color}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <arc:MarketIconButton Name="PART_ZoomIn" Glyph="{x:Static arc:ArcIcons.ZoomIn}" />
+                                            <arc:MarketIconButton Name="PART_ZoomOut" Glyph="{x:Static arc:ArcIcons.ZoomOut}" />
+                                            <arc:MarketIconButton Name="PART_Reset" Glyph="{x:Static arc:ArcIcons.Maximize2}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                <arc:MarketChart Name="PART_Chart" Margin="0,16,0,0" />
+                            </DockPanel>
+                        </Border>
+
+                        <!-- Watchlist card. -->
+                        <Border Name="PART_WatchCard"
+                                VerticalAlignment="Top"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                            <StackPanel>
+                                <DockPanel Margin="{arc:MarketTerminalTokenResource CardHeaderPadding}">
+                                    <TextBlock Name="PART_WatchCount"
+                                               DockPanel.Dock="Right"
+                                               VerticalAlignment="Bottom"
+                                               FontFeatures="tnum"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_WatchTitle"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </DockPanel>
+                                <Panel Margin="{arc:MarketTerminalTokenResource WatchListPadding}">
+                                    <arc:GlidingIndicator Name="PART_WatchSelection"
+                                                          Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                          CornerRadius="{arc:MarketTerminalTokenResource WatchRowRadius}"
+                                                          Spring="Morph" />
+                                    <StackPanel Name="PART_WatchRows" Spacing="2" />
+                                </Panel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Order ticket card. -->
+                        <Border Name="PART_TicketCard"
+                                VerticalAlignment="Top"
+                                ClipToBounds="True"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+                            <StackPanel>
+                                <DockPanel Margin="{arc:MarketTerminalTokenResource CardHeaderPadding}">
+                                    <TextBlock Name="PART_TicketHeld"
+                                               DockPanel.Dock="Right"
+                                               VerticalAlignment="Bottom"
+                                               FontFeatures="tnum"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_TicketTitle"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </DockPanel>
+                                <StackPanel Margin="{arc:MarketTerminalTokenResource TicketPadding}" Spacing="{arc:MarketTerminalTokenResource TicketGap}">
+                                    <DockPanel>
+                                        <arc:SegmentedControl Name="PART_Type" DockPanel.Dock="Right" />
+                                        <arc:SegmentedControl Name="PART_Side" HorizontalAlignment="Left" />
+                                    </DockPanel>
+                                    <arc:NumberField Name="PART_Shares"
+                                                     HorizontalAlignment="Left"
+                                                     Width="{arc:MarketTerminalTokenResource TicketFieldWidth}"
+                                                     Minimum="0"
+                                                     Maximum="1000000"
+                                                     Step="1"
+                                                     MaximumFractionDigits="0" />
+                                    <arc:SpringSizeDecorator Name="PART_LimitPanel"
+                                                             Axis="Height"
+                                                             Spring="Smooth"
+                                                             ShrinkSpring="Quick"
+                                                             IsExpanded="False"
+                                                             Margin="0,0,0,-16">
+                                        <Border Name="PART_LimitHost" Classes="limit" Padding="0,0,0,16">
+                                            <arc:NumberField Name="PART_Limit"
+                                                             HorizontalAlignment="Left"
+                                                             Width="{arc:MarketTerminalTokenResource TicketFieldWidth}"
+                                                             Minimum="0"
+                                                             Maximum="1000000"
+                                                             Step="0.01"
+                                                             LargeStep="1"
+                                                             MinimumFractionDigits="2"
+                                                             MaximumFractionDigits="2" />
+                                        </Border>
+                                    </arc:SpringSizeDecorator>
+                                    <Border Padding="0,12,0,0"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                        <StackPanel Spacing="6">
+                                            <DockPanel>
+                                                <TextBlock Name="PART_PriceValue" DockPanel.Dock="Right" FontFeatures="tnum" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                <TextBlock Name="PART_PriceLabel" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <TextBlock Name="PART_CostValue" DockPanel.Dock="Right" FontFeatures="tnum" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                <TextBlock Name="PART_CostLabel" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <TextBlock Name="PART_PowerValue" DockPanel.Dock="Right" FontFeatures="tnum" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                                <TextBlock Name="PART_PowerLabel" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Name="PART_Status"
+                                               Classes="status"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                    <arc:Button Name="PART_Submit"
+                                                Variant="Primary"
+                                                Size="Large"
+                                                HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Center" />
+                                    <TextBlock Name="PART_Disclaimer"
+                                               Margin="0,-8,0,0"
+                                               TextWrapping="Wrap"
+                                               TextAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <Border Name="PART_OrdersSection"
+                                        Padding="{arc:MarketTerminalTokenResource OrdersPadding}"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                    <StackPanel>
+                                        <TextBlock Name="PART_OrdersTitle"
+                                                   Margin="0,0,0,4"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <StackPanel Name="PART_OrderRows" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <arc:FinanceAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_ChangeLine">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ChangeGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_ChangeLine.down">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_ChangeLine.down > arc|ArcGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ChartCard">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:wide /template/ Border#PART_ChartCard">
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Status">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Status.shown">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_LimitHost">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_LimitHost.open">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_LimitHost">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Status">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- Compact: the stats get a row of four equal columns, the range switch its own line, toolbar buttons 44px. -->
+        <Style Selector="^:compact /template/ UniformGrid#PART_Stats">
+            <Setter Property="Grid.Row" Value="2" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|SegmentedControl#PART_Ranges">
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Tools">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MarketIconButton">
+            <Setter Property="Width" Value="{arc:MarketTerminalTokenResource CompactToolHeight}" />
+            <Setter Property="Height" Value="{arc:MarketTerminalTokenResource CompactToolHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MarketAverageToggle">
+            <Setter Property="Height" Value="{arc:MarketTerminalTokenResource CompactToolHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MarketLiveButton">
+            <Setter Property="Height" Value="{arc:MarketTerminalTokenResource CompactToolHeight}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The chart: candle, grid, label and tag colors from ArcDesign; the averages from the token. -->
+    <ControlTheme x:Key="{x:Type arc:MarketChart}" TargetType="arc:MarketChart">
+        <Setter Property="UpBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DownBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="AxisBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="LabelBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="ValueBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="StrongBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TagTextBrush" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="Ma20Brush" Value="{arc:MarketTerminalTokenResource Ma20Color}" />
+        <Setter Property="Ma50Brush" Value="{arc:MarketTerminalTokenResource Ma50Color}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Gutter" Value="{arc:MarketTerminalTokenResource ChartGutter}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+    </ControlTheme>
+
+    <!-- The live button: a pill with the dot, "Live" and a pause or play glyph. -->
+    <ControlTheme x:Key="{x:Type arc:MarketLiveButton}" TargetType="arc:MarketLiveButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Height" Value="{arc:MarketTerminalTokenResource ToolHeight}" />
+        <Setter Property="Padding" Value="12,0,10,0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MarketLiveButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <arc:MarketLiveDot Name="PART_Dot"
+                                               Width="8"
+                                               Height="8"
+                                               VerticalAlignment="Center"
+                                               IsLive="{TemplateBinding IsLive}"
+                                               LiveBrush="{arc:ArcDesignTokenResource Success}"
+                                               PausedBrush="{arc:ArcDesignTokenResource TextMuted}" />
+                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Pause" Data="{x:Static arc:ArcIcons.Pause}" Size="16" StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Play" Data="{x:Static arc:ArcIcons.Play}" Size="16" StrokeThickness="1.75" IsVisible="False"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:paused /template/ arc|ArcGlyph#PART_Pause">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:paused /template/ arc|ArcGlyph#PART_Play">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A moving average toggle: a pill with the average's line and name; off dims both. -->
+    <ControlTheme x:Key="{x:Type arc:MarketAverageToggle}" TargetType="arc:MarketAverageToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Height" Value="{arc:MarketTerminalTokenResource ToolHeight}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MarketAverageToggle">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Name="PART_Inner" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Border Width="12" Height="2" VerticalAlignment="Center"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusStep1}"
+                                    Background="{TemplateBinding Swatch}" />
+                            <ContentPresenter Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:unchecked /template/ StackPanel#PART_Inner">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ StackPanel#PART_Inner">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A round icon button. -->
+    <ControlTheme x:Key="{x:Type arc:MarketIconButton}" TargetType="arc:MarketIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="{arc:MarketTerminalTokenResource ToolHeight}" />
+        <Setter Property="Height" Value="{arc:MarketTerminalTokenResource ToolHeight}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MarketIconButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="16"
+                                      StrokeThickness="1.75"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A watchlist row: the selection fill is the block's gliding indicator, so the row itself only tints on hover. -->
+    <ControlTheme x:Key="{x:Type arc:MarketWatchRow}" TargetType="arc:MarketWatchRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:MarketTerminalTokenResource WatchRowPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MarketWatchRow">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                            Opacity="0"
+                            IsHitTestVisible="False" />
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:MarketTerminalTokenResource WatchRowRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding Ticker}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Text="{TemplateBinding SymbolName}"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <arc:MarketSparkline Name="PART_Sparkline"
+                                                 Grid.Column="1"
+                                                 Width="{arc:MarketTerminalTokenResource SparklineWidth}"
+                                                 Height="{arc:MarketTerminalTokenResource SparklineHeight}"
+                                                 VerticalAlignment="Center"
+                                                 UpBrush="{arc:ArcDesignTokenResource Success}"
+                                                 DownBrush="{arc:ArcDesignTokenResource Danger}"
+                                                 BaselineBrush="{arc:ArcDesignTokenResource BorderStrong}" />
+                            <StackPanel Grid.Column="2"
+                                        Width="{arc:MarketTerminalTokenResource WatchPriceColumnWidth}"
+                                        VerticalAlignment="Center">
+                                <Panel HorizontalAlignment="Right">
+                                    <Border Name="PART_Flash"
+                                            Margin="-6,-1"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
+                                            Background="{arc:ArcDesignTokenResource SuccessSubtle}"
+                                            Opacity="{TemplateBinding FlashOpacity}" />
+                                    <TextBlock Text="{TemplateBinding PriceText}"
+                                               FontFeatures="tnum"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Panel>
+                                <TextBlock Name="PART_Change"
+                                           Text="{TemplateBinding ChangeText}"
+                                           HorizontalAlignment="Right"
+                                           FontFeatures="tnum"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Change">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:down /template/ TextBlock#PART_Change">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:flash-down /template/ Border#PART_Flash">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^:pointerover:not(:current)">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- An order row: two lines, a status pill (working neutral, filled green, canceled muted) and a cancel button while working. -->
+    <ControlTheme x:Key="{x:Type arc:MarketOrderRow}" TargetType="arc:MarketOrderRow">
+        <Setter Property="MinHeight" Value="{arc:MarketTerminalTokenResource OrderRowHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MarketOrderRow">
+                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontFeatures="tnum"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{TemplateBinding Detail}"
+                                   FontFeatures="tnum"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                    <Border Name="PART_Status"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Padding="8,2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <TextBlock Name="PART_StatusText"
+                                   Text="{TemplateBinding StatusText}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                    </Border>
+                    <arc:MarketIconButton Name="PART_Cancel"
+                                          Grid.Column="2"
+                                          Margin="0,0,-8,0"
+                                          VerticalAlignment="Center"
+                                          Glyph="{x:Static arc:ArcIcons.X}"
+                                          AutomationProperties.Name="{TemplateBinding CancelName}"
+                                          IsVisible="False" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Status">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:working /template/ arc|MarketIconButton#PART_Cancel">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:filled /template/ Border#PART_Status">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        </Style>
+        <Style Selector="^:filled /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:canceled /template/ Border#PART_Status">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:canceled /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

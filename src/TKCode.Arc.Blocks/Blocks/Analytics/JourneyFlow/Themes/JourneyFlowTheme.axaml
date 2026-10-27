@@ -1,0 +1,427 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Journey flow (Arc Journey flow, design reference): no frame of its own (it lies flat on the page). Header (title,
+        rolling visitors, segment switch), body (chart area + side panel: beside the chart from 860, under it below),
+        footer ("Flow table") and the table on a height spring, plus a hidden live region. The chart is self-drawn
+        (JourneyFlowChart). Values a state changes (paddings, borders, columns) are set by styles, not in the template.
+    -->
+    <ControlTheme x:Key="{x:Type arc:JourneyFlow}" TargetType="arc:JourneyFlow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:JourneyFlowTokenResource BodySize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:JourneyFlow">
+                <Panel>
+                    <StackPanel Name="PART_Sections">
+                        <Border Name="PART_HeaderFrame">
+                            <arc:JourneyFlowHeaderPanel Name="PART_Header">
+                                <StackPanel Name="PART_TitleBlock">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:JourneyFlowTokenResource TitleSize}"
+                                               LineHeight="{arc:JourneyFlowTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:JourneyFlowTokenResource TitleTracking}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <StackPanel Name="PART_SubtitleRow" Orientation="Horizontal" Margin="0,2,0,0">
+                                        <TextBlock Name="PART_SubtitleBefore"
+                                                   Classes="subtitle"
+                                                   VerticalAlignment="Center" />
+                                        <arc:JourneyFlowRollingText Name="PART_Total"
+                                                                    VerticalAlignment="Center"
+                                                                    FontSize="{arc:JourneyFlowTokenResource BodySize}"
+                                                                    Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_SubtitleAfter"
+                                                   Classes="subtitle"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <arc:AnalyticsSegmentSwitch Name="PART_Segments" />
+                            </arc:JourneyFlowHeaderPanel>
+                        </Border>
+
+                        <arc:JourneyFlowBodyPanel Name="PART_Body" PanelWidth="{arc:JourneyFlowTokenResource PanelWidth}">
+                            <Border Name="PART_ChartArea">
+                                <arc:JourneyFlowChart Name="PART_Chart" />
+                            </Border>
+                            <Border Name="PART_Aside"
+                                    IsVisible="{TemplateBinding IsSidePanelVisible}"
+                                    AutomationProperties.Name="{TemplateBinding PanelLabel}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Height="28">
+                                        <arc:AnalyticsTextSwap Name="PART_PanelTitle"
+                                                               Swap="{x:Static arc:AnalyticsSwapStyle.Lift}"
+                                                               VerticalAlignment="Center"
+                                                               ClipToBounds="True"
+                                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                               FontSize="{arc:JourneyFlowTokenResource PanelTitleSize}"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:JourneyFlowClearButton Name="PART_Clear"
+                                                                    Grid.Column="1"
+                                                                    IsVisible="False"
+                                                                    Content="{TemplateBinding ClearText}" />
+                                    </Grid>
+                                    <arc:ArcContentSwap Name="PART_PanelNote"
+                                                        Margin="0,2,0,0"
+                                                        Mode="Lift"
+                                                        ExitDuration="0:0:0.12"
+                                                        EnterDuration="0:0:0.24"
+                                                        EnterDelay="0:0:0"
+                                                        EnterOffset="4"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:JourneyFlowTokenResource BodySize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:JourneyFlowRollingText Name="PART_BigNumber"
+                                                                Margin="0,12,0,0"
+                                                                HorizontalAlignment="Left"
+                                                                FontSize="{arc:JourneyFlowTokenResource BigNumberSize}"
+                                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="3.9" Margin="0,4,0,0">
+                                        <arc:JourneyFlowRollingText Name="PART_CaptionShare"
+                                                                    VerticalAlignment="Center"
+                                                                    FontSize="{arc:JourneyFlowTokenResource BodySize}"
+                                                                    Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:AnalyticsTextSwap Name="PART_CaptionText"
+                                                               Swap="{x:Static arc:AnalyticsSwapStyle.Lift}"
+                                                               VerticalAlignment="Center"
+                                                               LineHeight="{arc:JourneyFlowTokenResource BodyLineHeight}"
+                                                               FontSize="{arc:JourneyFlowTokenResource BodySize}"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <arc:JourneyFlowGroupsPanel Name="PART_Groups"
+                                                                Margin="0,20,0,0"
+                                                                RowGap="{arc:JourneyFlowTokenResource GroupGap}"
+                                                                ColumnGap="{arc:JourneyFlowTokenResource GroupColumnGap}">
+                                        <StackPanel>
+                                            <arc:AnalyticsTextSwap Name="PART_FirstGroupHeader" Classes="group-header" />
+                                            <StackPanel Name="PART_FirstGroupRows" Spacing="10" />
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <arc:AnalyticsTextSwap Name="PART_SecondGroupHeader" Classes="group-header" />
+                                            <StackPanel Name="PART_SecondGroupRows" Spacing="10" />
+                                        </StackPanel>
+                                    </arc:JourneyFlowGroupsPanel>
+                                </StackPanel>
+                            </Border>
+                        </arc:JourneyFlowBodyPanel>
+
+                        <Border Name="PART_Footer" IsVisible="{TemplateBinding IsTableVisible}">
+                            <arc:JourneyFlowTableButton Name="PART_TableButton"
+                                                        HorizontalAlignment="Left"
+                                                        Content="{TemplateBinding TableHeader}" />
+                        </Border>
+                        <arc:SpringSizeDecorator Name="PART_TableHost"
+                                                 Axis="Height"
+                                                 Spring="Smooth"
+                                                 IsVisible="{TemplateBinding IsTableVisible}"
+                                                 IsExpanded="{TemplateBinding IsTableExpanded}">
+                            <arc:JourneyFlowTable Name="PART_Table" />
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                    <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock.subtitle">
+            <Setter Property="FontSize" Value="{arc:JourneyFlowTokenResource BodySize}" />
+            <Setter Property="LineHeight" Value="{arc:JourneyFlowTokenResource BodyLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AnalyticsTextSwap.group-header">
+            <Setter Property="Swap" Value="{x:Static arc:AnalyticsSwapStyle.Lift}" />
+            <Setter Property="FontSize" Value="{arc:JourneyFlowTokenResource CaptionSize}" />
+            <Setter Property="LineHeight" Value="13.2" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <!-- Paddings: 16 / 20 (compact: 16). -->
+        <Style Selector="^ /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ChartArea">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource ChartPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_ChartArea">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource CompactChartPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Aside">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource PanelPadding}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Aside">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource CompactPanelPadding}" />
+        </Style>
+        <Style Selector="^:wide /template/ Border#PART_Aside">
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource FooterPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource CompactFooterPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|JourneyFlowTable#PART_Table">
+            <Setter Property="Margin" Value="{arc:JourneyFlowTokenResource TableMargin}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|JourneyFlowTable#PART_Table">
+            <Setter Property="Margin" Value="{arc:JourneyFlowTokenResource CompactTableMargin}" />
+        </Style>
+
+        <!-- Layout by the block's own width. -->
+        <Style Selector="^:wide /template/ arc|JourneyFlowBodyPanel#PART_Body">
+            <Setter Property="IsWide" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|JourneyFlowGroupsPanel#PART_Groups">
+            <Setter Property="Columns" Value="2" />
+        </Style>
+        <Style Selector="^:wide /template/ arc|JourneyFlowGroupsPanel#PART_Groups">
+            <Setter Property="Columns" Value="1" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|JourneyFlowGroupsPanel#PART_Groups">
+            <Setter Property="Columns" Value="1" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|JourneyFlowHeaderPanel#PART_Header">
+            <Setter Property="IsStretched" Value="True" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AnalyticsSegmentSwitch#PART_Segments">
+            <Setter Property="IsStretched" Value="True" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:tight /template/ arc|JourneyFlowChart#PART_Chart">
+            <Setter Property="IsTight" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A node's focus and pressed-state carrier: draws nothing (the chart draws the node, the ring and the focus ring). -->
+    <ControlTheme x:Key="{x:Type arc:JourneyFlowNodeButton}" TargetType="arc:JourneyFlowNodeButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:JourneyFlowNodeButton">
+                <Panel />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A side panel row: name (13, cut at the column without an ellipsis), rolling count and share (13 tabular; share in
+        TextSecondary), then a 3px pill bar (SurfaceMuted track, Accent fill on the Smooth spring) 6 below. Placeholder:
+        the line in TextMuted, no numbers. Empty: nothing but the slot (the track fades in 160ms).
+    -->
+    <ControlTheme x:Key="{x:Type arc:JourneyFlowRow}" TargetType="arc:JourneyFlowRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="27.2" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:JourneyFlowRow">
+                <Grid RowDefinitions="18.2,6,3" ColumnDefinitions="*,Auto,Auto">
+                    <arc:AnalyticsTextSwap Name="PART_Label"
+                                           Text="{TemplateBinding Label}"
+                                           Swap="{x:Static arc:AnalyticsSwapStyle.Lift}"
+                                           ClipToBounds="True"
+                                           VerticalAlignment="Center"
+                                           LineHeight="{arc:JourneyFlowTokenResource BodyLineHeight}"
+                                           FontSize="{arc:JourneyFlowTokenResource BodySize}" />
+                    <arc:JourneyFlowRollingText Name="PART_Count"
+                                                Grid.Column="1"
+                                                Margin="12,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="{TemplateBinding CountText}"
+                                                FontSize="{arc:JourneyFlowTokenResource BodySize}"
+                                                Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <arc:JourneyFlowRollingText Name="PART_Share"
+                                                Grid.Column="2"
+                                                Margin="12,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Text="{TemplateBinding ShareText}"
+                                                FontSize="{arc:JourneyFlowTokenResource BodySize}"
+                                                Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arc:AnalyticsShareBar Name="PART_Bar"
+                                           Grid.Row="2"
+                                           Grid.ColumnSpan="3"
+                                           Value="{TemplateBinding Fraction}"
+                                           Track="SurfaceMuted"
+                                           FillColor="Accent" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|AnalyticsTextSwap#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:placeholder /template/ arc|AnalyticsTextSwap#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:placeholder /template/ arc|RollingDigits">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|RollingDigits">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|AnalyticsTextSwap#PART_Label">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ arc|AnalyticsShareBar#PART_Bar">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|AnalyticsShareBar#PART_Bar">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- "Flow table": 32 high, Surface, 1px Border, radius 10, 13px medium, chevron-down 16 that turns over on a Quick spring. -->
+    <ControlTheme x:Key="{x:Type arc:JourneyFlowTableButton}" TargetType="arc:JourneyFlowTableButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CornerRadius" Value="{arc:JourneyFlowTokenResource TableButtonRadius}" />
+        <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource TableButtonPadding}" />
+        <Setter Property="Height" Value="{arc:JourneyFlowTokenResource TableButtonHeight}" />
+        <Setter Property="FontSize" Value="{arc:JourneyFlowTokenResource BodySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:JourneyFlowTableButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="16"
+                                          StrokeThickness="2"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Quick" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- "Clear": 28 high, Surface, 1px Border, radius 8, x 14 (stroke 1.75) and 12px medium TextSecondary; hover Foreground and BorderStrong in 160ms. -->
+    <ControlTheme x:Key="{x:Type arc:JourneyFlowClearButton}" TargetType="arc:JourneyFlowClearButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:JourneyFlowTokenResource ClearButtonRadius}" />
+        <Setter Property="Padding" Value="{arc:JourneyFlowTokenResource ClearButtonPadding}" />
+        <Setter Property="Height" Value="{arc:JourneyFlowTokenResource ClearButtonHeight}" />
+        <Setter Property="FontSize" Value="{arc:JourneyFlowTokenResource CaptionSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:JourneyFlowClearButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                          Size="14"
+                                          StrokeThickness="1.75"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

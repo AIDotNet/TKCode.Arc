@@ -1,0 +1,69 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Analytics change line (design reference: Metrics dashboard / KPI drilldown 12px 500 tabular, 13px arrow stroke 2,
+        gap 2; Success / Danger / TextMuted; colour 160ms (.22, 1, .36, 1), 240ms with :slow-tone; arrow turn 580ms CSS
+        spring with :rotates).
+    -->
+    <ControlTheme x:Key="{x:Type arc:AnalyticsDelta}" TargetType="arc:AnalyticsDelta">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AnalyticsDelta">
+                <StackPanel Orientation="Horizontal" Spacing="{TemplateBinding Spacing}">
+                    <arc:ArcGlyph Name="PART_Arrow"
+                                  Size="{TemplateBinding IconSize}"
+                                  StrokeThickness="{TemplateBinding IconStroke}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  VerticalAlignment="Center"
+                                  RenderTransformOrigin="50%,50%" />
+                    <arc:AnalyticsTextSwap Name="PART_Text"
+                                           Text="{TemplateBinding Text}"
+                                           Swap="{TemplateBinding Swap}"
+                                           IsTabular="True"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{TemplateBinding TextWeight}" />
+                    <arc:AnalyticsTextSwap Name="PART_Context"
+                                           Text="{TemplateBinding Context}"
+                                           Swap="{TemplateBinding Swap}"
+                                           IsVisible="{TemplateBinding Context, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Margin="{TemplateBinding ContextSpacing, Converter={x:Static arc:AnalyticsConverters.LeftGap}}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Style Selector="^:good">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:bad">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:slow-tone">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:rotates /template/ arc|ArcGlyph#PART_Arrow">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

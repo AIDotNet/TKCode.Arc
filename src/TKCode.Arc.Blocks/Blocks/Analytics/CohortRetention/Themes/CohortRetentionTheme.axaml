@@ -1,0 +1,128 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Cohort retention (Arc Analytics › Cohort retention, design reference): flat on the page (no frame unless you set
+        Background / BorderBrush), padding 16 / 20 / 20, sections 20 apart: the header (title, subtitle and the segment
+        switch), the three headline metrics, the toolbar (legend and view switch) and the self-drawn plot, plus the hidden
+        screen-reader table and live region. Under 560 (:narrow) paddings are 16 and the switch goes under the titles; under
+        440 (:stacked) the metrics stack and the view switch goes above the legend; the plot switches to its compact geometry
+        itself under 600. Values a state changes are styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CohortRetention}" TargetType="arc:CohortRetention">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:CohortRetentionTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="NarrowWidth" Value="{arc:CohortRetentionTokenResource NarrowWidth}" />
+        <Setter Property="StackedWidth" Value="{arc:CohortRetentionTokenResource StackedWidth}" />
+        <Setter Property="MetricValueMinSize" Value="{arc:CohortRetentionTokenResource MetricValueMinSize}" />
+        <Setter Property="MetricValueMaxSize" Value="{arc:CohortRetentionTokenResource MetricValueMaxSize}" />
+        <Setter Property="MetricValueScale" Value="{arc:CohortRetentionTokenResource MetricValueScale}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CohortRetention">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Sections">
+                            <arc:CohortRetentionSplitPanel Name="PART_Header"
+                                                           ColumnGap="{arc:CohortRetentionTokenResource HeaderColumnGap}"
+                                                           RowGap="{arc:CohortRetentionTokenResource HeaderRowGap}">
+                                <StackPanel VerticalAlignment="Top" Spacing="{arc:CohortRetentionTokenResource SubtitleGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:CohortRetentionTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:CohortRetentionTokenResource TitleLetterSpacing}"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Subtitle"
+                                               Text="{TemplateBinding Subtitle}"
+                                               IsVisible="{TemplateBinding Subtitle, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               LineHeight="{arc:CohortRetentionTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:SegmentedControl Name="PART_SegmentSwitch"
+                                                      arc:AnalyticsSegmented.Spring="Smooth"
+                                                      VerticalAlignment="Top"
+                                                      HorizontalAlignment="Left" />
+                            </arc:CohortRetentionSplitPanel>
+
+                            <arc:CohortRetentionKpiRow Name="PART_Metrics"
+                                                       LineBrush="{arc:ArcDesignTokenResource Border}"
+                                                       StackedPadding="{arc:CohortRetentionTokenResource StackedMetricPadding}" />
+
+                            <arc:CohortRetentionSplitPanel Name="PART_Toolbar"
+                                                           ColumnGap="{arc:CohortRetentionTokenResource ToolbarColumnGap}"
+                                                           RowGap="{arc:CohortRetentionTokenResource ToolbarRowGap}"
+                                                           Margin="{arc:CohortRetentionTokenResource ToolbarMargin}">
+                                <arc:CohortRetentionLegend Name="PART_Legend" VerticalAlignment="Center" />
+                                <arc:SegmentedControl Name="PART_ViewSwitch"
+                                                      arc:AnalyticsSegmented.Spring="Smooth"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left" />
+                            </arc:CohortRetentionSplitPanel>
+
+                            <arc:CohortRetentionPlot Name="PART_Plot"
+                                                     FocusAdorner="{x:Null}"
+                                                     ClipToBounds="False"
+                                                     CompactWidth="{arc:CohortRetentionTokenResource CompactPlotWidth}"
+                                                     LabelWidth="{arc:CohortRetentionTokenResource LabelColumnWidth}"
+                                                     CompactLabelWidth="{arc:CohortRetentionTokenResource CompactLabelColumnWidth}"
+                                                     SizeInset="{arc:CohortRetentionTokenResource SizeColumnInset}"
+                                                     RowPitch="{arc:CohortRetentionTokenResource RowPitch}"
+                                                     CompactRowPitch="{arc:CohortRetentionTokenResource CompactRowPitch}"
+                                                     CellHeight="{arc:CohortRetentionTokenResource CellHeight}"
+                                                     CompactCellHeight="{arc:CohortRetentionTokenResource CompactCellHeight}"
+                                                     CellRadius="{arc:CohortRetentionTokenResource CellRadius}"
+                                                     CompactCellRadius="{arc:CohortRetentionTokenResource CompactCellRadius}"
+                                                     AverageGap="{arc:CohortRetentionTokenResource AverageRowGap}"
+                                                     CompactAverageGap="{arc:CohortRetentionTokenResource CompactAverageRowGap}"
+                                                     NumberMinWidth="{arc:CohortRetentionTokenResource CellNumberMinWidth}"
+                                                     PointDiameter="{arc:CohortRetentionTokenResource PointDiameter}"
+                                                     AveragePointDiameter="{arc:CohortRetentionTokenResource AveragePointDiameter}"
+                                                     RingDiameter="{arc:CohortRetentionTokenResource RingDiameter}"
+                                                     AverageRingDiameter="{arc:CohortRetentionTokenResource AverageRingDiameter}"
+                                                     CardWidth="{arc:CohortRetentionTokenResource CardWidth}"
+                                                     CardGap="{arc:CohortRetentionTokenResource CardGap}" />
+                        </StackPanel>
+                        <arc:CohortRetentionDataTable Name="PART_Table" />
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:CohortRetentionTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CohortRetentionKpiRow#PART_Metrics">
+            <Setter Property="InlinePadding" Value="{arc:CohortRetentionTokenResource MetricPadding}" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:CohortRetentionTokenResource NarrowBlockPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:CohortRetentionTokenResource NarrowSectionGap}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|CohortRetentionKpiRow#PART_Metrics">
+            <Setter Property="InlinePadding" Value="{arc:CohortRetentionTokenResource NarrowMetricPadding}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

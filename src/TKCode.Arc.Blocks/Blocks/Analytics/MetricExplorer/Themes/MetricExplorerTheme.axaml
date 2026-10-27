@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Metric explorer (Arc Analytics › Metric explorer, design reference): flat on the page (no frame unless you set
+        Background / BorderBrush). A heading row (16px title, 12px caption) 12px above the stage, which draws the cards, the
+        open chart and the surfaces behind them (rounded 16, Surface, 1px Border inset). Everything inside is self-drawn or
+        built in code from tokens; this theme only holds the template and copies the geometry token into the control.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MetricExplorer}" TargetType="arc:MetricExplorer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="NarrowWidth" Value="{arc:MetricExplorerTokenResource NarrowWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:MetricExplorerTokenResource CompactWidth}" />
+        <Setter Property="TwoColumnWidth" Value="{arc:MetricExplorerTokenResource TwoColumnWidth}" />
+        <Setter Property="SurfaceRadius" Value="{arc:MetricExplorerTokenResource SurfaceRadius}" />
+        <Setter Property="CardGap" Value="{arc:MetricExplorerTokenResource CardGap}" />
+        <Setter Property="CompactCardGap" Value="{arc:MetricExplorerTokenResource CompactCardGap}" />
+        <Setter Property="CardPadding" Value="{arc:MetricExplorerTokenResource CardPadding}" />
+        <Setter Property="CompactCardPadding" Value="{arc:MetricExplorerTokenResource CompactCardPadding}" />
+        <Setter Property="SparklineHeight" Value="{arc:MetricExplorerTokenResource SparklineHeight}" />
+        <Setter Property="PanelPadding" Value="{arc:MetricExplorerTokenResource PanelPadding}" />
+        <Setter Property="NarrowPanelPadding" Value="{arc:MetricExplorerTokenResource NarrowPanelPadding}" />
+        <Setter Property="CompactPanelPadding" Value="{arc:MetricExplorerTokenResource CompactPanelPadding}" />
+        <Setter Property="TabRowHeight" Value="{arc:MetricExplorerTokenResource TabRowHeight}" />
+        <Setter Property="RowGap" Value="{arc:MetricExplorerTokenResource RowGap}" />
+        <Setter Property="StackedGap" Value="{arc:MetricExplorerTokenResource StackedGap}" />
+        <Setter Property="ChartMinHeight" Value="{arc:MetricExplorerTokenResource ChartMinHeight}" />
+        <Setter Property="ChartMaxHeight" Value="{arc:MetricExplorerTokenResource ChartMaxHeight}" />
+        <Setter Property="PlotInset" Value="{arc:MetricExplorerTokenResource PlotInset}" />
+        <Setter Property="AxisLabelWidth" Value="{arc:MetricExplorerTokenResource AxisLabelWidth}" />
+        <Setter Property="LegendTopGap" Value="{arc:MetricExplorerTokenResource LegendTopGap}" />
+        <Setter Property="LegendBottomGap" Value="{arc:MetricExplorerTokenResource LegendBottomGap}" />
+        <Setter Property="DescriptionGap" Value="{arc:MetricExplorerTokenResource DescriptionGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricExplorer">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Spacing="{arc:MetricExplorerTokenResource HeaderGap}">
+                            <arc:MetricExplorerHeader Name="PART_Header">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="17.6"
+                                           LetterSpacing="-0.16"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Caption"
+                                           Text="{TemplateBinding Caption}"
+                                           IsVisible="{TemplateBinding Caption, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </arc:MetricExplorerHeader>
+                            <arc:MetricExplorerStage Name="PART_Stage" />
+                        </StackPanel>
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

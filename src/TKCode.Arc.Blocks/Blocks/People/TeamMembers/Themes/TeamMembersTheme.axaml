@@ -1,0 +1,930 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The members page (Arc Team members, design reference). Framed: a card with a 1px Border, radius 16 and Surface;
+        flat: no frame. From the top: the header (title 16 / 17.6, description 13 / 18.2 in TextSecondary, the 180-wide seat
+        meter), the invite form (label, field + picker + send, the message line on a Smooth height spring), the lists
+        (members head with the search, member rows, pending head, pending rows) and the footer status. Lines in Border
+        color separate the four parts. A flight layer over everything carries the sent addresses.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembers}" TargetType="arc:TeamMembers">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:TeamMembersTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamMembersTokenResource CardRadius}" />
+        <Setter Property="NarrowWidth" Value="{arc:TeamMembersTokenResource NarrowWidth}" />
+        <Setter Property="StackWidth" Value="{arc:TeamMembersTokenResource StackWidth}" />
+        <Setter Property="ActionsBelowWidth" Value="{arc:TeamMembersTokenResource ActionsBelowWidth}" />
+        <Setter Property="TwoTierWidth" Value="{arc:TeamMembersTokenResource TwoTierWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembers">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Panel>
+                        <StackPanel>
+                            <arc:TeamMembersHeaderPanel Name="PART_Header"
+                                                        Gap="{arc:TeamMembersTokenResource HeaderGap}"
+                                                        StackedGap="{arc:TeamMembersTokenResource StackedHeaderGap}">
+                                <StackPanel Spacing="{arc:TeamMembersTokenResource DescriptionGap}">
+                                    <TextBlock Name="PART_Title"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:TeamMembersTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:TeamMembersTokenResource TitleLetterSpacing}"
+                                               TextTrimming="CharacterEllipsis"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Description"
+                                               LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                                               LetterSpacing="{arc:TeamMembersTokenResource CopyLetterSpacing}"
+                                               TextWrapping="Wrap"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <StackPanel Name="PART_SeatMeter"
+                                            Spacing="{arc:TeamMembersTokenResource SeatMeterGap}">
+                                    <StackPanel Orientation="Horizontal" AutomationProperties.AccessibilityView="Raw">
+                                        <arc:RollingDigits Name="PART_SeatsUsed"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                           VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_SeatsOf"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:TeamMembersTokenResource SmallLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <arc:ProjectsProgressLine Name="PART_SeatBar"
+                                                              Height="{arc:TeamMembersTokenResource SeatBarHeight}"
+                                                              Value="{TemplateBinding SeatBarValue}"
+                                                              Maximum="{TemplateBinding SeatBarMaximum}"
+                                                              FillMode="Slide"
+                                                              IsDecorative="False" />
+                                </StackPanel>
+                            </arc:TeamMembersHeaderPanel>
+
+                            <Border Name="PART_Form"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <StackPanel>
+                                    <TextBlock Name="PART_InviteLabel"
+                                               Margin="0,0,0,6"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                                               LetterSpacing="{arc:TeamMembersTokenResource CopyLetterSpacing}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:TeamMembersInviteFormPanel Name="PART_InviteForm"
+                                                                    Gap="{arc:TeamMembersTokenResource InviteRowGap}">
+                                        <arc:TeamMembersEmailField Name="PART_Field" />
+                                        <arc:TeamMembersRolePicker Name="PART_InviteRole" Look="Field" />
+                                        <arc:Button Name="PART_Send" Variant="Primary" Size="Small" />
+                                    </arc:TeamMembersInviteFormPanel>
+                                    <arc:SpringSizeDecorator Axis="Height" Spring="Smooth" CrossClipOverflow="8">
+                                        <arc:ArcContentSwap Name="PART_Message"
+                                                            Margin="0,8,0,0"
+                                                            Mode="BlurSwap"
+                                                            MeasuresExiting="True"
+                                                            HorizontalContentAlignment="Left"
+                                                            VerticalContentAlignment="Top"
+                                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                            TextBlock.LineHeight="{arc:TeamMembersTokenResource MessageLineHeight}" />
+                                    </arc:SpringSizeDecorator>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Name="PART_Lists"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    Padding="0,0,0,8">
+                                <StackPanel>
+                                    <arc:TeamMembersSectionHeadPanel Name="PART_MembersHead"
+                                                                     SearchWidth="{arc:TeamMembersTokenResource SearchWidth}"
+                                                                     RowGap="{arc:TeamMembersTokenResource HeadRowGap}">
+                                        <StackPanel Orientation="Horizontal" Spacing="{arc:TeamMembersTokenResource HeadCountGap}">
+                                            <TextBlock Name="PART_MembersHeading" Classes="heading" AutomationProperties.HeadingLevel="3" />
+                                            <arc:RollingDigits Name="PART_MembersCount" Classes="count" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <arc:SearchField Name="PART_Search" Size="Small" />
+                                    </arc:TeamMembersSectionHeadPanel>
+                                    <StackPanel Name="PART_MemberRows" />
+                                    <arc:TeamMembersSectionHeadPanel Name="PART_PendingHead">
+                                        <StackPanel Orientation="Horizontal" Spacing="{arc:TeamMembersTokenResource HeadCountGap}">
+                                            <TextBlock Name="PART_PendingHeading" Classes="heading" AutomationProperties.HeadingLevel="3" />
+                                            <arc:RollingDigits Name="PART_PendingCount" Classes="count" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </arc:TeamMembersSectionHeadPanel>
+                                    <StackPanel Name="PART_InviteRows" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Name="PART_Footer"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    IsVisible="{TemplateBinding IsFooterVisible}">
+                                <arc:ArcContentSwap Name="PART_Status"
+                                                    Mode="BlurSwap"
+                                                    HorizontalContentAlignment="Left"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                    TextBlock.LineHeight="{arc:TeamMembersTokenResource SmallLineHeight}"
+                                                    AutomationProperties.AccessibilityView="Raw" />
+                            </Border>
+                            <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                            <arc:ProjectsAnnouncer Name="PART_MessageAnnouncer" />
+                            <arc:ProjectsAnnouncer Name="PART_Alert" IsAssertive="True" />
+                        </StackPanel>
+                        <arc:TeamMembersFlightLayer Name="PART_Flights" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+
+        <!-- Paddings: wide, then compact (600 or less). -->
+        <Style Selector="^ /template/ arc|TeamMembersHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:TeamMembersTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Form">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource FormPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TeamMembersSectionHeadPanel#PART_MembersHead">
+            <Setter Property="Margin" Value="{arc:TeamMembersTokenResource MembersHeadPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TeamMembersSectionHeadPanel#PART_PendingHead">
+            <Setter Property="Margin" Value="{arc:TeamMembersTokenResource PendingHeadPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource FooterPadding}" />
+        </Style>
+        <Style Selector="^:stacked">
+            <Style Selector="^ /template/ arc|TeamMembersHeaderPanel#PART_Header">
+                <Setter Property="Margin" Value="{arc:TeamMembersTokenResource CompactHeaderPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Form">
+                <Setter Property="Padding" Value="{arc:TeamMembersTokenResource CompactFormPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamMembersSectionHeadPanel#PART_MembersHead">
+                <Setter Property="Margin" Value="{arc:TeamMembersTokenResource CompactMembersHeadPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamMembersSectionHeadPanel#PART_PendingHead">
+                <Setter Property="Margin" Value="{arc:TeamMembersTokenResource CompactPendingHeadPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="Padding" Value="{arc:TeamMembersTokenResource CompactFooterPadding}" />
+            </Style>
+        </Style>
+
+        <!-- The seat meter: 180 wide (full width when stacked), a Border track and an Accent fill (Warning when full, 240ms). -->
+        <Style Selector="^ /template/ StackPanel#PART_SeatMeter">
+            <Setter Property="Width" Value="{arc:TeamMembersTokenResource SeatMeterWidth}" />
+        </Style>
+        <Style Selector="^:stacked /template/ StackPanel#PART_SeatMeter">
+            <Setter Property="Width" Value="NaN" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProjectsProgressLine#PART_SeatBar">
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:full /template/ arc|ProjectsProgressLine#PART_SeatBar">
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <!-- Section heads: Geist-style display 13 / 14.3, medium, −0.39; the count in TextMuted. -->
+        <Style Selector="^ /template/ TextBlock.heading">
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:TeamMembersTokenResource HeadingLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:TeamMembersTokenResource HeadingLetterSpacing}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|RollingDigits.count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontSize" Value="{arc:TeamMembersTokenResource CopySize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SearchField#PART_Search">
+            <Setter Property="FontSize" Value="{arc:TeamMembersTokenResource CopySize}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The invite field: at least 36 tall, radius 18, 1px Border on Surface; BorderStrong while focused, Danger with an
+        error (160ms). Chips and the input wrap inside a (4, 3) padding with 4 between them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersEmailField}" TargetType="arc:TeamMembersEmailField">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamMembersTokenResource FieldRadius}" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource FieldPadding}" />
+        <Setter Property="MinHeight" Value="{arc:TeamMembersTokenResource FieldMinHeight}" />
+        <Setter Property="ChipGap" Value="{arc:TeamMembersTokenResource ChipGap}" />
+        <Setter Property="InputMinWidth" Value="{arc:TeamMembersTokenResource InputMinWidth}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersEmailField">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        ClipToBounds="True">
+                    <arc:TeamMembersChipPanel Name="PART_Chips" VerticalAlignment="Center">
+                        <arc:TeamMembersEmailInput Name="PART_Input" />
+                    </arc:TeamMembersChipPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:invalid">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The field's input: bare, 26 tall, 6 on each side, the block's 13px text, muted placeholder. -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersEmailInput}" TargetType="arc:TeamMembersEmailInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersEmailInput">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <Panel VerticalAlignment="Center">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       TextTrimming="CharacterEllipsis">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:TeamMembersTokenResource InputHeight}" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource InputInset}" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{arc:TeamMembersTokenResource CopySize}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <!-- A chip: 26 tall, pill, SurfaceMuted with a 1px Border, padding (9, 0, 3, 0), 2 before the 20px round remove button. -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersChip}" TargetType="arc:TeamMembersChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource ChipPadding}" />
+        <Setter Property="Height" Value="{arc:TeamMembersTokenResource ChipHeight}" />
+        <Setter Property="Cursor" Value="Arrow" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersChip">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Orientation="Horizontal" Spacing="{arc:TeamMembersTokenResource ChipInnerGap}">
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   VerticalAlignment="Center"
+                                   FontSize="{arc:TeamMembersTokenResource CopySize}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:TeamMembersChipRemoveButton Name="PART_Remove"
+                                VerticalAlignment="Center"
+                                IsEnabled="{TemplateBinding IsRemoveEnabled}"
+                                AutomationProperties.Name="{TemplateBinding RemoveName}"
+                                Width="{arc:TeamMembersTokenResource ChipRemoveSize}"
+                                Height="{arc:TeamMembersTokenResource ChipRemoveSize}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                          Size="{arc:TeamMembersTokenResource ChipGlyphSize}"
+                                          StrokeThickness="2" />
+                        </arc:TeamMembersChipRemoveButton>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+
+    <!-- A chip's remove button: 20px round, TextMuted cross; Border fill and Foreground on hover (160ms). -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersChipRemoveButton}" TargetType="arc:TeamMembersChipRemoveButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersChipRemoveButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-3"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.52" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The role picker. Field: 36 tall, radius 18, 1px Border on Surface, padding (14, 0, 12, 0), 8 before the chevron.
+        Ghost: 32 tall, radius 8, no border, padding (10, 0, 6, 0), 4 before the chevron, SurfaceMuted on hover. The name
+        morphs; the 14px chevron (TextMuted) turns over while the menu is open (580ms CSS spring).
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersRolePicker}" TargetType="arc:TeamMembersRolePicker">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:TeamMembersTokenResource CopySize}" />
+        <Setter Property="MenuOffset" Value="{arc:TeamMembersTokenResource MenuOffset}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamMembersTokenResource FieldRadius}" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource RoleFieldPadding}" />
+        <Setter Property="Height" Value="{arc:TeamMembersTokenResource FieldMinHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersRolePicker">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Name="PART_Content" Orientation="Horizontal" VerticalAlignment="Center">
+                            <arc:TextMorph Name="PART_Text"
+                                           Text="{TemplateBinding DisplayText}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:TeamMembersTokenResource ChevronSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center"
+                                          RenderTransformOrigin="50%,50%"
+                                          RenderTransform="rotate(0deg)" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ StackPanel#PART_Content">
+            <Setter Property="Spacing" Value="{arc:TeamMembersTokenResource RoleFieldGap}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="22" />
+        </Style>
+        <Style Selector="^:ghost">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="{arc:TeamMembersTokenResource RoleGhostRadius}" />
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource RoleGhostPadding}" />
+            <Setter Property="Height" Value="{arc:TeamMembersTokenResource RoleGhostHeight}" />
+            <Style Selector="^ /template/ StackPanel#PART_Content">
+                <Setter Property="Spacing" Value="{arc:TeamMembersTokenResource RoleGhostGap}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="CornerRadius" Value="12" />
+            </Style>
+        </Style>
+        <Style Selector="^:ghost:pointerover, ^:ghost:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:field:pointerover, ^:field:open">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.52" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The role menu's surface: padding 6, 1px Border, radius 20, Surface (the popup draws the floating shadow). -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersRoleMenu}" TargetType="arc:TeamMembersRoleMenu">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamMembersTokenResource MenuRadius}" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource MenuPadding}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <!-- A role in the menu: at least 48 tall, padding (10, 6, 36, 6), radius 10; SurfaceMuted when highlighted (80ms); a 16px check 12 from the right. -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersRoleMenuItem}" TargetType="arc:TeamMembersRoleMenuItem">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="MinHeight" Value="{arc:TeamMembersTokenResource MenuItemMinHeight}" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource MenuItemPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamMembersTokenResource MenuItemRadius}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersRoleMenuItem">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        MinHeight="{TemplateBinding MinHeight}">
+                    <Panel>
+                        <StackPanel Margin="{TemplateBinding Padding}" VerticalAlignment="Center" Spacing="1">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       FontSize="{arc:TeamMembersTokenResource CopySize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding Description}"
+                                       IsVisible="{TemplateBinding HasDescription}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:TeamMembersTokenResource SmallLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <arc:ArcGlyph Name="PART_Check"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="{arc:TeamMembersTokenResource MenuCheckSize}"
+                                      StrokeThickness="2"
+                                      Margin="{arc:TeamMembersTokenResource MenuCheckMargin}"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      IsVisible="False"
+                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:highlighted">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Duration="0:0:0.08" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A member row: padding (20, 8) / (16, 8) compact; a BorderSubtle divider above it from the text's left edge (68 / 64)
+        to the right padding, hidden on the first row and around a hovered row (160ms). Hover tints the row (muted surface
+        55% into the surface, 240ms); confirming tints it with the danger color (6%, 240ms) and swaps the faces: the old one
+        lifts 4 and fades in 180ms, the new one rises 6 and fades in in 240ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersMemberRow}" TargetType="arc:TeamMembersMemberRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource RowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersMemberRow">
+                <Panel>
+                    <Border Name="PART_Back" Background="{TemplateBinding Background}" />
+                    <Border Name="PART_Divider"
+                            Height="1"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <arc:TeamMembersMemberRowPanel Name="PART_Layout"
+                                                   Margin="{TemplateBinding Padding}"
+                                                   AvatarSize="{arc:TeamMembersTokenResource AvatarSize}"
+                                                   AvatarGap="{arc:TeamMembersTokenResource AvatarGap}"
+                                                   ColumnGap="{arc:TeamMembersTokenResource ColumnGap}"
+                                                   ActiveWidth="{arc:TeamMembersTokenResource ActiveColumnWidth}"
+                                                   RoleWidth="{arc:TeamMembersTokenResource RoleColumnWidth}"
+                                                   NarrowRoleWidth="{arc:TeamMembersTokenResource NarrowRoleColumnWidth}"
+                                                   RemoveWidth="{arc:TeamMembersTokenResource RemoveSize}">
+                        <arc:Avatar Name="PART_Avatar" Size="Medium" />
+                        <StackPanel Name="PART_Identity" Spacing="{arc:TeamMembersTokenResource IdentityGap}" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:TeamMembersTokenResource YouGap}">
+                                <TextBlock Name="PART_Name"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                                           LetterSpacing="{arc:TeamMembersTokenResource CopyLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_You"
+                                           LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Email" Classes="small muted" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Name="PART_ActiveInline" Classes="small muted" TextTrimming="CharacterEllipsis" IsVisible="False" />
+                        </StackPanel>
+                        <TextBlock Name="PART_Active" Classes="small" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                        <Panel Name="PART_RoleCell" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <arc:TeamMembersRolePicker Name="PART_Role" Look="Ghost" HorizontalAlignment="Right" />
+                            <TextBlock Name="PART_OwnerText"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Margin="{arc:TeamMembersTokenResource OwnerTextMargin}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Panel>
+                        <arc:Button Name="PART_Remove"
+                                    Classes="row-icon"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0z M22 11h-6"
+                                          Size="{arc:TeamMembersTokenResource RowGlyphSize}"
+                                          StrokeThickness="{arc:TeamMembersTokenResource RowGlyphStroke}" />
+                        </arc:Button>
+                        <Grid Name="PART_ConfirmFace" ColumnDefinitions="*,Auto" VerticalAlignment="Stretch">
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="{arc:TeamMembersTokenResource IdentityGap}">
+                                <TextBlock Name="PART_ConfirmTitle"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_ConfirmDetail" Classes="small muted" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        Margin="12,0,0,0"
+                                        VerticalAlignment="Center">
+                                <arc:Button Name="PART_Cancel" Variant="Secondary" Size="Small" />
+                                <arc:Button Name="PART_ConfirmRemove" Classes="confirm-remove" Variant="Danger" Size="Small" />
+                            </StackPanel>
+                        </Grid>
+                    </arc:TeamMembersMemberRowPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Divider">
+            <Setter Property="Margin" Value="68,0,20,0" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource CompactRowPadding}" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Margin" Value="64,0,16,0" />
+            </Style>
+        </Style>
+        <Style Selector="^:first /template/ Border#PART_Divider, ^:divider-hidden /template/ Border#PART_Divider, ^:confirming /template/ Border#PART_Divider">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:TeamMembersTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:confirming">
+            <Setter Property="Background" Value="{arc:TeamMembersTokenResource ConfirmBackground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.small">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:TeamMembersTokenResource SmallLineHeight}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.muted">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_ActiveInline">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Active">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.row-icon">
+            <Setter Property="Width" Value="{arc:TeamMembersTokenResource RemoveSize}" />
+            <Setter Property="Height" Value="{arc:TeamMembersTokenResource RemoveSize}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.confirm-remove">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <!-- The two faces: normal at rest, confirm while confirming (180ms out, 240ms in). -->
+        <Style Selector="^ /template/ Grid#PART_ConfirmFace">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="RenderTransform" Value="translateY(6px)" />
+        </Style>
+        <Style Selector="^:confirming /template/ Grid#PART_ConfirmFace">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Identity, ^ /template/ TextBlock#PART_Active, ^ /template/ Panel#PART_RoleCell, ^ /template/ arc|Button#PART_Remove">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:confirming /template/ StackPanel#PART_Identity, ^:confirming /template/ TextBlock#PART_Active, ^:confirming /template/ Panel#PART_RoleCell, ^:confirming /template/ arc|Button#PART_Remove">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="RenderTransform" Value="translateY(-4px)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_ConfirmFace">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Identity, ^ /template/ TextBlock#PART_Active, ^ /template/ Panel#PART_RoleCell, ^ /template/ arc|Button#PART_Remove">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Exit" />
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Exit" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A pending invite: the same row frame; a dashed 36px avatar (1px BorderStrong, initials 12 medium TextMuted); the
+        address (13 / 18) on a pill (padding 10 / 5, pulled back by the same margin: the landing spot of the flight); the
+        detail (12 / 16.8 TextMuted, blur swap) and the ghost Resend / Revoke buttons 4 apart.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersInviteRow}" TargetType="arc:TeamMembersInviteRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource RowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersInviteRow">
+                <Panel>
+                    <Border Name="PART_Back" Background="{TemplateBinding Background}" />
+                    <Border Name="PART_Divider"
+                            Height="1"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <arc:TeamMembersInviteRowPanel Name="PART_Layout"
+                                                   Margin="{TemplateBinding Padding}"
+                                                   AvatarSize="{arc:TeamMembersTokenResource AvatarSize}"
+                                                   AvatarGap="{arc:TeamMembersTokenResource AvatarGap}"
+                                                   ColumnGap="{arc:TeamMembersTokenResource ColumnGap}"
+                                                   BelowGap="{arc:TeamMembersTokenResource ActionsBelowGap}">
+                        <arc:TeamMembersDashedAvatar Name="PART_Avatar"
+                                                     Width="{arc:TeamMembersTokenResource AvatarSize}"
+                                                     Height="{arc:TeamMembersTokenResource AvatarSize}"
+                                                     Stroke="{arc:ArcDesignTokenResource BorderStrong}"
+                                                     Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                     FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                     FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                     AutomationProperties.AccessibilityView="Raw" />
+                        <StackPanel Spacing="0" VerticalAlignment="Center">
+                            <Border Name="PART_EmailBadge"
+                                    HorizontalAlignment="Left"
+                                    Padding="10,5"
+                                    Margin="-10,-5,-10,-5"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                                <TextBlock Name="PART_Email"
+                                           LineHeight="18"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            </Border>
+                            <arc:ArcContentSwap Name="PART_Detail"
+                                                Mode="BlurSwap"
+                                                HorizontalContentAlignment="Left"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                TextBlock.LineHeight="{arc:TeamMembersTokenResource SmallLineHeight}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="{arc:TeamMembersTokenResource ActionsGap}">
+                            <arc:Button Name="PART_Resend" Variant="Ghost" Size="Small" />
+                            <arc:Button Name="PART_Revoke" Variant="Ghost" Size="Small" />
+                        </StackPanel>
+                    </arc:TeamMembersInviteRowPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Divider">
+            <Setter Property="Margin" Value="68,0,20,0" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource CompactRowPadding}" />
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Margin" Value="64,0,16,0" />
+            </Style>
+        </Style>
+        <Style Selector="^:first /template/ Border#PART_Divider, ^:divider-hidden /template/ Border#PART_Divider">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:TeamMembersTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Divider">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The empty rows: members 52 tall with the text and a "Clear search" button; pending a single muted line (padding 20 / 8). -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersEmptyRow}" TargetType="arc:TeamMembersEmptyRow">
+        <Setter Property="Padding" Value="{arc:TeamMembersTokenResource RowPadding}" />
+        <Setter Property="MinHeight" Value="{arc:TeamMembersTokenResource EmptyRowHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersEmptyRow">
+                <Grid ColumnDefinitions="*,Auto" Margin="{TemplateBinding Padding}" MinHeight="{TemplateBinding MinHeight}">
+                    <TextBlock Name="PART_Text"
+                               Grid.Column="0"
+                               Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               LineHeight="{arc:TeamMembersTokenResource CopyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <arc:Button Name="PART_Clear"
+                                Grid.Column="1"
+                                Margin="12,0,0,0"
+                                Variant="Secondary"
+                                Size="Small"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding ClearText}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource CompactRowPadding}" />
+        </Style>
+        <Style Selector="^:pending">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource EmptyPendingPadding}" />
+            <Setter Property="MinHeight" Value="0" />
+            <Style Selector="^ /template/ arc|Button#PART_Clear">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:pending:compact">
+            <Setter Property="Padding" Value="{arc:TeamMembersTokenResource CompactEmptyPendingPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A flying address: 13 / 18 text on a SurfaceMuted pill with padding (10, 5); the tint fades on its own. -->
+    <ControlTheme x:Key="{x:Type arc:TeamMembersFlightGhost}" TargetType="arc:TeamMembersFlightGhost">
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamMembersFlightGhost">
+                <Panel>
+                    <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Opacity="{TemplateBinding TintOpacity}" />
+                    <TextBlock Text="{TemplateBinding Text}"
+                               Margin="10,5"
+                               LineHeight="18"
+                               FontSize="{arc:TeamMembersTokenResource CopySize}"
+                               FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

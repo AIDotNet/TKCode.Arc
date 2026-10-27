@@ -1,0 +1,494 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        KPI drilldown (Arc Analytics › KPI drilldown, design reference only, ADR 0024): a header (title, Compare, range
+        switch) over the card area. The card area (KpiDrilldownStage) holds the card grid, the veil and the detail panel,
+        and runs the card → detail expansion; the detail content is laid out once at its final width and clipped while the
+        panel grows. Breakpoints come from the block's own width (:two-column, :compact), set in code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:KpiDrilldown}" TargetType="arc:KpiDrilldown">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KpiDrilldown">
+                <Panel Background="{TemplateBinding Background}">
+                    <Grid RowDefinitions="Auto,Auto">
+                        <Border Name="PART_HeaderFrame"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto">
+                                <TextBlock Name="PART_Title"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="15.4"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Margin="12,0,0,0"
+                                            Spacing="{arc:KpiDrilldownTokenResource HeaderControlsGap}">
+                                    <arc:KpiCompareButton Name="PART_Compare" VerticalAlignment="Center" />
+                                    <arc:AnalyticsSegmentSwitch Name="PART_Ranges" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <arc:KpiDrilldownStage Name="PART_Stage"
+                                               Grid.Row="1"
+                                               Inset="{arc:KpiDrilldownTokenResource DetailInset}">
+                            <arc:KpiCardGrid Name="PART_Grid" RowsMinHeight="{arc:KpiDrilldownTokenResource CardRowsMinHeight}" />
+                            <arc:AnalyticsVeil Name="PART_Veil" CornerRadius="0,0,16,16" />
+                            <arc:KpiDetailFrame Name="PART_Frame" IsVisible="False">
+                                <arc:KpiDetailClip>
+                                    <StackPanel Name="PART_Detail"
+                                                Margin="{arc:KpiDrilldownTokenResource DetailPadding}">
+                                        <!-- Header: the metric, the close button; the value, the change and the "vs" line. -->
+                                        <Grid ColumnDefinitions="*,Auto" Height="20">
+                                            <TextBlock Name="PART_DetailTitle"
+                                                       VerticalAlignment="Center"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                                                       LetterSpacing="-0.42"
+                                                       LineHeight="15.4"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <arc:KpiCloseButton Name="PART_Close"
+                                                                Grid.Column="1"
+                                                                Margin="8,-6,-6,-6"
+                                                                VerticalAlignment="Center" />
+                                        </Grid>
+                                        <WrapPanel Margin="0,6,0,0"
+                                                   Orientation="Horizontal"
+                                                   ItemSpacing="10"
+                                                   LineSpacing="4">
+                                            <Panel>
+                                                <arc:AnalyticsRollingNumber Name="PART_DetailValue"
+                                                                            FontSize="{TemplateBinding DetailValueSize}"
+                                                                            FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                                            FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                            Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <TextBlock Name="PART_DetailPlainValue"
+                                                           FontSize="{TemplateBinding DetailValueSize}"
+                                                           IsVisible="False"
+                                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            </Panel>
+                                            <arc:KpiDelta Name="PART_DetailDelta" VerticalAlignment="Bottom" Margin="0,0,0,5" />
+                                            <StackPanel Name="PART_Versus"
+                                                        Orientation="Horizontal"
+                                                        VerticalAlignment="Bottom"
+                                                        Margin="0,0,0,5"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                                <TextBlock Name="PART_VersusBefore" VerticalAlignment="Center" LineHeight="16.8" />
+                                                <arc:AnalyticsRollingNumber Name="PART_VersusValue"
+                                                                            VerticalAlignment="Center"
+                                                                            FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                            FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                                            Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                <TextBlock Name="PART_VersusAfter" VerticalAlignment="Center" LineHeight="16.8" />
+                                            </StackPanel>
+                                        </WrapPanel>
+
+                                        <!-- Body: fades in after the panel starts to grow. -->
+                                        <StackPanel Name="PART_Body" Margin="0,10,0,0" Spacing="12">
+                                            <TextBlock Name="PART_Description"
+                                                       TextWrapping="Wrap"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       LineHeight="16.8"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            <arc:KpiTrendChart Name="PART_Chart"
+                                                               Margin="0,4,0,0"
+                                                               Height="{arc:KpiDrilldownTokenResource TrendHeight}" />
+                                            <StackPanel Name="PART_Legend"
+                                                        Orientation="Horizontal"
+                                                        Spacing="16"
+                                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <arc:KpiLegendSwatch VerticalAlignment="Center" />
+                                                    <arc:AnalyticsTextSwap Name="PART_LegendCurrent" LineHeight="16.8" />
+                                                </StackPanel>
+                                                <StackPanel Name="PART_LegendPriorItem" Orientation="Horizontal" Spacing="6">
+                                                    <arc:KpiLegendSwatch IsPrior="True" VerticalAlignment="Center" />
+                                                    <arc:AnalyticsTextSwap Name="PART_LegendPrior" LineHeight="16.8" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <Border Name="PART_Breakdown"
+                                                    Margin="0,8,0,0"
+                                                    Padding="0,14,0,0"
+                                                    BorderThickness="0,1,0,0"
+                                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                                                <StackPanel>
+                                                    <Grid ColumnDefinitions="*,Auto" MinHeight="34" Margin="0,0,0,8">
+                                                        <TextBlock Name="PART_BreakdownTitle"
+                                                                   VerticalAlignment="Center"
+                                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                   LineHeight="15.4"
+                                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                        <arc:AnalyticsSegmentSwitch Name="PART_Dimensions"
+                                                                                    Grid.Column="1"
+                                                                                    Margin="8,0,0,0"
+                                                                                    VerticalAlignment="Center" />
+                                                    </Grid>
+                                                    <arc:KpiBreakdownTable Name="PART_Table" />
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </arc:KpiDetailClip>
+                            </arc:KpiDetailFrame>
+                        </arc:KpiDrilldownStage>
+                    </Grid>
+                    <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:KpiDrilldownTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|KpiDrilldownStage#PART_Stage">
+            <Setter Property="StagePadding" Value="{arc:KpiDrilldownTokenResource StagePadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|KpiCardGrid#PART_Grid">
+            <Setter Property="Gap" Value="{arc:KpiDrilldownTokenResource CardGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|KpiBreakdownTable#PART_Table">
+            <Setter Property="ValueWidth" Value="{arc:KpiDrilldownTokenResource BreakdownValueWidth}" />
+            <Setter Property="ChangeWidth" Value="{arc:KpiDrilldownTokenResource BreakdownChangeWidth}" />
+            <Setter Property="PercentWidth" Value="{arc:KpiDrilldownTokenResource BreakdownPercentWidth}" />
+        </Style>
+        <Setter Property="DetailValueSize" Value="{arc:KpiDrilldownTokenResource KpiValueSize}" />
+        <Style Selector="^:compact">
+            <Setter Property="DetailValueSize" Value="{arc:KpiDrilldownTokenResource CompactKpiValueSize}" />
+        </Style>
+        <Style Selector="^:compare-off /template/ StackPanel#PART_LegendPriorItem">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <Style Selector="^:compact /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:KpiDrilldownTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|KpiDrilldownStage#PART_Stage">
+            <Setter Property="StagePadding" Value="{arc:KpiDrilldownTokenResource CompactStagePadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|KpiCardGrid#PART_Grid">
+            <Setter Property="Gap" Value="{arc:KpiDrilldownTokenResource CompactCardGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|KpiBreakdownTable#PART_Table">
+            <Setter Property="ValueWidth" Value="{arc:KpiDrilldownTokenResource CompactBreakdownValueWidth}" />
+            <Setter Property="ChangeWidth" Value="{arc:KpiDrilldownTokenResource CompactBreakdownChangeWidth}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ StackPanel#PART_LegendPriorItem">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel#PART_LegendPriorItem">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A KPI card: one button; hover darkens the edge and lifts a resting shadow, pressing scales to .985. -->
+    <ControlTheme x:Key="{x:Type arc:KpiCard}" TargetType="arc:KpiCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:KpiDrilldownTokenResource KpiCardRadius}" />
+        <Setter Property="Padding" Value="{arc:KpiDrilldownTokenResource KpiCardPadding}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="ValueSize" Value="{arc:KpiDrilldownTokenResource KpiValueSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KpiCard">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{arc:KpiDrilldownTokenResource KpiCardRowGap}">
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       LineHeight="20"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <WrapPanel Grid.Row="1" Orientation="Horizontal" ItemSpacing="10" LineSpacing="4">
+                                <Panel>
+                                    <arc:AnalyticsRollingNumber Name="PART_Value"
+                                                                FontSize="{TemplateBinding ValueSize}"
+                                                                FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_PlainValue"
+                                               FontSize="{TemplateBinding ValueSize}"
+                                               IsVisible="False"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </Panel>
+                                <arc:KpiDelta Name="PART_Delta" VerticalAlignment="Bottom" Margin="0,0,0,5" />
+                            </WrapPanel>
+                            <arc:KpiSparkline Name="PART_Sparkline"
+                                              Grid.Row="2"
+                                              MinHeight="{arc:KpiDrilldownTokenResource SparklineMinHeight}" />
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="18"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact">
+            <Setter Property="ValueSize" Value="{arc:KpiDrilldownTokenResource CompactKpiValueSize}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="0 0 0 0 Transparent" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Frame">
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.985)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Frame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A change: arrow and rolling signed number, tinted by tone (160ms). -->
+    <ControlTheme x:Key="{x:Type arc:KpiDelta}" TargetType="arc:KpiDelta">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KpiDelta">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <arc:ArcGlyph Name="PART_Arrow"
+                                  Size="13"
+                                  StrokeThickness="2"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  VerticalAlignment="Center"
+                                  RenderTransformOrigin="50%,50%" />
+                    <arc:AnalyticsRollingNumber Name="PART_Number"
+                                                VerticalAlignment="Center"
+                                                FontFamily="{TemplateBinding FontFamily}"
+                                                FontSize="{TemplateBinding FontSize}"
+                                                FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                Foreground="{TemplateBinding Foreground}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:good">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:bad">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- Compare: an accent toggle with an icon; icon-only when compact. -->
+    <ControlTheme x:Key="{x:Type arc:KpiCompareButton}" TargetType="arc:KpiCompareButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:KpiDrilldownTokenResource CompareRadius}" />
+        <Setter Property="Padding" Value="{arc:KpiDrilldownTokenResource ComparePadding}" />
+        <Setter Property="Height" Value="{arc:KpiDrilldownTokenResource ToolbarItemHeight}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KpiCompareButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_OnEdge"
+                            Opacity="0"
+                            BorderBrush="{TemplateBinding OnBorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Name="PART_Content"
+                                Margin="{TemplateBinding Padding}"
+                                Orientation="Horizontal"
+                                Spacing="6"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.GitCompareArrows}"
+                                      Size="14"
+                                      StrokeThickness="2"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      VerticalAlignment="Center" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="13"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_OnEdge">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:icon-only">
+            <Setter Property="Width" Value="{arc:KpiDrilldownTokenResource CompareIconOnlyWidth}" />
+        </Style>
+        <Style Selector="^:icon-only /template/ StackPanel#PART_Content">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:icon-only /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_OnEdge">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The detail view's close button: 30 square, radius 9, an x at 16. -->
+    <ControlTheme x:Key="{x:Type arc:KpiCloseButton}" TargetType="arc:KpiCloseButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:KpiDrilldownTokenResource CloseRadius}" />
+        <Setter Property="Width" Value="{arc:KpiDrilldownTokenResource CloseSize}" />
+        <Setter Property="Height" Value="{arc:KpiDrilldownTokenResource CloseSize}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:KpiCloseButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      Size="16"
+                                      StrokeThickness="2"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="13"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

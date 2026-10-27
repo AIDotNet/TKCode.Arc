@@ -1,0 +1,395 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Uptime status (Arc Analytics › Uptime status, design reference only, ADR 0024): flat on the page. The header (status
+        icon, title, page line, an action), the Uptime section (service rows with day bars and the hover-card layer), and the
+        Response time and Incidents sections side by side (stacked under a block width of 860; compact under 560, both set in
+        code from the block's own width as :stacked / :compact).
+    -->
+    <ControlTheme x:Key="{x:Type arc:UptimeStatus}" TargetType="arc:UptimeStatus">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UptimeStatus">
+                <Panel Background="{TemplateBinding Background}">
+                    <StackPanel>
+                        <!-- Header: icon, title over the page line, the action. -->
+                        <Grid Name="PART_Header"
+                              ColumnDefinitions="28,*,Auto"
+                              ColumnSpacing="16"
+                              RowSpacing="12"
+                              Margin="{arc:UptimeStatusTokenResource HeaderPadding}">
+                            <arc:UptimeStatusIcon Name="PART_Icon"
+                                                  Width="{arc:UptimeStatusTokenResource StatusIconSize}"
+                                                  Height="{arc:UptimeStatusTokenResource StatusIconSize}"
+                                                  VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                <arc:AnalyticsTextSwap Name="PART_Title"
+                                                       FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LineHeight="17.6"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Name="PART_PageName"
+                                               VerticalAlignment="Center"
+                                               LineHeight="19.6"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Separator"
+                                               Text="·"
+                                               VerticalAlignment="Center"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:AnalyticsTextSwap Name="PART_Summary"
+                                                           VerticalAlignment="Center"
+                                                           FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           LineHeight="19.6"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <ContentPresenter Name="PART_Action"
+                                              Grid.Column="2"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+
+                        <TextBlock Name="PART_Empty"
+                                   IsVisible="False"
+                                   Margin="20,8,20,20"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+
+                        <!-- Uptime: heading, legend, service rows, date row; the hover card layer covers the whole section. -->
+                        <Panel Name="PART_UptimeSection">
+                            <Border Name="PART_UptimeFrame"
+                                    Padding="{arc:UptimeStatusTokenResource SectionPadding}"
+                                    BorderThickness="0,0,0,1"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <StackPanel>
+                                    <Grid Name="PART_UptimeHead" ColumnDefinitions="*,Auto">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Name="PART_UptimeHeading"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LetterSpacing="-0.42"
+                                                       LineHeight="15.4"
+                                                       AutomationProperties.HeadingLevel="3" />
+                                            <TextBlock Name="PART_UptimeHint"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       LineHeight="19.6"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_Legend"
+                                                    Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    Spacing="16"
+                                                    VerticalAlignment="Bottom"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:UptimeStatusMark Status="Operational" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_LegendOperational" LineHeight="16.8" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:UptimeStatusMark Status="Degraded" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_LegendDegraded" LineHeight="16.8" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:UptimeStatusMark Status="Outage" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_LegendOutage" LineHeight="16.8" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                    <arc:UptimeServiceList Name="PART_Services" Margin="-10,12,-10,0" />
+                                    <Grid ColumnDefinitions="*,Auto"
+                                          Margin="0,8,0,0"
+                                          TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                          TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                        <TextBlock Name="PART_StartDate" LineHeight="16.8" />
+                                        <TextBlock Name="PART_Today" Grid.Column="1" LineHeight="16.8" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <arc:UptimeTipLayer Name="PART_Tip" IsHitTestVisible="False" />
+                        </Panel>
+
+                        <!-- Response time and Incidents. -->
+                        <Grid Name="PART_Lower" ColumnDefinitions="1.2*,*">
+                            <Border Name="PART_ResponseFrame" Padding="{arc:UptimeStatusTokenResource SectionPadding}">
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Name="PART_ResponseHeading"
+                                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       LetterSpacing="-0.42"
+                                                       LineHeight="15.4"
+                                                       AutomationProperties.HeadingLevel="3" />
+                                            <arc:AnalyticsTextSwap Name="PART_Subtitle"
+                                                                   FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                   LineHeight="19.6"
+                                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                        <TextBlock Name="PART_Latest"
+                                                   Grid.Column="1"
+                                                   Margin="12,0,0,0"
+                                                   VerticalAlignment="Top"
+                                                   LineHeight="19.6"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Grid>
+                                    <WrapPanel Margin="0,12,0,8" ItemSpacing="24" LineSpacing="8">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:UptimeKeyMark Kind="P95" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_P95Name" FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="16.8" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="3">
+                                                <arc:AnalyticsRollingNumber Name="PART_P95Value" FontSize="18" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" Foreground="{arc:ArcDesignTokenResource Foreground}" VerticalAlignment="Bottom" />
+                                                <TextBlock Name="PART_Unit1" FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="15.6" Margin="0,0,0,2" VerticalAlignment="Bottom" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:UptimeKeyMark Kind="P50" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_P50Name" FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="16.8" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="3">
+                                                <arc:AnalyticsRollingNumber Name="PART_P50Value" FontSize="18" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" Foreground="{arc:ArcDesignTokenResource Foreground}" VerticalAlignment="Bottom" />
+                                                <TextBlock Name="PART_Unit2" FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="15.6" Margin="0,0,0,2" VerticalAlignment="Bottom" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:UptimeKeyMark Kind="Target" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_TargetName" FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="16.8" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="3">
+                                                <arc:AnalyticsRollingNumber Name="PART_TargetValue" FontSize="18" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" Foreground="{arc:ArcDesignTokenResource Foreground}" VerticalAlignment="Bottom" />
+                                                <TextBlock Name="PART_Unit3" FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="15.6" Margin="0,0,0,2" VerticalAlignment="Bottom" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </WrapPanel>
+                                    <arc:UptimeLatencyChart Name="PART_Chart" Height="{arc:UptimeStatusTokenResource ChartHeight}" />
+                                    <arc:UptimeDataTable Name="PART_Table" />
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_IncidentsFrame"
+                                    Grid.Column="1"
+                                    Padding="{arc:UptimeStatusTokenResource SectionPadding}"
+                                    BorderThickness="1,0,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <StackPanel>
+                                    <TextBlock Name="PART_IncidentsHeading"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LetterSpacing="-0.42"
+                                               LineHeight="15.4"
+                                               AutomationProperties.HeadingLevel="3" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Margin="0,4,0,0"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                        <TextBlock Name="PART_CountBefore" LineHeight="19.6" />
+                                        <arc:AnalyticsRollingNumber Name="PART_CountValue"
+                                                                    FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_CountAfter" LineHeight="19.6" />
+                                    </StackPanel>
+                                    <arc:UptimeIncidentList Name="PART_Incidents" Margin="0,12,0,0" />
+                                    <TextBlock Name="PART_NoIncidents"
+                                               Margin="0,12,0,0"
+                                               IsVisible="False"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                    <arc:AnalyticsAnnouncer Name="PART_StatusAnnouncer" />
+                    <arc:AnalyticsAnnouncer Name="PART_InspectAnnouncer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:UptimeStatusTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_UptimeFrame">
+            <Setter Property="Padding" Value="{arc:UptimeStatusTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_ResponseFrame">
+            <Setter Property="Padding" Value="{arc:UptimeStatusTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_IncidentsFrame">
+            <Setter Property="Padding" Value="{arc:UptimeStatusTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^:empty /template/ TextBlock#PART_Empty">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:empty /template/ Panel#PART_UptimeSection">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:empty /template/ Grid#PART_Lower">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The day bars take their geometry from the token. -->
+    <ControlTheme x:Key="{x:Type arc:UptimeStrip}" TargetType="arc:UptimeStrip">
+        <Setter Property="BandHeight" Value="{arc:UptimeStatusTokenResource StripHeight}" />
+        <Setter Property="BarRadius" Value="{arc:UptimeStatusTokenResource BarRadius}" />
+        <Setter Property="DegradedFraction" Value="{arc:UptimeStatusTokenResource DegradedBarFraction}" />
+        <Setter Property="OutageFraction" Value="{arc:UptimeStatusTokenResource OutageBarFraction}" />
+        <Setter Property="DimmedOpacity" Value="{arc:UptimeStatusTokenResource DimmedBarOpacity}" />
+    </ControlTheme>
+
+    <!-- A service's name line: name and description, the badge of a service that is not operational, the rolling uptime. -->
+    <ControlTheme x:Key="{x:Type arc:UptimeRowButton}" TargetType="arc:UptimeRowButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UptimeRowButton">
+                <Panel Background="Transparent">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock Name="PART_Name"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="19.6"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_Description"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0,0,0,1"
+                                       MaxWidth="260"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <arc:UptimeBadge Name="PART_Badge" Grid.Column="1" IsVisible="False" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                            <arc:AnalyticsRollingNumber Name="PART_Uptime"
+                                                        VerticalAlignment="Bottom"
+                                                        FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                        Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Name="PART_UptimeLabel"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0,0,0,1"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </Grid>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,-2"
+                            CornerRadius="6"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact /template/ TextBlock#PART_Description">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_UptimeLabel">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- An incident's header: mark, title over meta, badge or "Resolved", chevron (turns half way round when open, Quick spring). -->
+    <ControlTheme x:Key="{x:Type arc:UptimeIncidentHeader}" TargetType="arc:UptimeIncidentHeader">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UptimeIncidentHeader">
+                <Panel Background="Transparent">
+                    <Grid ColumnDefinitions="8,*,Auto,16"
+                          ColumnSpacing="12"
+                          Margin="{arc:UptimeStatusTokenResource IncidentHeaderMargin}"
+                          VerticalAlignment="Center">
+                        <arc:UptimeStatusMark Name="PART_Mark" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Name="PART_Title"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="19.6"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:ArcContentSwap Name="PART_Meta" Mode="Label" HorizontalContentAlignment="Left">
+                                <arc:ArcContentSwap.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <TextBlock Text="{Binding}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </DataTemplate>
+                                </arc:ArcContentSwap.ContentTemplate>
+                            </arc:ArcContentSwap>
+                        </StackPanel>
+                        <Panel Grid.Column="2" VerticalAlignment="Center">
+                            <arc:UptimeBadge Name="PART_Badge" IsVisible="False" />
+                            <TextBlock Name="PART_Resolved"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Panel>
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Grid.Column="3"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="16"
+                                      StrokeThickness="1.75"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%"
+                                      RenderTransform="rotate(0deg)" />
+                    </Grid>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,0"
+                            CornerRadius="6"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Responsive" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

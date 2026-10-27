@@ -1,0 +1,798 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The directory (Arc Team directory, design reference). Framed: a card with a 1px Border, radius 16, Surface, clipped;
+        flat: no frame. From the top: the header (title, count, 240 × 32 search box), the team buttons, a Border line, and
+        the body: the list (padding 8) and the profile side by side (list max(196, 36%), body at least 432 high, a Border
+        line between them) or, at 500 wide or less, stacked with a Border line above the profile.
+        Breakpoints follow the block's width: :narrow (≤ 640), :stacked (≤ 500), :compact (≤ 400).
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectory}" TargetType="arc:TeamDirectory">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:TeamDirectoryTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TeamDirectoryTokenResource CardRadius}" />
+        <Setter Property="NarrowWidth" Value="{arc:TeamDirectoryTokenResource NarrowWidth}" />
+        <Setter Property="StackedWidth" Value="{arc:TeamDirectoryTokenResource StackedWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:TeamDirectoryTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectory">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <arc:TeamDirectoryHeader Name="PART_Header"
+                                                 SearchWidth="{arc:TeamDirectoryTokenResource SearchWidth}"
+                                                 Gap="{arc:TeamDirectoryTokenResource HeaderGap}"
+                                                 CompactGap="{arc:TeamDirectoryTokenResource CompactHeaderGap}">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:TeamDirectoryTokenResource TitleCountGap}">
+                                <TextBlock Name="PART_Title"
+                                           VerticalAlignment="Bottom"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:TeamDirectoryTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:TeamDirectoryTokenResource TitleLetterSpacing}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           AutomationProperties.HeadingLevel="2" />
+                                <TextBlock Name="PART_Count"
+                                           VerticalAlignment="Bottom"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:TeamDirectoryTokenResource CopySize}"
+                                           FontFeatures="tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <Border Name="PART_SearchFrame"
+                                    Height="{arc:TeamDirectoryTokenResource SearchHeight}"
+                                    Padding="{arc:TeamDirectoryTokenResource SearchPadding}"
+                                    Background="{arc:ArcDesignTokenResource Surface}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                    Cursor="IBeam">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{arc:TeamDirectoryTokenResource SearchGap}">
+                                    <arc:ArcGlyph Grid.Column="0"
+                                                  VerticalAlignment="Center"
+                                                  Data="{x:Static arc:ArcIcons.Search}"
+                                                  Size="{arc:TeamDirectoryTokenResource SearchGlyphSize}"
+                                                  StrokeThickness="{arc:TeamDirectoryTokenResource GlyphStroke}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <arc:TeamDirectorySearchInput Name="PART_SearchInput"
+                                                                  Grid.Column="1"
+                                                                  VerticalAlignment="Center" />
+                                    <!-- The clear slot is always reserved, so the input never changes width. -->
+                                    <Panel Grid.Column="2"
+                                           Width="{arc:TeamDirectoryTokenResource ClearSlotSize}"
+                                           Height="{arc:TeamDirectoryTokenResource ClearSlotSize}">
+                                        <arc:TeamDirectoryClearButton Name="PART_ClearSearch" IsVisible="False" />
+                                    </Panel>
+                                </Grid>
+                            </Border>
+                        </arc:TeamDirectoryHeader>
+                        <Border Name="PART_FilterBar">
+                            <!-- The strip has 4px of room on every side for the buttons' focus rings; the viewer takes it back. -->
+                            <ScrollViewer Name="PART_FilterScroll"
+                                          Margin="-4"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Disabled">
+                                <arc:TeamDirectoryFilterStrip Name="PART_Filters"
+                                                              Margin="4"
+                                                              HorizontalAlignment="Left"
+                                                              Height="{arc:TeamDirectoryTokenResource FilterHeight}"
+                                                              Gap="{arc:TeamDirectoryTokenResource FilterGap}">
+                                    <arc:GlidingIndicator Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                          CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                </arc:TeamDirectoryFilterStrip>
+                            </ScrollViewer>
+                        </Border>
+                        <Border Name="PART_BodyFrame"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <arc:TeamDirectoryBody Name="PART_Body"
+                                                   ListMinWidth="{arc:TeamDirectoryTokenResource ListMinWidth}"
+                                                   ListFraction="{arc:TeamDirectoryTokenResource ListFraction}"
+                                                   MinBodyHeight="{arc:TeamDirectoryTokenResource BodyMinHeight}">
+                                <Border Name="PART_ListPane"
+                                        Padding="{arc:TeamDirectoryTokenResource ListPadding}"
+                                        BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <Panel>
+                                        <arc:TeamDirectoryList Name="PART_List"
+                                                               VerticalAlignment="Top"
+                                                               RowHeight="{arc:TeamDirectoryTokenResource RowHeight}"
+                                                               RowGap="{arc:TeamDirectoryTokenResource RowGap}">
+                                            <arc:GlidingIndicator Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                                  CornerRadius="{arc:TeamDirectoryTokenResource RowRadius}" />
+                                        </arc:TeamDirectoryList>
+                                        <StackPanel Name="PART_Empty"
+                                                    IsVisible="False"
+                                                    VerticalAlignment="Top"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="{arc:TeamDirectoryTokenResource EmptyPadding}"
+                                                    Spacing="{arc:TeamDirectoryTokenResource EmptyGap}">
+                                            <TextBlock Name="PART_NoMatch"
+                                                       TextWrapping="Wrap"
+                                                       LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                                                       LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <arc:TeamDirectoryLinkButton Name="PART_ClearFilters"
+                                                                         HorizontalAlignment="Left"
+                                                                         IsUnderlined="True" />
+                                        </StackPanel>
+                                    </Panel>
+                                </Border>
+                                <Border Name="PART_DetailPane" BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                    <arc:TeamDirectoryDetailHost Name="PART_Detail"
+                                                                 Rise="{arc:TeamDirectoryTokenResource ProfileRise}" />
+                                </Border>
+                            </arc:TeamDirectoryBody>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with the frame or a breakpoint are styles, not template values (those would win). -->
+        <Style Selector="^:not(:framed)">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|TeamDirectoryHeader#PART_Header">
+            <Setter Property="Padding" Value="{arc:TeamDirectoryTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_FilterBar">
+            <Setter Property="Padding" Value="{arc:TeamDirectoryTokenResource FilterBarPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SearchFrame">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SearchFrame:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ListPane">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessRight}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DetailPane">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|TeamDirectoryDetailHost#PART_Detail">
+            <Setter Property="ContentPadding" Value="{arc:TeamDirectoryTokenResource DetailPadding}" />
+            <Setter Property="LabelWidth" Value="{arc:TeamDirectoryTokenResource LabelWidth}" />
+            <Setter Property="IsCopyIconOnly" Value="False" />
+        </Style>
+
+        <!-- ≤ 640: the copy button shows its glyph only, the profile tightens. -->
+        <Style Selector="^:narrow /template/ arc|TeamDirectoryDetailHost#PART_Detail">
+            <Setter Property="ContentPadding" Value="{arc:TeamDirectoryTokenResource NarrowDetailPadding}" />
+            <Setter Property="LabelWidth" Value="{arc:TeamDirectoryTokenResource NarrowLabelWidth}" />
+            <Setter Property="IsCopyIconOnly" Value="True" />
+        </Style>
+
+        <!-- ≤ 500: one column; the copy button shows its label again. -->
+        <Style Selector="^:stacked">
+            <Style Selector="^ /template/ arc|TeamDirectoryHeader#PART_Header">
+                <Setter Property="Padding" Value="{arc:TeamDirectoryTokenResource StackedHeaderPadding}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FilterBar">
+                <Setter Property="Padding" Value="{arc:TeamDirectoryTokenResource StackedFilterBarPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamDirectoryBody#PART_Body">
+                <Setter Property="IsStacked" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_ListPane">
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_DetailPane">
+                <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamDirectoryDetailHost#PART_Detail">
+                <Setter Property="ContentPadding" Value="{arc:TeamDirectoryTokenResource StackedDetailPadding}" />
+                <Setter Property="IsCopyIconOnly" Value="False" />
+            </Style>
+        </Style>
+
+        <!-- ≤ 400: the search box under the title, the team counts hidden, a 84 label column (as measured). -->
+        <Style Selector="^:compact">
+            <Style Selector="^ /template/ arc|TeamDirectoryHeader#PART_Header">
+                <Setter Property="IsCompact" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamDirectoryFilterStrip#PART_Filters">
+                <Setter Property="IsCountVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|TeamDirectoryDetailHost#PART_Detail">
+                <Setter Property="LabelWidth" Value="{arc:TeamDirectoryTokenResource CompactLabelWidth}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Border#PART_SearchFrame">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The search input: no frame (the box draws it), 13 on 18.2, a muted placeholder. -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectorySearchInput}" TargetType="arc:TeamDirectorySearchInput">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectorySearchInput">
+                <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  VerticalAlignment="Center">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextWrapping="NoWrap"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}"
+                                           VerticalAlignment="Center" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:TeamDirectoryTokenResource CopySize}" />
+        <Setter Property="LineHeight" Value="{arc:TeamDirectoryTokenResource CopyLineHeight}" />
+        <Setter Property="LetterSpacing" Value="{arc:TeamDirectoryTokenResource CopyLetterSpacing}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+    </ControlTheme>
+
+    <!-- The clear button: 24 round, a 14 cross in TextMuted; hovered, Foreground on SurfaceMuted (no transition). -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryClearButton}" TargetType="arc:TeamDirectoryClearButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Width" Value="{arc:TeamDirectoryTokenResource ClearSlotSize}" />
+        <Setter Property="Height" Value="{arc:TeamDirectoryTokenResource ClearSlotSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryClearButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Size="{arc:TeamDirectoryTokenResource ClearGlyphSize}"
+                                      StrokeThickness="{arc:TeamDirectoryTokenResource GlyphStroke}"
+                                      Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A team button: 28 high, pill, padding 0 10; the label 13 in TextSecondary (Foreground when hovered or pressed, 160ms),
+        the count 12 in TextMuted 6 after it (tabular figures). The pressed button's fill is the strip's gliding pill.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryFilterButton}" TargetType="arc:TeamDirectoryFilterButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Padding" Value="{arc:TeamDirectoryTokenResource FilterPadding}" />
+        <Setter Property="Height" Value="{arc:TeamDirectoryTokenResource FilterHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryFilterButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:TeamDirectoryTokenResource FilterCountGap}">
+                            <TextBlock Name="PART_Label"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding Label}"
+                                       FontSize="{arc:TeamDirectoryTokenResource CopySize}"
+                                       LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                                       LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <TextBlock Name="PART_Count"
+                                       VerticalAlignment="Center"
+                                       Text="{TemplateBinding CountText}"
+                                       IsVisible="{TemplateBinding IsCountVisible}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:TeamDirectoryTokenResource SmallLineHeight}"
+                                       FontFeatures="tnum"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A person row: 52 high, radius 10, padding 10 / 8; a 36 avatar with its availability dot, 12 before the name (13,
+        medium) over the role (12, TextMuted), both on one line with an ellipsis. Hovered, the muted surface at 60%
+        (160ms); the row whose profile shows sits on the list's gliding highlight.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryRow}" TargetType="arc:TeamDirectoryRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryRow">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:TeamDirectoryTokenResource RowRadius}"
+                            Padding="{arc:TeamDirectoryTokenResource RowPadding}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:TeamDirectoryTokenResource RowContentGap}">
+                            <arc:Avatar Name="PART_Avatar" Grid.Column="0" Size="Medium" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="{arc:TeamDirectoryTokenResource RowTextGap}">
+                                <TextBlock Name="PART_Name"
+                                           FontSize="{arc:TeamDirectoryTokenResource CopySize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                                           LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Role"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:TeamDirectoryTokenResource SmallLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:TeamDirectoryTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A profile: padding 24 (20 at ≤ 640, 16 / 20 at ≤ 500), parts 16 apart. The 48 avatar (no dot) 14 before the name
+        (18 on 19.8, medium, display font) over the role (13, TextSecondary); the bio (13, TextSecondary, at most 426.5
+        wide); five 40px fields under a Border line, BorderSubtle lines between them, the label column 96 (76 / 84).
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryProfile}" TargetType="arc:TeamDirectoryProfile">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryProfile">
+                <StackPanel Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="Top"
+                            Spacing="{arc:TeamDirectoryTokenResource DetailGap}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:TeamDirectoryTokenResource ProfileAvatarGap}">
+                        <arc:Avatar Name="PART_Avatar" Grid.Column="0" Size="Large" VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="{arc:TeamDirectoryTokenResource RowTextGap}">
+                            <TextBlock Text="{TemplateBinding NameText}"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:TeamDirectoryTokenResource NameLineHeight}"
+                                       LetterSpacing="{arc:TeamDirectoryTokenResource NameLetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       AutomationProperties.HeadingLevel="3" />
+                            <TextBlock Text="{TemplateBinding RoleText}"
+                                       LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                                       LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Name="PART_Bio"
+                               Text="{TemplateBinding BioText}"
+                               IsVisible="{TemplateBinding BioText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               HorizontalAlignment="Left"
+                               MaxWidth="{arc:TeamDirectoryTokenResource BioMaxWidth}"
+                               TextWrapping="Wrap"
+                               LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                               LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}">
+                        <StackPanel>
+                            <Border Classes="field">
+                                <DockPanel>
+                                    <TextBlock Classes="label" Width="{TemplateBinding LabelWidth}" Text="{TemplateBinding StatusLabel}" />
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="{arc:TeamDirectoryTokenResource InlineGap}">
+                                        <Border Name="PART_StatusDot"
+                                                VerticalAlignment="Center"
+                                                Width="{arc:TeamDirectoryTokenResource StatusDotSize}"
+                                                Height="{arc:TeamDirectoryTokenResource StatusDotSize}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                                        <TextBlock Classes="value" Text="{TemplateBinding StatusText}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                            <Border Classes="field">
+                                <DockPanel>
+                                    <TextBlock Classes="label" Width="{TemplateBinding LabelWidth}" Text="{TemplateBinding TeamLabel}" />
+                                    <TextBlock Classes="value" Text="{TemplateBinding TeamText}" />
+                                </DockPanel>
+                            </Border>
+                            <Border Classes="field"
+                                    IsVisible="{TemplateBinding FocusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <DockPanel>
+                                    <TextBlock Classes="label" Width="{TemplateBinding LabelWidth}" Text="{TemplateBinding FocusLabel}" />
+                                    <TextBlock Classes="value" Text="{TemplateBinding FocusText}" />
+                                </DockPanel>
+                            </Border>
+                            <Border Classes="field"
+                                    IsVisible="{TemplateBinding CityText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <DockPanel>
+                                    <TextBlock Classes="label" Width="{TemplateBinding LabelWidth}" Text="{TemplateBinding LocationLabel}" />
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="{arc:TeamDirectoryTokenResource InlineGap}">
+                                        <TextBlock Classes="value" Text="{TemplateBinding CityText}" />
+                                        <TextBlock Classes="value"
+                                                   Text="{TemplateBinding TimeZoneText}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                            <Border Classes="field last"
+                                    IsVisible="{TemplateBinding EmailText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                                <DockPanel>
+                                    <TextBlock Classes="label" Width="{TemplateBinding LabelWidth}" Text="{TemplateBinding EmailLabel}" />
+                                    <arc:TeamDirectoryCopyButton Name="PART_Copy"
+                                                                 DockPanel.Dock="Right"
+                                                                 Margin="{arc:TeamDirectoryTokenResource CopyMargin}"
+                                                                 IsIconOnly="{TemplateBinding IsCopyIconOnly}" />
+                                    <arc:TeamDirectoryLinkButton Name="PART_Email"
+                                                                 HorizontalAlignment="Left"
+                                                                 VerticalAlignment="Center"
+                                                                 Text="{TemplateBinding EmailText}" />
+                                </DockPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border.field">
+            <Setter Property="Height" Value="{arc:TeamDirectoryTokenResource FieldHeight}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessBottom}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ Border.field.last">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.label">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="{arc:TeamDirectoryTokenResource LabelMargin}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:TeamDirectoryTokenResource SmallLineHeight}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.value">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="LineHeight" Value="{arc:TeamDirectoryTokenResource CopyLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:TeamDirectoryTokenResource CopyLetterSpacing}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_StatusDot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:away /template/ Border#PART_StatusDot">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The profile area when nobody matches: 13 medium Foreground over 13 TextSecondary, 4 apart, centred vertically. -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryNoProfile}" TargetType="arc:TeamDirectoryNoProfile">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryNoProfile">
+                <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                    <StackPanel VerticalAlignment="Center" Spacing="{arc:TeamDirectoryTokenResource NoneGap}">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   TextWrapping="Wrap"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                                   LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Text="{TemplateBinding Hint}"
+                                   TextWrapping="Wrap"
+                                   LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                                   LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The copy button: 28 high pill, 1px Border (BorderStrong when hovered, 160ms), Surface; padding 0 10; a 14 glyph
+        slot (copy over check) 6 before a 12px label at least 38 wide. Copied: the check replaces the copy glyph
+        (opacity 160ms, scale .6 → 1 on the 580ms CSS spring) and label and check turn Success; Retry: label and glyph turn
+        Danger. Colors change at once. Pressed: scale .97 (120ms). Icon-only: 28 × 28, no label.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryCopyButton}" TargetType="arc:TeamDirectoryCopyButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Height" Value="{arc:TeamDirectoryTokenResource CopyHeight}" />
+        <Setter Property="Padding" Value="{arc:TeamDirectoryTokenResource CopyPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryCopyButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:TeamDirectoryTokenResource InlineGap}">
+                            <Panel Width="{arc:TeamDirectoryTokenResource CopyGlyphSize}"
+                                   Height="{arc:TeamDirectoryTokenResource CopyGlyphSize}"
+                                   VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_CopyGlyph"
+                                              Data="{x:Static arc:ArcIcons.Copy}"
+                                              Size="{arc:TeamDirectoryTokenResource CopyGlyphSize}"
+                                              StrokeThickness="{arc:TeamDirectoryTokenResource GlyphStroke}"
+                                              RenderTransformOrigin="50%,50%"
+                                              RenderTransform="scale(1)" />
+                                <arc:ArcGlyph Name="PART_CheckGlyph"
+                                              Data="{x:Static arc:ArcIcons.Check}"
+                                              Size="{arc:TeamDirectoryTokenResource CopyGlyphSize}"
+                                              StrokeThickness="{arc:TeamDirectoryTokenResource CheckStroke}"
+                                              RenderTransformOrigin="50%,50%" />
+                            </Panel>
+                            <Panel Name="PART_Label" MinWidth="{arc:TeamDirectoryTokenResource CopyLabelMinWidth}" VerticalAlignment="Center">
+                                <!-- Reserve the widest of the three labels, so the width never changes. -->
+                                <TextBlock Classes="copy-label" Text="{TemplateBinding IdleLabel}" Opacity="0" />
+                                <TextBlock Classes="copy-label" Text="{TemplateBinding CopiedLabel}" Opacity="0" />
+                                <TextBlock Classes="copy-label" Text="{TemplateBinding RetryLabel}" Opacity="0" />
+                                <TextBlock Name="PART_LabelText" Classes="copy-label" Text="{TemplateBinding Label}" />
+                            </Panel>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock.copy-label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:TeamDirectoryTokenResource SmallLineHeight}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_LabelText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_CopyGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_CheckGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.6)" />
+        </Style>
+        <Style Selector="^:copied">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_CopyGlyph">
+                <Setter Property="Opacity" Value="0" />
+                <Setter Property="RenderTransform" Value="scale(0.6)" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_CheckGlyph">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="RenderTransform" Value="scale(1)" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_LabelText">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+            </Style>
+        </Style>
+        <Style Selector="^:error">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_CopyGlyph">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_LabelText">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+            </Style>
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:icon-only">
+            <Setter Property="Width" Value="{arc:TeamDirectoryTokenResource CopyHeight}" />
+            <Setter Property="Padding" Value="0" />
+            <Style Selector="^ /template/ Panel#PART_Label">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.97)" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A text button: 13 on 18.2 in Foreground, one line with an ellipsis. Underlined (Clear filters): medium weight and
+        a BorderStrong line 3 below the text. The focus ring follows the text.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TeamDirectoryLinkButton}" TargetType="arc:TeamDirectoryLinkButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TeamDirectoryLinkButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <TextBlock Name="PART_Text"
+                               Text="{TemplateBinding Text}"
+                               TextTrimming="CharacterEllipsis"
+                               FontSize="{arc:TeamDirectoryTokenResource CopySize}"
+                               LineHeight="{arc:TeamDirectoryTokenResource CopyLineHeight}"
+                               LetterSpacing="{arc:TeamDirectoryTokenResource CopyLetterSpacing}"
+                               Foreground="{TemplateBinding Foreground}" />
+                    <Border Name="PART_Underline"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Height="1"
+                            VerticalAlignment="Bottom"
+                            Background="{arc:ArcDesignTokenResource BorderStrong}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,-2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:underlined">
+            <Setter Property="Padding" Value="0" />
+            <Style Selector="^ /template/ TextBlock#PART_Text">
+                <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Underline">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Margin" Value="{arc:TeamDirectoryTokenResource UnderlineMargin}" />
+            </Style>
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

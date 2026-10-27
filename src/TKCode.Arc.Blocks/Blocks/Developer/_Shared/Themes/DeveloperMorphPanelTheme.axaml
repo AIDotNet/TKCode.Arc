@@ -1,0 +1,151 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        The Developer pill-to-panel morph (Arc API keys "Create key" / Webhooks "Add endpoint", design reference): one cell
+        with the leading count at the left and the pill at the right. Pill 36 high, radius 18, fill Foreground 5.5% into
+        Surface (9% hover, 11% pressed; mixed in code), face padding 0 14 0 6 with a 28px round toggle and the title 14/19.6,
+        body padding 4 14 14. The plus turns 45° on Quick; the surface fill changes in 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DeveloperMorphPanel}" TargetType="arc:DeveloperMorphPanel">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DeveloperMorphPanel">
+                <Panel>
+                    <Panel Height="36" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <ContentPresenter Name="PART_Leading"
+                                          Content="{TemplateBinding Leading}"
+                                          VerticalAlignment="Center" />
+                    </Panel>
+                    <arc:DeveloperMorphShell Name="PART_Shell"
+                                             HorizontalAlignment="Right"
+                                             VerticalAlignment="Top"
+                                             Cursor="Hand"
+                                             CornerRadius="{arc:ArcDesignTokenResource RadiusControl}">
+                        <arc:DeveloperMorphShell.Face>
+                            <StackPanel Orientation="Horizontal"
+                                        Height="36"
+                                        Spacing="2"
+                                        Margin="6,0,14,0"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                        TextElement.FontWeight="{TemplateBinding TitleFontWeight}">
+                                <arc:DeveloperMorphToggle Name="PART_Toggle" VerticalAlignment="Center">
+                                    <arc:ArcGlyph Name="PART_Icon"
+                                                  Data="{x:Static arc:ArcIcons.Plus}"
+                                                  Size="16"
+                                                  StrokeThickness="1.75"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </arc:DeveloperMorphToggle>
+                                <arc:ArcContentSwap Name="PART_Title"
+                                                    Content="{TemplateBinding Title}"
+                                                    Mode="BlurSwap"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left" />
+                            </StackPanel>
+                        </arc:DeveloperMorphShell.Face>
+                        <arc:DeveloperMorphShell.Body>
+                            <Border Name="PART_BodyHost" Padding="14,4,14,14" Cursor="Arrow">
+                                <arc:ArcContentSwap Name="PART_Body"
+                                                    Content="{TemplateBinding Content}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    Mode="Lift"
+                                                    ExitDuration="0:0:0.12"
+                                                    EnterDuration="0:0:0.32"
+                                                    EnterDelay="0:0:0.06"
+                                                    EnterOffset="8"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    VerticalContentAlignment="Top" />
+                            </Border>
+                        </arc:DeveloperMorphShell.Body>
+                    </arc:DeveloperMorphShell>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:open /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="RenderTransform" Value="rotate(45deg)" />
+        </Style>
+        <Style Selector="^:open /template/ arc|DeveloperMorphShell#PART_Shell">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Quick" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|DeveloperMorphShell#PART_Shell">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The 28px round toggle: transparent, Foreground 8% on hover (set in code, 160ms), a 2px ring 2px outside on keyboard
+        focus. The pressed scale is Arc's button press (.97, Quick).
+    -->
+    <ControlTheme x:Key="{x:Type arc:DeveloperMorphToggle}" TargetType="arc:DeveloperMorphToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DeveloperMorphToggle">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Background">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Background">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Background">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Quick" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

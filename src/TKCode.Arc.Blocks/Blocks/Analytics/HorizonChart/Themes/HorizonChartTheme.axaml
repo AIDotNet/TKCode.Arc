@@ -1,0 +1,169 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Horizon chart (Arc Analytics › Horizon chart, design reference): a framed block (1px Border, radius RadiusPanel, Surface)
+        with a header (titles, and the Sort and Bands switches that wrap under the titles), the readout (the day, and the
+        colour scale), and the self-drawn rows with the crosshair and the day axis, plus the hidden screen-reader table and live
+        region. Up to 900 wide (:medium) the name and value columns narrow; up to 560 (:compact) paddings, rows and type
+        shrink and the switches and the scale take whole lines. Values a state changes are styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:HorizonChart}" TargetType="arc:HorizonChart">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:HorizonChart">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <StackPanel Name="PART_Sections">
+                            <Border Name="PART_HeaderBox">
+                                <arc:HorizonSplitPanel Name="PART_Header"
+                                                       ColumnGap="{arc:HorizonChartTokenResource HeaderColumnGap}"
+                                                       RowGap="{arc:HorizonChartTokenResource HeaderRowGap}"
+                                                       LeadBasis="{arc:HorizonChartTokenResource TitleMinWidth}">
+                                    <StackPanel VerticalAlignment="Top" Spacing="{arc:HorizonChartTokenResource DescriptionGap}">
+                                        <TextBlock Name="PART_Title"
+                                                   Text="{TemplateBinding Title}"
+                                                   IsVisible="{TemplateBinding Title, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                   TextWrapping="Wrap"
+                                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="{arc:HorizonChartTokenResource TitleLineHeight}"
+                                                   LetterSpacing="{arc:HorizonChartTokenResource TitleLetterSpacing}"
+                                                   AutomationProperties.HeadingLevel="2"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_Description"
+                                                   Text="{TemplateBinding Description}"
+                                                   IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:HorizonChartTokenResource SmallLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <arc:HorizonSplitPanel Name="PART_Controls"
+                                                           VerticalAlignment="Top"
+                                                           ColumnGap="{arc:HorizonChartTokenResource ControlsColumnGap}"
+                                                           RowGap="{arc:HorizonChartTokenResource ControlsRowGap}">
+                                        <StackPanel Name="PART_SortGroup" Orientation="Horizontal" Spacing="{arc:HorizonChartTokenResource ControlLabelGap}">
+                                            <TextBlock Name="PART_SortLabel"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                       AutomationProperties.AccessibilityView="Raw" />
+                                            <arc:SegmentedControl Name="PART_SortSwitch" arc:AnalyticsSegmented.Spring="Smooth" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_BandsGroup" Orientation="Horizontal" Spacing="{arc:HorizonChartTokenResource ControlLabelGap}">
+                                            <TextBlock Name="PART_BandsLabel"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                       AutomationProperties.AccessibilityView="Raw" />
+                                            <arc:SegmentedControl Name="PART_BandsSwitch" arc:AnalyticsSegmented.Spring="Smooth" />
+                                        </StackPanel>
+                                    </arc:HorizonSplitPanel>
+                                </arc:HorizonSplitPanel>
+                            </Border>
+
+                            <Border Name="PART_ReadoutBox"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="0,0,0,1">
+                                <arc:HorizonSplitPanel Name="PART_Readout"
+                                                       ColumnGap="{arc:HorizonChartTokenResource ReadoutColumnGap}"
+                                                       RowGap="{arc:HorizonChartTokenResource ReadoutRowGap}">
+                                    <StackPanel VerticalAlignment="Top">
+                                        <TextBlock Name="PART_Date"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                   FontFeatures="tnum" />
+                                        <TextBlock Name="PART_Status"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="{arc:HorizonChartTokenResource SmallLineHeight}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <arc:HorizonLegend Name="PART_Legend"
+                                                       VerticalAlignment="Top"
+                                                       LegendWidth="{arc:HorizonChartTokenResource LegendWidth}"
+                                                       RampHeight="{arc:HorizonChartTokenResource RampHeight}"
+                                                       CellRadius="{arc:HorizonChartTokenResource RampCellRadius}"
+                                                       ZeroMarkHeight="{arc:HorizonChartTokenResource ZeroMarkHeight}"
+                                                       ZeroMarkMargin="{arc:HorizonChartTokenResource ZeroMarkMargin}"
+                                                       RowGap="{arc:HorizonChartTokenResource LegendRowGap}"
+                                                       LabelGap="{arc:HorizonChartTokenResource LegendLabelGap}"
+                                                       TextLineHeight="{arc:HorizonChartTokenResource SmallLineHeight}" />
+                                </arc:HorizonSplitPanel>
+                            </Border>
+
+                            <arc:HorizonPlot Name="PART_Plot"
+                                             FocusAdorner="{x:Null}"
+                                             MediumWidth="{arc:HorizonChartTokenResource MediumWidth}"
+                                             CompactWidth="{arc:HorizonChartTokenResource CompactWidth}"
+                                             RowHeight="{arc:HorizonChartTokenResource RowHeight}"
+                                             CompactRowHeight="{arc:HorizonChartTokenResource CompactRowHeight}"
+                                             BandInset="{arc:HorizonChartTokenResource BandInset}"
+                                             BandRadius="{arc:HorizonChartTokenResource BandRadius}"
+                                             SidePadding="{arc:HorizonChartTokenResource SidePadding}"
+                                             CompactSidePadding="{arc:HorizonChartTokenResource CompactSidePadding}"
+                                             NameWidth="{arc:HorizonChartTokenResource NameWidth}"
+                                             MediumNameWidth="{arc:HorizonChartTokenResource MediumNameWidth}"
+                                             CompactNameWidth="{arc:HorizonChartTokenResource CompactNameWidth}"
+                                             ValueWidth="{arc:HorizonChartTokenResource ValueWidth}"
+                                             MediumValueWidth="{arc:HorizonChartTokenResource MediumValueWidth}"
+                                             CompactValueWidth="{arc:HorizonChartTokenResource CompactValueWidth}"
+                                             ColumnGap="{arc:HorizonChartTokenResource ColumnGap}"
+                                             MediumColumnGap="{arc:HorizonChartTokenResource MediumColumnGap}"
+                                             CompactColumnGap="{arc:HorizonChartTokenResource CompactColumnGap}"
+                                             CrosshairOverhang="{arc:HorizonChartTokenResource CrosshairOverhang}" />
+                        </StackPanel>
+                        <arc:HorizonDataTable Name="PART_Table" />
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_HeaderBox">
+            <Setter Property="Padding" Value="{arc:HorizonChartTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ReadoutBox">
+            <Setter Property="Padding" Value="{arc:HorizonChartTokenResource ReadoutPadding}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Date">
+            <Setter Property="FontSize" Value="{arc:HorizonChartTokenResource DateFontSize}" />
+            <Setter Property="LineHeight" Value="{arc:HorizonChartTokenResource DateLineHeight}" />
+        </Style>
+
+        <Style Selector="^:compact /template/ Border#PART_HeaderBox">
+            <Setter Property="Padding" Value="{arc:HorizonChartTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_ReadoutBox">
+            <Setter Property="Padding" Value="{arc:HorizonChartTokenResource CompactReadoutPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Date">
+            <Setter Property="FontSize" Value="{arc:HorizonChartTokenResource CompactDateFontSize}" />
+            <Setter Property="LineHeight" Value="{arc:HorizonChartTokenResource CompactDateLineHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|HorizonSplitPanel#PART_Controls">
+            <Setter Property="IsFilled" Value="True" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|HorizonLegend#PART_Legend">
+            <Setter Property="IsFilled" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

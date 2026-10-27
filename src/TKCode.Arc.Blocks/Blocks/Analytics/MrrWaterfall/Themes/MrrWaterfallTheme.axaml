@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        MRR waterfall (Arc Analytics › MRR waterfall, design reference): a framed surface (1px Border, radius 34, padding 20)
+        with three sections 20 apart: the header (title, subtitle, and the period and unit switches that wrap under the
+        titles when they do not fit), the summary (headline and statistics) and the body (the chart and the 264 wide account
+        panel, which goes under the chart below 800). Under 560 the headline is 22 and the statistics are 16 and share the
+        row. Values a state changes are styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MrrWaterfall}" TargetType="arc:MrrWaterfall">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:MrrWaterfallTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="StackedWidth" Value="{arc:MrrWaterfallTokenResource StackedWidth}" />
+        <Setter Property="CompactSummaryWidth" Value="{arc:MrrWaterfallTokenResource CompactSummaryWidth}" />
+        <Setter Property="HeadlineValueSize" Value="{arc:MrrWaterfallTokenResource HeadlineValueSize}" />
+        <Setter Property="CompactHeadlineValueSize" Value="{arc:MrrWaterfallTokenResource CompactHeadlineValueSize}" />
+        <Setter Property="StatValueSize" Value="{arc:MrrWaterfallTokenResource StatValueSize}" />
+        <Setter Property="CompactStatValueSize" Value="{arc:MrrWaterfallTokenResource CompactStatValueSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MrrWaterfall">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Sections" Spacing="{arc:MrrWaterfallTokenResource SectionGap}">
+                            <arc:MrrWaterfallSplitPanel Name="PART_Header"
+                                                        ColumnGap="{arc:MrrWaterfallTokenResource HeaderColumnGap}"
+                                                        RowGap="{arc:MrrWaterfallTokenResource HeaderRowGap}">
+                                <StackPanel VerticalAlignment="Top" Spacing="{arc:MrrWaterfallTokenResource SubtitleGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:MrrWaterfallTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:MrrWaterfallTokenResource TitleLetterSpacing}"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:AnalyticsTextSwap Name="PART_Subtitle"
+                                                           HorizontalAlignment="Left"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           LineHeight="{arc:MrrWaterfallTokenResource BodyLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <WrapPanel Name="PART_Switches"
+                                           Orientation="Horizontal"
+                                           ItemSpacing="{arc:MrrWaterfallTokenResource SwitchGap}"
+                                           LineSpacing="{arc:MrrWaterfallTokenResource SwitchGap}"
+                                           VerticalAlignment="Top">
+                                    <arc:SegmentedControl Name="PART_PeriodSwitch" arc:AnalyticsSegmented.Spring="Smooth" />
+                                    <arc:SegmentedControl Name="PART_ValueSwitch" arc:AnalyticsSegmented.Spring="Smooth" />
+                                </WrapPanel>
+                            </arc:MrrWaterfallSplitPanel>
+
+                            <arc:MrrWaterfallSplitPanel Name="PART_Summary"
+                                                        ColumnGap="{arc:MrrWaterfallTokenResource SummaryColumnGap}"
+                                                        RowGap="{arc:MrrWaterfallTokenResource SummaryRowGap}">
+                                <arc:MrrWaterfallHeadline Name="PART_Headline" VerticalAlignment="Bottom" />
+                                <arc:MrrWaterfallStats Name="PART_Stats"
+                                                       VerticalAlignment="Bottom"
+                                                       InlinePadding="{arc:MrrWaterfallTokenResource StatPadding}"
+                                                       LineBrush="{arc:ArcDesignTokenResource Border}" />
+                            </arc:MrrWaterfallSplitPanel>
+
+                            <arc:MrrWaterfallBody Name="PART_Body"
+                                                  ColumnGap="{arc:MrrWaterfallTokenResource BodyGap}"
+                                                  PanelWidth="{arc:MrrWaterfallTokenResource PanelWidth}">
+                                <arc:MrrWaterfallPlot Name="PART_Plot" FocusAdorner="{x:Null}" ClipToBounds="False" />
+                                <arc:MrrWaterfallPanel Name="PART_Panel"
+                                                       LineBrush="{arc:ArcDesignTokenResource Border}"
+                                                       Inset="{arc:MrrWaterfallTokenResource PanelInset}"
+                                                       StackedInset="{arc:MrrWaterfallTokenResource StackedPanelInset}" />
+                            </arc:MrrWaterfallBody>
+                        </StackPanel>
+                        <arc:MrrWaterfallDataTable Name="PART_Table" />
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

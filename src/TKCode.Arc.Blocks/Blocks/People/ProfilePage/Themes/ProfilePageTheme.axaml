@@ -1,0 +1,712 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:atom="https://atomui.net"
+                    x:ClassModifier="internal">
+
+    <!--
+        Profile page (Arc Profile page, design reference). Parts first: the pill buttons, the width-locked label layers,
+        the tabs, the star button, the sheet's text fields and the sheet; the page itself last.
+    -->
+
+    <!-- Pill buttons: Share / Cancel by default (surface, 1px border); .primary = Edit profile / Save; .icon = close; .link = website. -->
+    <ControlTheme x:Key="{x:Type arc:ProfilePageButton}" TargetType="arc:ProfilePageButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:ProfilePageTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:ProfilePageTokenResource PillPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProfilePageButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.4" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^.primary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ProfilePageTokenResource PrimaryForeground}" />
+        </Style>
+        <Style Selector="^.primary:pointerover">
+            <Setter Property="Background" Value="{arc:ProfilePageTokenResource PrimaryHoverBackground}" />
+        </Style>
+        <Style Selector="^.primary:disabled">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^.icon">
+            <Setter Property="Width" Value="{arc:ProfilePageTokenResource CloseDiameter}" />
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource CloseDiameter}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.icon:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.icon:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+
+        <Style Selector="^.link">
+            <Setter Property="Height" Value="NaN" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep4}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^.link:pointerover">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.link:pressed">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^.link /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-4,-2" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One label of a width-locked stack: hidden layers sit 3px lower, blurred 2px and transparent. -->
+    <ControlTheme x:Key="{x:Type arc:ProfilePageSwapLayer}" TargetType="arc:ProfilePageSwapLayer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="Effect" Value="blur(2)" />
+        <Setter Property="RenderTransform" Value="translateY(3px)" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProfilePageSwapLayer">
+                <ContentPresenter Content="{TemplateBinding Content}" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:shown">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Effect" Value="{x:Null}" />
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcEffectTransition Property="Effect" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Enter" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A tab: 38 high, its label 9px from the top, secondary text that turns the strong color when selected or pointed at. -->
+    <ControlTheme x:Key="{x:Type arc:ProfilePageTabButton}" TargetType="arc:ProfilePageTabButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ProfilePageTokenResource TabHeight}" />
+        <Setter Property="Padding" Value="{arc:ProfilePageTokenResource TabPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProfilePageTabButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,4,-4,2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="6"
+                                VerticalAlignment="Top"
+                                Margin="{TemplateBinding Padding}">
+                        <TextBlock Text="{TemplateBinding Label}" LineHeight="19.6" VerticalAlignment="Bottom" />
+                        <TextBlock Text="{TemplateBinding Count}"
+                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                   LineHeight="16.8"
+                                   FontFeatures="tnum"
+                                   Margin="0,0,0,1"
+                                   VerticalAlignment="Bottom"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The star button: 28 high, a pill with a 1px border; starred fills the star with the warning color. -->
+    <ControlTheme x:Key="{x:Type arc:ProfilePageStarButton}" TargetType="arc:ProfilePageStarButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:ProfilePageTokenResource StarHeight}" />
+        <Setter Property="Padding" Value="{arc:ProfilePageTokenResource StarPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProfilePageStarButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                            <arc:ProfilePageStarGlyph Name="PART_Glyph"
+                                                      Size="14"
+                                                      VerticalAlignment="Center"
+                                                      Stroke="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Text="{TemplateBinding CountText}"
+                                       LineHeight="16.8"
+                                       FontFeatures="tnum"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.95)" />
+        </Style>
+        <Style Selector="^:starred">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:starred /template/ arc|ProfilePageStarGlyph#PART_Glyph">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The sheet's text fields: 36 high, radius 10, surface fill and a 1px border; focus = BorderStrong (no ring); .invalid = Danger. -->
+    <ControlTheme x:Key="ProfilePageFieldBoxTheme" TargetType="TextBox">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Height" Value="{arc:ProfilePageTokenResource FieldHeight}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ProfilePageTokenResource FieldRadius}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="19.6" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="TextBox">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  IsScrollChainingEnabled="True">
+                        <Panel>
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       IsHitTestVisible="False"
+                                       IsVisible="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                            <TextPresenter Name="PART_TextPresenter"
+                                           Text="{TemplateBinding Text, Mode=TwoWay}"
+                                           CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                           CaretIndex="{TemplateBinding CaretIndex}"
+                                           SelectionStart="{TemplateBinding SelectionStart}"
+                                           SelectionEnd="{TemplateBinding SelectionEnd}"
+                                           TextAlignment="{TemplateBinding TextAlignment}"
+                                           TextWrapping="{TemplateBinding TextWrapping}"
+                                           LineHeight="{TemplateBinding LineHeight}"
+                                           LetterSpacing="{TemplateBinding LetterSpacing}"
+                                           PasswordChar="{TemplateBinding PasswordChar}"
+                                           RevealPassword="{TemplateBinding RevealPassword}"
+                                           SelectionBrush="{TemplateBinding SelectionBrush}"
+                                           SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                           CaretBrush="{TemplateBinding CaretBrush}" />
+                        </Panel>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^.invalid">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^.bio">
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource BioHeight}" />
+            <Setter Property="MinHeight" Value="96" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="AcceptsReturn" Value="True" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The edit sheet: SurfaceRaised, a 1px border on its left, the floating shadow; header 56, scrolling fields, footer. -->
+    <ControlTheme x:Key="{x:Type arc:ProfilePageSheet}" TargetType="arc:ProfilePageSheet">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProfilePageSheet">
+                <Border Name="PART_Surface"
+                        Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        BorderThickness="1,0,0,0"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Grid RowDefinitions="56,*,Auto">
+                        <Grid ColumnDefinitions="*,Auto" Margin="{arc:ProfilePageTokenResource SheetHeadInset}">
+                            <TextBlock Name="PART_Title"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="17.6"
+                                       LetterSpacing="-0.48"
+                                       VerticalAlignment="Center" />
+                            <arc:ProfilePageButton Name="PART_Close" Grid.Column="1" Classes="icon" VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="16" StrokeThickness="1.75" />
+                            </arc:ProfilePageButton>
+                        </Grid>
+                        <arc:ScrollArea Grid.Row="1" FadeLength="0">
+                            <StackPanel Margin="{arc:ProfilePageTokenResource SheetBodyInset}" Spacing="16">
+                                <StackPanel Spacing="6">
+                                    <TextBlock Name="PART_NameLabel" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" LineHeight="19.6" />
+                                    <TextBox Name="PART_NameBox" Theme="{StaticResource ProfilePageFieldBoxTheme}" />
+                                    <TextBlock Name="PART_NameError" IsVisible="False" TextWrapping="Wrap"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="16.8"
+                                               Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                </StackPanel>
+                                <StackPanel Spacing="6">
+                                    <TextBlock Name="PART_HeadlineLabel" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" LineHeight="19.6" />
+                                    <TextBox Name="PART_HeadlineBox" Theme="{StaticResource ProfilePageFieldBoxTheme}" />
+                                </StackPanel>
+                                <arc:ProfilePageColumns Name="PART_Pair" Columns="2" Gap="16" RowGap="16">
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Name="PART_LocationLabel" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" LineHeight="19.6" />
+                                        <TextBox Name="PART_LocationBox" Theme="{StaticResource ProfilePageFieldBoxTheme}" />
+                                    </StackPanel>
+                                    <StackPanel Spacing="6">
+                                        <TextBlock Name="PART_WebsiteLabel" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" LineHeight="19.6" />
+                                        <TextBox Name="PART_WebsiteBox" Theme="{StaticResource ProfilePageFieldBoxTheme}" />
+                                        <TextBlock Name="PART_WebsiteError" IsVisible="False" TextWrapping="Wrap"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                    </StackPanel>
+                                </arc:ProfilePageColumns>
+                                <StackPanel Spacing="6">
+                                    <DockPanel>
+                                        <TextBlock Name="PART_BioCounter" DockPanel.Dock="Right"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}" LineHeight="16.8"
+                                                   FontFeatures="tnum" VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_BioLabel" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" LineHeight="19.6" />
+                                    </DockPanel>
+                                    <TextBox Name="PART_BioBox" Classes="bio" Theme="{StaticResource ProfilePageFieldBoxTheme}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </arc:ScrollArea>
+                        <StackPanel Grid.Row="2">
+                            <arc:PresenceHost Name="PART_AlertHost" IsPresent="False" Mode="Fade" Collapse="Height">
+                                <Border Margin="20,0,20,12"
+                                        Padding="12,10"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                                        Background="{arc:ArcDesignTokenResource DangerSubtle}"
+                                        AutomationProperties.LiveSetting="Assertive">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                      Size="15"
+                                                      StrokeThickness="1.75"
+                                                      Margin="0,2,0,0"
+                                                      VerticalAlignment="Top"
+                                                      Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                        <TextBlock Name="PART_AlertText" Grid.Column="1" TextWrapping="Wrap" LineHeight="19.6" />
+                                    </Grid>
+                                </Border>
+                            </arc:PresenceHost>
+                            <Border BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Padding="{arc:ProfilePageTokenResource SheetFootInset}">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                                    <arc:ProfilePageButton Name="PART_Cancel" />
+                                    <arc:ProfilePageButton Name="PART_Save" Classes="primary">
+                                        <arc:ProfilePageSwapStack Name="PART_SaveStack" />
+                                    </arc:ProfilePageButton>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The page. -->
+    <ControlTheme x:Key="{x:Type arc:ProfilePage}" TargetType="arc:ProfilePage">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProfilePage">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <arc:ScrollArea Name="PART_Scroll" FadeLength="0">
+                            <StackPanel>
+                                <Border Name="PART_Cover" ClipToBounds="True">
+                                    <atom:AsyncImage Name="PART_CoverImage" Stretch="UniformToFill" IsVisible="False" />
+                                </Border>
+
+                                <Border Name="PART_IdentityFrame"
+                                        MaxWidth="{arc:ProfilePageTokenResource ContentMaxWidth}"
+                                        Padding="{arc:ProfilePageTokenResource IdentityInset}">
+                                    <Grid ColumnDefinitions="Auto,*"
+                                          RowDefinitions="Auto,Auto"
+                                          ColumnSpacing="{arc:ProfilePageTokenResource IdentityColumnGap}"
+                                          RowSpacing="{arc:ProfilePageTokenResource IdentityRowGap}">
+                                        <arc:Avatar Name="PART_Avatar" VerticalAlignment="Top" />
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    Spacing="8"
+                                                    HorizontalAlignment="Right"
+                                                    VerticalAlignment="Bottom"
+                                                    Margin="{arc:ProfilePageTokenResource ActionsInset}">
+                                            <arc:ProfilePageButton Name="PART_Share">
+                                                <arc:ProfilePageSwapStack Name="PART_ShareStack" />
+                                            </arc:ProfilePageButton>
+                                            <arc:ProfilePageButton Name="PART_Edit"
+                                                                   Classes="primary"
+                                                                   IsVisible="{TemplateBinding IsEditable}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Spacing="2">
+                                            <arc:ProfilePageGlow Name="PART_NameGlow" HorizontalAlignment="Left"
+                                                                 Radius="{arc:ProfilePageTokenResource GlowRadius}"
+                                                                 Spread="{arc:ProfilePageTokenResource GlowSpread}">
+                                                <TextBlock Name="PART_Name"
+                                                           TextWrapping="Wrap"
+                                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            </arc:ProfilePageGlow>
+                                            <WrapPanel Orientation="Horizontal">
+                                                <TextBlock Name="PART_Handle" LineHeight="19.6"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <TextBlock Name="PART_HeadlineDot" Text="·" Margin="6,0" LineHeight="19.6"
+                                                           AutomationProperties.AccessibilityView="Raw"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                <arc:ProfilePageGlow Name="PART_HeadlineGlow"
+                                                                     Radius="{arc:ProfilePageTokenResource GlowRadius}"
+                                                                     Spread="{arc:ProfilePageTokenResource GlowSpread}">
+                                                    <TextBlock Name="PART_Headline" LineHeight="19.6" TextWrapping="Wrap"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                </arc:ProfilePageGlow>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <Border Name="PART_BodyFrame"
+                                        MaxWidth="{arc:ProfilePageTokenResource ContentMaxWidth}"
+                                        Padding="{arc:ProfilePageTokenResource BodyInset}">
+                                    <arc:ProfilePageBodyPanel Name="PART_Body"
+                                                              AboutWidth="{arc:ProfilePageTokenResource AboutWidth}"
+                                                              ColumnGap="{arc:ProfilePageTokenResource ColumnGap}"
+                                                              StackedGap="{arc:ProfilePageTokenResource StackedGap}">
+                                        <StackPanel Name="PART_About" Spacing="16">
+                                            <arc:ProfilePageGlow Name="PART_BioGlow"
+                                                                 Radius="{arc:ProfilePageTokenResource GlowRadius}"
+                                                                 Spread="{arc:ProfilePageTokenResource GlowSpread}">
+                                                <TextBlock Name="PART_Bio" TextWrapping="Wrap" LineHeight="19.6" />
+                                            </arc:ProfilePageGlow>
+                                            <StackPanel Spacing="8">
+                                                <arc:ProfilePageGlow Name="PART_LocationGlow" HorizontalAlignment="Left"
+                                                                     Radius="{arc:ProfilePageTokenResource GlowRadius}"
+                                                                     Spread="{arc:ProfilePageTokenResource GlowSpread}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <arc:ArcGlyph Size="15" StrokeThickness="1.75" VerticalAlignment="Center"
+                                                                      AutomationProperties.AccessibilityView="Raw"
+                                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                                      Data="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0 M9 10a3 3 0 1 0 6 0a3 3 0 1 0 -6 0z" />
+                                                        <TextBlock Name="PART_Location" LineHeight="19.6"
+                                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                    </StackPanel>
+                                                </arc:ProfilePageGlow>
+                                                <arc:ProfilePageGlow Name="PART_WebsiteGlow" HorizontalAlignment="Left"
+                                                                     Radius="{arc:ProfilePageTokenResource GlowRadius}"
+                                                                     Spread="{arc:ProfilePageTokenResource GlowSpread}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Link2}" Size="15" StrokeThickness="1.75"
+                                                                      VerticalAlignment="Center"
+                                                                      AutomationProperties.AccessibilityView="Raw"
+                                                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                        <arc:ProfilePageButton Name="PART_Website" Classes="link" />
+                                                    </StackPanel>
+                                                </arc:ProfilePageGlow>
+                                                <StackPanel Name="PART_JoinedRow" Orientation="Horizontal" Spacing="8">
+                                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Calendar}" Size="15" StrokeThickness="1.75"
+                                                                  VerticalAlignment="Center"
+                                                                  AutomationProperties.AccessibilityView="Raw"
+                                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                                    <TextBlock Name="PART_Joined" LineHeight="19.6"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <Border BorderThickness="0,1,0,0"
+                                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                                    Padding="0,16,0,0">
+                                                <arc:ProfilePageColumns Name="PART_Stats" Columns="3" Gap="12" RowGap="12" />
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Name="PART_Main">
+                                            <arc:ProfilePageTabStrip Name="PART_Tabs"
+                                                                     TabGap="{arc:ProfilePageTokenResource TabGap}"
+                                                                     UnderlineThickness="{arc:ProfilePageTokenResource UnderlineThickness}" />
+                                            <arc:SpringSizeDecorator Name="PART_PanelSize" Axis="Height" Spring="Smooth">
+                                                <arc:ProfilePagePanelSwap Name="PART_PanelSwap"
+                                                                          Margin="{arc:ProfilePageTokenResource PanelInset}" />
+                                            </arc:SpringSizeDecorator>
+                                        </StackPanel>
+                                    </arc:ProfilePageBodyPanel>
+                                </Border>
+                            </StackPanel>
+                        </arc:ScrollArea>
+                        <Border Name="PART_Scrim"
+                                Background="{arc:ProfilePageTokenResource ScrimFill}"
+                                Opacity="0"
+                                IsHitTestVisible="False" />
+                        <arc:ProfilePageSheet Name="PART_Sheet"
+                                              HorizontalAlignment="Right"
+                                              IsVisible="False" />
+                        <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:framed">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        </Style>
+
+        <!-- Cover -->
+        <Style Selector="^ /template/ Border#PART_Cover">
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource CoverHeight}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:cover-medium /template/ Border#PART_Cover">
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource CoverHeightMedium}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Cover">
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource CoverHeightCompact}" />
+        </Style>
+
+        <!-- Avatar: 104 with a 4px surface ring, pulled up by half (84 under 640). -->
+        <Style Selector="^ /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="Width" Value="{arc:ProfilePageTokenResource AvatarDiameter}" />
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource AvatarDiameter}" />
+            <Setter Property="Margin" Value="{arc:ProfilePageTokenResource AvatarOverlap}" />
+            <Setter Property="BorderThickness" Value="{arc:ProfilePageTokenResource AvatarRing}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="FontSize" Value="{arc:ProfilePageTokenResource AvatarInitialsSize}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="Width" Value="{arc:ProfilePageTokenResource AvatarDiameterCompact}" />
+            <Setter Property="Height" Value="{arc:ProfilePageTokenResource AvatarDiameterCompact}" />
+            <Setter Property="Margin" Value="{arc:ProfilePageTokenResource AvatarOverlapCompact}" />
+            <Setter Property="FontSize" Value="{arc:ProfilePageTokenResource AvatarInitialsSizeCompact}" />
+        </Style>
+
+        <!-- Name: 28/30.8 display type (22 under 640). -->
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource Type2XL}" />
+            <Setter Property="LineHeight" Value="{arc:ProfilePageTokenResource TitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:ProfilePageTokenResource TitleLetterSpacing}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Name">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="LineHeight" Value="{arc:ProfilePageTokenResource TitleLineHeightCompact}" />
+            <Setter Property="LetterSpacing" Value="{arc:ProfilePageTokenResource TitleLetterSpacingCompact}" />
+        </Style>
+
+        <Style Selector="^:compact /template/ Border#PART_IdentityFrame">
+            <Setter Property="Padding" Value="{arc:ProfilePageTokenResource IdentityInsetCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_BodyFrame">
+            <Setter Property="Padding" Value="{arc:ProfilePageTokenResource BodyInsetCompact}" />
+        </Style>
+
+        <!-- Scrim: fades with the sheet (240ms on the standard curve) and takes presses only while editing. -->
+        <Style Selector="^:editing /template/ Border#PART_Scrim">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Scrim">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Scrim">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

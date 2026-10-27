@@ -1,0 +1,236 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Roles and permissions (Arc Roles and permissions, design reference). Framed: a card with a 1px Border, radius 16,
+        Surface, no padding. Flat: no frame, a page margin of 32 (16 when compact). From the top: the header (title,
+        subtitle with rolling counts, member avatars; the avatars wrap under the titles when there is no room), the matrix
+        in a horizontal scroller under a 1px Border line, the footer with two legends, and the review bar's slot, which
+        opens to 76 when there is something to save. Content narrower than 760 is :narrow, narrower than 540 :compact.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RolesPermissions}" TargetType="arc:RolesPermissions">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:RolesPermissionsTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:RolesPermissionsTokenResource CardRadius}" />
+        <Setter Property="NarrowWidth" Value="{arc:RolesPermissionsTokenResource NarrowWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:RolesPermissionsTokenResource CompactWidth}" />
+        <Setter Property="BarSlotHeight" Value="{arc:RolesPermissionsTokenResource BarSlotHeight}" />
+        <Setter Property="GroupRippleStep" Value="{arc:RolesPermissionsTokenResource GroupRippleStep}" />
+        <Setter Property="TableRippleStep" Value="{arc:RolesPermissionsTokenResource TableRippleStep}" />
+        <Setter Property="SavedHold" Value="{arc:RolesPermissionsTokenResource SavedHold}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RolesPermissions">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <Border Name="PART_HeaderFrame">
+                            <arc:RolesPermissionsHeaderPanel Name="PART_Header">
+                                <StackPanel Spacing="{arc:RolesPermissionsTokenResource SubtitleGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:RolesPermissionsTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:RolesPermissionsTokenResource TitleLetterSpacing}"
+                                               TextTrimming="CharacterEllipsis"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <WrapPanel Name="PART_Subtitle" Orientation="Horizontal" />
+                                </StackPanel>
+                                <arc:AvatarGroup Name="PART_Members"
+                                                 Size="Small"
+                                                 MaxVisibleCount="4"
+                                                 VerticalAlignment="Bottom" />
+                            </arc:RolesPermissionsHeaderPanel>
+                        </Border>
+                        <Border Name="PART_MatrixFrame"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <arc:RolesPermissionsViewport Name="PART_Viewport">
+                                <ScrollViewer Name="PART_Scroller"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <arc:RolesPermissionsGrid Name="PART_Grid"
+                                                              HorizontalAlignment="Left" />
+                                </ScrollViewer>
+                            </arc:RolesPermissionsViewport>
+                        </Border>
+                        <Border Name="PART_Footer"
+                                IsVisible="{TemplateBinding IsFooterVisible}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <WrapPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,20,0">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Lock}"
+                                                  Size="14"
+                                                  StrokeThickness="1.75"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <TextBlock Name="PART_LockedLegend" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Ellipse Width="5" Height="5" VerticalAlignment="Center"
+                                             Fill="{arc:ArcDesignTokenResource Warning}" />
+                                    <TextBlock Name="PART_UnsavedLegend" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </WrapPanel>
+                        </Border>
+                        <Panel Name="PART_BarSlot" Height="0" ClipToBounds="False">
+                            <Border Name="PART_Bar"
+                                    IsVisible="False"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Stretch"
+                                    MaxWidth="{arc:RolesPermissionsTokenResource BarMaxWidth}"
+                                    Height="{arc:RolesPermissionsTokenResource BarHeight}"
+                                    CornerRadius="{arc:RolesPermissionsTokenResource BarRadius}"
+                                    Padding="{arc:RolesPermissionsTokenResource BarPadding}"
+                                    Background="{arc:ArcDesignTokenResource Surface}"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                                    AutomationProperties.LandmarkType="Region">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel Grid.Column="0" Spacing="1" VerticalAlignment="Center" Margin="0,0,12,0">
+                                        <arc:ArcContentSwap Name="PART_BarTitle"
+                                                            Mode="Crossfade"
+                                                            HorizontalContentAlignment="Left"
+                                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        <arc:ArcContentSwap Name="PART_BarText"
+                                                            Mode="BlurSwap"
+                                                            HorizontalContentAlignment="Left" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                        <arc:Button Name="PART_Discard" Variant="Ghost" Size="Small" />
+                                        <arc:Button Name="PART_Save" Variant="Primary" Size="Small" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Panel>
+                        <arc:ProjectsAnnouncer Name="PART_Announcer" />
+                        <arc:ProjectsAnnouncer Name="PART_Alert" IsAssertive="True" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:RolesPermissionsTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_Subtitle TextBlock.subtitle">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="LineHeight" Value="{arc:RolesPermissionsTokenResource CopyLineHeight}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ WrapPanel#PART_Subtitle arc|RollingDigits.count">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:RolesPermissionsTokenResource FooterPadding}" />
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Bar">
+            <Setter Property="Margin" Value="{arc:RolesPermissionsTokenResource BarMargin}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_BarText">
+            <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:not(:framed)">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="{arc:RolesPermissionsTokenResource FlatPadding}" />
+        </Style>
+        <Style Selector="^:not(:framed):compact">
+            <Setter Property="Padding" Value="{arc:RolesPermissionsTokenResource CompactFlatPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_HeaderFrame">
+            <Setter Property="Padding" Value="{arc:RolesPermissionsTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="{arc:RolesPermissionsTokenResource CompactFooterPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Bar">
+            <Setter Property="Margin" Value="{arc:RolesPermissionsTokenResource CompactBarMargin}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The matrix's own colors and geometry (see RolesPermissionsToken): the parts read them from here. Narrow and
+        compact switch the column widths, the label insets and the permission text size.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RolesPermissionsGrid}" TargetType="arc:RolesPermissionsGrid">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SubtleBorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="SurfaceMutedBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="WarningBrush" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="BoxOffBorderBrush" Value="{arc:RolesPermissionsTokenResource BoxOffBorder}" />
+        <Setter Property="BoxHoverFillBrush" Value="{arc:RolesPermissionsTokenResource BoxHoverFill}" />
+        <Setter Property="BoxHoverBorderBrush" Value="{arc:RolesPermissionsTokenResource BoxHoverBorder}" />
+        <Setter Property="BoxOnFillBrush" Value="{arc:RolesPermissionsTokenResource BoxOnFill}" />
+        <Setter Property="BoxOnGlyphBrush" Value="{arc:RolesPermissionsTokenResource BoxOnGlyph}" />
+        <Setter Property="BoxMixedFillBrush" Value="{arc:RolesPermissionsTokenResource BoxMixedFill}" />
+        <Setter Property="BoxLockedFillBrush" Value="{arc:RolesPermissionsTokenResource BoxLockedFill}" />
+        <Setter Property="BandFillBrush" Value="{arc:RolesPermissionsTokenResource BandFill}" />
+        <Setter Property="RowHoverFillBrush" Value="{arc:RolesPermissionsTokenResource RowHoverFill}" />
+        <Setter Property="LabelMinWidth" Value="{arc:RolesPermissionsTokenResource LabelMinWidth}" />
+        <Setter Property="RoleWidth" Value="{arc:RolesPermissionsTokenResource RoleWidth}" />
+        <Setter Property="LabelInset" Value="{arc:RolesPermissionsTokenResource LabelInset}" />
+        <Setter Property="PermissionInset" Value="{arc:RolesPermissionsTokenResource PermissionInset}" />
+        <Setter Property="PermissionFontSize" Value="{arc:RolesPermissionsTokenResource CopySize}" />
+        <Setter Property="LabelEndInset" Value="{arc:RolesPermissionsTokenResource LabelEndInset}" />
+        <Setter Property="PermissionLineHeight" Value="{arc:RolesPermissionsTokenResource PermissionLineHeight}" />
+        <Setter Property="PermissionVerticalInset" Value="{arc:RolesPermissionsTokenResource PermissionVerticalInset}" />
+        <Setter Property="HeaderRowHeight" Value="{arc:RolesPermissionsTokenResource HeaderRowHeight}" />
+        <Setter Property="GroupRowHeight" Value="{arc:RolesPermissionsTokenResource GroupRowHeight}" />
+        <Setter Property="PermissionRowHeight" Value="{arc:RolesPermissionsTokenResource PermissionRowHeight}" />
+        <Setter Property="RoleButtonInset" Value="{arc:RolesPermissionsTokenResource RoleButtonInset}" />
+        <Setter Property="RoleButtonHeight" Value="{arc:RolesPermissionsTokenResource RoleButtonHeight}" />
+        <Setter Property="RoleButtonRadius" Value="{arc:RolesPermissionsTokenResource RoleButtonRadius}" />
+        <Setter Property="GroupButtonHeight" Value="{arc:RolesPermissionsTokenResource GroupButtonHeight}" />
+        <Setter Property="GroupButtonRadius" Value="{arc:RolesPermissionsTokenResource GroupButtonRadius}" />
+        <Setter Property="CellWidth" Value="{arc:RolesPermissionsTokenResource CellWidth}" />
+        <Setter Property="CellHeight" Value="{arc:RolesPermissionsTokenResource CellHeight}" />
+        <Setter Property="CellRadius" Value="{arc:RolesPermissionsTokenResource CellRadius}" />
+        <Setter Property="BoxSize" Value="{arc:RolesPermissionsTokenResource BoxSize}" />
+        <Setter Property="BoxRadius" Value="{arc:RolesPermissionsTokenResource BoxRadius}" />
+        <Setter Property="DotSize" Value="{arc:RolesPermissionsTokenResource DotSize}" />
+        <Setter Property="BandInset" Value="{arc:RolesPermissionsTokenResource BandInset}" />
+        <Setter Property="BandRadius" Value="{arc:RolesPermissionsTokenResource BandRadius}" />
+        <Style Selector="^:narrow">
+            <Setter Property="LabelMinWidth" Value="{arc:RolesPermissionsTokenResource NarrowLabelMinWidth}" />
+            <Setter Property="RoleWidth" Value="{arc:RolesPermissionsTokenResource NarrowRoleWidth}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="LabelMinWidth" Value="{arc:RolesPermissionsTokenResource CompactLabelMinWidth}" />
+            <Setter Property="RoleWidth" Value="{arc:RolesPermissionsTokenResource CompactRoleWidth}" />
+            <Setter Property="LabelInset" Value="{arc:RolesPermissionsTokenResource CompactLabelInset}" />
+            <Setter Property="PermissionInset" Value="{arc:RolesPermissionsTokenResource CompactPermissionInset}" />
+            <Setter Property="PermissionFontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="IsCountVisible" Value="False" />
+            <Setter Property="IsChevronVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

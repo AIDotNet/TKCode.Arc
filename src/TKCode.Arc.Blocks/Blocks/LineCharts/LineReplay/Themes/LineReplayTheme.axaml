@@ -1,0 +1,380 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Line replay (Arc Line replay, design reference): the chart column (heading and legend, the readout, the
+        self-drawn stage, the transport) and the key moments column beside it from 1000 (under it below, in two columns,
+        and in one below 560). The stage and the scrubber are created by code and inserted into PART_Stage and
+        PART_Scrubber. Values a state changes are set by styles, not in the template, so the states can override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LineReplay}" TargetType="arc:LineReplay">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LineReplay">
+                <Panel Background="{TemplateBinding Background}">
+                    <Grid Name="PART_Root" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                        <StackPanel Name="PART_Main">
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Spacing="{arc:LineReplayTokenResource DescriptionGap}">
+                                    <TextBlock Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                                               LineHeight="{arc:LineReplayTokenResource TitleLineHeight}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Text="{TemplateBinding Description}"
+                                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                               TextWrapping="Wrap"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <StackPanel Name="PART_Legend"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:LineReplayTokenResource LegendGap}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:LineReplayTokenResource SwatchTextGap}">
+                                        <Line StartPoint="0,4"
+                                              EndPoint="20,4"
+                                              Width="{arc:LineReplayTokenResource SwatchWidth}"
+                                              Height="8"
+                                              VerticalAlignment="Center"
+                                              StrokeThickness="2"
+                                              Stroke="{arc:ArcDesignTokenResource Series1}" />
+                                        <TextBlock Classes="legend" Text="{TemplateBinding SeriesLabel}" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_BaselineKey"
+                                                Orientation="Horizontal"
+                                                Spacing="{arc:LineReplayTokenResource SwatchTextGap}">
+                                        <Line StartPoint="0,4"
+                                              EndPoint="20,4"
+                                              Width="{arc:LineReplayTokenResource SwatchWidth}"
+                                              Height="8"
+                                              VerticalAlignment="Center"
+                                              StrokeThickness="1.25"
+                                              StrokeDashArray="2.4,2.4"
+                                              Stroke="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Classes="legend" Text="{TemplateBinding BaselineLabel}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <arc:LineReplayReadoutPanel Name="PART_Readout" Margin="0,20,0,0">
+                                <StackPanel Spacing="1">
+                                    <TextBlock Classes="read-label" Text="{TemplateBinding TimeText}" />
+                                    <arc:LineReplayReadoutValue Name="PART_TimeValue" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </StackPanel>
+                                <StackPanel Spacing="1">
+                                    <TextBlock Classes="read-label" Text="{TemplateBinding ValueLabel}" />
+                                    <arc:LineReplayReadoutValue Name="PART_ValueValue" Foreground="{arc:ArcDesignTokenResource Series1}" />
+                                </StackPanel>
+                                <StackPanel Name="PART_RatioItem" Spacing="1">
+                                    <TextBlock Name="PART_VersusLabel" Classes="read-label" />
+                                    <arc:LineReplayReadoutValue Name="PART_RatioValue" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </StackPanel>
+                                <StackPanel Spacing="1">
+                                    <TextBlock Classes="read-label" Text="{TemplateBinding PeakText}" />
+                                    <arc:LineReplayReadoutValue Name="PART_PeakValue" Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                </StackPanel>
+                            </arc:LineReplayReadoutPanel>
+
+                            <Panel Name="PART_Stage" Margin="-4,20,-4,0" ClipToBounds="False" />
+
+                            <Grid Name="PART_Transport" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" Margin="0,20,0,0">
+                                <arc:Button Name="PART_PlayButton" Variant="Primary" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcGlyph Name="PART_PlayGlyph" Size="16" VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_PlayText" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                                <Panel Name="PART_Scrubber" VerticalAlignment="Center" />
+                                <arc:SegmentedControl Name="PART_SpeedSwitch" VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+
+                        <Border Name="PART_Aside" BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <StackPanel>
+                                <TextBlock Text="{TemplateBinding MomentsTitle}"
+                                           Margin="8,0,8,4"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:LineReplayMomentsPanel Name="PART_Moments" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <arc:LineChartsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Main">
+            <Setter Property="Margin" Value="{arc:LineReplayTokenResource MainPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Main">
+            <Setter Property="Margin" Value="{arc:LineReplayTokenResource NarrowMainPadding}" />
+        </Style>
+
+        <!-- Legend: beside the heading; under the description below 560. -->
+        <Style Selector="^ /template/ StackPanel#PART_Legend">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Margin" Value="24,4,0,0" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Legend">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.legend">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.read-label">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:LineReplayTokenResource CaptionLineHeight}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:no-baseline /template/ StackPanel#PART_BaselineKey">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:no-baseline /template/ StackPanel#PART_RatioItem">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Transport: play, scrubber, speed in one row; below 560 the scrubber takes its own row above the other two. -->
+        <Style Selector="^ /template/ Panel#PART_Scrubber">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Margin" Value="16,0" />
+        </Style>
+        <Style Selector="^:narrow /template/ Panel#PART_Scrubber">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="3" />
+            <Setter Property="Margin" Value="-10,0,-10,12" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_PlayButton">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="0" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|Button#PART_PlayButton">
+            <Setter Property="Grid.Row" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ arc|SegmentedControl#PART_SpeedSwitch">
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Grid.Row" Value="0" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SegmentedControl#PART_SpeedSwitch">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+
+        <!-- Moments: a 300px column with a hairline on its left from 1000; under the chart with a hairline above below. -->
+        <Style Selector="^ /template/ Border#PART_Aside">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Width" Value="{arc:LineReplayTokenResource AsideWidth}" />
+            <Setter Property="Padding" Value="{arc:LineReplayTokenResource AsidePadding}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessLeft}" />
+        </Style>
+        <Style Selector="^:stacked /template/ Border#PART_Aside">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Padding" Value="{arc:LineReplayTokenResource StackedAsidePadding}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Border#PART_Aside">
+            <Setter Property="Padding" Value="{arc:LineReplayTokenResource NarrowAsidePadding}" />
+        </Style>
+        <Style Selector="^:no-moments /template/ Border#PART_Aside">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A key moment: padding 10 / 12, radius 18, at least 44 high. Before the playhead it is quiet (muted icon, secondary
+        title); once passed it reads at full strength; the latest passed one is tinted with the series color at 8% and its
+        icon takes that color (incidents keep the warning color). The effect line keeps its room and fades in (240ms) once
+        its window has played. Hover tints with SurfaceMuted; colors change in 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:LineReplayMomentButton}" TargetType="arc:LineReplayMomentButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:LineReplayTokenResource MomentPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:LineReplayTokenResource MomentRadius}" />
+        <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeMD}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:LineReplayMomentButton">
+                <Panel>
+                    <Border Name="PART_Tint"
+                            Background="{arc:ArcDesignTokenResource Series1}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            IsHitTestVisible="False" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:LineReplayTokenResource MomentIconGap}">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Data="{TemplateBinding Glyph}"
+                                          Size="16"
+                                          Margin="0,2,0,0"
+                                          VerticalAlignment="Top" />
+                            <StackPanel Grid.Column="1" Spacing="{arc:LineReplayTokenResource MomentLineGap}">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               TextWrapping="Wrap"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <TextBlock Name="PART_Time"
+                                               Grid.Column="1"
+                                               Text="{TemplateBinding TimeText}"
+                                               Margin="0,2,0,0"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}" />
+                                </Grid>
+                                <TextBlock Name="PART_Detail"
+                                           Text="{TemplateBinding Detail}"
+                                           IsVisible="{TemplateBinding Detail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:LineReplayTokenResource CaptionLineHeight}" />
+                                <TextBlock Name="PART_Effect"
+                                           Text="{TemplateBinding EffectText}"
+                                           TextWrapping="Wrap"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:LineReplayTokenResource CaptionLineHeight}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep18}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Before the playhead. -->
+        <Style Selector="^ /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Time">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Detail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Effect">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+
+        <!-- Passed. -->
+        <Style Selector="^:reached /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:reached /template/ TextBlock#PART_Title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:reached /template/ TextBlock#PART_Time">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:reached /template/ TextBlock#PART_Detail">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:effect-shown /template/ TextBlock#PART_Effect">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+
+        <!-- The latest passed. -->
+        <Style Selector="^:current /template/ Border#PART_Tint">
+            <Setter Property="Opacity" Value="0.08" />
+        </Style>
+        <Style Selector="^:current /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Series1}" />
+        </Style>
+
+        <!-- Incidents keep the warning color on the icon and the effect. -->
+        <Style Selector="^:incident /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:incident /template/ TextBlock#PART_Effect">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:current:pointerover">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Tint">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Title">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock#PART_Effect">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ TextBlock#PART_Effect">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

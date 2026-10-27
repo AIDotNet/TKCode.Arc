@@ -1,0 +1,201 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Env variables (Arc Env variables, design reference). Framed: a card with a 1px Border, radius 20, Surface, no
+        shadow; flat: no frame. From the top: the header (title Display 18/19.8 500, then the monospace project name, a
+        3px dot and the key count 12/16.8 TextSecondary; Import .env and Add variable on the right, under the title when
+        they do not fit, half the width each below 560), the redeploy banner and the add panel (both open under the
+        header), the toolbar (search 360 wide and the view switch), and the view (built in code: matrix or compare).
+        Side insets 24, 16 below 560.
+    -->
+    <ControlTheme x:Key="{x:Type arc:EnvVariables}" TargetType="arc:EnvVariables">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="CompactWidth" Value="{arc:EnvVariablesTokenResource CompactWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:EnvVariablesTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EnvVariables">
+                <Border Name="PART_Shell"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <arc:EnvSplitPanel Name="PART_Header"
+                                           Margin="{arc:EnvVariablesTokenResource HeaderPadding}"
+                                           LineAlignment="Top"
+                                           ColumnGap="16"
+                                           RowGap="16">
+                            <StackPanel Spacing="4">
+                                <TextBlock Name="PART_Title"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                                           FontWeight="Medium"
+                                           LineHeight="19.8"
+                                           LetterSpacing="-0.18"
+                                           TextTrimming="CharacterEllipsis"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <WrapPanel Name="PART_Meta" ItemSpacing="8" LineSpacing="4">
+                                    <TextBlock Name="PART_Project"
+                                               VerticalAlignment="Center"
+                                               FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="16.8"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <Ellipse Name="PART_MetaDot"
+                                             Width="3"
+                                             Height="3"
+                                             VerticalAlignment="Center"
+                                             Fill="{arc:ArcDesignTokenResource BorderStrong}" />
+                                    <TextBlock Name="PART_Summary"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="16.8"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </WrapPanel>
+                            </StackPanel>
+                            <Grid Name="PART_Actions" ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
+                                <arc:Button Name="PART_Import" Grid.Column="0" Variant="Secondary" HorizontalAlignment="Stretch" />
+                                <arc:Button Name="PART_Add" Grid.Column="1" Variant="Primary" HorizontalAlignment="Stretch" />
+                            </Grid>
+                        </arc:EnvSplitPanel>
+                        <arc:EnvDisclosure Name="PART_BannerHost" />
+                        <arc:EnvDisclosure Name="PART_AddHost" />
+                        <arc:EnvSplitPanel Name="PART_Toolbar"
+                                           Margin="24,0,24,16"
+                                           FillsFirst="True"
+                                           ColumnGap="16"
+                                           RowGap="12">
+                            <arc:SearchField Name="PART_Search" MaxWidth="360" />
+                            <arc:SegmentedControl Name="PART_ViewSwitch" HorizontalAlignment="Right" />
+                        </arc:EnvSplitPanel>
+                        <Decorator Name="PART_ViewSlot" />
+                        <arc:DeveloperAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|EnvSplitPanel#PART_Header">
+            <Setter Property="Margin" Value="16,20,16,16" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|EnvSplitPanel#PART_Toolbar">
+            <Setter Property="Margin" Value="16,0,16,16" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SearchField#PART_Search">
+            <Setter Property="MaxWidth" Value="100000" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|SegmentedControl#PART_ViewSwitch">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        An environment switch. Matrix face: 92 x 44, radius 12, transparent, the 18px box centered (its name is for screen
+        readers). Pill face: 36 high, pill radius, Surface with a 1px edge (BorderStrong on, Border off), the box and the
+        name 12/16.8 (Foreground on, TextSecondary off), 8 apart. Fills on hover, press and keyboard focus are mixed in code
+        and ease over 160ms; the keyboard ring is 2px FocusRing outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:EnvScopeToggle}" TargetType="arc:EnvScopeToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:EnvScopeToggle">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep16}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <arc:EnvCheckGlyph IsChecked="{TemplateBinding IsOn}" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       IsVisible="{TemplateBinding IsPill}"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{TemplateBinding Foreground}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[IsPill=True]">
+            <Setter Property="Height" Value="36" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^[IsPill=True]:checked">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^[IsPill=True] /template/ Border#PART_FocusRing">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A border whose fill and edge ease over 240ms (the row being edited, the redeploy banner turning green or red). -->
+    <ControlTheme x:Key="{x:Type arc:EnvTintBorder}" TargetType="arc:EnvTintBorder">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

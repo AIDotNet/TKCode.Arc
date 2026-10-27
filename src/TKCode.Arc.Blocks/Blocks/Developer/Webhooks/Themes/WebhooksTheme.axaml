@@ -1,0 +1,235 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The webhooks console (Arc Webhooks, design reference). Flat by default (no frame: put it in a card). From the
+        top: the header (title 16/17.6 500, description 14/19.6 TextSecondary at most 540 wide) and the toolbar with the
+        "Add endpoint" pill (padding 16 / 20, 16 above the toolbar); the endpoint list (1px Border on top, 4 above and
+        below the rows); the detail and chart; the lower half (16 above, 1px Border on top) in a crossfade; the hidden
+        announcer. Rows, chart and inspector are built in code from tokens; their paddings follow the width
+        (20, or 16 at ≤ 540).
+    -->
+    <ControlTheme x:Key="{x:Type arc:Webhooks}" TargetType="arc:Webhooks">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="InlineGutter" Value="{arc:WebhooksTokenResource InlineGutter}" />
+        <Setter Property="CompactInlineGutter" Value="{arc:WebhooksTokenResource CompactInlineGutter}" />
+        <Setter Property="RateColumnWidth" Value="{arc:WebhooksTokenResource RateColumnWidth}" />
+        <Setter Property="StateColumnWidth" Value="{arc:WebhooksTokenResource StateColumnWidth}" />
+        <Setter Property="RowColumnGap" Value="{arc:WebhooksTokenResource RowColumnGap}" />
+        <Setter Property="MaxChips" Value="{arc:WebhooksTokenResource MaxChips}" />
+        <Setter Property="RowPlateInset" Value="{arc:WebhooksTokenResource RowPlateInset}" />
+        <Setter Property="ChartHeight" Value="{arc:WebhooksTokenResource ChartHeight}" />
+        <Setter Property="BarGap" Value="{arc:WebhooksTokenResource BarGap}" />
+        <Setter Property="DeliveryRowHeight" Value="{arc:WebhooksTokenResource DeliveryRowHeight}" />
+        <Setter Property="ActionColumnWidth" Value="{arc:WebhooksTokenResource ActionColumnWidth}" />
+        <Setter Property="StackedPanelHeight" Value="{arc:WebhooksTokenResource StackedPanelHeight}" />
+        <Setter Property="MinPanelHeight" Value="{arc:WebhooksTokenResource MinPanelHeight}" />
+        <Setter Property="StackedWidth" Value="{arc:WebhooksTokenResource StackedWidth}" />
+        <Setter Property="EventsTwoColumnWidth" Value="{arc:WebhooksTokenResource EventsTwoColumnWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:WebhooksTokenResource NarrowWidth}" />
+        <Setter Property="FormSingleColumnWidth" Value="{arc:WebhooksTokenResource FormSingleColumnWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:WebhooksTokenResource CompactWidth}" />
+        <Setter Property="DeliveryTwoLineWidth" Value="{arc:WebhooksTokenResource DeliveryTwoLineWidth}" />
+        <Setter Property="HeadersStackedWidth" Value="{arc:WebhooksTokenResource HeadersStackedWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Webhooks">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <Border Name="PART_Top" Padding="20,16">
+                            <StackPanel>
+                                <TextBlock Name="PART_Title"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="17.6"
+                                           LetterSpacing="-0.16"
+                                           TextWrapping="Wrap"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Description"
+                                           Margin="0,2,0,0"
+                                           MaxWidth="{arc:WebhooksTokenResource DescriptionMaxWidth}"
+                                           HorizontalAlignment="Left"
+                                           LineHeight="19.6"
+                                           LetterSpacing="-0.14"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:DeveloperMorphPanel Name="PART_Add" Margin="0,16,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                Padding="0,4">
+                            <Panel Name="PART_EndpointsHost" />
+                        </Border>
+                        <Border Name="PART_DetailHost" />
+                        <Border Margin="0,16,0,0"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <arc:ArcContentSwap Name="PART_Split"
+                                                Mode="Lift"
+                                                ExitDuration="0:0:0.12"
+                                                EnterDuration="0:0:0.24"
+                                                EnterDelay="0:0:0.04"
+                                                EnterOffset="6"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </Border>
+                        <arc:DeveloperAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        A row's frame: transparent (the list's flash shows through), an optional 1px BorderSubtle line on top, and the
+        hover plate (inset 8 / 2, radius 10) fading in over 160ms; a selected row hides it (the gliding plate shows).
+    -->
+    <ControlTheme x:Key="{x:Type arc:WebhookRowFrame}" TargetType="arc:WebhookRowFrame">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WebhookRowFrame">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Separator"
+                            Height="1"
+                            VerticalAlignment="Top"
+                            IsHitTestVisible="False"
+                            IsVisible="{TemplateBinding ShowsSeparator}"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <Border Name="PART_Hover"
+                            Margin="{TemplateBinding PlateInset}"
+                            IsHitTestVisible="False"
+                            Background="{TemplateBinding HoverBrush}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}" />
+                    <ContentPresenter Name="PART_Content"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A row's button: transparent; a 2px ring of the plate's shape (radius 14) on keyboard focus only. -->
+    <ControlTheme x:Key="{x:Type arc:WebhookRowButton}" TargetType="arc:WebhookRowButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WebhookRowButton">
+                <Panel Background="Transparent">
+                    <ContentPresenter Name="PART_Content"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{TemplateBinding RingMargin}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A delivery's event name in mono 12/16.8: Foreground, TextSecondary once resolved (240ms). -->
+    <ControlTheme x:Key="{x:Type arc:WebhookEventText}" TargetType="arc:WebhookEventText">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WebhookEventText">
+                <TextBlock Text="{TemplateBinding Text}"
+                           LineHeight="16.8"
+                           TextTrimming="CharacterEllipsis"
+                           VerticalAlignment="Center" />
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:dimmed">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The payload / headers panel: 1px Border, radius 10, the row plate's fill; a 2px ring (radius 14) while the
+        scrolling area inside has keyboard focus.
+    -->
+    <ControlTheme x:Key="{x:Type arc:WebhookPanelFrame}" TargetType="arc:WebhookPanelFrame">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:WebhookPanelFrame">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            IsHitTestVisible="False"
+                            IsVisible="{TemplateBinding ShowsRing}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep14}" />
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding HoverBrush}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                            ClipToBounds="True">
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,496 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The key manager (Arc API keys, design reference). Framed: a card with a 1px Border, radius 26 and Surface; flat:
+        no frame. Top block padding 20/16 (compact 16/16): the title 16/17.6 500, the description 14/19.6 TextSecondary at
+        most 520 wide, 2 under the title, and 16 lower the toolbar cell (count at the left, the Create key pill at the
+        right). Under it the list, with a 1px Border line on top. Empty: centered title, line and optional button.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ApiKeys}" TargetType="arc:ApiKeys">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="NarrowWidth" Value="{arc:ApiKeysTokenResource NarrowWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:ApiKeysTokenResource CompactWidth}" />
+        <Setter Property="StackedFormWidth" Value="{arc:ApiKeysTokenResource StackedFormWidth}" />
+        <Setter Property="DatesMinWidth" Value="{arc:ApiKeysTokenResource DatesMinWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ApiKeys">
+                <Border Name="PART_Frame"
+                        ClipToBounds="True"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel>
+                        <Border Name="PART_Top">
+                            <StackPanel>
+                                <TextBlock Name="PART_Title"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ApiKeysTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:ApiKeysTokenResource TitleLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Description"
+                                           Margin="0,2,0,0"
+                                           HorizontalAlignment="Left"
+                                           MaxWidth="{arc:ApiKeysTokenResource DescriptionMaxWidth}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="19.6"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:DeveloperMorphPanel Name="PART_Create" Margin="0,16,0,0">
+                                    <arc:DeveloperMorphPanel.Leading>
+                                        <StackPanel Name="PART_CountGroup" Orientation="Horizontal" Spacing="4">
+                                            <arc:ArcContentSwap Name="PART_Count"
+                                                                Mode="Roll"
+                                                                ClipToBounds="True"
+                                                                VerticalAlignment="Center"
+                                                                HorizontalContentAlignment="Left"
+                                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                                AutomationProperties.AccessibilityView="Raw" />
+                                            <TextBlock Name="PART_CountWords"
+                                                       VerticalAlignment="Center"
+                                                       LineHeight="19.6"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                       AutomationProperties.AccessibilityView="Raw" />
+                                        </StackPanel>
+                                    </arc:DeveloperMorphPanel.Leading>
+                                </arc:DeveloperMorphPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Name="PART_ListFrame"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}">
+                            <Panel>
+                                <arc:DeveloperListPanel Name="PART_Keys" VerticalAlignment="Top" />
+                                <Border Name="PART_Empty" IsVisible="False" Padding="{arc:ApiKeysTokenResource EmptyPadding}">
+                                    <StackPanel HorizontalAlignment="Center" Spacing="4">
+                                        <TextBlock Name="PART_EmptyTitle"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   LineHeight="19.6"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_EmptyDescription"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   LineHeight="19.6"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:Button Name="PART_EmptyAction"
+                                                    Margin="0,8,0,0"
+                                                    HorizontalAlignment="Center"
+                                                    Variant="Secondary"
+                                                    Size="Small"
+                                                    IsVisible="False" />
+                                    </StackPanel>
+                                </Border>
+                            </Panel>
+                        </Border>
+                        <arc:DeveloperAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Top">
+            <Setter Property="Padding" Value="{arc:ApiKeysTokenResource TopPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Top">
+            <Setter Property="Padding" Value="{arc:ApiKeysTokenResource CompactTopPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One row. The row itself stays transparent (the list draws the new-key highlight under it); its inner border has a
+        1px BorderSubtle line on top from the second row on and the open tint (SurfaceMuted 80% into Surface, 160ms).
+        Trigger padding 20/12 (compact 16/12), 20 between columns: name 14/19.6 500 with an 8px gap to the small badge, the
+        mask mono 12/16.8 TextMuted 2 below; chips; dates 12/16.8 (used TextSecondary, created TextMuted); a 16px chevron
+        (TextMuted, Foreground and turned 180° while open). Details padding 0 20 16 (compact 16), 16 between the facts
+        (12 down, 24 across; label 12/16.8 TextMuted, value 14/19.6 in a 28 line) and the revoke line (BorderSubtle on top,
+        12 above, note 14/19.6 TextSecondary). Revoked: name TextMuted, badge, chips and dates at 40%.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ApiKeyRow}" TargetType="arc:ApiKeyRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ApiKeyRow">
+                <Border Name="PART_Inner"
+                        BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                    <StackPanel>
+                        <arc:ApiKeyRowTrigger Name="PART_Trigger">
+                            <Grid Name="PART_Columns" ColumnSpacing="{arc:ApiKeysTokenResource ColumnGap}">
+                                <StackPanel Name="PART_Identity" Spacing="2" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Height="22">
+                                        <Panel VerticalAlignment="Center">
+                                            <TextBlock Name="PART_Name"
+                                                       LineHeight="19.6"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            <arc:ApiKeyStrike Name="PART_NameStrike"
+                                                              Thickness="{arc:ApiKeysTokenResource StrikeThickness}"
+                                                              Brush="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        </Panel>
+                                        <arc:Badge Name="PART_Badge" Size="Small" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <Panel HorizontalAlignment="Left">
+                                        <TextBlock Name="PART_Mask"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:ApiKeyStrike Name="PART_MaskStrike"
+                                                          Thickness="{arc:ApiKeysTokenResource StrikeThickness}"
+                                                          Brush="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </Panel>
+                                </StackPanel>
+                                <WrapPanel Name="PART_Scopes"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           ItemSpacing="{arc:ApiKeysTokenResource ChipGap}"
+                                           LineSpacing="{arc:ApiKeysTokenResource ChipGap}" />
+                                <StackPanel Name="PART_Dates" Grid.Column="2" Spacing="2" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <arc:ArcGlyph Name="PART_StaleIcon"
+                                                      Data="{x:Static arc:ArcIcons.TriangleAlert}"
+                                                      Size="13"
+                                                      VerticalAlignment="Center"
+                                                      IsVisible="False"
+                                                      Foreground="{arc:ArcDesignTokenResource Warning}" />
+                                        <TextBlock Name="PART_Used"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <TextBlock Name="PART_Created"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="16.8"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Grid.Column="3"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              StrokeThickness="1.75"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center" />
+                            </Grid>
+                        </arc:ApiKeyRowTrigger>
+                        <arc:SpringSizeDecorator Name="PART_DetailHost" Axis="Height" Spring="Smooth" IsExpanded="False">
+                            <Border Name="PART_Detail" IsVisible="False">
+                                <StackPanel Spacing="{arc:ApiKeysTokenResource DetailGap}">
+                                    <Grid Name="PART_Facts"
+                                          ColumnSpacing="{arc:ApiKeysTokenResource FactColumnGap}"
+                                          RowSpacing="{arc:ApiKeysTokenResource FactRowGap}">
+                                        <StackPanel Name="PART_CreatedByFact" Classes="fact">
+                                            <TextBlock Name="PART_CreatedByLabel" Classes="term" />
+                                            <StackPanel Orientation="Horizontal" Spacing="8" Height="28">
+                                                <arc:Avatar Name="PART_Avatar" Size="Small" VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_CreatedBy" Classes="value" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Name="PART_LastRequestFact" Classes="fact">
+                                            <TextBlock Name="PART_LastRequestLabel" Classes="term" />
+                                            <TextBlock Name="PART_LastRequest" Classes="value" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_RequestsFact" Classes="fact">
+                                            <TextBlock Name="PART_RequestsLabel" Classes="term" />
+                                            <TextBlock Name="PART_Requests" Classes="value" FontFeatures="tnum" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_CreatedFact" Classes="fact">
+                                            <TextBlock Name="PART_CreatedLabel" Classes="term" />
+                                            <TextBlock Name="PART_CreatedDate" Classes="value" />
+                                        </StackPanel>
+                                        <StackPanel Name="PART_ScopesFact" Classes="fact">
+                                            <TextBlock Name="PART_ScopesLabel" Classes="term" />
+                                            <WrapPanel Name="PART_DetailScopes"
+                                                       Margin="0,3,0,0"
+                                                       ItemSpacing="{arc:ApiKeysTokenResource ChipGap}"
+                                                       LineSpacing="{arc:ApiKeysTokenResource ChipGap}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            Padding="0,12,0,0">
+                                        <Grid Name="PART_RevokeLine" ColumnSpacing="24" RowSpacing="12">
+                                            <Grid Name="PART_Note" ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                                                <arc:ArcGlyph Name="PART_NoteIcon"
+                                                              Data="{x:Static arc:ArcIcons.TriangleAlert}"
+                                                              Size="16"
+                                                              Margin="0,2,8,0"
+                                                              VerticalAlignment="Top"
+                                                              IsVisible="False"
+                                                              Foreground="{arc:ArcDesignTokenResource Warning}" />
+                                                <TextBlock Name="PART_NoteText"
+                                                           Grid.Column="1"
+                                                           TextWrapping="Wrap"
+                                                           LineHeight="19.6"
+                                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            </Grid>
+                                            <arc:HoldToConfirm Name="PART_Revoke" Tone="Accent" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="^:expanded /template/ Border#PART_Inner">
+            <Setter Property="Background" Value="{arc:ApiKeysTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:first /template/ Border#PART_Inner">
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|ApiKeyRowTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:ApiKeysTokenResource RowPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ApiKeyRowTrigger#PART_Trigger">
+            <Setter Property="Padding" Value="{arc:ApiKeysTokenResource CompactRowPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Detail">
+            <Setter Property="Padding" Value="{arc:ApiKeysTokenResource DetailPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Detail">
+            <Setter Property="Padding" Value="{arc:ApiKeysTokenResource CompactDetailPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.fact">
+            <Setter Property="Spacing" Value="4" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.term">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.value">
+            <Setter Property="LineHeight" Value="19.6" />
+            <Setter Property="Padding" Value="0,4.2" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:revoked /template/ TextBlock#PART_Name">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Badge#PART_Badge, ^ /template/ WrapPanel#PART_Scopes, ^ /template/ StackPanel#PART_Dates">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:revoked /template/ arc|Badge#PART_Badge, ^:revoked /template/ WrapPanel#PART_Scopes, ^:revoked /template/ StackPanel#PART_Dates">
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Inner">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Name">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|Badge#PART_Badge, ^ /template/ WrapPanel#PART_Scopes, ^ /template/ StackPanel#PART_Dates">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The whole-row button: transparent, the open tint while pointed at (160ms), and a 2px keyboard ring drawn 2px
+        inside its edge so the row's clipping never cuts it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ApiKeyRowTrigger}" TargetType="arc:ApiKeyRowTrigger">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ApiKeyRowTrigger">
+                <Panel>
+                    <Border Name="PART_Background" Background="{TemplateBinding Background}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="2"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep6}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ApiKeysTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The form: fields in two columns (name, then the environment switch at its natural width), 16 apart, one column when
+        stacked; the scope legend 2 above a two-column grid whose 44px checkbox hit areas hang 13 out to the left (scope
+        name mono 12/16.8 500, line 12/16.8); errors in 12/16.8 Danger; the hint 12/16.8 TextMuted, then Cancel (ghost)
+        and Generate key (primary) 8 apart. A failed generate shows a Danger line above the buttons.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ApiKeyForm}" TargetType="arc:ApiKeyForm">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ApiKeyForm">
+                <StackPanel>
+                    <Grid Name="PART_Fields"
+                          ColumnDefinitions="*,Auto"
+                          RowDefinitions="Auto"
+                          ColumnSpacing="{arc:ApiKeysTokenResource FormGap}"
+                          RowSpacing="{arc:ApiKeysTokenResource FormGap}">
+                        <arc:Input Name="PART_Name" VerticalAlignment="Top" />
+                        <StackPanel Name="PART_EnvironmentField"
+                                    Grid.Column="1"
+                                    Spacing="8"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top">
+                            <TextBlock Name="PART_EnvironmentLabel"
+                                       LineHeight="19.6"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       AutomationProperties.AccessibilityView="Raw" />
+                            <arc:SegmentedControl Name="PART_Environment" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Margin="0,16,0,0" Spacing="2">
+                        <TextBlock Name="PART_ScopesLabel"
+                                   LineHeight="19.6"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:ApiKeyScopeGrid Name="PART_ScopeGrid"
+                                             Margin="-13,0,0,0"
+                                             ColumnGap="{arc:ApiKeysTokenResource FormGap}" />
+                        <arc:SpringSizeDecorator Name="PART_ScopeErrorHost" Axis="Height" Spring="Smooth" IsExpanded="False">
+                            <TextBlock Name="PART_ScopeError"
+                                       Padding="0,4,0,0"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       Foreground="{arc:ArcDesignTokenResource Danger}" />
+                        </arc:SpringSizeDecorator>
+                    </StackPanel>
+                    <arc:SpringSizeDecorator Name="PART_ErrorHost" Axis="Height" Spring="Smooth" IsExpanded="False">
+                        <Grid Margin="0,16,0,0" ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                          Size="16"
+                                          Margin="0,2,0,0"
+                                          VerticalAlignment="Top"
+                                          Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            <TextBlock Name="PART_Error"
+                                       Grid.Column="1"
+                                       TextWrapping="Wrap"
+                                       LineHeight="19.6"
+                                       Foreground="{arc:ArcDesignTokenResource Danger}"
+                                       AutomationProperties.LiveSetting="Assertive" />
+                        </Grid>
+                    </arc:SpringSizeDecorator>
+                    <Grid Name="PART_Actions"
+                          Margin="0,16,0,0"
+                          ColumnDefinitions="*,Auto,Auto"
+                          RowDefinitions="Auto"
+                          ColumnSpacing="8"
+                          RowSpacing="8">
+                        <arc:ArcContentSwap Name="PART_Hint"
+                                            Mode="BlurSwap"
+                                            VerticalAlignment="Center"
+                                            HorizontalContentAlignment="Left"
+                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <arc:Button Name="PART_Cancel" Grid.Column="1" Variant="Ghost" />
+                        <arc:Button Name="PART_Generate" Grid.Column="2" Variant="Primary" />
+                    </Grid>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The reveal: the one-time secret (label 8 above, warning 16 below), then Done at the end, 16 apart. -->
+    <ControlTheme x:Key="{x:Type arc:ApiKeyReveal}" TargetType="arc:ApiKeyReveal">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ApiKeyReveal">
+                <StackPanel Spacing="16">
+                    <arc:DeveloperSecretField Name="PART_Secret" LabelSpacing="8" />
+                    <arc:Button Name="PART_Done" Variant="Primary" HorizontalAlignment="Right" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,414 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Metrics dashboard (Arc Pro Analytics, design reference only, ADR 0024). Flat on the Surface, no frame. From the top:
+        the header (title 16/17.6 500, subtitle 14/19.6 TextMuted; range switch and Export on the right, wrapping under the
+        titles when they do not fit), the metric tabs (lines above and below, the 2px accent underline under the selected
+        one), the chart section (legend and Compare in a 24px row, 12 above the plot) and the two ranked lists (a line
+        above, one between). Under 640 wide (:md) the tabs go 2 × 2 and the lists stack; under 460 (:sm) the header pads
+        16 all round, the range switch spans the row, values are 18 and the plot is 168 high.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MetricsDashboard}" TargetType="arc:MetricsDashboard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="MediumWidth" Value="{arc:MetricsDashboardTokenResource MediumWidth}" />
+        <Setter Property="SmallWidth" Value="{arc:MetricsDashboardTokenResource SmallWidth}" />
+        <Setter Property="TabPadding" Value="{arc:MetricsDashboardTokenResource TabPadding}" />
+        <Setter Property="FirstTabPadding" Value="{arc:MetricsDashboardTokenResource FirstTabPadding}" />
+        <Setter Property="CompactTabPadding" Value="{arc:MetricsDashboardTokenResource CompactTabPadding}" />
+        <Setter Property="TabValueSize" Value="{arc:MetricsDashboardTokenResource TabValueSize}" />
+        <Setter Property="SmallTabValueSize" Value="{arc:MetricsDashboardTokenResource SmallTabValueSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricsDashboard">
+                <Border Name="PART_Root" Background="{TemplateBinding Background}">
+                    <StackPanel>
+                        <arc:MetricsDashboardHeaderPanel Name="PART_Header"
+                                                         ColumnGap="{arc:MetricsDashboardTokenResource HeaderColumnGap}"
+                                                         RowGap="{arc:MetricsDashboardTokenResource HeaderRowGap}">
+                            <StackPanel Spacing="{arc:MetricsDashboardTokenResource SubtitleGap}">
+                                <TextBlock Name="PART_Title"
+                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:MetricsDashboardTokenResource TitleLineHeight}"
+                                           LetterSpacing="{arc:MetricsDashboardTokenResource TitleLetterSpacing}"
+                                           TextTrimming="CharacterEllipsis"
+                                           AutomationProperties.HeadingLevel="2"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Subtitle"
+                                           LineHeight="{arc:MetricsDashboardTokenResource CopyLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <DockPanel Name="PART_Actions" LastChildFill="True">
+                                <arc:MetricsDashboardExportButton Name="PART_Export"
+                                                                  DockPanel.Dock="Right"
+                                                                  Margin="8,0,0,0"
+                                                                  VerticalAlignment="Center" />
+                                <arc:AnalyticsSegmentSwitch Name="PART_Range" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </arc:MetricsDashboardHeaderPanel>
+
+                        <arc:MetricsDashboardTabStrip Name="PART_Tabs"
+                                                      UnderlineThickness="{arc:MetricsDashboardTokenResource UnderlineThickness}" />
+
+                        <StackPanel Name="PART_ChartSection">
+                            <Grid ColumnDefinitions="*,Auto" Height="{arc:MetricsDashboardTokenResource ChartBarHeight}">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:MetricsDashboardTokenResource LegendGap}"
+                                            AutomationProperties.AccessibilityView="Raw">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <arc:MetricsDashboardSwatch VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_LegendText"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                    <StackPanel Name="PART_PreviousLegend" Orientation="Horizontal" Spacing="6" IsVisible="False">
+                                        <arc:MetricsDashboardSwatch IsDashed="True" VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_PreviousLegendText"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <arc:MetricsDashboardCompareBox Name="PART_Compare" Grid.Column="1" VerticalAlignment="Center" />
+                            </Grid>
+                            <arc:MetricsDashboardPlot Name="PART_Plot"
+                                                      Margin="0,12,0,0"
+                                                      XAxisHeight="{arc:MetricsDashboardTokenResource XAxisHeight}"
+                                                      YAxisGap="{arc:MetricsDashboardTokenResource YAxisGap}"
+                                                      LineThickness="{arc:MetricsDashboardTokenResource LineThickness}"
+                                                      PreviousLineThickness="{arc:MetricsDashboardTokenResource PreviousLineThickness}"
+                                                      PreviousDash="{arc:MetricsDashboardTokenResource PreviousDash}"
+                                                      AreaOpacity="{arc:MetricsDashboardTokenResource AreaOpacity}"
+                                                      DotDiameter="{arc:MetricsDashboardTokenResource DotDiameter}" />
+                        </StackPanel>
+
+                        <arc:MetricsDashboardSplitPanel Name="PART_Lists">
+                            <Border Name="PART_PrimarySection" Classes="mdlist">
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="*,Auto" Margin="{arc:MetricsDashboardTokenResource ListHeaderMargin}">
+                                        <TextBlock Name="PART_PrimaryTitle"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="15.4"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   AutomationProperties.HeadingLevel="3"
+                                                   VerticalAlignment="Bottom" />
+                                        <TextBlock Name="PART_PrimaryHeader"
+                                                   Grid.Column="1"
+                                                   Margin="12,0,0,0"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   VerticalAlignment="Bottom"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Grid>
+                                    <StackPanel Name="PART_PrimaryRows" Spacing="{arc:MetricsDashboardTokenResource ListRowGap}" />
+                                </StackPanel>
+                            </Border>
+                            <Border Name="PART_SecondarySection" Classes="mdlist">
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="*,Auto" Margin="{arc:MetricsDashboardTokenResource ListHeaderMargin}">
+                                        <TextBlock Name="PART_SecondaryTitle"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="15.4"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   AutomationProperties.HeadingLevel="3"
+                                                   VerticalAlignment="Bottom" />
+                                        <TextBlock Name="PART_SecondaryHeader"
+                                                   Grid.Column="1"
+                                                   Margin="12,0,0,0"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   VerticalAlignment="Bottom"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Grid>
+                                    <StackPanel Name="PART_SecondaryRows" Spacing="{arc:MetricsDashboardTokenResource ListRowGap}" />
+                                </StackPanel>
+                            </Border>
+                        </arc:MetricsDashboardSplitPanel>
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|MetricsDashboardHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:MetricsDashboardTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_ChartSection">
+            <Setter Property="Margin" Value="{arc:MetricsDashboardTokenResource ChartPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MetricsDashboardPlot#PART_Plot">
+            <Setter Property="PlotHeight" Value="{arc:MetricsDashboardTokenResource PlotHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Border.mdlist">
+            <Setter Property="Padding" Value="{arc:MetricsDashboardTokenResource ListPadding}" />
+        </Style>
+        <Style Selector="^:sm /template/ arc|MetricsDashboardHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:MetricsDashboardTokenResource SmallHeaderPadding}" />
+        </Style>
+        <Style Selector="^:sm /template/ StackPanel#PART_ChartSection">
+            <Setter Property="Margin" Value="{arc:MetricsDashboardTokenResource SmallChartPadding}" />
+        </Style>
+        <Style Selector="^:sm /template/ arc|MetricsDashboardPlot#PART_Plot">
+            <Setter Property="PlotHeight" Value="{arc:MetricsDashboardTokenResource SmallPlotHeight}" />
+        </Style>
+        <Style Selector="^:sm /template/ Border.mdlist">
+            <Setter Property="Padding" Value="{arc:MetricsDashboardTokenResource SmallListPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A metric tab: transparent, SurfaceMuted on hover (160ms), a 2px focus ring inside its edge. -->
+    <ControlTheme x:Key="{x:Type arc:MetricsDashboardTab}" TargetType="arc:MetricsDashboardTab">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricsDashboardTab">
+                <Panel>
+                    <Border Name="PART_Background" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Top" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="2"
+                            BorderThickness="2"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Export: 32 high, padding 10 / 12, radius 10, 1px Border, Surface (SurfaceMuted on hover), 14px TextSecondary glyph,
+        6 gap, 14px text. Confirmed: the check and "Exported" fade in (160ms) while the download glyph and "Export" fade out;
+        the glyphs also scale between .8 and 1. Pressed scales to .97. All 160ms (.22, 1, .36, 1).
+    -->
+    <ControlTheme x:Key="{x:Type arc:MetricsDashboardExportButton}" TargetType="arc:MetricsDashboardExportButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:MetricsDashboardTokenResource ExportHeight}" />
+        <Setter Property="Padding" Value="{arc:MetricsDashboardTokenResource ExportPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:MetricsDashboardTokenResource ExportRadius}" />
+        <Setter Property="GlyphSize" Value="{arc:MetricsDashboardTokenResource ExportGlyphSize}" />
+        <Setter Property="GlyphGap" Value="{arc:MetricsDashboardTokenResource ExportGap}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricsDashboardExportButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="{TemplateBinding GlyphGap}" VerticalAlignment="Center">
+                            <Panel Width="{TemplateBinding GlyphSize}" Height="{TemplateBinding GlyphSize}" VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Download"
+                                              Data="{x:Static arc:ArcIcons.Download}"
+                                              Size="{TemplateBinding GlyphSize}"
+                                              StrokeThickness="2"
+                                              RenderTransformOrigin="50%,50%"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <arc:ArcGlyph Name="PART_Check"
+                                              Data="{x:Static arc:ArcIcons.Check}"
+                                              Size="{TemplateBinding GlyphSize}"
+                                              StrokeThickness="2"
+                                              RenderTransformOrigin="50%,50%"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </Panel>
+                            <Grid VerticalAlignment="Center">
+                                <TextBlock Name="PART_Text" Text="{TemplateBinding Text}" LineHeight="19.6" />
+                                <TextBlock Name="PART_ConfirmedText" Text="{TemplateBinding ConfirmedText}" LineHeight="19.6"
+                                           AutomationProperties.AccessibilityView="Raw" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="2"
+                            CornerRadius="14"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Download">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.8)" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_ConfirmedText">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:confirmed /template/ arc|ArcGlyph#PART_Download">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.8)" />
+        </Style>
+        <Style Selector="^:confirmed /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:confirmed /template/ TextBlock#PART_Text">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:confirmed /template/ TextBlock#PART_ConfirmedText">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Compare: a 14px box (radius 4, 1px BorderStrong on Surface; ControlOn fill and edge with an 11px Background check
+        when on; colors 160ms) and a 12px TextSecondary label 6 to its right. The focus ring goes around the box.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MetricsDashboardCompareBox}" TargetType="arc:MetricsDashboardCompareBox">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BoxSize" Value="{arc:MetricsDashboardTokenResource CheckBoxSize}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MetricsDashboardCompareBox">
+                <StackPanel Orientation="Horizontal" Spacing="6" Background="{TemplateBinding Background}">
+                    <Panel Width="{TemplateBinding BoxSize}" Height="{TemplateBinding BoxSize}" VerticalAlignment="Center">
+                        <Border Name="PART_Box"
+                                BorderThickness="1"
+                                CornerRadius="{arc:MetricsDashboardTokenResource CheckBoxRadius}" />
+                        <arc:ArcGlyph Name="PART_Check"
+                                      Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="{arc:MetricsDashboardTokenResource CheckGlyphSize}"
+                                      StrokeThickness="{arc:MetricsDashboardTokenResource CheckGlyphStroke}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="-4"
+                                BorderThickness="2"
+                                CornerRadius="6"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Box">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Foreground" Value="Transparent" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Box">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource ControlOn}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Box">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,146 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Connected scatter (Arc Analytics › Connected scatter, design reference only, ADR 0024): one surface with 24px
+        padding and 24px between its sections: the header (title, description and the series switch), the four readouts, the
+        chart (axis title and legend, the plot, the x axis title) and the transport (play button and scrubber), plus the hidden
+        screen-reader table and live region. Under 540 wide (:narrow) the paddings are 16 and the radius is the panel's; the
+        plot, the readouts and the scrubber read their own width for the finer breakpoints. Values a state changes are
+        styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ConnectedScatter}" TargetType="arc:ConnectedScatter">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:ConnectedScatterTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="NarrowWidth" Value="{arc:ConnectedScatterTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConnectedScatter">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Sections">
+                            <arc:ConnectedScatterSplitPanel Name="PART_Header"
+                                                            ColumnGap="{arc:ConnectedScatterTokenResource HeaderColumnGap}"
+                                                            RowGap="{arc:ConnectedScatterTokenResource HeaderRowGap}">
+                                <StackPanel VerticalAlignment="Top" Spacing="{arc:ConnectedScatterTokenResource DescriptionGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ConnectedScatterTokenResource TitleSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:ConnectedScatterTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:ConnectedScatterTokenResource TitleLetterSpacing}"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Description"
+                                               TextWrapping="Wrap"
+                                               LineHeight="{arc:ConnectedScatterTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <arc:SegmentedControl Name="PART_SeriesSwitch"
+                                                      arc:AnalyticsSegmented.Spring="Smooth"
+                                                      VerticalAlignment="Top"
+                                                      HorizontalAlignment="Left" />
+                            </arc:ConnectedScatterSplitPanel>
+
+                            <arc:ConnectedScatterReadoutStrip Name="PART_Readouts"
+                                                              CellPadding="{arc:ConnectedScatterTokenResource ReadoutPadding}"
+                                                              TinyCellPadding="{arc:ConnectedScatterTokenResource TinyReadoutPadding}"
+                                                              ValueSize="{arc:ConnectedScatterTokenResource ReadoutValueSize}"
+                                                              TinyValueSize="{arc:ConnectedScatterTokenResource TinyReadoutValueSize}" />
+
+                            <StackPanel Name="PART_Chart">
+                                <arc:ConnectedScatterSplitPanel Name="PART_ChartHeader"
+                                                                Margin="{arc:ConnectedScatterTokenResource ChartHeaderMargin}"
+                                                                ColumnGap="{arc:ConnectedScatterTokenResource LegendGap}"
+                                                                RowGap="4">
+                                    <TextBlock Name="PART_YTitle"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               VerticalAlignment="Center" />
+                                    <arc:ConnectedScatterLegend Name="PART_Legend"
+                                                                ItemGap="{arc:ConnectedScatterTokenResource LegendGap}" />
+                                </arc:ConnectedScatterSplitPanel>
+                                <arc:ConnectedScatterPlot Name="PART_Plot"
+                                                          ClipToBounds="False"
+                                                          PlotInset="{arc:ConnectedScatterTokenResource PlotInset}"
+                                                          WideHeight="{arc:ConnectedScatterTokenResource PlotHeightWide}"
+                                                          MediumHeight="{arc:ConnectedScatterTokenResource PlotHeightMedium}"
+                                                          CompactHeight="{arc:ConnectedScatterTokenResource PlotHeightCompact}"
+                                                          CardWidth="{arc:ConnectedScatterTokenResource CardWidth}"
+                                                          CardGap="{arc:ConnectedScatterTokenResource CardGap}" />
+                                <TextBlock Name="PART_XTitle"
+                                           Margin="{arc:ConnectedScatterTokenResource XTitleMargin}"
+                                           HorizontalAlignment="Right"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+
+                            <Grid Name="PART_Transport"
+                                  ColumnDefinitions="Auto,*"
+                                  RowDefinitions="Auto,Auto"
+                                  Margin="{arc:ConnectedScatterTokenResource TransportMargin}"
+                                  ColumnSpacing="{arc:ConnectedScatterTokenResource TransportGap}">
+                                <arc:Button Name="PART_PlayButton"
+                                            Variant="Secondary"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            MinWidth="{arc:ConnectedScatterTokenResource ButtonColumnWidth}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <arc:ArcGlyph Name="PART_PlayGlyph" Size="16" VerticalAlignment="Center" />
+                                        <TextBlock Name="PART_PlayText" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                                <arc:ConnectedScatterScrubber Name="PART_Scrubber"
+                                                              Grid.Column="1"
+                                                              FocusAdorner="{x:Null}"
+                                                              BandHeight="{arc:ConnectedScatterTokenResource ScrubberHeight}"
+                                                              VerticalAlignment="Top" />
+                            </Grid>
+                        </StackPanel>
+                        <arc:ConnectedScatterDataTable Name="PART_Table" />
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:ConnectedScatterTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:ConnectedScatterTokenResource NarrowBlockPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:ConnectedScatterTokenResource NarrowSectionGap}" />
+        </Style>
+
+        <!-- Under 480 of content: the scrubber goes under the button, one column. -->
+        <Style Selector="^:compact /template/ Grid#PART_Transport">
+            <Setter Property="ColumnSpacing" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ConnectedScatterScrubber#PART_Scrubber">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Grid.Row" Value="1" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

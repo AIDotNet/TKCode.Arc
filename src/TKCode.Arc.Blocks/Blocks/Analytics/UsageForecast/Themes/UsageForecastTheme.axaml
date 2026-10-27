@@ -1,0 +1,174 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Usage forecast (Arc Analytics › Usage forecast, design reference): the card version has a 1px Border, radius 16 and a
+        Surface fill (:framed, the default); without it the block is flat on the page. Padding 16 / 20 / 20, sections 20
+        apart: the header (titles and metric switch), the headline and its detail line, the three tiles, the self-drawn chart
+        with the budget band over it, and the footer (alert chips and legend, a top line in the card). Under 560 (:compact)
+        paddings are 16, the switch goes under the titles and the chart is 232 high; under 440 (:narrow) the tiles stack and the
+        chips fill their rows. Values a state changes are styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:UsageForecast}" TargetType="arc:UsageForecast">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:UsageForecastTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CompactWidth" Value="{arc:UsageForecastTokenResource CompactWidth}" />
+        <Setter Property="NarrowWidth" Value="{arc:UsageForecastTokenResource NarrowWidth}" />
+        <Setter Property="HeadlineSize" Value="{arc:UsageForecastTokenResource HeadlineSize}" />
+        <Setter Property="HeadlineMinSize" Value="{arc:UsageForecastTokenResource HeadlineMinSize}" />
+        <Setter Property="HeadlineScale" Value="{arc:UsageForecastTokenResource HeadlineScale}" />
+        <Setter Property="TileValueSize" Value="{arc:UsageForecastTokenResource TileValueSize}" />
+        <Setter Property="CompactTileValueSize" Value="{arc:UsageForecastTokenResource CompactTileValueSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:UsageForecast">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Sections">
+                            <arc:UsageForecastSplitPanel Name="PART_Header"
+                                                         ColumnGap="{arc:UsageForecastTokenResource HeaderColumnGap}"
+                                                         RowGap="{arc:UsageForecastTokenResource HeaderRowGap}">
+                                <StackPanel VerticalAlignment="Top" Spacing="{arc:UsageForecastTokenResource SubtitleGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:UsageForecastTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:UsageForecastTokenResource TitleLetterSpacing}"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Subtitle"
+                                               Text="{TemplateBinding Subtitle}"
+                                               IsVisible="{TemplateBinding Subtitle, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               LineHeight="{arc:UsageForecastTokenResource BodyLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:SegmentedControl Name="PART_MetricSwitch"
+                                                      arc:AnalyticsSegmented.Spring="Smooth"
+                                                      VerticalAlignment="Top"
+                                                      HorizontalAlignment="Left" />
+                            </arc:UsageForecastSplitPanel>
+
+                            <StackPanel Name="PART_HeadlineStack" Spacing="{arc:UsageForecastTokenResource HeadlineGap}">
+                                <arc:UsageWordText Name="PART_Headline"
+                                                   IsMedium="True"
+                                                   HorizontalAlignment="Left"
+                                                   FontSize="{arc:UsageForecastTokenResource HeadlineSize}"
+                                                   LineHeight="28.6"
+                                                   MaxTextWidth="{arc:UsageForecastTokenResource HeadlineMaxWidth}" />
+                                <arc:UsageWordText Name="PART_Detail"
+                                                   IsSecondary="True"
+                                                   HorizontalAlignment="Left"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   LineHeight="{arc:UsageForecastTokenResource BodyLineHeight}" />
+                            </StackPanel>
+
+                            <arc:UsageKpiRow Name="PART_Tiles">
+                                <arc:UsageKpiItem Name="PART_Used" />
+                                <arc:UsageKpiItem Name="PART_Forecast" />
+                                <arc:UsageKpiItem Name="PART_Cost" />
+                            </arc:UsageKpiRow>
+
+                            <Panel Name="PART_Chart">
+                                <arc:UsageForecastPlot Name="PART_Plot"
+                                                       FocusAdorner="{x:Null}"
+                                                       ClipToBounds="False"
+                                                       PlotInsets="{arc:UsageForecastTokenResource PlotInsets}"
+                                                       AxisLabelWidth="{arc:UsageForecastTokenResource AxisLabelWidth}"
+                                                       HandleCapsuleHeight="{arc:UsageForecastTokenResource HandleCapsuleHeight}"
+                                                       HandleCapsuleInset="{arc:UsageForecastTokenResource HandleCapsuleInset}"
+                                                       PanelWidth="{arc:UsageForecastTokenResource PanelWidth}"
+                                                       PanelOffset="{arc:UsageForecastTokenResource PanelOffset}"
+                                                       PanelRadius="{arc:UsageForecastTokenResource PanelRadius}"
+                                                       CrossingRadius="{arc:UsageForecastTokenResource CrossingRadius}"
+                                                       TodayDotRadius="{arc:UsageForecastTokenResource TodayDotRadius}"
+                                                       ThresholdTickLength="{arc:UsageForecastTokenResource ThresholdTickLength}" />
+                                <arc:UsageBudgetHandle Name="PART_Handle"
+                                                       FocusAdorner="{x:Null}"
+                                                       Margin="{arc:UsageForecastTokenResource HandleMargin}"
+                                                       BandHeight="{arc:UsageForecastTokenResource HandleBandHeight}" />
+                            </Panel>
+
+                            <Border Name="PART_Footer" Padding="0,0,0,0">
+                                <StackPanel Spacing="{arc:UsageForecastTokenResource FooterGap}">
+                                    <arc:UsageAlertRow Name="PART_Alerts"
+                                                       Gap="{arc:UsageForecastTokenResource ChipGap}"
+                                                       IsVisible="{TemplateBinding IsAlertsVisible}">
+                                        <TextBlock Name="PART_AlertLabel"
+                                                   Text="{Binding Labels.NotifyAtText, RelativeSource={RelativeSource TemplatedParent}}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </arc:UsageAlertRow>
+                                    <arc:UsageLegend Name="PART_Legend"
+                                                     RowGap="{arc:UsageForecastTokenResource LegendRowGap}"
+                                                     IsVisible="{TemplateBinding IsLegendVisible}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <arc:UsageForecastDataTable Name="PART_Table" />
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:UsageForecastTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|UsageKpiRow#PART_Tiles">
+            <Setter Property="InlinePadding" Value="{arc:UsageForecastTokenResource TilePadding}" />
+            <Setter Property="StackedPadding" Value="{arc:UsageForecastTokenResource StackedTilePadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|UsageForecastPlot#PART_Plot">
+            <Setter Property="ChartHeight" Value="{arc:UsageForecastTokenResource ChartHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|UsageLegend#PART_Legend">
+            <Setter Property="ColumnGap" Value="{arc:UsageForecastTokenResource LegendColumnGap}" />
+        </Style>
+        <Style Selector="^:framed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{arc:UsageForecastTokenResource FrameRadius}" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_Footer">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="Padding" Value="0,12,0,0" />
+        </Style>
+        <Style Selector="^:not(:framed) /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="0,12,0,0" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:UsageForecastTokenResource CompactBlockPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:UsageForecastTokenResource CompactSectionGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|UsageKpiRow#PART_Tiles">
+            <Setter Property="InlinePadding" Value="{arc:UsageForecastTokenResource CompactTilePadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|UsageForecastPlot#PART_Plot">
+            <Setter Property="ChartHeight" Value="{arc:UsageForecastTokenResource CompactChartHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|UsageLegend#PART_Legend">
+            <Setter Property="ColumnGap" Value="{arc:UsageForecastTokenResource CompactLegendColumnGap}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

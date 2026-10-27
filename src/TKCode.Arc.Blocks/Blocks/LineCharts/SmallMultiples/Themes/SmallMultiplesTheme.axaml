@@ -1,0 +1,167 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Small multiples (Arc Small multiples, design reference): a card with the heading and the controls (sort, scale,
+        dim switch), the readout (period, position, total) with the legend, and the trellis of self-drawn panels
+        (SmallMultiplesGrid, inserted into PART_GridHost by code) under a hairline. Below 640 the controls move under
+        the heading and the legend under the readout; below 480 the paddings tighten. Values a state changes are set by
+        styles, not in the template, so the states can override them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SmallMultiples}" TargetType="arc:SmallMultiples">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:SmallMultiplesTokenResource CardRadius}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SmallMultiples">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Grid RowDefinitions="Auto,Auto,Auto">
+                            <arc:SmallMultiplesHeaderPanel Name="PART_Header">
+                                <StackPanel Name="PART_Heading"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:SmallMultiplesTokenResource DescriptionGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:SmallMultiplesTokenResource TitleSize}"
+                                               LineHeight="{arc:SmallMultiplesTokenResource TitleLineHeight}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Description"
+                                               Text="{TemplateBinding Description}"
+                                               IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:SmallMultiplesTokenResource DescriptionSize}"
+                                               LineHeight="{arc:SmallMultiplesTokenResource DescriptionLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <WrapPanel Name="PART_Controls"
+                                           Orientation="Horizontal"
+                                           ItemSpacing="{arc:SmallMultiplesTokenResource ControlGap}"
+                                           LineSpacing="{arc:SmallMultiplesTokenResource ControlGap}">
+                                    <arc:SegmentedControl Name="PART_SortSwitch" />
+                                    <arc:SegmentedControl Name="PART_ScaleSwitch" />
+                                    <arc:Switch Name="PART_DimSwitch"
+                                                VerticalAlignment="Center"
+                                                Content="{TemplateBinding DimFlatText}" />
+                                </WrapPanel>
+                            </arc:SmallMultiplesHeaderPanel>
+
+                            <Grid Name="PART_Readout" Grid.Row="1" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Period"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:SmallMultiplesTokenResource PeriodSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_State"
+                                               Margin="8,0,0,0"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="6"
+                                                Margin="20,0,0,0"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="{TemplateBinding TotalText}" Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_Total"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </StackPanel>
+                                </WrapPanel>
+                                <StackPanel Name="PART_Legend"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:SmallMultiplesTokenResource KeyGap}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:SmallMultiplesTokenResource KeyTextGap}">
+                                        <Border Width="{arc:SmallMultiplesTokenResource KeyWidth}"
+                                                Height="2"
+                                                CornerRadius="1"
+                                                VerticalAlignment="Center"
+                                                Background="{arc:ArcDesignTokenResource Series1}" />
+                                        <TextBlock Classes="legend" Text="{TemplateBinding SeriesLegendText}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:SmallMultiplesTokenResource KeyTextGap}">
+                                        <Line StartPoint="0,0.5"
+                                              EndPoint="14,0.5"
+                                              Width="{arc:SmallMultiplesTokenResource KeyWidth}"
+                                              Height="1"
+                                              VerticalAlignment="Center"
+                                              StrokeThickness="1"
+                                              StrokeDashArray="3,3"
+                                              Opacity="0.7"
+                                              Stroke="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Classes="legend" Text="{TemplateBinding GhostLegendText}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <Border Grid.Row="2"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <Panel Name="PART_GridHost">
+                                    <Border Name="PART_FocusRing"
+                                            IsVisible="False"
+                                            IsHitTestVisible="False"
+                                            Margin="2"
+                                            CornerRadius="0,0,18,18"
+                                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                                </Panel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <arc:LineChartsLiveRegion Name="PART_LiveRegion" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Header: the heading on the left and the controls on the right; when both do not fit, the controls wrap under it. -->
+        <Style Selector="^ /template/ arc|SmallMultiplesHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:SmallMultiplesTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^:phone /template/ arc|SmallMultiplesHeaderPanel#PART_Header">
+            <Setter Property="Margin" Value="{arc:SmallMultiplesTokenResource PhoneHeaderPadding}" />
+        </Style>
+
+        <!-- Readout: the period, its position and the total; the legend on the right (under it below 640). -->
+        <Style Selector="^ /template/ Grid#PART_Readout">
+            <Setter Property="Margin" Value="{arc:SmallMultiplesTokenResource ReadoutPadding}" />
+        </Style>
+        <Style Selector="^:phone /template/ Grid#PART_Readout">
+            <Setter Property="Margin" Value="{arc:SmallMultiplesTokenResource PhoneReadoutPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Legend">
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Margin" Value="16,0,0,0" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Legend">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.legend">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

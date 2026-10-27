@@ -1,0 +1,138 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Revenue explorer (Arc Analytics › Revenue explorer, design reference): flat on the page (no frame unless you set
+        Background / BorderBrush), padding 16 / 20 / 20, sections 20 apart: the header (title, range text and the range
+        buttons), the three headline numbers, the toolbar (series chips and the compare switch), the self-drawn chart and the
+        self-drawn overview strip, plus the hidden screen-reader table and live region. Under 560 (:tight) paddings are 16;
+        under 440 (:stacked) the range buttons take their own row and the numbers stack. The plot switches to its compact
+        height itself under 600. Values a state changes are styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:RevenueExplorer}" TargetType="arc:RevenueExplorer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:RevenueExplorerTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="NarrowWidth" Value="{arc:RevenueExplorerTokenResource NarrowWidth}" />
+        <Setter Property="StackedWidth" Value="{arc:RevenueExplorerTokenResource StackedWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:RevenueExplorerTokenResource CompactPlotWidth}" />
+        <Setter Property="MetricValueMinSize" Value="{arc:RevenueExplorerTokenResource MetricValueMinSize}" />
+        <Setter Property="MetricValueMaxSize" Value="{arc:RevenueExplorerTokenResource MetricValueMaxSize}" />
+        <Setter Property="MetricValueScale" Value="{arc:RevenueExplorerTokenResource MetricValueScale}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RevenueExplorer">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <StackPanel Name="PART_Sections">
+                            <arc:RevenueSplitPanel Name="PART_Header"
+                                                   ColumnGap="{arc:RevenueExplorerTokenResource HeaderColumnGap}"
+                                                   RowGap="{arc:RevenueExplorerTokenResource HeaderRowGap}">
+                                <StackPanel VerticalAlignment="Center" Spacing="{arc:RevenueExplorerTokenResource SubtitleGap}">
+                                    <TextBlock Name="PART_Title"
+                                               IsVisible="{TemplateBinding Title, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:RevenueExplorerTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:RevenueExplorerTokenResource TitleLetterSpacing}"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:AnalyticsTextSwap Name="PART_Subtitle"
+                                                           IsTabular="True"
+                                                           LineHeight="{arc:RevenueExplorerTokenResource BodyLineHeight}"
+                                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:AnalyticsSegmentSwitch Name="PART_Presets"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalAlignment="Right" />
+                            </arc:RevenueSplitPanel>
+
+                            <arc:RevenueKpiRow Name="PART_Metrics"
+                                               LineBrush="{arc:ArcDesignTokenResource Border}"
+                                               StackedPadding="{arc:RevenueExplorerTokenResource StackedMetricPadding}" />
+
+                            <arc:RevenueSplitPanel Name="PART_Toolbar"
+                                                   ColumnGap="{arc:RevenueExplorerTokenResource ToolbarColumnGap}"
+                                                   RowGap="{arc:RevenueExplorerTokenResource ToolbarRowGap}">
+                                <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:RevenueExplorerTokenResource ChipSpacing}">
+                                    <arc:RevenueSeriesChip Name="PART_NewChip" Series="New" FocusAdorner="{x:Null}" />
+                                    <arc:RevenueSeriesChip Name="PART_ExpansionChip" Series="Expansion" FocusAdorner="{x:Null}" />
+                                    <arc:RevenueSeriesChip Name="PART_ChurnChip" Series="Churn" FocusAdorner="{x:Null}" />
+                                </StackPanel>
+                                <arc:RevenueCompareSwitch Name="PART_Compare"
+                                                          VerticalAlignment="Center"
+                                                          FocusAdorner="{x:Null}" />
+                            </arc:RevenueSplitPanel>
+
+                            <arc:RevenueChartView Name="PART_Plot"
+                                                  FocusAdorner="{x:Null}"
+                                                  ClipToBounds="False"
+                                                  PlotHeight="{arc:RevenueExplorerTokenResource PlotHeight}"
+                                                  CompactPlotHeight="{arc:RevenueExplorerTokenResource CompactPlotHeight}"
+                                                  CompactWidth="{arc:RevenueExplorerTokenResource CompactPlotWidth}"
+                                                  LeftInset="{arc:RevenueExplorerTokenResource PlotLeftInset}"
+                                                  BottomInset="{arc:RevenueExplorerTokenResource PlotBottomInset}"
+                                                  FocusRadius="{arc:RevenueExplorerTokenResource PlotFocusRadius}"
+                                                  PanelOffset="{arc:RevenueExplorerTokenResource PanelOffset}"
+                                                  PanelTop="{arc:RevenueExplorerTokenResource PanelTop}"
+                                                  DotRadius="{arc:RevenueExplorerTokenResource DotRadius}"
+                                                  CrosshairTop="{arc:RevenueExplorerTokenResource CrosshairTop}"
+                                                  LabelLeftInset="{arc:RevenueExplorerTokenResource LabelLeftInset}"
+                                                  LabelRightInset="{arc:RevenueExplorerTokenResource LabelRightInset}"
+                                                  NewAreaOpacity="{arc:RevenueExplorerTokenResource AreaOpacityNew}"
+                                                  ExpansionAreaOpacity="{arc:RevenueExplorerTokenResource AreaOpacityExpansion}"
+                                                  ChurnAreaOpacity="{arc:RevenueExplorerTokenResource AreaOpacityChurn}"
+                                                  PrimaryLineWidth="{arc:RevenueExplorerTokenResource LineWidthPrimary}"
+                                                  SecondaryLineWidth="{arc:RevenueExplorerTokenResource LineWidthSecondary}" />
+
+                            <arc:RevenueOverviewView Name="PART_Overview"
+                                                     ClipToBounds="False"
+                                                     OverviewHeight="{arc:RevenueExplorerTokenResource OverviewHeight}"
+                                                     BrushHeight="{arc:RevenueExplorerTokenResource BrushHeight}"
+                                                     LeftInset="{arc:RevenueExplorerTokenResource PlotLeftInset}"
+                                                     HandleWidth="{arc:RevenueExplorerTokenResource HandleWidth}"
+                                                     GripWidth="{arc:RevenueExplorerTokenResource GripWidth}"
+                                                     GripHeight="{arc:RevenueExplorerTokenResource GripHeight}"
+                                                     WindowRadius="{arc:RevenueExplorerTokenResource WindowRadius}" />
+                        </StackPanel>
+                        <arc:RevenueDataTable Name="PART_Table" />
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:RevenueExplorerTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|RevenueKpiRow#PART_Metrics">
+            <Setter Property="InlinePadding" Value="{arc:RevenueExplorerTokenResource MetricPadding}" />
+        </Style>
+        <Style Selector="^:tight">
+            <Setter Property="Padding" Value="{arc:RevenueExplorerTokenResource NarrowBlockPadding}" />
+        </Style>
+        <Style Selector="^:tight /template/ StackPanel#PART_Sections">
+            <Setter Property="Spacing" Value="{arc:RevenueExplorerTokenResource NarrowSectionGap}" />
+        </Style>
+        <Style Selector="^:tight /template/ arc|RevenueKpiRow#PART_Metrics">
+            <Setter Property="InlinePadding" Value="{arc:RevenueExplorerTokenResource NarrowMetricPadding}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

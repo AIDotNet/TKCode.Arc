@@ -1,0 +1,261 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+    <!--
+        Choropleth explorer (Arc Analytics › Choropleth explorer, design reference only, ADR 0024): a header (title and
+        description, the area switch and the metric switch), then the body: the map column (summary, map, legend) and the
+        list column (count, "Ranked by …", the ranked rows or the empty panel). The map, the legend and the rows are
+        self-drawn parts; the layout states (:wide, :compact, header placement) are set by the block from its own width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ChoroplethExplorer}" TargetType="arc:ChoroplethExplorer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="{arc:ChoroplethExplorerTokenResource BlockPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChoroplethExplorer">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Panel>
+                        <Grid Name="PART_Stack" RowDefinitions="Auto,Auto">
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Name="PART_TitleBlock" VerticalAlignment="Top">
+                                    <arc:AnalyticsTextSwap Name="PART_Title"
+                                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                           FontSize="{arc:ChoroplethExplorerTokenResource TitleSize}"
+                                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                           LineHeight="{arc:ChoroplethExplorerTokenResource TitleLineHeight}"
+                                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Description"
+                                               Margin="0,2,0,0"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:ChoroplethExplorerTokenResource DescriptionLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <Grid Name="PART_Controls"
+                                      Grid.Column="1"
+                                      ColumnDefinitions="Auto,*,Auto"
+                                      RowDefinitions="Auto,Auto"
+                                      VerticalAlignment="Top">
+                                    <arc:MorphSelect Name="PART_AreaSwitch" VerticalAlignment="Top" />
+                                    <arc:SegmentedControl Name="PART_MetricSwitch"
+                                                          Grid.Column="2"
+                                                          VerticalAlignment="Top"
+                                                          arc:AnalyticsSegmented.Spring="Smooth" />
+                                </Grid>
+                            </Grid>
+
+                            <arc:ChoroplethBodyPanel Name="PART_Body"
+                                                     Grid.Row="1"
+                                                     SideWidth="{arc:ChoroplethExplorerTokenResource SideWidth}"
+                                                     ColumnGap="{arc:ChoroplethExplorerTokenResource ColumnGap}"
+                                                     StackGap="{arc:ChoroplethExplorerTokenResource StackGap}">
+                                <Grid Name="PART_Main"
+                                      RowDefinitions="Auto,Auto,Auto"
+                                      RowSpacing="{arc:ChoroplethExplorerTokenResource MainGap}">
+                                    <Grid Name="PART_Summary" ColumnDefinitions="*,Auto">
+                                        <StackPanel VerticalAlignment="Top">
+                                            <arc:AnalyticsTextSwap Name="PART_SummaryName"
+                                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                                   LineHeight="19.6"
+                                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <WrapPanel Orientation="Horizontal">
+                                                <arc:AnalyticsCountUp Name="PART_Headline"
+                                                                      Margin="0,0,10,0"
+                                                                      FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                                      Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                                <arc:AnalyticsTextSwap Name="PART_HeadlineLabel"
+                                                                       VerticalAlignment="Bottom"
+                                                                       Margin="0,0,0,5"
+                                                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                                       LineHeight="16.8"
+                                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                            </WrapPanel>
+                                        </StackPanel>
+                                        <arc:PresenceHost Name="PART_BackPresence"
+                                                          Grid.Column="1"
+                                                          Mode="Fade"
+                                                          IsPresent="False"
+                                                          VerticalAlignment="Top"
+                                                          HorizontalAlignment="Right">
+                                            <arc:ChoroplethBackButton Name="PART_Back" />
+                                        </arc:PresenceHost>
+                                    </Grid>
+                                    <arc:ChoroplethMapView Name="PART_Map" Grid.Row="1" />
+                                    <StackPanel Grid.Row="2" Spacing="4">
+                                        <arc:ChoroplethLegend Name="PART_Legend"
+                                                              HorizontalAlignment="Left"
+                                                              RampWidth="{arc:ChoroplethExplorerTokenResource RampWidth}" />
+                                        <arc:AnalyticsTextSwap Name="PART_LegendCaption"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               LineHeight="16.8"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Name="PART_Side" RowDefinitions="Auto,*" RowSpacing="8">
+                                    <Grid Margin="2,0" ColumnDefinitions="*,Auto">
+                                        <arc:AnalyticsTextSwap Name="PART_SideCount"
+                                                               VerticalAlignment="Bottom"
+                                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               LineHeight="17"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <arc:AnalyticsTextSwap Name="PART_SideNote"
+                                                               Grid.Column="1"
+                                                               VerticalAlignment="Bottom"
+                                                               TextAlignment="Right"
+                                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                               LineHeight="16.8"
+                                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Grid>
+                                    <Panel Grid.Row="1">
+                                        <ScrollViewer Name="PART_Scroller"
+                                                      Margin="-6,0"
+                                                      Padding="6,0"
+                                                      HorizontalScrollBarVisibility="Disabled"
+                                                      VerticalScrollBarVisibility="Auto">
+                                            <arc:ChoroplethRankList Name="PART_List" />
+                                        </ScrollViewer>
+                                        <StackPanel Name="PART_Empty" IsVisible="False" Margin="4,16" Spacing="6">
+                                            <TextBlock Name="PART_EmptyTitle"
+                                                       TextWrapping="Wrap"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                            <TextBlock Name="PART_EmptyText"
+                                                       Margin="0,0,0,10"
+                                                       TextWrapping="Wrap"
+                                                       LineHeight="19.6"
+                                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <arc:ChoroplethBackButton Name="PART_EmptyBack" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                    </Panel>
+                                </Grid>
+                            </arc:ChoroplethBodyPanel>
+                        </Grid>
+                        <arc:AnalyticsAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Grid#PART_Stack">
+            <Setter Property="RowSpacing" Value="{arc:ChoroplethExplorerTokenResource SectionGap}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Summary">
+            <Setter Property="Height" Value="{arc:ChoroplethExplorerTokenResource SummaryHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AnalyticsCountUp#PART_Headline">
+            <Setter Property="FontSize" Value="{arc:ChoroplethExplorerTokenResource HeadlineSize}" />
+            <Setter Property="LineHeight" Value="33.6" />
+        </Style>
+
+        <Style Selector="^:card">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="CornerRadius" Value="{arc:ChoroplethExplorerTokenResource CardRadius}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:ChoroplethExplorerTokenResource CompactBlockPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Stack">
+            <Setter Property="RowSpacing" Value="{arc:ChoroplethExplorerTokenResource CompactSectionGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Summary">
+            <Setter Property="Height" Value="{arc:ChoroplethExplorerTokenResource CompactSummaryHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|AnalyticsCountUp#PART_Headline">
+            <Setter Property="FontSize" Value="{arc:ChoroplethExplorerTokenResource CompactHeadlineSize}" />
+            <Setter Property="LineHeight" Value="26.4" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The pill that zooms back out: arrow and text, 36 high, surface and border; the pointer tints it, pressing presses it in. -->
+    <ControlTheme x:Key="{x:Type arc:ChoroplethBackButton}" TargetType="arc:ChoroplethBackButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Padding" Value="{arc:ChoroplethExplorerTokenResource BackPadding}" />
+        <Setter Property="Height" Value="{arc:ChoroplethExplorerTokenResource BackHeight}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ChoroplethBackButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowLeft}"
+                                          Size="16"
+                                          StrokeThickness="1.75"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

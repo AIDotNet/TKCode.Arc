@@ -1,0 +1,593 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The integrations directory (Arc Integrations, design reference). Framed: a card with a 1px Border, radius 16,
+        Surface, no shadow (clipped to its corners so the last row's hover tint follows them); flat: no frame. From the
+        top: the header (title 16/17.6 medium and subtitle 13/18.2 TextSecondary at the left, the 260-wide search at the
+        right; below 720 the search drops under the title at full width), the filter row, then 12 below it the list frame:
+        a 1px Border line, the rows (or the empty state) inside a Smooth height spring. Running text is 13/18.2, −0.13.
+    -->
+    <ControlTheme x:Key="{x:Type arc:Integrations}" TargetType="arc:Integrations">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:IntegrationsTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        <Setter Property="NarrowWidth" Value="{arc:IntegrationsTokenResource NarrowWidth}" />
+        <Setter Property="TightWidth" Value="{arc:IntegrationsTokenResource TightWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:IntegrationsTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:Integrations">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <StackPanel>
+                            <Grid Name="PART_Header" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Name="PART_Intro"
+                                            Grid.Column="0"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:IntegrationsTokenResource SubtitleGap}">
+                                    <TextBlock Name="PART_Title"
+                                               Focusable="True"
+                                               IsTabStop="False"
+                                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:IntegrationsTokenResource TitleLineHeight}"
+                                               LetterSpacing="{arc:IntegrationsTokenResource TitleLetterSpacing}"
+                                               TextTrimming="CharacterEllipsis"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Subtitle"
+                                               LineHeight="{arc:IntegrationsTokenResource CopyLineHeight}"
+                                               LetterSpacing="{arc:IntegrationsTokenResource CopyLetterSpacing}"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <arc:SearchField Name="PART_Search"
+                                                 Grid.Column="1"
+                                                 Size="Small"
+                                                 IsLabelVisible="False"
+                                                 IsVisible="{TemplateBinding ShowSearch}"
+                                                 VerticalAlignment="Center" />
+                            </Grid>
+                            <arc:IntegrationFilterBar Name="PART_Filters" />
+                            <Border Name="PART_ListFrame"
+                                    BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}">
+                                <arc:SpringSizeDecorator Name="PART_ListHeight"
+                                                         Axis="Height"
+                                                         Spring="Smooth"
+                                                         CrossClipOverflow="8">
+                                    <Panel>
+                                        <arc:DeveloperListPanel Name="PART_Rows" VerticalAlignment="Top" />
+                                        <arc:ArcContentSwap Name="PART_Empty"
+                                                            Mode="BlurSwap"
+                                                            VerticalAlignment="Top"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            VerticalContentAlignment="Top" />
+                                    </Panel>
+                                </arc:SpringSizeDecorator>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:DeveloperAnnouncer Name="PART_Announcer" />
+                    <arc:Drawer Name="PART_Drawer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|SearchField#PART_Search">
+            <Setter Property="Width" Value="{arc:IntegrationsTokenResource SearchWidth}" />
+            <Setter Property="Margin" Value="24,0,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|IntegrationFilterBar#PART_Filters">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource FilterPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_ListFrame">
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+
+        <Style Selector="^:not(:framed) /template/ Border#PART_Card">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+
+        <!-- Below 720: the search drops under the title at full width (12 between). -->
+        <Style Selector="^:narrow /template/ arc|SearchField#PART_Search">
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+        <Style Selector="^:tight /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource TightHeaderPadding}" />
+        </Style>
+        <Style Selector="^:tight /template/ arc|IntegrationFilterBar#PART_Filters">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource TightFilterPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Header">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource CompactHeaderPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|IntegrationFilterBar#PART_Filters">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource CompactFilterPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The filter row: pills 28 high, 12 at the sides, 6 between text and count, 2 apart. Text 13/18.2 medium,
+        TextSecondary, Foreground on hover and when checked; the tabular count TextMuted, TextSecondary when checked; both
+        change color in 160ms. The highlight (SurfaceMuted, a 1px Border edge, pill radius) glides on Settle. Compact,
+        the row scrolls sideways without a bar.
+    -->
+    <ControlTheme x:Key="{x:Type arc:IntegrationFilterBar}" TargetType="arc:IntegrationFilterBar">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationFilterBar">
+                <ScrollViewer Name="PART_Scroll"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Disabled"
+                              ClipToBounds="False">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Highlight"
+                                              Fill="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        <WrapPanel Name="PART_Pills"
+                                   Orientation="Horizontal"
+                                   ItemSpacing="{arc:IntegrationsTokenResource FilterGap}"
+                                   LineSpacing="{arc:IntegrationsTokenResource FilterGap}" />
+                    </Panel>
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:compact /template/ ScrollViewer#PART_Scroll">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:IntegrationFilterPill}" TargetType="arc:IntegrationFilterPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:IntegrationsTokenResource FilterHeight}" />
+        <Setter Property="Padding" Value="{arc:IntegrationsTokenResource FilterInlinePadding}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationFilterPill">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:IntegrationsTokenResource FilterInnerGap}">
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       VerticalAlignment="Center"
+                                       LineHeight="{arc:IntegrationsTokenResource CopyLineHeight}"
+                                       LetterSpacing="{arc:IntegrationsTokenResource CopyLetterSpacing}"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <arc:ArcContentSwap Name="PART_Count"
+                                                Mode="Roll"
+                                                ClipToBounds="True"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Right"
+                                                AutomationProperties.AccessibilityView="Raw" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Count">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|ArcContentSwap#PART_Count">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A row: at least 60 high, padding 10 / 20 (16 when tight; compact 12 / 16, at least 72.9 and top-aligned), columns
+        20 / * / auto 12 apart. A 1px BorderSubtle line above every row but the first. Hover tints an inner layer with the
+        muted surface mixed 55% into the surface (160ms). The name is 13/14.3 medium −0.39 (display font), the category
+        12/16.8 TextMuted 8 after it, the description 12/16.8 TextSecondary on one line (two when compact).
+    -->
+    <ControlTheme x:Key="{x:Type arc:IntegrationRow}" TargetType="arc:IntegrationRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MinHeight" Value="{arc:IntegrationsTokenResource RowMinHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationRow">
+                <Panel>
+                    <Border Name="PART_Hover" Background="{TemplateBinding Background}" />
+                    <Border Name="PART_Divider"
+                            Height="1"
+                            VerticalAlignment="Top"
+                            IsVisible="False"
+                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                    <Grid Name="PART_Grid" ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                        <arc:IntegrationMark Name="PART_Mark"
+                                             Grid.Column="0"
+                                             Item="{TemplateBinding Item}"
+                                             VerticalAlignment="Center" />
+                        <StackPanel Name="PART_Body"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:IntegrationsTokenResource BodyGap}">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:IntegrationsTokenResource NameGap}">
+                                <arc:IntegrationNameButton Name="PART_Name"
+                                                           Content="{TemplateBinding AppName}"
+                                                           VerticalAlignment="Bottom" />
+                                <TextBlock Name="PART_Category"
+                                           Text="{TemplateBinding CategoryText}"
+                                           VerticalAlignment="Bottom"
+                                           Margin="0,0,0,-1"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="{arc:IntegrationsTokenResource SmallLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Description"
+                                       Text="{TemplateBinding Description}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:IntegrationsTokenResource SmallLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       MaxLines="1"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </StackPanel>
+                        <StackPanel Name="PART_Actions"
+                                    Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:IntegrationsTokenResource ActionsGap}">
+                            <arc:IntegrationReveal Name="PART_ConfigureHost" VerticalAlignment="Center">
+                                <arc:Button Name="PART_Configure" Variant="Ghost" Size="Small" />
+                            </arc:IntegrationReveal>
+                            <arc:IntegrationConnectPill Name="PART_Pill" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Grid#PART_Grid">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource RowPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|IntegrationMark#PART_Mark">
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Actions">
+            <Setter Property="Margin" Value="12,0,0,0" />
+        </Style>
+        <Style Selector="^:divided /template/ Border#PART_Divider">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:IntegrationsTokenResource RowHoverBackground}" />
+        </Style>
+        <Style Selector="^:tight /template/ Grid#PART_Grid">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource TightRowPadding}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="MinHeight" Value="{arc:IntegrationsTokenResource CompactRowMinHeight}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Grid">
+            <Setter Property="Margin" Value="{arc:IntegrationsTokenResource CompactRowPadding}" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|IntegrationMark#PART_Mark">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="0,-1,12,0" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Body">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Actions">
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Category">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Description">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="MaxLines" Value="2" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:IntegrationNameButton}" TargetType="arc:IntegrationNameButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationNameButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <TextBlock Text="{TemplateBinding Content}"
+                               Background="Transparent"
+                               LineHeight="{arc:IntegrationsTokenResource NameLineHeight}"
+                               LetterSpacing="{arc:IntegrationsTokenResource NameLetterSpacing}"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{TemplateBinding Foreground}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The status pill: 32 high, padding 10 / 12, pill radius, 1px edge; the face (16 icon slot, 6, text 13 medium) is
+        blur-swapped and its width follows on Smooth. Fill and edge are set in code per state (240ms here); the press dips
+        to .985 on Quick. Keyboard focus: a 2px ring 2px outside, pill shaped.
+    -->
+    <ControlTheme x:Key="{x:Type arc:IntegrationConnectPill}" TargetType="arc:IntegrationConnectPill">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:IntegrationsTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:IntegrationsTokenResource PillPadding}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="FontSize" Value="{arc:IntegrationsTokenResource CopySize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Gap" Value="{arc:IntegrationsTokenResource PillGap}" />
+        <Setter Property="IconSlot" Value="{arc:IntegrationsTokenResource PillIconSlot}" />
+        <Setter Property="PlusSize" Value="{arc:IntegrationsTokenResource PlusSize}" />
+        <Setter Property="PlusStroke" Value="{arc:IntegrationsTokenResource PlusStroke}" />
+        <Setter Property="CheckStroke" Value="{arc:IntegrationsTokenResource CheckStroke}" />
+        <Setter Property="SpinnerSize" Value="{arc:IntegrationsTokenResource SpinnerSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationConnectPill">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <arc:SpringSizeDecorator Axis="Width"
+                                                 Spring="Smooth"
+                                                 CrossClipOverflow="12"
+                                                 ClipOverflow="4"
+                                                 VerticalAlignment="Center">
+                            <arc:ArcContentSwap Name="PART_Phase"
+                                                Mode="BlurSwap"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalAlignment="Center" />
+                        </arc:SpringSizeDecorator>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Surface">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#PART_Surface">
+            <Setter Property="RenderTransform" Value="scale(0.985)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Quick" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The empty list: padding 32 / 16 / 24, centered; title 14/19.6 medium, hint 13/18.2 TextMuted, a small secondary button 8 below. -->
+    <ControlTheme x:Key="{x:Type arc:IntegrationEmpty}" TargetType="arc:IntegrationEmpty">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationEmpty">
+                <StackPanel Margin="{arc:IntegrationsTokenResource EmptyPadding}"
+                            HorizontalAlignment="Center"
+                            Spacing="{arc:IntegrationsTokenResource EmptyGap}">
+                    <TextBlock Text="{TemplateBinding Title}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                               LineHeight="19.6"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Text="{TemplateBinding Hint}"
+                               IsVisible="{TemplateBinding Hint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               LineHeight="{arc:IntegrationsTokenResource CopyLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <arc:Button Name="PART_Action"
+                                Variant="Secondary"
+                                Size="Small"
+                                HorizontalAlignment="Center"
+                                Margin="0,8,0,0"
+                                Content="{TemplateBinding ActionText}"
+                                IsVisible="{TemplateBinding ActionText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The drawer body: the status block (the pill, then 12 below the status line 14/19.6 TextSecondary with a 28px
+        avatar 8 before it), 24 below it the permissions (heading 14 medium display, lead 14 TextMuted 4 below, list 12
+        below: rows padded 12 / 0 with a 1px Border line above each and below the last, a 16px TextMuted icon 12 before
+        the 14 Foreground text), then the settings that open once connected (frame reaching 8 past the sides, padding
+        24 / 8 / 8): the sync frequency menu with its hint, and 24 below a danger zone (a 1px Border line, 20 padding)
+        with the hold button and its 12/16.8 TextMuted note 12 below.
+    -->
+    <ControlTheme x:Key="{x:Type arc:IntegrationSheet}" TargetType="arc:IntegrationSheet">
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationSheet">
+                <StackPanel>
+                    <StackPanel Spacing="{arc:IntegrationsTokenResource SheetStatusGap}">
+                        <arc:IntegrationConnectPill Name="PART_Pill" HorizontalAlignment="Left" />
+                        <StackPanel Orientation="Horizontal" Spacing="8" MinHeight="28">
+                            <arc:Avatar Name="PART_Avatar"
+                                        Size="Small"
+                                        VerticalAlignment="Center"
+                                        IsVisible="{TemplateBinding HasPerson}" />
+                            <arc:ArcContentSwap Name="PART_Meta"
+                                                Mode="BlurSwap"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Left"
+                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Margin="0,24,0,0">
+                        <TextBlock Text="{TemplateBinding AccessTitle}"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LetterSpacing="-0.42"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:ArcContentSwap Name="PART_Lead"
+                                            Mode="BlurSwap"
+                                            Margin="0,4,0,0"
+                                            HorizontalContentAlignment="Left"
+                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <StackPanel Name="PART_Scopes" Margin="0,12,0,0" />
+                    </StackPanel>
+                    <arc:SpringSizeDecorator Name="PART_Settings"
+                                             Axis="Height"
+                                             Spring="Smooth"
+                                             IsExpanded="False"
+                                             Margin="{arc:IntegrationsTokenResource SettingsMargin}">
+                        <StackPanel Name="PART_SettingsBody"
+                                    Margin="{arc:IntegrationsTokenResource SettingsPadding}"
+                                    Spacing="{arc:IntegrationsTokenResource SheetSectionGap}">
+                            <arc:Select Name="PART_Frequency" IsVisible="{TemplateBinding HasFrequency}" />
+                            <Border BorderThickness="0,1,0,0"
+                                    BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                    Padding="0,20,0,0">
+                                <StackPanel Spacing="{arc:IntegrationsTokenResource DangerGap}">
+                                    <arc:HoldToConfirm Name="PART_Hold" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{TemplateBinding DisconnectNote}"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               LineHeight="{arc:IntegrationsTokenResource SmallLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </arc:SpringSizeDecorator>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:IntegrationScopeRow}" TargetType="arc:IntegrationScopeRow">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:IntegrationScopeRow">
+                <Border Name="PART_Line"
+                        BorderThickness="0,1,0,0"
+                        BorderBrush="{arc:ArcDesignTokenResource Border}"
+                        Padding="{arc:IntegrationsTokenResource ScopePadding}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="{arc:IntegrationsTokenResource ScopeIconSize}"
+                                      StrokeThickness="1.75"
+                                      VerticalAlignment="Top"
+                                      Margin="0,2,12,0"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding Text}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   LineHeight="19.6"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[IsLast=True] /template/ Border#PART_Line">
+            <Setter Property="BorderThickness" Value="0,1,0,1" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
