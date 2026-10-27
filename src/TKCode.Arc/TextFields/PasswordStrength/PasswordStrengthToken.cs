@@ -20,7 +20,7 @@ internal sealed class PasswordStrengthToken : AbstractControlDesignToken
     public double SegmentHeight { get; set; }
     public double SegmentGap { get; set; }
 
-    /// <summary>The strength word's fixed slot: 4.5rem, 12px from the meter, 1.4em tall.</summary>
+    /// <summary>The strength word's minimum slot: 4.5rem, growing for localized labels, 12px from the meter, 1.4em tall.</summary>
     public double WordWidth { get; set; }
     public Thickness WordMargin { get; set; }
     public double WordLineHeight { get; set; }
