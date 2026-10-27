@@ -29,7 +29,7 @@ def read(rel):
 
 
 EXPECTED_CATEGORIES = [
-    ("Buttons", "buttons", 10), ("Gestures", "gestures", 3), ("Menus", "menus", 3),
+    ("Buttons", "buttons", 11), ("Gestures", "gestures", 3), ("Menus", "menus", 3),
     ("TextFields", "text-fields", 7), ("SpecialInputs", "special-inputs", 7), ("Selects", "selects", 5),
     ("Toggles", "toggles", 6), ("Sliders", "sliders", 2), ("Pickers", "pickers", 5), ("Editors", "editors", 3),
     ("Navigation", "navigation", 3), ("Expand", "expand", 5), ("Overlays", "overlays", 6),
@@ -37,7 +37,7 @@ EXPECTED_CATEGORIES = [
     ("Charts", "charts", 13), ("Tables", "tables", 7), ("Activity", "activity", 3), ("Media", "media", 3),
     ("TextEffects", "text-effects", 4),
 ]
-EXPECTED_PHASES = [2, 6, 7, 19, 8, 13, 17, 17, 12, 10]
+EXPECTED_PHASES = [2, 6, 7, 19, 8, 14, 17, 17, 12, 10]
 
 # ---------------------------------------------------------------- 1. inventory
 inv = read("components/overview.md")
@@ -55,8 +55,8 @@ for line in inv.splitlines():
         rows.append(dict(order=int(m.group(1)), cls=m.group(2), slug=m.group(3), phase=int(m.group(4)),
                          deps=deps, prims=prims, category=current_cat))
 
-if len(rows) != 111:
-    err(f"inventory: expected 111 rows, found {len(rows)}")
+if len(rows) != 112:
+    err(f"inventory: expected 112 rows, found {len(rows)}")
 if len({r['cls'] for r in rows}) != len(rows):
     err("inventory: duplicate class names")
 if len({r['slug'] for r in rows}) != len(rows):

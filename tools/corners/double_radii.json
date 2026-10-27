@@ -28,5 +28,6 @@
   "VectorSearch.NodeRadius": "dot",
   "WorkflowMinimap.NodeRadius": "dot",
   "WorkflowCanvas.GridDotRadius": "dot",
-  "PromptStudio.CornerGap": "ignore"
+  "PromptStudio.CornerGap": "ignore",
+  "BudgetVariance.BandRadius": "corner"
 }

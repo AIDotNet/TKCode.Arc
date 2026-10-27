@@ -39,6 +39,7 @@ arrow-up-narrow-wide list-filter
 gauge layers-3 brain file-code file-spreadsheet languages lightbulb wrench clipboard-paste square-pen pen-line bug
 trophy equal thumbs-down git-compare-arrows arrow-up-from-line scan-text text-select square-dashed-text
 panel-right-close shield-check cpu book-open list-todo layout-template
+heading-4 heading-5 heading-6 superscript subscript replace replace-all a-large-small
 """.split()
 
 

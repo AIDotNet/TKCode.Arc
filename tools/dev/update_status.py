@@ -31,4 +31,4 @@ for i, line in enumerate(lines):
             lines[i] = " | ".join(cells)
             changed += 1
 open(doc, "w", encoding="utf-8").write("\n".join(lines))
-print(f"implemented: {done}/111, rows updated: {changed}")
+print(f"implemented: {done}/112, rows updated: {changed}")

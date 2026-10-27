@@ -2,7 +2,7 @@
 
 Usage: python3 -I tools/dev/fetch_arc_sources.py <repo-root> <out-dir>
 Writes <out-dir>/<slug>/<file> plus <out-dir>/<slug>/_meta.json (title, description, docs). Uses curl.
-Pro components are never requested: the catalog lists only the 111 free components.
+Pro components are never requested: the catalog lists only the 112 free components.
 """
 import json, os, re, subprocess, sys
 
