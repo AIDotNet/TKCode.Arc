@@ -270,17 +270,36 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
     private readonly MotionValue<double> _opacity;
     private readonly Face _format;
     private readonly Face _link;
+    private readonly Face _color;
+    private readonly Face _sizes;
     private bool _shown;
     private bool _below;
-    private bool _linkFace;
+    private FaceKind _face;
+    private bool _docs;
     private double _rootWidth;
+
+    private enum FaceKind
+    {
+        Format,
+        Link,
+        Color,
+        Size
+    }
 
     public RichTextEditorToolbar()
     {
         Bold = new RichTextEditorToolButton(ArcIcons.Bold, "Bold", true);
         Italic = new RichTextEditorToolButton(ArcIcons.Italic, "Italic", true);
         Strike = new RichTextEditorToolButton(ArcIcons.Strikethrough, "Strikethrough", true);
+        Underline = new RichTextEditorToolButton(ArcIcons.Underline, "Underline", true) { IsVisible = false };
         Code = new RichTextEditorToolButton(ArcIcons.Code, "Inline code", true);
+        Superscript = new RichTextEditorToolButton(ArcIcons.Superscript, "Superscript", true) { IsVisible = false };
+        Subscript = new RichTextEditorToolButton(ArcIcons.Subscript, "Subscript", true) { IsVisible = false };
+        Palette = new RichTextEditorToolButton(ArcIcons.Palette, "Text color") { IsVisible = false };
+        TextSize = new RichTextEditorToolButton(ArcIcons.ALargeSmall, "Text size") { IsVisible = false };
+        SizeBack = new RichTextEditorToolButton(ArcIcons.ArrowLeft, "Back to formatting");
+        Todo = new RichTextEditorToolButton(ArcIcons.ListTodo, "To-do list", true) { IsVisible = false };
+        ColorBack = new RichTextEditorToolButton(ArcIcons.ArrowLeft, "Back to formatting");
         Link = new RichTextEditorToolButton(ArcIcons.Link, "Link", true);
         Heading1 = new RichTextEditorToolButton(ArcIcons.Heading1, "Heading 1", true);
         Heading2 = new RichTextEditorToolButton(ArcIcons.Heading2, "Heading 2", true);
@@ -292,6 +311,12 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         SetTip(Bold, "Bold (⌘B)");
         SetTip(Italic, "Italic (⌘I)");
         SetTip(Strike, "Strikethrough (⌘⇧X)");
+        SetTip(Underline, "Underline (⌘U)");
+        SetTip(Superscript, "Superscript (⌘.)");
+        SetTip(Subscript, "Subscript (⌘,)");
+        SetTip(Palette, "Text color");
+        SetTip(TextSize, "Text size");
+        SetTip(Todo, "To-do list");
         SetTip(Code, "Inline code (⌘E)");
         SetTip(Link, "Link (⌘K)");
         SetTip(Heading1, "Heading 1");
@@ -300,11 +325,34 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
 
         Divider = new Border { Width = 1, Height = 18, Margin = new Thickness(4, 0) };
         ArcTokens.Bind(Divider, Border.BackgroundProperty, DesignTokens.ArcDesignTokenKind.Border);
-        BlockTools = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2, Children = { Divider, Heading1, Heading2, Quote } };
+        BlockTools = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2, Children = { Divider, Heading1, Heading2, Quote, Todo } };
         var formatRow = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2, Margin = new Thickness(4),
-            Children = { Bold, Italic, Strike, Code, Link, BlockTools }
+            Children = { Bold, Italic, Underline, Strike, Superscript, Subscript, Code, Link, Palette, TextSize, BlockTools }
+        };
+        TextSwatches = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2 };
+        FillSwatches = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2 };
+        var colorDivider = new Border { Width = 1, Height = 18, Margin = new Thickness(4, 0) };
+        ArcTokens.Bind(colorDivider, Border.BackgroundProperty, DesignTokens.ArcDesignTokenKind.Border);
+        var colorRow = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2, Margin = new Thickness(4),
+            Children = { ColorBack, TextSwatches, colorDivider, FillSwatches }
+        };
+        SizeOptions = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2 };
+        foreach (var (size, label, fontSize) in new[] { (RichTextSize.Small, "Small", 11d), (RichTextSize.Default, "Default", 13d), (RichTextSize.Large, "Large", 16d), (RichTextSize.ExtraLarge, "Extra large", 19d) })
+        {
+            var option = new RichTextEditorToolButton { IsToggle = true, Tag = size, Content = new TextBlock { Text = "A", FontSize = fontSize, FontWeight = FontWeight.Medium } };
+            AutomationProperties.SetName(option, "Text size: " + label);
+            Tooltip.SetTip(option, label);
+            option.Click += (_, _) => SizeChosen?.Invoke(size);
+            SizeOptions.Children.Add(option);
+        }
+        var sizeRow = new StackPanel
+        {
+            Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2, Margin = new Thickness(4),
+            Children = { SizeBack, SizeOptions }
         };
         LinkBox = SelectInputBox.Create();
         LinkBox.Width = 240;
@@ -320,9 +368,15 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         };
         _format = new Face(this, formatRow);
         _link = new Face(this, linkRow);
+        _color = new Face(this, colorRow);
+        _sizes = new Face(this, sizeRow);
         Host.Children.Add(formatRow);
         Host.Children.Add(linkRow);
+        Host.Children.Add(colorRow);
+        Host.Children.Add(sizeRow);
         _link.Hide();
+        _color.Hide();
+        _sizes.Hide();
 
         _size = new MotionValue<Size>(this, default, MotionVectors.Size);
         _position = new MotionValue<Point>(this, default, MotionVectors.Point);
@@ -347,6 +401,19 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
 
     public RichTextEditorToolButton Bold { get; }
     public RichTextEditorToolButton Italic { get; }
+    public RichTextEditorToolButton Underline { get; }
+    public RichTextEditorToolButton Superscript { get; }
+    public RichTextEditorToolButton Subscript { get; }
+    public RichTextEditorToolButton Palette { get; }
+    public RichTextEditorToolButton TextSize { get; }
+    public RichTextEditorToolButton SizeBack { get; }
+
+    /// <summary>The size face's options, one per <see cref="RichTextSize"/> (each button's <c>Tag</c>).</summary>
+    public StackPanel SizeOptions { get; }
+    public RichTextEditorToolButton Todo { get; }
+    public RichTextEditorToolButton ColorBack { get; }
+    public StackPanel TextSwatches { get; }
+    public StackPanel FillSwatches { get; }
     public RichTextEditorToolButton Strike { get; }
     public RichTextEditorToolButton Code { get; }
     public RichTextEditorToolButton Link { get; }
@@ -362,7 +429,94 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
 
     public bool IsShown => _shown;
 
-    public bool IsLinkFace => _linkFace;
+    public bool IsLinkFace => _face == FaceKind.Link;
+
+    public bool IsColorFace => _face == FaceKind.Color;
+
+    public bool IsSizeFace => _face == FaceKind.Size;
+
+    /// <summary>Raised when a text size is chosen on the size face.</summary>
+    public event Action<RichTextSize>? SizeChosen;
+
+    /// <summary>Opens the size face with <paramref name="current"/> checked, or closes it.</summary>
+    public void SetSizeFace(bool open, RichTextSize current = RichTextSize.Default, bool animate = true)
+    {
+        foreach (var option in SizeOptions.Children.OfType<RichTextEditorToolButton>())
+        {
+            option.IsChecked = option.Tag is RichTextSize size && size == current;
+        }
+        SetFace(open ? FaceKind.Size : FaceKind.Format, animate);
+    }
+
+    /// <summary>Raised when a swatch is chosen: whether it is a highlight (else a text color), and the color.</summary>
+    public event Action<bool, RichTextColor>? SwatchChosen;
+
+    /// <summary>Shows the Docs profile's buttons (underline, superscript, subscript, text color, to-do list) or hides them.</summary>
+    public void SetDocs(bool docs)
+    {
+        if (_docs == docs)
+        {
+            return;
+        }
+        _docs = docs;
+        Underline.IsVisible = docs;
+        Superscript.IsVisible = docs;
+        Subscript.IsVisible = docs;
+        Palette.IsVisible = docs;
+        TextSize.IsVisible = docs;
+        Todo.IsVisible = docs;
+        if (!docs && _face is FaceKind.Color or FaceKind.Size)
+        {
+            SetFace(FaceKind.Format, animate: false);
+        }
+        Refit();
+    }
+
+    /// <summary>Rebuilds the swatches from the editor's palette: each text color shown as a colored letter, each highlight as a filled square.</summary>
+    public void SetPalette(Func<RichTextColor, IBrush?> text, Func<RichTextColor, IBrush?> fill)
+    {
+        Fill(TextSwatches, isHighlight: false, text);
+        Fill(FillSwatches, isHighlight: true, fill);
+    }
+
+    private void Fill(StackPanel row, bool isHighlight, Func<RichTextColor, IBrush?> brushOf)
+    {
+        row.Children.Clear();
+        foreach (var color in Enum.GetValues<RichTextColor>())
+        {
+            var label = (isHighlight ? "Highlight: " : "Text color: ") + (color == RichTextColor.Default ? "None" : color.ToString());
+            var button = new RichTextEditorToolButton { IsToggle = false };
+            AutomationProperties.SetName(button, label);
+            Tooltip.SetTip(button, label);
+            var brush = brushOf(color);
+            if (isHighlight)
+            {
+                button.Content = new Border
+                {
+                    Width = 16, Height = 16, CornerRadius = new CornerRadius(4), Background = brush, BorderThickness = new Thickness(1)
+                };
+                if (color == RichTextColor.Default)
+                {
+                    ArcTokens.Bind((Border)button.Content, Border.BorderBrushProperty, DesignTokens.ArcDesignTokenKind.BorderStrong);
+                }
+            }
+            else
+            {
+                var glyph = new ArcGlyph { Data = ArcIcons.Type, Size = 16, StrokeThickness = 2 };
+                if (brush is not null)
+                {
+                    button.Foreground = brush;
+                }
+                button.Content = glyph;
+            }
+            var captured = color;
+            button.Click += (_, _) => SwatchChosen?.Invoke(isHighlight, captured);
+            row.Children.Add(button);
+        }
+    }
+
+    /// <summary>Opens or closes the color face.</summary>
+    public void SetColorFace(bool color, bool animate = true) => SetFace(color ? FaceKind.Color : FaceKind.Format, animate);
 
     /// <summary>The format face's buttons in keyboard order (Alt+F10, ArrowLeft and ArrowRight).</summary>
     public IEnumerable<RichTextEditorToolButton> FormatButtons
@@ -371,14 +525,32 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         {
             yield return Bold;
             yield return Italic;
+            if (_docs)
+            {
+                yield return Underline;
+            }
             yield return Strike;
+            if (_docs)
+            {
+                yield return Superscript;
+                yield return Subscript;
+            }
             yield return Code;
             yield return Link;
+            if (_docs)
+            {
+                yield return Palette;
+                yield return TextSize;
+            }
             if (BlockTools.IsVisible)
             {
                 yield return Heading1;
                 yield return Heading2;
                 yield return Quote;
+                if (_docs)
+                {
+                    yield return Todo;
+                }
             }
         }
     }
@@ -392,7 +564,7 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         return new Size(size.Width + 2, size.Height + 2);
     }
 
-    private Face Current => _linkFace ? _link : _format;
+    private Face Current => _face switch { FaceKind.Link => _link, FaceKind.Color => _color, FaceKind.Size => _sizes, _ => _format };
 
     /// <summary>Opens at, or glides to, <paramref name="x"/> (selection centre) and <paramref name="y"/> (top, or bottom when <paramref name="below"/>).</summary>
     public void Present(double x, double y, bool below, double rootWidth)
@@ -476,24 +648,26 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         if (!_shown)
         {
             IsVisible = false;
-            if (_linkFace)
+            if (_face != FaceKind.Format)
             {
-                SetLinkFace(false, animate: false);
+                SetFace(FaceKind.Format, animate: false);
             }
         }
     }
 
     /// <summary>Switches between the format face and the link face.</summary>
-    public void SetLinkFace(bool link, bool animate = true)
+    public void SetLinkFace(bool link, bool animate = true) => SetFace(link ? FaceKind.Link : FaceKind.Format, animate);
+
+    private void SetFace(FaceKind face, bool animate)
     {
-        if (link == _linkFace)
+        if (face == _face)
         {
             return;
         }
-        _linkFace = link;
-        var incoming = link ? _link : _format;
-        var outgoing = link ? _format : _link;
-        var direction = link ? 1 : -1;
+        var outgoing = Current;
+        _face = face;
+        var incoming = Current;
+        var direction = face == FaceKind.Format ? -1 : 1;
         var level = animate && _shown ? ArcMotion.GetEffectiveLevel(this) : ArcMotionLevel.Off;
         incoming.Show(direction, level);
         outgoing.Leave(direction, level);
@@ -553,8 +727,11 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
     {
         var format = FaceSize(_format);
         var link = FaceSize(_link);
+        var color = FaceSize(_color);
+        var sizes = FaceSize(_sizes);
         Host.Measure(Size.Infinity);
-        return new Size(Math.Max(format.Width, link.Width), Math.Max(format.Height, link.Height));
+        return new Size(Math.Max(Math.Max(format.Width, sizes.Width), Math.Max(link.Width, color.Width)),
+            Math.Max(Math.Max(format.Height, sizes.Height), Math.Max(link.Height, color.Height)));
     }
 
     /// <summary>One face of the toolbar: it slides in from the side it comes from and unblurs, or fades under reduced motion.</summary>
@@ -658,22 +835,32 @@ internal sealed record RichTextEditorSlashItem(RichTextBlockType Type, string La
         new(RichTextBlockType.Heading1, "Heading 1", "#", "title h1 large", ArcIcons.Heading1),
         new(RichTextBlockType.Heading2, "Heading 2", "##", "subtitle h2 section", ArcIcons.Heading2),
         new(RichTextBlockType.Heading3, "Heading 3", "###", "h3 small", ArcIcons.Heading3),
+        new(RichTextBlockType.Heading4, "Heading 4", "####", "h4 subheading", ArcIcons.Heading4),
+        new(RichTextBlockType.Heading5, "Heading 5", "#####", "h5", ArcIcons.Heading5),
+        new(RichTextBlockType.Heading6, "Heading 6", "######", "h6 smallest", ArcIcons.Heading6),
         new(RichTextBlockType.BulletedList, "Bulleted list", "-", "bullet unordered ul points", ArcIcons.List),
         new(RichTextBlockType.NumberedList, "Numbered list", "1.", "ordered ol steps numbers", ArcIcons.ListOrdered),
-        new(RichTextBlockType.Quote, "Quote", ">", "blockquote citation callout", ArcIcons.Quote),
+        new(RichTextBlockType.TodoList, "To-do list", "[]", "todo task checkbox checklist", ArcIcons.ListTodo),
+        new(RichTextBlockType.Toggle, "Toggle list", string.Empty, "toggle collapse fold expand details disclosure", ArcIcons.ChevronRight),
+        new(RichTextBlockType.Quote, "Quote", ">", "blockquote citation", ArcIcons.Quote),
+        new(RichTextBlockType.Callout, "Callout", "!", "callout note tip warning highlight alert admonition", ArcIcons.Lightbulb),
         new(RichTextBlockType.CodeBlock, "Code block", "```", "pre snippet monospace", ArcIcons.SquareCode),
-        new(RichTextBlockType.Divider, "Divider", "---", "rule hr line separator", ArcIcons.Minus)
+        new(RichTextBlockType.Divider, "Divider", "---", "rule hr line separator", ArcIcons.Minus),
+        new(RichTextBlockType.Image, "Image", "![]()", "picture photo img upload file", ArcIcons.Image),
+        new(RichTextBlockType.TableCell, "Table", "| |", "grid cells rows columns", ArcIcons.Table)
     };
 
     /// <summary>Arc's filter: a word of the label or keywords starts with the query, or the label contains it.</summary>
-    public static List<RichTextEditorSlashItem> Filter(string query)
+    public static List<RichTextEditorSlashItem> Filter(string query, bool docs = false)
     {
         var q = query.Trim().ToLowerInvariant();
+        var available = docs ? All : All.Where(item => item.Type is not (RichTextBlockType.TodoList or RichTextBlockType.Callout or RichTextBlockType.Image or RichTextBlockType.TableCell
+            or RichTextBlockType.Heading4 or RichTextBlockType.Heading5 or RichTextBlockType.Heading6 or RichTextBlockType.Toggle)).ToArray();
         if (q.Length == 0)
         {
-            return All.ToList();
+            return available.ToList();
         }
-        return All.Where(item =>
+        return available.Where(item =>
             $"{item.Label} {item.Keywords}".ToLowerInvariant().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Any(word => word.StartsWith(q, StringComparison.Ordinal))
             || item.Label.ToLowerInvariant().Contains(q, StringComparison.Ordinal)).ToList();
     }

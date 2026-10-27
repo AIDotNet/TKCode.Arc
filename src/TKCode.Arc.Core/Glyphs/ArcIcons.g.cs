@@ -8,6 +8,7 @@ namespace TKCode.Arc;
 /// <summary>Lucide glyphs used inside Arc controls (24x24 viewBox, stroked).</summary>
 public static partial class ArcIcons
 {
+    public static Geometry ALargeSmall => Get("a-large-small", "M15 16l2.536-7.328a1.02 1.02 1 0 1 1.928 0L22 16 M15.697 14h5.606 M2 16l4.039-9.69a.5.5 0 0 1 .923 0L11 16 M3.304 13h6.392");
     public static Geometry Activity => Get("activity", "M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2");
     public static Geometry Archive => Get("archive", "M3 3h18a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-18a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1z M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8 M10 12h4");
     public static Geometry ArrowDown => Get("arrow-down", "M12 5v14 M19 12l-7 7-7-7");
@@ -109,6 +110,9 @@ public static partial class ArcIcons
     public static Geometry Heading1 => Get("heading-1", "M4 12h8 M4 18V6 M12 18V6 M17 12l3-2v8");
     public static Geometry Heading2 => Get("heading-2", "M4 12h8 M4 18V6 M12 18V6 M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1");
     public static Geometry Heading3 => Get("heading-3", "M4 12h8 M4 18V6 M12 18V6 M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2 M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2");
+    public static Geometry Heading4 => Get("heading-4", "M12 18V6 M17 10v3a1 1 0 0 0 1 1h3 M21 10v8 M4 12h8 M4 18V6");
+    public static Geometry Heading5 => Get("heading-5", "M4 12h8 M4 18V6 M12 18V6 M17 13v-3h4 M17 17.7c.4.2.8.3 1.3.3 1.5 0 2.7-1.1 2.7-2.5S19.8 13 18.3 13H17");
+    public static Geometry Heading6 => Get("heading-6", "M4 12h8 M4 18V6 M12 18V6 M17 16a2 2 0 1 0 4 0a2 2 0 1 0 -4 0z M20 10c-2 2-3 3.5-3 6");
     public static Geometry Heart => Get("heart", "M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5");
     public static Geometry Highlighter => Get("highlighter", "M9 11l-6 6v3h9l3-3 M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4");
     public static Geometry Hourglass => Get("hourglass", "M5 22h14 M5 2h14 M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22 M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2");
@@ -167,6 +171,8 @@ public static partial class ArcIcons
     public static Geometry Quote => Get("quote", "M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z");
     public static Geometry Redo2 => Get("redo-2", "M15 14l5-5-5-5 M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13");
     public static Geometry RefreshCw => Get("refresh-cw", "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8 M21 3v5h-5 M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16 M8 16H3v5");
+    public static Geometry Replace => Get("replace", "M14 4a1 1 0 0 1 1-1 M15 10a1 1 0 0 1-1-1 M21 4a1 1 0 0 0-1-1 M21 9a1 1 0 0 1-1 1 M3 7l3 3 3-3 M6 10V5a2 2 0 0 1 2-2h2 M4 14h5a1 1 0 0 1 1 1v5a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1v-5a1 1 0 0 1 1 -1z");
+    public static Geometry ReplaceAll => Get("replace-all", "M14 14a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1 M14 4a1 1 0 0 1 1-1 M15 10a1 1 0 0 1-1-1 M19 14a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1 M21 4a1 1 0 0 0-1-1 M21 9a1 1 0 0 1-1 1 M3 7l3 3 3-3 M6 10V5a2 2 0 0 1 2-2h2 M4 14h5a1 1 0 0 1 1 1v5a1 1 0 0 1 -1 1h-5a1 1 0 0 1 -1 -1v-5a1 1 0 0 1 1 -1z");
     public static Geometry Reply => Get("reply", "M20 18v-2a4 4 0 0 0-4-4H4 M9 17l-5-5 5-5");
     public static Geometry RotateCcw => Get("rotate-ccw", "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5");
     public static Geometry RotateCw => Get("rotate-cw", "M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8 M21 3v5h-5");
@@ -193,8 +199,10 @@ public static partial class ArcIcons
     public static Geometry SquarePen => Get("square-pen", "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7 M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z");
     public static Geometry Star => Get("star", "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z");
     public static Geometry Strikethrough => Get("strikethrough", "M16 4H9a3 3 0 0 0-2.83 4 M14 12a4 4 0 0 1 0 8H6 M4 12L20 12");
+    public static Geometry Subscript => Get("subscript", "M4 5l8 8 M12 5l-8 8 M20 19h-4c0-1.5.44-2 1.5-2.5S20 15.33 20 14c0-.47-.17-.93-.48-1.29a2.11 2.11 0 0 0-2.62-.44c-.42.24-.74.62-.9 1.07");
     public static Geometry Sun => Get("sun", "M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0z M12 2v2 M12 20v2 M4.93 4.93l1.41 1.41 M17.66 17.66l1.41 1.41 M2 12h2 M20 12h2 M6.34 17.66l-1.41 1.41 M19.07 4.93l-1.41 1.41");
     public static Geometry SunMoon => Get("sun-moon", "M12 2v2 M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715 M16 12a4 4 0 0 0-4-4 M19 5l-1.256 1.256 M20 12h2");
+    public static Geometry Superscript => Get("superscript", "M4 19l8-8 M12 19l-8-8 M20 12h-4c0-1.5.442-2 1.5-2.5S20 8.334 20 7.002c0-.472-.17-.93-.484-1.29a2.105 2.105 0 0 0-2.617-.436c-.42.239-.738.614-.899 1.06");
     public static Geometry Table => Get("table", "M12 3v18 M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2z M3 9h18 M3 15h18");
     public static Geometry Tag => Get("tag", "M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z M7 7.5a0.5 0.5 0 1 0 1 0a0.5 0.5 0 1 0 -1 0z");
     public static Geometry Terminal => Get("terminal", "M12 19h8 M4 17l6-6-6-6");

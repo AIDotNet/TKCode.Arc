@@ -16,6 +16,8 @@ namespace TKCode.Arc;
 /// re-arranged as the width moves; the list face hangs under it at its own fixed width and fades in once the surface
 /// opens. Everything outside the shape is clipped. The popup content keeps a fixed size around the largest shape (with
 /// room for the shadow), so the host window never resizes per frame.
+/// <para>When the popup had to slide up into view, the closed shape sits lower than the top of the popup (the drop), over
+/// the trigger, and springs up to the top as it opens and back down as it closes.</para>
 /// </summary>
 internal sealed class MorphSelectSurface : Control
 {
@@ -36,8 +38,10 @@ internal sealed class MorphSelectSurface : Control
     private MotionValue<double>? _lift;
     private MotionValue<double>? _faceOpacity;
     private MotionValue<double>? _faceY;
+    private MotionValue<double>? _drop;
     private double _w;
     private double _h;
+    private double _d;
     private bool _atRest;
     private int _morphGeneration;
     private ImmutableSolidColorBrush? _fillBrush;
@@ -121,16 +125,20 @@ internal sealed class MorphSelectSurface : Control
         {
             var room = ShadowRoom;
             var x = AlignEnd ? room.Left + Capacity.Width - _w : room.Left;
-            return new Rect(x, room.Top, _w, _h);
+            return new Rect(x, room.Top + _d, _w, _h);
         }
     }
 
-    /// <summary>Places the shape without motion (the closed trigger at open, or any jump).</summary>
-    public void Jump(Size shape, bool open)
+    /// <summary>
+    /// Places the shape without motion (the closed trigger at open, or any jump). <paramref name="drop"/> is how far
+    /// below the top of the popup the shape sits.
+    /// </summary>
+    public void Jump(Size shape, bool open, double drop)
     {
         Ensure();
         _width!.Jump(shape.Width);
         _height!.Jump(shape.Height);
+        _drop!.Jump(drop);
         _warm!.Jump(open ? 1 : 0);
         _lift!.Jump(open ? 1 : 0);
         SetFace(open ? 1 : 0, open ? 0 : -6, open ? 0 : 2);
@@ -141,8 +149,11 @@ internal sealed class MorphSelectSurface : Control
         UpdateClip();
     }
 
-    /// <summary>Springs to <paramref name="target"/>; returns when the height settles (the visible end of the morph).</summary>
-    public Task<bool> MorphTo(Size target, bool open)
+    /// <summary>
+    /// Springs to <paramref name="target"/> at <paramref name="drop"/> below the top of the popup; returns when the height
+    /// settles (the visible end of the morph).
+    /// </summary>
+    public Task<bool> MorphTo(Size target, bool open, double drop)
     {
         Ensure();
         var lastW = _w;
@@ -155,6 +166,11 @@ internal sealed class MorphSelectSurface : Control
         UpdateClip();
         var widthDone = _width!.AnimateTo(target.Width, MotionSpec.Spring(widthSpring));
         var done = _height!.AnimateTo(target.Height, MotionSpec.Spring(area));
+        if (Math.Abs(_drop!.Value - drop) > 0.01)
+        {
+            // Shrinking toward the trigger must not overshoot past it; the drop shares the height's area spring.
+            _ = _drop.AnimateTo(drop, MotionSpec.Spring(open ? area : Shrink));
+        }
         if (open)
         {
             // Settled and open: the shape no longer clips (the face already sits inside it), so hit testing and
@@ -200,6 +216,17 @@ internal sealed class MorphSelectSurface : Control
         return done;
     }
 
+    /// <summary>Moves the shape down by <paramref name="drop"/> at once and springs it back up to the top of the popup (0: stays at the top).</summary>
+    public void RiseFrom(double drop)
+    {
+        Ensure();
+        _drop!.Jump(drop);
+        if (drop > 0)
+        {
+            _ = _drop.AnimateTo(0, MotionSpec.Spring(Grow));
+        }
+    }
+
     private void Ensure()
     {
         if (_width is not null)
@@ -226,6 +253,12 @@ internal sealed class MorphSelectSurface : Control
         _faceOpacity.Changed += _ => ApplyFace();
         _faceY = new MotionValue<double>(this, 1, MotionVectors.Double);
         _faceY.Changed += _ => ApplyFace();
+        _drop = new MotionValue<double>(this, 0, MotionVectors.Double);
+        _drop.Changed += v =>
+        {
+            _d = Math.Max(0, v);
+            OnShapeChanged(arrangeLid: true);
+        };
     }
 
     /// <summary>
@@ -304,9 +337,9 @@ internal sealed class MorphSelectSurface : Control
         var room = ShadowRoom;
         var shape = ShapeRect;
         // The lid spans the current width; the face keeps its own width so it measures the same mid spring.
-        _lid.Arrange(new Rect(shape.X, room.Top, Math.Max(0, shape.Width), LidHeight));
+        _lid.Arrange(new Rect(shape.X, shape.Y, Math.Max(0, shape.Width), LidHeight));
         var faceX = AlignEnd ? room.Left + Capacity.Width - FaceWidth : room.Left;
-        _face.Arrange(new Rect(faceX, room.Top + LidHeight, FaceWidth, _face.DesiredSize.Height));
+        _face.Arrange(new Rect(faceX, shape.Y + LidHeight, FaceWidth, _face.DesiredSize.Height));
     }
 
     /// <summary>Hosts the lid and face at the surface's rectangles (a plain panel would re-centre them).</summary>

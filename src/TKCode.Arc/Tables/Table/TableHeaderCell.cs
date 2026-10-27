@@ -12,18 +12,18 @@ using Avalonia.Media.Immutable;
 namespace TKCode.Arc;
 
 /// <summary>
-/// One header cell of a <see cref="SortableDataTable"/>, drawn directly: the label, the hint arrow that shows
+/// One header cell of a <see cref="Table"/>, drawn directly: the label, the hint arrow that shows
 /// on hover or keyboard focus, and the sort arrow that fades and scales in where a column becomes sorted and
 /// flips on a snappy spring when the direction changes. Column index -1 is the Select all checkbox.
 /// </summary>
-internal sealed class SortableDataTableHeaderCell : Control
+internal sealed class TableHeaderCell : Control
 {
     private const double GlyphExtent = 16;
     private const double GlyphGap = 6;
     private static readonly Geometry s_arrow = ArcIcons.ArrowUp;
 
-    private readonly SortableDataTable _table;
-    private readonly SortableDataTableCheckbox? _checkbox;
+    private readonly Table _table;
+    private readonly TableCheckbox? _checkbox;
     private FormattedText? _label;
     private string? _labelText;
     private int _labelVersion = -1;
@@ -43,13 +43,13 @@ internal sealed class SortableDataTableHeaderCell : Control
     private ImmutablePen? _hintPen;
     private Color _hintPenColor;
 
-    public SortableDataTableHeaderCell(SortableDataTable table, int columnIndex)
+    public TableHeaderCell(Table table, int columnIndex)
     {
         _table = table;
         ColumnIndex = columnIndex;
         if (columnIndex < 0)
         {
-            _checkbox = new SortableDataTableCheckbox(this);
+            _checkbox = new TableCheckbox(this);
         }
         ClipToBounds = false;
         FocusAdorner = null;
@@ -69,7 +69,7 @@ internal sealed class SortableDataTableHeaderCell : Control
     public DataTableSortDirection Direction => !_active ? DataTableSortDirection.None
         : _descending ? DataTableSortDirection.Descending : DataTableSortDirection.Ascending;
 
-    internal SortableDataTableCheckbox? Checkbox => _checkbox;
+    internal TableCheckbox? Checkbox => _checkbox;
 
     /// <summary>Applies the sort state; <paramref name="animate"/> is false on the first layout and on rebuilds.</summary>
     public void SetSort(bool active, bool descending, bool animate)
@@ -348,8 +348,8 @@ internal sealed class SortableDataTableHeaderCell : Control
             {
                 context.FillRectangle(palette.SurfaceBrush, new Rect(size));
             }
-            var y = Math.Round((size.Height - SortableDataTableCheckbox.Extent) / 2);
-            var x = compact ? Math.Round((size.Width - SortableDataTableCheckbox.Extent) / 2) : _table.CellInlinePadding;
+            var y = Math.Round((size.Height - TableCheckbox.Extent) / 2);
+            var x = compact ? Math.Round((size.Width - TableCheckbox.Extent) / 2) : _table.CellInlinePadding;
             _checkbox.Render(context, new Point(x, y), palette, focusVisible);
             return;
         }
@@ -455,7 +455,7 @@ internal sealed class SortableDataTableHeaderCell : Control
 
     private sealed class HeaderPeer : ControlAutomationPeer, IInvokeProvider
     {
-        public HeaderPeer(SortableDataTableHeaderCell owner) : base(owner)
+        public HeaderPeer(TableHeaderCell owner) : base(owner)
         {
         }
 
@@ -465,16 +465,16 @@ internal sealed class SortableDataTableHeaderCell : Control
 
         protected override bool IsControlElementCore() => true;
 
-        public void Invoke() => ((SortableDataTableHeaderCell)Owner).Activate();
+        public void Invoke() => ((TableHeaderCell)Owner).Activate();
     }
 
     private sealed class SelectAllPeer : ControlAutomationPeer, IToggleProvider
     {
-        public SelectAllPeer(SortableDataTableHeaderCell owner) : base(owner)
+        public SelectAllPeer(TableHeaderCell owner) : base(owner)
         {
         }
 
-        private SortableDataTableHeaderCell Cell => (SortableDataTableHeaderCell)Owner;
+        private TableHeaderCell Cell => (TableHeaderCell)Owner;
 
         protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.CheckBox;
 

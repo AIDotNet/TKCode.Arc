@@ -30,11 +30,39 @@
                                                Heading2FontSize="{arc:ArcDesignTokenResource TypeXL}"
                                                Heading3FontSize="{arc:ArcDesignTokenResource TypeLG}"
                                                CodeFontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               SyntaxCommentBrush="{arc:CodeBlockTokenResource SyntaxComment}"
+                                               SyntaxStringBrush="{arc:CodeBlockTokenResource SyntaxString}"
+                                               SyntaxNumberBrush="{arc:CodeBlockTokenResource SyntaxNumber}"
+                                               SyntaxKeywordBrush="{arc:CodeBlockTokenResource SyntaxKeyword}"
+                                               SyntaxTypeBrush="{arc:CodeBlockTokenResource SyntaxType}"
+                                               SyntaxFunctionBrush="{arc:CodeBlockTokenResource SyntaxFunction}"
+                                               SyntaxPropertyBrush="{arc:CodeBlockTokenResource SyntaxProperty}"
+                                               SyntaxTagBrush="{arc:CodeBlockTokenResource SyntaxTag}"
+                                               SyntaxPunctuationBrush="{arc:CodeBlockTokenResource SyntaxPunctuation}"
+                                               CheckBrush="{arc:ArcDesignTokenResource AccentForeground}"
+                                               TextGrayBrush="{arc:RichTextEditorTokenResource TextGray}"
+                                               TextRedBrush="{arc:RichTextEditorTokenResource TextRed}"
+                                               TextOrangeBrush="{arc:RichTextEditorTokenResource TextOrange}"
+                                               TextYellowBrush="{arc:RichTextEditorTokenResource TextYellow}"
+                                               TextGreenBrush="{arc:RichTextEditorTokenResource TextGreen}"
+                                               TextBlueBrush="{arc:RichTextEditorTokenResource TextBlue}"
+                                               TextPurpleBrush="{arc:RichTextEditorTokenResource TextPurple}"
+                                               FillGrayBrush="{arc:RichTextEditorTokenResource FillGray}"
+                                               FillRedBrush="{arc:RichTextEditorTokenResource FillRed}"
+                                               FillOrangeBrush="{arc:RichTextEditorTokenResource FillOrange}"
+                                               FillYellowBrush="{arc:RichTextEditorTokenResource FillYellow}"
+                                               FillGreenBrush="{arc:RichTextEditorTokenResource FillGreen}"
+                                               FillBlueBrush="{arc:RichTextEditorTokenResource FillBlue}"
+                                               FillPurpleBrush="{arc:RichTextEditorTokenResource FillPurple}"
                                                Tracking="{arc:ArcDesignTokenResource TrackingBody}" />
                     <arc:EditorsLiveRegion Name="PART_LiveRegion" />
                 </Panel>
             </ControlTemplate>
         </Setter>
+        <!-- The Docs profile keeps a gutter left of the text for the block handle. -->
+        <Style Selector="^[Profile=Docs] /template/ arc|RichTextEditorSurface#PART_Surface">
+            <Setter Property="Margin" Value="{arc:RichTextEditorTokenResource GutterMargin}" />
+        </Style>
         <Style Selector="^[IsReadOnly=True] /template/ arc|RichTextEditorSurface#PART_Surface">
             <Setter Property="Cursor" Value="Arrow" />
         </Style>
@@ -119,6 +147,16 @@
 
     <!-- The floating toolbar: one raised surface (16px corners, floating shadow). -->
     <ControlTheme x:Key="{x:Type arc:RichTextEditorToolbar}" TargetType="arc:RichTextEditorToolbar">
+        <Setter Property="SurfaceBackground" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="SurfaceBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="SurfaceShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="SurfaceRadius" Value="{arc:RichTextEditorTokenResource ToolbarRadius}" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+    </ControlTheme>
+
+    <!-- The find bar: the toolbar's raised surface, at the top right of the editor. -->
+    <ControlTheme x:Key="{x:Type arc:RichTextEditorFindBar}" TargetType="arc:RichTextEditorFindBar">
         <Setter Property="SurfaceBackground" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
         <Setter Property="SurfaceBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
         <Setter Property="SurfaceShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />

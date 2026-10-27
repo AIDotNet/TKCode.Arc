@@ -5,10 +5,11 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia;
 
 namespace TKCode.Arc.Tests.Tables;
 
-public class SortableDataTableTests
+public class TableTests
 {
     public sealed class Project
     {
@@ -35,16 +36,16 @@ public class SortableDataTableTests
         new("Item 2", "Lee", 120000, "Active")
     ];
 
-    private static SortableDataTable Table(IEnumerable<Project> items, bool selectable = false)
+    private static Table Table(IEnumerable<Project> items, bool selectable = false)
     {
-        var table = new SortableDataTable { ItemsSource = items, IsSelectable = selectable };
+        var table = new Table { ItemsSource = items, IsSelectable = selectable };
         table.Columns.Add(DataTableColumn.Create<Project>("Name", p => p.Name));
         table.Columns.Add(DataTableColumn.Create<Project>("Owner", p => p.Owner));
         table.Columns.Add(DataTableColumn.Create<Project>("Budget", p => p.Budget));
         return table;
     }
 
-    private static Window Show(SortableDataTable table, double width = 800, double height = 600)
+    private static Window Show(Table table, double width = 800, double height = 600)
     {
         var window = TestHelpers.Show(table);
         window.Width = width;
@@ -53,10 +54,10 @@ public class SortableDataTableTests
         return window;
     }
 
-    private static List<string> Names(SortableDataTable table) =>
+    private static List<string> Names(Table table) =>
         Enumerable.Range(0, table.RowCount).Select(d => ((Project)table.ItemAt(table.SourceAt(d))).Name).ToList();
 
-    private static SortableDataTableHeaderCell Header(SortableDataTable table, int column) =>
+    private static TableHeaderCell Header(Table table, int column) =>
         table.Presenter!.Header.CellFor(column)!;
 
     [AvaloniaFact]
@@ -135,7 +136,7 @@ public class SortableDataTableTests
     [AvaloniaFact]
     public void Binding_Columns_Evaluate_Against_Rows()
     {
-        var table = new SortableDataTable { ItemsSource = Projects() };
+        var table = new Table { ItemsSource = Projects() };
         table.Columns.Add(new DataTableColumn { Header = "Name", Binding = new Binding("Name") });
         table.Columns.Add(new DataTableColumn { Header = "Budget", Binding = new Binding("Budget"), StringFormat = "N0" });
         var window = Show(table);
@@ -207,6 +208,55 @@ public class SortableDataTableTests
             table.SelectedItems!.Count.ShouldBe(0);
             changes.Count.ShouldBe(4);
             changes[1].AddedItems.Count.ShouldBe(2);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaTheory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Row_Clicks_Select_Unless_Only_The_Checkbox_Does(bool selectsOnRowClick)
+    {
+        var table = Table(Projects(), selectable: true);
+        table.SelectsOnRowClick = selectsOnRowClick;
+        var window = Show(table);
+        try
+        {
+            var row = table.Presenter!.RowAt(0)!;
+            void Click(double x)
+            {
+                var point = row.TranslatePoint(new Point(x, row.Bounds.Height / 2), window)!.Value;
+                window.MouseDown(point, MouseButton.Left);
+                window.MouseUp(point, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            Click(row.Bounds.Width / 2);
+            table.SelectedItems!.Count.ShouldBe(selectsOnRowClick ? 1 : 0);
+            Click(20); // the checkbox cell always toggles
+            table.SelectedItems!.Count.ShouldBe(selectsOnRowClick ? 0 : 1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Former_Name_Is_A_Table_With_The_Table_Theme()
+    {
+#pragma warning disable CS0618 // the obsolete name is what this test covers
+        var table = new SortableDataTable { ItemsSource = Projects() };
+#pragma warning restore CS0618
+        table.Columns.Add(DataTableColumn.Create<Project>("Name", p => p.Name));
+        var window = Show(table);
+        try
+        {
+            table.Presenter.ShouldNotBeNull();
+            table.RowCount.ShouldBe(5);
         }
         finally
         {

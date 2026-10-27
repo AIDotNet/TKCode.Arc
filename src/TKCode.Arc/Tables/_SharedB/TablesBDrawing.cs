@@ -4,7 +4,7 @@ using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
-/// <summary>Drawing helpers shared by the self-drawn parts of SortableDataTable, ReorderableList and FilterToolbar.</summary>
+/// <summary>Drawing helpers shared by the self-drawn parts of Table, ReorderableList and FilterToolbar.</summary>
 internal static class TablesBDrawing
 {
     public static Color Lerp(Color a, Color b, double t)

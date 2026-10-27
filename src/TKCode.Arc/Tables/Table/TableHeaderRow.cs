@@ -6,7 +6,7 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>Resolved geometry of one table layout pass (shared by the header, the rows and the presenter).</summary>
-internal sealed class SortableDataTableLayout
+internal sealed class TableLayout
 {
     private double[] _x = [];
     private double[] _w = [];
@@ -34,15 +34,15 @@ internal sealed class SortableDataTableLayout
 /// stuck to the top of the visible area. Below the compact breakpoint it becomes Arc's strip of sort pills that
 /// scrolls sideways under a pinned Select all.
 /// </summary>
-internal sealed class SortableDataTableHeaderRow : Control
+internal sealed class TableHeaderRow : Control
 {
     private const double PillHeight = 32;
     private const double PillGap = 4;
     private const double StripInset = 8;
     private const double PinnedWidth = 40;
 
-    private readonly SortableDataTable _table;
-    private readonly List<SortableDataTableHeaderCell> _cells = new();
+    private readonly Table _table;
+    private readonly List<TableHeaderCell> _cells = new();
     private readonly TranslateTransform _stick = new();
     private double _stripOffset;
     private double _stripExtent;
@@ -51,7 +51,7 @@ internal sealed class SortableDataTableHeaderRow : Control
 
     private readonly HeaderFade _fadeLayer;
 
-    public SortableDataTableHeaderRow(SortableDataTable table)
+    public TableHeaderRow(Table table)
     {
         _table = table;
         RenderTransform = _stick;
@@ -61,7 +61,7 @@ internal sealed class SortableDataTableHeaderRow : Control
         VisualChildren.Add(_fadeLayer);
     }
 
-    public IReadOnlyList<SortableDataTableHeaderCell> Cells => _cells;
+    public IReadOnlyList<TableHeaderCell> Cells => _cells;
 
     public double StickOffset
     {
@@ -79,12 +79,12 @@ internal sealed class SortableDataTableHeaderRow : Control
         _cells.Clear();
         if (_table.IsSelectable)
         {
-            _cells.Add(new SortableDataTableHeaderCell(_table, -1) { Focusable = true });
+            _cells.Add(new TableHeaderCell(_table, -1) { Focusable = true });
         }
         for (var i = 0; i < _table.ColumnCount; i++)
         {
             var column = _table.ColumnAt(i)!;
-            _cells.Add(new SortableDataTableHeaderCell(_table, i)
+            _cells.Add(new TableHeaderCell(_table, i)
             {
                 Focusable = column.IsSortable,
                 Cursor = column.IsSortable ? new Cursor(StandardCursorType.Hand) : null
@@ -100,7 +100,7 @@ internal sealed class SortableDataTableHeaderRow : Control
         InvalidateMeasure();
     }
 
-    public SortableDataTableHeaderCell? CellFor(int columnIndex)
+    public TableHeaderCell? CellFor(int columnIndex)
     {
         foreach (var cell in _cells)
         {
@@ -172,7 +172,7 @@ internal sealed class SortableDataTableHeaderRow : Control
     }
 
     /// <summary>Keeps a pill inside the strip (Arc scrolls the active sort control into view).</summary>
-    public void RevealPill(SortableDataTableHeaderCell cell)
+    public void RevealPill(TableHeaderCell cell)
     {
         if (!_table.Layout.Compact || cell.IsSelectAll)
         {
@@ -246,9 +246,9 @@ internal sealed class SortableDataTableHeaderRow : Control
 
     private sealed class HeaderFade : Control
     {
-        private readonly SortableDataTableHeaderRow _row;
+        private readonly TableHeaderRow _row;
 
-        public HeaderFade(SortableDataTableHeaderRow row) => _row = row;
+        public HeaderFade(TableHeaderRow row) => _row = row;
 
         public override void Render(DrawingContext context) => _row.RenderFade(context);
     }

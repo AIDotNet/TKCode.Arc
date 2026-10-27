@@ -193,6 +193,10 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     private const int Page = 8;
     private const double LidHeight = 44;
     private const double OpenRadius = 22;
+    /// <summary>Shortest list kept when the room under the trigger is short (three rows and a bit).</summary>
+    private const double MinListHeight = 120;
+    /// <summary>Gap kept between the open surface and the bottom edge of the window.</summary>
+    private const double EdgeGap = 8;
 
     private readonly SelectEntrySource _entries;
     private readonly List<int> _visible = new();
@@ -520,6 +524,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
         _surface = new MorphSelectSurface(_lid, _face) { LidHeight = LidHeight, CornerRadiusValue = OpenRadius };
         _surface.OutsidePressed += (_, _) => Close(restoreFocus: false);
+        _surface.LayoutUpdated += OnSurfaceLayoutUpdated;
         _popup.Child = _surface;
         ApplySurfaceStyle();
     }
@@ -675,6 +680,45 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     private double TriggerWidth => _anchor?.TargetWidth ?? _trigger?.Bounds.Width ?? 0;
 
+    private double _listCap = double.NaN;
+    private double _slide;
+    private bool _awaitingPlacement;
+
+    /// <summary>Tallest the list gets on the current open: <see cref="MaxListHeight"/> or less (see <see cref="ListCapFor"/>).</summary>
+    private double ListCap => double.IsNaN(_listCap) ? MaxListHeight : _listCap;
+
+    /// <summary>
+    /// Shortens the list so the open surface fits under the trigger: a popup that has to slide no longer starts over the
+    /// trigger, and the surface would fold back into a spot above it. Never under <see cref="MinListHeight"/>.
+    /// </summary>
+    private double ListCapFor()
+    {
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null || _trigger is null || _trigger.TranslatePoint(default, topLevel) is not { } origin)
+        {
+            return MaxListHeight;
+        }
+        // The face adds 6px of scroll inset above the list and 6px of padding under it.
+        var room = topLevel.ClientSize.Height - origin.Y - LidHeight - 12 - EdgeGap;
+        return Math.Min(MaxListHeight, Math.Max(MinListHeight, Math.Floor(room)));
+    }
+
+    /// <summary>
+    /// How far the popup put the lid above the trigger: more than zero only when even the shortest list did not fit
+    /// under it and the popup slid up into view. The surface then starts and ends its morph over the trigger.
+    /// </summary>
+    private double MeasureSlide()
+    {
+        if (_trigger is null || _surface is null || TopLevel.GetTopLevel(this) is not { } topLevel)
+        {
+            return 0;
+        }
+        var trigger = _trigger.PointToScreen(default);
+        var lid = _surface.PointToScreen(new Point(0, _surface.ShadowRoom.Top));
+        var slide = (trigger.Y - lid.Y) / topLevel.RenderScaling;
+        return slide > 0.5 ? slide : 0;
+    }
+
     private double ListWidth()
     {
         var viewport = TopLevel.GetTopLevel(this)?.ClientSize.Width ?? double.PositiveInfinity;
@@ -683,7 +727,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     private double FaceHeight(double extent, bool empty)
     {
-        var list = empty ? 0 : Math.Min(MaxListHeight, extent);
+        var list = empty ? 0 : Math.Min(ListCap, extent);
         var emptyHeight = empty ? 12 + Math.Ceiling(FontSize * 1.45) + 14 : 0;
         // 6px scroll inset at the top, 6px face padding at the bottom.
         return 6 + list + emptyHeight + 6;
@@ -712,6 +756,10 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             start = FirstEnabled(0, 1);
         }
 
+        if (!_popup.IsOpen)
+        {
+            _listCap = ListCapFor();
+        }
         var triggerWidth = TriggerWidth;
         var listWidth = ListWidth();
         var fullExtent = _options!.Extent;
@@ -729,8 +777,12 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             var (text, icon, placeholder) = CurrentValue();
             _lidValue!.Show(text, icon, placeholder, animate: false);
-            surface.Jump(new Size(triggerWidth, LidHeight), open: false);
+            surface.Jump(new Size(triggerWidth, LidHeight), open: false, drop: 0);
+            _slide = 0;
+            _awaitingPlacement = true;
             _popup.IsOpen = true;
+            // Placement settles in the layout passes before the first frame; later passes leave the drop alone.
+            Dispatcher.UIThread.Post(() => _awaitingPlacement = false, DispatcherPriority.Background);
         }
         if (_face is not null)
         {
@@ -739,9 +791,9 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         if (_scroll is not null)
         {
             // The 6px top inset is scroll padding outside the list's max height (content-box).
-            _scroll.MaxHeight = MaxListHeight + 6;
+            _scroll.MaxHeight = ListCap + 6;
         }
-        _ = surface.MorphTo(new Size(Math.Max(triggerWidth, listWidth), openHeight), open: true);
+        _ = surface.MorphTo(new Size(Math.Max(triggerWidth, listWidth), openHeight), open: true, drop: 0);
         TurnChevron(open: true);
         ShowSearch(canSearch);
         _options.SetActive(start, animate: false);
@@ -787,7 +839,9 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             return;
         }
         // The surface folds back into the trigger, which springs to the new label's width at the same time.
-        var reached = await _surface.MorphTo(new Size(TriggerWidth, LidHeight), open: false);
+        _awaitingPlacement = false;
+        _slide = MeasureSlide();
+        var reached = await _surface.MorphTo(new Size(TriggerWidth, LidHeight), open: false, drop: _slide);
         if (generation != _closeGeneration || IsOpen)
         {
             return;
@@ -797,6 +851,25 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             return;
         }
         FinishClose(focusInside);
+    }
+
+    /// <summary>
+    /// The popup is placed in the layout passes after it opens (an overlay popup is laid out before it gets its
+    /// position, so an early pass measures a wrong slide). Each pass until the first frame measures again; if the popup
+    /// had to slide up, the closed shape sits down on the trigger and rises from there.
+    /// </summary>
+    private void OnSurfaceLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (!_awaitingPlacement || _surface is null || _popup is not { IsOpen: true })
+        {
+            return;
+        }
+        var slide = MeasureSlide();
+        if (Math.Abs(slide - _slide) > 0.5)
+        {
+            _slide = slide;
+            _surface.RiseFrom(slide);
+        }
     }
 
     private void FinishClose(bool focusInside)
@@ -983,7 +1056,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _surface.Capacity = new Size(_surface.Capacity.Width, height);
             _surface.InvalidateMeasure();
         }
-        _ = _surface.MorphTo(new Size(width, height), open: true);
+        _ = _surface.MorphTo(new Size(width, height), open: true, drop: 0);
     }
 
     private void Announce(string text)

@@ -3,8 +3,8 @@ using Avalonia.Media.Immutable;
 
 namespace TKCode.Arc;
 
-/// <summary>Resolved colors, pens and fonts shared by the self-drawn parts of one <see cref="SortableDataTable"/>.</summary>
-internal sealed class SortableDataTablePalette
+/// <summary>Resolved colors, pens and fonts shared by the self-drawn parts of one <see cref="Table"/>.</summary>
+internal sealed class TablePalette
 {
     public int Version { get; private set; }
 

@@ -30,7 +30,7 @@ namespace TKCode.Arc;
 [TemplatePart(AnnouncerPart, typeof(TextBlock))]
 [TemplatePart(ClearPart, typeof(AvaloniaButton))]
 [PseudoClasses(CompactPseudoClass, SelectablePseudoClass, LoadingPseudoClass, EmptyPseudoClass, SelectionPseudoClass)]
-public class SortableDataTable : TemplatedControl
+public class Table : TemplatedControl
 {
     public const string ScrollViewerPart = "PART_ScrollViewer";
     public const string AnnouncerPart = "PART_Announcer";
@@ -44,67 +44,70 @@ public class SortableDataTable : TemplatedControl
     #region Public properties
 
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
-        AvaloniaProperty.Register<SortableDataTable, IEnumerable?>(nameof(ItemsSource));
+        AvaloniaProperty.Register<Table, IEnumerable?>(nameof(ItemsSource));
 
     public static readonly StyledProperty<DataTableColumn?> SortColumnProperty =
-        AvaloniaProperty.Register<SortableDataTable, DataTableColumn?>(nameof(SortColumn), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Table, DataTableColumn?>(nameof(SortColumn), defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<string?> SortKeyProperty =
-        AvaloniaProperty.Register<SortableDataTable, string?>(nameof(SortKey), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Table, string?>(nameof(SortKey), defaultBindingMode: BindingMode.TwoWay);
 
     /// <summary>Sort direction of the sorted column (two-way): None, Ascending or Descending.</summary>
     public static readonly StyledProperty<DataTableSortDirection> SortDirectionProperty =
-        AvaloniaProperty.Register<SortableDataTable, DataTableSortDirection>(nameof(SortDirection), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Table, DataTableSortDirection>(nameof(SortDirection), defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<bool> IsSortClearableProperty =
-        AvaloniaProperty.Register<SortableDataTable, bool>(nameof(IsSortClearable));
+        AvaloniaProperty.Register<Table, bool>(nameof(IsSortClearable));
 
     public static readonly StyledProperty<bool> IsSelectableProperty =
-        AvaloniaProperty.Register<SortableDataTable, bool>(nameof(IsSelectable));
+        AvaloniaProperty.Register<Table, bool>(nameof(IsSelectable));
+
+    public static readonly StyledProperty<bool> SelectsOnRowClickProperty =
+        AvaloniaProperty.Register<Table, bool>(nameof(SelectsOnRowClick), true);
 
     public static readonly StyledProperty<IList?> SelectedItemsProperty =
-        AvaloniaProperty.Register<SortableDataTable, IList?>(nameof(SelectedItems), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<Table, IList?>(nameof(SelectedItems), defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<Func<object, object>?> RowKeySelectorProperty =
-        AvaloniaProperty.Register<SortableDataTable, Func<object, object>?>(nameof(RowKeySelector));
+        AvaloniaProperty.Register<Table, Func<object, object>?>(nameof(RowKeySelector));
 
     public static readonly StyledProperty<string> CaptionProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(Caption), "Data table");
+        AvaloniaProperty.Register<Table, string>(nameof(Caption), "Data table");
 
     /// <summary>Text shown when there are no rows (default "No rows to show").</summary>
     public static readonly StyledProperty<string> EmptyMessageProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(EmptyMessage), "No rows to show");
+        AvaloniaProperty.Register<Table, string>(nameof(EmptyMessage), "No rows to show");
 
     public static readonly StyledProperty<bool> IsLoadingProperty =
-        AvaloniaProperty.Register<SortableDataTable, bool>(nameof(IsLoading));
+        AvaloniaProperty.Register<Table, bool>(nameof(IsLoading));
 
     /// <summary>Text shown with the loading spinner (default "Loading rows").</summary>
     public static readonly StyledProperty<string> LoadingMessageProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(LoadingMessage), "Loading rows");
+        AvaloniaProperty.Register<Table, string>(nameof(LoadingMessage), "Loading rows");
 
     public static readonly StyledProperty<string> ItemNameOneProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(ItemNameOne), "row");
+        AvaloniaProperty.Register<Table, string>(nameof(ItemNameOne), "row");
 
     public static readonly StyledProperty<string> ItemNameOtherProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(ItemNameOther), "rows");
+        AvaloniaProperty.Register<Table, string>(nameof(ItemNameOther), "rows");
 
     /// <summary>Word for the selected rows in the count line, as in "2 selected" (default "selected").</summary>
     public static readonly StyledProperty<string> SelectedNounProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(SelectedNoun), "selected");
+        AvaloniaProperty.Register<Table, string>(nameof(SelectedNoun), "selected");
 
     /// <summary>Accessible name of the select-all checkbox in the header (default "Select all rows").</summary>
     public static readonly StyledProperty<string> SelectAllLabelProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(SelectAllLabel), "Select all rows");
+        AvaloniaProperty.Register<Table, string>(nameof(SelectAllLabel), "Select all rows");
 
     /// <summary>Text of the Clear selection action in the count line (default "Clear selection").</summary>
     public static readonly StyledProperty<string> ClearSelectionLabelProperty =
-        AvaloniaProperty.Register<SortableDataTable, string>(nameof(ClearSelectionLabel), "Clear selection");
+        AvaloniaProperty.Register<Table, string>(nameof(ClearSelectionLabel), "Clear selection");
 
     public static readonly RoutedEvent<DataTableSortChangedEventArgs> SortChangedEvent =
-        RoutedEvent.Register<SortableDataTable, DataTableSortChangedEventArgs>(nameof(SortChanged), RoutingStrategies.Bubble);
+        RoutedEvent.Register<Table, DataTableSortChangedEventArgs>(nameof(SortChanged), RoutingStrategies.Bubble);
 
     public static readonly RoutedEvent<DataTableSelectionChangedEventArgs> SelectionChangedEvent =
-        RoutedEvent.Register<SortableDataTable, DataTableSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
+        RoutedEvent.Register<Table, DataTableSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
 
     /// <summary>Row items (any enumerable; <see cref="INotifyCollectionChanged"/> sources are followed).</summary>
     public IEnumerable? ItemsSource { get => GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value); }
@@ -127,6 +130,12 @@ public class SortableDataTable : TemplatedControl
 
     /// <summary>Adds the checkbox column, row-click selection and the count line with Clear selection.</summary>
     public bool IsSelectable { get => GetValue(IsSelectableProperty); set => SetValue(IsSelectableProperty, value); }
+
+    /// <summary>
+    /// When true (the default) a click anywhere on a row toggles it; when false only the checkbox cell does, and clicks on
+    /// the rest of the row are left to the app. Keyboard selection is the same either way.
+    /// </summary>
+    public bool SelectsOnRowClick { get => GetValue(SelectsOnRowClickProperty); set => SetValue(SelectsOnRowClickProperty, value); }
 
     /// <summary>Selected row items in display order (two-way). A bound mutable list is updated in place.</summary>
     public IList? SelectedItems { get => GetValue(SelectedItemsProperty); set => SetValue(SelectedItemsProperty, value); }
@@ -180,51 +189,51 @@ public class SortableDataTable : TemplatedControl
     #region Theme-provided values
 
     internal static readonly StyledProperty<IBrush?> ColumnTintBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(ColumnTintBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(ColumnTintBrush));
     internal static readonly StyledProperty<IBrush?> SecondaryForegroundProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(SecondaryForeground));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(SecondaryForeground));
     internal static readonly StyledProperty<IBrush?> MutedForegroundProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(MutedForeground));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(MutedForeground));
     internal static readonly StyledProperty<IBrush?> RuleBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(RuleBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(RuleBrush));
     internal static readonly StyledProperty<IBrush?> DividerBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(DividerBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(DividerBrush));
     internal static readonly StyledProperty<IBrush?> CheckboxBorderBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(CheckboxBorderBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(CheckboxBorderBrush));
     internal static readonly StyledProperty<IBrush?> AccentBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(AccentBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(AccentBrush));
     internal static readonly StyledProperty<IBrush?> CheckboxOnBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(CheckboxOnBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(CheckboxOnBrush));
     internal static readonly StyledProperty<IBrush?> CheckmarkBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(CheckmarkBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(CheckmarkBrush));
     internal static readonly StyledProperty<IBrush?> FocusRingBrushProperty =
-        AvaloniaProperty.Register<SortableDataTable, IBrush?>(nameof(FocusRingBrush));
+        AvaloniaProperty.Register<Table, IBrush?>(nameof(FocusRingBrush));
     internal static readonly StyledProperty<double> SmallFontSizeProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(SmallFontSize), 12);
+        AvaloniaProperty.Register<Table, double>(nameof(SmallFontSize), 12);
     internal static readonly StyledProperty<FontWeight> MediumWeightProperty =
-        AvaloniaProperty.Register<SortableDataTable, FontWeight>(nameof(MediumWeight), FontWeight.Medium);
+        AvaloniaProperty.Register<Table, FontWeight>(nameof(MediumWeight), FontWeight.Medium);
     internal static readonly StyledProperty<double> RowHeightProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(RowHeight), 52);
+        AvaloniaProperty.Register<Table, double>(nameof(RowHeight), 52);
     internal static readonly StyledProperty<double> HeaderHeightProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(HeaderHeight), 44);
+        AvaloniaProperty.Register<Table, double>(nameof(HeaderHeight), 44);
     internal static readonly StyledProperty<double> CompactRowHeightProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(CompactRowHeight), 64);
+        AvaloniaProperty.Register<Table, double>(nameof(CompactRowHeight), 64);
     internal static readonly StyledProperty<double> CompactHeaderHeightProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(CompactHeaderHeight), 41);
+        AvaloniaProperty.Register<Table, double>(nameof(CompactHeaderHeight), 41);
     internal static readonly StyledProperty<double> EmptyRowHeightProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(EmptyRowHeight), 120);
+        AvaloniaProperty.Register<Table, double>(nameof(EmptyRowHeight), 120);
     internal static readonly StyledProperty<double> CellInlinePaddingProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(CellInlinePadding), 16);
+        AvaloniaProperty.Register<Table, double>(nameof(CellInlinePadding), 16);
     internal static readonly StyledProperty<double> PrimaryInsetSelectableProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(PrimaryInsetSelectable), 8);
+        AvaloniaProperty.Register<Table, double>(nameof(PrimaryInsetSelectable), 8);
     internal static readonly StyledProperty<double> SelectColumnWidthProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(SelectColumnWidth), 44);
+        AvaloniaProperty.Register<Table, double>(nameof(SelectColumnWidth), 44);
     internal static readonly StyledProperty<double> MinTableWidthProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(MinTableWidth), 560);
+        AvaloniaProperty.Register<Table, double>(nameof(MinTableWidth), 560);
     internal static readonly StyledProperty<double> CompactBreakpointProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(CompactBreakpoint), 620);
+        AvaloniaProperty.Register<Table, double>(nameof(CompactBreakpoint), 620);
     internal static readonly StyledProperty<double> ControlRadiusProperty =
-        AvaloniaProperty.Register<SortableDataTable, double>(nameof(ControlRadius), 18);
+        AvaloniaProperty.Register<Table, double>(nameof(ControlRadius), 18);
 
     internal IBrush? ColumnTintBrush { get => GetValue(ColumnTintBrushProperty); set => SetValue(ColumnTintBrushProperty, value); }
     internal IBrush? SecondaryForeground { get => GetValue(SecondaryForegroundProperty); set => SetValue(SecondaryForegroundProperty, value); }
@@ -250,20 +259,20 @@ public class SortableDataTable : TemplatedControl
     internal double CompactBreakpoint { get => GetValue(CompactBreakpointProperty); set => SetValue(CompactBreakpointProperty, value); }
     internal double ControlRadius { get => GetValue(ControlRadiusProperty); set => SetValue(ControlRadiusProperty, value); }
 
-    internal static readonly DirectProperty<SortableDataTable, string> CountTextProperty =
-        AvaloniaProperty.RegisterDirect<SortableDataTable, string>(nameof(CountText), o => o.CountText);
+    internal static readonly DirectProperty<Table, string> CountTextProperty =
+        AvaloniaProperty.RegisterDirect<Table, string>(nameof(CountText), o => o.CountText);
 
-    internal static readonly DirectProperty<SortableDataTable, string> CountNounProperty =
-        AvaloniaProperty.RegisterDirect<SortableDataTable, string>(nameof(CountNoun), o => o.CountNoun);
+    internal static readonly DirectProperty<Table, string> CountNounProperty =
+        AvaloniaProperty.RegisterDirect<Table, string>(nameof(CountNoun), o => o.CountNoun);
 
-    internal static readonly DirectProperty<SortableDataTable, int> CountDirectionProperty =
-        AvaloniaProperty.RegisterDirect<SortableDataTable, int>(nameof(CountDirection), o => o.CountDirection);
+    internal static readonly DirectProperty<Table, int> CountDirectionProperty =
+        AvaloniaProperty.RegisterDirect<Table, int>(nameof(CountDirection), o => o.CountDirection);
 
-    internal static readonly DirectProperty<SortableDataTable, int> NounDirectionProperty =
-        AvaloniaProperty.RegisterDirect<SortableDataTable, int>(nameof(NounDirection), o => o.NounDirection);
+    internal static readonly DirectProperty<Table, int> NounDirectionProperty =
+        AvaloniaProperty.RegisterDirect<Table, int>(nameof(NounDirection), o => o.NounDirection);
 
-    internal static readonly DirectProperty<SortableDataTable, bool> HasSelectionProperty =
-        AvaloniaProperty.RegisterDirect<SortableDataTable, bool>(nameof(HasSelection), o => o.HasSelection);
+    internal static readonly DirectProperty<Table, bool> HasSelectionProperty =
+        AvaloniaProperty.RegisterDirect<Table, bool>(nameof(HasSelection), o => o.HasSelection);
 
     private string _countText = "0";
     private string _countNoun = "rows";
@@ -286,17 +295,17 @@ public class SortableDataTable : TemplatedControl
             Column = column;
             if (column.ValueSelector is null && column.Binding is { } binding)
             {
-                ValueProbe = new SortableDataTableBindingProbe(binding);
+                ValueProbe = new TableBindingProbe(binding);
             }
             if (column.SortValueSelector is null && column.SortBinding is { } sortBinding)
             {
-                SortProbe = new SortableDataTableBindingProbe(sortBinding);
+                SortProbe = new TableBindingProbe(sortBinding);
             }
         }
 
         public DataTableColumn Column { get; }
-        public SortableDataTableBindingProbe? ValueProbe { get; }
-        public SortableDataTableBindingProbe? SortProbe { get; }
+        public TableBindingProbe? ValueProbe { get; }
+        public TableBindingProbe? SortProbe { get; }
         public bool? Numeric { get; set; }
         public object?[]? SortValues { get; set; }
         public double Natural { get; set; } = -1;
@@ -312,7 +321,7 @@ public class SortableDataTable : TemplatedControl
     private ColumnState[] _states = [];
     private bool _naturalLocked;
     private int _compactLead = -1;
-    private SortableDataTablePresenter? _presenter;
+    private TablePresenter? _presenter;
     private ScrollViewer? _scroll;
     private TextBlock? _announcer;
     private AvaloniaButton? _clear;
@@ -324,14 +333,14 @@ public class SortableDataTable : TemplatedControl
     private int _currentRow = -1;
     private double _widthHint = double.NaN;
 
-    internal SortableDataTableLayout Layout { get; } = new();
-    internal SortableDataTablePalette Palette { get; } = new();
+    internal TableLayout Layout { get; } = new();
+    internal TablePalette Palette { get; } = new();
 
-    public SortableDataTable()
+    public Table()
     {
         Columns.CollectionChanged += OnColumnsChanged;
         SetCurrentValue(SelectedItemsProperty, new AvaloniaList<object>());
-        _presenter = new SortableDataTablePresenter(this);
+        _presenter = new TablePresenter(this);
     }
 
     #region Data access (presenter, rows and header)
@@ -345,7 +354,7 @@ public class SortableDataTable : TemplatedControl
     internal double TableWidthHint => _widthHint;
     internal bool IsCompact => Layout.Compact;
     internal int CompactLeadNumericIndex => _compactLead;
-    internal SortableDataTablePresenter? Presenter => _presenter;
+    internal TablePresenter? Presenter => _presenter;
 
     internal DataTableColumn? ColumnAt(int index) => index >= 0 && index < _states.Length ? _states[index].Column : null;
 
@@ -416,7 +425,7 @@ public class SortableDataTable : TemplatedControl
     }
 
     internal string CellText(int sourceIndex, int columnIndex) =>
-        SortableDataTableValues.Format(_states[columnIndex].Column, ValueOf(sourceIndex, columnIndex));
+        TableValues.Format(_states[columnIndex].Column, ValueOf(sourceIndex, columnIndex));
 
     /// <summary>Arc right-aligns a column when every non-empty value is a number (sampled for large sources).</summary>
     internal bool IsNumericColumn(int columnIndex)
@@ -440,11 +449,11 @@ public class SortableDataTable : TemplatedControl
         for (var i = 0; i < limit && all; i++)
         {
             var value = ValueOf(i, columnIndex);
-            if (SortableDataTableValues.IsNumber(value))
+            if (TableValues.IsNumber(value))
             {
                 any = true;
             }
-            else if (!SortableDataTableValues.IsEmpty(value))
+            else if (!TableValues.IsEmpty(value))
             {
                 all = false;
             }
@@ -454,7 +463,7 @@ public class SortableDataTable : TemplatedControl
         return state.Numeric.Value;
     }
 
-    internal string RowName(SortableDataTableRow row)
+    internal string RowName(TableRow row)
     {
         if (row.SourceIndex < 0 || _states.Length == 0)
         {
@@ -581,7 +590,7 @@ public class SortableDataTable : TemplatedControl
         return sum;
     }
 
-    internal void ComputeColumns(SortableDataTableLayout layout)
+    internal void ComputeColumns(TableLayout layout)
     {
         EnsureNatural();
         var count = _states.Length;
@@ -853,14 +862,14 @@ public class SortableDataTable : TemplatedControl
             {
                 var left = values[a];
                 var right = values[b];
-                var emptyLeft = SortableDataTableValues.IsEmpty(left);
-                var emptyRight = SortableDataTableValues.IsEmpty(right);
+                var emptyLeft = TableValues.IsEmpty(left);
+                var emptyRight = TableValues.IsEmpty(right);
                 // Empty values stay at the bottom in both directions.
                 if (emptyLeft || emptyRight)
                 {
                     return emptyLeft == emptyRight ? a - b : emptyLeft ? 1 : -1;
                 }
-                var result = SortableDataTableValues.Compare(left!, right!, comparer);
+                var result = TableValues.Compare(left!, right!, comparer);
                 if (descending)
                 {
                     result = -result;
@@ -1137,7 +1146,7 @@ public class SortableDataTable : TemplatedControl
         ApplySelectionVisuals(animate: true);
     }
 
-    internal void OnRowClicked(SortableDataTableRow row, bool extend)
+    internal void OnRowClicked(TableRow row, bool extend)
     {
         if (!IsSelectable || row.Key is null)
         {
@@ -1150,7 +1159,7 @@ public class SortableDataTable : TemplatedControl
         _presenter?.UpdateTabStops();
     }
 
-    internal void OnRowFocused(SortableDataTableRow row)
+    internal void OnRowFocused(TableRow row)
     {
         if (row.DisplayIndex >= 0)
         {
@@ -1164,7 +1173,7 @@ public class SortableDataTable : TemplatedControl
     #region Keyboard
 
     /// <summary>Header: ←/→ and Home/End walk the header controls; ↓ enters the row checkboxes.</summary>
-    internal bool NavigateFromHeader(SortableDataTableHeaderCell cell, Key key)
+    internal bool NavigateFromHeader(TableHeaderCell cell, Key key)
     {
         if (_presenter is null)
         {
@@ -1172,7 +1181,7 @@ public class SortableDataTable : TemplatedControl
         }
         var cells = _presenter.Header.Cells.Where(c => c.Focusable).ToList();
         var index = cells.IndexOf(cell);
-        SortableDataTableHeaderCell? target = key switch
+        TableHeaderCell? target = key switch
         {
             Key.Right => index + 1 < cells.Count ? cells[index + 1] : null,
             Key.Left => index > 0 ? cells[index - 1] : null,
@@ -1195,7 +1204,7 @@ public class SortableDataTable : TemplatedControl
     }
 
     /// <summary>Rows: ↑/↓, Home/End, PageUp/PageDown move between checkboxes; Space / Enter toggles (Shift extends).</summary>
-    internal bool NavigateFromRow(SortableDataTableRow row, Key key, KeyModifiers modifiers)
+    internal bool NavigateFromRow(TableRow row, Key key, KeyModifiers modifiers)
     {
         var count = _items.Count;
         var current = row.DisplayIndex;
@@ -1311,7 +1320,7 @@ public class SortableDataTable : TemplatedControl
         {
             _clear.Click += OnClearClick;
         }
-        _presenter ??= new SortableDataTablePresenter(this);
+        _presenter ??= new TablePresenter(this);
         if (_scroll is not null)
         {
             _scroll.Content = _presenter;
@@ -1499,7 +1508,7 @@ public class SortableDataTable : TemplatedControl
 
     private sealed class TablePeer : Avalonia.Automation.Peers.ControlAutomationPeer
     {
-        public TablePeer(SortableDataTable owner) : base(owner)
+        public TablePeer(Table owner) : base(owner)
         {
         }
 

@@ -22,6 +22,11 @@ internal sealed class RichTextEditorHtmlNode
 
     public string? Style { get; set; }
 
+    /// <summary>The attributes the Docs profile reads: <c>data-*</c>, <c>type</c>, <c>checked</c>, <c>class</c> and <c>lang</c>.</summary>
+    public Dictionary<string, string>? Attrs { get; set; }
+
+    public string? Attr(string name) => Attrs is not null && Attrs.TryGetValue(name, out var value) ? value : null;
+
     public RichTextEditorHtmlNode? Parent { get; set; }
 
     public List<RichTextEditorHtmlNode> Children { get; } = new();
@@ -158,8 +163,8 @@ internal static class RichTextEditorHtml
                 end++;
             }
             var tag = html.Substring(start, end - start).ToLowerInvariant();
-            i = ParseAttributes(html, end, out var href, out var style, out var selfClosing);
-            OpenElement(stack, tag, href, style, selfClosing);
+            i = ParseAttributes(html, end, out var href, out var style, out var attrs, out var selfClosing);
+            OpenElement(stack, tag, href, style, attrs, selfClosing);
             if (s_rawText.Contains(tag) && !selfClosing)
             {
                 var closeAt = html.IndexOf("</" + tag, i, StringComparison.OrdinalIgnoreCase);
@@ -177,10 +182,11 @@ internal static class RichTextEditorHtml
 
     private static bool IsNameChar(char c) => char.IsAsciiLetterOrDigit(c) || c is '-' or ':' or '_';
 
-    private static int ParseAttributes(string html, int i, out string? href, out string? style, out bool selfClosing)
+    private static int ParseAttributes(string html, int i, out string? href, out string? style, out Dictionary<string, string>? attrs, out bool selfClosing)
     {
         href = null;
         style = null;
+        attrs = null;
         selfClosing = false;
         var n = html.Length;
         while (i < n)
@@ -244,11 +250,15 @@ internal static class RichTextEditorHtml
             {
                 style = value;
             }
+            else if (name.StartsWith("data-", StringComparison.Ordinal) || name is "type" or "checked" or "class" or "lang" or "src" or "alt" or "align" or "width" or "colspan" or "rowspan")
+            {
+                (attrs ??= new Dictionary<string, string>(StringComparer.Ordinal))[name] = value ?? string.Empty;
+            }
         }
         return n;
     }
 
-    private static void OpenElement(List<RichTextEditorHtmlNode> stack, string tag, string? href, string? style, bool selfClosing)
+    private static void OpenElement(List<RichTextEditorHtmlNode> stack, string tag, string? href, string? style, Dictionary<string, string>? attrs, bool selfClosing)
     {
         if (s_closesParagraph.Contains(tag))
         {
@@ -262,7 +272,7 @@ internal static class RichTextEditorHtml
         {
             stack.RemoveAt(stack.Count - 1);
         }
-        var node = new RichTextEditorHtmlNode(tag) { Href = href, Style = style };
+        var node = new RichTextEditorHtmlNode(tag) { Href = href, Style = style, Attrs = attrs };
         stack[^1].Add(node);
         if (!selfClosing && !s_void.Contains(tag))
         {
@@ -354,9 +364,9 @@ internal static class RichTextEditorHtml
      * -------------------------------------------------------------------------------------------------------- */
 
     /// <summary>Parses and sanitizes <paramref name="html"/> into editor blocks (empty input gives no blocks).</summary>
-    public static List<RichTextEditorBlock> ToBlocks(string? html)
+    public static List<RichTextEditorBlock> ToBlocks(string? html, bool docs = false)
     {
-        var builder = new BlockBuilder();
+        var builder = new BlockBuilder(docs);
         if (!string.IsNullOrEmpty(html))
         {
             builder.Walk(Parse(html), new Context(RichTextEditorMarks.None, null, Container.Top, RichTextBlockType.BulletedList, 0, 0));
@@ -377,11 +387,37 @@ internal static class RichTextEditorHtml
             || value.StartsWith('#');
     }
 
+    /// <summary>True when an image address can be kept: no script schemes and no data other than raster images; hosts may use their own schemes.</summary>
+    public static bool IsSafeImageUrl(string url)
+    {
+        var value = url.Trim();
+        if (value.Length == 0)
+        {
+            return false;
+        }
+        if (value.StartsWith("data:", StringComparison.OrdinalIgnoreCase))
+        {
+            var rest = value.AsSpan(5);
+            foreach (var type in s_imageDataTypes)
+            {
+                if (rest.StartsWith(type, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !value.StartsWith("javascript:", StringComparison.OrdinalIgnoreCase) && !value.StartsWith("vbscript:", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static readonly string[] s_imageDataTypes = { "image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp", "image/bmp", "image/avif" };
+
     private enum Container
     {
         Top,
         Item,
-        Quote
+        Quote,
+        Cell
     }
 
     private readonly record struct Context(RichTextEditorMarks Marks, string? Href, Container Container, RichTextBlockType ItemType, int ItemLevel, int ListDepth);
@@ -394,6 +430,13 @@ internal static class RichTextEditorHtml
         private bool _open;
         private bool _needBreak;
         private readonly Stack<RichTextBlockType> _lists = new();
+        private readonly bool _docs;
+        private RichTextEditorBlockAttrs _attrs;
+
+        public BlockBuilder(bool docs)
+        {
+            _docs = docs;
+        }
 
         public List<RichTextEditorBlock> Blocks { get; } = new();
 
@@ -413,6 +456,16 @@ internal static class RichTextEditorHtml
                 return;
             }
             var tag = node.Tag;
+            if (tag == "img" && _docs)
+            {
+                AddImage(node, ctx);
+                return;
+            }
+            if (tag == "table" && _docs && ctx.Container == Container.Top)
+            {
+                AddTable(node);
+                return;
+            }
             if (s_drop.Contains(tag))
             {
                 return;
@@ -448,9 +501,31 @@ internal static class RichTextEditorHtml
                 case "tt":
                     Walk(node, ctx with { Marks = ctx.Marks | RichTextEditorMarks.Code });
                     return;
+                case "sup":
+                case "sub":
+                    // One of the two at a time: the inner one wins.
+                    var script = tag == "sup" ? RichTextEditorMarks.Superscript : RichTextEditorMarks.Subscript;
+                    Walk(node, _docs ? ctx with { Marks = ctx.Marks & ~RichTextEditorMarks.ScriptMask | script } : ctx);
+                    return;
+                case "u":
+                case "ins":
+                    Walk(node, _docs ? ctx with { Marks = ctx.Marks | RichTextEditorMarks.Underline } : ctx);
+                    return;
+                case "mark":
+                    Walk(node, _docs ? ctx with { Marks = ctx.Marks.WithHighlight(ParseColor(node.Attr("data-bg"), RichTextColor.Yellow)) } : ctx);
+                    return;
                 case "span":
                 case "font":
-                    Walk(node, ctx with { Marks = ctx.Marks | StyleMarks(node.Style) });
+                    var spanMarks = ctx.Marks | StyleMarks(node.Style);
+                    if (_docs && node.Attr("data-color") is { } colorName)
+                    {
+                        spanMarks = spanMarks.WithTextColor(ParseColor(colorName, RichTextColor.Default));
+                    }
+                    if (_docs && node.Attr("data-size") is { } sizeName)
+                    {
+                        spanMarks = spanMarks.WithSize(ParseSize(sizeName));
+                    }
+                    Walk(node, ctx with { Marks = spanMarks });
                     return;
                 case "a":
                     var href = node.Href;
@@ -487,15 +562,19 @@ internal static class RichTextEditorHtml
                     {
                         "h1" => RichTextBlockType.Heading1,
                         "h2" => RichTextBlockType.Heading2,
-                        "h3" or "h4" or "h5" or "h6" => RichTextBlockType.Heading3,
+                        "h3" => RichTextBlockType.Heading3,
+                        "h4" => _docs ? RichTextBlockType.Heading4 : RichTextBlockType.Heading3,
+                        "h5" => _docs ? RichTextBlockType.Heading5 : RichTextBlockType.Heading3,
+                        "h6" => _docs ? RichTextBlockType.Heading6 : RichTextBlockType.Heading3,
                         _ => RichTextBlockType.Paragraph
                     }, 0);
+                    _attrs = new RichTextEditorBlockAttrs(Align: AlignOf(node), Spacing: SpacingOf(node));
                     Walk(node, inline);
                     Close();
                     return;
                 case "ul":
                 case "ol":
-                    if (ctx.Container == Container.Quote)
+                    if (ctx.Container is Container.Quote or Container.Cell)
                     {
                         Boundary(ctx);
                         Walk(node, ctx);
@@ -503,13 +582,16 @@ internal static class RichTextEditorHtml
                         return;
                     }
                     Close();
-                    _lists.Push(tag == "ol" ? RichTextBlockType.NumberedList : RichTextBlockType.BulletedList);
+                    _lists.Push(tag == "ol" ? RichTextBlockType.NumberedList
+                        : _docs && node.Attr("data-todo") is not null ? RichTextBlockType.TodoList
+                        : _docs && node.Attr("data-toggle") is not null ? RichTextBlockType.Toggle
+                        : RichTextBlockType.BulletedList);
                     Walk(node, inline with { ListDepth = ctx.ListDepth + 1 });
                     _lists.Pop();
                     Close();
                     return;
                 case "li":
-                    if (ctx.Container == Container.Quote)
+                    if (ctx.Container is Container.Quote or Container.Cell)
                     {
                         Boundary(ctx);
                         Walk(node, ctx);
@@ -519,10 +601,49 @@ internal static class RichTextEditorHtml
                     Close();
                     var itemType = _lists.Count > 0 ? _lists.Peek() : RichTextBlockType.BulletedList;
                     var itemLevel = Math.Max(0, ctx.ListDepth - 1);
+                    var itemChecked = _docs && node.Attr("data-checked") is not null;
+                    if (_docs && itemType == RichTextBlockType.BulletedList && node.Children.Find(c => c.Tag == "input" && c.Attr("type") == "checkbox") is { } box)
+                    {
+                        // GitHub style task lists: a checkbox input leads the item.
+                        itemType = RichTextBlockType.TodoList;
+                        itemChecked = box.Attr("checked") is not null;
+                    }
                     var item = inline with { Container = Container.Item, ItemType = itemType, ItemLevel = itemLevel };
                     Begin(itemType, itemLevel);
+                    _attrs = new RichTextEditorBlockAttrs(Checked: itemChecked, Spacing: SpacingOf(node),
+                        Collapsed: itemType == RichTextBlockType.Toggle && node.Attr("data-collapsed") is not null);
                     Walk(node, item);
                     Close();
+                    return;
+                case "aside" when _docs && ctx.Container == Container.Top && node.Attr("data-callout") is not null:
+                    Close();
+                    var calloutAttrs = new RichTextEditorBlockAttrs(Icon: node.Attr("data-icon"), Tone: ParseColor(node.Attr("data-callout"), RichTextColor.Default));
+                    var paragraphs = 0;
+                    foreach (var child in node.Children)
+                    {
+                        if (child.Tag is null && string.IsNullOrWhiteSpace(child.Text))
+                        {
+                            continue;
+                        }
+                        Begin(RichTextBlockType.Callout, 0);
+                        _attrs = calloutAttrs with { Align = AlignOf(child), Spacing = SpacingOf(child) };
+                        if (child.Tag is "p" or "div" or "h1" or "h2" or "h3" or "h4" or "h5" or "h6")
+                        {
+                            Walk(child, inline);
+                        }
+                        else
+                        {
+                            Visit(child, inline);
+                        }
+                        Close();
+                        paragraphs++;
+                    }
+                    if (paragraphs == 0)
+                    {
+                        Begin(RichTextBlockType.Callout, 0);
+                        _attrs = calloutAttrs;
+                        Close();
+                    }
                     return;
                 case "blockquote":
                     if (ctx.Container != Container.Top)
@@ -534,6 +655,7 @@ internal static class RichTextEditorHtml
                     }
                     Close();
                     Begin(RichTextBlockType.Quote, 0);
+                    _attrs = new RichTextEditorBlockAttrs(Align: AlignOf(node), Spacing: SpacingOf(node));
                     Walk(node, inline with { Container = Container.Quote });
                     Close();
                     return;
@@ -556,7 +678,8 @@ internal static class RichTextEditorHtml
                         return;
                     }
                     Close();
-                    Blocks.Add(RichTextEditorBlock.Plain(RichTextBlockType.CodeBlock, code.Replace("​", string.Empty)));
+                    Blocks.Add(RichTextEditorBlock.Create(RichTextBlockType.CodeBlock, 0, new[] { new RichTextEditorRun(code.Replace("​", string.Empty)) },
+                        new RichTextEditorBlockAttrs(Language: _docs ? node.Attr("data-lang") : null)));
                     return;
                 case "hr":
                     if (ctx.Container != Container.Top)
@@ -577,6 +700,158 @@ internal static class RichTextEditorHtml
             }
             // Unknown inline elements are unwrapped.
             Walk(node, ctx);
+        }
+
+        /// <summary>An <c>img</c> at the top level becomes an image block between the text before and after it; elsewhere it is dropped.</summary>
+        private void AddImage(RichTextEditorHtmlNode node, Context ctx)
+        {
+            var src = node.Attr("src");
+            if (ctx.Container != Container.Top || string.IsNullOrWhiteSpace(src) || !IsSafeImageUrl(src))
+            {
+                return;
+            }
+            if (_open && !HasContent())
+            {
+                _open = false;
+                _needBreak = false;
+                _attrs = default;
+                _runs.Clear();
+            }
+            else
+            {
+                Close();
+            }
+            Blocks.Add(RichTextEditorBlock.Image(src.Trim(), node.Attr("alt"), int.TryParse(node.Attr("width"), out var width) ? width : 0));
+        }
+
+        /// <summary>
+        /// A <c>table</c> becomes its cells in row-major order; short rows are padded, and a cell with <c>colspan</c> or <c>rowspan</c>
+        /// becomes a merged cell followed by the empty cells it covers. The first row is the header unless the Docs profile reads one
+        /// without <c>th</c> cells; there it also reads a header column (<c>th</c> down the first column), cell colors (<c>data-bg</c>) and
+        /// column widths (<c>col width</c>).
+        /// </summary>
+        private void AddTable(RichTextEditorHtmlNode table)
+        {
+            Close();
+            var rows = new List<List<RichTextEditorHtmlNode>>();
+            CollectRows(table, rows);
+            if (rows.Count == 0)
+            {
+                return;
+            }
+            var placed = new List<(RichTextEditorHtmlNode Node, int Row, int Col, int RowSpan, int ColSpan)>();
+            var taken = new HashSet<(int, int)>();
+            var cols = 0;
+            for (var r = 0; r < rows.Count; r++)
+            {
+                var c = 0;
+                foreach (var node in rows[r])
+                {
+                    while (taken.Contains((r, c)))
+                    {
+                        c++;
+                    }
+                    var colSpan = Math.Clamp(SpanOf(node, "colspan"), 1, RichTextEditorTables.MaxColumns - Math.Min(c, RichTextEditorTables.MaxColumns - 1));
+                    var rowSpan = Math.Clamp(SpanOf(node, "rowspan"), 1, rows.Count - r);
+                    for (var k = 0; k < rowSpan; k++)
+                    {
+                        for (var j = 0; j < colSpan; j++)
+                        {
+                            taken.Add((r + k, c + j));
+                        }
+                    }
+                    placed.Add((node, r, c, rowSpan, colSpan));
+                    c += colSpan;
+                    cols = Math.Max(cols, c);
+                }
+            }
+            if (cols == 0)
+            {
+                return;
+            }
+            var headerRow = !_docs || rows[0].Count > 0 && rows[0].All(n => n.Tag == "th");
+            var bodyFirst = placed.Where(p => p.Col == 0 && p.Row >= (headerRow ? 1 : 0)).ToList();
+            var headerColumn = _docs && bodyFirst.Count > 0 && bodyFirst.All(p => p.Node.Tag == "th");
+            var widths = new List<int>();
+            if (_docs)
+            {
+                CollectColumns(table, widths);
+            }
+            var anchors = placed.ToDictionary(p => (p.Row, p.Col));
+            var covered = new HashSet<(int, int)>();
+            foreach (var p in placed)
+            {
+                for (var k = 0; k < p.RowSpan; k++)
+                {
+                    for (var j = 0; j < p.ColSpan; j++)
+                    {
+                        if (k > 0 || j > 0)
+                        {
+                            covered.Add((p.Row + k, p.Col + j));
+                        }
+                    }
+                }
+            }
+            for (var r = 0; r < rows.Count; r++)
+            {
+                for (var c = 0; c < cols; c++)
+                {
+                    Begin(RichTextBlockType.TableCell, 0);
+                    if (anchors.TryGetValue((r, c), out var anchor))
+                    {
+                        _attrs = new RichTextEditorBlockAttrs(Align: AlignOf(anchor.Node), Row: r, Col: c,
+                            RowSpan: anchor.RowSpan > 1 ? anchor.RowSpan : 0, ColSpan: anchor.ColSpan > 1 ? anchor.ColSpan : 0,
+                            Tone: _docs ? ParseColor(anchor.Node.Attr("data-bg"), RichTextColor.Default) : RichTextColor.Default);
+                        Walk(anchor.Node, new Context(RichTextEditorMarks.None, null, Container.Cell, RichTextBlockType.BulletedList, 0, 0));
+                    }
+                    else
+                    {
+                        _attrs = new RichTextEditorBlockAttrs(Row: r, Col: c, Covered: covered.Contains((r, c)));
+                    }
+                    if (r == 0)
+                    {
+                        _attrs = _attrs with { Width = c < widths.Count ? widths[c] : 0, NoHeaderRow = c == 0 && !headerRow, HeaderColumn = c == 0 && headerColumn };
+                    }
+                    Close();
+                }
+            }
+        }
+
+        private static int SpanOf(RichTextEditorHtmlNode cell, string name) =>
+            int.TryParse(cell.Attr(name), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var span) ? span : 1;
+
+        /// <summary>The widths of the table's <c>col</c> elements (0 when one has none), in order.</summary>
+        private static void CollectColumns(RichTextEditorHtmlNode node, List<int> widths)
+        {
+            foreach (var child in node.Children)
+            {
+                if (child.Tag == "colgroup")
+                {
+                    CollectColumns(child, widths);
+                }
+                else if (child.Tag == "col")
+                {
+                    widths.Add(int.TryParse(child.Attr("width"), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var width) ? width : 0);
+                }
+            }
+        }
+
+        private static void CollectRows(RichTextEditorHtmlNode node, List<List<RichTextEditorHtmlNode>> rows)
+        {
+            foreach (var child in node.Children)
+            {
+                switch (child.Tag)
+                {
+                    case "tr":
+                        rows.Add(child.Children.Where(c => c.Tag is "td" or "th").ToList());
+                        break;
+                    case "thead":
+                    case "tbody":
+                    case "tfoot":
+                        CollectRows(child, rows);
+                        break;
+                }
+            }
         }
 
         private void AddText(string raw, Context ctx)
@@ -647,6 +922,30 @@ internal static class RichTextEditorHtml
             }
         }
 
+        /// <summary>The Docs profile's line spacing of a block element (<c>data-spacing</c>).</summary>
+        private RichTextLineSpacing SpacingOf(RichTextEditorHtmlNode node) => !_docs ? RichTextLineSpacing.Default : node.Attr("data-spacing")?.ToLowerInvariant() switch
+        {
+            "compact" => RichTextLineSpacing.Compact,
+            "relaxed" => RichTextLineSpacing.Relaxed,
+            "loose" => RichTextLineSpacing.Loose,
+            _ => RichTextLineSpacing.Default
+        };
+
+        private RichTextAlign AlignOf(RichTextEditorHtmlNode node)
+        {
+            if (!_docs)
+            {
+                return RichTextAlign.Start;
+            }
+            var value = node.Attr("data-align") ?? node.Attr("align") ?? (node.Style is { } style && System.Text.RegularExpressions.Regex.Match(style, @"text-align:\s*(\w+)") is { Success: true } match ? match.Groups[1].Value : null);
+            return value?.ToLowerInvariant() switch
+            {
+                "center" => RichTextAlign.Center,
+                "end" or "right" => RichTextAlign.End,
+                _ => RichTextAlign.Start
+            };
+        }
+
         private void Begin(RichTextBlockType type, int level)
         {
             Close();
@@ -666,7 +965,8 @@ internal static class RichTextEditorHtml
             _open = false;
             _needBreak = false;
             FinishWhitespace(_runs);
-            Blocks.Add(RichTextEditorBlock.Create(_type, _level, _runs));
+            Blocks.Add(RichTextEditorBlock.Create(_type, _level, _runs, _attrs));
+            _attrs = default;
             _runs.Clear();
         }
     }
@@ -685,6 +985,60 @@ internal static class RichTextEditorHtml
 
     private static bool IsNormalWeight(string? style) =>
         style is not null && System.Text.RegularExpressions.Regex.IsMatch(style, @"font-weight:\s*(normal|[1-4]00)");
+
+    /// <summary>The palette color named <paramref name="name"/> (case-insensitive), or <paramref name="fallback"/>.</summary>
+    internal static RichTextColor ParseColor(string? name, RichTextColor fallback) => name?.ToLowerInvariant() switch
+    {
+        "gray" => RichTextColor.Gray,
+        "red" => RichTextColor.Red,
+        "orange" => RichTextColor.Orange,
+        "yellow" => RichTextColor.Yellow,
+        "green" => RichTextColor.Green,
+        "blue" => RichTextColor.Blue,
+        "purple" => RichTextColor.Purple,
+        "default" => RichTextColor.Default,
+        _ => fallback
+    };
+
+    /// <summary>The text size named <paramref name="name"/> (case-insensitive), or the default.</summary>
+    internal static RichTextSize ParseSize(string? name) => name?.ToLowerInvariant() switch
+    {
+        "small" => RichTextSize.Small,
+        "large" => RichTextSize.Large,
+        "xlarge" => RichTextSize.ExtraLarge,
+        _ => RichTextSize.Default
+    };
+
+    /// <summary>The attribute value naming a text size.</summary>
+    internal static string SizeName(RichTextSize size) => size switch
+    {
+        RichTextSize.Small => "small",
+        RichTextSize.Large => "large",
+        RichTextSize.ExtraLarge => "xlarge",
+        _ => "default"
+    };
+
+    /// <summary>The <c>data-spacing</c> attribute of a block, or nothing for the default spacing.</summary>
+    private static string SpacingAttr(RichTextEditorBlock block) => block.Spacing switch
+    {
+        RichTextLineSpacing.Compact => " data-spacing=\"compact\"",
+        RichTextLineSpacing.Relaxed => " data-spacing=\"relaxed\"",
+        RichTextLineSpacing.Loose => " data-spacing=\"loose\"",
+        _ => string.Empty
+    };
+
+    /// <summary>The attribute value naming a palette color.</summary>
+    internal static string ColorName(RichTextColor color) => color switch
+    {
+        RichTextColor.Gray => "gray",
+        RichTextColor.Red => "red",
+        RichTextColor.Orange => "orange",
+        RichTextColor.Yellow => "yellow",
+        RichTextColor.Green => "green",
+        RichTextColor.Blue => "blue",
+        RichTextColor.Purple => "purple",
+        _ => "default"
+    };
 
     private static RichTextEditorMarks StyleMarks(string? style)
     {
@@ -837,13 +1191,51 @@ internal static class RichTextEditorHtml
                 i = end;
                 continue;
             }
+            if (block.IsCell)
+            {
+                var table = RichTextEditorTables.Extent(blocks, i);
+                WriteTable(blocks, table, sb);
+                i = table.End;
+                continue;
+            }
+            if (block.IsCallout)
+            {
+                var end = i + 1;
+                while (end < count && block.SharesCalloutBox(blocks[end]))
+                {
+                    end++;
+                }
+                WriteCallout(blocks, i, end, sb);
+                i = end;
+                continue;
+            }
             switch (block.Type)
             {
                 case RichTextBlockType.Divider:
                     sb.Append("<hr>");
                     break;
+                case RichTextBlockType.Image:
+                    if (block.Src is { } src && IsSafeImageUrl(src))
+                    {
+                        sb.Append("<img src=\"").Append(Escape(src)).Append('"');
+                        if (block.Alt is { } alt)
+                        {
+                            sb.Append(" alt=\"").Append(Escape(alt)).Append('"');
+                        }
+                        if (block.Width > 0)
+                        {
+                            sb.Append(" width=\"").Append(block.Width).Append('"');
+                        }
+                        sb.Append('>');
+                    }
+                    break;
                 case RichTextBlockType.CodeBlock:
-                    sb.Append("<pre>").Append(block.Length == 0 ? "<br>" : Escape(block.Text)).Append("</pre>");
+                    sb.Append("<pre");
+                    if (block.Language is { } language)
+                    {
+                        sb.Append(" data-lang=\"").Append(Escape(language)).Append('"');
+                    }
+                    sb.Append('>').Append(block.Length == 0 ? "<br>" : Escape(block.Text)).Append("</pre>");
                     break;
                 default:
                     var tag = block.Type switch
@@ -851,10 +1243,18 @@ internal static class RichTextEditorHtml
                         RichTextBlockType.Heading1 => "h1",
                         RichTextBlockType.Heading2 => "h2",
                         RichTextBlockType.Heading3 => "h3",
+                        RichTextBlockType.Heading4 => "h4",
+                        RichTextBlockType.Heading5 => "h5",
+                        RichTextBlockType.Heading6 => "h6",
                         RichTextBlockType.Quote => "blockquote",
                         _ => "p"
                     };
-                    sb.Append('<').Append(tag).Append('>');
+                    sb.Append('<').Append(tag);
+                    if (block.Align != RichTextAlign.Start)
+                    {
+                        sb.Append(" data-align=\"").Append(block.Align == RichTextAlign.Center ? "center" : "end").Append('"');
+                    }
+                    sb.Append(SpacingAttr(block)).Append('>');
                     WriteInlineBlock(block, sb);
                     sb.Append("</").Append(tag).Append('>');
                     break;
@@ -862,6 +1262,94 @@ internal static class RichTextEditorHtml
             i++;
         }
         return sb.Length == 0 ? "<p><br></p>" : sb.ToString();
+    }
+
+    private static void WriteTable(IReadOnlyList<RichTextEditorBlock> blocks, RichTextEditorTableExtent table, StringBuilder sb)
+    {
+        var head = blocks[table.Start];
+        var headerRow = !head.Attrs.NoHeaderRow;
+        sb.Append("<table>");
+        if (Enumerable.Range(0, table.Cols).Any(c => table.IndexOf(0, c) < table.End && blocks[table.IndexOf(0, c)].Width > 0))
+        {
+            sb.Append("<colgroup>");
+            for (var c = 0; c < table.Cols; c++)
+            {
+                var width = table.IndexOf(0, c) < table.End ? blocks[table.IndexOf(0, c)].Width : 0;
+                sb.Append(width > 0 ? "<col width=\"" + width.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\">" : "<col>");
+            }
+            sb.Append("</colgroup>");
+        }
+        for (var r = 0; r < table.Rows; r++)
+        {
+            sb.Append(headerRow
+                ? r == 0 ? "<thead><tr>" : r == 1 ? "<tbody><tr>" : "<tr>"
+                : r == 0 ? "<tbody><tr>" : "<tr>");
+            for (var c = 0; c < table.Cols; c++)
+            {
+                var index = table.IndexOf(r, c);
+                var cell = index < table.End ? blocks[index] : null;
+                if (cell is { IsCovered: true })
+                {
+                    continue;
+                }
+                var tag = cell is not null && RichTextEditorTables.IsHeader(head, cell) || cell is null && r == 0 && headerRow ? "th" : "td";
+                sb.Append('<').Append(tag);
+                if (cell is { ColSpan: > 1 })
+                {
+                    sb.Append(" colspan=\"").Append(cell.ColSpan).Append('"');
+                }
+                if (cell is { RowSpan: > 1 })
+                {
+                    sb.Append(" rowspan=\"").Append(cell.RowSpan).Append('"');
+                }
+                if (cell is not null && cell.Align != RichTextAlign.Start)
+                {
+                    sb.Append(" data-align=\"").Append(cell.Align == RichTextAlign.Center ? "center" : "end").Append('"');
+                }
+                if (cell is not null && cell.Tone != RichTextColor.Default)
+                {
+                    sb.Append(" data-bg=\"").Append(ColorName(cell.Tone)).Append('"');
+                }
+                sb.Append('>');
+                if (cell is not null && cell.Length > 0)
+                {
+                    WriteInline(cell, 0, cell.SpanCount, 0, sb);
+                    if (cell.Text.EndsWith('\n'))
+                    {
+                        sb.Append("<br>");
+                    }
+                }
+                sb.Append("</").Append(tag).Append('>');
+            }
+            sb.Append("</tr>");
+            if (headerRow && r == 0)
+            {
+                sb.Append("</thead>");
+            }
+            else if (r == table.Rows - 1)
+            {
+                sb.Append("</tbody>");
+            }
+        }
+        sb.Append("</table>");
+    }
+
+    private static void WriteCallout(IReadOnlyList<RichTextEditorBlock> blocks, int from, int to, StringBuilder sb)
+    {
+        var first = blocks[from];
+        sb.Append("<aside data-callout=\"").Append(ColorName(first.Tone)).Append("\" data-icon=\"").Append(Escape(first.Icon ?? RichTextEditorBlock.DefaultCalloutIcon)).Append("\">");
+        for (var i = from; i < to; i++)
+        {
+            sb.Append("<p");
+            if (blocks[i].Align != RichTextAlign.Start)
+            {
+                sb.Append(" data-align=\"").Append(blocks[i].Align == RichTextAlign.Center ? "center" : "end").Append('"');
+            }
+            sb.Append(SpacingAttr(blocks[i])).Append('>');
+            WriteInlineBlock(blocks[i], sb);
+            sb.Append("</p>");
+        }
+        sb.Append("</aside>");
     }
 
     private static void WriteInlineBlock(RichTextEditorBlock block, StringBuilder sb)
@@ -879,14 +1367,28 @@ internal static class RichTextEditorHtml
         }
     }
 
-    private static readonly string[] s_tags = { "a", "strong", "em", "s", "code" };
+    private static readonly string[] s_tags = { "a", "strong", "em", "s", "u", "span", "mark", "code", "sup", "sub", "span" };
 
-    private static readonly RichTextEditorMarks[] s_levelMarks = { RichTextEditorMarks.None, RichTextEditorMarks.Bold, RichTextEditorMarks.Italic, RichTextEditorMarks.Strike, RichTextEditorMarks.Code };
+    private static readonly RichTextEditorMarks[] s_levelMarks =
+    {
+        RichTextEditorMarks.None, RichTextEditorMarks.Bold, RichTextEditorMarks.Italic, RichTextEditorMarks.Strike, RichTextEditorMarks.Underline,
+        RichTextEditorMarks.ColorMask, RichTextEditorMarks.FillMask, RichTextEditorMarks.Code, RichTextEditorMarks.Superscript, RichTextEditorMarks.Subscript,
+        RichTextEditorMarks.SizeMask
+    };
 
-    /// <summary>The grouping key of a span at a nesting level: links outermost, then strong, em, s and code.</summary>
-    internal static object? GroupKey(in RichTextEditorSpan span, int level) => level == 0
-        ? span.Href
-        : (span.Marks & s_levelMarks[level]) != 0 ? s_levelMarks[level] : null;
+    private const int ColorLevel = 5;
+    private const int HighlightLevel = 6;
+    private const int SizeLevel = 10;
+
+    /// <summary>The grouping key of a span at a nesting level: links outermost, then strong, em, s, u, the text color, the highlight, code, sup, sub and the size.</summary>
+    internal static object? GroupKey(in RichTextEditorSpan span, int level) => level switch
+    {
+        0 => span.Href,
+        SizeLevel => span.Marks.Size() is var size && size != RichTextSize.Default ? size : null,
+        ColorLevel => span.Marks.TextColor() is var color && color != RichTextColor.Default ? color : null,
+        HighlightLevel => span.Marks.Highlight() is var fill && fill != RichTextColor.Default ? fill : null,
+        _ => (span.Marks & s_levelMarks[level]) != 0 ? s_levelMarks[level] : null
+    };
 
     private static void WriteInline(RichTextEditorBlock block, int from, int to, int level, StringBuilder sb)
     {
@@ -944,6 +1446,18 @@ internal static class RichTextEditorHtml
                 {
                     sb.Append(" href=\"").Append(Escape((string)key)).Append('"');
                 }
+                else if (level == ColorLevel)
+                {
+                    sb.Append(" data-color=\"").Append(ColorName((RichTextColor)key)).Append('"');
+                }
+                else if (level == HighlightLevel)
+                {
+                    sb.Append(" data-bg=\"").Append(ColorName((RichTextColor)key)).Append('"');
+                }
+                else if (level == SizeLevel)
+                {
+                    sb.Append(" data-size=\"").Append(SizeName((RichTextSize)key)).Append('"');
+                }
                 sb.Append('>');
                 WriteInline(block, index, end, level + 1, sb);
                 sb.Append("</").Append(s_tags[level]).Append('>');
@@ -965,17 +1479,17 @@ internal static class RichTextEditorHtml
             }
             if (stack.Count == 0 || stack[^1].Level < item.Level)
             {
-                sb.Append('<').Append(ListTag(item.Type)).Append("><li>");
+                sb.Append('<').Append(ListTag(item.Type)).Append(ListAttrs(item.Type)).Append("><li").Append(ItemAttrs(item)).Append('>');
                 stack.Add((item.Level, item.Type));
             }
             else if (stack[^1].Type != item.Type)
             {
-                sb.Append("</li></").Append(ListTag(stack[^1].Type)).Append("><").Append(ListTag(item.Type)).Append("><li>");
+                sb.Append("</li></").Append(ListTag(stack[^1].Type)).Append("><").Append(ListTag(item.Type)).Append(ListAttrs(item.Type)).Append("><li").Append(ItemAttrs(item)).Append('>');
                 stack[^1] = (item.Level, item.Type);
             }
             else
             {
-                sb.Append("</li><li>");
+                sb.Append("</li><li").Append(ItemAttrs(item)).Append('>');
             }
             WriteInlineBlock(item, sb);
         }
@@ -987,6 +1501,16 @@ internal static class RichTextEditorHtml
     }
 
     private static string ListTag(RichTextBlockType type) => type == RichTextBlockType.NumberedList ? "ol" : "ul";
+
+    private static string ListAttrs(RichTextBlockType type) => type switch
+    {
+        RichTextBlockType.TodoList => " data-todo=\"true\"",
+        RichTextBlockType.Toggle => " data-toggle=\"true\"",
+        _ => string.Empty
+    };
+
+    private static string ItemAttrs(RichTextEditorBlock item) =>
+        (item.IsChecked ? " data-checked=\"true\"" : string.Empty) + (item.IsCollapsed ? " data-collapsed=\"true\"" : string.Empty) + SpacingAttr(item);
 
     /// <summary>The end (exclusive) of the list beginning at <paramref name="start"/>: a change of type at the outer level starts a new list.</summary>
     internal static int ListGroupEnd(IReadOnlyList<RichTextEditorBlock> blocks, int start, int count)
@@ -1009,7 +1533,7 @@ internal static class RichTextEditorHtml
         while (i < blocks.Count)
         {
             starts.Add(i);
-            i = blocks[i].IsList ? ListGroupEnd(blocks, i, blocks.Count) : i + 1;
+            i = blocks[i].IsList ? ListGroupEnd(blocks, i, blocks.Count) : blocks[i].IsCell ? RichTextEditorTables.Extent(blocks, i).End : i + 1;
         }
         var count = blocks.Count;
         for (var g = starts.Count - 1; g > 0; g--)
@@ -1018,7 +1542,7 @@ internal static class RichTextEditorHtml
             var visible = false;
             for (var k = start; k < count; k++)
             {
-                if (blocks[k].IsDivider || !string.IsNullOrWhiteSpace(blocks[k].Text))
+                if (blocks[k].IsStructural || !string.IsNullOrWhiteSpace(blocks[k].Text))
                 {
                     visible = true;
                     break;
@@ -1061,7 +1585,7 @@ internal static class RichTextEditorHtml
     {
         foreach (var block in blocks)
         {
-            if (block.IsDivider || !string.IsNullOrWhiteSpace(block.Text))
+            if (block.IsStructural || !string.IsNullOrWhiteSpace(block.Text))
             {
                 return false;
             }
@@ -1069,9 +1593,9 @@ internal static class RichTextEditorHtml
         return true;
     }
 
-    public static ImmutableList<RichTextEditorBlock> ToDocument(string? html)
+    public static ImmutableList<RichTextEditorBlock> ToDocument(string? html, bool docs = false)
     {
-        var blocks = ToBlocks(html);
+        var blocks = ToBlocks(html, docs);
         return RichTextEditorEngine.Normalize(blocks.Count == 0 ? ImmutableList.Create(RichTextEditorBlock.EmptyParagraph) : blocks.ToImmutableList());
     }
 }

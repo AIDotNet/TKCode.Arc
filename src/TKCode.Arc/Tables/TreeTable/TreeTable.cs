@@ -248,7 +248,7 @@ public class TreeTable : TemplatedControl
     private readonly Dictionary<object, List<object>?> _kids = new();
     private readonly List<object> _allKeys = new();
     private readonly List<object> _expandableKeys = new();
-    private readonly Dictionary<TreeTableColumn, SortableDataTableBindingProbe> _probes = new();
+    private readonly Dictionary<TreeTableColumn, TableBindingProbe> _probes = new();
     private readonly HashSet<INotifyCollectionChanged> _watched = new();
     private readonly List<TreeTableLine> _lines = new();
     private readonly List<TreeTableLine> _rowLines = new();
@@ -471,7 +471,7 @@ public class TreeTable : TemplatedControl
         {
             if (!_probes.TryGetValue(column, out var probe))
             {
-                probe = new SortableDataTableBindingProbe(binding);
+                probe = new TableBindingProbe(binding);
                 _probes[column] = probe;
             }
             return probe.Evaluate(item);
@@ -541,13 +541,13 @@ public class TreeTable : TemplatedControl
         }).ToList();
         keyed.Sort((a, b) =>
         {
-            var aEmpty = SortableDataTableValues.IsEmpty(a.value);
-            var bEmpty = SortableDataTableValues.IsEmpty(b.value);
+            var aEmpty = TableValues.IsEmpty(a.value);
+            var bEmpty = TableValues.IsEmpty(b.value);
             if (aEmpty || bEmpty)
             {
                 return aEmpty == bEmpty ? a.index.CompareTo(b.index) : aEmpty ? 1 : -1;
             }
-            var result = SortableDataTableValues.Compare(a.value!, b.value!, null);
+            var result = TableValues.Compare(a.value!, b.value!, null);
             return result == 0 ? a.index.CompareTo(b.index) : sign * result;
         });
         return keyed.Select(k => k.item).ToList();

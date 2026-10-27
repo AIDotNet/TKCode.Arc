@@ -10,7 +10,7 @@ namespace TKCode.Arc;
 /// a check that draws itself (path length) and morphs into the mixed dash (they share three points), a hover
 /// border and a press scale. Arc builds it from a hidden native input; here the row or header cell owns focus.
 /// </summary>
-internal sealed class SortableDataTableCheckbox
+internal sealed class TableCheckbox
 {
     public const double Extent = 18;
     private const double Radius = 5;
@@ -27,7 +27,7 @@ internal sealed class SortableDataTableCheckbox
     private Color _penColor;
     private IPen? _borderPen;
 
-    public SortableDataTableCheckbox(Visual owner) => _owner = owner;
+    public TableCheckbox(Visual owner) => _owner = owner;
 
     public bool IsChecked { get; private set; }
     public bool IsMixed { get; private set; }
@@ -107,7 +107,7 @@ internal sealed class SortableDataTableCheckbox
         return value;
     }
 
-    public void Render(DrawingContext context, Point origin, SortableDataTablePalette palette, bool focusVisible)
+    public void Render(DrawingContext context, Point origin, TablePalette palette, bool focusVisible)
     {
         var on = IsOn ? 1.0 : 0.0;
         var opacity = Math.Clamp(_opacity?.Value ?? on, 0, 1);

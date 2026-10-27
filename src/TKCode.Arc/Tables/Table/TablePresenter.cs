@@ -7,20 +7,20 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The scrolled content of a <see cref="SortableDataTable"/>: the sticky header row and the realized body rows.
+/// The scrolled content of a <see cref="Table"/>: the sticky header row and the realized body rows.
 /// Rows are virtualized against the effective viewport (works inside the table's own scroller and inside any
 /// scrolling ancestor), recycled through a pool, and keyed by row key so that a re-sort or a source change can
 /// slide surviving rows from where they were drawn to their new slots (FLIP). Rows entering or leaving the
 /// viewport travel from or to just beyond its edge, then the leaving ones are recycled.
 /// </summary>
-internal sealed class SortableDataTablePresenter : Control
+internal sealed class TablePresenter : Control
 {
     private const int Buffer = 2;
 
-    private readonly SortableDataTable _table;
-    private readonly SortableDataTableHeaderRow _header;
-    private readonly Dictionary<object, SortableDataTableRow> _realized = new();
-    private readonly List<SortableDataTableRow> _pool = new();
+    private readonly Table _table;
+    private readonly TableHeaderRow _header;
+    private readonly Dictionary<object, TableRow> _realized = new();
+    private readonly List<TableRow> _pool = new();
     private readonly List<object> _stale = new();
     private Rect _viewport;
     private bool _hasViewport;
@@ -43,18 +43,18 @@ internal sealed class SortableDataTablePresenter : Control
         public double HeaderHeight;
     }
 
-    public SortableDataTablePresenter(SortableDataTable table)
+    public TablePresenter(Table table)
     {
         _table = table;
-        _header = new SortableDataTableHeaderRow(table);
+        _header = new TableHeaderRow(table);
         LogicalChildren.Add(_header);
         VisualChildren.Add(_header);
         EffectiveViewportChanged += OnEffectiveViewportChanged;
     }
 
-    public SortableDataTableHeaderRow Header => _header;
+    public TableHeaderRow Header => _header;
 
-    public IEnumerable<SortableDataTableRow> RealizedRows => _realized.Values;
+    public IEnumerable<TableRow> RealizedRows => _realized.Values;
 
     internal int RealizedCount => _realized.Count;
 
@@ -96,7 +96,7 @@ internal sealed class SortableDataTablePresenter : Control
         return Math.Clamp(_viewport.Top, 0, max);
     }
 
-    private (int First, int Last) RangeFor(SortableDataTableLayout layout)
+    private (int First, int Last) RangeFor(TableLayout layout)
     {
         var count = _table.RowCount;
         double top;
@@ -170,7 +170,7 @@ internal sealed class SortableDataTablePresenter : Control
         InvalidateVisual();
     }
 
-    public SortableDataTableRow? RowAt(int displayIndex)
+    public TableRow? RowAt(int displayIndex)
     {
         foreach (var row in _realized.Values)
         {
@@ -183,7 +183,7 @@ internal sealed class SortableDataTablePresenter : Control
     }
 
     /// <summary>Realizes the row at <paramref name="displayIndex"/> now (keyboard moves past the viewport).</summary>
-    public SortableDataTableRow? EnsureRow(int displayIndex)
+    public TableRow? EnsureRow(int displayIndex)
     {
         if (RowAt(displayIndex) is { } existing)
         {
@@ -207,8 +207,8 @@ internal sealed class SortableDataTablePresenter : Control
     public void UpdateTabStops()
     {
         var current = _table.CurrentRow;
-        SortableDataTableRow? stop = null;
-        SortableDataTableRow? firstVisible = null;
+        TableRow? stop = null;
+        TableRow? firstVisible = null;
         foreach (var row in _realized.Values)
         {
             if (row.IsLeaving)
@@ -271,7 +271,7 @@ internal sealed class SortableDataTablePresenter : Control
         return new Size(width, layout.HeaderHeight + body);
     }
 
-    private void Realize(SortableDataTableLayout layout)
+    private void Realize(TableLayout layout)
     {
         var count = _table.RowCount;
         _generation++;
@@ -334,9 +334,9 @@ internal sealed class SortableDataTablePresenter : Control
         row.Stamp = generation;
     }
 
-    private SortableDataTableRow Rent()
+    private TableRow Rent()
     {
-        SortableDataTableRow row;
+        TableRow row;
         if (_pool.Count > 0)
         {
             row = _pool[^1];
@@ -345,7 +345,7 @@ internal sealed class SortableDataTablePresenter : Control
         }
         else
         {
-            row = new SortableDataTableRow(_table);
+            row = new TableRow(_table);
             LogicalChildren.Add(row);
             VisualChildren.Add(row);
             row.SyncTemplates();
@@ -353,7 +353,7 @@ internal sealed class SortableDataTablePresenter : Control
         return row;
     }
 
-    private void Recycle(SortableDataTableRow row)
+    private void Recycle(TableRow row)
     {
         row.Detach();
         row.IsVisible = false;
@@ -415,7 +415,7 @@ internal sealed class SortableDataTablePresenter : Control
         return Math.Clamp(y, viewport.Top - flip.RowHeight, Math.Max(viewport.Top, viewport.Bottom));
     }
 
-    private async Task RecycleWhenSettled(SortableDataTableRow row)
+    private async Task RecycleWhenSettled(TableRow row)
     {
         if (row.Settle is { } settle)
         {

@@ -5,8 +5,8 @@ using Avalonia.Data;
 
 namespace TKCode.Arc;
 
-/// <summary>Value helpers of <see cref="SortableDataTable"/>: Arc's comparison, emptiness and number detection.</summary>
-internal static class SortableDataTableValues
+/// <summary>Value helpers of <see cref="Table"/>: Arc's comparison, emptiness and number detection.</summary>
+internal static class TableValues
 {
     private static readonly CompareInfo s_compare = CultureInfo.GetCultureInfo("en").CompareInfo;
     private static readonly CompareOptions s_options = ProbeOptions();
@@ -154,12 +154,12 @@ internal static class SortableDataTableValues
 }
 
 /// <summary>Evaluates a column binding against row items without putting them in the tree.</summary>
-internal sealed class SortableDataTableBindingProbe : StyledElement
+internal sealed class TableBindingProbe : StyledElement
 {
     public static readonly StyledProperty<object?> ValueProperty =
-        AvaloniaProperty.Register<SortableDataTableBindingProbe, object?>("Value");
+        AvaloniaProperty.Register<TableBindingProbe, object?>("Value");
 
-    public SortableDataTableBindingProbe(BindingBase binding)
+    public TableBindingProbe(BindingBase binding)
     {
         Bind(ValueProperty, binding);
     }

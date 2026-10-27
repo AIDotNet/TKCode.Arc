@@ -23,8 +23,30 @@ internal sealed class RichTextEditorBlockView : IDisposable
     /// <summary>Height of the block's box (code blocks include their padding).</summary>
     public double Height { get; set; }
 
-    /// <summary>Text origin inside the box.</summary>
+    /// <summary>Height of the block's own content; a table cell's <see cref="Height"/> is its row's height, the tallest cell's.</summary>
+    public double ContentHeight { get; set; }
+
+    /// <summary>Text origin inside the box (a table cell adds its column's offset).</summary>
     public double TextX { get; set; }
+
+    /// <summary>The text's offset inside the block's box, before a table cell's column offset.</summary>
+    public double PadX { get; set; }
+
+    /// <summary>The left edge and width of a table cell's box; the whole width for any other block.</summary>
+    public double BoxX { get; set; }
+
+    public double BoxWidth { get; set; }
+
+    /// <summary>True for a cell in the last column / the last row of its table (those draw the closing borders).</summary>
+    public bool IsLastColumn { get; set; }
+
+    public bool IsLastRow { get; set; }
+
+    /// <summary>True for a table cell in the header row or header column: it is tinted and its text is medium weight.</summary>
+    public bool IsHeader { get; set; }
+
+    /// <summary>An image's drawn size, or the placeholder's.</summary>
+    public Size ImageSize { get; set; }
 
     public double TextY { get; set; }
 
@@ -45,6 +67,12 @@ internal sealed class RichTextEditorBlockView : IDisposable
 
     /// <summary>Inline code backgrounds relative to the text origin.</summary>
     public List<Rect>? CodeRects { get; set; }
+
+    /// <summary>Highlight backgrounds relative to the text origin.</summary>
+    public List<(Rect Rect, RichTextColor Color)>? FillRects { get; set; }
+
+    /// <summary>Superscript and subscript text, drawn over the room the layout keeps for it (positions relative to the text origin).</summary>
+    public List<(TextLayout Layout, Point At)>? ScriptRuns { get; set; }
 
     private double[]? _lineTops;
 
@@ -109,6 +137,13 @@ internal sealed class RichTextEditorBlockView : IDisposable
     public void Dispose()
     {
         Layout?.Dispose();
+        if (ScriptRuns is { } runs)
+        {
+            foreach (var (layout, _) in runs)
+            {
+                layout.Dispose();
+            }
+        }
         Layout = null;
     }
 }

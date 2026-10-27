@@ -55,6 +55,9 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ThumbWidth" Value="{arc:SwitchTokenResource ThumbSize}" />
+        <!-- The off position is set, not left at the default: a style value that falls back to the default while a
+             transition runs raises no change, so turning off from a press would finish the press glide first. -->
+        <Setter Property="ThumbMargin" Value="0" />
         <!-- The focus ring sits outside the control. -->
         <Setter Property="ClipToBounds" Value="False" />
         <!-- Base fills live in styles (not the template) so state styles can override them. -->

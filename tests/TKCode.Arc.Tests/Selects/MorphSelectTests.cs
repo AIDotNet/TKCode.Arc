@@ -250,4 +250,65 @@ public class MorphSelectTests
             window.Close();
         }
     }
+
+    [AvaloniaTheory]
+    [InlineData(420)] // the list gets shorter so the surface fits under the trigger
+    [InlineData(600)] // even the shortest list does not fit: the popup slides up
+    public void Surface_Opens_From_And_Closes_Onto_The_Trigger_Near_The_Window_Bottom(double top)
+    {
+        var clock = new Motion.ManualFrameClock();
+        using var _ = clock.Install();
+        var select = Zones(extra: 7);
+        select.SelectedValue = "z3";
+        var canvas = new Canvas();
+        Canvas.SetLeft(select, 20);
+        Canvas.SetTop(select, top);
+        canvas.Children.Add(select);
+        var window = TestHelpers.Show(canvas, Motion.ArcMotionLevel.Full);
+        window.Width = 600;
+        window.Height = 700;
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var trigger = select.GetVisualDescendants().OfType<Border>().First(b => b.Name == MorphSelect.TriggerPart);
+            var triggerY = trigger.TranslatePoint(default, window)!.Value.Y;
+            double ShapeY() => select.Surface!.TranslatePoint(select.Surface!.ShapeRect.TopLeft, window)!.Value.Y;
+
+            select.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            ShapeY().ShouldBe(triggerY, 0.5); // the first frame starts over the trigger
+            clock.Advance(TimeSpan.FromSeconds(2));
+            Dispatcher.UIThread.RunJobs();
+            var openY = ShapeY();
+            if (top == 420)
+            {
+                openY.ShouldBe(triggerY, 0.5);
+                select.Surface!.ShapeSize.Height.ShouldBeLessThan(44 + 6 + 296 + 6);
+            }
+            else
+            {
+                openY.ShouldBeLessThan(triggerY - 1);
+            }
+
+            select.IsOpen = false;
+            Dispatcher.UIThread.RunJobs();
+            var lowest = ShapeY();
+            TestHelpers.PumpUntil(() =>
+            {
+                clock.Advance(TimeSpan.FromMilliseconds(16));
+                if (select.Surface!.TranslatePoint(default, window) is null)
+                {
+                    return true;
+                }
+                lowest = Math.Max(lowest, ShapeY());
+                return false;
+            }, 3000).ShouldBeTrue();
+            // The fold ends on the trigger, not on the spot the open lid had.
+            lowest.ShouldBe(triggerY, 0.5);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

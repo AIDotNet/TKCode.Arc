@@ -371,7 +371,7 @@ internal sealed class FilterMenuList : Control
                     MaxLineCount = 1,
                     Trimming = TextTrimming.CharacterEllipsis
                 };
-                text.SetFontFeatures(SortableDataTablePalette.TabularNumbers);
+                text.SetFontFeatures(TablePalette.TabularNumbers);
                 _metas[i] = text;
             }
         }

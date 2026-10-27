@@ -6,7 +6,7 @@ namespace TKCode.Arc;
 /// <summary>What the rich text editor would do to a construct when it imports Markdown.</summary>
 public enum RichTextImportIssueKind
 {
-    /// <summary>A heading deeper than three levels; the editor stores it as Heading 3.</summary>
+    /// <summary>A heading deeper than three levels; without the <see cref="RichTextEditorProfile.Docs"/> profile (which has six) the editor stores it as Heading 3.</summary>
     HeadingLevelDowngraded,
 
     /// <summary>The language or other info string of a fenced code block, which the editor does not store.</summary>
@@ -15,7 +15,7 @@ public enum RichTextImportIssueKind
     /// <summary>A tilde fence (<c>~~~</c>); the editor reads only backtick fences.</summary>
     TildeFence,
 
-    /// <summary>A table; the editor has no table block, so the cells become one paragraph.</summary>
+    /// <summary>A table; without the <see cref="RichTextEditorProfile.Docs"/> profile the editor has no table block, so the cells become one paragraph.</summary>
     Table,
 
     /// <summary>A setext heading underlined with <c>===</c> or <c>---</c>; the editor reads only ATX headings.</summary>
@@ -33,7 +33,7 @@ public enum RichTextImportIssueKind
     /// <summary>Block level HTML; the editor keeps it as text and joins the lines into one paragraph.</summary>
     HtmlBlock,
 
-    /// <summary>An image; the editor has no image block, so the source is kept as text.</summary>
+    /// <summary>An image; without the <see cref="RichTextEditorProfile.Docs"/> profile (or inside a line of text) the editor has no image block, so the source is kept as text.</summary>
     Image,
 
     /// <summary>A reference link or its definition; the editor reads only inline links, so it is kept as text.</summary>
@@ -112,7 +112,7 @@ public sealed class RichTextImportIssue
 }
 
 /// <summary>
-/// The result of <see cref="RichTextEditorMarkdown.Analyze"/>: every construct of a Markdown source that the rich text
+/// The result of <see cref="RichTextEditorMarkdown.Analyze(string?)"/>: every construct of a Markdown source that the rich text
 /// editor cannot store (<see cref="RichTextImportSeverity.Lossy"/>) or writes back in another form
 /// (<see cref="RichTextImportSeverity.Normalized"/>), in source order.
 /// </summary>
@@ -155,19 +155,25 @@ public sealed class RichTextImportReport
 public static partial class RichTextEditorMarkdown
 {
     /// <summary>
-    /// Reads a Markdown source the way <see cref="ToHtml"/> would and reports every construct the editor cannot store,
+    /// Reads a Markdown source the way <see cref="ToHtml(string?)"/> would and reports every construct the editor cannot store,
     /// plus the constructs it writes back in another form, with the line, the column and a reason. Nothing is converted
     /// and no editor is involved, so a host can warn, keep the original file or open a source editor instead.
     /// </summary>
     /// <remarks>
-    /// The analysis covers the block and inline rules of <see cref="ToHtml"/>: headings deeper than h3, a fence's info
+    /// The analysis covers the block and inline rules of <see cref="ToHtml(string?)"/>: headings deeper than h3, a fence's info
     /// string, tilde fences, tables, setext headings, indented code, a list's start number, hard line breaks, block
     /// HTML, images, reference links, footnotes and backslash escapes are losses; bullet, numbered, bold, italic and
     /// divider markers written in another form are normalizations. Everything else in the supported subset (paragraphs,
     /// three heading levels, nested lists, quotes, fenced code, dividers, bold, italic, strikethrough, inline code and
     /// inline links) produces no issue.
     /// </remarks>
-    public static RichTextImportReport Analyze(string? markdown)
+    public static RichTextImportReport Analyze(string? markdown) => Analyze(markdown, RichTextEditorProfile.Arc);
+
+    /// <summary>
+    /// As <see cref="Analyze(string?)"/> for an editor with the given <paramref name="profile"/>: the
+    /// <see cref="RichTextEditorProfile.Docs"/> profile stores headings 4 to 6, pipe tables and lines that hold only an image, so those are no losses.
+    /// </summary>
+    public static RichTextImportReport Analyze(string? markdown, RichTextEditorProfile profile)
     {
         var source = (markdown ?? string.Empty).Replace("\r\n", "\n").Replace('\r', '\n');
         if (source.Length == 0)
@@ -178,13 +184,13 @@ public static partial class RichTextEditorMarkdown
         var issues = new List<RichTextImportIssue>();
         for (var index = 0; index < lines.Length;)
         {
-            index = ScanBlock(lines, index, issues);
+            index = ScanBlock(lines, index, issues, profile == RichTextEditorProfile.Docs);
         }
         return issues.Count == 0 ? RichTextImportReport.Empty : new RichTextImportReport(issues);
     }
 
     /// <summary>Scans one block starting at <paramref name="index"/>; returns the index of the next block.</summary>
-    private static int ScanBlock(string[] lines, int index, List<RichTextImportIssue> issues)
+    private static int ScanBlock(string[] lines, int index, List<RichTextImportIssue> issues, bool docs)
     {
         var line = lines[index];
         if (line.Trim().Length == 0)
@@ -218,13 +224,20 @@ public static partial class RichTextEditorMarkdown
         }
         if (index + 1 < lines.Length && IsTableRow(line) && IsTableDelimiter(lines[index + 1]))
         {
-            Add(issues, RichTextImportIssueKind.Table, index, 1, line.Length, line);
+            if (!docs)
+            {
+                Add(issues, RichTextImportIssueKind.Table, index, 1, line.Length, line);
+            }
             var end = index + 2;
             while (end < lines.Length && IsTableRow(lines[end]))
             {
                 end++;
             }
             return end;
+        }
+        if (docs && (ImageLineRegex().IsMatch(line) || ImageTagLineRegex().IsMatch(line)))
+        {
+            return index + 1;
         }
         if (IsSetextUnderline(line) && index > 0 && IsParagraphLine(lines[index - 1]))
         {
@@ -256,7 +269,7 @@ public static partial class RichTextEditorMarkdown
         if (heading.Success)
         {
             var level = heading.Groups[1].Length;
-            if (level > 3)
+            if (level > 3 && !docs)
             {
                 Add(issues, RichTextImportIssueKind.HeadingLevelDowngraded, index, 1, level, line);
             }

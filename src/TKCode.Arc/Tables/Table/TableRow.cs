@@ -12,16 +12,16 @@ using Avalonia.Media.Immutable;
 namespace TKCode.Arc;
 
 /// <summary>
-/// One realized body row of a <see cref="SortableDataTable"/>. Cells are drawn as text (custom
+/// One realized body row of a <see cref="Table"/>. Cells are drawn as text (custom
 /// <see cref="DataTableColumn.CellTemplate"/> content is hosted as children); the fill follows hover and
 /// selection on Arc's 240ms background transition, and the row's vertical offset is a spring-driven render
 /// transform so a re-sort slides rows from their old places (FLIP) without any layout.
 /// Rows are recycled by the presenter; the row is the keyboard target of its checkbox.
 /// </summary>
-internal sealed class SortableDataTableRow : Control
+internal sealed class TableRow : Control
 {
-    private readonly SortableDataTable _table;
-    private readonly SortableDataTableCheckbox _checkbox;
+    private readonly Table _table;
+    private readonly TableCheckbox _checkbox;
     private readonly TranslateTransform _shift = new();
     private MotionValue<double>? _offset;
     private MotionValue<double>? _hover;
@@ -41,10 +41,10 @@ internal sealed class SortableDataTableRow : Control
     private int _dataVersion = -1;
     private bool _templatesPending = true;
 
-    public SortableDataTableRow(SortableDataTable table)
+    public TableRow(Table table)
     {
         _table = table;
-        _checkbox = new SortableDataTableCheckbox(this);
+        _checkbox = new TableCheckbox(this);
         RenderTransform = _shift;
         Focusable = true;
         IsTabStop = false;
@@ -385,8 +385,14 @@ internal sealed class SortableDataTableRow : Control
         {
             return;
         }
+        var inSelect = InSelectCell(e.GetPosition(this));
+        if (!inSelect && !_table.SelectsOnRowClick)
+        {
+            // Only the checkbox cell selects: the press is left to the app (opening a detail view, for example).
+            return;
+        }
         _pressed = true;
-        _pressInSelect = InSelectCell(e.GetPosition(this));
+        _pressInSelect = inSelect;
         if (_pressInSelect)
         {
             _checkbox.SetPressed(true);
@@ -488,7 +494,7 @@ internal sealed class SortableDataTableRow : Control
             };
             if (_table.IsNumericColumn(i))
             {
-                formatted.SetFontFeatures(SortableDataTablePalette.TabularNumbers);
+                formatted.SetFontFeatures(TablePalette.TabularNumbers);
             }
             _strings[i] = text;
             _texts[i] = formatted;
@@ -566,8 +572,8 @@ internal sealed class SortableDataTableRow : Control
         }
         if (_table.IsSelectable)
         {
-            var boxX = layout.Compact ? 4 + (36 - SortableDataTableCheckbox.Extent) / 2 : _table.CellInlinePadding;
-            var boxY = Math.Round((size.Height - SortableDataTableCheckbox.Extent) / 2);
+            var boxX = layout.Compact ? 4 + (36 - TableCheckbox.Extent) / 2 : _table.CellInlinePadding;
+            var boxY = Math.Round((size.Height - TableCheckbox.Extent) / 2);
             _checkbox.Render(context, new Point(boxX, boxY), palette, focusVisible);
         }
         else if (focusVisible && palette.FocusPen is { } focus)
@@ -653,7 +659,7 @@ internal sealed class SortableDataTableRow : Control
 
     private Size _compactSize;
 
-    private void RenderCompact(DrawingContext context, SortableDataTablePalette palette, Size size)
+    private void RenderCompact(DrawingContext context, TablePalette palette, Size size)
     {
         if (_compactSize != size || _compactSlots.Length != _texts.Length)
         {
@@ -688,11 +694,11 @@ internal sealed class SortableDataTableRow : Control
 
     private sealed class RowPeer : ControlAutomationPeer, IToggleProvider
     {
-        public RowPeer(SortableDataTableRow owner) : base(owner)
+        public RowPeer(TableRow owner) : base(owner)
         {
         }
 
-        private SortableDataTableRow Row => (SortableDataTableRow)Owner;
+        private TableRow Row => (TableRow)Owner;
 
         protected override AutomationControlType GetAutomationControlTypeCore() =>
             Row._table.IsSelectable ? AutomationControlType.CheckBox : AutomationControlType.DataItem;

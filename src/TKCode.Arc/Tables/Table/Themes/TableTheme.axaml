@@ -2,12 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     x:ClassModifier="internal">
-    <ControlTheme x:Key="{x:Type arc:SortableDataTable}" TargetType="arc:SortableDataTable">
+    <ControlTheme x:Key="{x:Type arc:Table}" TargetType="arc:Table">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
-            <ControlTemplate TargetType="arc:SortableDataTable">
+            <ControlTemplate TargetType="arc:Table">
                 <Panel>
                 <Border Name="PART_Frame"
                         Background="{TemplateBinding Background}"
@@ -20,7 +20,7 @@
                                       VerticalScrollBarVisibility="Auto" />
                         <Panel Name="PART_Loading"
                                IsVisible="{TemplateBinding IsLoading}"
-                               Margin="{arc:SortableDataTableTokenResource LoadingInset}">
+                               Margin="{arc:TableTokenResource LoadingInset}">
                             <Border Background="{TemplateBinding Background}" Opacity="0.6" />
                             <StackPanel Orientation="Horizontal"
                                         Spacing="10"
@@ -36,8 +36,8 @@
                         <Border Name="PART_Footer"
                                 Grid.Row="1"
                                 IsVisible="{TemplateBinding IsSelectable}"
-                                Height="{arc:SortableDataTableTokenResource FooterHeight}"
-                                Padding="{arc:SortableDataTableTokenResource FooterInset}"
+                                Height="{arc:TableTokenResource FooterHeight}"
+                                Padding="{arc:TableTokenResource FooterInset}"
                                 BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
                                 BorderBrush="{TemplateBinding BorderBrush}">
                             <Grid ColumnDefinitions="*,Auto">
@@ -45,7 +45,7 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Left"
                                         ClipToBounds="False">
-                                    <StackPanel Orientation="Horizontal" Spacing="{arc:SortableDataTableTokenResource CountGap}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:TableTokenResource CountGap}">
                                         <arc:SpringSizeDecorator Axis="Width" Spring="Morph">
                                             <arc:ArcContentSwap Mode="Roll"
                                                                 Direction="{TemplateBinding CountDirection}"
@@ -68,9 +68,9 @@
                                                 Variant="Ghost"
                                                 Content="{TemplateBinding ClearSelectionLabel}"
                                                 Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                                MinHeight="{arc:SortableDataTableTokenResource ClearButtonHeight}"
-                                                Height="{arc:SortableDataTableTokenResource ClearButtonHeight}"
-                                                Padding="{arc:SortableDataTableTokenResource ClearButtonInset}" />
+                                                MinHeight="{arc:TableTokenResource ClearButtonHeight}"
+                                                Height="{arc:TableTokenResource ClearButtonHeight}"
+                                                Padding="{arc:TableTokenResource ClearButtonInset}" />
                                 </arc:PresenceHost>
                             </Grid>
                         </Border>
@@ -115,16 +115,16 @@
         <Setter Property="CheckboxOnBrush" Value="{arc:ArcDesignTokenResource ControlOn}" />
         <Setter Property="CheckmarkBrush" Value="{arc:ArcDesignTokenResource ControlGlyph}" />
         <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
-        <Setter Property="RowHeight" Value="{arc:SortableDataTableTokenResource RowHeight}" />
-        <Setter Property="HeaderHeight" Value="{arc:SortableDataTableTokenResource HeaderHeight}" />
-        <Setter Property="CompactRowHeight" Value="{arc:SortableDataTableTokenResource CompactRowHeight}" />
-        <Setter Property="CompactHeaderHeight" Value="{arc:SortableDataTableTokenResource CompactHeaderHeight}" />
-        <Setter Property="EmptyRowHeight" Value="{arc:SortableDataTableTokenResource EmptyRowHeight}" />
-        <Setter Property="CellInlinePadding" Value="{arc:SortableDataTableTokenResource CellInlinePadding}" />
-        <Setter Property="PrimaryInsetSelectable" Value="{arc:SortableDataTableTokenResource PrimaryInsetSelectable}" />
-        <Setter Property="SelectColumnWidth" Value="{arc:SortableDataTableTokenResource SelectColumnWidth}" />
-        <Setter Property="MinTableWidth" Value="{arc:SortableDataTableTokenResource MinTableWidth}" />
-        <Setter Property="CompactBreakpoint" Value="{arc:SortableDataTableTokenResource CompactBreakpoint}" />
+        <Setter Property="RowHeight" Value="{arc:TableTokenResource RowHeight}" />
+        <Setter Property="HeaderHeight" Value="{arc:TableTokenResource HeaderHeight}" />
+        <Setter Property="CompactRowHeight" Value="{arc:TableTokenResource CompactRowHeight}" />
+        <Setter Property="CompactHeaderHeight" Value="{arc:TableTokenResource CompactHeaderHeight}" />
+        <Setter Property="EmptyRowHeight" Value="{arc:TableTokenResource EmptyRowHeight}" />
+        <Setter Property="CellInlinePadding" Value="{arc:TableTokenResource CellInlinePadding}" />
+        <Setter Property="PrimaryInsetSelectable" Value="{arc:TableTokenResource PrimaryInsetSelectable}" />
+        <Setter Property="SelectColumnWidth" Value="{arc:TableTokenResource SelectColumnWidth}" />
+        <Setter Property="MinTableWidth" Value="{arc:TableTokenResource MinTableWidth}" />
+        <Setter Property="CompactBreakpoint" Value="{arc:TableTokenResource CompactBreakpoint}" />
 
         <Style Selector="^ /template/ Border#PART_CountHost">
             <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />

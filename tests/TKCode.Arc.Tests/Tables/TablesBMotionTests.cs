@@ -27,7 +27,7 @@ public class TablesBMotionTests
     {
         var clock = new ManualFrameClock();
         using var installed = clock.Install();
-        var table = new SortableDataTable
+        var table = new Table
         {
             ItemsSource = new[] { new Row("a", 3), new Row("b", 1), new Row("c", 2) }
         };

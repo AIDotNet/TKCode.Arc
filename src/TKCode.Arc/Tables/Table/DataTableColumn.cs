@@ -8,7 +8,7 @@ using Avalonia.Metadata;
 
 namespace TKCode.Arc;
 
-/// <summary>Sort direction of a <see cref="SortableDataTable"/> column.</summary>
+/// <summary>Sort direction of a <see cref="Table"/> column.</summary>
 public enum DataTableSortDirection
 {
     /// <summary>Rows keep the order of the source.</summary>
@@ -18,7 +18,7 @@ public enum DataTableSortDirection
 }
 
 /// <summary>
-/// One column of a <see cref="SortableDataTable"/>. The cell value comes from <see cref="ValueSelector"/> or
+/// One column of a <see cref="Table"/>. The cell value comes from <see cref="ValueSelector"/> or
 /// <see cref="Binding"/> (compiled against the table's item type in XAML); sorting uses
 /// <see cref="SortValueSelector"/> / <see cref="SortBinding"/> when given, else the cell value, and
 /// <see cref="Comparer"/> when given, else Arc's comparison (numbers numerically, text with natural ordering,
@@ -74,7 +74,7 @@ public class DataTableColumn : AvaloniaObject
     /// <summary>Column label; also the default <see cref="EffectiveKey"/>.</summary>
     public string Header { get => GetValue(HeaderProperty); set => SetValue(HeaderProperty, value); }
 
-    /// <summary>Stable id reported by <see cref="SortableDataTable.SortKey"/> and sort events (defaults to <see cref="SortMemberPath"/>, then <see cref="Header"/>).</summary>
+    /// <summary>Stable id reported by <see cref="Table.SortKey"/> and sort events (defaults to <see cref="SortMemberPath"/>, then <see cref="Header"/>).</summary>
     public string? Key { get => GetValue(KeyProperty); set => SetValue(KeyProperty, value); }
 
     /// <summary>Name of the member the column sorts by, reported as the sort key. The sorted value itself comes from <see cref="SortBinding"/>, <see cref="SortValueSelector"/> or the cell value.</summary>
@@ -93,12 +93,12 @@ public class DataTableColumn : AvaloniaObject
     public string? StringFormat { get => GetValue(StringFormatProperty); set => SetValue(StringFormatProperty, value); }
 
     /// <summary>Custom cell content (Arc <c>render</c>); the data context is the row item.</summary>
-    [InheritDataTypeFromItems(nameof(SortableDataTable.ItemsSource), AncestorType = typeof(SortableDataTable))]
+    [InheritDataTypeFromItems(nameof(Table.ItemsSource), AncestorType = typeof(Table))]
     public IDataTemplate? CellTemplate { get => GetValue(CellTemplateProperty); set => SetValue(CellTemplateProperty, value); }
 
     /// <summary>Binding evaluated against each row item for the cell value.</summary>
     [AssignBinding]
-    [InheritDataTypeFromItems(nameof(SortableDataTable.ItemsSource), AncestorType = typeof(SortableDataTable))]
+    [InheritDataTypeFromItems(nameof(Table.ItemsSource), AncestorType = typeof(Table))]
     public BindingBase? Binding
     {
         get => _binding;
@@ -111,7 +111,7 @@ public class DataTableColumn : AvaloniaObject
 
     /// <summary>Binding evaluated against each row item for the sort value.</summary>
     [AssignBinding]
-    [InheritDataTypeFromItems(nameof(SortableDataTable.ItemsSource), AncestorType = typeof(SortableDataTable))]
+    [InheritDataTypeFromItems(nameof(Table.ItemsSource), AncestorType = typeof(Table))]
     public BindingBase? SortBinding
     {
         get => _sortBinding;
@@ -166,7 +166,7 @@ public class DataTableColumn : AvaloniaObject
         }
     }
 
-    /// <summary>The id used for <see cref="SortableDataTable.SortKey"/>.</summary>
+    /// <summary>The id used for <see cref="Table.SortKey"/>.</summary>
     public string EffectiveKey => Key ?? SortMemberPath ?? Header;
 
     internal event EventHandler? DefinitionChanged;
@@ -180,7 +180,7 @@ public class DataTableColumn : AvaloniaObject
     private void OnDefinitionChanged() => DefinitionChanged?.Invoke(this, EventArgs.Empty);
 }
 
-/// <summary>Arguments of <see cref="SortableDataTable.SortChanged"/>.</summary>
+/// <summary>Arguments of <see cref="Table.SortChanged"/>.</summary>
 public sealed class DataTableSortChangedEventArgs : RoutedEventArgs
 {
     public DataTableSortChangedEventArgs(RoutedEvent routedEvent, DataTableColumn? column, DataTableSortDirection direction)
@@ -199,7 +199,7 @@ public sealed class DataTableSortChangedEventArgs : RoutedEventArgs
     public DataTableSortDirection Direction { get; }
 }
 
-/// <summary>Arguments of <see cref="SortableDataTable.SelectionChanged"/>.</summary>
+/// <summary>Arguments of <see cref="Table.SelectionChanged"/>.</summary>
 public sealed class DataTableSelectionChangedEventArgs : RoutedEventArgs
 {
     public DataTableSelectionChangedEventArgs(RoutedEvent routedEvent, IReadOnlyList<object> selectedItems,

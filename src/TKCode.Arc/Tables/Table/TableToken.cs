@@ -3,9 +3,9 @@ using Avalonia;
 
 namespace TKCode.Arc;
 
-/// <summary>Geometry of <see cref="SortableDataTable"/> (values from Arc's sortable-data-table.module.css).</summary>
+/// <summary>Geometry of <see cref="Table"/> (values from Arc's sortable-data-table.module.css).</summary>
 [ControlDesignToken]
-internal sealed class SortableDataTableToken : AbstractControlDesignToken
+internal sealed class TableToken : AbstractControlDesignToken
 {
     /// <summary>Header row height including its 1px rule (th height 44).</summary>
     public double HeaderHeight { get; set; }
