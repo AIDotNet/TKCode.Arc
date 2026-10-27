@@ -9,6 +9,25 @@ TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版�
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners` 和 `TKCode.Arc.Mobile`。
 
+## 0.3.1-preview.3 (2026-10-27)
+
+### 新增
+
+- **Blocks**：Analytics、Developer、People、Finance 与 LineCharts 新增约 25 个区块（API 密钥、Webhook、集成、环境变量、团队与角色、指标探索、MRR 瀑布图、同期群留存、分级统计地图、行情终端等），附 Gallery 页面、示例与测试。
+- 新增 **RichTextEditor** 与 **ActionSwap** 控件。
+- **行动端**：`Dialog`、`Toast`、`ActionSheet`、`Toolbar`、`PullToRefresh`、`Radio` 与 `IconButton`，键盘避让与 Arc 动效。
+- **Gallery**：桌面端支持检查更新并设置 macOS Dock 图标；浏览器端通过 HTTP 加载地图数据。
+
+### 变更
+
+- 重做 **Table**、**Editors**、**Selects** 与 **Toggles**。
+
+### 修复
+
+- **TimePicker**、**FilterMenu**：行的空白区域不再响应指针输入 (#20)；**Combobox**：清除后不再打开列表。
+- **Password**：显隐选择与输入状态保持一致 (#21)。
+- **Gallery**：修复 Windows 上侧边栏搜索框重复提交输入法内容的问题。
+
 ## 0.3.1-preview.2 (2026-10-26)
 
 ### 新增

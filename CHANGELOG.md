@@ -7,6 +7,30 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners` and `TKCode.Arc.Mobile`.
 
+## 0.3.1-preview.3 - 2026-10-27
+
+### Added
+
+- **Blocks**: about 25 new blocks in Analytics (`MetricExplorer`, `MetricsDashboard`, `KpiDrilldown`, `CohortRetention`,
+  `MrrWaterfall`, `RevenueExplorer`, `UsageForecast`, `UptimeStatus`, `HorizonChart`, `ConnectedScatter`,
+  `JourneyFlow`, `ChoroplethExplorer`), Developer (`ApiKeys`, `Webhooks`, `Integrations`, `EnvVariables`), People
+  (`TeamMembers`, `TeamDirectory`, `RolesPermissions`, `InvitePeople`, `ProfilePage`), Finance (`BudgetVariance`,
+  `MarketTerminal`) and LineCharts (`LineReplay`, `SmallMultiples`), each with Gallery pages, demos and tests.
+- **RichTextEditor** and **ActionSwap** controls, with Gallery pages and demos.
+- **Mobile**: `Dialog`, `Toast`, `ActionSheet`, `Toolbar`, `PullToRefresh`, `Radio` and `IconButton`, keyboard
+  avoidance, and Arc motion for the Mobile controls.
+- **Gallery**: the Desktop app checks for updates and sets the macOS Dock icon; the Browser host can load map data over HTTP.
+
+### Changed
+
+- **Table**, **Editors**, **Selects** and **Toggles** are reworked; the Table sources moved within `Tables/`.
+
+### Fixed
+
+- **TimePicker**, **FilterMenu**: the empty area of a row ignores pointer input (#20); **Combobox**: clearing no longer opens the list.
+- **Password**: the show/hide choice stays consistent with the input state (#21).
+- **Gallery**: a duplicated IME commit in the sidebar search box on Windows.
+
 ## 0.3.1-preview.2 - 2026-10-26
 
 ### Added
@@ -522,6 +546,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.2...v0.3.1-preview.3
 [0.3.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.1...v0.3.1-preview.2
 [0.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.5...v0.3.1-preview.1
 [0.3.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.4...v0.3.0-preview.5

@@ -9,6 +9,25 @@ TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版�
 
 每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners` 與 `TKCode.Arc.Mobile`。
 
+## 0.3.1-preview.3 (2026-10-27)
+
+### 新增
+
+- **Blocks**：Analytics、Developer、People、Finance 與 LineCharts 新增約 25 個區塊（API 金鑰、Webhook、整合、環境變數、團隊與角色、指標探索、MRR 瀑布圖、同期群留存、分級統計地圖、行情終端等），附 Gallery 頁面、範例與測試。
+- 新增 **RichTextEditor** 與 **ActionSwap** 控制項。
+- **行動端**：`Dialog`、`Toast`、`ActionSheet`、`Toolbar`、`PullToRefresh`、`Radio` 與 `IconButton`，鍵盤避讓與 Arc 動態。
+- **Gallery**：桌面端支援檢查更新並設定 macOS Dock 圖示；瀏覽器端透過 HTTP 載入地圖資料。
+
+### 變更
+
+- 重做 **Table**、**Editors**、**Selects** 與 **Toggles**。
+
+### 修復
+
+- **TimePicker**、**FilterMenu**：列的空白區域不再回應指標輸入 (#20)；**Combobox**：清除後不再開啟清單。
+- **Password**：顯隱選擇與輸入狀態保持一致 (#21)。
+- **Gallery**：修復 Windows 上側邊欄搜尋框重複提交輸入法內容的問題。
+
 ## 0.3.1-preview.2 (2026-10-26)
 
 ### 新增
