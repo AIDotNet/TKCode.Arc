@@ -1,0 +1,273 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        Ported from Arc's free file-upload block (MIT, Copyright (c) 2026 Elia Kuratli): file-upload.module.css.
+
+        A full-width dropzone (at least 92 high, padding 16, the icon, the copy and Browse 12 apart, a 1px dashed
+        BorderStrong edge, RadiusPanel, Surface). A file over it, a mouse or pen over it and a press all turn the edge
+        Accent and the fill AccentSubtle over 240ms (press feedback is color only, never a scale); the cloud lifts 3px on
+        Arc's CSS spring while a file hovers. Disabled: .52 opacity. Under it the status line (12/16.8, TextMuted, 8 below)
+        and the list (6 above it while it has files); each row: 6 above, padding 10 10 10 12, a 1px BorderSubtle edge,
+        RadiusControl, SurfaceMuted. Values that change with pseudo-classes are styles, not template values.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FileUpload}" TargetType="arc:FileUpload">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileUpload">
+                <StackPanel>
+                    <arc:FileUploadDropzone Name="PART_Dropzone"
+                                            MinHeight="{arc:FileUploadTokenResource DropzoneMinHeight}"
+                                            Padding="{arc:FileUploadTokenResource DropzoneInset}"
+                                            DashLength="{arc:FileUploadTokenResource DashLength}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+                                            FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}">
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="{arc:FileUploadTokenResource DropzoneSpacing}"
+                              VerticalAlignment="Center">
+                            <Panel Width="{arc:FileUploadTokenResource IconBoxEdge}"
+                                   Height="{arc:FileUploadTokenResource IconBoxEdge}"
+                                   VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_UploadIcon"
+                                              Data="{x:Static arc:ArcIcons.CloudUpload}"
+                                              Size="20"
+                                              StrokeThickness="1.8"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                            </Panel>
+                            <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                <arc:FileUploadSwap Name="PART_Label"
+                                              HorizontalContentAlignment="Left"
+                                              TextElement.FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                              TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                              EnterOffset="4.2" EnterBlur="4"
+                                              ExitOffset="-4.2" ExitBlur="2"
+                                              ReducedEnterDuration="0:0:0" ReducedExitDuration="0:0:0.12" />
+                                <TextBlock Name="PART_Description"
+                                           Text="{TemplateBinding Description}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           LineHeight="16.8"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="2"
+                                       Name="PART_Browse"
+                                       Text="{TemplateBinding BrowseLabel}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                        </Grid>
+                    </arc:FileUploadDropzone>
+                    <arc:FileUploadCollapse Name="PART_StatusFrame" IsOpen="False" AnimatesOpacity="False">
+                        <arc:FileUploadSwap Name="PART_Status"
+                                      Margin="0,8,0,0"
+                                      HorizontalContentAlignment="Left"
+                                      TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                      TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                      EnterOffset="3.6" EnterBlur="4"
+                                      ExitOffset="-3.6" ExitBlur="2"
+                                      ReducedEnterDuration="0:0:0" ReducedExitDuration="0:0:0.12" />
+                    </arc:FileUploadCollapse>
+                    <Border Name="PART_List" />
+                    <arc:FileUploadAnnouncer Name="PART_Announcer" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|FileUploadDropzone#PART_Dropzone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_UploadIcon">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+        </Style>
+        <Style Selector="^:zonehover /template/ arc|FileUploadDropzone#PART_Dropzone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:zonepressed /template/ arc|FileUploadDropzone#PART_Dropzone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:dragging /template/ arc|FileUploadDropzone#PART_Dropzone">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:dragging:motion-full /template/ arc|ArcGlyph#PART_UploadIcon">
+            <Setter Property="RenderTransform" Value="translateY(-3px)" />
+        </Style>
+        <Style Selector="^:disabled /template/ arc|FileUploadDropzone#PART_Dropzone">
+            <Setter Property="Opacity" Value="{arc:FileUploadTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|FileUploadDropzone#PART_Dropzone">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Standard" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Standard" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_UploadIcon">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One file: icon 24 (glyph 16), name 14/19.6 medium on one line, meta 12/16.8 TextMuted with tabular numbers, the
+         error in Danger, the 3px bar (Border track, Accent fill), the 26px status slot and Remove, 12 apart. -->
+    <ControlTheme x:Key="{x:Type arc:FileUploadRow}" TargetType="arc:FileUploadRow">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileUploadRow">
+                <Border Name="PART_Item"
+                        Margin="0,6,0,0"
+                        Padding="{arc:FileUploadTokenResource RowInset}"
+                        BorderThickness="1"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                        Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="{arc:FileUploadTokenResource RowColumnSpacing}">
+                        <Panel Width="{arc:FileUploadTokenResource IconBoxEdge}"
+                               Height="{arc:FileUploadTokenResource IconBoxEdge}"
+                               VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_FileIcon"
+                                          Size="16"
+                                          StrokeThickness="1.8"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Panel>
+                        <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                            <TextBlock Name="PART_Name"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="19.6"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis" />
+                            <StackPanel Orientation="Horizontal"
+                                        ClipToBounds="True"
+                                        TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                <TextBlock Name="PART_Size" LineHeight="16.8" />
+                                <TextBlock Name="PART_Dot" Text="·" Margin="5,0" LineHeight="16.8" />
+                                <arc:FileUploadSwap Name="PART_Phase"
+                                              HorizontalContentAlignment="Left"
+                                              EnterOffset="3.6" EnterBlur="4"
+                                              ExitOffset="-3.6" ExitBlur="2"
+                                              ReducedEnterDuration="0:0:0" ReducedExitDuration="0:0:0.12" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Error"
+                                       IsVisible="False"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="16.8"
+                                       TextWrapping="Wrap"
+                                       Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            <arc:FileUploadCollapse Name="PART_BarFrame" IsOpen="False" ExitDelay="0:0:0.24">
+                                <Border Height="{arc:FileUploadTokenResource BarHeight}"
+                                        Margin="{arc:FileUploadTokenResource BarMargin}"
+                                        ClipToBounds="True"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource Border}">
+                                    <Border Name="PART_BarFill"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            Background="{arc:ArcDesignTokenResource Accent}" />
+                                </Border>
+                            </arc:FileUploadCollapse>
+                        </StackPanel>
+                        <Panel Name="PART_StatusSlot"
+                               Grid.Column="2"
+                               Width="{arc:FileUploadTokenResource ButtonEdge}"
+                               Height="{arc:FileUploadTokenResource ButtonEdge}"
+                               VerticalAlignment="Center" />
+                        <arc:FileUploadIconButton Name="PART_Remove"
+                                                  Grid.Column="3"
+                                                  Glyph="{x:Static arc:ArcIcons.X}"
+                                                  GlyphSize="15"
+                                                  VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- Retry and Remove: 26px round, transparent, TextMuted (Retry TextSecondary); a mouse or pen over it: Surface and
+         Foreground over 160ms. Pressed: .96 in 120ms, released on the CSS spring. Keyboard ring 2px FocusRing, 2px out. -->
+    <ControlTheme x:Key="{x:Type arc:FileUploadIconButton}" TargetType="arc:FileUploadIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Width" Value="{arc:FileUploadTokenResource ButtonEdge}" />
+        <Setter Property="Height" Value="{arc:FileUploadTokenResource ButtonEdge}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FileUploadIconButton">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Size="{TemplateBinding GlyphSize}"
+                                  StrokeThickness="{TemplateBinding GlyphStroke}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.retry">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:finehover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

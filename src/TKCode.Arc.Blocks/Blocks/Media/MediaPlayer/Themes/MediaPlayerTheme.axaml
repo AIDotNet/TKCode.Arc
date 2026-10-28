@@ -1,0 +1,417 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal">
+
+    <!--
+        The player (Arc Media player, design reference). Framed: a card with a 1px Border, radius 34 and Surface, padding
+        20 (compact 14); flat: no card. Top to bottom: the cover (2.2:1, compact 1.7:1; radius 18 when framed), the title
+        block and the transport (18 above, 12 below, 4 at the sides; 16 apart, compact 10), the time row (12 apart, 18
+        below), the playlist heading with the mute button and volume (12 above, 6 below; a 1px BorderSubtle line on top
+        when framed), then the rows.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MediaPlayer}" TargetType="arc:MediaPlayer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:MediaPlayerTokenResource PlayerMaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="Padding" Value="{arc:MediaPlayerTokenResource FramePadding}" />
+        <Setter Property="CompactWidth" Value="{arc:MediaPlayerTokenResource CompactWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MediaPlayer">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <arc:MediaPlayerCoverFrame Name="PART_CoverFrame" ClipToBounds="True">
+                            <arc:MediaPlayerSwap Name="PART_Cover" Kind="Cover" />
+                        </arc:MediaPlayerCoverFrame>
+                        <Grid Name="PART_NowPlaying"
+                              ColumnDefinitions="*,Auto"
+                              Margin="{arc:MediaPlayerTokenResource NowPlayingPadding}">
+                            <arc:MediaPlayerSwap Name="PART_Title"
+                                                 Kind="Title"
+                                                 ClipToBounds="True"
+                                                 VerticalAlignment="Center"
+                                                 Travel="{arc:MediaPlayerTokenResource TitleTravel}" />
+                            <StackPanel Name="PART_Transport"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <arc:MediaPlayerButton Name="PART_Previous" Classes="skip">
+                                    <arc:MediaPlayerGlyph Data="{x:Static arc:MediaPlayerGlyphs.SkipBack}"
+                                                          IsFilled="True"
+                                                          StrokeThickness="2"
+                                                          Size="{arc:MediaPlayerTokenResource SkipGlyphSize}" />
+                                </arc:MediaPlayerButton>
+                                <arc:MediaPlayerButton Name="PART_Play" Classes="play">
+                                    <arc:MediaPlayerSwap Name="PART_PlayIcon"
+                                                         Kind="Icon"
+                                                         Width="{arc:MediaPlayerTokenResource PlayGlyphSize}"
+                                                         Height="{arc:MediaPlayerTokenResource PlayGlyphSize}" />
+                                </arc:MediaPlayerButton>
+                                <arc:MediaPlayerButton Name="PART_Next" Classes="skip">
+                                    <arc:MediaPlayerGlyph Data="{x:Static arc:MediaPlayerGlyphs.SkipForward}"
+                                                          IsFilled="True"
+                                                          StrokeThickness="2"
+                                                          Size="{arc:MediaPlayerTokenResource SkipGlyphSize}" />
+                                </arc:MediaPlayerButton>
+                            </StackPanel>
+                        </Grid>
+                        <Grid Name="PART_Timeline"
+                              ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="{arc:MediaPlayerTokenResource TimelineGap}"
+                              Margin="{arc:MediaPlayerTokenResource TimelinePadding}">
+                            <TextBlock Name="PART_Elapsed" Classes="time" />
+                            <arc:MediaPlayerRange Name="PART_Seek"
+                                                  Grid.Column="1"
+                                                  Minimum="0"
+                                                  SmallChange="0.1" />
+                            <TextBlock Name="PART_Length" Grid.Column="2" Classes="time" />
+                        </Grid>
+                        <Border Name="PART_QueueHead" Padding="{arc:MediaPlayerTokenResource QueueHeadPadding}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock Name="PART_PlaylistTitle"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="15.4"
+                                           LetterSpacing="-0.42"
+                                           TextTrimming="CharacterEllipsis"
+                                           AutomationProperties.HeadingLevel="3"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:MediaPlayerTokenResource VolumeGap}">
+                                    <arc:MediaPlayerButton Name="PART_Mute" Classes="mute">
+                                        <arc:MediaPlayerGlyph Name="PART_MuteGlyph"
+                                                              StrokeThickness="2"
+                                                              Size="{arc:MediaPlayerTokenResource VolumeGlyphSize}" />
+                                    </arc:MediaPlayerButton>
+                                    <arc:MediaPlayerRange Name="PART_Volume"
+                                                          VerticalAlignment="Center"
+                                                          Minimum="0"
+                                                          Maximum="1"
+                                                          SmallChange="0.01" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <arc:MediaPlayerQueue Name="PART_Queue"
+                                              RailWidth="2"
+                                              RailHeight="20"
+                                              RailInset="2"
+                                              RailBrush="{arc:ArcDesignTokenResource Accent}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with the layout live in styles, not on the template elements, so the states can override them. -->
+        <Style Selector="^ /template/ arc|MediaPlayerCoverFrame#PART_CoverFrame">
+            <Setter Property="Aspect" Value="{arc:MediaPlayerTokenResource CoverAspect}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_NowPlaying">
+            <Setter Property="ColumnSpacing" Value="{arc:MediaPlayerTokenResource NowPlayingGap}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Transport">
+            <Setter Property="Spacing" Value="{arc:MediaPlayerTokenResource TransportGap}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MediaPlayerButton.skip">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource SkipButtonSize}" />
+            <Setter Property="Height" Value="{arc:MediaPlayerTokenResource SkipButtonSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MediaPlayerButton.play">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource PlayButtonSize}" />
+            <Setter Property="Height" Value="{arc:MediaPlayerTokenResource PlayButtonSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MediaPlayerButton.mute">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource MuteButtonSize}" />
+            <Setter Property="Height" Value="{arc:MediaPlayerTokenResource MuteButtonSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MediaPlayerRange#PART_Volume">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource VolumeWidth}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.time">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="FontFeatures" Value="tnum" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|MediaPlayerRange">
+            <Setter Property="Height" Value="{arc:MediaPlayerTokenResource RangeHeight}" />
+            <Setter Property="TrackHeight" Value="{arc:MediaPlayerTokenResource RangeTrackHeight}" />
+            <Setter Property="ThumbSize" Value="{arc:MediaPlayerTokenResource RangeThumbSize}" />
+            <Setter Property="ThumbGap" Value="{arc:MediaPlayerTokenResource RangeThumbGap}" />
+            <Setter Property="DragScale" Value="{arc:MediaPlayerTokenResource RangeDragScale}" />
+            <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource ControlFill}" />
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="ThumbBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource Background}" />
+            <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        </Style>
+
+        <!-- The card: the cover gets rounded corners, the ring around the slider dots takes the card's color, and a line separates the playlist. -->
+        <Style Selector="^:framed /template/ arc|MediaPlayerCoverFrame#PART_CoverFrame">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        </Style>
+        <Style Selector="^:framed /template/ arc|MediaPlayerRange">
+            <Setter Property="RingBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+        <Style Selector="^:framed /template/ Border#PART_QueueHead">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+
+        <!-- Below 420 wide: tighter padding and gaps, smaller buttons, a taller cover, a shorter volume slider. -->
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:MediaPlayerTokenResource CompactFramePadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MediaPlayerCoverFrame#PART_CoverFrame">
+            <Setter Property="Aspect" Value="{arc:MediaPlayerTokenResource CompactCoverAspect}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_NowPlaying">
+            <Setter Property="ColumnSpacing" Value="{arc:MediaPlayerTokenResource CompactNowPlayingGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Transport">
+            <Setter Property="Spacing" Value="{arc:MediaPlayerTokenResource CompactTransportGap}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MediaPlayerButton.skip">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource CompactSkipButtonSize}" />
+            <Setter Property="Height" Value="{arc:MediaPlayerTokenResource CompactSkipButtonSize}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MediaPlayerButton.play">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource CompactPlayButtonSize}" />
+            <Setter Property="Height" Value="{arc:MediaPlayerTokenResource CompactPlayButtonSize}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|MediaPlayerRange#PART_Volume">
+            <Setter Property="Width" Value="{arc:MediaPlayerTokenResource CompactVolumeWidth}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A round icon button: transparent with Foreground glyphs (the mute button TextSecondary), a SurfaceMuted plate on
+        hover; the play button is solid Foreground with a Background glyph and no hover change. Pressed: scale 0.94 (120ms,
+        standard curve); colors change in 160ms. The focus ring is a 2px circle 2px outside the button.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MediaPlayerButton}" TargetType="arc:MediaPlayerButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="none" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MediaPlayerButton">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.mute">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.play">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^.play:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.94)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A playlist row: 44 high (plus a 1px BorderSubtle line on top after the first), padded 14 left and 10 right, radius
+        12, a SurfaceMuted plate on hover. The title is 14/19.6 500, TextSecondary, Foreground on the current row; the
+        length 12 TextMuted with tabular digits, replaced by the playing bars (Accent) while the row's track plays.
+    -->
+    <ControlTheme x:Key="{x:Type arc:MediaPlayerTrackRow}" TargetType="arc:MediaPlayerTrackRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{arc:MediaPlayerTokenResource RowPadding}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MediaPlayerTrackRow">
+                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Panel Height="{arc:MediaPlayerTokenResource RowHeight}">
+                        <Border Name="PART_Background"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}" />
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="{arc:MediaPlayerTokenResource RowGap}"
+                              Margin="{TemplateBinding Padding}">
+                            <TextBlock Name="PART_TitleText"
+                                       Text="{TemplateBinding TitleText}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="19.6"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <Panel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Name="PART_LengthText"
+                                           Text="{TemplateBinding LengthText}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           FontFeatures="tnum"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:MediaPlayerBars Name="PART_Bars"
+                                                     IsVisible="False"
+                                                     VerticalAlignment="Center"
+                                                     HorizontalAlignment="Right"
+                                                     AutomationProperties.Name="{TemplateBinding PlayingText}"
+                                                     Brush="{arc:ArcDesignTokenResource Accent}"
+                                                     BarWidth="{arc:MediaPlayerTokenResource BarWidth}"
+                                                     BarHeight="{arc:MediaPlayerTokenResource BarHeight}"
+                                                     BarGap="{arc:MediaPlayerTokenResource BarGap}"
+                                                     Period="{arc:MediaPlayerTokenResource BarPeriod}" />
+                            </Panel>
+                        </Grid>
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:separated">
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:playing /template/ TextBlock#PART_LengthText">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:playing /template/ arc|MediaPlayerBars#PART_Bars">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The title block: the title in the display face, 28/30.8 400 −0.84 (compact 22/24.2 −0.66), and the byline 12/16.8 TextSecondary. -->
+    <ControlTheme x:Key="{x:Type arc:MediaPlayerHeading}" TargetType="arc:MediaPlayerHeading">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:MediaPlayerHeading">
+                <StackPanel>
+                    <TextBlock Name="PART_TitleText"
+                               Text="{TemplateBinding TitleText}"
+                               FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                               FontWeight="{arc:ArcDesignTokenResource WeightRegular}"
+                               TextTrimming="CharacterEllipsis"
+                               AutomationProperties.HeadingLevel="2"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <TextBlock Name="PART_BylineText"
+                               Text="{TemplateBinding BylineText}"
+                               Margin="0,4,0,0"
+                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                               LineHeight="16.8"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_TitleText">
+            <Setter Property="FontSize" Value="{arc:MediaPlayerTokenResource TitleFontSize}" />
+            <Setter Property="LineHeight" Value="{arc:MediaPlayerTokenResource TitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:MediaPlayerTokenResource TitleLetterSpacing}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_TitleText">
+            <Setter Property="FontSize" Value="{arc:MediaPlayerTokenResource CompactTitleFontSize}" />
+            <Setter Property="LineHeight" Value="{arc:MediaPlayerTokenResource CompactTitleLineHeight}" />
+            <Setter Property="LetterSpacing" Value="{arc:MediaPlayerTokenResource CompactTitleLetterSpacing}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

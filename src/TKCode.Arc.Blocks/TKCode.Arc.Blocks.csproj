@@ -13,6 +13,8 @@
     <ItemGroup>
         <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+        <!-- MediaPlayer plays through the audio abstraction; platform backends ship in their own packages (ADR 0028). -->
+        <ProjectReference Include="../TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
     </ItemGroup>
     <ItemGroup>
         <!-- Natural Earth 1:110m Land (public domain), rasterized by tools/geo/generate_land_mask.py: RevenueGlobe's land dots. -->

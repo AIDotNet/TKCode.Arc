@@ -240,5 +240,11 @@ public static class BlockCatalog
         new("EnvVariables", "Env variables", "env-variables", "Developer",
             "A project's environment variables as a matrix of switches per environment, with masked values, inline editing, .env import, a fingerprint comparison and a redeploy banner.",
             IsArcPort: false),
+        new("FileUpload", "File upload", "file-upload", "Media",
+            "A complete file selection flow with constraints, progress, and error feedback.",
+            IsArcPort: true),
+        new("MediaPlayer", "Media player", "media-player", "Media",
+            "An audio player with cover art, a playlist, a seek bar, previous and next, and volume with mute; skipping wraps around and keeps playing or paused, and the playing row shows moving bars.",
+            IsArcPort: false),
     ];
 }
