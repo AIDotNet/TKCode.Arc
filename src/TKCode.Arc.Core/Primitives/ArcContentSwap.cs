@@ -254,6 +254,9 @@ public class ArcContentSwap : Control
     private void RemoveLayer(Layer layer)
     {
         layer.Progress?.Dispose();
+        // A removed presenter keeps its child until its content changes, and a control has one parent: without this the
+        // content could never be shown again (a kept view that the swap shows, hides and shows again).
+        SetContent(layer.Presenter, null);
         LogicalChildren.Remove(layer.Presenter);
         VisualChildren.Remove(layer.Presenter);
         _exiting.Remove(layer);
@@ -265,6 +268,15 @@ public class ArcContentSwap : Control
 
     private void Swap(object? content)
     {
+        // A control that comes back while it is still leaving (A → B → A inside one swap) is still the child of its exiting
+        // layer; a control has one parent, so that layer goes first.
+        if (content is Control control)
+        {
+            foreach (var layer in _exiting.Where(layer => ReferenceEquals(layer.Presenter.Content, control)).ToList())
+            {
+                RemoveLayer(layer);
+            }
+        }
         if (_current is null)
         {
             _current = CreateLayer(content);

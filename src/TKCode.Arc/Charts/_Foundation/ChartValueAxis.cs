@@ -164,7 +164,9 @@ internal sealed class ChartValueAxis
             if (labels && y >= plot.Top - 8 && y <= bottom + 8)
             {
                 var text = texts.Get(palette, entry.Label, palette.SizeXS, palette.TextMuted);
-                var avoid = double.IsNaN(avoidY) ? 1 : Math.Clamp((Math.Abs(y - avoidY) - 10) / 6, 0, 1);
+                // Both labels are centered on their lines, so they overlap until the lines are a label's height apart; the tick
+                // stays hidden that close and fades back in over the next 4px.
+                var avoid = double.IsNaN(avoidY) ? 1 : Math.Clamp((Math.Abs(y - avoidY) - text.Height) / 4, 0, 1);
                 if (avoid <= 0.001)
                 {
                     continue;

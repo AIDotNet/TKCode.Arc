@@ -28,6 +28,30 @@ public class ArcContentSwapTests
         TestHelpers.Show(new StackPanel { Children = { swap } }, ArcMotionLevel.Full);
 
     [AvaloniaFact]
+    public void A_Control_That_Comes_Back_While_It_Is_Leaving_Moves_Into_The_New_Layer()
+    {
+        // Webhooks' inspector: Payload → Headers → Payload faster than the blur swap used to throw "already has a visual parent".
+        using var _ = new ManualFrameClock().Install();
+        var payload = new TextBlock { Text = "payload" };
+        var headers = new TextBlock { Text = "headers" };
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.BlurSwap, Content = payload };
+        var window = Show(swap);
+        try
+        {
+            swap.Content = headers;
+            window.UpdateLayout();
+            swap.Content = payload;
+            Should.NotThrow(() => window.UpdateLayout());
+            payload.GetVisualParent().ShouldBeOfType<ContentPresenter>().Content.ShouldBe(payload);
+            swap.GetVisualChildren().OfType<ContentPresenter>().Count(p => ReferenceEquals(p.Content, payload)).ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Left_Aligned_Outgoing_Text_Stays_On_The_Left_Edge()
     {
         using var _ = new ManualFrameClock().Install();

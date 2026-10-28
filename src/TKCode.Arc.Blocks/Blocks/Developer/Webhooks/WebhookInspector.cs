@@ -350,7 +350,13 @@ internal sealed class WebhookInspector : Border
         _tabs.SelectedIndex = _owner.InspectorTab == WebhookInspectorTab.Headers ? 1 : 0;
         _syncingTab = false;
         _panel.Mode = animate ? ContentSwapMode.BlurSwap : ContentSwapMode.None;
-        _panel.Content = _owner.InspectorTab == WebhookInspectorTab.Headers ? _headers : _payload;
+        var next = _owner.InspectorTab == WebhookInspectorTab.Headers ? (Control?)_headers : _payload;
+        if (!ReferenceEquals(_panel.Content, next))
+        {
+            // Payload and headers share one scroll area; each starts at its first line, not where the other was left.
+            _scroll.Offset = default;
+        }
+        _panel.Content = next;
         _copy.Value = CopyText;
         AutomationProperties.SetName(_scroll, _owner.InspectorTab == WebhookInspectorTab.Headers ? _owner.Labels.Headers : _owner.Labels.Payload);
     }

@@ -590,6 +590,49 @@ public class WebhooksTests
     }
 
     [AvaloniaFact]
+    public void Each_Tab_Opens_At_Its_First_Line()
+    {
+        // Payload and headers share one scroll area. In a short inspector (beside a short deliveries list, or stacked in a
+        // small window) the headers are taller than the panel too, so they kept the payload's offset and opened cut off.
+        var hooks = Create();
+        hooks.StackedPanelHeight = 110;
+        var window = Show(hooks, width: 700);
+        var panel = hooks.Split!.Inspector.Panel;
+        panel.Offset = new Vector(0, 60);
+        Pump(window);
+        panel.Offset.Y.ShouldBe(60);
+        hooks.InspectorTab = WebhookInspectorTab.Headers;
+        Pump(window);
+        panel.Extent.Height.ShouldBeGreaterThan(panel.Viewport.Height + 60);
+        panel.Offset.Y.ShouldBe(0);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData(0)]
+    [InlineData(17)]
+    [InlineData(80)]
+    [InlineData(400)]
+    public void Switching_Payload_And_Headers_Back_And_Forth_Never_Throws(double gap)
+    {
+        // The inspector's tabs swap two kept views; switching back while the old one is still leaving used to give it two parents.
+        var clock = new ManualFrameClock();
+        using var installed = clock.Install();
+        var hooks = Create();
+        var window = Show(hooks, level: ArcMotionLevel.Full);
+        Step(clock, window, 600);
+        for (var i = 0; i < 6; i++)
+        {
+            hooks.InspectorTab = i % 2 == 0 ? WebhookInspectorTab.Headers : WebhookInspectorTab.Payload;
+            Should.NotThrow(() => Step(clock, window, gap));
+            Should.NotThrow(() => Step(clock, window, 17));
+        }
+        Step(clock, window, 1000);
+        hooks.Split!.Inspector.PayloadView!.IsEffectivelyVisible.ShouldBeTrue();
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void The_Response_Swap_Never_Pushes_The_Tabs_Down()
     {
         // Arc stacks the old and new response body while they swap, pushing the tabs ≈22px down for 160ms. Ours overlap.
