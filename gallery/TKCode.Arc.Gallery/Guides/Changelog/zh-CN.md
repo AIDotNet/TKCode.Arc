@@ -1,13 +1,28 @@
 ---
 title: 更新日志
-source-hash: d0068be03287
+source-hash: 02475717fda7
 ---
 
 # 更新日志
 
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
-每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners` 和 `TKCode.Arc.Mobile`。
+每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 0.3.1-preview.5 (2026-10-28)
+
+### 新增
+
+- **Audio**(新包 `TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 与 `TKCode.Arc.Audio.Browser`):媒体类 Block 使用的 `IAudioPlayer` 抽象,默认静音模拟;桌面经 miniaudio 播放(`ArcAudioNative.Use()`),WebAssembly 经 HTML audio 元素播放(`ArcAudioBrowser.UseAsync()`)。
+- **Blocks**:`MediaPlayer`(封面、播放列表、进度条、上一首与下一首、音量与静音)和 `FileUpload`(拖放区、文件列表、进度、校验)。
+- **Special**:新增 Cursor 分组,包含 `DotGrid`、`GravityWell` 和 `InkFluid` 三个指针效果。
+- **Gallery**:`/demo` 下的 Northstar 仪表盘演示,复刻 uiarc.dev/demo 的十一个页面和登录页;从首页的"查看演示"或顶栏菜单的"演示"进入。
+
+### 修复
+
+- **ArcContentSwap**:控件被切换出去后再次显示不再抛出异常(在 Webhooks 检查面板里切换 Payload 与 Headers 会导致程序崩溃)。
+- **Charts**:平均线旁边的坐标刻度保持隐藏,平均值标签不再与它重叠。
+- **Webhooks**:Payload 与 Headers 切换后都从第一行开始显示。
 
 ## 0.3.1-preview.4 (2026-10-27)
 

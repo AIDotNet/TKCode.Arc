@@ -5,7 +5,31 @@ while the version carries a `-preview` suffix the API may still change between r
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
-`TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile` and `TKCode.Arc.Terminal`.
+`TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
+`TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
+
+## 0.3.1-preview.5 - 2026-10-28
+
+### Added
+
+- **Audio** (new packages `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`): the
+  `IAudioPlayer` abstraction behind the media blocks with a silent simulated backend by default, desktop playback
+  through a miniaudio shim (`ArcAudioNative.Use()`, native libraries under `runtimes/<rid>/native`) and WebAssembly
+  playback through an HTML audio element (`ArcAudioBrowser.UseAsync()`).
+- **Blocks**: `MediaPlayer` (cover art, playlist, seek bar, previous and next, volume with mute; compact and flat
+  variants) and `FileUpload` (drop zone, file list, per-file progress and status, validation, single-file mode).
+- **Special**: a new Cursor group with `DotGrid`, `GravityWell` and `InkFluid` pointer effects.
+- **Gallery**: the Northstar dashboard demo at `/demo`, a copy of uiarc.dev/demo with its eleven pages (Overview,
+  Analytics, Customers, Projects, Team, Activity, Status, Integrations, Developers, Billing, Settings) and the sign-in
+  page, built from Arc components and blocks; open it from the home page's "Live demo" button or the top menu's
+  "Demo". `tools/docshots` gains `route <address> <out.png>` to render any gallery address.
+
+### Fixed
+
+- **ArcContentSwap**: showing a control again after it was swapped out no longer throws "already has a visual
+  parent" (switching the Webhooks inspector between Payload and Headers crashed the app).
+- **Charts**: the value-axis tick next to the average line stays hidden, so "Avg 44" no longer overlaps "40".
+- **Webhooks**: Payload and Headers each open at their first line instead of the other tab's scroll position.
 
 ## 0.3.1-preview.4 - 2026-10-27
 
@@ -555,6 +579,8 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.4...v0.3.1-preview.5
+[0.3.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.3...v0.3.1-preview.4
 [0.3.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.2...v0.3.1-preview.3
 [0.3.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.1...v0.3.1-preview.2
 [0.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.0-preview.5...v0.3.1-preview.1

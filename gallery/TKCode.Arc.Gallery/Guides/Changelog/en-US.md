@@ -9,7 +9,22 @@ version carries a `-preview` suffix, the API may still change between releases; 
 keep the version pinned in your project. The same list is kept in `CHANGELOG.md` in the repository.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile` and `TKCode.Arc.Terminal`.
+`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
+
+## 0.3.1-preview.5 (2026-10-28)
+
+### Added
+
+- **Audio** (new packages `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`): the `IAudioPlayer` abstraction behind the media blocks, silent by default, with desktop playback through miniaudio (`ArcAudioNative.Use()`) and WebAssembly playback through an HTML audio element (`ArcAudioBrowser.UseAsync()`).
+- **Blocks**: `MediaPlayer` (cover art, playlist, seek bar, previous and next, volume with mute) and `FileUpload` (drop zone, file list, progress, validation).
+- **Special**: a Cursor group with the `DotGrid`, `GravityWell` and `InkFluid` pointer effects.
+- **Gallery**: the Northstar dashboard demo at `/demo`, a copy of uiarc.dev/demo with eleven pages and a sign-in page; open it from "Live demo" on the home page or "Demo" in the top menu.
+
+### Fixed
+
+- **ArcContentSwap**: showing a control again after it was swapped out no longer throws (switching the Webhooks inspector between Payload and Headers crashed the app).
+- **Charts**: the axis tick next to the average line stays hidden, so the average label no longer overlaps it.
+- **Webhooks**: Payload and Headers each open at their first line.
 
 ## 0.3.1-preview.4 (2026-10-27)
 
