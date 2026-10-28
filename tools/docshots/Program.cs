@@ -32,9 +32,9 @@ public static class Program
         System.Globalization.CultureInfo.CurrentCulture = english;
         System.Globalization.CultureInfo.CurrentUICulture = english;
 
-        if (args.Length < 2 || args[0] is not ("check" or "shoot" or "page"))
+        if (args.Length < 2 || args[0] is not ("check" or "shoot" or "page" or "route"))
         {
-            Console.Error.WriteLine("usage: DocShots check <page.md>... | DocShots shoot <en-US.md>... | DocShots page <Class> <lang> <out.png>");
+            Console.Error.WriteLine("usage: DocShots check <page.md>... | DocShots shoot <en-US.md>... | DocShots page <Class> <lang> <out.png> | DocShots route <address> <out.png>");
             return 2;
         }
 
@@ -55,6 +55,10 @@ public static class Program
         if (args[0] == "page")
         {
             return PageShot.Run(args.Skip(1).ToArray());
+        }
+        if (args[0] == "route")
+        {
+            return RouteShot.Run(args.Skip(1).ToArray());
         }
         // The runtime XAML loader resolves namespaces from loaded assemblies; load the Lucide package the guides show.
         _ = typeof(TKCode.Arc.Icons.Lucide.LucideIcon).Assembly;

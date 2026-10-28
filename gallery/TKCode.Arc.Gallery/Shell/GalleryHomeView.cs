@@ -109,9 +109,13 @@ public sealed class GalleryHomeView : UserControl
         explore.Click += (_, _) => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Components));
         var docs = new Button { Variant = ButtonVariant.Secondary, Size = ControlSize.Medium, Content = WithArrow(GalleryShellLangResourceKind.HomeReadDocs) };
         docs.Click += (_, _) => _shell.Navigate(_shell.RouteFor(GalleryRouteKind.Docs));
-        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12, HorizontalAlignment = HorizontalAlignment.Center };
+        // The dashboard demo: /demo, which opens its overview.
+        var demo = new Button { Variant = ButtonVariant.Secondary, Size = ControlSize.Medium, Content = WithArrow(GalleryShellLangResourceKind.HomeDemo) };
+        demo.Click += (_, _) => _shell.Navigate(GalleryRoute.Demo());
+        var actions = new WrapPanel { Orientation = Orientation.Horizontal, ItemSpacing = 12, LineSpacing = 12, HorizontalAlignment = HorizontalAlignment.Center };
         actions.Children.Add(explore);
         actions.Children.Add(docs);
+        actions.Children.Add(demo);
 
         var command = GalleryUi.Mono($"$ {InstallCommand}", ArcDesignTokenKind.TextSecondary, 13);
         command.VerticalAlignment = VerticalAlignment.Center;

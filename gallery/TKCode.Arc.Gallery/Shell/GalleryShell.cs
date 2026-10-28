@@ -1,5 +1,6 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.DemoApp;
 using TKCode.Arc.Gallery.Pages;
 using Avalonia;
 using Avalonia.Controls;
@@ -23,8 +24,10 @@ public sealed class GalleryShell : Grid
     private readonly ContentControl _pageHost = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch };
     private readonly GallerySidebar _sidebar = new() { Width = SidebarWidth };
     private readonly GallerySponsorBanner _banner = new();
+    private readonly StackPanel _chrome = new();
     private GalleryHomeView? _home;
     private GalleryFriendsView? _friends;
+    private DemoAppView? _demo;
     private GalleryRoute _route = GalleryRoute.Home;
     private GalleryEntry? _lastComponent;
     private GalleryEntry? _lastBlock;
@@ -33,19 +36,18 @@ public sealed class GalleryShell : Grid
     public GalleryShell(GalleryRoute? initial = null)
     {
         var topBar = TopBar = new GalleryTopBar(_theme, this);
-        Grid.SetRow(_banner, 0);
-        Grid.SetRow(topBar, 1);
+        _chrome.Children.Add(_banner);
+        _chrome.Children.Add(topBar);
 
         var body = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*") };
         _sidebar.EntrySelected += OnEntrySelected;
         Grid.SetColumn(_pageHost, 1);
         body.Children.Add(_sidebar);
         body.Children.Add(_pageHost);
-        Grid.SetRow(body, 2);
+        Grid.SetRow(body, 1);
 
-        RowDefinitions = new RowDefinitions("Auto,Auto,*");
-        Children.Add(_banner);
-        Children.Add(topBar);
+        RowDefinitions = new RowDefinitions("Auto,*");
+        Children.Add(_chrome);
         Children.Add(body);
         ArcTokens.Bind(this, Panel.BackgroundProperty, ArcDesignTokenKind.Background);
         // A key press goes to the focused element and up through its parents. The home page has nothing to focus, and a window
@@ -73,6 +75,22 @@ public sealed class GalleryShell : Grid
     /// <summary>Opens the page at <paramref name="route"/>: the home page without a sidebar, any other with it.</summary>
     public void Navigate(GalleryRoute route)
     {
+        // The dashboard demo is an app of its own, as on uiarc.dev/demo: its sidebar and top bar take the whole frame.
+        SetChromeVisible(route.Kind != GalleryRouteKind.Demo);
+        if (route.Kind == GalleryRouteKind.Demo)
+        {
+            _sidebar.IsVisible = false;
+            var demo = _demo ??= new DemoAppView(this);
+            var page = demo.Resolve(route.Page);
+            if (_pageHost.Content != demo)
+            {
+                ReleaseFocusFromPage();
+                _pageHost.Content = demo;
+            }
+            demo.Show(page);
+            SetRoute(GalleryRoute.Demo(page.Slug));
+            return;
+        }
         if (route.Kind == GalleryRouteKind.Friends)
         {
             _sidebar.IsVisible = false;
@@ -97,6 +115,9 @@ public sealed class GalleryShell : Grid
         _sidebar.Select(entry);
     }
 
+    /// <summary>Shows or hides the sponsor banner and the top bar (the banner keeps its own dismissal).</summary>
+    private void SetChromeVisible(bool visible) => _chrome.IsVisible = visible;
+
     /// <summary>
     /// The page a top menu item opens: the component or block that was open last, so a visitor returns to where they were,
     /// or the first one; Docs opens its first page.
@@ -113,7 +134,7 @@ public sealed class GalleryShell : Grid
     /// <summary>Moves the focus to the sidebar search; on the home page, which has no sidebar, the components open first.</summary>
     public void FocusSearch()
     {
-        if (_route.Kind == GalleryRouteKind.Home)
+        if (_route.Kind is GalleryRouteKind.Home or GalleryRouteKind.Demo)
         {
             Navigate(RouteFor(GalleryRouteKind.Components));
         }

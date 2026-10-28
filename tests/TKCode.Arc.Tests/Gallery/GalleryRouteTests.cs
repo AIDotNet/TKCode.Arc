@@ -1,4 +1,5 @@
 using TKCode.Arc.Gallery.Catalog;
+using TKCode.Arc.Gallery.DemoApp;
 using TKCode.Arc.Gallery.Shell;
 
 namespace TKCode.Arc.Tests.Gallery;
@@ -14,6 +15,23 @@ public class GalleryRouteTests
         GalleryRoute.Parse("/friends")!.ShouldBe(GalleryRoute.Friends);
         GalleryRoute.Parse("/Friends/")!.ShouldBe(GalleryRoute.Friends);
         GalleryRoute.Parse("/friends/avalonia").ShouldBeNull();
+    }
+
+    [Fact]
+    public void The_Dashboard_Demo_Lives_Under_Demo()
+    {
+        GalleryRoute.Demo().Path.ShouldBe("/demo");
+        GalleryRoute.Demo("overview").Path.ShouldBe("/demo/overview");
+        GalleryRoute.Demo("overview").Title.ShouldBe("Overview · Demo · Arc Gallery");
+        GalleryRoute.Demo("login").Title.ShouldBe("Sign in · Demo · Arc Gallery");
+        GalleryRoute.Parse("/demo")!.ShouldBe(GalleryRoute.Demo());
+        GalleryRoute.Parse("/Demo/Settings/")!.ShouldBe(GalleryRoute.Demo("settings"));
+        foreach (var page in DemoPages.App.Append(DemoPages.Login))
+        {
+            GalleryRoute.Parse($"/demo/{page.Slug}")!.Page.ShouldBe(page.Slug);
+        }
+        GalleryRoute.Parse("/demo/nope").ShouldBeNull();
+        GalleryRoute.Parse("/demo/overview/extra").ShouldBeNull();
     }
 
     [Fact]

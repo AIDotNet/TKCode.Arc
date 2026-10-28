@@ -679,6 +679,12 @@
         <target state="translated">阅读文档</target>
       </segment>
     </unit>
+    <unit id="HomeDemo">
+      <segment>
+        <source>Live demo</source>
+        <target state="translated">查看演示</target>
+      </segment>
+    </unit>
     <unit id="HomeLiveTitle">
       <segment>
         <source>Every example is live</source>
@@ -731,6 +737,12 @@
       <segment>
         <source>Friends</source>
         <target state="translated">伙伴</target>
+      </segment>
+    </unit>
+    <unit id="NavDemo">
+      <segment>
+        <source>Demo</source>
+        <target state="translated">演示</target>
       </segment>
     </unit>
     <unit id="HomeBadge">

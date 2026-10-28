@@ -42,11 +42,11 @@ public sealed class GalleryTopBar : Border
     private readonly Button _language;
     private readonly TextBlock _languageName;
     private readonly MenuSurface _languageMenu;
-    private readonly string[] _navValues = ["components", "blocks", "docs", "changelog", "friends"];
+    private readonly string[] _navValues = ["components", "blocks", "docs", "changelog", "friends", "demo"];
     private readonly GalleryShellLangResourceKind[] _navLabels =
     [
         GalleryShellLangResourceKind.Components, GalleryShellLangResourceKind.Category_Blocks, GalleryShellLangResourceKind.Category_Docs,
-        GalleryShellLangResourceKind.NavChangelog, GalleryShellLangResourceKind.NavFriends
+        GalleryShellLangResourceKind.NavChangelog, GalleryShellLangResourceKind.NavFriends, GalleryShellLangResourceKind.NavDemo
     ];
     private double _navWidth = 420;
     private double _brandWidth = 150;
@@ -63,7 +63,8 @@ public sealed class GalleryTopBar : Border
         Control owner = shell;
 
         // The site header block draws the brand and the section menu (a capsule, as on uiarc.dev); the buttons ride in its
-        // trailing slot. Components, Blocks, Docs, Changelog and Friends; the last two are pages of the Docs section.
+        // trailing slot. Components, Blocks, Docs, Changelog, Friends and Demo; Changelog is a page of the Docs section and Demo
+        // opens the Northstar dashboard demo (/demo).
         _header = new SiteHeader
         {
             Variant = SiteHeaderVariant.Simple,
@@ -94,6 +95,7 @@ public sealed class GalleryTopBar : Border
                         "blocks" => shell.RouteFor(GalleryRouteKind.Blocks),
                         "docs" => shell.RouteFor(GalleryRouteKind.Docs),
                         "changelog" => GalleryRoute.To(GalleryCatalog.Docs.Entries.First(entry => entry.ClassName == ChangelogClassName)),
+                        "demo" => GalleryRoute.Demo(),
                         _ => GalleryRoute.Friends
                     });
                     break;
@@ -418,6 +420,7 @@ public sealed class GalleryTopBar : Border
             GalleryRouteKind.Blocks => "blocks",
             GalleryRouteKind.Docs => route.Entry?.ClassName == ChangelogClassName ? "changelog" : "docs",
             GalleryRouteKind.Friends => "friends",
+            GalleryRouteKind.Demo => "demo",
             _ => null
         };
     }

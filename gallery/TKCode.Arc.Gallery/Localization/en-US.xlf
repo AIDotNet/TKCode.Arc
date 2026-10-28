@@ -566,6 +566,11 @@
         <source>Read the docs</source>
       </segment>
     </unit>
+    <unit id="HomeDemo">
+      <segment>
+        <source>Live demo</source>
+      </segment>
+    </unit>
     <unit id="HomeLiveTitle">
       <segment>
         <source>Every example is live</source>
@@ -609,6 +614,11 @@
     <unit id="NavFriends">
       <segment>
         <source>Friends</source>
+      </segment>
+    </unit>
+    <unit id="NavDemo">
+      <segment>
+        <source>Demo</source>
       </segment>
     </unit>
     <unit id="HomeBadge">
