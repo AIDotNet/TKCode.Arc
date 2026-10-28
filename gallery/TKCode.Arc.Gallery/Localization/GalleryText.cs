@@ -111,6 +111,7 @@ public static class GalleryText
             "Content" => GalleryShellLangResourceKind.Category_Content,
             "Ai" => GalleryShellLangResourceKind.Category_Ai,
             "Illustrations" => GalleryShellLangResourceKind.Category_Illustrations,
+            "Cursor" => GalleryShellLangResourceKind.Category_Cursor,
             "Blocks" => GalleryShellLangResourceKind.Category_Blocks,
             "Docs" => GalleryShellLangResourceKind.Category_Docs,
             "Mobile" => GalleryShellLangResourceKind.Category_Mobile,
