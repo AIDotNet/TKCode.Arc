@@ -70,8 +70,8 @@ field. The caret, selection, undo, IME composition and clipboard shortcuts are t
    copy under the frame. The error row swaps its whole message at once.
 6. **Meter row**: 12 px below the field or its error row. Four equal segments, 4 px tall, with 5 px gaps, on a track in
    the border color.
-7. **Strength word**: a 72 px slot at the end of the meter row, 12 px from the meter, right aligned, in the medium
-   weight of the small body size. It is empty while the field is empty.
+7. **Strength word**: At the end of the meter row, a slot at least 72 px wide that grows for localized labels,
+   12 px from the meter, right aligned, in the medium weight of the small body size. It is empty while the field is empty.
 8. **Requirement list** (`Rules`): 16 px below the meter, 6 px between rules. Each row has a 16 px circle that gains a
    faint success tint and a tick when the rule is met, then the rule label. An unmet rule with a `Remaining` function
    also shows a rolling count such as "4 more" in the muted color.
