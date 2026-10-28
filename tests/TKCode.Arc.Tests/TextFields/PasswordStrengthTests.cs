@@ -22,7 +22,7 @@ public class PasswordStrengthTests
         var window = TestHelpers.Show(field, level);
         try
         {
-            foreach (var label in new[] { "Strong", "符合输入要求", "Exigences respectées", "Good" })
+            foreach (var label in new[] { "Strong", "符合输入要求", "Conforme", "Good" })
             {
                 field.Messages = new PasswordStrengthMessages { Strong = label };
                 field.Text = "Correct-Horse-9";

@@ -1,7 +1,7 @@
 ---
 title: 密码强度
 summary: 在输入新密码时显示其强度。
-source-hash: 03a81b19e445
+source-hash: 1b9e076740df
 ---
 
 <Demo name="Create" />
