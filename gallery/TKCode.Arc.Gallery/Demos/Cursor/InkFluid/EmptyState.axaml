@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InkFluidEmptyStateDemo">
+    <!-- A waiting screen: light ink, no tint, the low grid, and the ambient stir keeping it alive. -->
+    <arc:InkFluid Height="260"
+                  MaxWidth="520"
+                  Intensity="0.35"
+                  Tint="0"
+                  Quality="Low"
+                  BorderThickness="1"
+                  Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                  BorderBrush="{arc:ArcDesignTokenResource Border}"
+                  CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}">
+        <StackPanel Spacing="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Nothing here yet"
+                       HorizontalAlignment="Center"
+                       FontSize="{arc:ArcDesignTokenResource TypeLG}"
+                       FontWeight="Medium"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <TextBlock Text="New reports show up here as soon as they finish."
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </arc:InkFluid>
+</UserControl>

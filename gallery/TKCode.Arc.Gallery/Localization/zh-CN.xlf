@@ -127,6 +127,12 @@
         <target state="translated">插图</target>
       </segment>
     </unit>
+    <unit id="Category_Cursor">
+      <segment>
+        <source>Cursor</source>
+        <target state="translated">光标</target>
+      </segment>
+    </unit>
     <unit id="Category_Editors">
       <segment>
         <source>Editors</source>

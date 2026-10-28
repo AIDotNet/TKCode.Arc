@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MediaPlayerPreviewDemo">
+    <!-- Three synthesized loops with drawn covers (MediaPlayerDemoData). The gallery plays them through the host's audio backend. -->
+    <arc:MediaPlayer x:Name="Player" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

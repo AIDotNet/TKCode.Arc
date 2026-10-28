@@ -87,6 +87,7 @@ public enum GalleryShellLangResourceKind
     Category_Content,
     Category_Ai,
     Category_Illustrations,
+    Category_Cursor,
     Category_Blocks,
     BlockGroup_Analytics,
     BlockGroup_Finance,

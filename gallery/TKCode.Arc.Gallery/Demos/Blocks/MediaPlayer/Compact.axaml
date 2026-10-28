@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MediaPlayerCompactDemo">
+    <!-- 360 wide, below CompactWidth (420): tighter padding, a taller cover, smaller buttons and title, a shorter volume slider. -->
+    <arc:MediaPlayer x:Name="Player" Width="360" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.GravityWellTeamDemo">
+    <!-- Without Columns the grid fits as many 64px tiles as the width allows; resize the window to see it reflow. -->
+    <arc:GravityWell Label="Team"
+                     MaxWidth="560"
+                     MinTileSize="64"
+                     Gap="10"
+                     Radius="120"
+                     ItemsSource="{x:Static demos:GravityWellDemoData.People}">
+        <arc:GravityWell.ItemTemplate>
+            <DataTemplate x:DataType="demos:GravityWellPerson">
+                <Border Background="{Binding Tint}" ToolTip.Tip="{Binding Name}">
+                    <TextBlock Text="{Binding Initials}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontWeight="Medium"
+                               Foreground="#1f1f1f" />
+                </Border>
+            </DataTemplate>
+        </arc:GravityWell.ItemTemplate>
+    </arc:GravityWell>
+</UserControl>

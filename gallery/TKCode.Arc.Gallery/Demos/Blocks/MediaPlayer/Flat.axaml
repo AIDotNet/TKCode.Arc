@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MediaPlayerFlatDemo">
+    <!-- IsFramed="False": no card, square cover corners; the player sits on the page's own surface. -->
+    <arc:MediaPlayer x:Name="Player" IsFramed="False" Margin="0,12" HorizontalAlignment="Center" />
+</UserControl>

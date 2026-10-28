@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InkFluidTuningDemo">
+    <!-- Intensity, tint and force from 0 to 1 (the sliders show percent), the ambient stir and the grid size. -->
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:InkFluid x:Name="Ink"
+                      Height="300"
+                      BorderThickness="1"
+                      Background="{arc:ArcDesignTokenResource Surface}"
+                      BorderBrush="{arc:ArcDesignTokenResource Border}"
+                      CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16">
+            <arc:Slider x:Name="IntensitySlider" Label="Intensity" Value="50" ValueChanged="OnChanged" />
+            <arc:Slider x:Name="TintSlider" Grid.Column="1" Label="Tint" Value="80" ValueChanged="OnChanged" />
+            <arc:Slider x:Name="ForceSlider" Grid.Column="2" Label="Force" Value="50" ValueChanged="OnChanged" />
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="16" HorizontalAlignment="Center">
+            <arc:Switch x:Name="AmbientSwitch" Content="Ambient stir" IsChecked="True" IsCheckedChanged="OnChanged" />
+            <arc:SegmentedControl x:Name="QualityPicker" SelectedValue="Medium" SelectionChanged="OnChanged">
+                <arc:SegmentedOption Value="Low" Label="Low" />
+                <arc:SegmentedOption Value="Medium" Label="Medium" />
+                <arc:SegmentedOption Value="High" Label="High" />
+            </arc:SegmentedControl>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

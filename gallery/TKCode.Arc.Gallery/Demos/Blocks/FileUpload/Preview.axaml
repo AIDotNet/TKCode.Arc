@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FileUploadPreviewDemo">
+    <!-- Images and PDFs up to 10 MB, uploaded as they are added. A name containing "fail" fails once; Retry succeeds. -->
+    <StackPanel MaxWidth="520" Spacing="16">
+        <arc:FileUpload x:Name="Upload" Accept="image/*,.pdf" MaxSize="10485760" />
+        <arc:Button Content="Add sample files" Variant="Secondary" Size="Small" HorizontalAlignment="Left" Click="OnAddSamples" />
+    </StackPanel>
+</UserControl>

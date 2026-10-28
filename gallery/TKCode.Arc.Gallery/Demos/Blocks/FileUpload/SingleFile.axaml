@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FileUploadSingleFileDemo">
+    <!-- One file at a time: a new file replaces the old one and cancels its upload. -->
+    <arc:FileUpload x:Name="Upload"
+                    MaxWidth="520"
+                    Multiple="False"
+                    Accept="image/*"
+                    Label="Upload a cover image"
+                    Description="PNG, JPEG or WebP. A new image replaces the current one." />
+</UserControl>

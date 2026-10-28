@@ -6464,6 +6464,42 @@
         <source>Center label at rest, above the total.</source>
         <target>静止时位于中心的标签，显示在总计上方。</target>
       </trans-unit>
+      <trans-unit id="DotGrid">
+        <source>A field of dots that bulge away from the pointer like a lens, wobble back on their own springs and ripple outward from every click or tap (Arc Dot grid, design reference). Content placed inside sits on top and stays interactive; the field listens to the pointer across the whole control, over the content too.</source>
+        <target>一片点阵，点会像透镜一样从指针处向外鼓起，沿各自的弹簧晃回原位，并随每次点击或轻触向外扩散涟漪（Arc 点阵，设计参考）。放在里面的内容位于点阵之上并保持可交互；点阵在整个控件范围内监听指针，内容上方也一样。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.ActiveDotBrush">
+        <source>Color the dots take under the lens and in ripples. The theme uses the accent color.</source>
+        <target>点在透镜下和涟漪中呈现的颜色。主题使用强调色。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.DotBrush">
+        <source>Color of the dots at rest. The theme uses the strong border color.</source>
+        <target>静止时点的颜色。主题使用强边框色。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.DotSize">
+        <source>Dot radius in px at rest.</source>
+        <target>静止时点的半径，单位 px。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.Gap">
+        <source>Distance between dots in px; lower is denser. At least 6.</source>
+        <target>点与点之间的距离，单位 px；越小越密。最小为 6。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.IsFadeEnabled">
+        <source>Whether the field fades out toward its edges.</source>
+        <target>点阵是否在靠近边缘处淡出。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.IsRippleEnabled">
+        <source>Whether clicks and taps send a ripple through the field.</source>
+        <target>点击和轻触是否会让涟漪扫过点阵。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.Radius">
+        <source>Radius of the lens around the pointer in px.</source>
+        <target>指针周围透镜的半径，单位 px。</target>
+      </trans-unit>
+      <trans-unit id="DotGrid.Strength">
+        <source>How far the lens pushes dots at its strongest point, a third of the way out, in px.</source>
+        <target>透镜在最强处（向外三分之一处）把点推开的距离，单位 px。</target>
+      </trans-unit>
       <trans-unit id="Drawer">
         <source>A temporary side surface for focused work that keeps the page in context: filters, settings, record details, forms too long for a dialog. Declare it anywhere; while `IsOpen` its panel springs in from `Side` above a lightly blurred scrim. The header is a drag handle: it follows the pointer toward the edge and rubber-bands the other way; past a third of the panel, or on a flick toward the edge faster than 500px/s, the drawer closes and keeps the flick's velocity; otherwise it springs back. A click, Escape or the scrim closes it with a quicker tween. The close button is always there; under reduced motion dragging is off and the panel only fades.</source>
         <target>用于聚焦工作的临时侧边表面，可让页面保持上下文：筛选器、设置、记录详情、过长而不适合对话框的表单等。可在任意位置声明；当 `IsOpen` 为 true 时，其面板会从 `Side` 方向以弹簧弹入，并位于轻微模糊的遮罩之上。标题栏是拖动手柄：它跟随指针向边缘移动，向另一方向则产生橡皮筋回弹；超过面板的三分之一，或以快于 500px/s 的速度朝边缘轻扫时，抽屉会关闭并保留轻扫的速度；否则会弹回。点击、Escape 或遮罩会以较快的补间动画关闭它。关闭按钮始终存在；在减少动效模式下，拖动功能关闭，面板只淡入淡出。</target>
@@ -7544,6 +7580,78 @@
         <source>Raised when any property of this row changes.</source>
         <target>此行的任一属性变化时引发。</target>
       </trans-unit>
+      <trans-unit id="FileUpload">
+        <source>A complete file selection flow: a dropzone that takes dropped files or opens the file picker, validation of type (`Accept`) and size (`MaxSize`), one upload per accepted file through `Uploader` with a progress bar and a counted percentage, and Retry and Remove on every row. Rejected files stay listed with their error; removing a file cancels its upload. A polite status line says what was added, rejected, uploaded, failed or removed.</source>
+        <target>完整的文件选择流程：放置区接受拖入的文件或打开文件选择器，按类型（`Accept`）和大小（`MaxSize`）校验，每个被接受的文件通过 `Uploader` 上传一次并显示进度条和计数百分比，每一行都有重试和移除。被拒绝的文件连同错误留在列表中；移除文件会取消其上传。礼貌模式的状态行会说明添加、拒绝、上传完成、上传失败或移除了什么。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Accept">
+        <source>Accepted types, comma separated: extensions (".pdf"), MIME types ("application/zip") and wildcards ("image/*"). Rejected files stay listed with an error. Empty accepts everything.</source>
+        <target>接受的类型，逗号分隔：扩展名（".pdf"）、MIME 类型（"application/zip"）和通配符（"image/*"）。被拒绝的文件连同错误留在列表中。为空时接受所有文件。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.BrowseLabel">
+        <source>The text at the dropzone's end.</source>
+        <target>放置区末尾的文字。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Description">
+        <source>The dropzone's help text; it also describes the dropzone to screen readers.</source>
+        <target>放置区的说明文字；它也会向屏幕阅读器描述放置区。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Files">
+        <source>The file list, newest last. Two-way: the control replaces it when files are added or removed.</source>
+        <target>文件列表，最新的在最后。双向：添加或移除文件时控件会替换它。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.FilesChanged">
+        <source>Raised after files were added or removed, with the new list.</source>
+        <target>添加或移除文件后引发，带有新列表。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.IsDragging">
+        <source>True while files are dragged over the dropzone.</source>
+        <target>文件拖到放置区上方时为 true。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Label">
+        <source>The dropzone's heading.</source>
+        <target>放置区的标题。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.MaxSize">
+        <source>The largest accepted file in bytes; larger files are listed with an error. Null or 0 sets no limit.</source>
+        <target>允许的最大文件字节数；更大的文件会带错误列出。为 null 或 0 时不限制。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Multiple">
+        <source>Whether several files can be added; when false a new file replaces the list (and cancels running uploads).</source>
+        <target>是否可以添加多个文件；为 false 时新文件替换列表（并取消正在进行的上传）。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Status">
+        <source>The last status message ("2 files added.", "report.pdf uploaded."); empty until the first one.</source>
+        <target>最后一条状态消息（"2 files added."、"report.pdf uploaded."）；第一条之前为空。</target>
+      </trans-unit>
+      <trans-unit id="FileUpload.Uploader">
+        <source>Uploads one accepted file: report 0 to 100 through the progress, return when done, throw to mark the file failed. The token is cancelled when the file is removed or replaced, or the control leaves the tree. Null only lists files.</source>
+        <target>上传一个被接受的文件：通过 progress 报告 0 到 100，完成后返回，抛出异常则把文件标为失败。文件被移除或替换、或控件离开可视树时取消令牌。为 null 时只列出文件。</target>
+      </trans-unit>
+      <trans-unit id="FileUploadFilesChangedEventArgs">
+        <source>Carries the file list after files were added or removed.</source>
+        <target>携带添加或移除文件后的文件列表。</target>
+      </trans-unit>
+      <trans-unit id="FileUploadItem">
+        <source>A file in a `FileUpload` list: the picked or dropped file, its name and size, the validation error when it was rejected, and the state of its upload.</source>
+        <target>`FileUpload` 列表中的一个文件：选中或拖入的文件、其名称和大小、被拒绝时的校验错误，以及上传状态。</target>
+      </trans-unit>
+      <trans-unit id="FileUploadItem.Error">
+        <source>Why the file was rejected (wrong type or too large); null for an accepted file.</source>
+        <target>文件被拒绝的原因（类型不对或过大）；被接受的文件为 null。</target>
+      </trans-unit>
+      <trans-unit id="FileUploadItem.Progress">
+        <source>How far the upload got, 0 to 100; it never goes back while the upload runs.</source>
+        <target>上传进行到的程度，0 到 100；上传进行中不会回退。</target>
+      </trans-unit>
+      <trans-unit id="FileUploadItem.Status">
+        <source>Where the upload stands.</source>
+        <target>上传所处的状态。</target>
+      </trans-unit>
+      <trans-unit id="FileUploadStatus">
+        <source>Where a `FileUploadItem`'s upload stands.</source>
+        <target>`FileUploadItem` 的上传所处的状态。</target>
+      </trans-unit>
       <trans-unit id="FilterChip">
         <source>An applied filter shown as a chip: "Label · Value". The id is the field id, so one chip per field.</source>
         <target>已应用的筛选条件，以标签形式显示：“标签 · 值”。ID 为字段 ID，因此每个字段对应一个标签。</target>
@@ -7763,6 +7871,46 @@
       <trans-unit id="GaugeThreshold">
         <source>A band that starts at `From` (in value units). The highest band the value reaches sets the ring's tone and names the state under the number, so the state never rests on color alone.</source>
         <target>从 `From`（以数值单位计）开始的一个区间。数值所达到的最高区间决定环形的色调，并在数字下方标明状态，因此状态不仅依靠颜色来表达。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell">
+        <source>A grid of square tiles that bends toward the pointer like spacetime around a mass (Arc Gravity well, design reference). Tiles near the well lean in, shrink and dim on their own springs; a click, a tap, Space or Enter sends a shockwave rolling outward through the grid. Each item becomes one tile: photos, avatars, icons or any small content.</source>
+        <target>一格格正方形图块组成的网格，像时空围绕质量一样朝指针弯曲（Arc 引力井，设计参考）。引力井附近的图块沿各自的弹簧向内倾斜、缩小并变暗；点击、轻触、Space 或 Enter 会发出一道向外滚过网格的冲击波。每个项目成为一个图块：照片、头像、图标或任何小型内容。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.Columns">
+        <source>A fixed column count; 0 (the default) fits as many columns as `MinTileSize` allows.</source>
+        <target>固定的列数；为 0（默认）时在 `MinTileSize` 允许的范围内放下尽可能多的列。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.Gap">
+        <source>The gap between tiles in px.</source>
+        <target>图块之间的间距，单位 px。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.Label">
+        <source>The accessible name of the grid.</source>
+        <target>网格的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.MinTileSize">
+        <source>The smallest tile width in px when `Columns` is 0.</source>
+        <target>`Columns` 为 0 时图块的最小宽度，单位 px。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.Pulsed">
+        <source>Raised when a click, a tap or a key sends a shockwave, with its origin in the grid.</source>
+        <target>点击、轻触或按键发出冲击波时触发，并给出它在网格中的起点。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.Radius">
+        <source>The reach of the well in px.</source>
+        <target>引力井的作用范围，单位 px。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.Strength">
+        <source>The pull strength, from 0 to about 1.5.</source>
+        <target>吸力强度，从 0 到约 1.5。</target>
+      </trans-unit>
+      <trans-unit id="GravityWell.TileCornerRadius">
+        <source>The corner radius of every tile; the content is clipped to it and the shockwave ring follows it.</source>
+        <target>每个图块的圆角半径；内容被裁剪到这个圆角，冲击波的描边环也随之变化。</target>
+      </trans-unit>
+      <trans-unit id="GravityWellPulseEventArgs">
+        <source>The origin of a `GravityWell` shockwave.</source>
+        <target>一道 `GravityWell` 冲击波的起点。</target>
       </trans-unit>
       <trans-unit id="HoldToConfirm">
         <source>A button that commits only after it is held, for destructive or hard to undo actions where a stray tap must not count. The fill tracks the hold on a linear, pausable timeline (P22) and is revealed from the leading edge with the label inverted exactly at the edge (P29); letting go early rewinds it on a smooth spring, and finishing morphs the label and icon into the done state (P2, P5, P15). Space and Enter can be held too; the hint is in the help text.</source>
@@ -8259,6 +8407,42 @@
       <trans-unit id="IncidentUpdate.Tone">
         <source>The colour of the dot while this is the newest update.</source>
         <target>当这是最新更新时圆点的颜色。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid">
+        <source>A real-time fluid simulation behind your content (Arc Ink fluid, design reference). The pointer stirs soft ink tinted with the accent color, which turns neutral as it spreads and fades over a couple of seconds; left alone, a slow, calm stir keeps it alive. Content placed inside sits on top and stays interactive.</source>
+        <target>在内容背后运行的实时流体模拟（Arc 墨水流体，设计参考）。指针搅动带强调色的柔和墨水，墨水扩散时转为中性色，并在几秒内淡去；无人操作时，一阵缓慢而平静的搅动让它保持流动。放在里面的内容位于墨水之上并保持可交互。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.AccentInkBrush">
+        <source>The color of tinted ink. The theme uses the accent color.</source>
+        <target>带色墨水的颜色。主题使用强调色。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.Force">
+        <source>How hard the pointer stirs, from 0 to 1.</source>
+        <target>指针搅动的力度，从 0 到 1。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.InkBrush">
+        <source>The color of neutral ink. The theme uses the foreground color.</source>
+        <target>中性墨水的颜色。主题使用前景色。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.Intensity">
+        <source>How dark the ink gets, from 0 to 1.</source>
+        <target>墨水能有多深，从 0 到 1。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.IsAmbient">
+        <source>Whether a slow stir keeps the ink moving while nobody interacts, starting 1.2s after the last pointer move.</source>
+        <target>无人操作时是否用缓慢的搅动让墨水保持流动，在最后一次指针移动 1.2 秒后开始。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.IsInteractive">
+        <source>Whether the pointer stirs the ink.</source>
+        <target>指针是否会搅动墨水。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.Quality">
+        <source>The simulation grid and ink resolution.</source>
+        <target>模拟网格与墨水的分辨率。</target>
+      </trans-unit>
+      <trans-unit id="InkFluid.Tint">
+        <source>How much of the fresh ink takes the accent color, from 0 to 1; the tinted share turns neutral as it spreads.</source>
+        <target>新墨水中带强调色的比例，从 0 到 1；带色的部分会在扩散时转为中性色。</target>
       </trans-unit>
       <trans-unit id="InlineEdit">
         <source>Arc inline edit: click-to-edit text for names and short fields read far more often than they change. The text turns into a field in place with the same metrics, so nothing around it moves, and the frame grows with what is typed. Enter commits (`TextCommitted`) and saves optimistically through `SaveHandler`: the new text shows at once, quieter until the save lands, then a check draws. Escape cancels and the text rolls back; a failed save restores the last saved `Value`, says why, and offers to try again. Tab or a click elsewhere saves like Enter. Multiline: Shift+Enter adds a line break.</source>
@@ -10735,6 +10919,118 @@
       <trans-unit id="MaxLengthRule">
         <source>Fails text longer than `Length` characters.</source>
         <target>文字长度超过 `Length` 个字符时不通过。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer">
+        <source>An audio player with a playlist: the current track's cover, title and artist, previous / play / next buttons, a seek bar with the elapsed and total time, a mute button with a volume slider, and the tracks as rows that play when pressed. Playback goes through `Backend` (or `AudioBackend`): add `TKCode.Arc.Audio.Native` on desktop or `TKCode.Arc.Audio.Browser` in WebAssembly for sound; the default backend keeps time silently. Skipping wraps around and keeps playing or paused as it was; a track that reaches its end stops and returns to 0:00.</source>
+        <target>带播放列表的音频播放器：当前曲目的封面、标题和艺人，上一首 / 播放 / 下一首按钮，带已播放与总时长的进度条，带音量滑块的静音按钮，以及按下即播放的曲目行。播放经由 `Backend`（或 `AudioBackend`）：桌面添加 `TKCode.Arc.Audio.Native`、WebAssembly 添加 `TKCode.Arc.Audio.Browser` 即可发声；默认后端只静默计时。切换曲目会循环并保持原来的播放或暂停；曲目播放到结尾会停下并回到 0:00。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.AudioBackend">
+        <source>The backend that plays the audio; null uses `Backend`. Set it before the player is shown.</source>
+        <target>播放音频的后端；为 null 时使用 `Backend`。请在播放器显示之前设置。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.CompactWidth">
+        <source>Below this width the player tightens (smaller paddings, buttons and title; a taller cover). 420.</source>
+        <target>低于此宽度时播放器收紧（更小的内边距、按钮和标题；更高的封面）。420。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.DefaultVolume">
+        <source>The volume the mute button restores when nothing louder was muted before (0.7).</source>
+        <target>之前没有可恢复的音量时，静音按钮恢复的音量（0.7）。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.Duration">
+        <source>The current track's length: what the backend reports once it is loaded, the track's own `Duration` before.</source>
+        <target>当前曲目的长度：加载后为后端报告的值，加载前为曲目自身的 `Duration`。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.IsAudible">
+        <source>Whether the backend makes sound (false for the silent default backend).</source>
+        <target>后端是否发出声音（默认的静默后端为 false）。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.IsCompact">
+        <source>Whether the compact layout applies (the player is narrower than `CompactWidth`).</source>
+        <target>是否使用紧凑布局（播放器窄于 `CompactWidth`）。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.IsFramed">
+        <source>Draws a bordered card with rounded corners (true); false lays the player flat on the page.</source>
+        <target>绘制带圆角的边框卡片（true）；false 时播放器平铺在页面上。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.IsMuted">
+        <source>Whether the volume is zero (the mute button then offers to unmute).</source>
+        <target>音量是否为零（此时静音按钮提供取消静音）。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.IsPlaying">
+        <source>Whether the current track is playing (two-way): set it to play or pause.</source>
+        <target>当前曲目是否正在播放（双向）：设置它即可播放或暂停。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.Labels">
+        <source>Every word the player shows or reads to screen readers.</source>
+        <target>播放器显示或读给屏幕阅读器的全部文字。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.PlaybackFailed">
+        <source>Raised when the backend could not load or play the current track.</source>
+        <target>后端无法加载或播放当前曲目时触发。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.Position">
+        <source>How far into the current track playback is, as last reported by the backend.</source>
+        <target>当前曲目已播放到的位置，以后端最近一次报告为准。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.SelectedIndex">
+        <source>The index of the current track in `Tracks` (two-way); −1 when the playlist is empty.</source>
+        <target>当前曲目在 `Tracks` 中的索引（双向）；播放列表为空时为 −1。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.SelectedTrack">
+        <source>The current track; null when the playlist is empty.</source>
+        <target>当前曲目；播放列表为空时为 null。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.SelectedTrackChanged">
+        <source>Raised when the current track changes.</source>
+        <target>当前曲目改变时触发。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.TrackEnded">
+        <source>Raised when the current track played to its end (the player has stopped and returned to the start).</source>
+        <target>当前曲目播放到结尾时触发（播放器已停止并回到开头）。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayer.Volume">
+        <source>The output volume from 0 to 1 (two-way, 0.7); 0 is muted.</source>
+        <target>输出音量，从 0 到 1（双向，0.7）；0 即静音。</target>
+      </trans-unit>
+      <trans-unit id="MediaPlayerLabels">
+        <source>Every word `MediaPlayer` shows or reads to screen readers, in English by default. Replace the instance to translate or reword; texts that take values are functions so that word order can change.</source>
+        <target>`MediaPlayer` 显示或读给屏幕阅读器的每个词，默认为英文。替换整个实例即可翻译或改写；带数值的文字是函数，以便调整语序。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack">
+        <source>One entry of a `MediaPlayer`'s playlist: what it is called, who made it, its cover and the audio to play.</source>
+        <target>`MediaPlayer` 播放列表中的一项：名称、作者、封面和要播放的音频。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Album">
+        <source>The album or collection; shown under the heading after the artist.</source>
+        <target>专辑或合集；显示在标题下方、艺人之后。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Artist">
+        <source>Who made it; shown under the heading before the album.</source>
+        <target>作者；显示在标题下方、专辑之前。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Cover">
+        <source>The cover art, drawn to fill the cover frame (cropped, not stretched).</source>
+        <target>封面图，填满封面框（裁剪，不拉伸）。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.CoverDescription">
+        <source>What the cover shows, for screen readers.</source>
+        <target>封面内容的描述，供屏幕阅读器使用。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Duration">
+        <source>The track's length, shown in the playlist before it has been loaded; the player replaces it with the length the audio reports once the track is loaded.</source>
+        <target>曲目的长度，在加载前显示在播放列表中；曲目加载后，播放器会用音频报告的长度替换它。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Source">
+        <source>The audio to play; a track without one can be selected but stays silent.</source>
+        <target>要播放的音频；没有音频的曲目可以选中，但不会发声。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Tag">
+        <source>Anything you want to keep with the track.</source>
+        <target>任何想随曲目保存的内容。</target>
+      </trans-unit>
+      <trans-unit id="MediaTrack.Title">
+        <source>The track's name: the player's heading while it is current, and its row in the playlist.</source>
+        <target>曲目名称：作为当前曲目时是播放器的标题，也是它在播放列表中的那一行。</target>
       </trans-unit>
       <trans-unit id="MemoryGroup">
         <source>A filing group of memories (About you, Preferences, Projects, People by default).</source>
@@ -18528,90 +18824,6 @@
         <source>The order of the panels of a `SmallMultiples`.</source>
         <target>`SmallMultiples` 中面板的顺序。</target>
       </trans-unit>
-      <trans-unit id="Table">
-        <source>Arc's sortable data table: compare structured records with sortable columns. Click a header (or press Enter / Space on it) to sort ascending, again for descending; rows slide to their new places on a smooth spring and the sort arrow flips on a snappy one. `IsSelectable` adds a checkbox column, row-click selection, Shift range selection, Escape to clear and a count line with Clear selection. Rows are drawn as light text cells, virtualized for thousands of records, sorted by index (never by container), and the header sticks to the top of the visible area. Below 620px rows fold into two lines and the header becomes a strip of sort pills, as in Arc.</source>
-        <target>Arc 可排序数据表格：以可排序的列比较结构化记录。点击表头（或在表头上按 Enter / Space）升序排列，再点一次降序；行以平滑的弹簧滑动到新位置，排序箭头以更灵敏的弹簧翻转。`IsSelectable` 会添加复选框列、点击行选择、Shift 范围选择、Escape 清除选择，以及带“清除选择”的计数行。行以轻量文本单元格绘制，对数千条记录进行虚拟化，按索引（而非容器）排序，表头会吸附在可见区域顶部。宽度低于 620px 时，行会折叠为两行，表头则变为排序胶囊条，与 Arc 一致。</target>
-      </trans-unit>
-      <trans-unit id="Table.Caption">
-        <source>Accessible name of the table.</source>
-        <target>表格的无障碍名称。</target>
-      </trans-unit>
-      <trans-unit id="Table.ClearSelectionLabel">
-        <source>Text of the Clear selection action in the count line (default "Clear selection").</source>
-        <target>计数行中“Clear selection”操作的文字（默认 "Clear selection"）。</target>
-      </trans-unit>
-      <trans-unit id="Table.EmptyMessage">
-        <source>Text shown when there are no rows (default "No rows to show").</source>
-        <target>没有行时显示的文字（默认 "No rows to show"）。</target>
-      </trans-unit>
-      <trans-unit id="Table.IsLoading">
-        <source>Shows a spinner over the body (in place of the empty message when there are no rows).</source>
-        <target>在表格主体上显示加载指示器（没有数据行时代替空状态提示）。</target>
-      </trans-unit>
-      <trans-unit id="Table.IsSelectable">
-        <source>Adds the checkbox column, row-click selection and the count line with Clear selection.</source>
-        <target>添加复选框列、点击行选择，以及带“清除选择”的计数行。</target>
-      </trans-unit>
-      <trans-unit id="Table.IsSortClearable">
-        <source>When true a third click on a sorted header clears the sort (Arc toggles between ascending and descending).</source>
-        <target>为 true 时，对已排序的表头第三次点击会清除排序（Arc 中仅在升序和降序之间切换）。</target>
-      </trans-unit>
-      <trans-unit id="Table.ItemNameOne">
-        <source>Singular noun of the count line, as in "1 project".</source>
-        <target>计数行中的单数名词，如“1 个项目”。</target>
-      </trans-unit>
-      <trans-unit id="Table.ItemNameOther">
-        <source>Plural noun of the count line, as in "6 projects".</source>
-        <target>计数行中的复数名词，如“6 个项目”。</target>
-      </trans-unit>
-      <trans-unit id="Table.ItemsSource">
-        <source>Row items (any enumerable; `INotifyCollectionChanged` sources are followed).</source>
-        <target>数据行项（任意可枚举对象；会跟踪 `INotifyCollectionChanged` 数据源）。</target>
-      </trans-unit>
-      <trans-unit id="Table.LoadingMessage">
-        <source>Text shown with the loading spinner (default "Loading rows").</source>
-        <target>加载旋转图标旁显示的文字（默认 "Loading rows"）。</target>
-      </trans-unit>
-      <trans-unit id="Table.RowKeySelector">
-        <source>Row identity (Arc `rowKey`); defaults to the item itself. Selection and row motion follow keys across source changes.</source>
-        <target>数据行的标识（Arc 中为 `rowKey`）；默认为项本身。数据源变化时，选择状态与行的移动依然依据该键。</target>
-      </trans-unit>
-      <trans-unit id="Table.SelectAllLabel">
-        <source>Accessible name of the select-all checkbox in the header (default "Select all rows").</source>
-        <target>表头全选复选框的无障碍名称（默认 "Select all rows"）。</target>
-      </trans-unit>
-      <trans-unit id="Table.SelectedItems">
-        <source>Selected row items in display order (two-way). A bound mutable list is updated in place.</source>
-        <target>按显示顺序排列的已选数据行项（双向）。绑定的可变列表会被原地更新。</target>
-      </trans-unit>
-      <trans-unit id="Table.SelectedNoun">
-        <source>Word for the selected rows in the count line, as in "2 selected" (default "selected").</source>
-        <target>计数行中已选行的用词，如 "2 selected"（默认 "selected"）。</target>
-      </trans-unit>
-      <trans-unit id="Table.SelectionChanged">
-        <source>Raised when the user changes the selection (checkboxes, row clicks, Select all, Clear, Escape).</source>
-        <target>用户更改选择时触发（复选框、点击行、全选、清除或 Escape）。</target>
-      </trans-unit>
-      <trans-unit id="Table.SelectsOnRowClick">
-        <source>When true (the default) a click anywhere on a row toggles it; when false only the checkbox cell does, and clicks on the rest of the row are left to the app. Keyboard selection is the same either way.</source>
-        <target>为 true（默认）时，点击行的任意位置都会切换该行；为 false 时只有复选框那一格会切换，点击行的其他位置交给应用处理。两种情况下键盘选择的方式相同。</target>
-      </trans-unit>
-      <trans-unit id="Table.SortChanged">
-        <source>Raised when the user sorts (header click or keyboard) or `Sort` is called.</source>
-        <target>用户排序（点击表头或使用键盘）或调用 `Sort` 时触发。</target>
-      </trans-unit>
-      <trans-unit id="Table.SortColumn">
-        <source>The sorted column (two-way). Setting a column while `SortDirection` is None sorts ascending.</source>
-        <target>已排序的列（双向）。在 `SortDirection` 为 None 时设置列，将按升序排列。</target>
-      </trans-unit>
-      <trans-unit id="Table.SortDirection">
-        <source>Sort direction of the sorted column (two-way): None, Ascending or Descending.</source>
-        <target>已排序列的排序方向（双向绑定）：None、Ascending 或 Descending。</target>
-      </trans-unit>
-      <trans-unit id="Table.SortKey">
-        <source>The sorted column's `EffectiveKey` (two-way, for view models).</source>
-        <target>已排序列的 `EffectiveKey`（双向，供视图模型使用）。</target>
-      </trans-unit>
       <trans-unit id="Sparkline">
         <source>Arc's sparkline: a compact trend beside a value, for cards, table rows and KPI blocks. Scrub it with the pointer or the arrow keys: the cursor springs between points, the stretch after it dims as if it has not happened yet, and the headline and aside roll to the scrubbed point. The line draws once like a pen the first time it is half visible; the fill follows the tip, then the end dot lands. New data morphs the line from the shape on screen. Motion is code-driven because the pen tip, cursor and morph are coordinates inside the self-drawn plot.</source>
         <target>Arc 迷你趋势图：紧挨数值旁的紧凑趋势图，适用于卡片、表格行和 KPI 区块。可用指针或方向键拖动浏览：光标在各数据点之间弹动，其后的区段会变暗，仿佛尚未发生；标题与附注会滚动到所浏览的数据点。首次半数可见时，折线会像画笔一样绘制一次；填充区随笔尖跟进，然后末端圆点落定。新数据会从屏幕上的形状变形为新折线。由于笔尖、光标和变形都是自绘绘图区内的坐标，因此动效由代码驱动。</target>
@@ -18963,6 +19175,90 @@
       <trans-unit id="Switch">
         <source>Arc switch: a tactile toggle for settings that take effect immediately. While pressed the thumb widens toward the other side (far edge anchored); on release it glides on a critically damped spring. Toggles that did not come from a press (keyboard, code) play a brief stretch instead.</source>
         <target>Arc 开关：用于即时生效设置的触感切换。按下时，滑块会向另一侧拉宽（远端固定）；松开后，它以临界阻尼弹簧滑动。非按下触发的切换（键盘、代码）则改为短暂拉伸。</target>
+      </trans-unit>
+      <trans-unit id="Table">
+        <source>Arc's sortable data table: compare structured records with sortable columns. Click a header (or press Enter / Space on it) to sort ascending, again for descending; rows slide to their new places on a smooth spring and the sort arrow flips on a snappy one. `IsSelectable` adds a checkbox column, row-click selection, Shift range selection, Escape to clear and a count line with Clear selection. Rows are drawn as light text cells, virtualized for thousands of records, sorted by index (never by container), and the header sticks to the top of the visible area. Below 620px rows fold into two lines and the header becomes a strip of sort pills, as in Arc.</source>
+        <target>Arc 可排序数据表格：以可排序的列比较结构化记录。点击表头（或在表头上按 Enter / Space）升序排列，再点一次降序；行以平滑的弹簧滑动到新位置，排序箭头以更灵敏的弹簧翻转。`IsSelectable` 会添加复选框列、点击行选择、Shift 范围选择、Escape 清除选择，以及带“清除选择”的计数行。行以轻量文本单元格绘制，对数千条记录进行虚拟化，按索引（而非容器）排序，表头会吸附在可见区域顶部。宽度低于 620px 时，行会折叠为两行，表头则变为排序胶囊条，与 Arc 一致。</target>
+      </trans-unit>
+      <trans-unit id="Table.Caption">
+        <source>Accessible name of the table.</source>
+        <target>表格的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="Table.ClearSelectionLabel">
+        <source>Text of the Clear selection action in the count line (default "Clear selection").</source>
+        <target>计数行中“Clear selection”操作的文字（默认 "Clear selection"）。</target>
+      </trans-unit>
+      <trans-unit id="Table.EmptyMessage">
+        <source>Text shown when there are no rows (default "No rows to show").</source>
+        <target>没有行时显示的文字（默认 "No rows to show"）。</target>
+      </trans-unit>
+      <trans-unit id="Table.IsLoading">
+        <source>Shows a spinner over the body (in place of the empty message when there are no rows).</source>
+        <target>在表格主体上显示加载指示器（没有数据行时代替空状态提示）。</target>
+      </trans-unit>
+      <trans-unit id="Table.IsSelectable">
+        <source>Adds the checkbox column, row-click selection and the count line with Clear selection.</source>
+        <target>添加复选框列、点击行选择，以及带“清除选择”的计数行。</target>
+      </trans-unit>
+      <trans-unit id="Table.IsSortClearable">
+        <source>When true a third click on a sorted header clears the sort (Arc toggles between ascending and descending).</source>
+        <target>为 true 时，对已排序的表头第三次点击会清除排序（Arc 中仅在升序和降序之间切换）。</target>
+      </trans-unit>
+      <trans-unit id="Table.ItemNameOne">
+        <source>Singular noun of the count line, as in "1 project".</source>
+        <target>计数行中的单数名词，如“1 个项目”。</target>
+      </trans-unit>
+      <trans-unit id="Table.ItemNameOther">
+        <source>Plural noun of the count line, as in "6 projects".</source>
+        <target>计数行中的复数名词，如“6 个项目”。</target>
+      </trans-unit>
+      <trans-unit id="Table.ItemsSource">
+        <source>Row items (any enumerable; `INotifyCollectionChanged` sources are followed).</source>
+        <target>数据行项（任意可枚举对象；会跟踪 `INotifyCollectionChanged` 数据源）。</target>
+      </trans-unit>
+      <trans-unit id="Table.LoadingMessage">
+        <source>Text shown with the loading spinner (default "Loading rows").</source>
+        <target>加载旋转图标旁显示的文字（默认 "Loading rows"）。</target>
+      </trans-unit>
+      <trans-unit id="Table.RowKeySelector">
+        <source>Row identity (Arc `rowKey`); defaults to the item itself. Selection and row motion follow keys across source changes.</source>
+        <target>数据行的标识（Arc 中为 `rowKey`）；默认为项本身。数据源变化时，选择状态与行的移动依然依据该键。</target>
+      </trans-unit>
+      <trans-unit id="Table.SelectAllLabel">
+        <source>Accessible name of the select-all checkbox in the header (default "Select all rows").</source>
+        <target>表头全选复选框的无障碍名称（默认 "Select all rows"）。</target>
+      </trans-unit>
+      <trans-unit id="Table.SelectedItems">
+        <source>Selected row items in display order (two-way). A bound mutable list is updated in place.</source>
+        <target>按显示顺序排列的已选数据行项（双向）。绑定的可变列表会被原地更新。</target>
+      </trans-unit>
+      <trans-unit id="Table.SelectedNoun">
+        <source>Word for the selected rows in the count line, as in "2 selected" (default "selected").</source>
+        <target>计数行中已选行的用词，如 "2 selected"（默认 "selected"）。</target>
+      </trans-unit>
+      <trans-unit id="Table.SelectionChanged">
+        <source>Raised when the user changes the selection (checkboxes, row clicks, Select all, Clear, Escape).</source>
+        <target>用户更改选择时触发（复选框、点击行、全选、清除或 Escape）。</target>
+      </trans-unit>
+      <trans-unit id="Table.SelectsOnRowClick">
+        <source>When true (the default) a click anywhere on a row toggles it; when false only the checkbox cell does, and clicks on the rest of the row are left to the app. Keyboard selection is the same either way.</source>
+        <target>为 true（默认）时，点击行的任意位置都会切换该行；为 false 时只有复选框那一格会切换，点击行的其他位置交给应用处理。两种情况下键盘选择的方式相同。</target>
+      </trans-unit>
+      <trans-unit id="Table.SortChanged">
+        <source>Raised when the user sorts (header click or keyboard) or `Sort` is called.</source>
+        <target>用户排序（点击表头或使用键盘）或调用 `Sort` 时触发。</target>
+      </trans-unit>
+      <trans-unit id="Table.SortColumn">
+        <source>The sorted column (two-way). Setting a column while `SortDirection` is None sorts ascending.</source>
+        <target>已排序的列（双向）。在 `SortDirection` 为 None 时设置列，将按升序排列。</target>
+      </trans-unit>
+      <trans-unit id="Table.SortDirection">
+        <source>Sort direction of the sorted column (two-way): None, Ascending or Descending.</source>
+        <target>已排序列的排序方向（双向绑定）：None、Ascending 或 Descending。</target>
+      </trans-unit>
+      <trans-unit id="Table.SortKey">
+        <source>The sorted column's `EffectiveKey` (two-way, for view models).</source>
+        <target>已排序列的 `EffectiveKey`（双向，供视图模型使用）。</target>
       </trans-unit>
       <trans-unit id="Tabs">
         <source>Arc tabs: switch between related views of the same object. A single selection pill glides between the triggers on a morph spring, the incoming panel slides 8px in from the side of travel while the outgoing one is pinned in place and fades, and the panel area springs from the old panel height to the new one so the content below glides. Long tab lists scroll horizontally with soft edges and edge scroll buttons, and the selected or focused tab is always scrolled into view. Items are `TabItem` containers written inline (`&lt;arc:TabItem Header="Overview"&gt;…&lt;/arc:TabItem&gt;`) or generated from `ItemsSource`: `ItemTemplate` renders the trigger and `ContentTemplate` the panel.</source>

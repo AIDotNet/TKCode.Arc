@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DotGridPreviewDemo">
+    <!-- Move the pointer over the field and click anywhere; the switch changes the gap between dots. -->
+    <arc:DotGrid x:Name="Field"
+                 Height="420"
+                 MaxWidth="720"
+                 BorderThickness="1"
+                 Background="{arc:ArcDesignTokenResource Surface}"
+                 BorderBrush="{arc:ArcDesignTokenResource Border}"
+                 CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+        <arc:SegmentedControl SelectedValue="22"
+                              SelectionChanged="OnDensityChanged"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Bottom"
+                              Margin="0,0,0,20">
+            <arc:SegmentedOption Value="14" Label="Dense" />
+            <arc:SegmentedOption Value="22" Label="Default" />
+            <arc:SegmentedOption Value="32" Label="Loose" />
+        </arc:SegmentedControl>
+    </arc:DotGrid>
+</UserControl>

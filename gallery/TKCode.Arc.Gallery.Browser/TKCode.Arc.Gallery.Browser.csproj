@@ -34,6 +34,7 @@
         <PackageReference Include="Avalonia.Fonts.Inter" />
         <ProjectReference Include="../TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Audio.Browser/TKCode.Arc.Audio.Browser.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
     <ItemGroup>

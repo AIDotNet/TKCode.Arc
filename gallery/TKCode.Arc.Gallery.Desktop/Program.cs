@@ -20,6 +20,8 @@ internal static class Program
         GalleryLogos.Source = new AssetLogoSource();
         // The language chosen in the top bar is kept for the next start; until there is one, the system's language decides.
         GalleryLanguages.Store = new FileLanguageStore();
+        // Media players make sound through miniaudio; without the native library for this platform they keep time silently.
+        ArcAudioNative.Use();
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 

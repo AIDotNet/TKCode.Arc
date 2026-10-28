@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DotGridHeroDemo">
+    <!-- A hero: the headline and actions are the content; the field listens to the pointer over them too. -->
+    <arc:DotGrid Height="380"
+                 MaxWidth="720"
+                 Gap="26"
+                 BorderThickness="1"
+                 Background="{arc:ArcDesignTokenResource Surface}"
+                 BorderBrush="{arc:ArcDesignTokenResource Border}"
+                 CornerRadius="{arc:ArcDesignTokenResource RadiusSurface}">
+        <StackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="440">
+            <TextBlock Text="Built to be poked at"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                       FontSize="{arc:ArcDesignTokenResource Type3XL}"
+                       FontWeight="Medium"
+                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+            <TextBlock Text="Move across the field to bend it, and click to send a ripple."
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center" Margin="0,8,0,0">
+                <arc:Button Content="Start a project" />
+                <arc:Button Content="Read the guide" Variant="Ghost" />
+            </StackPanel>
+        </StackPanel>
+    </arc:DotGrid>
+</UserControl>

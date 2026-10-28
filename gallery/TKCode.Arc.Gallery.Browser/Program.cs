@@ -15,7 +15,7 @@ namespace TKCode.Arc.Gallery.Browser;
 
 internal sealed partial class Program
 {
-    private static Task Main(string[] args)
+    private static async Task Main(string[] args)
     {
         // A publish without trimming leaves assemblies out of the boot list (the project file) and fetches them when the runtime asks.
         if (AppContext.TryGetSwitch("Arc.Gallery.LazyAssemblies", out var lazyAssemblies) && lazyAssemblies)
@@ -40,7 +40,9 @@ internal sealed partial class Program
         }
         // The language chosen in the top bar is kept in local storage; until there is one, the browser's languages decide.
         GalleryLanguages.Store = new BrowserLanguageStore();
-        return BuildAvaloniaApp().StartBrowserAppAsync("out");
+        // Media players make sound through an HTML audio element each; if the module cannot load they keep time silently.
+        await ArcAudioBrowser.UseAsync();
+        await BuildAvaloniaApp().StartBrowserAppAsync("out");
     }
 
     public static AppBuilder BuildAvaloniaApp() =>

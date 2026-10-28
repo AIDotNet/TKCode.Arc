@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.FileUploadValidationDemo">
+    <!-- No uploader: files are only checked and listed. The CSV is accepted, the archive has the wrong type, the PDF is too large. -->
+    <StackPanel MaxWidth="520" Spacing="16">
+        <arc:FileUpload x:Name="Upload"
+                        Accept=".csv,text/plain"
+                        MaxSize="1048576"
+                        Label="Import contacts"
+                        Description="CSV or plain text, up to 1 MB." />
+        <arc:Button Content="Add sample files" Variant="Secondary" Size="Small" HorizontalAlignment="Left" Click="OnAddSamples" />
+    </StackPanel>
+</UserControl>

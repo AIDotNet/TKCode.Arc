@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DotGridColorsDemo">
+    <!-- Brand colors, a wider and stronger lens, no edge fade and no ripples. -->
+    <arc:DotGrid Height="300"
+                 MaxWidth="720"
+                 Gap="18"
+                 DotSize="1.8"
+                 Radius="200"
+                 Strength="24"
+                 IsFadeEnabled="False"
+                 IsRippleEnabled="False"
+                 DotBrush="{arc:ArcDesignTokenResource Border}"
+                 ActiveDotBrush="{arc:ArcDesignTokenResource Series2}"
+                 BorderThickness="1"
+                 Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                 BorderBrush="{arc:ArcDesignTokenResource Border}"
+                 CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}" />
+</UserControl>

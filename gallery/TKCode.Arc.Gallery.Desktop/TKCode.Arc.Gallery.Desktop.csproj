@@ -18,6 +18,7 @@
         <ProjectReference Include="../TKCode.Arc.Gallery.Shots/TKCode.Arc.Gallery.Shots.csproj" />
         <ProjectReference Include="../TKCode.Arc.Gallery.Content/TKCode.Arc.Gallery.Content.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Audio.Native/TKCode.Arc.Audio.Native.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
     <!-- The screenshots and the page text are resource-only assemblies that Avalonia finds by name (avares://). NativeAOT keeps no

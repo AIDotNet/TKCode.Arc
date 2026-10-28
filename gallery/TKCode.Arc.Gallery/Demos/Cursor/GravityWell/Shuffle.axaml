@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.GravityWellShuffleDemo">
+    <!-- Pulsed reports every shockwave with its origin; here each one shuffles the team. -->
+    <StackPanel Spacing="12" MaxWidth="560">
+        <arc:GravityWell x:Name="Well"
+                         Label="Shuffled team"
+                         Columns="8"
+                         Strength="1.4"
+                         Pulsed="OnPulsed">
+            <arc:GravityWell.ItemTemplate>
+                <DataTemplate x:DataType="demos:GravityWellPerson">
+                    <Border Background="{Binding Tint}">
+                        <TextBlock Text="{Binding Initials}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Medium"
+                                   Foreground="#1f1f1f" />
+                    </Border>
+                </DataTemplate>
+            </arc:GravityWell.ItemTemplate>
+        </arc:GravityWell>
+        <TextBlock x:Name="Status"
+                   Text="Click the grid, or press Space while it has focus."
+                   HorizontalAlignment="Center"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

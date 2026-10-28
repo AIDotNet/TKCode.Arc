@@ -55,6 +55,7 @@ public static partial class GalleryCatalog
             "MobileToolbar", "MobileNavigationStack", "MobileListGroup", "MobilePullToRefresh", "MobileDialog", "MobileToast",
             "MobileSheet", "MobileActionSheet", "MobileTextField", "MobileSearchbar", "MobileCheckbox", "MobileRadio",
             "MobileIconButton", "MobileSegmented"]),
+        ("2026-10-27", ["FileUpload", "MediaPlayer"]),
     }.SelectMany(g => g.Classes.Select(c => (c, g.Date))).ToDictionary(e => e.c, e => e.Date);
 
     private static string? AddedOnOf(string className) => s_addedOn.GetValueOrDefault(className);
@@ -94,6 +95,18 @@ public static partial class GalleryCatalog
     /// </summary>
     public static readonly GalleryCategory[] Special =
     [
+        new("Cursor", "Cursor", "光标",
+        [
+            new("DotGrid", "Dot grid", "dot-grid", 0,
+                "A field of dots that swells away from the pointer like a lens and sends a ripple out from every click.",
+                IsArc: false, AddedOn: "2026-10-27"),
+            new("GravityWell", "Gravity well", "gravity-well", 0,
+                "Tiles that lean toward the pointer, shrink and dim as if pulled into a well, with a click that rolls a shockwave through the grid.",
+                IsArc: false, AddedOn: "2026-10-27"),
+            new("InkFluid", "Ink fluid", "ink-fluid", 0,
+                "A fluid simulation behind your content: the pointer stirs soft ink that swirls and fades, and a slow stir keeps it moving when nobody does.",
+                IsArc: false, AddedOn: "2026-10-27"),
+        ], IsArc: false),
         new("Ai", "AI", "AI",
         [
             new("AgentStatus", "Agent status", "agent-status", 0,
