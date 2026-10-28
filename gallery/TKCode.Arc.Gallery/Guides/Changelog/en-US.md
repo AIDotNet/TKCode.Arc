@@ -11,6 +11,12 @@ keep the version pinned in your project. The same list is kept in `CHANGELOG.md`
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts` and
 `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`, `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`, `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## 0.3.1-preview.6 (2026-10-28)
+
+### Added
+
+- **Cascader** (Extras): pick one node of a hierarchy level by level, such as province, city and district. The field, menu, gliding highlight and clear button match `Select`; a parent opens its children in a column to the right and the menu width springs to its new size. Data is read through delegates (`ChildrenSelector`, `TextSelector`, `ValueSelector`), so nothing is reflected. `SelectedItem`, `SelectedValue` and `SelectedPath` stay in step, and a value written before the data arrives is kept and resolved when it does. Options: `LeafOnly`, `ExpandTrigger`, `ShowFullPath`, `PathSeparator`, `IsClearable`, `IsReadOnly`; full keyboard support.
+
 ## 0.3.1-preview.5 (2026-10-28)
 
 ### Added

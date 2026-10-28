@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 02475717fda7
+source-hash: 55098180ce25
 ---
 
 # 更新日志
@@ -8,6 +8,12 @@ source-hash: 02475717fda7
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 0.3.1-preview.6 (2026-10-28)
+
+### 新增
+
+- **Cascader**(Extras):按层级逐级选择一个节点,如省、市、区。字段、菜单、滑动高亮和清除按钮与 `Select` 一致;父节点的子级在右侧一列中展开,菜单宽度用弹簧过渡到新的宽度。数据通过委托读取(`ChildrenSelector`、`TextSelector`、`ValueSelector`),不使用反射。`SelectedItem`、`SelectedValue` 与 `SelectedPath` 始终保持一致,数据到达之前写入的值会被保留,数据到达后再解析。选项:`LeafOnly`、`ExpandTrigger`、`ShowFullPath`、`PathSeparator`、`IsClearable`、`IsReadOnly`;完整的键盘支持。
 
 ## 0.3.1-preview.5 (2026-10-28)
 

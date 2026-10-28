@@ -8,6 +8,18 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## 0.3.1-preview.6 - 2026-10-28
+
+### Added
+
+- **Cascader** (Extras): pick one node of a hierarchy level by level, such as province, city and district (#22). The
+  field, menu surface, gliding highlight and clear button match `Select`; a parent opens its children in a column to
+  the right and the menu width springs to its new size. Data is read through delegates (`ChildrenSelector`,
+  `TextSelector`, `ValueSelector`, `DisabledSelector`, `IsLeafSelector`), so nothing is reflected. `SelectedItem`,
+  `SelectedValue` and `SelectedPath` stay in step, and a value written before the data arrives is kept and resolved
+  when it does. Options: `LeafOnly`, `ExpandTrigger` (click or hover), `ShowFullPath`, `PathSeparator`, `IsClearable`,
+  `IsReadOnly`, `ColumnWidth`. Full keyboard support, with a Gallery page and six demos.
+
 ## 0.3.1-preview.5 - 2026-10-28
 
 ### Added
@@ -579,6 +591,7 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 
 First preview release.
 
+[0.3.1-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.5...v0.3.1-preview.6
 [0.3.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.4...v0.3.1-preview.5
 [0.3.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.3...v0.3.1-preview.4
 [0.3.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.2...v0.3.1-preview.3
