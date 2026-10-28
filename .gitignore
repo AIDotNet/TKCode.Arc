@@ -38,3 +38,4 @@ __pycache__/
 
 # libghostty-vt binaries for TKCode.Arc.Terminal (tools/terminal/sync-native.sh)
 src/TKCode.Arc.Terminal/runtimes/
+src/TKCode.Arc.Audio.Native/runtimes/

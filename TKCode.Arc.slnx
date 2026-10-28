@@ -2,6 +2,9 @@
   <Folder Name="/src/">
     <Project Path="src/TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
     <Project Path="src/TKCode.Arc/TKCode.Arc.csproj" />
+    <Project Path="src/TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
+    <Project Path="src/TKCode.Arc.Audio.Native/TKCode.Arc.Audio.Native.csproj" />
+    <Project Path="src/TKCode.Arc.Audio.Browser/TKCode.Arc.Audio.Browser.csproj" />
     <Project Path="src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
     <Project Path="src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
     <Project Path="src/TKCode.Arc.Terminal/TKCode.Arc.Terminal.csproj" />

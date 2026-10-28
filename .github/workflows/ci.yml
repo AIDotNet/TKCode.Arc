@@ -82,7 +82,8 @@ jobs:
 
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
   # the Zig in native/toolchain.json. Linux cross-compiles the Linux and Windows targets; the macOS targets need the
-  # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native.
+  # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native. The same job builds the miniaudio shim of
+  # TKCode.Arc.Audio.Native (native/miniaudio, pinned in miniaudio-upstream.json) with the same Zig and RID split.
   native:
     name: Native (${{ matrix.host }})
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
@@ -114,10 +115,13 @@ jobs:
           path: |
             ~/.cache/tkcode/zig
             ${{ github.workspace }}/.zig-cache-global
-          key: zig-${{ matrix.host }}-${{ hashFiles('native/toolchain.json', 'native/ghostty/ghostty-upstream.json') }}
+          key: zig-${{ matrix.host }}-${{ hashFiles('native/toolchain.json', 'native/ghostty/ghostty-upstream.json', 'native/miniaudio/miniaudio-upstream.json') }}
 
       - name: Build libghostty-vt
         run: for rid in ${{ matrix.rids }}; do tools/terminal/build-ghostty.sh "$rid"; done
+
+      - name: Build the miniaudio shim
+        run: for rid in ${{ matrix.rids }}; do tools/audio/build-miniaudio.sh "$rid"; done
 
       # The Linux libraries must load on glibc 2.28 and newer.
       - name: Check the glibc floor (2.28)
@@ -135,6 +139,8 @@ jobs:
           path: |
             artifacts/native/*/*ghostty-vt.*
             artifacts/native/*/ghostty-commit.txt
+            artifacts/native/*/*tkcode_audio.*
+            artifacts/native/*/miniaudio-version.txt
           if-no-files-found: error
           retention-days: 7
 
@@ -193,9 +199,11 @@ jobs:
           path: artifacts/native
           merge-multiple: true
 
-      # artifacts/native/<rid>/ -> src/TKCode.Arc.Terminal/runtimes/<rid>/native/
+      # artifacts/native/<rid>/ -> src/TKCode.Arc.Terminal/runtimes/<rid>/native/ and src/TKCode.Arc.Audio.Native/runtimes/<rid>/native/
       - name: Stage the native libraries
-        run: tools/terminal/sync-native.sh
+        run: |
+          tools/terminal/sync-native.sh
+          tools/audio/sync-native.sh
 
       # Build the whole solution once, then pack without rebuilding.
       - name: Build
@@ -215,7 +223,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
+          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -230,6 +238,13 @@ jobs:
                        runtimes/win-x64/native/ghostty-vt.dll runtimes/win-arm64/native/ghostty-vt.dll \
                        runtimes/osx-x64/native/libghostty-vt.dylib runtimes/osx-arm64/native/libghostty-vt.dylib; do
             unzip -l "$terminal" | grep -q " $entry\$" || { echo "::error::$terminal lacks $entry"; exit 1; }
+          done
+          # TKCode.Arc.Audio.Native must carry the miniaudio shim for every RID.
+          audio="artifacts/nupkg/TKCode.Arc.Audio.Native.$VERSION.nupkg"
+          for entry in runtimes/linux-x64/native/libtkcode_audio.so runtimes/linux-arm64/native/libtkcode_audio.so \
+                       runtimes/win-x64/native/tkcode_audio.dll runtimes/win-arm64/native/tkcode_audio.dll \
+                       runtimes/osx-x64/native/libtkcode_audio.dylib runtimes/osx-arm64/native/libtkcode_audio.dylib; do
+            unzip -l "$audio" | grep -q " $entry\$" || { echo "::error::$audio lacks $entry"; exit 1; }
           done
           ls -l artifacts/nupkg
           for pkg in artifacts/nupkg/*.nupkg; do
@@ -282,12 +297,12 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      # The matching .snupkg next to each .nupkg is pushed too. Core goes first, the packages that depend on it after (TKCode.Arc before Blocks, AdvancedCharts and Special).
+      # The matching .snupkg next to each .nupkg is pushed too. Core goes first, the packages that depend on it after (TKCode.Arc before Blocks, AdvancedCharts and Special; TKCode.Arc.Audio before Blocks and its backends).
       - name: Push
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
+          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

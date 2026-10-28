@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Audio.Browser</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Audio.Browser</PackageId>
+        <Description>WebAssembly audio backend for TKCode.Arc.Audio: one HTML audio element per player through JavaScript interop. Call await ArcAudioBrowser.UseAsync() at startup of a browser app.</Description>
+        <PackageTags>$(PackageTags);audio;media;browser;wasm</PackageTags>
+        <!-- The JSImport source generator emits unsafe code. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Imported from a data: URL by ArcAudioBrowser, so the package needs no static web asset path in the host. -->
+        <EmbeddedResource Include="arc-audio.js" LogicalName="TKCode.Arc.Audio.Browser.arc-audio.js" />
+    </ItemGroup>
+</Project>

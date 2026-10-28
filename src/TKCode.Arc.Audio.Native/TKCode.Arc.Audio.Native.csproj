@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Audio.Native</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Audio.Native</PackageId>
+        <Description>Desktop audio backend for TKCode.Arc.Audio (Windows, macOS, Linux; x64 and arm64), built on miniaudio. Call ArcAudioNative.Use() at startup. The native library ships in the package under runtimes/&lt;rid&gt;/native.</Description>
+        <PackageTags>$(PackageTags);audio;media;miniaudio</PackageTags>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
+    </ItemGroup>
+    <!-- The miniaudio shim per RID. Not committed: tools/audio/build-miniaudio.sh builds it and tools/audio/sync-native.sh copies it here.
+         Packed under runtimes/ for NuGet consumers, and copied next to the assembly for project references, where
+         ArcAudioNative's resolver finds it under runtimes/<rid>/native. -->
+    <ItemGroup>
+        <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="../../native/miniaudio/miniaudio-upstream.json" Pack="false" Visible="false" />
+    </ItemGroup>
+    <Target Name="WarnMissingAudioNative" BeforeTargets="Pack">
+        <ItemGroup>
+            <_AudioNative Include="$(MSBuildProjectDirectory)/runtimes/*/native/*" />
+        </ItemGroup>
+        <Warning Condition="'@(_AudioNative)' == ''" Text="No tkcode_audio under runtimes/&lt;rid&gt;/native: the package would ship without the native library. Run tools/audio/build-miniaudio.sh and tools/audio/sync-native.sh." />
+    </Target>
+</Project>

@@ -11,5 +11,6 @@
         <PackageReference Include="xunit.runner.visualstudio" />
         <PackageReference Include="Shouldly" />
         <ProjectReference Include="../../src/TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
     </ItemGroup>
 </Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Audio</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Audio</PackageId>
+        <Description>Audio playback abstraction for TKCode.Arc (IAudioPlayer, AudioSource) with a silent simulated backend. Platform backends ship separately: TKCode.Arc.Audio.Native (desktop, miniaudio) and TKCode.Arc.Audio.Browser (WebAssembly).</Description>
+        <PackageTags>$(PackageTags);audio;media</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Core.Tests" />
+    </ItemGroup>
+</Project>

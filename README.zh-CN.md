@@ -32,7 +32,7 @@ dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.4    # 可选
 ```
 
 `TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`
-（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装；工作流画布 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）随 0.3.1-preview.1 起一同发布；像素风主题包 `TKCode.Arc.Themes.Pixel`（`UseArcPixelTheme()`）与移动端首批控件 `TKCode.Arc.Mobile`（`UseArcMobile()`，尚未在真机上验证）自 0.3.1-preview.1 起发布；全局圆角包 `TKCode.Arc.Themes.Corners`（`WithArcCorners()`）自 0.3.1-preview.2 起发布。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
+（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装；工作流画布 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）随 0.3.1-preview.1 起一同发布；像素风主题包 `TKCode.Arc.Themes.Pixel`（`UseArcPixelTheme()`）与移动端首批控件 `TKCode.Arc.Mobile`（`UseArcMobile()`，尚未在真机上验证）自 0.3.1-preview.1 起发布；全局圆角包 `TKCode.Arc.Themes.Corners`（`WithArcCorners()`）自 0.3.1-preview.2 起发布。音频播放抽象 `TKCode.Arc.Audio`（媒体类 Block 使用的 `IAudioPlayer`，默认静音模拟）及其平台后端 `TKCode.Arc.Audio.Native`（桌面，miniaudio，`ArcAudioNative.Use()`）与 `TKCode.Arc.Audio.Browser`（WebAssembly，`ArcAudioBrowser.UseAsync()`）尚未发布。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
 
 ## 快速开始
 
