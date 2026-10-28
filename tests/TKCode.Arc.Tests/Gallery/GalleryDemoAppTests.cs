@@ -1,7 +1,15 @@
 using TKCode.Arc.Gallery.DemoApp;
 using TKCode.Arc.Gallery.Shell;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Primitives;
+using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Media;
+using TKCode.Arc.DesignTokens;
+using Avalonia.Headless;
+using Avalonia.Input;
 using Avalonia.Headless.XUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -54,6 +62,113 @@ public class GalleryDemoAppTests
         }
         finally
         {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void The_Sidebar_Highlight_Glides_To_The_Chosen_Page_Through_The_Page_Switch()
+    {
+        var window = Open();
+        ArcMotion.SetLevel(window, ArcMotionLevel.Full);
+        try
+        {
+            window.Shell.Navigate(GalleryRoute.Demo("overview"));
+            Pump();
+            var nav = window.GetVisualDescendants().OfType<DemoNav>().First(n => n.IsEffectivelyVisible);
+            var highlight = nav.GetVisualDescendants().OfType<GlidingIndicator>().Single();
+            var from = highlight.CurrentRect;
+
+            window.Shell.Navigate(GalleryRoute.Demo("customers"));
+            Pump();
+            window.UpdateLayout();
+            Pump();
+
+            // uiarc.dev's highlight springs across (layoutId with spring.morph); the new page's layout passes used to
+            // jump it straight onto the row.
+            var row = nav.GetVisualDescendants().OfType<GalleryNavRow>().Single(r => r.IsSelected);
+            var target = row.TranslatePoint(default, highlight.GetVisualParent()!)!.Value;
+            highlight.CurrentRect.Y.ShouldBeLessThan(target.Y - 1, "still on its way down from the overview row");
+            highlight.CurrentRect.Y.ShouldBeGreaterThanOrEqualTo(from.Y);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Collapsed_Rail_Opens_The_Page_Whose_Icon_Is_Clicked()
+    {
+        var window = Open();
+        try
+        {
+            window.Shell.Navigate(GalleryRoute.Demo("overview"));
+            Pump();
+            window.GetVisualDescendants().OfType<DemoFrame>().Single().ToggleCollapsed();
+            var nav = window.GetVisualDescendants().OfType<DemoNav>().First(n => n.IsEffectivelyVisible);
+            // The width follows a 400ms transition on the wall clock; under a loaded test run it can take longer.
+            var deadline = DateTime.UtcNow.AddSeconds(5);
+            while (nav.Bounds.Width >= DemoNav.CollapsedWidth && DateTime.UtcNow < deadline)
+            {
+                Thread.Sleep(50);
+                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                Pump();
+                window.UpdateLayout();
+            }
+            nav.Bounds.Width.ShouldBeLessThan(DemoNav.CollapsedWidth);
+
+            // The labels are hidden from the pointer in the rail; the row's own surface has to take the click, not
+            // only the glyph's strokes.
+            var row = nav.GetVisualDescendants().OfType<GalleryNavRow>().Single(r => AutomationProperties.GetName(r) == "Customers");
+            var point = row.TranslatePoint(new Point(4, row.Bounds.Height / 2), window)!.Value;
+            window.MouseDown(point, MouseButton.Left);
+            window.MouseUp(point, MouseButton.Left);
+            Pump();
+
+            window.Shell.Route.ShouldBe(GalleryRoute.Demo("customers"));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Preferences_Accent_Swatch_Sets_The_Accent_Of_Every_Control()
+    {
+        var window = Open();
+        try
+        {
+            window.Shell.Navigate(GalleryRoute.Demo("settings"));
+            Pump();
+            var frame = window.GetVisualDescendants().OfType<DemoFrame>().Single();
+            frame.Navigate(new DemoIntent("settings", View: "preferences"));
+            Pump();
+            var swatches = window.GetVisualDescendants().OfType<WrapPanel>().Single(p => AutomationProperties.GetName(p) == "Accent color");
+            var probe = new Border();
+            ArcTokens.Bind(probe, Border.BackgroundProperty, ArcDesignTokenKind.Accent);
+            swatches.Children.Add(probe);
+            Pump();
+            var before = ((ISolidColorBrush)probe.Background!).Color;
+
+            var blue = swatches.GetVisualDescendants().OfType<ToggleButton>().Single(b => AutomationProperties.GetName(b) == "Blue");
+            blue.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            for (var i = 0; i < 20 && window.Shell.Appearance.Accent != ArcAccentPreset.Blue; i++)
+            {
+                Thread.Sleep(20);
+                Pump();
+            }
+            Pump();
+
+            window.Shell.Appearance.Accent.ShouldBe(ArcAccentPreset.Blue);
+            blue.IsChecked.ShouldBe(true);
+            ((ISolidColorBrush)probe.Background!).Color.ShouldNotBe(before, "the theme's accent token follows the swatch");
+        }
+        finally
+        {
+            window.Shell.Appearance.SetAccentAsync(ArcAccentPreset.Neutral).GetAwaiter().GetResult();
+            Pump();
             window.Close();
         }
     }

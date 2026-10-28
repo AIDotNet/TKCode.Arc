@@ -104,6 +104,9 @@ internal sealed class NotificationCenterToken : AbstractControlDesignToken
 
     public Thickness RowPaddingNarrow { get; set; }
 
+    /// <summary>Half the 4px gap between rows, above and below each one; it closes with the row it belongs to.</summary>
+    public Thickness RowGap { get; set; }
+
     public CornerRadius RowRadius { get; set; }
 
     /// <summary>The title column keeps 11px (narrow: 7px) from the visual and the time.</summary>
@@ -234,10 +237,11 @@ internal sealed class NotificationCenterToken : AbstractControlDesignToken
         MarkAllPadding = new Thickness(0, 6);
         MarkAllGap = 6;
         MarkAllGlyphSize = 15;
-        ListPadding = new Thickness(11, 9, 11, 10);
-        ListPaddingNarrow = new Thickness(5, 8);
+        ListPadding = new Thickness(11, 7, 11, 8);
+        ListPaddingNarrow = new Thickness(5, 6);
         RowPadding = new Thickness(10);
         RowPaddingNarrow = new Thickness(7, 10);
+        RowGap = new Thickness(0, 2);
         RowRadius = new CornerRadius(14);
         RowColumnGap = new Thickness(11, 0);
         RowColumnGapNarrow = new Thickness(7, 0);

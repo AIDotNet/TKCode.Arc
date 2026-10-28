@@ -858,7 +858,7 @@ public class NotificationCenterTests
             AutomationProperties.GetSizeOfSet(first).ShouldBe(500);
             // The place holders carry the height of a row, so the scroll range is the real one.
             var scroll = ListScroller(panel);
-            var rowHeight = panel.ShownRows.First().Bounds.Height;
+            var rowHeight = ((Control)panel.ShownRows.First().Parent!).Bounds.Height; // the row with its share of the gap
             rowHeight.ShouldBeGreaterThan(40);
             scroll.Extent.Height.ShouldBeGreaterThan(500 * rowHeight * 0.95);
             scroll.Extent.Height.ShouldBeLessThan(500 * (rowHeight + 8) * 1.1);
@@ -879,7 +879,7 @@ public class NotificationCenterTests
             var panel = OpenPanel(center);
             Layout();
             var scroll = ListScroller(panel);
-            var rowHeight = panel.ShownRows.First().Bounds.Height;
+            var rowHeight = ((Control)panel.ShownRows.First().Parent!).Bounds.Height; // the row with its share of the gap
             scroll.Offset = new Vector(0, rowHeight * 200);
             Layout();
             Layout();
@@ -983,7 +983,7 @@ public class NotificationCenterTests
             var panel = OpenPanel(center);
             Layout();
             var scroll = ListScroller(panel);
-            var rowHeight = panel.ShownRows.First().Bounds.Height;
+            var rowHeight = ((Control)panel.ShownRows.First().Parent!).Bounds.Height; // the row with its share of the gap
             scroll.Offset = new Vector(0, rowHeight * 100);
             Layout();
             Layout();

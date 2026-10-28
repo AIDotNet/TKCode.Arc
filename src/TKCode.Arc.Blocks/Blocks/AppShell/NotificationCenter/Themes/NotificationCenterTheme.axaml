@@ -477,6 +477,7 @@
 
     <!-- A notification row (Arc's article.item): hover and expanded rows sit on the muted surface. -->
     <ControlTheme x:Key="{x:Type arc:NotificationCenterRow}" TargetType="arc:NotificationCenterRow">
+        <Setter Property="Margin" Value="{arc:NotificationCenterTokenResource RowGap}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Background" Value="Transparent" />

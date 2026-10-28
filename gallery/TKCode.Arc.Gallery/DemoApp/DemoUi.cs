@@ -30,6 +30,9 @@ public interface IDemoHost
 
     /// <summary>Changes a toast that is showing (a loading toast into its result, an Undo into what it undid).</summary>
     void UpdateToast(string id, ToastUpdate update);
+
+    /// <summary>The gallery's appearance (light or dark, accent), which the demo's preferences change.</summary>
+    GalleryTheme Appearance { get; }
 }
 
 public static class DemoHostExtensions

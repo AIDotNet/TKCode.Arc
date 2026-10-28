@@ -107,7 +107,8 @@ public sealed class GalleryNavRow : Panel
         }
         else
         {
-            _surface.Background = null;
+            // Transparent, not null: the whole row takes the pointer, not only its text and glyph (a collapsed rail hides the text).
+            _surface.Background = Brushes.Transparent;
         }
     }
 

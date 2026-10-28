@@ -31,6 +31,7 @@ public sealed class DemoNav : DockPanel
     private readonly ArcGlyph? _collapseGlyph;
     private readonly GalleryNavRow? _collapseRow;
     private string? _selected;
+    private Rect? _highlightTarget;
     private bool _isCollapsed;
 
     /// <param name="isRail">The desktop sidebar: with the brand and the collapse toggle (the drawer has neither).</param>
@@ -105,7 +106,11 @@ public sealed class DemoNav : DockPanel
             {
                 row.IsSelected = true;
             }
-            Dispatcher.UIThread.Post(() => SyncHighlight(animate), DispatcherPriority.Render);
+            // Glide now: a layout pass before a posted glide would see the new row and jump the highlight there.
+            if (!SyncHighlight(animate))
+            {
+                Dispatcher.UIThread.Post(() => SyncHighlight(animate), DispatcherPriority.Render);
+            }
         }
     }
 
@@ -200,18 +205,24 @@ public sealed class DemoNav : DockPanel
         _labels.Add(label);
     }
 
-    private void SyncHighlight(bool animate)
+    /// <summary>
+    /// Moves the highlight onto the open page's row. Layout passes (every pass in the window, a page switch makes many)
+    /// call it without animation and only jump the highlight when the row itself moved, so they don't cut a glide short.
+    /// </summary>
+    private bool SyncHighlight(bool animate)
     {
         if (_selected is null || !_rows.TryGetValue(_selected, out var row) || row.Bounds.Height <= 0
             || row.TranslatePoint(default, _content) is not { } origin)
         {
-            return;
+            return false;
         }
         var rect = new Rect(origin, row.Bounds.Size);
-        if (!animate && rect == _highlight.CurrentRect)
+        if (!animate && rect == _highlightTarget)
         {
-            return;
+            return true;
         }
+        _highlightTarget = rect;
         _highlight.MoveTo(rect, animate);
+        return true;
     }
 }

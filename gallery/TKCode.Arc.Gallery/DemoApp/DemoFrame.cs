@@ -138,6 +138,8 @@ public sealed class DemoFrame : Grid, IDemoHost
 
     public Task SignOutAsync() => _app.SignOutAsync();
 
+    public GalleryTheme Appearance => _app.Shell.Appearance;
+
     public void ToggleCollapsed()
     {
         _isCollapsed = !_isCollapsed;
@@ -339,13 +341,12 @@ public sealed class DemoFrame : Grid, IDemoHost
             };
             this.Toast(ToastKind.Info, title, description, id: "status");
         };
-        menu.ThemePreferenceChanged += async (_, e) =>
+        menu.ThemePreferenceChanged += async (_, e) => await DemoAppearance.SetAsync(Appearance, e.ThemePreference switch
         {
-            if (e.ThemePreference != UserMenuThemePreference.System)
-            {
-                await _app.Shell.Appearance.SetDarkAsync(e.ThemePreference == UserMenuThemePreference.Dark);
-            }
-        };
+            UserMenuThemePreference.Dark => DemoAppearance.Dark,
+            UserMenuThemePreference.System => DemoAppearance.System,
+            _ => DemoAppearance.Light
+        });
         // The row spins for 700ms, then the whole app fades out and the sign-in page opens.
         menu.SignOutAction = async () =>
         {
@@ -359,7 +360,12 @@ public sealed class DemoFrame : Grid, IDemoHost
     {
         _account.DisplayName = Account.Name;
         _account.Email = Account.Email;
-        _account.ThemePreference = _app.Shell.Appearance.IsDark ? UserMenuThemePreference.Dark : UserMenuThemePreference.Light;
+        _account.ThemePreference = DemoAppearance.Current(Appearance) switch
+        {
+            DemoAppearance.System => UserMenuThemePreference.System,
+            DemoAppearance.Dark => UserMenuThemePreference.Dark,
+            _ => UserMenuThemePreference.Light
+        };
     }
 
     private Dialog BuildNewWorkspace()

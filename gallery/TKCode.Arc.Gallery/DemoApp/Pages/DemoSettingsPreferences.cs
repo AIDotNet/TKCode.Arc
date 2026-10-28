@@ -14,8 +14,8 @@ namespace TKCode.Arc.Gallery.DemoApp;
 
 /// <summary>
 /// Settings → Preferences, the demo's own panel: appearance, accent color, compact sidebar and the demo session. The
-/// appearance and accent choices are shown here only (the gallery's own appearance menu sets the app theme); the compact
-/// sidebar switch folds the demo's sidebar, and Sign out leaves for the sign-in page.
+/// appearance and accent set the gallery's own theme (uiarc.dev shares them with the Arc library); the compact sidebar
+/// switch folds the demo's sidebar, and Sign out leaves for the sign-in page.
 /// </summary>
 internal sealed class DemoSettingsPreferences : Border
 {
@@ -26,18 +26,21 @@ internal sealed class DemoSettingsPreferences : Border
         ("system", "System", "Follows your device's light or dark setting.")
     ];
 
-    /// <summary>uiarc.dev's accent swatches; the check is dark on the light Amber and Green.</summary>
-    private static readonly (string Name, string Hex, bool DarkCheck)[] s_accents =
+    /// <summary>uiarc.dev's accent swatches and the Arc accent each one applies; the check is dark on the light Amber and Green.</summary>
+    private static readonly (string Name, string Hex, bool DarkCheck, ArcAccentPreset Preset)[] s_accents =
     [
-        ("Gray", "#747474", false), ("Violet", "#7747ff", false), ("Blue", "#0562ef", false), ("Green", "#0db879", true),
-        ("Amber", "#f3ad20", true), ("Orange", "#f48120", false), ("Coral", "#f15f55", false), ("Rose", "#ed4e9d", false)
+        ("Gray", "#747474", false, ArcAccentPreset.Neutral), ("Violet", "#7747ff", false, ArcAccentPreset.Violet),
+        ("Blue", "#0562ef", false, ArcAccentPreset.Blue), ("Green", "#0db879", true, ArcAccentPreset.Green),
+        ("Amber", "#f3ad20", true, ArcAccentPreset.Amber), ("Orange", "#f48120", false, ArcAccentPreset.Orange),
+        ("Coral", "#f15f55", false, ArcAccentPreset.Coral), ("Rose", "#ed4e9d", false, ArcAccentPreset.Rose)
     ];
 
     private readonly IDemoHost _host;
     private readonly List<Border> _rows = [];
     private readonly Border _head;
     private readonly Border _note;
-    private readonly List<(ToggleButton Button, PresenceHost Check, Border Ring)> _swatches = [];
+    private readonly List<(ToggleButton Button, PresenceHost Check, Border Ring, ArcAccentPreset Preset)> _swatches = [];
+    private readonly SegmentedControl _appearance;
     private readonly Switch _compact;
 
     public DemoSettingsPreferences(IDemoHost host)
@@ -57,15 +60,26 @@ internal sealed class DemoSettingsPreferences : Border
         // Appearance: the hint morphs with the choice.
         var hint = new TextMorph { FontSize = DemoUi.BodySize, Text = s_appearances[2].Hint };
         ArcTokens.Bind(hint, TextMorph.ForegroundProperty, ArcDesignTokenKind.TextSecondary);
-        var appearance = new SegmentedControl();
+        var appearance = _appearance = new SegmentedControl();
         AutomationProperties.SetName(appearance, "Appearance");
         foreach (var (value, label, _) in s_appearances)
         {
             appearance.Items.Add(new SegmentedOption(value, label));
         }
-        appearance.SelectedValue = "system";
-        appearance.SelectionChanged += (_, _) =>
-            hint.Text = s_appearances.FirstOrDefault(item => item.Value == appearance.SelectedValue as string).Hint ?? hint.Text;
+        appearance.SelectedValue = DemoAppearance.Current(host.Appearance);
+        hint.Text = s_appearances.First(item => item.Value == (string)appearance.SelectedValue!).Hint;
+        appearance.SelectionChanged += async (_, _) =>
+        {
+            if (appearance.SelectedValue is not string mode)
+            {
+                return;
+            }
+            hint.Text = s_appearances.FirstOrDefault(item => item.Value == mode).Hint ?? hint.Text;
+            if (mode != DemoAppearance.Current(_host.Appearance))
+            {
+                await DemoAppearance.SetAsync(_host.Appearance, mode);
+            }
+        };
 
         // Compact sidebar: the demo shell's folded sidebar.
         _compact = new Switch { VerticalAlignment = VerticalAlignment.Center };
@@ -104,7 +118,12 @@ internal sealed class DemoSettingsPreferences : Border
         Child = column;
 
         SizeChanged += (_, e) => ApplyWidth(e.NewSize.Width);
-        AttachedToVisualTree += (_, _) => _compact.IsChecked = _host.IsSidebarCollapsed;
+        AttachedToVisualTree += (_, _) =>
+        {
+            _compact.IsChecked = _host.IsSidebarCollapsed;
+            _appearance.SelectedValue = DemoAppearance.Current(_host.Appearance);
+            Select(_host.Appearance.Accent);
+        };
     }
 
     private static TextBlock Hint(string text) => DemoUi.Text(text, ArcDesignTokenKind.TextSecondary);
@@ -146,13 +165,13 @@ internal sealed class DemoSettingsPreferences : Border
 
     /// <summary>
     /// Eight 28px swatches 10 apart. The pressed one has a ring (2px surface gap, 1px strong border) and a check that pops
-    /// in. They show the choice only: the app accent is the gallery's appearance setting.
+    /// in. Pressing one sets the gallery's accent, so every accent-colored control follows.
     /// </summary>
     private Control Swatches()
     {
         var panel = new WrapPanel { ItemSpacing = 10, LineSpacing = 10 };
         AutomationProperties.SetName(panel, "Accent color");
-        foreach (var (name, hex, darkCheck) in s_accents)
+        foreach (var (name, hex, darkCheck, preset) in s_accents)
         {
             var color = Color.Parse(hex);
             var check = new ArcGlyph { Data = ArcIcons.Check, Size = 14, StrokeThickness = 2.4, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
@@ -184,19 +203,26 @@ internal sealed class DemoSettingsPreferences : Border
             button.PointerExited += (_, _) => button.RenderTransform = null;
             button.PointerPressed += (_, _) => button.RenderTransform = new ScaleTransform(0.92, 0.92);
             button.PointerReleased += (_, _) => button.RenderTransform = button.IsPointerOver ? new ScaleTransform(1.1, 1.1) : null;
-            button.Click += (_, _) => Select(button);
-            _swatches.Add((button, checkHost, ring));
+            button.Click += async (_, _) =>
+            {
+                Select(preset);
+                if (_host.Appearance.Accent != preset)
+                {
+                    await _host.Appearance.SetAccentAsync(preset);
+                }
+            };
+            _swatches.Add((button, checkHost, ring, preset));
             panel.Children.Add(button);
         }
-        Select(_swatches[0].Button);
+        Select(_host.Appearance.Accent);
         return panel;
     }
 
-    private void Select(ToggleButton selected)
+    private void Select(ArcAccentPreset selected)
     {
-        foreach (var (button, check, ring) in _swatches)
+        foreach (var (button, check, ring, preset) in _swatches)
         {
-            var on = ReferenceEquals(button, selected);
+            var on = preset == selected;
             button.IsChecked = on;
             check.IsPresent = on;
             ring.IsVisible = on;
