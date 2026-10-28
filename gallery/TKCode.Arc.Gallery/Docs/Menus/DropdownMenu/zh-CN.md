@@ -1,7 +1,7 @@
 ---
 title: 下拉菜单
 summary: 锚定在触发器上的聚焦操作列表。
-source-hash: b709b001eb3d
+source-hash: fc1669f839ad
 ---
 
 <Demo name="Actions" />
@@ -257,6 +257,8 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 **如何使用自定义控件作为触发器？** 把 `Trigger` 设为任意控件。菜单会锚定到该控件，`Button` 点击后切换菜单。对于页面上已有的控件，改用 `DropdownMenu.Menu` 附加菜单。
 
 **没有空间时，菜单会朝哪一侧打开？** 它会翻转到另一侧。`Side` 是首选的边缘，当窗口没有足够空间时菜单会移动。
+
+**菜单行很多时会怎样？** 菜单最高 384 px，超出部分可以滚动；它也不会超出窗口在触发器旁留出的空间。用 `MaxDropDownHeight` 修改这个上限。若是一长串可选的值（例如几十个模型），优先使用 `Select` 或 `Combobox`：它们只绘制可见的选项，并提供搜索。
 
 ## API 参考
 

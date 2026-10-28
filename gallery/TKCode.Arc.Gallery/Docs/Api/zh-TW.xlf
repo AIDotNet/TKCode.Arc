@@ -6648,6 +6648,10 @@
         <source>Trigger text (Arc: required). Changing it morphs the trigger.</source>
         <target>觸發器文字（Arc：必填）。變更時觸發器會變形。</target>
       </trans-unit>
+      <trans-unit id="DropdownMenu.MaxDropDownHeight">
+        <source>Maximum height of the menu; longer menus scroll. NaN (default) uses the theme's 384px. The menu never grows past the room the window leaves beside the trigger, whatever this is set to.</source>
+        <target>選單的最大高度；更長的選單會捲動。NaN（預設）使用主題的 384px。無論設為多少，選單都不會超出視窗在觸發器旁留出的空間。</target>
+      </trans-unit>
       <trans-unit id="DropdownMenu.Menu">
         <source>Turns any control into a dropdown trigger for a `MenuSurface`: clicks (buttons) or taps toggle the menu, Enter / Space / ArrowDown open it on the first row, ArrowUp on the last, Escape returns focus to the control, and Arc buttons stop press-scaling while they anchor the menu. Used by split buttons, button groups and row "more" buttons: `&lt;arc:Button arc:DropdownMenu.Menu="{StaticResource RowMenu}"/&gt;`.</source>
         <target>將任意控制項轉換為 `MenuSurface` 的下拉式觸發器：點選（按鈕）或輕觸會切換選單，Enter / Space / ArrowDown 在第一列開啟選單，ArrowUp 在最後一列開啟，Escape 將焦點返回該控制項；當 Arc 按鈕錨定選單時會停止按壓縮放。用於分割按鈕、按鈕群組與列內「更多」按鈕：`&lt;arc:Button arc:DropdownMenu.Menu="{StaticResource RowMenu}"/&gt;`。</target>

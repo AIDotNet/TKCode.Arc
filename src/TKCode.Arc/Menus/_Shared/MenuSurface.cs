@@ -28,17 +28,27 @@ namespace TKCode.Arc;
 /// A surface placed directly in a layout works as a static menu panel (highlight, keyboard and activation without a popup).
 /// </para>
 /// </summary>
+[TemplatePart(FramePart, typeof(Border))]
+[TemplatePart(ScrollViewerPart, typeof(ScrollViewer))]
 [TemplatePart(HighlightPart, typeof(GlidingIndicator))]
 [TemplatePart(ItemsHostPart, typeof(Panel))]
 [PseudoClasses(OpenPseudoClass, DangerHighlightPseudoClass)]
 public class MenuSurface : HeaderedItemsControl
 {
+    public const string FramePart = "PART_Frame";
+    public const string ScrollViewerPart = "PART_ScrollViewer";
     public const string HighlightPart = "PART_Highlight";
     public const string ItemsHostPart = "PART_ItemsHost";
     public const string OpenPseudoClass = ":open";
     public const string DangerHighlightPseudoClass = ":danger-highlight";
 
     private static readonly TimeSpan HighlightGrace = TimeSpan.FromMilliseconds(70);
+
+    // Space kept between a floating menu and the window edge when its height is clamped to the window.
+    private const double WindowEdgeMargin = 8;
+
+    // Rows that stagger in when the surface has not been laid out yet (no viewport to test against).
+    private const int UnmeasuredStaggerRows = 12;
 
     #region 公共属性定义
 
@@ -154,8 +164,12 @@ public class MenuSurface : HeaderedItemsControl
     private readonly List<MenuEntry> _stops = new();
     private readonly ListKeyboardNavigator _navigator;
     private MenuSurfacePopup? _popup;
+    private Border? _frame;
+    private ScrollViewer? _scrollViewer;
     private GlidingIndicator? _highlight;
     private Panel? _itemsHost;
+    private Point? _lastPointer;
+    private double _windowRoom = double.PositiveInfinity;
     private MenuEntry? _active;
     private DispatcherTimer? _graceTimer;
     private MenuOpenFocus _pendingFocus;
@@ -281,8 +295,19 @@ public class MenuSurface : HeaderedItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
+        if (_scrollViewer is not null)
+        {
+            _scrollViewer.ScrollChanged -= OnScrollChanged;
+        }
+        _frame = e.NameScope.Find<Border>(FramePart);
+        _scrollViewer = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _highlight = e.NameScope.Find<GlidingIndicator>(HighlightPart);
         _itemsHost = e.NameScope.Find<Panel>(ItemsHostPart);
+        if (_scrollViewer is not null)
+        {
+            _scrollViewer.ScrollChanged += OnScrollChanged;
+        }
+        _frame?.SetCurrentValue(MaxHeightProperty, _windowRoom);
     }
 
     #region Containers
@@ -367,6 +392,9 @@ public class MenuSurface : HeaderedItemsControl
         popup.OverlayInputPassThroughElement = target;
         popup.Configure(Variant, Side, Alignment, AnchorGap, _anchorPoint);
         SetActive(null, false, animate: false);
+        ClampToWindow(target);
+        // Every open starts at the first row; a keyboard open on the last row scrolls it into view.
+        _scrollViewer?.SetCurrentValue(ScrollViewer.OffsetProperty, default(Vector));
         _popupOpen = true;
         popup.IsOpen = true;
         if (!popup.IsOpen)
@@ -374,6 +402,42 @@ public class MenuSurface : HeaderedItemsControl
             _popupOpen = false;
             SetCurrentValue(IsOpenProperty, false);
         }
+    }
+
+    /// <summary>
+    /// Limits the frame to the room the window leaves on the larger side of the anchor (the popup is hosted in the
+    /// window's overlay layer, so anything taller is cut off). The variant's own maximum height still applies on top,
+    /// and the rows scroll beyond either limit. Sheets size themselves.
+    /// </summary>
+    private void ClampToWindow(Control target)
+    {
+        _windowRoom = WindowRoom(target);
+        // The template is applied on the first open, after this runs; OnApplyTemplate picks the value up then.
+        _frame?.SetCurrentValue(MaxHeightProperty, _windowRoom);
+    }
+
+    private double WindowRoom(Control target)
+    {
+        if (Variant == MenuSurfaceVariant.Sheet || TopLevel.GetTopLevel(target) is not { } topLevel)
+        {
+            return double.PositiveInfinity;
+        }
+        var client = topLevel.ClientSize.Height;
+        var origin = target.TranslatePoint(_anchorPoint ?? default, topLevel) ?? default;
+        var anchor = _anchorPoint is null ? new Rect(origin, target.Bounds.Size) : new Rect(origin, new Size(0, 0));
+        double room;
+        if (_anchorPoint is null && Side is MenuSide.Left or MenuSide.Right)
+        {
+            // Side menus line up with the anchor and slide along the window edge, so the whole height is usable.
+            room = client;
+        }
+        else
+        {
+            var gap = _anchorPoint is null ? AnchorGap : 0;
+            room = Math.Max(anchor.Top, client - anchor.Bottom) - gap;
+        }
+        // A zoomed surface lays out in unscaled units (ArcZoom), so the window room shrinks by the zoom.
+        return Math.Max(0, room - WindowEdgeMargin) / ArcZoom.GetScale(target);
     }
 
     private void HidePopup()
@@ -644,6 +708,7 @@ public class MenuSurface : HeaderedItemsControl
             return;
         }
         _keyboardModality = false;
+        _lastPointer = e.GetPosition(this);
         var entry = EntryFrom(e.Source);
         if (entry is { IsEffectivelyEnabled: true } && new Rect(entry.RowVisual.Bounds.Size).Contains(e.GetPosition(entry.RowVisual)))
         {
@@ -670,9 +735,61 @@ public class MenuSurface : HeaderedItemsControl
         StartGrace();
     }
 
+    private void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
+    {
+        if (e.OffsetDelta.Y == 0 || _keyboardModality || _closing || !_popupOpen || _lastPointer is not { } point)
+        {
+            return;
+        }
+        // The wheel moves the rows under a still pointer: the highlight follows the row now under it.
+        if (EntryAtPointer(point) is { IsEffectivelyEnabled: true, TracksPointerHighlight: true } entry)
+        {
+            if (!ReferenceEquals(entry, _active))
+            {
+                StopGrace();
+                if (!entry.Focus(NavigationMethod.Pointer) || !ReferenceEquals(entry, _active))
+                {
+                    SetActive(entry, false, animate: false);
+                }
+            }
+        }
+        else if (_active is not null)
+        {
+            SetActive(null, false, animate: true);
+            Focus(NavigationMethod.Pointer);
+        }
+    }
+
+    /// <summary>
+    /// The row under <paramref name="point"/> (surface coordinates) at the scroll viewer's current offset. Worked out from
+    /// the rows' positions in the scrolled content instead of a hit test: the offset changes before the rows are
+    /// arranged at it, so a hit test would still find the row that was there before the scroll.
+    /// </summary>
+    private MenuEntry? EntryAtPointer(Point point)
+    {
+        if (_scrollViewer is not { } scroll || _itemsHost is not { } host ||
+            this.TranslatePoint(point, scroll) is not { } inViewer || !new Rect(scroll.Bounds.Size).Contains(inViewer))
+        {
+            return null;
+        }
+        var content = inViewer + scroll.Offset;
+        var count = ItemCount;
+        for (var i = 0; i < count; i++)
+        {
+            if (ContainerFromIndex(i) is MenuEntry { IsVisible: true } entry &&
+                entry.RowVisual.TranslatePoint(default, host) is { } origin &&
+                new Rect(origin, entry.RowVisual.Bounds.Size).Contains(content))
+            {
+                return entry;
+            }
+        }
+        return null;
+    }
+
     protected override void OnPointerExited(PointerEventArgs e)
     {
         base.OnPointerExited(e);
+        _lastPointer = null;
         if (e.Pointer.Type != PointerType.Touch)
         {
             StartGrace();
@@ -842,7 +959,8 @@ public class MenuSurface : HeaderedItemsControl
     /// Rows fade in by index after the surface starts its enter (Arc: dropdown and context rows 35ms apart, capped at the
     /// fifth, 240ms on the enter curve from 2px toward the anchor; account rows 30ms + 16ms apart, 200ms from 3px below).
     /// Code-driven because each row's delay depends on its index and on the moment the popup opened, which ControlTheme
-    /// transitions cannot express. Full motion only; Reduced and Off show the rows at once.
+    /// transitions cannot express. Full motion only; Reduced and Off show the rows at once. Only the rows inside the
+    /// scroll viewport play: a long menu would otherwise animate every hidden row's opacity and transform each frame.
     /// </summary>
     private void PlayEntrance()
     {
@@ -857,12 +975,24 @@ public class MenuSurface : HeaderedItemsControl
         {
             MenuSurfaceStagger.Play(header, full, Delay(index++), duration, offset);
         }
+        var viewport = _scrollViewer is { Viewport.Height: > 0 } scroll
+            ? new Rect(scroll.Offset.X, scroll.Offset.Y, scroll.Viewport.Width, scroll.Viewport.Height)
+            : (Rect?)null;
         var count = ItemCount;
+        var row = 0;
         for (var i = 0; i < count; i++)
         {
             if (ContainerFromIndex(i) is MenuEntry entry)
             {
-                MenuSurfaceStagger.Play(entry, full, Delay(index++), duration, offset);
+                var visible = viewport is { } view
+                    ? entry.Bounds.Bottom > view.Top && entry.Bounds.Top < view.Bottom
+                    : row < UnmeasuredStaggerRows;
+                row++;
+                MenuSurfaceStagger.Play(entry, full && visible, Delay(index), duration, offset);
+                if (full && visible)
+                {
+                    index++;
+                }
             }
         }
 

@@ -13,6 +13,9 @@ internal sealed class MenuSurfaceToken : AbstractControlDesignToken
     /// <summary>Dropdown family minimum width (12rem).</summary>
     public double DropdownMinWidth { get; set; }
 
+    /// <summary>Dropdown family maximum height (24rem, about ten rows); longer menus scroll.</summary>
+    public double DropdownMaxHeight { get; set; }
+
     /// <summary>Context menu minimum width (13rem) and maximum height (300px, scrolls beyond).</summary>
     public double ContextMinWidth { get; set; }
     public double ContextMaxHeight { get; set; }
@@ -51,6 +54,7 @@ internal sealed class MenuSurfaceToken : AbstractControlDesignToken
         var n = ArcPalette.Neutrals(isDarkMode);
         PanelInset = new Thickness(5);
         DropdownMinWidth = 192;
+        DropdownMaxHeight = 384;
         ContextMinWidth = 208;
         ContextMaxHeight = 300;
         HighlightRadius = new CornerRadius(20);

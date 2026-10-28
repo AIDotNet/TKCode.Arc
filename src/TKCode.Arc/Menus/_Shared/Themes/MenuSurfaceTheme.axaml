@@ -48,6 +48,7 @@
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource PanelInset}" />
         <Setter Property="MinWidth" Value="{arc:MenuSurfaceTokenResource DropdownMinWidth}" />
+        <Setter Property="MaxHeight" Value="{arc:MenuSurfaceTokenResource DropdownMaxHeight}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
@@ -87,6 +88,7 @@
         <!-- Sheet (narrow windows): full width along the bottom edge, top-rounded, handle, 16px text. -->
         <Style Selector="^[Variant=Sheet]">
             <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MaxHeight" Value="Infinity" />
             <Setter Property="Padding" Value="{arc:MenuSurfaceTokenResource SheetInset}" />
             <Setter Property="CornerRadius" Value="{arc:MenuSurfaceTokenResource SheetRadius}" />
             <Setter Property="BorderThickness" Value="{arc:MenuSurfaceTokenResource SheetBorderThickness}" />

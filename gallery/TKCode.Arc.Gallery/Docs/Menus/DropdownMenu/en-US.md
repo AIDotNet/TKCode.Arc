@@ -319,6 +319,11 @@ instead.
 **Which side does the menu open on when there is no room?** It flips to the other side. `Side` is the preferred edge,
 and the menu moves when the window does not have room for it.
 
+**What happens when the menu has many rows?** The menu stops at 384 px and scrolls beyond that. It also never grows past
+the room the window leaves beside the trigger. Set `MaxDropDownHeight` to change the limit. For long lists of values,
+such as dozens of models to choose from, prefer a `Select` or a `Combobox`: they draw only the visible options and add
+search.
+
 ## API reference
 
 <!-- api: DropdownMenu -->

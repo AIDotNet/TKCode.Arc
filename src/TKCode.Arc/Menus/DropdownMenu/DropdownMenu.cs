@@ -76,6 +76,13 @@ public class DropdownMenu : TemplatedControl
     public static readonly StyledProperty<MenuAlignment> AlignmentProperty =
         AvaloniaProperty.Register<DropdownMenu, MenuAlignment>(nameof(Alignment), MenuAlignment.End);
 
+    /// <summary>
+    /// Maximum height of the menu; longer menus scroll. NaN (default) uses the theme's 384px. The menu never grows past
+    /// the room the window leaves beside the trigger, whatever this is set to.
+    /// </summary>
+    public static readonly StyledProperty<double> MaxDropDownHeightProperty =
+        AvaloniaProperty.Register<DropdownMenu, double>(nameof(MaxDropDownHeight), double.NaN);
+
     /// <summary>Data items shown as one row each; ItemTemplate renders them when set.</summary>
     public static readonly StyledProperty<IEnumerable?> ItemsSourceProperty =
         AvaloniaProperty.Register<DropdownMenu, IEnumerable?>(nameof(ItemsSource));
@@ -131,6 +138,13 @@ public class DropdownMenu : TemplatedControl
     {
         get => GetValue(AlignmentProperty);
         set => SetValue(AlignmentProperty, value);
+    }
+
+    /// <inheritdoc cref="MaxDropDownHeightProperty"/>
+    public double MaxDropDownHeight
+    {
+        get => GetValue(MaxDropDownHeightProperty);
+        set => SetValue(MaxDropDownHeightProperty, value);
     }
 
     /// <inheritdoc cref="ItemsSourceProperty"/>
@@ -289,6 +303,18 @@ public class DropdownMenu : TemplatedControl
         else if (change.Property == ItemTemplateProperty)
         {
             Menu.ItemTemplate = change.GetNewValue<IDataTemplate?>();
+        }
+        else if (change.Property == MaxDropDownHeightProperty)
+        {
+            var height = change.GetNewValue<double>();
+            if (double.IsNaN(height))
+            {
+                Menu.ClearValue(MaxHeightProperty);
+            }
+            else
+            {
+                Menu.MaxHeight = height;
+            }
         }
         else if (change.Property == SideProperty)
         {

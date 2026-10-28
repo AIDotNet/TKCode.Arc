@@ -1,7 +1,7 @@
 ---
 title: 下拉選單
 summary: 錨定在觸發器上的聚焦操作清單。
-source-hash: b709b001eb3d
+source-hash: fc1669f839ad
 ---
 
 <Demo name="Actions" />
@@ -257,6 +257,8 @@ menu.ItemClicked += (_, e) => viewModel.SortLabel = $"排序：{e.Header}";
 **如何使用自訂控制項作為觸發器？** 把 `Trigger` 設為任意控制項。選單會錨定到該控制項，`Button` 點選後切換選單。對於頁面上已有的控制項，改用 `DropdownMenu.Menu` 附加選單。
 
 **沒有空間時，選單會朝哪一側開啟？** 它會翻轉到另一側。`Side` 是首選的邊緣，當視窗沒有足夠空間時選單會移動。
+
+**選單列很多時會怎樣？** 選單最高 384 px，超出部分可以捲動；它也不會超出視窗在觸發器旁留出的空間。用 `MaxDropDownHeight` 修改這個上限。若是一長串可選的值（例如幾十個模型），優先使用 `Select` 或 `Combobox`：它們只繪製可見的選項，並提供搜尋。
 
 ## API 參考
 
