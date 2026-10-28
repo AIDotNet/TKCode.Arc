@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CascaderParentSelectableDemo">
+    <arc:Cascader x:Name="Category"
+                  HorizontalAlignment="Center"
+                  Width="320"
+                  Label="Category"
+                  Description="Any level can be picked: the menu stays open on a parent so you can go deeper."
+                  LeafOnly="False"
+                  Placeholder="Select a category" />
+</UserControl>

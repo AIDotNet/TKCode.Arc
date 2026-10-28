@@ -43,6 +43,17 @@ internal interface ISelectOptionHost
 }
 
 /// <summary>
+/// Optional extension of <see cref="ISelectOptionHost"/> for hierarchical lists (Cascader): branch rows end in a
+/// chevron instead of a check, and the rows on the expanded path get a quiet fill.
+/// </summary>
+internal interface ISelectOptionBranchHost
+{
+    bool IsBranch(int entryIndex);
+
+    bool IsOnPath(int entryIndex);
+}
+
+/// <summary>
 /// The option list of every popup select in this category. Rows are drawn in <see cref="Render"/> for the
 /// visible part of the scroll viewport only, so a list of thousands of options costs a few text layouts and no
 /// containers; filtering swaps the row index list. A Core <see cref="GlidingIndicator"/> under the rows draws the
@@ -95,6 +106,9 @@ internal sealed class SelectOptionView : Control
     public static readonly StyledProperty<IBrush?> CheckForegroundProperty =
         AvaloniaProperty.Register<SelectOptionView, IBrush?>(nameof(CheckForeground));
 
+    public static readonly StyledProperty<IBrush?> PathBrushProperty =
+        AvaloniaProperty.Register<SelectOptionView, IBrush?>(nameof(PathBrush));
+
     public static readonly StyledProperty<double> DisabledOpacityProperty =
         AvaloniaProperty.Register<SelectOptionView, double>(nameof(DisabledOpacity), 0.45);
 
@@ -127,6 +141,8 @@ internal sealed class SelectOptionView : Control
     public IBrush? EmphasisForeground { get => GetValue(EmphasisForegroundProperty); set => SetValue(EmphasisForegroundProperty, value); }
     public IBrush? MutedForeground { get => GetValue(MutedForegroundProperty); set => SetValue(MutedForegroundProperty, value); }
     public IBrush? CheckForeground { get => GetValue(CheckForegroundProperty); set => SetValue(CheckForegroundProperty, value); }
+    /// <summary>Fill of the rows on the expanded path (<see cref="ISelectOptionBranchHost"/> hosts only).</summary>
+    public IBrush? PathBrush { get => GetValue(PathBrushProperty); set => SetValue(PathBrushProperty, value); }
     public double DisabledOpacity { get => GetValue(DisabledOpacityProperty); set => SetValue(DisabledOpacityProperty, value); }
     public FontWeight LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
     public bool ShowGroups { get => GetValue(ShowGroupsProperty); set => SetValue(ShowGroupsProperty, value); }
@@ -616,20 +632,27 @@ internal sealed class SelectOptionView : Control
             }
             var entry = entries[entryIndex];
             var selected = host.IsEntrySelected(entryIndex);
+            var branchHost = host as ISelectOptionBranchHost;
+            var branch = branchHost?.IsBranch(entryIndex) == true;
+            var onPath = branchHost?.IsOnPath(entryIndex) == true;
             var active = row.Position == _active;
             var cy = row.Top + row.Height / 2;
+            if (onPath && PathBrush is { } pathBrush)
+            {
+                context.DrawRectangle(pathBrush, null, new RoundedRect(new Rect(0, row.Top, width, row.Height), RowCornerRadius));
+            }
             var x = padding.Left;
             var right = width - padding.Right;
             using var _ = entry.IsDisabled ? context.PushOpacity(DisabledOpacity) : default(DrawingContext.PushedState?);
 
-            var labelBrush = entry.IsDisabled ? muted : (active || selected) ? emphasis : foreground;
+            var labelBrush = entry.IsDisabled ? muted : (active || selected || onPath) ? emphasis : foreground;
             if (entry.Icon is { } icon)
             {
                 DrawIcon(context, icon, new Rect(x, cy - 10, 20, 20), entry.IsDisabled ? muted : muted);
                 x += 20 + 8;
             }
 
-            var progress = mode == SelectCheckMode.None ? 0 : CheckProgress(entryIndex, selected);
+            var progress = mode == SelectCheckMode.None || branch ? 0 : CheckProgress(entryIndex, selected);
             Rect checkRect;
             if (!double.IsNaN(inset))
             {
@@ -647,6 +670,10 @@ internal sealed class SelectOptionView : Control
             {
                 DrawCheck(context, checkRect, progress, mode);
             }
+            if (branch)
+            {
+                DrawChevron(context, checkRect, muted);
+            }
 
             if (!string.IsNullOrEmpty(entry.Meta))
             {
@@ -658,6 +685,20 @@ internal sealed class SelectOptionView : Control
             var variant = ReferenceEquals(labelBrush, foreground) ? 0 : ReferenceEquals(labelBrush, emphasis) ? 1 : 3;
             var label = GetText(entryIndex, variant, entry.Text, right - x, labelBrush, LabelFontWeight, fontSize);
             label.Draw(context, new Point(x, cy - label.Height / 2));
+        }
+    }
+
+    private void DrawChevron(DrawingContext context, Rect rect, IBrush? brush)
+    {
+        if (brush is null)
+        {
+            return;
+        }
+        var scale = rect.Width / 24.0;
+        var pen = new Pen(brush, 2, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+        using (context.PushTransform(Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(rect.X, rect.Y)))
+        {
+            context.DrawGeometry(null, pen, ArcIcons.ChevronRight);
         }
     }
 

@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CascaderBindingDemo">
+    <StackPanel HorizontalAlignment="Center" Width="360" Spacing="8">
+        <arc:Cascader x:Name="Region"
+                      Label="Region"
+                      Description="The value is set at once; the data arrives a second later."
+                      Placeholder="Select a district" />
+        <TextBlock x:Name="Path" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+        <arc:Button x:Name="Reload" Content="Reload the data" HorizontalAlignment="Left" />
+    </StackPanel>
+</UserControl>

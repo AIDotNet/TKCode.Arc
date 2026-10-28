@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CascaderBasicDemo">
+    <StackPanel HorizontalAlignment="Center" Width="320" Spacing="8">
+        <arc:Cascader x:Name="Region"
+                      Label="Region"
+                      Description="Pick a province, a city and a district."
+                      Placeholder="Select a district" />
+        <TextBlock x:Name="Result" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

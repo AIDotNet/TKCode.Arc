@@ -86,6 +86,9 @@ public static partial class GalleryCatalog
             new("TokenTextEditor", "Token text editor", "token-text-editor", 0,
                 "A multi-line text editor whose tokens, such as commands and mentions, behave as single units, with triggers that open a query for your own list.",
                 IsArc: false),
+            new("Cascader", "Cascader", "cascader", 0,
+                "Pick one node of a hierarchy level by level, such as province, city and district, with a field and menu that match Select.",
+                IsArc: false, AddedOn: "2026-10-28"),
         ], IsArc: false),
     ];
 

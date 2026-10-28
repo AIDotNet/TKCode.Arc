@@ -3436,6 +3436,110 @@
         <source>Share of the carousel width one slide takes (Arc default `min(80cqw, 340px)`: 0.8).</source>
         <target>單張投影片佔輪播寬度的比例（Arc 預設 `min(80cqw, 340px)`：0.8）。</target>
       </trans-unit>
+      <trans-unit id="Cascader">
+        <source>Arc cascader: a select field that picks one node of a hierarchy, level by level (province, city, district). Opening the menu shows the first level; choosing a parent opens its children in a column to the right, and the menu grows with a spring. Look and motion follow `Select`: the same trigger, menu surface, gliding highlight and clear button. Nodes are any objects: `ChildrenSelector` gives the children, `TextSelector` the label and `ValueSelector` the value, which must be unique across the whole tree. Everything goes through delegates, so nothing is reflected. `SelectedItem`, `SelectedValue` and `SelectedPath` always agree; a value written before the data arrives is kept and resolved when it does. Keyboard: Enter, Space and the arrows open; Up and Down move in the column, Right opens the highlighted parent, Left goes back a column; Enter picks a leaf (or opens a parent); Escape closes without a change; typing jumps to the next matching node; Delete clears.</source>
+        <target>Arc 級聯選擇器：在層級資料中逐級選擇一個節點的選擇欄位（省、市、區）。開啟選單先顯示第一級；選取一個父節點，它的子級會在右側的一欄中展開，選單寬度隨彈簧變化。外觀和動態效果與 `Select` 一致：相同的觸發器、選單表面、滑動醒目提示和清除按鈕。節點可以是任意物件：`ChildrenSelector` 提供子級，`TextSelector` 提供標籤，`ValueSelector` 提供值，值必須在整棵樹中唯一。一切都透過委派完成，不使用反射。`SelectedItem`、`SelectedValue` 和 `SelectedPath` 始終保持一致；資料抵達之前寫入的值會被保留，資料抵達後再解析。鍵盤：Enter、Space 和方向鍵開啟；Up、Down 在目前欄移動，Right 展開醒目提示的父節點，Left 回到上一欄；Enter 選取葉節點（或展開父節點）；Escape 關閉且不變更值；輸入字母跳到下一個相符的節點；Delete 清除。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ChildrenSelector">
+        <source>Children of a node; same shape as the one of `TreeView`. Null or empty means a leaf.</source>
+        <target>節點的子級；簽章與 `TreeView` 的相同。為 null 或空表示葉節點。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ColumnWidth">
+        <source>Width of every column; NaN sizes each column to its labels (160 to 280).</source>
+        <target>每一欄的寬度；NaN 表示每欄依其標籤自動調整（160 到 280）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.Description">
+        <source>Muted hint under the trigger; also the accessible help text.</source>
+        <target>觸發器下方的弱化提示；同時是協助工具說明文字。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.DisabledSelector">
+        <source>Returns true for nodes that are shown but cannot be picked or opened.</source>
+        <target>對顯示但不能被選取或展開的節點傳回 true。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ExpandTrigger">
+        <source>Whether a parent opens on click only, or also while the pointer rests on it.</source>
+        <target>父節點只在點擊時展開，還是在指標停留時也展開。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsClearable">
+        <source>Whether a clear button shows while a value is selected.</source>
+        <target>選取值時是否顯示清除按鈕。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsLeafSelector">
+        <source>Decides whether a node is a leaf; when null, a node without children is one.</source>
+        <target>判斷節點是否為葉節點；為 null 時，沒有子級的節點就是葉節點。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsOpen">
+        <source>Whether the menu is open (two-way).</source>
+        <target>選單是否開啟（雙向）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsReadOnly">
+        <source>The menu opens for looking, but the value cannot be changed or cleared.</source>
+        <target>選單可以開啟檢視，但值不能被修改或清除。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ItemsSource">
+        <source>The root nodes (first column).</source>
+        <target>根節點（第一欄）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.Label">
+        <source>Visible label above the trigger; also the accessible name.</source>
+        <target>觸發器上方的可見標籤；同時是協助工具名稱。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.LeafOnly">
+        <source>When true (the default) only leaves can be picked; parents just open their children.</source>
+        <target>為 true（預設）時只能選取葉節點；父節點只展開它的子級。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.MaxDropDownHeight">
+        <source>Tallest a column gets before it scrolls.</source>
+        <target>每一欄在開始捲動前的最大高度。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.PathSeparator">
+        <source>Text between the nodes of the full path.</source>
+        <target>完整路徑中節點之間的文字。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.Placeholder">
+        <source>Muted text shown while nothing is selected.</source>
+        <target>未選取任何值時顯示的弱化文字。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedItem">
+        <source>The selected node (two-way), or null.</source>
+        <target>選取的節點（雙向），或 null。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedPath">
+        <source>The nodes from the root to the selected node; empty when nothing is selected.</source>
+        <target>從根節點到選取節點的節點清單；未選取時為空。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedText">
+        <source>The text of the field: the full path or the selected node alone, see `ShowFullPath`.</source>
+        <target>欄位的文字：完整路徑或僅選取的節點，見 `ShowFullPath`。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedValue">
+        <source>Value of the selected node (two-way). A value that the data does not contain (yet) is kept: the field shows the placeholder until the data arrives, then resolves it.</source>
+        <target>選取節點的值（雙向）。資料中（暫時）不包含的值會被保留：資料抵達之前欄位顯示預留位置文字，抵達後再解析它。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectionChanged">
+        <source>Raised when the selected node changes: by the user, by a binding or by clearing.</source>
+        <target>選取的節點變更時觸發：使用者操作、繫結或清除都會觸發。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ShowFullPath">
+        <source>Show the whole path in the field (true), or only the selected node (false).</source>
+        <target>在欄位中顯示完整路徑（true），或只顯示選取的節點（false）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.TextSelector">
+        <source>Label of a node; when null, `ToString()`.</source>
+        <target>節點的標籤；為 null 時使用 `ToString()`。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ValueSelector">
+        <source>Value of a node; it must be unique across the tree. When null, the node itself is the value.</source>
+        <target>節點的值；必須在整棵樹中唯一。為 null 時節點本身就是值。</target>
+      </trans-unit>
+      <trans-unit id="CascaderExpandTrigger">
+        <source>How a parent node of a `Cascader` opens its child column.</source>
+        <target>`Cascader` 的父節點如何展開它的子級欄。</target>
+      </trans-unit>
+      <trans-unit id="CascaderSelectionChangedEventArgs">
+        <source>Data of `SelectionChanged`.</source>
+        <target>`SelectionChanged` 的事件資料。</target>
+      </trans-unit>
       <trans-unit id="ChartBase.ActiveIndex">
         <source>The point being read (crosshair, scrubbed bar, hovered segment), or null at rest. Two-way.</source>
         <target>正在讀取的資料點（十字準線、被拖曳的柱子、懸停的區段），靜止時為 null。雙向繫結。</target>

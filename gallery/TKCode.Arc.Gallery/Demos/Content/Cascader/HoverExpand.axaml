@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CascaderHoverExpandDemo">
+    <arc:Cascader x:Name="Region"
+                  HorizontalAlignment="Center"
+                  Width="320"
+                  Label="Region"
+                  ExpandTrigger="Hover"
+                  Placeholder="Select a district" />
+</UserControl>

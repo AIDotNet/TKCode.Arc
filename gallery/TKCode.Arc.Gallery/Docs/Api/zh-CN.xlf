@@ -3436,6 +3436,110 @@
         <source>Share of the carousel width one slide takes (Arc default `min(80cqw, 340px)`: 0.8).</source>
         <target>单张幻灯片占轮播宽度的比例（Arc 默认 `min(80cqw, 340px)`：0.8）。</target>
       </trans-unit>
+      <trans-unit id="Cascader">
+        <source>Arc cascader: a select field that picks one node of a hierarchy, level by level (province, city, district). Opening the menu shows the first level; choosing a parent opens its children in a column to the right, and the menu grows with a spring. Look and motion follow `Select`: the same trigger, menu surface, gliding highlight and clear button. Nodes are any objects: `ChildrenSelector` gives the children, `TextSelector` the label and `ValueSelector` the value, which must be unique across the whole tree. Everything goes through delegates, so nothing is reflected. `SelectedItem`, `SelectedValue` and `SelectedPath` always agree; a value written before the data arrives is kept and resolved when it does. Keyboard: Enter, Space and the arrows open; Up and Down move in the column, Right opens the highlighted parent, Left goes back a column; Enter picks a leaf (or opens a parent); Escape closes without a change; typing jumps to the next matching node; Delete clears.</source>
+        <target>Arc 级联选择器：在层级数据中逐级选择一个节点的选择字段（省、市、区）。打开菜单先显示第一级；选中一个父节点，它的子级会在右侧的一列中展开，菜单宽度随弹簧变化。外观和动效与 `Select` 一致：相同的触发器、菜单表面、滑动高亮和清除按钮。节点可以是任意对象：`ChildrenSelector` 给出子级，`TextSelector` 给出标签，`ValueSelector` 给出值，值必须在整棵树中唯一。一切都通过委托完成，不使用反射。`SelectedItem`、`SelectedValue` 和 `SelectedPath` 始终保持一致；数据到达之前写入的值会被保留，数据到达后再解析。键盘：Enter、Space 和方向键打开；Up、Down 在当前列移动，Right 展开高亮的父节点，Left 回到上一列；Enter 选中叶子（或展开父节点）；Escape 关闭且不改变值；输入字母跳到下一个匹配的节点；Delete 清除。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ChildrenSelector">
+        <source>Children of a node; same shape as the one of `TreeView`. Null or empty means a leaf.</source>
+        <target>节点的子级；签名与 `TreeView` 的相同。为 null 或空表示叶子。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ColumnWidth">
+        <source>Width of every column; NaN sizes each column to its labels (160 to 280).</source>
+        <target>每一列的宽度；NaN 表示每列按其标签自适应（160 到 280）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.Description">
+        <source>Muted hint under the trigger; also the accessible help text.</source>
+        <target>触发器下方的弱化提示；同时是无障碍帮助文本。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.DisabledSelector">
+        <source>Returns true for nodes that are shown but cannot be picked or opened.</source>
+        <target>对显示但不能被选择或展开的节点返回 true。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ExpandTrigger">
+        <source>Whether a parent opens on click only, or also while the pointer rests on it.</source>
+        <target>父节点只在点击时展开，还是在指针停留时也展开。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsClearable">
+        <source>Whether a clear button shows while a value is selected.</source>
+        <target>选中值时是否显示清除按钮。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsLeafSelector">
+        <source>Decides whether a node is a leaf; when null, a node without children is one.</source>
+        <target>判断节点是否为叶子；为 null 时，没有子级的节点就是叶子。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsOpen">
+        <source>Whether the menu is open (two-way).</source>
+        <target>菜单是否打开（双向）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.IsReadOnly">
+        <source>The menu opens for looking, but the value cannot be changed or cleared.</source>
+        <target>菜单可以打开查看，但值不能被修改或清除。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ItemsSource">
+        <source>The root nodes (first column).</source>
+        <target>根节点（第一列）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.Label">
+        <source>Visible label above the trigger; also the accessible name.</source>
+        <target>触发器上方的可见标签；同时是无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.LeafOnly">
+        <source>When true (the default) only leaves can be picked; parents just open their children.</source>
+        <target>为 true（默认）时只能选择叶子；父节点只展开它的子级。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.MaxDropDownHeight">
+        <source>Tallest a column gets before it scrolls.</source>
+        <target>每一列在开始滚动前的最大高度。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.PathSeparator">
+        <source>Text between the nodes of the full path.</source>
+        <target>完整路径中节点之间的文本。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.Placeholder">
+        <source>Muted text shown while nothing is selected.</source>
+        <target>未选择任何值时显示的弱化文本。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedItem">
+        <source>The selected node (two-way), or null.</source>
+        <target>选中的节点（双向），或 null。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedPath">
+        <source>The nodes from the root to the selected node; empty when nothing is selected.</source>
+        <target>从根节点到选中节点的节点列表；未选择时为空。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedText">
+        <source>The text of the field: the full path or the selected node alone, see `ShowFullPath`.</source>
+        <target>字段的文本：完整路径或仅选中的节点，见 `ShowFullPath`。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectedValue">
+        <source>Value of the selected node (two-way). A value that the data does not contain (yet) is kept: the field shows the placeholder until the data arrives, then resolves it.</source>
+        <target>选中节点的值（双向）。数据中（暂时）不包含的值会被保留：数据到达之前字段显示占位文本，到达后再解析它。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.SelectionChanged">
+        <source>Raised when the selected node changes: by the user, by a binding or by clearing.</source>
+        <target>选中的节点改变时触发：用户操作、绑定或清除都会触发。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ShowFullPath">
+        <source>Show the whole path in the field (true), or only the selected node (false).</source>
+        <target>在字段中显示完整路径（true），或只显示选中的节点（false）。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.TextSelector">
+        <source>Label of a node; when null, `ToString()`.</source>
+        <target>节点的标签；为 null 时使用 `ToString()`。</target>
+      </trans-unit>
+      <trans-unit id="Cascader.ValueSelector">
+        <source>Value of a node; it must be unique across the tree. When null, the node itself is the value.</source>
+        <target>节点的值；必须在整棵树中唯一。为 null 时节点本身就是值。</target>
+      </trans-unit>
+      <trans-unit id="CascaderExpandTrigger">
+        <source>How a parent node of a `Cascader` opens its child column.</source>
+        <target>`Cascader` 的父节点如何展开它的子级列。</target>
+      </trans-unit>
+      <trans-unit id="CascaderSelectionChangedEventArgs">
+        <source>Data of `SelectionChanged`.</source>
+        <target>`SelectionChanged` 的事件数据。</target>
+      </trans-unit>
       <trans-unit id="ChartBase.ActiveIndex">
         <source>The point being read (crosshair, scrubbed bar, hovered segment), or null at rest. Two-way.</source>
         <target>正在读取的数据点（十字准线、被拖动的柱子、悬停的分段），静止时为 null。双向绑定。</target>

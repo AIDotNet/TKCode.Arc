@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CascaderDisabledDemo">
+    <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
+        <arc:Cascader x:Name="Partial" Label="Some nodes disabled" Width="260" Placeholder="Select a district" />
+        <arc:Cascader x:Name="Off" Label="Disabled" Width="260" IsEnabled="False" />
+        <arc:Cascader x:Name="ReadOnly" Label="Read only" Width="260" IsReadOnly="True" />
+    </WrapPanel>
+</UserControl>
