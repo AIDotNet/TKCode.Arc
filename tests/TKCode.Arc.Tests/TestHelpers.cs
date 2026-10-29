@@ -1,6 +1,3 @@
-using AtomUI;
-using AtomUI.Theme;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -14,12 +11,9 @@ internal static class TestHelpers
     /// <summary>Shows content in a window. Motion is off by default so assertions are deterministic.</summary>
     public static Window Show(Control content, Motion.ArcMotionLevel level = Motion.ArcMotionLevel.Off)
     {
-        // Headless has no popup windows: popups fall back to this layer manager's overlay layer.
-        var layers = new Avalonia.Controls.Primitives.VisualLayerManager { Child = content };
-        typeof(Avalonia.Controls.Primitives.VisualLayerManager)
-            .GetProperty("EnablePopupOverlayLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?
-            .SetValue(layers, true);
-        var window = new Window { Content = layers, Width = 400, Height = 300 };
+        // Arc's base Window theme gives the window a layer manager with the overlay and popup overlay layers, which headless
+        // popups fall back to.
+        var window = new Window { Content = content, Width = 400, Height = 300 };
         Motion.ArcMotion.SetLevel(window, level);
         window.Show();
         Dispatcher.UIThread.RunJobs();
@@ -97,6 +91,7 @@ internal static class TestHelpers
     /// </summary>
     public static void Collect(params WeakReference[] references)
     {
+        ClearGridScratch();
         for (var i = 0; i < 6 && references.Any(r => r.IsAlive); i++)
         {
             Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
@@ -104,6 +99,27 @@ internal static class TestHelpers
             GC.Collect();
             GC.WaitForPendingFinalizers();
             Dispatcher.UIThread.RunJobs();
+        }
+    }
+
+    private static readonly LocalDataStoreSlot? s_gridScratchSlot =
+        typeof(Grid).GetField("s_tempDefinitionsDataSlot", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)?
+            .GetValue(null) as LocalDataStoreSlot;
+
+    /// <summary>
+    /// Empties the scratch array Avalonia's <see cref="Grid"/> shares per thread. A grid writes its row and column
+    /// definitions into it while it measures and clears them when it arranges; a grid measured again with a new constraint
+    /// but not arranged again (its bounds did not change) leaves them there, and every such grid holds the array. So the
+    /// array can keep the definitions (and through them the whole tree) of a control a test has dropped, as long as some
+    /// other grid is alive. With per-test isolation that other grid is often in an earlier test's tree, kept by a static
+    /// geometry or pen that still points at that test's compositor and dispatcher; which grids those are depends on the
+    /// order the tests run in. That reference belongs to Avalonia, not to the control under test.
+    /// </summary>
+    private static void ClearGridScratch()
+    {
+        if (s_gridScratchSlot is not null && Thread.GetData(s_gridScratchSlot) is WeakReference { Target: Array scratch })
+        {
+            Array.Clear(scratch);
         }
     }
 
@@ -118,11 +134,19 @@ internal static class TestHelpers
         _ => Colors.Transparent
     };
 
-    public static async Task ApplyAsync(ThemeConfig? config)
+    /// <summary>Changes for <see cref="ApplyAsync"/>: the dark appearance.</summary>
+    public static readonly Action<ArcThemeBuilder> Dark = static t => t.Appearance(ArcAppearance.Dark);
+
+    /// <summary>
+    /// Applies a theme state built from the default one (light, default accent, full motion, no overrides) by
+    /// <paramref name="configure"/>; null applies the default state. Like an AtomUI theme request, nothing of the previous
+    /// state is kept. Runs the dispatcher's jobs afterwards.
+    /// </summary>
+    public static async Task ApplyAsync(Action<ArcThemeBuilder>? configure)
     {
-        var manager = Application.Current!.GetThemeManager()!;
-        await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, config, ThemeTransitionReason.UserRequest),
-            TestContext.Current.CancellationToken);
+        var state = configure is null ? ArcThemeState.Default : ArcThemeState.Default.With(configure);
+        ArcTheme.Manager.Apply(state);
+        await Task.CompletedTask;
         Dispatcher.UIThread.RunJobs();
     }
 }

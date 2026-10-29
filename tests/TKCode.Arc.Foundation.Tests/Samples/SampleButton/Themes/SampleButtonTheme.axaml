@@ -1,0 +1,37 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.Foundation.Samples.SampleButtonTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:SampleButton}" TargetType="arc:SampleButton">
+        <Setter Property="Background" Value="{arc:SampleDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:SampleDesignTokenResource AccentForeground}" />
+        <Setter Property="CornerRadius" Value="{arc:SampleDesignTokenResource RadiusControl}" />
+        <Setter Property="Padding" Value="{arc:SampleButtonTokenResource InlinePadding}" />
+        <Setter Property="MinHeight" Value="{arc:SampleDesignTokenResource ControlSizeMD}" />
+        <Setter Property="FontFamily" Value="{arc:SampleDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontWeight" Value="{arc:SampleDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SampleButton">
+                <!-- Token used directly on a template element, not through a setter. -->
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{arc:SampleDesignTokenResource ShadowRaised}">
+                    <ContentPresenter Name="PART_ContentPresenter" Content="{TemplateBinding Content}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Opacity" Value="{arc:SampleButtonTokenResource HoverOpacity}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A named theme in the same file, based on the type theme through StaticResource. -->
+    <ControlTheme x:Key="SampleGhostButtonTheme" TargetType="arc:SampleButton"
+                  BasedOn="{StaticResource {x:Type arc:SampleButton}}">
+        <Setter Property="Background" Value="{arc:SampleButtonTokenResource GhostHoverBackground}" />
+        <Setter Property="Foreground" Value="{arc:SampleDesignTokenResource Foreground}" />
+    </ControlTheme>
+</ResourceDictionary>

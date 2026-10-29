@@ -269,15 +269,14 @@ public class LayoutMorphRenderingTests
     public void Copies_go_with_the_stage_and_with_their_pictures()
     {
         var (window, morph) = Show();
-        var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
         try
         {
             var stage = morph.Stage;
             stage.Pictures.Count.ShouldBe(15);
-            layers.Child = null;
+            window.Content = null;
             Pump();
             stage.Pictures.Count.ShouldBe(0);
-            layers.Child = morph;
+            window.Content = morph;
             Pump();
             stage.Pictures.Count.ShouldBe(15);
             var first = PictureCards(stage)[0];
@@ -604,7 +603,6 @@ public class LayoutMorphRenderingTests
         var morph = Create();
         morph.Layout = LayoutMorphMode.Carousel;
         var (window, _) = Show(morph, level: ArcMotionLevel.Full);
-        var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
         try
         {
             var stage = morph.Stage;
@@ -614,11 +612,11 @@ public class LayoutMorphRenderingTests
             morph.FocusItem(morph.EffectiveItems[6]);
             RunFrames(clock, 4);
             Enumerable.Range(0, stage.Count).Count(i => stage.IsCardCached(i)).ShouldBeGreaterThan(0);
-            layers.Child = null;
+            window.Content = null;
             Should.NotThrow(() => Pump());
             Enumerable.Range(0, stage.Count).ShouldAllBe(i => !stage.IsCardCached(i) && stage.CardAt(i).CacheMode == null);
             stage.Pictures.Count.ShouldBe(0);
-            layers.Child = morph;
+            window.Content = morph;
             Should.NotThrow(() => Pump());
             RunFrames(clock, 120);
             // Copies again for every picture the carousel shows smaller than its pixels (the front ones are drawn at full size).

@@ -1,4 +1,3 @@
-using AtomUI.Controls;
 
 namespace TKCode.Arc.Gallery.Demos;
 

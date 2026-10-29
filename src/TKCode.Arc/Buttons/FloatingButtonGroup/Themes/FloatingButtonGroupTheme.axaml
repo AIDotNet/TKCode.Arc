@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FloatingButtonGroupTheme">
     <!-- Separate soft buttons in a quiet tray; one shared highlight moves underneath their content. -->
     <ControlTheme x:Key="{x:Type arc:FloatingButtonGroup}" TargetType="arc:FloatingButtonGroup">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />

@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using AtomUI.Controls;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -219,7 +219,7 @@ internal sealed class ProfilePageProjectsView : ProfilePageColumns
         cover.Children.Add(coverFill);
         if (project.Cover is { } source)
         {
-            cover.Children.Add(new AsyncImage { Source = source, Stretch = Stretch.UniformToFill });
+            cover.Children.Add(new ArcImage { Source = source, Stretch = Stretch.UniformToFill });
         }
         AutomationProperties.SetAccessibilityView(cover, AccessibilityView.Raw);
         DockPanel.SetDock(cover, Dock.Top);

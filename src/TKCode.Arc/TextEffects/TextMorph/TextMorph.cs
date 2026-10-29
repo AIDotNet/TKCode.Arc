@@ -213,7 +213,7 @@ public class TextMorph : Control
                 gone.Exit.Changed += _ => InvalidateVisual();
                 var leaving = gone;
                 gone.Exit.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Exit, ArcEasings.Standard))
-                    .ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    .ContinueWith(_ => Dispatcher.Post(() =>
                     {
                         _glyphs.Remove(leaving);
                         InvalidateVisual();

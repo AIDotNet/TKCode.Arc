@@ -991,5 +991,41 @@
         <target state="translated">下载</target>
       </segment>
     </unit>
+    <unit id="WindowPin">
+      <segment>
+        <source>Keep on top</source>
+        <target state="translated">窗口置顶</target>
+      </segment>
+    </unit>
+    <unit id="WindowUnpin">
+      <segment>
+        <source>Stop keeping on top</source>
+        <target state="translated">取消置顶</target>
+      </segment>
+    </unit>
+    <unit id="WindowMinimize">
+      <segment>
+        <source>Minimize</source>
+        <target state="translated">最小化</target>
+      </segment>
+    </unit>
+    <unit id="WindowMaximize">
+      <segment>
+        <source>Maximize</source>
+        <target state="translated">最大化</target>
+      </segment>
+    </unit>
+    <unit id="WindowRestore">
+      <segment>
+        <source>Restore</source>
+        <target state="translated">还原</target>
+      </segment>
+    </unit>
+    <unit id="WindowClose">
+      <segment>
+        <source>Close</source>
+        <target state="translated">关闭</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

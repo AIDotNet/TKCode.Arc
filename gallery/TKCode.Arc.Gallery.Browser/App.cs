@@ -8,8 +8,6 @@ public partial class App : Application
 {
     public override void OnFrameworkInitializationCompleted()
     {
-        // Popups need the root's overlay layer, which AtomUI's browser root template does not enable.
-        Styles.Add(EmbeddableRootTemplate.Create());
         // The browser has one view and no windows, so the shell is the page itself.
         if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
         {

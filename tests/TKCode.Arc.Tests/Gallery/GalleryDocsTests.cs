@@ -1,4 +1,3 @@
-using AtomUI.Localization;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Pages;
@@ -8,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Tests.Gallery;
 
@@ -16,7 +16,7 @@ public class GalleryDocsTests
 {
     private static GalleryEntry Entry(string className) => GalleryCatalog.AllEntries.First(e => e.ClassName == className);
 
-    private static ILanguageManager Languages() => global::AtomUI.ApplicationExtensions.GetLanguageManager(Application.Current!)!;
+    private static ArcLanguageManager Languages() => ArcLanguageManager.Current!;
 
     [AvaloniaFact]
     public void Every_Page_Belongs_To_A_Gallery_Entry_And_Has_An_English_Source()

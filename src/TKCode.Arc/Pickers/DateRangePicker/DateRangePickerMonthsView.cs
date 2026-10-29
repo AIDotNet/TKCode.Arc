@@ -111,7 +111,7 @@ internal sealed class DateRangePickerMonthsView : Control
         outgoing.IsEnabled = false;
         outgoing.ZIndex = 0;
         _leaving.Add(outgoing);
-        outgoing.Exit(direction, full).ContinueWith(_ => Dispatcher.UIThread.Post(() =>
+        outgoing.Exit(direction, full).ContinueWith(_ => Dispatcher.Post(() =>
         {
             if (_leaving.Contains(outgoing))
             {

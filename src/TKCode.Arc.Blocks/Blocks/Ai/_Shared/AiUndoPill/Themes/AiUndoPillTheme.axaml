@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiUndoPillTheme">
 
     <!--
         The undo pill: 32 high, padding 0 12, a pill with a 1px Border on SurfaceRaised and ShadowRaised. Parts 6px apart:

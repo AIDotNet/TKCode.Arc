@@ -289,7 +289,7 @@ internal sealed class FileUploadSwap : Control
             layer.Presenter.Effect = ArcBlur.Get(blur * p);
         };
         progress.AnimateTo(1, MotionSpec.Tween(duration, ExitEasing))
-            .ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            .ContinueWith(_ => Dispatcher.Post(() =>
             {
                 if (_exiting.Contains(layer))
                 {

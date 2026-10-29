@@ -1,8 +1,4 @@
 using System.Text.RegularExpressions;
-using AtomUI;
-using AtomUI.Theme;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -14,7 +10,7 @@ using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Themes.Corners;
 using SkiaSharp;
-using ArcWindow = AtomUI.Desktop.Controls.Window;
+using ArcWindow = Avalonia.Controls.Window;
 
 namespace TKCode.Arc.DocShots;
 
@@ -135,8 +131,8 @@ internal static class Shooter
         {
             Content = host,
             Width = width + 2 * Scene.Padding,
-            SizeToContent = SizeToContent.Height,
-            IsTitleBarVisible = false
+            // A headless window draws no title bar (AtomUI's window needed IsTitleBarVisible = false).
+            SizeToContent = SizeToContent.Height
         };
         // Captures show the settled state: entrances, counters and charts at their end values. Some of them animate in
         // the composition layer, which only the window's own rendered frame shows (a RenderTargetBitmap of the visual
@@ -259,18 +255,10 @@ internal static class Shooter
 
     public static void ApplyTheme(bool dark, ArcCornerStyle corners = default)
     {
-        var builder = new ThemeConfigBuilder();
-        builder = dark ? builder.WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark) : builder.WithAlgorithms(ThemeAlgorithm.Default);
-        builder = builder.WithArc(arc => arc.Accent(ArcAccentPreset.Neutral).Corners(corners, ArcCornerScope.All));
-        var manager = Application.Current!.GetThemeManager()!;
-        var task = manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(), ThemeTransitionReason.UserRequest),
-                                           CancellationToken.None);
-        while (!task.IsCompleted)
-        {
-            Dispatcher.UIThread.RunJobs();
-            Thread.Sleep(5);
-        }
-        task.GetAwaiter().GetResult();
+        ArcTheme.Manager.Apply(ArcThemeState.Default.With(t => t
+            .Appearance(dark ? ArcAppearance.Dark : ArcAppearance.Light)
+            .Accent(ArcAccentPreset.Neutral)
+            .Corners(corners)));
         Program.Pump(5);
     }
 

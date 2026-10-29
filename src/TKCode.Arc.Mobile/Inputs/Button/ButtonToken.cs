@@ -1,4 +1,3 @@
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc.Mobile;
@@ -7,7 +6,8 @@ namespace TKCode.Arc.Mobile;
 /// Geometry of the mobile <see cref="Button"/>: a 44px minimum touch target, padding, and the press feedback.
 /// Colors, radii and type come from the ArcDesign tokens in the theme.
 /// </summary>
-[ControlDesignToken]
+// The desktop TKCode.Arc package declares a ButtonToken too, and identities are unique per application.
+[ControlDesignToken(Identity = "MobileButton")]
 internal sealed class ButtonToken : AbstractControlDesignToken
 {
     /// <summary>Minimum width and height: 44.</summary>

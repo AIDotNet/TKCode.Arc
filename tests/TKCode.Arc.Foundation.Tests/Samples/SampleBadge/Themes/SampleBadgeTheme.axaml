@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.Foundation.Samples.SampleBadgeTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:SampleBadge}" TargetType="arc:SampleBadge">
+        <Setter Property="Width" Value="{arc:SampleBadgeTokenResource DotSize}" />
+        <Setter Property="Height" Value="{arc:SampleBadgeTokenResource DotSize}" />
+        <Setter Property="Background" Value="{arc:SampleDesignTokenResource Accent}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SampleBadge">
+                <Border Background="{TemplateBinding Background}" CornerRadius="{arc:SampleDesignTokenResource RadiusPill}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

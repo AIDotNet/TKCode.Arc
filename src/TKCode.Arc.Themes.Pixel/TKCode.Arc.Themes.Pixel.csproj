@@ -5,10 +5,8 @@
         <RootNamespace>TKCode.Arc.Themes.Pixel</RootNamespace>
         <PackageId>TKCode.Arc.Themes.Pixel</PackageId>
         <Description>Pixel-art theme (token overrides only, no controls) for TKCode.Arc: square corners, hard shadows, limited palette, light and dark.</Description>
-            <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
     </PropertyGroup>
     <ItemGroup>
-        <AtomUIThemeDefinition Include="Themes/*.xml" />
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
         <ProjectReference Include="../TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
     </ItemGroup>

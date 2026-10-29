@@ -388,7 +388,7 @@ public class ToastStack : TemplatedControl, IToastService
 
     private void RemoveWhenGone(ToastStackItem item, Task exit)
     {
-        exit.ThenOnUiThread(() =>
+        exit.ThenOnUiThread(Dispatcher, () =>
         {
             _leaving.Remove(item);
             _panel?.RemoveItem(item);
@@ -575,7 +575,9 @@ public class ToastStack : TemplatedControl, IToastService
         {
             return;
         }
-        foreach (var item in _panel.Present)
+        // A copy: resuming a toast whose time ran out while paused fires its timer at once, and the dismissal that follows
+        // takes it out of Present while this loop is still walking it.
+        foreach (var item in _panel.Present.ToArray())
         {
             item.SetPaused(paused);
         }

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DialogTheme">
     <!-- The declarative dialog renders nothing in place; its DialogSurface is shown on the overlay layer. -->
     <ControlTheme x:Key="{x:Type arc:Dialog}" TargetType="arc:Dialog">
         <Setter Property="ScrimBrush" Value="{arc:DialogTokenResource ScrimColor}" />

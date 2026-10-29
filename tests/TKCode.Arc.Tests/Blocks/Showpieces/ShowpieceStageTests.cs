@@ -1,6 +1,4 @@
 using TKCode.Arc.Motion;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
@@ -342,7 +340,7 @@ public class ShowpieceStageTests
             stage.Cache.Brush(Colors.Black, 0.5);
             stage.Cache.Count.ShouldBe(1);
             var changes = stage.ThemeChanges;
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             stage.ThemeChanges.ShouldBeGreaterThan(changes);
             stage.Cache.Count.ShouldBe(0);
             stage.Cache.BrushCount.ShouldBe(0);

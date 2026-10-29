@@ -27,11 +27,7 @@ public class SpeculativeDecodingTests
     // TestHelpers.Show with a window large enough for the whole card (autoplay needs most of it in view).
     private static Window Show(Control content, ArcMotionLevel level, double width = 760, double height = 1000)
     {
-        var layers = new Avalonia.Controls.Primitives.VisualLayerManager { Child = content };
-        typeof(Avalonia.Controls.Primitives.VisualLayerManager)
-            .GetProperty("EnablePopupOverlayLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?
-            .SetValue(layers, true);
-        var window = new Window { Content = layers, Width = width, Height = height };
+        var window = new Window { Content = content, Width = width, Height = height };
         ArcMotion.SetLevel(window, level);
         window.Show();
         Dispatcher.UIThread.RunJobs();

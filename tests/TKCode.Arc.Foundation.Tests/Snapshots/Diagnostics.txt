@@ -1,0 +1,14 @@
+ARCF001 Error :13 Token 'Odd.Offset' has type 'Point', which string overrides cannot parse; use Color, double, int, bool, string, Thickness, CornerRadius, BoxShadows, FontFamily, FontWeight, TimeSpan, Easing or an enum
+ARCF001 Error :14 Token 'Odd.MaybeColor' has type 'Color?', which string overrides cannot parse; use Color, double, int, bool, string, Thickness, CornerRadius, BoxShadows, FontFamily, FontWeight, TimeSpan, Easing or an enum
+ARCF002 Error :22 'NotAToken' is marked [ControlDesignToken] but does not derive from TKCode.Arc.AbstractControlDesignToken
+ARCF003 Warning :19 'EmptyToken' declares no public settable properties; give the control at least one token or remove the class
+ARCF004 Error :40 Token identity 'First' is declared by both 'global::Demo.Bad.FirstToken' and 'global::Demo.Other.FirstToken'
+ARCF005 Error :34 'global::Demo.Bad.FirstToken' and 'global::Demo.Bad.SecondToken' are both marked IsGlobal; an application has a single global token identity
+ARCF006 Error :28 'AbstractToken' must be a non-abstract, non-generic, top-level class with a parameterless constructor
+ARCF007 Warning :25 'Widget' does not end with 'Token'; its identity is the whole class name
+ARCF010 Error NoClassTheme.axaml:1 Theme file 'A/Themes/NoClassTheme.axaml' has no x:Class; add x:Class="Demo.Controls.NoClassTheme" so the dictionary can be created without loading XAML by URI (which is not AOT safe)
+ARCF011 Error BrokenTheme.axaml:1 Theme file 'B/Themes/BrokenTheme.axaml' cannot be read: The 'unclosed' start tag on line 1 position 22 does not match the end tag of 'ResourceDictionary'. Line 1, position 33.
+ARCF012 Warning UnresolvedTheme.axaml:3 Theme file 'C/Themes/UnresolvedTheme.axaml' keys a resource by '{x:Type b:Missing}', but no accessible type 'Missing' was found; the resource will not be loaded on demand
+ARCF013 Error DuplicateTheme.axaml:3 Resource key '{x:Type b:Thing}' is defined by both 'C/Themes/UnresolvedTheme.axaml' and 'D/Themes/DuplicateTheme.axaml'
+ARCF013 Error DuplicateTheme.axaml:4 Resource key 'Shared' is defined by both 'C/Themes/UnresolvedTheme.axaml' and 'D/Themes/DuplicateTheme.axaml'
+ARCF014 Warning EmptyTheme.axaml:1 Theme file 'E/Themes/EmptyTheme.axaml' has no keyed top-level resources, so nothing can ever load it

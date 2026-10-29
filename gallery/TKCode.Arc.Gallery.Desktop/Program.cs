@@ -1,5 +1,4 @@
 using System.Globalization;
-using AtomUI;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
 using TKCode.Arc.Gallery;
@@ -7,8 +6,8 @@ using TKCode.Arc.Gallery.Content;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
 using TKCode.Arc.Gallery.Shots;
-using AtomUI.Desktop.Controls;
 using Avalonia;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Gallery.Desktop;
 
@@ -33,12 +32,9 @@ internal static class Program
                   .WithArcPixelFonts()
                   .WithGalleryShots()
                   .WithGalleryContent()
-                  .UseAtomUI(builder =>
-                  {
+                  .UseArc(arc => arc
                       // The system's display language (on macOS the first preferred language with the region).
-                      builder.UseLanguages(GalleryLanguages.Initial([CultureInfo.CurrentUICulture.Name]), GalleryLanguages.Tags);
-                      builder.UseDesktopControls();
-                      builder.UseArc();
-                      builder.UseArcGallery();
-                  });
+                      .UseLanguages(GalleryLanguages.Initial([CultureInfo.CurrentUICulture.Name]), GalleryLanguages.Tags)
+                      .UseArcControls()
+                      .UseArcGallery());
 }

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ChatThreadTheme">
     <!--
         Arc chat-thread.module.css. The thread fills the height it is given: a scroller with the virtualized rows (content
         padding 12px 16px 14px), the jump pill 12px above its bottom edge, two hidden live regions, and the composer.

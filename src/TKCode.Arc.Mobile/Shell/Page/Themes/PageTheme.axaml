@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.PageTheme">
 
     <!-- Page: Background fill, the safe area as padding, header / content (optionally scrolling) / footer in three rows, and an overlay slot over all of it. -->
     <ControlTheme x:Key="{x:Type arcm:Page}" TargetType="arcm:Page">

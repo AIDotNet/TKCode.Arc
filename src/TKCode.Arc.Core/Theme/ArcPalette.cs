@@ -1,6 +1,4 @@
-using AtomUI.Theme.Algorithms;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace TKCode.Arc;
 
@@ -34,9 +32,9 @@ public readonly record struct ArcAccentColors(
     string Preset);
 
 /// <summary>
-/// Resolves Arc accent colors from an accent seed (AtomUI ColorPrimary). Exact preset seeds use Arc's
-/// hand-tuned tables; seeds produced by AtomUI's dark algorithm map back to their preset; AtomUI's default
-/// primary maps to Arc's default (neutral); anything else is derived in OKLCH.
+/// Resolves Arc accent colors from an accent seed (<c>ArcSeedToken.ColorPrimary</c>). Exact preset seeds use Arc's
+/// hand-tuned tables; seeds of the Ant-style dark palette (as AtomUI's dark algorithm produced them in 0.3) map back to
+/// their preset; the default seed (#1677FF) maps to Arc's default (neutral); anything else is derived in OKLCH.
 /// </summary>
 public static class ArcPalette
 {
@@ -116,13 +114,12 @@ public static class ArcPalette
     private static Dictionary<uint, Preset> BuildDarkDerivedLookup()
     {
         var map = new Dictionary<uint, Preset>();
-        var option = new PaletteGenerateOption { ThemeVariant = ThemeVariant.Dark };
         foreach (var preset in s_presets)
         {
-            var derived = PaletteGenerator.GeneratePalette(Color.Parse(preset.Seed), option)[5];
+            var derived = ArcPaletteGenerator.Generate(Color.Parse(preset.Seed), isDark: true)[5];
             map.TryAdd(Key(derived), preset);
         }
-        var defaultDerived = PaletteGenerator.GeneratePalette(AtomUIDefaultPrimary, option)[5];
+        var defaultDerived = ArcPaletteGenerator.Generate(AtomUIDefaultPrimary, isDark: true)[5];
         map.TryAdd(Key(defaultDerived), s_presets[0]);
         return map;
     }

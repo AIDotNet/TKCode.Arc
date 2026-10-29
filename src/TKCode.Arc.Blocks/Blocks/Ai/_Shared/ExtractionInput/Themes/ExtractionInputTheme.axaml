@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ExtractionInputTheme">
 
     <!--
         The value box of an extraction field (spec 3.4): 32 high, padding 0 8, radius 9, a 1px border, 14 / 19.6 Foreground;

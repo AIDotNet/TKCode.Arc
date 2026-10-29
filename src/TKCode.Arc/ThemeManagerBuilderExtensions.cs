@@ -1,18 +1,13 @@
-using AtomUI;
-using AtomUI.Desktop.Controls;
-using AtomUI.Generated.TKCodeArc;
+using TKCode.Arc.Generated.TKCodeArc;
 
 namespace TKCode.Arc;
 
 public static class ArcBuilderExtensions
 {
     /// <summary>
-    /// Enables Arc controls. Depends on <see cref="ArcCoreBuilderExtensions.UseArcCore"/> and AtomUI desktop controls.
+    /// Enables the Arc controls. Depends on <see cref="ArcCoreBuilderExtensions.UseArcCore"/>.
     /// </summary>
-    public static IAtomUIBuilder UseArc(this IAtomUIBuilder builder)
-        => GeneratedControlPackageRegistration.Definition.Register(builder, static package =>
-        {
-            package.DependsOn(static dependency => dependency.UseArcCore());
-            package.DependsOn(static dependency => dependency.UseDesktopControls());
-        });
+    public static ArcBuilder UseArcControls(this ArcBuilder builder)
+        => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
+            .DependsOn(static b => b.UseArcCore())));
 }

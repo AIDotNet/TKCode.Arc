@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.CheckboxTheme">
 
     <!-- Mobile checkbox: a 22px box (outlined, ControlOn fill when checked) with a check or a dash, and the label beside it; the
          whole 44px row is the touch target; a finger shrinks the box; no hover state. -->

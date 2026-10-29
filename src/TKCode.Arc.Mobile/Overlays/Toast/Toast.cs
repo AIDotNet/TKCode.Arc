@@ -368,7 +368,7 @@ public class Toast : TemplatedControl
             {
                 exit = _presence.AnimateTo(0, spec);
             }
-            _ = exit.ContinueWith(t => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            _ = exit.ContinueWith(t => Root.Dispatcher.Post(() =>
             {
                 if (t.Result || IsLeaving)
                 {

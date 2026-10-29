@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BillingToggleTheme">
     <ControlTheme x:Key="{x:Type arc:BillingToggle}" TargetType="arc:BillingToggle">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />

@@ -274,7 +274,7 @@ internal sealed class MoneyInputCurrencyList : Panel
 /// The currency menu popup: anchored to the shell's bottom-right edge, 8px below it, its right edge on the shell's inner
 /// edge. Arc's enter (opacity fast + enter ease, scale 0.96 and 4px of travel on the snappy spring) and exit (scale 0.97,
 /// 2px, instant + standard ease) grow from the currency switch; reduced motion only fades. The subtle 2px blur of Arc's
-/// enter and exit is not drawn (AtomUI's popup motion actor has no blur channel).
+/// enter and exit is not drawn (the popup's motion has no blur channel).
 /// </summary>
 internal sealed class MoneyInputCurrencyPopup : ArcPopup
 {
@@ -339,8 +339,8 @@ internal sealed class MoneyInputCurrencyPopup : ArcPopup
     protected override void OnPlacementResolved(CustomPopupPlacement placement, Thickness shadow, double marginToAnchor,
                                                 bool isOverlayHost, bool flipX, bool flipY)
     {
-        var width = Math.Max(1, placement.PopupSize.Width - placement.Deflate.Left - placement.Deflate.Right);
-        var height = Math.Max(1, placement.PopupSize.Height - placement.Deflate.Top - placement.Deflate.Bottom);
+        var width = Math.Max(1, placement.PopupSize.Width - shadow.Left - shadow.Right);
+        var height = Math.Max(1, placement.PopupSize.Height - shadow.Top - shadow.Bottom);
         // Arc: transform-origin: calc(100% - 44px) calc(var(--drop) * -1 - 18px), i.e. the switch's centre.
         var originX = flipX ? OriginInset / width : 1 - OriginInset / width;
         var originY = flipY ? 1 + OriginRise / height : -OriginRise / height;

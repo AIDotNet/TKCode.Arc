@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-             xmlns:atom="https://atomui.net"
              xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.CardStackPhotosDemo">
     <arc:CardStack x:Name="Photographed"
@@ -12,7 +11,7 @@
                 <Grid RowDefinitions="*,Auto">
                     <Panel>
                         <ContentControl Content="{Binding Scene, Converter={x:Static demos:CardStackDemoData.Art}}" />
-                        <atom:AsyncImage Source="{Binding Photo}" Stretch="UniformToFill" />
+                        <arc:ArcImage Source="{Binding Photo}" Stretch="UniformToFill" />
                     </Panel>
                     <StackPanel Grid.Row="1" Margin="20,16,20,20" Spacing="4">
                         <TextBlock Text="{Binding Name}"

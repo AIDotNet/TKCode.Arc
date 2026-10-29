@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.ListItemTheme">
 
     <!-- List item: icon, title over subtitle, trailing content and a chevron in one 48+ high row; a hairline under it
          (hidden on the last row); a finger on it shades the row with SurfaceMuted; no hover state. -->

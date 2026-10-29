@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TreemapTheme">
     <ControlTheme x:Key="{x:Type arc:Treemap}" TargetType="arc:Treemap">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="StageRadius" Value="{arc:TreemapTokenResource StageRadius}" />

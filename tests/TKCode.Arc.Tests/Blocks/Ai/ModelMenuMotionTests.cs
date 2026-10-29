@@ -1,6 +1,6 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Tests.CorePrimitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Headless.XUnit;
@@ -18,8 +18,8 @@ public class ModelMenuMotionTests
 
     private static Matrix FrameMatrix(ModelMenuPanel panel)
     {
-        var actor = panel.FindAncestorOfType<BaseMotionActor>();
-        var transform = (actor?.MotionTransform ?? panel.RenderTransform) as MatrixTransform;
+        var actor = panel.FindAncestorOfType<ArcPopupFrame>();
+        var transform = (actor?.RenderTransform ?? panel.RenderTransform) as MatrixTransform;
         return transform?.Matrix ?? Matrix.Identity;
     }
 

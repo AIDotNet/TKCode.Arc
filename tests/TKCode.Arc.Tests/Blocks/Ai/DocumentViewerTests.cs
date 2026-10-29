@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
@@ -741,7 +739,7 @@ public class DocumentViewerTests
             TestHelpers.ColorOf(viewer.CanvasBrush).ShouldBe(Oklch.MixOklab(surface, foreground, 0.05));
             Oklch.FromColor(TestHelpers.ColorOf(viewer.CanvasBrush)).L.ShouldBe(0.9575, 0.01);
             TestHelpers.ColorOf(Part<Border>(viewer, "PART_CanvasHost").Background).ShouldBe(TestHelpers.ColorOf(viewer.CanvasBrush));
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             try
             {
                 Settle(window);
@@ -749,7 +747,7 @@ public class DocumentViewerTests
             }
             finally
             {
-                await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+                await TestHelpers.ApplyAsync(null);
             }
         }
         finally

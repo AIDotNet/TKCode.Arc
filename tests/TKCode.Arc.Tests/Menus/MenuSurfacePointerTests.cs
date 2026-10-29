@@ -98,7 +98,12 @@ public class MenuSurfacePointerTests
         var anchor = new Button { Content = "Account" };
         var surface = new MenuSurface { Variant = MenuSurfaceVariant.Sheet, Header = new TextBlock { Text = "Ada Lovelace", Height = 40 } };
         surface.Items.Add(new MenuEntry { Header = "Profile" });
-        var window = TestHelpers.Show(new StackPanel { Children = { anchor } }, ArcMotionLevel.Full);
+        // A plain window: its layer manager (Arc's base Window theme) hosts both the scrim (overlay layer) and the sheet
+        // (popup overlay layer, above the scrim), as in an app.
+        var window = new Window { Content = new StackPanel { Children = { anchor } }, Width = 400, Height = 300 };
+        ArcMotion.SetLevel(window, ArcMotionLevel.Full);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
         try
         {
             surface.Open(anchor);

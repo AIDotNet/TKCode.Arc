@@ -179,7 +179,7 @@ internal sealed class ColorPickerSwatchRow : Control
         }
         swatch.IsHitTestVisible = false;
         _leaving.Add(swatch);
-        swatch.Exit(full, fade).ContinueWith(_ => Dispatcher.UIThread.Post(() =>
+        swatch.Exit(full, fade).ContinueWith(_ => Dispatcher.Post(() =>
         {
             if (_leaving.Remove(swatch))
             {

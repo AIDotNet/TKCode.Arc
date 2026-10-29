@@ -79,10 +79,9 @@ public class GalleryTextSourceTests
                 view.Docs.Text.ShouldBe(expected.Markdown);
 
                 // Leaving the visual tree and coming back (as navigation does) shows the page it has, without asking again.
-                var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
-                layers.Child = null;
+                window.Content = null;
                 Dispatcher.UIThread.RunJobs();
-                layers.Child = view;
+                window.Content = view;
                 Dispatcher.UIThread.RunJobs();
                 pending.Requests.ShouldBe(1);
                 view.Docs.Text.ShouldBe(expected.Markdown);

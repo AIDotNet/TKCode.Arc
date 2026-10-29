@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.IconButtonTheme">
 
     <!-- Mobile icon button: Plain (accent icon), Tinted, Filled or Fab (56px, floating shadow) by Variant; no hover state,
          press scales to 0.97 and dims (the Fab scales to 0.92), 44 x 44 minimum. -->

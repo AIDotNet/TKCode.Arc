@@ -1,6 +1,4 @@
 using System.Collections.ObjectModel;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Collections;
@@ -691,14 +689,14 @@ public class PromptCacheTests
             card.Advance(3);
             var bar = card.RowBar(0)!;
             var light = bar.Palette!.Surface;
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             card.Advance(0.1);
             bar.Palette!.Surface.ShouldNotBe(light);
             bar.Palette.Surface.ShouldBe(ArcTokens.GetColor(card, DesignTokens.ArcDesignTokenKind.Surface));
         }
         finally
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+            await TestHelpers.ApplyAsync(null);
             window.Close();
         }
     }

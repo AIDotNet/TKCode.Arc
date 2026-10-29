@@ -288,10 +288,12 @@ public partial class DataGrid
     {
         var column = ColumnOf(accessor);
         var options = FilterOptionsOf(accessor);
-        var search = new TextBox
+        // The filter row's input (DataGridTheme gives it its template; a plain TextBox has none of its own).
+        var search = new DataGridFilterBox
         {
             PlaceholderText = DataGridText.Get(DataGridLangResourceKind.SearchValues),
             IsVisible = options.Count > 7,
+            Height = 30,
             Margin = new Thickness(4, 4, 4, 6)
         };
         AutomationProperties.SetName(search, DataGridText.Get(DataGridLangResourceKind.SearchValues));

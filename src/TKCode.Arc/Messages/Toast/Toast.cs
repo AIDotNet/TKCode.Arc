@@ -441,7 +441,7 @@ public class Toast : TemplatedControl
 
     private void FinishWhenDone(int generation, Task<bool> task)
     {
-        task.ThenOnUiThread(() =>
+        task.ThenOnUiThread(Dispatcher, () =>
         {
             Finish(generation);
         });

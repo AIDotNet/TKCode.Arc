@@ -132,7 +132,7 @@ internal sealed class PhoneInputFace : Control
         var spec = full
             ? MotionSpec.Tween(TimeSpan.FromMilliseconds(120), ArcEasings.Standard)
             : MotionSpec.Tween(TimeSpan.FromMilliseconds(80), ArcEasings.Standard);
-        progress.AnimateTo(1, spec).ContinueWith(_ => Dispatcher.UIThread.Post(() => Remove(layer)), TaskScheduler.Default);
+        progress.AnimateTo(1, spec).ContinueWith(_ => Dispatcher.Post(() => Remove(layer)), TaskScheduler.Default);
     }
 
     private void Remove(FaceLayer layer)

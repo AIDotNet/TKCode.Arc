@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.PullToRefreshTheme">
 
     <!-- PullToRefresh: fills its parent and clips; an indicator (an arrow that turns over with the pull, then a spinner) sits
          above the content, and the content is pushed down by the pull. The offsets are driven by the control's code (a pull

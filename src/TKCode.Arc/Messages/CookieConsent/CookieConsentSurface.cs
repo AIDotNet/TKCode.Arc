@@ -297,7 +297,7 @@ internal sealed class CookieConsentSurface : Control, ICustomHitTest
 
     private static void HideWhenDone(Face face, int generation, Task<bool> task)
     {
-        task.ThenOnUiThread(() =>
+        task.ThenOnUiThread(face.Control.Dispatcher, () =>
         {
             if (face.Generation == generation && !face.Present)
             {
@@ -365,7 +365,7 @@ internal sealed class CookieConsentSurface : Control, ICustomHitTest
 
     private void HideSurfaceWhenDone(int generation, Task<bool> task)
     {
-        task.ThenOnUiThread(() =>
+        task.ThenOnUiThread(Dispatcher, () =>
         {
             if (generation == _exitGeneration && _mode == CookieConsentMode.None)
             {

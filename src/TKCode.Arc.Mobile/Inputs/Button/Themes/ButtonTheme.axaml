@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.ButtonTheme">
 
     <!-- Mobile button: Filled (Foreground / Background pill), Tinted (AccentSubtle pill) or Plain (accent text) by Variant;
          no hover state, press scales to 0.97 and dims, min 44 x 44. -->

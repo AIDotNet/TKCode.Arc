@@ -1,4 +1,3 @@
-using AtomUI.Controls;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -476,7 +475,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         {
             foreach (var tile in _gallery.Children.OfType<ChatThreadButton>())
             {
-                if (tile.Content is Panel { Children: [AsyncImage image, ..] })
+                if (tile.Content is Panel { Children: [ArcImage image, ..] })
                 {
                     image.Source = null;
                 }
@@ -654,7 +653,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
                     _gallery.Children.Add(tile);
                 }
                 var panel = (Panel)tile.Content!;
-                var asyncImage = (AsyncImage)panel.Children[0];
+                var asyncImage = (ArcImage)panel.Children[0];
                 asyncImage.Source = image.ImageSource;
                 var more = (Border)panel.Children[1];
                 var extra = images.Count - 4;
@@ -706,7 +705,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
 
     private ChatThreadButton CreateTile()
     {
-        var image = new AsyncImage { Stretch = Stretch.UniformToFill };
+        var image = new ArcImage { Stretch = Stretch.UniformToFill };
         var more = new ChatThreadMore
         {
             IsVisible = false,

@@ -244,7 +244,7 @@ internal sealed class ToolCallText : Control
         var leaving = outgoing;
         leaving.Presence = CreateValue(shown);
         _leaving.Add(leaving);
-        leaving.Presence.AnimateTo(0, exit).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        leaving.Presence.AnimateTo(0, exit).ContinueWith(_ => Dispatcher.Post(() =>
         {
             _leaving.Remove(leaving);
             UpdateLoop();

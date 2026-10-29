@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BillingOverviewTheme">
     <!--
         Billing overview: three cards 16 apart. The plan card has a label, the plan name with a status badge, a line of
         seats and renewal, the price on the right (under the name when narrow) and a footer with the next charge and the

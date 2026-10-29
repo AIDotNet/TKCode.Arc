@@ -5,11 +5,9 @@
         <RootNamespace>TKCode.Arc.Mobile</RootNamespace>
         <PackageId>TKCode.Arc.Mobile</PackageId>
         <Description>Touch-first Arc components for Avalonia (first slice: page, navbar, tabbar, button, switch) with press states and 44px touch targets. Previewed in a desktop phone frame; not yet verified on Android or iOS devices.</Description>
-        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
-        <!-- Its own catalog so a Mobile Button does not clash with the desktop Button (design/components/mobile/overview.md, open question 1). -->
-        <AtomUIThemeControlCatalog>TKCode.Arc.Mobile</AtomUIThemeControlCatalog>
         <!-- Core contains generated types with identical names. -->
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />

@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.Gallery.Demos;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -789,7 +787,7 @@ public class RevenueGlobeTests
         {
             foreach (var dark in new[] { false, true })
             {
-                await TestHelpers.ApplyAsync(dark ? new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build() : null);
+                await TestHelpers.ApplyAsync(dark ? TestHelpers.Dark : null);
                 foreach (var create in demos)
                 {
                     var demo = create();

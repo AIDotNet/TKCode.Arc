@@ -1,0 +1,19 @@
+<!-- Base theme (design/architecture/foundation.md, "基础主题"): the default ItemsControl, an items presenter in a frame. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="TKCode.Arc.ItemsControlBaseTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type ItemsControl}" TargetType="ItemsControl">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="ItemsControl">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

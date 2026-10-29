@@ -335,7 +335,7 @@ public partial class RolesPermissions
             _slotHeight.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Standard));
             _barShift!.AnimateTo(16, MotionSpec.Spring(ArcSpring.Smooth));
             _ = _barOpacity!.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Standard)).ContinueWith(_ =>
-                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                Dispatcher.Post(() =>
                 {
                     if (!_barOpen && _bar is not null)
                     {

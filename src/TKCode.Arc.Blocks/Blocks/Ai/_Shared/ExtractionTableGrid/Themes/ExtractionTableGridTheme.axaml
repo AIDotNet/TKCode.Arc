@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ExtractionTableGridTheme">
 
     <!--
         A table field (spec 3.4): a box of radius 12, padding 4 4 6 8 (lit: the group color at 6%, set by the grid). The header

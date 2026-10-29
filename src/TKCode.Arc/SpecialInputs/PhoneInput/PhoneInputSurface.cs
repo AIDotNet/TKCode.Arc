@@ -174,7 +174,7 @@ internal sealed class PhoneInputSurface : Control
         if (open)
         {
             // Settled and open: the face sits inside the shape, so rendering and hit testing skip the geometry clip.
-            Task.WhenAll(widthDone, done, radiusDone).ContinueWith(t => Dispatcher.UIThread.Post(() =>
+            Task.WhenAll(widthDone, done, radiusDone).ContinueWith(t => Dispatcher.Post(() =>
             {
                 if (generation == _morphGeneration && t.Result.All(r => r))
                 {

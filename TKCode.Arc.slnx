@@ -1,5 +1,7 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/TKCode.Arc.Foundation/TKCode.Arc.Foundation.csproj" />
+    <Project Path="src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj" />
     <Project Path="src/TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
     <Project Path="src/TKCode.Arc/TKCode.Arc.csproj" />
     <Project Path="src/TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
@@ -17,7 +19,9 @@
     <Project Path="src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/TKCode.Arc.Foundation.Tests/TKCode.Arc.Foundation.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Core.Tests/TKCode.Arc.Core.Tests.csproj" />
+    <Project Path="tests/TKCode.Arc.BaseTheme.Tests/TKCode.Arc.BaseTheme.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Tests/TKCode.Arc.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Mobile.Tests/TKCode.Arc.Mobile.Tests.csproj" />
   </Folder>

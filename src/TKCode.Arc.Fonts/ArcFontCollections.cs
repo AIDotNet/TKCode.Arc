@@ -42,7 +42,7 @@ public static class ArcFontsAppBuilderExtensions
         fontManager.AddFontCollection(new GeistMonoFontCollection());
     });
 
-    /// <summary>Registers the pixel fonts (Silkscreen, VT323) that <c>ArcPixelTheme.PixelFontStack</c> names first. Not part of <see cref="WithArcFonts"/> to keep its size out of apps that do not use the pixel theme.</summary>
+    /// <summary>Registers the pixel fonts (Silkscreen, VT323) that <c>ArcPixelPresets.PixelFontStack</c> names first. Not part of <see cref="WithArcFonts"/> to keep its size out of apps that do not use the pixel theme.</summary>
     public static AppBuilder WithArcPixelFonts(this AppBuilder builder) => builder.ConfigureFonts(fontManager =>
     {
         fontManager.AddFontCollection(new ArcPixelFontCollection());

@@ -1,16 +1,11 @@
-using AtomUI;
 using TKCode.Arc.Motion;
-using AtomUI.Theme;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.Themes.Corners;
 using TKCode.Arc.Themes.Pixel;
-using Avalonia;
 using Avalonia.Controls;
 
 namespace TKCode.Arc.Gallery.Shell;
 
-/// <summary>Holds the gallery's appearance, accent and motion level, and applies them through AtomUI.</summary>
+/// <summary>Holds the gallery's appearance, accent and motion level, and applies them through the Arc theme manager.</summary>
 public sealed class GalleryTheme
 {
     public bool IsDark { get; private set; }
@@ -63,30 +58,34 @@ public sealed class GalleryTheme
         Changed?.Invoke();
     }
 
-    private async Task ApplyAsync()
+    // ArcThemeManager.Apply, not ApplyAsync: computing every token takes a few milliseconds, and callers may wait on these
+    // tasks on the UI thread, which ApplyAsync's UI-thread publish cannot complete under (see ArcThemeManager.ApplyAsync).
+    private Task ApplyAsync()
     {
-        var manager = Application.Current?.GetThemeManager();
+        var manager = ArcThemeManager.Current;
         if (manager is null)
         {
-            return;
+            return Task.CompletedTask;
         }
-        if (IsPixel)
-        {
-            // The pixel style is a compiled theme pair; its config already carries light/dark and the palette.
-            await manager.ApplyThemeAsync(ArcPixelTheme.CreateRequest(IsDark, scope: ArcPixelScope.All));
-            ArcPixelRendering.ApplyToApplication(true);
-            Changed?.Invoke();
-            return;
-        }
-        ArcPixelRendering.ApplyToApplication(false);
-        var builder = new ThemeConfigBuilder();
-        builder = IsDark
-            ? builder.WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
-            : builder.WithAlgorithms(ThemeAlgorithm.Default);
+        var dark = IsDark;
+        var pixel = IsPixel;
         var accent = Accent;
         var corners = CornerStyle;
-        builder = builder.WithArc(arc => arc.Accent(accent).Corners(corners, ArcCornerScope.All));
-        await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(), ThemeTransitionReason.UserRequest));
+        manager.Apply(t =>
+        {
+            t.Appearance(dark ? ArcAppearance.Dark : ArcAppearance.Light);
+            if (pixel)
+            {
+                // The Pixel style brings its own palette and square corners.
+                t.DefaultAccent().RemovePreset(ArcCornerPresets.Slot).Pixel();
+            }
+            else
+            {
+                t.Accent(accent).RemovePreset(ArcPixelPresets.Slot).Corners(corners);
+            }
+        });
+        ArcPixelRendering.ApplyToApplication(pixel);
         Changed?.Invoke();
+        return Task.CompletedTask;
     }
 }

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SettingsCommandTheme">
     <!--
         The settings command palette: a search row (glyph, bare field, Esc cap), a hairline, the result list (group
         titles and rows over a gliding highlight; a centered message when nothing matches) and a footer of key hints with

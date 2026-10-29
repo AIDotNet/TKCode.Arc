@@ -1,6 +1,4 @@
 using System.Collections.ObjectModel;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.Gallery.Demos;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -960,7 +958,7 @@ public class LayoutMorphTests
         try
         {
             var light = morph.Stage.Palette.CardFill;
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             Pump();
             morph.Stage.Palette.CardFill.ShouldNotBe(light);
             morph.Stage.Palette.IsDark.ShouldBeTrue();
@@ -984,13 +982,12 @@ public class LayoutMorphTests
     public void A_theme_change_then_a_detach_before_the_repaint_runs_does_not_throw()
     {
         var (window, morph) = Show();
-        var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
         try
         {
             // The theme variant changes (the stage posts its palette refresh), then the block leaves the window before
             // the posted job runs.
             window.RequestedThemeVariant = Avalonia.Styling.ThemeVariant.Dark;
-            layers.Child = null;
+            window.Content = null;
             Should.NotThrow(() => Pump());
             TopLevel.GetTopLevel(morph.Stage).ShouldBeNull();
         }
@@ -1004,12 +1001,11 @@ public class LayoutMorphTests
     public void Detaching_and_changing_items_while_detached_does_not_throw()
     {
         var (window, morph) = Show();
-        var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
         try
         {
             // A detach raises a resource change (the stage marks its palette dirty); the posted refresh, a collection
             // rebuild and a size pass all run while the block is out of the tree.
-            layers.Child = null;
+            window.Content = null;
             morph.Items.RemoveAt(0);
             morph.Items.Add(new LayoutMorphItem { Title = "Late arrival", Value = "$12" });
             Should.NotThrow(() => Pump());
@@ -1023,7 +1019,7 @@ public class LayoutMorphTests
             morph.Stage.Count.ShouldBe(24);
 
             // Back in the window: the cards paint with the window's palette again.
-            layers.Child = morph;
+            window.Content = morph;
             Pump();
             morph.Stage.Palette.CardFill.ShouldBe(ThemeColor(morph.Stage, TKCode.Arc.DesignTokens.ArcDesignTokenKind.SurfaceRaised));
             morph.Stage.Palette.CardFillBrush.ShouldNotBeNull();
@@ -1104,15 +1100,14 @@ public class LayoutMorphTests
     public async Task A_theme_switched_while_detached_is_picked_up_on_attach()
     {
         var (window, morph) = Show();
-        var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
         try
         {
             var light = morph.Stage.Palette.CardFill;
-            layers.Child = null;
+            window.Content = null;
             Pump();
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             Pump();
-            layers.Child = morph;
+            window.Content = morph;
             Pump();
             var dark = ThemeColor(morph.Stage, TKCode.Arc.DesignTokens.ArcDesignTokenKind.SurfaceRaised);
             dark.ShouldNotBe(light);
@@ -1130,18 +1125,17 @@ public class LayoutMorphTests
     public async Task A_block_created_before_the_theme_switch_and_attached_after_paints_with_the_new_theme()
     {
         // The window is up and the block exists (with items, never attached) when the theme switches to dark.
-        var layers = new Avalonia.Controls.Primitives.VisualLayerManager();
-        var window = new Window { Content = layers, Width = 1200, Height = 1100 };
+        var window = new Window { Width = 1200, Height = 1100 };
         ArcMotion.SetLevel(window, ArcMotionLevel.Full);
         window.Show();
         var morph = Create();
         try
         {
             Pump();
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             morph.Layout = LayoutMorphMode.Carousel;
             Should.NotThrow(() => Pump());
-            layers.Child = morph;
+            window.Content = morph;
             Should.NotThrow(() => Pump());
             var dark = ThemeColor(morph.Stage, TKCode.Arc.DesignTokens.ArcDesignTokenKind.SurfaceRaised);
             morph.Stage.Palette.CardFill.ShouldBe(dark);
@@ -1185,7 +1179,7 @@ public class LayoutMorphTests
     {
         if (dark)
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
         }
         try
         {

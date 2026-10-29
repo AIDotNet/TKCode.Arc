@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -27,7 +25,7 @@ public class SemanticZoomDemosTests
         {
             foreach (var dark in new[] { false, true })
             {
-                await TestHelpers.ApplyAsync(dark ? new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build() : null);
+                await TestHelpers.ApplyAsync(dark ? TestHelpers.Dark : null);
                 foreach (var create in Demos())
                 {
                     var demo = create();

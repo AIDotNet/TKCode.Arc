@@ -115,7 +115,7 @@ internal sealed class ProgressSwapText : Control
             var exitDuration = full ? TweenDuration(ExitTween) : ArcMotionPresets.Instant;
             var leaving = outgoing;
             outgoing.Progress.AnimateTo(1, MotionSpec.Tween(exitDuration, full ? ArcEasings.Standard : s_linear))
-                    .ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    .ContinueWith(_ => Dispatcher.Post(() =>
                     {
                         _leaving.Remove(leaving);
                         InvalidateVisual();

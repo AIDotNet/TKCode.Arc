@@ -9,7 +9,6 @@
         <NoWarn>$(NoWarn);CS0436</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AtomUI.Desktop.Controls" />
         <PackageReference Include="Avalonia.Desktop" />
         <PackageReference Include="Avalonia.Headless" />
         <PackageReference Include="Avalonia.Fonts.Inter" />

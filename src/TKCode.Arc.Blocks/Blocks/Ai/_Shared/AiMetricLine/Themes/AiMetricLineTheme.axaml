@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiMetricLineTheme">
 
     <!--
         "First token 1.83s · 152 tok/s · $0.0041": 12 / 16.8, labels, unit and dots TextMuted, values Foreground (the time

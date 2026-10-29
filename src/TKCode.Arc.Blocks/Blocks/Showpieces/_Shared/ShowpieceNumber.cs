@@ -395,7 +395,7 @@ internal sealed class ShowpieceNumber : Control
         column.Leaving = true;
         var leaving = column;
         column.Presence.AnimateTo(0, MotionSpec.Spring(ArcSpring.Morph)).ContinueWith(_ =>
-            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            Dispatcher.Post(() =>
             {
                 if (leaving.Leaving)
                 {

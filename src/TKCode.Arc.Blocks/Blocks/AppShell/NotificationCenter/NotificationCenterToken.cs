@@ -1,5 +1,4 @@
 // Ported from Arc's free notification-center block (MIT, Copyright (c) 2026 Elia Kuratli).
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc;

@@ -1,10 +1,10 @@
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc.Mobile;
 
 /// <summary>Geometry of the mobile <see cref="Switch"/>: a 51 by 31 track, a 27px thumb and a 44px touch target.</summary>
-[ControlDesignToken]
+// The desktop TKCode.Arc package declares a SwitchToken too, and identities are unique per application.
+[ControlDesignToken(Identity = "MobileSwitch")]
 internal sealed class SwitchToken : AbstractControlDesignToken
 {
     /// <summary>Track width: 51.</summary>

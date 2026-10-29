@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MultiStepFormTheme">
     <!--
         Multi-step form (design reference: Arc's Pro multi-step-form block, ADR 0020; all values measured on its preview).
         A 540 wide card: the progress header (list left, count right; stacked when narrow), the step area that springs to

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SemanticZoomTheme">
     <!--
         Semantic zoom (Arc Semantic zoom, design reference): a framed surface with a heading, the self-drawn map with its
         overlays (breadcrumbs and tour button on top, hover card, minimap, hint and zoom bar at the bottom) and the

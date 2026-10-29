@@ -1,0 +1,79 @@
+<!--
+    Base theme (design/architecture/foundation.md, "基础主题"): the hosts Avalonia creates for popups (OverlayPopupHost
+    on the overlay layer, PopupRoot as a native window) and for the Browser's single view (EmbeddableControlRoot). They
+    present their content and give it Arc's text defaults; Arc's surfaces draw their own frames and shadows.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.PopupHostBaseTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type OverlayPopupHost}" TargetType="OverlayPopupHost">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="OverlayPopupHost">
+                <LayoutTransformControl LayoutTransform="{TemplateBinding Transform}">
+                    <VisualLayerManager Name="PART_VisualLayerManager">
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Padding="{TemplateBinding Padding}"
+                                          Background="{TemplateBinding Background}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </VisualLayerManager>
+                </LayoutTransformControl>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type PopupRoot}" TargetType="PopupRoot">
+        <Setter Property="Background" Value="{x:Null}" />
+        <Setter Property="TransparencyLevelHint" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="PopupRoot">
+                <LayoutTransformControl LayoutTransform="{TemplateBinding Transform}">
+                    <Panel>
+                        <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
+                        <VisualLayerManager Name="PART_VisualLayerManager">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Padding="{TemplateBinding Padding}"
+                                              Background="{TemplateBinding Background}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </VisualLayerManager>
+                    </Panel>
+                </LayoutTransformControl>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type EmbeddableControlRoot}" TargetType="EmbeddableControlRoot">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="EmbeddableControlRoot">
+                <Panel>
+                    <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
+                    <Border Background="{TemplateBinding Background}">
+                        <VisualLayerManager Name="PART_VisualLayerManager">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Margin="{TemplateBinding Padding}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </VisualLayerManager>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

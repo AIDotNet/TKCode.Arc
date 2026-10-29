@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PromptVersionMenuTheme">
 
     <!--
         A version row: 62.4px (padding 8 10), radius 18. Avatar 28 (2px down), 10px gap, then the message (16 / 22.4,

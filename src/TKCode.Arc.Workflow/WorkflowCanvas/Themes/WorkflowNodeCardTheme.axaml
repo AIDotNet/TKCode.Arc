@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WorkflowNodeCardTheme">
 
     <!-- A step card (Arc HeroRelay .node): 1px border, radius 14, padding 0 14, 13px text, the surface and Arc's node shadow. -->
     <ControlTheme x:Key="{x:Type arc:WorkflowNodeCard}" TargetType="arc:WorkflowNodeCard">

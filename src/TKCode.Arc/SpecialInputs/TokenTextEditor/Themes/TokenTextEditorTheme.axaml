@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TokenTextEditorTheme">
     <!--
         Arc composer text area: Inter 16/24, -0.01em, padding 8, no frame of its own (the owner draws the surface).
         Tokens: Accent 12% fill (from code), AccentStrong text, radius 6 with a 2px outset (Arc's box-shadow spread).

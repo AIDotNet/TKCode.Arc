@@ -1,4 +1,3 @@
-using AtomUI.Controls;
 using Avalonia.Media;
 
 namespace TKCode.Arc.Gallery.Demos;

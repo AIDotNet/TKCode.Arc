@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WorkflowMinimapTheme">
 
     <!-- The map: the zoom bar's surface (Surface, 1px Border, radius 10, ShadowResting); steps in BorderStrong, running and
          selected ones in the accent, failed ones in Danger; the view as an accent frame over AccentSubtle. Self-drawn. -->

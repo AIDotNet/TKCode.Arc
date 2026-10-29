@@ -1,6 +1,4 @@
 using TKCode.Arc.DesignTokens;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Interactivity;
@@ -139,10 +137,7 @@ public class MarkdownTests
         var window = Show(markdown);
         try
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder()
-                                         .WithAlgorithms(ThemeAlgorithm.Dark)
-                                         .WithArc(a => a.Accent(ArcAccentPreset.Violet))
-                                         .Build());
+            await TestHelpers.ApplyAsync(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));
             var view = markdown.View!;
             view.ActualThemeVariant.ShouldBe(ThemeVariant.Dark);
             var style = MarkdownStyle.Resolve(view);

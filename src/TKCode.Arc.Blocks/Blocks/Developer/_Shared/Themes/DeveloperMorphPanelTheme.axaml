@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DeveloperMorphPanelTheme">
     <!--
         The Developer pill-to-panel morph (Arc API keys "Create key" / Webhooks "Add endpoint", design reference): one cell
         with the leading count at the left and the pill at the right. Pill 36 high, radius 18, fill Foreground 5.5% into

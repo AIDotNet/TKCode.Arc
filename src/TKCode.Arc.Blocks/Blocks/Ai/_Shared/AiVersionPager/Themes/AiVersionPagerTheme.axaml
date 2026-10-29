@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiVersionPagerTheme">
 
     <!--
         "‹ 2 / 2 ›": the two 26 × 28 buttons around the count (14px, TextSecondary, tabular figures). The numbers are

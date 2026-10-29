@@ -1,6 +1,5 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -18,8 +17,8 @@ namespace TKCode.Arc;
 /// 130ms standard to 2.5px and scale 0.98 while fading out. A close during the enter (or an open during the exit) continues
 /// from the values on screen. Reduced motion: a 120ms linear fade, no transform; Off: instant.
 /// <para>
-/// Code-driven (MotionValue) rather than AtomUI's popup motions: opacity and transform run on two curves and durations, a
-/// reversal must continue from the values on screen (AtomUI motions restart from fixed start values), the origin is the
+/// Code-driven (MotionValue) rather than the popup's own motions: opacity and transform run on two curves and durations, a
+/// reversal must continue from the values on screen (the popup's motions restart from fixed start values), the origin is the
 /// pill's corner, and the popup may only close after the exit has played. Same model as M1's <c>ModelMenuPresence</c>,
 /// with the studio's distances and for any surface.
 /// </para>
@@ -37,7 +36,7 @@ internal sealed class PromptPopoverPresence : IDisposable
     private readonly MotionValue<Point> _pose;
     private readonly MatrixTransform _transform = new();
     private readonly MatrixTransform _fallbackTransform = new();
-    private BaseMotionActor? _actor;
+    private ArcPopupFrame? _actor;
     private bool _closing;
     private int _generation;
 
@@ -188,11 +187,11 @@ internal sealed class PromptPopoverPresence : IDisposable
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
-        _actor = Surface.FindAncestorOfType<BaseMotionActor>();
+        _actor = Surface.FindAncestorOfType<ArcPopupFrame>();
         if (_actor is not null)
         {
             _actor.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            _actor.MotionTransform = _transform;
+            _actor.RenderTransform = _transform;
         }
         Apply();
         Shown?.Invoke(this, EventArgs.Empty);

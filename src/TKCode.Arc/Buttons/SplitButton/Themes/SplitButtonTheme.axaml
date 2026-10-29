@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SplitButtonTheme">
     <!-- One half of the pill (main action or chevron). Colors only: the group presses in for the main action and the
          chevron anchors the menu, so neither half scales on its own. -->
     <ControlTheme x:Key="SplitButtonHalfTheme" TargetType="arc:Button">

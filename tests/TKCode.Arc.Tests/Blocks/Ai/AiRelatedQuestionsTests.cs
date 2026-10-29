@@ -1,8 +1,6 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.Theme.Configuration;
-using AtomUI.Theme.Algorithms;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -233,14 +231,14 @@ public class AiRelatedQuestionsTests
         line.Kind.ShouldBe(ArcDesignTokenKind.BorderSubtle);
         try
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             rig.Settle();
             line.Kind.ShouldBe(ArcDesignTokenKind.Border);
             TestHelpers.ColorOf(line.Brush).ShouldBe(ArcTokens.GetColor(list, ArcDesignTokenKind.Border));
         }
         finally
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+            await TestHelpers.ApplyAsync(null);
             rig.Settle();
         }
         line.Kind.ShouldBe(ArcDesignTokenKind.BorderSubtle);

@@ -1,5 +1,4 @@
 // Ported from Arc's free otp-input block (MIT, Copyright (c) 2026 Elia Kuratli): otp-input.module.css.
-using AtomUI.Theme.DesignTokens;
 using Avalonia.Media;
 
 namespace TKCode.Arc;

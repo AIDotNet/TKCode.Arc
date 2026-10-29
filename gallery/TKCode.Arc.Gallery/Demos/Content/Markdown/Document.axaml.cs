@@ -22,7 +22,7 @@ public partial class MarkdownDocumentDemo : UserControl
             - Light, dark and the accent switch live.
 
             1. Add the package.
-            2. Call `UseArc()` in `UseAtomUI(...)`.
+            2. Call `UseArcControls()` in `UseArc(...)`.
             3. Drop `<arc:Markdown Text="..." />` into a view.
 
             - [x] Static documents

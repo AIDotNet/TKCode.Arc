@@ -64,8 +64,8 @@ public sealed class ThemeSwitcherChangeRequestedEventArgs : RoutedEventArgs
 /// <summary>
 /// A single light / dark switch for a header: a secondary button that swaps sun and moon on a shared turn and names the
 /// next appearance. Pressing it raises <see cref="ThemeChangeRequested"/>; unless a handler marks it handled, the
-/// switcher applies the change through AtomUI's theme manager (toggling <c>ThemeAlgorithm.Dark</c> and keeping the rest
-/// of the current theme) inside the page transition of its <see cref="Variant"/>. Arc hands that transition to the View
+/// switcher applies the change through <see cref="ArcThemeManager"/> (changing the appearance and keeping the rest of the
+/// current theme) inside the page transition of its <see cref="Variant"/>. Arc hands that transition to the View
 /// Transitions API; here the old window is snapshotted into an overlay whose animated clip reveals the new theme
 /// beneath (<see cref="RunTransitionAsync"/>, also usable from a handler). Reduced motion switches without a transition.
 /// </summary>
@@ -116,7 +116,7 @@ public class ThemeSwitcher : TemplatedControl
 
     /// <summary>
     /// Raised before the theme changes. Set <see cref="RoutedEventArgs.Handled"/> to apply the theme yourself (optionally
-    /// inside <see cref="RunTransitionAsync"/>); otherwise the switcher applies it through AtomUI's theme manager.
+    /// inside <see cref="RunTransitionAsync"/>); otherwise the switcher applies it through <see cref="ArcThemeManager"/>.
     /// </summary>
     public event EventHandler<ThemeSwitcherChangeRequestedEventArgs>? ThemeChangeRequested
     {
@@ -158,7 +158,6 @@ public class ThemeSwitcher : TemplatedControl
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        ThemeSwitcherThemeApplier.EnsureTracking();
         // A stored preference usually lands just after the first frames: only changes after that animate.
         Dispatcher.UIThread.Post(() => _settled = IsLoaded, DispatcherPriority.Background);
     }

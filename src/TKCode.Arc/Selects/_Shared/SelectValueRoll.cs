@@ -191,7 +191,7 @@ internal sealed class SelectValueRoll : Control
         var spec = full
             ? MotionSpec.Tween(flying ? TimeSpan.FromMilliseconds(120) : ExitDuration, ArcEasings.Standard)
             : MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard);
-        progress.AnimateTo(1, spec).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() => Remove(layer)),
+        progress.AnimateTo(1, spec).ContinueWith(_ => Dispatcher.Post(() => Remove(layer)),
             TaskScheduler.Default);
     }
 

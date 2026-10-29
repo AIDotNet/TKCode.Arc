@@ -1,8 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    xmlns:atom="https://atomui.net"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProfilePageTheme">
 
     <!--
         Profile page (Arc Profile page, design reference). Parts first: the pill buttons, the width-locked label layers,
@@ -509,7 +509,7 @@
                         <arc:ScrollArea Name="PART_Scroll" FadeLength="0">
                             <StackPanel>
                                 <Border Name="PART_Cover" ClipToBounds="True">
-                                    <atom:AsyncImage Name="PART_CoverImage" Stretch="UniformToFill" IsVisible="False" />
+                                    <arc:ArcImage Name="PART_CoverImage" Stretch="UniformToFill" IsVisible="False" />
                                 </Border>
 
                                 <Border Name="PART_IdentityFrame"

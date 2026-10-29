@@ -6,7 +6,7 @@
     <StackPanel Spacing="12" Margin="0,12">
         <StackPanel Orientation="Horizontal" Spacing="12">
             <TextBlock VerticalAlignment="Center" Text="Search (two-way):" />
-            <TextBox Width="180" Text="{Binding #Block.SearchText}" />
+            <arc:Input x:Name="Search" Width="180" Text="{Binding #Block.SearchText}" />
             <TextBlock VerticalAlignment="Center" x:Name="View" />
         </StackPanel>
         <arc:EnvVariables x:Name="Block" IsFramed="False" />

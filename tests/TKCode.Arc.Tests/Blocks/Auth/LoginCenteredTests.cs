@@ -635,7 +635,8 @@ public class LoginCenteredTests
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
         Assert.False(viewport.IsGliding);
-        Assert.Equal(0, viewport.ExitingCount);
+        // The old step leaves from an await on its exit motions, which can come back through the thread pool.
+        TestHelpers.ShouldDrain(() => viewport.ExitingCount);
         Assert.Equal(block.View!.DesiredSize.Height, viewport.Bounds.Height, 1);
         Assert.Equal(1, block.View.Opacity);
     }

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WorkflowCanvasTheme">
 
     <!-- The workflow canvas (Arc HeroRelay): the page background with a touch of accent, a dot grid, wires and cards. -->
     <ControlTheme x:Key="{x:Type arc:WorkflowCanvas}" TargetType="arc:WorkflowCanvas">

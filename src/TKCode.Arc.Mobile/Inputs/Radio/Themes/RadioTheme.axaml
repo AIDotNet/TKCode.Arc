@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.RadioTheme">
 
     <!-- Mobile radio: a 22px circle (ControlOn outline when chosen) with a dot that springs in, and the label beside it;
          the whole 44px row is the touch target; a finger dims it; no hover state. -->

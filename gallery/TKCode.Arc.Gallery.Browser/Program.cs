@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using AtomUI;
-using AtomUI.Desktop.Controls;
 using Avalonia;
 using Avalonia.Browser;
 using TKCode.Arc;
@@ -10,6 +8,7 @@ using TKCode.Arc.Gallery.Demos;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Shell;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Gallery.Browser;
 
@@ -51,11 +50,8 @@ internal sealed partial class Program
                   .WithArcFonts()
                   .WithArcPixelFonts()
                   .WithCjkFont()
-                  .UseAtomUI(builder =>
-                  {
-                      builder.UseLanguages(GalleryLanguages.Initial(BrowserLanguageStore.Preferred()), GalleryLanguages.Tags);
-                      builder.UseDesktopControls();
-                      builder.UseArc();
-                      builder.UseArcGallery();
-                  });
+                  .UseArc(arc => arc
+                      .UseLanguages(GalleryLanguages.Initial(BrowserLanguageStore.Preferred()), GalleryLanguages.Tags)
+                      .UseArcControls()
+                      .UseArcGallery());
 }

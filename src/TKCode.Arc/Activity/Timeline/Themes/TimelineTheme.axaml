@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TimelineTheme">
     <!--
         Arc timeline.module.css. The feed is a scroller holding the virtualized rows and the pinned day label (the stand-in
         for position: sticky, moved by a render transform). Day labels sit on the timeline surface (HeaderBackground).

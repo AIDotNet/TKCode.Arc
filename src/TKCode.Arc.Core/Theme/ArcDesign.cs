@@ -4,8 +4,8 @@ using Avalonia.Controls;
 namespace TKCode.Arc;
 
 /// <summary>
-/// Identity carrier for the Arc global design tokens. It is never placed in a visual tree.
-/// It must stay public: the AtomUI registration pipeline only registers public control types.
+/// Former identity carrier of the Arc global design tokens (they are now the global identity of
+/// <c>ArcDesignToken</c>). Kept for source compatibility; it is never placed in a visual tree.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class ArcDesign : Control

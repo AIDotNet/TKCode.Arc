@@ -1,7 +1,6 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using TKCode.Arc.Tests.CorePrimitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -587,8 +586,8 @@ public class ModelMenuInlineEffortTests
         host.Open();
         var presence = host.Menu.MainPresence!;
         presence.CurrentPose.ShouldBe(new Point(6, 0.97));
-        var actor = host.Main.FindAncestorOfType<BaseMotionActor>()!;
-        var matrix = ((MatrixTransform)actor.MotionTransform!).Matrix;
+        var actor = host.Main.FindAncestorOfType<ArcPopupFrame>()!;
+        var matrix = ((MatrixTransform)actor.RenderTransform!).Matrix;
         // Below its rest position (toward the chip under it), scaled about the bottom-right corner: that corner moves
         // only by the travel.
         var corner = host.Main.TranslatePoint(new Point(host.Main.Bounds.Width, host.Main.Bounds.Height), actor)!.Value;

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ModelSummaryTheme">
 
     <!-- The summary: description, facts table, optional note and the fixed-height change line, 12px apart. -->
     <ControlTheme x:Key="{x:Type arc:ModelSummary}" TargetType="arc:ModelSummary">

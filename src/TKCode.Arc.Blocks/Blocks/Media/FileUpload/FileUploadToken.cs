@@ -1,5 +1,4 @@
 // Ported from Arc's free file-upload block (MIT, Copyright (c) 2026 Elia Kuratli): file-upload.module.css.
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc;

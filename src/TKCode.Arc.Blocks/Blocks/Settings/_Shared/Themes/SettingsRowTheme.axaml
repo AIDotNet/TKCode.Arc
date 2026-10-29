@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SettingsRowTheme">
     <!--
         A settings row: hairline on top (not on the first row), icon tile, header and description, and the control on
         the right; under :stacked the control drops below the text, aligned with it.

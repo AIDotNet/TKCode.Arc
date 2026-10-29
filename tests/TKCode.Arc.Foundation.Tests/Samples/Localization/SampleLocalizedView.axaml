@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Foundation.Samples.SampleLocalizedView">
+    <StackPanel>
+        <TextBlock Name="SaveText" Text="{arc:SampleLangResource Save}" />
+        <TextBlock Name="CancelText" Text="{arc:SampleLangResource Kind=Cancel}" />
+    </StackPanel>
+</UserControl>

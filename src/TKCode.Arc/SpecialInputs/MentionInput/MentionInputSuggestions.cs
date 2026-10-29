@@ -1,8 +1,7 @@
 using TKCode.Arc.DesignTokens;
 using System.Globalization;
-using AtomUI.Controls;
-using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
+using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Automation.Peers;
@@ -122,10 +121,11 @@ internal sealed class MentionInputSuggestionPopup : ArcPopup
     protected override void OnPlacementResolved(CustomPopupPlacement placement, Thickness shadow, double marginToAnchor,
                                                 bool isOverlayHost, bool flipX, bool flipY)
     {
-        // Arc: transform-origin 14px from the left, on the edge facing the line (after the positioner's flips).
+        // Arc: transform-origin 14px from the left, on the edge facing the line (after the positioner's flips); the
+        // origin is relative to the surface, which the popup size includes with its shadow room (shadow).
         var above = flipY ? !_above : _above;
-        var width = placement.PopupSize.Width;
-        var originX = width > 0 ? (placement.Deflate.Left + 14) / width : _originX;
+        var width = placement.PopupSize.Width - shadow.Left - shadow.Right;
+        var originX = width > 0 ? 14 / width : _originX;
         SetOrigin(above, originX);
     }
 }
@@ -487,7 +487,7 @@ internal sealed class MentionInputSuggestionList : Control
 /// TextSecondary initials TypeXS 500, or the portrait); channels a 16px Lucide Hash in a 28px slot. The label is
 /// TextSecondary weight 500 (Foreground on the active row) with the matched part in Foreground, the meta line TypeXS
 /// TextMuted, and a channel's member count TypeXS TextMuted tabular at the right. All drawn in <see cref="Render"/>;
-/// only a portrait URL adds a child (AtomUI's async image, clipped to the circle).
+/// only a portrait URL adds a child (an ArcImage, clipped to the circle).
 /// </summary>
 internal sealed class MentionInputSuggestionRow : Control
 {
@@ -506,7 +506,7 @@ internal sealed class MentionInputSuggestionRow : Control
     private TextLayout? _initials;
     private double _layoutWidth = -1;
     private Border? _portraitHost;
-    private AsyncImage? _portrait;
+    private ArcImage? _portrait;
     private string? _portraitUrl;
     private bool _pressed;
     private Pen? _hashPen;
@@ -581,11 +581,11 @@ internal sealed class MentionInputSuggestionRow : Control
         }
         if (_portraitHost is null)
         {
-            _portrait = new AsyncImage { Stretch = Stretch.UniformToFill, IsHitTestVisible = false };
+            _portrait = new ArcImage { Stretch = Stretch.UniformToFill, IsHitTestVisible = false };
             // Initials stay visible until the portrait has loaded (and when it fails).
             _portrait.PropertyChanged += (_, e) =>
             {
-                if (e.Property == AsyncImage.IsLoadedProperty || e.Property == AsyncImage.IsFailedProperty)
+                if (e.Property == ArcImage.IsImageLoadedProperty || e.Property == ArcImage.IsFailedProperty)
                 {
                     InvalidateVisual();
                 }
@@ -740,7 +740,7 @@ internal sealed class MentionInputSuggestionRow : Control
             }
             return;
         }
-        if (_portraitHost is { IsVisible: true } && _portrait is { IsLoaded: true, IsFailed: false })
+        if (_portraitHost is { IsVisible: true } && _portrait is { IsImageLoaded: true, IsFailed: false })
         {
             return;
         }

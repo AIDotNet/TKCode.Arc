@@ -4,9 +4,9 @@
         <RootNamespace>TKCode.Arc.Gallery</RootNamespace>
         <IsPackable>false</IsPackable>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../../src/TKCode.Arc/TKCode.Arc.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
@@ -38,7 +38,7 @@
 
     <!-- Docs pages (design/decisions/0012-gallery-docs.md): pages and API translations go to GalleryDocsGenerator, which
          also collects the Demos/**/*.axaml views that <Demo name="..." /> lines show (Avalonia passes them in).
-         The API translations stay out of Localization/ folders, which AtomUI's language build owns. -->
+         The API translations stay out of Localization/ folders, which the Foundation generator reads as language catalogs. -->
     <ItemGroup>
         <AdditionalFiles Include="Docs/**/*.md" GalleryDocKind="Page" />
         <AdditionalFiles Include="Docs/Api/*.xlf" GalleryDocKind="ApiTranslation" />

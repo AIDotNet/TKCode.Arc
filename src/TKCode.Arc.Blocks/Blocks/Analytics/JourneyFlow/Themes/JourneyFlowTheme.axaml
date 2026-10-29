@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.JourneyFlowTheme">
     <!--
         Journey flow (Arc Journey flow, design reference): no frame of its own (it lies flat on the page). Header (title,
         rolling visitors, segment switch), body (chart area + side panel: beside the chart from 860, under it below),

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SiteFooterTheme">
     <!--
         Ported from Arc's free site-footer block (MIT, Copyright (c) 2026 Elia Kuratli): site-footer.module.css.
         A footer with a 1px top border (Border), clipped. Columns and Logo: the intro (brand, tagline, newsletter) beside three

@@ -326,7 +326,7 @@ internal sealed class NumberFieldAffixText : Control
             _ = gone.Rise.AnimateTo(-direction * 0.3, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard));
             var leaving = gone;
             _ = gone.Size.AnimateTo(0, MotionSpec.Spring(ArcSpring.Smooth)).ContinueWith(_ =>
-                Dispatcher.UIThread.Post(() =>
+                Dispatcher.Post(() =>
                 {
                     if (leaving.Leaving && _entries.Remove(leaving))
                     {
@@ -635,7 +635,7 @@ internal sealed class NumberFieldLimitNote : TextBlock
         }
         var duration = level == ArcMotionLevel.Full ? ArcMotionPresets.Standard : ArcMotionPresets.Instant;
         _opacity.AnimateTo(0, MotionSpec.Tween(duration, ArcEasings.Standard)).ContinueWith(_ =>
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.Post(() =>
             {
                 if (_hiding)
                 {

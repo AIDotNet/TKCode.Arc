@@ -1,5 +1,4 @@
 // Ported from Arc's free signup-form block (MIT, Copyright (c) 2026 Elia Kuratli): the geometry of signup-form.module.css.
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc;

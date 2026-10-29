@@ -1,6 +1,5 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -8,7 +7,6 @@ using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AtomPopup = AtomUI.Desktop.Controls.Popup;
 
 namespace TKCode.Arc;
 
@@ -30,7 +28,7 @@ internal sealed class ModelMenuPopup : ArcPopup
         EnterOffset = 0;
         EnterScale = 1;
         // The presence plays the motion; animation priority wins over the local value ArcPopup sets for its own.
-        SetValue(AtomPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
+        SetValue(ArcPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
     }
 
     public bool IsSubmenu { get; }
@@ -76,20 +74,7 @@ internal sealed class ModelMenuPopup : ArcPopup
         ? !IsVerticalFlipped
         : IsVerticalFlipped;
 
-    /// <summary>Runs the placement again (the surface changed size while open, or the anchor moved).</summary>
-    public void Reposition()
-    {
-        if (!IsOpen)
-        {
-            return;
-        }
-        // Offset changes are the public way to make the popup run its placement again.
-        var offset = VerticalOffset;
-        VerticalOffset = offset + 1;
-        VerticalOffset = offset;
-    }
-
-    protected override void AdjustPlacementAnchor(CustomPopupPlacement placement, ref bool flipX, ref bool flipY)
+    protected override void AdjustPlacementAnchor(CustomPopupPlacement placement)
     {
         if (IsSubmenu && PlacementTarget is { } target && TopLevel.GetTopLevel(target) is { } topLevel &&
             SubmenuAnchor?.Invoke(topLevel) is { } rect)
@@ -112,7 +97,7 @@ internal sealed class ModelMenuPopup : ArcPopup
         {
             return;
         }
-        var width = placement.PopupSize.Width - placement.Deflate.Left - placement.Deflate.Right;
+        var width = placement.PopupSize.Width - shadow.Left - shadow.Right;
         var client = topLevel.ClientSize.Width;
         if (width <= 0 || width + 2 * CollisionPadding > client + 0.5)
         {
@@ -144,8 +129,8 @@ internal sealed class ModelMenuPopup : ArcPopup
 /// open during the exit) continues from the current values. Reduced motion: a 120ms linear fade, no transform; Off:
 /// instant.
 /// <para>
-/// Code-driven (MotionValue) rather than AtomUI's popup motions: opacity and transform run on two different curves and
-/// durations, a reversal must continue from the values on screen (AtomUI motions restart from fixed start values), and
+/// Code-driven (MotionValue) rather than the popup's own motions: opacity and transform run on two different curves and
+/// durations, a reversal must continue from the values on screen (the popup's motions restart from fixed start values), and
 /// the popup may only close after the exit has played.
 /// </para>
 /// </summary>
@@ -162,7 +147,7 @@ internal sealed class ModelMenuPresence : IDisposable
     private readonly MotionValue<Point> _pose;
     private readonly MatrixTransform _transform = new();
     private readonly MatrixTransform _fallbackTransform = new();
-    private BaseMotionActor? _actor;
+    private ArcPopupFrame? _actor;
     private bool _closing;
     private int _generation;
 
@@ -310,11 +295,11 @@ internal sealed class ModelMenuPresence : IDisposable
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
-        _actor = Panel.FindAncestorOfType<BaseMotionActor>();
+        _actor = Panel.FindAncestorOfType<ArcPopupFrame>();
         if (_actor is not null)
         {
             _actor.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            _actor.MotionTransform = _transform;
+            _actor.RenderTransform = _transform;
         }
         Apply();
         Shown?.Invoke(this, EventArgs.Empty);

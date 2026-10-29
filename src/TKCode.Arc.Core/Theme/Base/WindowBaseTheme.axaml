@@ -1,0 +1,38 @@
+<!--
+    Base theme (design/architecture/foundation.md, "基础主题"): the desktop window. Avalonia's own Window template has no
+    visual layer manager, so a plain Window has no overlay layer (Arc's overlay popups, toasts, the ThemeSwitcher reveal)
+    and draws text in black at 12px. This one gives the window ArcDesign's background and text defaults and names its
+    layer manager PART_VisualLayerManager, which Window switches on (overlay, popup overlay and text selector layers).
+    An application's own Window theme wins (ArcBaseTheme leaves this file out when one is found).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.WindowBaseTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type Window}" TargetType="Window">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="Window">
+                <Panel>
+                    <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
+                    <Border Background="{TemplateBinding Background}">
+                        <VisualLayerManager Name="PART_VisualLayerManager" EnableOverlayLayer="True">
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </VisualLayerManager>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -58,14 +58,8 @@ public class WorkflowLeakTests
     private static void ShouldBeCollected(params WeakReference[][] groups)
     {
         var all = groups.SelectMany(g => g).ToArray();
-        for (var i = 0; i < 5 && all.Any(r => r.IsAlive); i++)
-        {
-            // The motion scheduler lets go of a stopped driver on its next frame; the closed window has none, so tick one.
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick(2);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Dispatcher.UIThread.RunJobs();
-        }
+        // The motion scheduler lets go of a stopped driver on its next frame; Collect ticks one each round.
+        TestHelpers.Collect(all);
         all.Where(r => r.IsAlive).Select(r => r.Target?.GetType().Name).ShouldBeEmpty();
     }
 

@@ -300,7 +300,7 @@ public class Dialog : ItemsControl
             ? MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard)
             : MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Exit);
         _ = _progress.AnimateTo(0, spec).ContinueWith(
-            t => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            t => Dispatcher.Post(() =>
             {
                 if (t.Result)
                 {

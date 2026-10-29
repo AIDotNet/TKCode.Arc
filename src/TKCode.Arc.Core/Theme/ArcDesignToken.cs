@@ -1,5 +1,4 @@
 using TKCode.Arc.Motion;
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Media;
@@ -9,9 +8,10 @@ namespace TKCode.Arc;
 /// <summary>
 /// Arc global semantic tokens, carried by <see cref="ArcDesign"/>. The single source of every value is
 /// design/architecture/theming/token-catalog.md. Values are computed from the accent seed
-/// (AtomUI ColorPrimary on the ArcDesign identity) and the appearance.
+/// (<see cref="ArcSeedToken.ColorPrimary"/>, the theme state's accent) and the appearance. It is the global identity: theme
+/// overrides that name no identity (<c>Token("RadiusControl", "12")</c>) land here.
 /// </summary>
-[ControlDesignToken]
+[ControlDesignToken(IsGlobal = true)]
 internal sealed class ArcDesignToken : AbstractControlDesignToken
 {
     #region Neutral ramp
@@ -254,7 +254,12 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
         BlurText = 8;
         BackdropBlurDialog = 7;
         BackdropBlurDrawer = 4;
-        MotionMode = EffectiveGlobalToken.EnableMotion ? "full" : "off";
+        MotionMode = EffectiveGlobalToken.MotionLevel switch
+        {
+            ArcMotionLevel.Off => "off",
+            ArcMotionLevel.Reduced => "reduced",
+            _ => "full"
+        };
         ReduceTransparency = false;
     }
 

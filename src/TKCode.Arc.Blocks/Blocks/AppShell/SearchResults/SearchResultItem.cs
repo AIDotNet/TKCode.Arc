@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Interactivity;
-using AtomUI.Controls;
 
 namespace TKCode.Arc;
 

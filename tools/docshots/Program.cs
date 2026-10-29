@@ -1,12 +1,10 @@
-using AtomUI;
-using AtomUI.Desktop.Controls;
-using AtomUI.Localization;
 using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Threading;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
 using TKCode.Arc.Gallery;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.DocShots;
 
@@ -43,13 +41,9 @@ public static class Program
                   .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false })
                   .WithInterFont()
                   .WithArcFonts()
-                  .UseAtomUI(builder =>
-                  {
-                      builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);
-                      builder.UseDesktopControls();
-                      builder.UseArc();
-                      builder.UseArcGallery();
-                  })
+                  .UseArc(arc => arc.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW])
+                                    .UseArcControls()
+                                    .UseArcGallery())
                   .SetupWithoutStarting();
 
         if (args[0] == "page")
@@ -78,11 +72,6 @@ public static class Program
     }
 }
 
-public sealed partial class DocShotsApp : Application
+public sealed class DocShotsApp : Application
 {
-    public override void RegisterServices()
-    {
-        base.RegisterServices();
-        ApplicationStartup.Attach(this);
-    }
 }

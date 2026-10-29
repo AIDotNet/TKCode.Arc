@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ExpandingButtonGroupItemTheme">
     <!-- The box never scales: its width is the animation, so a press answers with the icon and with color. -->
     <ControlTheme x:Key="{x:Type arc:ExpandingButtonGroupItem}" TargetType="arc:ExpandingButtonGroupItem">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->

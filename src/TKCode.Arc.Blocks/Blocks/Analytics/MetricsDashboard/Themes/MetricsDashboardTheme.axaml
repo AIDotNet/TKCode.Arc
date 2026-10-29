@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MetricsDashboardTheme">
 
     <!--
         Metrics dashboard (Arc Pro Analytics, design reference only, ADR 0024). Flat on the Surface, no frame. From the top:

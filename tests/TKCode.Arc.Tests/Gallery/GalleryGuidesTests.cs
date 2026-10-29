@@ -1,5 +1,4 @@
 using System.Text;
-using AtomUI.Localization;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Pages;
@@ -9,6 +8,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Platform;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Tests.Gallery;
 
@@ -18,7 +18,7 @@ namespace TKCode.Arc.Tests.Gallery;
 /// </summary>
 public class GalleryGuidesTests
 {
-    private static ILanguageManager Languages() => global::AtomUI.ApplicationExtensions.GetLanguageManager(Application.Current!)!;
+    private static ArcLanguageManager Languages() => ArcLanguageManager.Current!;
 
     [AvaloniaFact]
     public void Every_Docs_Entry_Has_A_Page_In_Every_Language()
@@ -116,14 +116,14 @@ public class GalleryGuidesTests
             markdown.Text.ShouldContain("<shot src=\"Guides/Theming/images/AccentPresets\" alt=\"");
             markdown.Text.ShouldNotContain("](images/");
 
-            languages.ChangeLanguage(LanguageTags.ZhCN);
+            languages.Set(LanguageTags.ZhCN);
             Dispatcher.UIThread.RunJobs();
             markdown.Text.ShouldStartWith(GalleryGuides.Get("Theming", "zh-CN")!.Markdown[..10]);
             markdown.Text.ShouldNotStartWith("# Theming");
         }
         finally
         {
-            languages.ChangeLanguage(LanguageTags.EnUS);
+            languages.Set(LanguageTags.EnUS);
             window.Close();
         }
     }

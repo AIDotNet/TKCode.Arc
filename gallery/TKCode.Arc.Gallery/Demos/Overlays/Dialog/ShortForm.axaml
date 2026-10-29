@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-             xmlns:atom="https://atomui.net"
              x:Class="TKCode.Arc.Gallery.Demos.DialogShortFormDemo">
     <StackPanel Spacing="12">
         <WrapPanel HorizontalAlignment="Center" ItemSpacing="12" LineSpacing="12">
@@ -12,7 +11,7 @@
                         Title="Rename project"
                         Description="Choose a short name your team will recognize."
                         Closed="OnClosed">
-                <atom:TextBox x:Name="ProjectName" Text="Atlas redesign" />
+                <arc:Input x:Name="ProjectName" Text="Atlas redesign" />
                 <arc:Dialog.Actions>
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <arc:Button Content="Cancel" Variant="Secondary" arc:Dialog.Result="{x:False}" />

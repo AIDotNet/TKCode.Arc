@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.IconMorphTheme">
     <!-- Drawn in code on the 24-unit grid; the theme only supplies sizes and the like color (Arc: danger). -->
     <ControlTheme x:Key="{x:Type arc:IconMorph}" TargetType="arc:IconMorph">
         <Setter Property="IconSize" Value="{arc:IconMorphTokenResource GlyphExtent}" />

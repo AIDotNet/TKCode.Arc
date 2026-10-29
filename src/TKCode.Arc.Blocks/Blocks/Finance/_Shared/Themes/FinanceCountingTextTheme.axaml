@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FinanceCountingTextTheme">
     <!--
         A counting number of the Finance blocks. Its size and color come from classes so code-built rows only name a role:
         secondary / muted text, xs / base sizes, left alignment, and the variance colors (over = danger, under = success,

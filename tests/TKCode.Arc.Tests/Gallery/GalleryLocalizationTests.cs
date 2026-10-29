@@ -1,4 +1,3 @@
-using AtomUI.Localization;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Localization;
 using TKCode.Arc.Gallery.Pages;
@@ -78,7 +77,7 @@ public class GalleryLocalizationTests
         var window = TestHelpers.Show(new StackPanel());
         var plain = new TextBlock();
         var formatted = new TextBlock();
-        ((StackPanel)((Avalonia.Controls.Primitives.VisualLayerManager)window.Content!).Child!).Children.AddRange([plain, formatted]);
+        ((StackPanel)window.Content!).Children.AddRange([plain, formatted]);
         GalleryText.Bind(plain, TextBlock.TextProperty, GalleryShellLangResourceKind.OnThisPage);
         GalleryText.BindFormat(formatted, TextBlock.TextProperty, GalleryShellLangResourceKind.ImplementedCount, 8, 110);
         Dispatcher.UIThread.RunJobs();

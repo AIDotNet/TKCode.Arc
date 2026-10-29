@@ -470,7 +470,7 @@ public class ArcContentSwap : Control
         progress.AnimateTo(1, full
                 ? MotionSpec.Tween(TimeSpan.FromSeconds(0.24), ArcEasings.Standard)
                 : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing()))
-            .ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() => RemoveLayer(layer)), TaskScheduler.Default);
+            .ContinueWith(_ => Dispatcher.Post(() => RemoveLayer(layer)), TaskScheduler.Default);
     }
 
     private void StartExit(Layer layer, bool full, double toOffset, bool horizontal = false, bool blur = true, TimeSpan? duration = null)
@@ -499,7 +499,7 @@ public class ArcContentSwap : Control
         var spec = full
             ? MotionSpec.Tween(duration ?? ArcMotionPresets.Fast, ArcEasings.Standard)
             : MotionSpec.Tween(ArcMotionPresets.Instant, new Avalonia.Animation.Easings.LinearEasing());
-        progress.AnimateTo(1, spec).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() => RemoveLayer(layer)),
+        progress.AnimateTo(1, spec).ContinueWith(_ => Dispatcher.Post(() => RemoveLayer(layer)),
             TaskScheduler.Default);
     }
 

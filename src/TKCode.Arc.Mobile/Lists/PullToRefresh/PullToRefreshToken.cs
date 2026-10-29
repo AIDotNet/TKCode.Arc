@@ -1,4 +1,3 @@
-using AtomUI.Theme.DesignTokens;
 
 namespace TKCode.Arc.Mobile;
 

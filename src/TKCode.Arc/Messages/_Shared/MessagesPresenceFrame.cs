@@ -167,7 +167,7 @@ internal sealed class MessagesPresenceFrame : Decorator
 
     private void Complete(int generation, bool open, Task<bool> sizeTask, Task<bool> fadeTask)
     {
-        Task.WhenAll(sizeTask, fadeTask).ThenOnUiThread(() =>
+        Task.WhenAll(sizeTask, fadeTask).ThenOnUiThread(Dispatcher, () =>
         {
             if (generation != _generation)
             {

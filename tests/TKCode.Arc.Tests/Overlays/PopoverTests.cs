@@ -1,6 +1,5 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -138,7 +137,7 @@ public class PopoverTests
         {
             popover.IsOpen = true;
             Dispatcher.UIThread.RunJobs();
-            var actor = popover.Surface!.GetVisualAncestors().OfType<BaseMotionActor>().First();
+            var actor = popover.Surface!.GetVisualAncestors().OfType<ArcPopupFrame>().First();
             actor.Opacity.ShouldBe(0, 0.01);
             clock.Advance(TimeSpan.FromMilliseconds(80));
             actor.Opacity.ShouldBeGreaterThan(0.2);

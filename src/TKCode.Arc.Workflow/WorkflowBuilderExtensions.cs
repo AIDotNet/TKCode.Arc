@@ -1,5 +1,4 @@
-using AtomUI;
-using AtomUI.Generated.TKCodeArcWorkflow;
+using TKCode.Arc.Generated.TKCodeArcWorkflow;
 
 namespace TKCode.Arc;
 
@@ -7,11 +6,9 @@ public static class ArcWorkflowBuilderExtensions
 {
     /// <summary>
     /// Enables the Arc workflow canvas (<see cref="WorkflowCanvas"/>) and its built-in text in en-US, zh-CN and zh-TW. Depends on
-    /// <see cref="ArcBuilderExtensions.UseArc"/>.
+    /// <see cref="ArcBuilderExtensions.UseArcControls"/>.
     /// </summary>
-    public static IAtomUIBuilder UseArcWorkflow(this IAtomUIBuilder builder)
-        => GeneratedControlPackageRegistration.Definition.Register(builder, static package =>
-        {
-            package.DependsOn(static dependency => dependency.UseArc());
-        });
+    public static ArcBuilder UseArcWorkflow(this ArcBuilder builder)
+        => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
+            .DependsOn(static b => b.UseArcControls())));
 }

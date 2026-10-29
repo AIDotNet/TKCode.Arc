@@ -13,7 +13,6 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
-using AtomUI.Controls;
 using AvaloniaTextBox = Avalonia.Controls.TextBox;
 
 namespace TKCode.Arc;
@@ -682,7 +681,7 @@ internal sealed class ChatComposerTile : Panel
     private static readonly SpringSpec s_pop = SpringSpec.FromVisual(0.3, 0.22);
     private readonly ScaleTransform _scale = new();
     private MotionValue<double>? _presence;
-    private readonly AsyncImage? _image;
+    private readonly ArcImage? _image;
 
     public ChatComposerTile(ChatComposerFile file)
     {
@@ -693,7 +692,7 @@ internal sealed class ChatComposerTile : Panel
         Control body;
         if (file.IsImage)
         {
-            _image = new AsyncImage { Stretch = Stretch.UniformToFill, Source = new StorageFileImageSource(file.File) };
+            _image = new ArcImage { Stretch = Stretch.UniformToFill, Source = new StorageFileImageSource(file.File) };
             body = new ChatComposerTileFrame { Child = _image, IsImage = true };
         }
         else

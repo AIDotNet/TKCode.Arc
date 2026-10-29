@@ -1,4 +1,3 @@
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -615,10 +614,10 @@ public class HoverCardKeyboardTests
             FocusOn(page.Trigger, NavigationMethod.Tab);
             page.Window.UpdateLayout();
             Dispatcher.UIThread.RunJobs();
-            var actor = page.Card.Surface!.FindAncestorOfType<BaseMotionActor>();
+            var actor = page.Card.Surface!.FindAncestorOfType<ArcPopupFrame>();
             actor.ShouldNotBeNull();
             clock.Advance(TimeSpan.FromMilliseconds(34));
-            var matrix = (actor.MotionTransform as Avalonia.Media.MatrixTransform)?.Matrix ?? Matrix.Identity;
+            var matrix = (actor.RenderTransform as Avalonia.Media.MatrixTransform)?.Matrix ?? Matrix.Identity;
             switch (level)
             {
                 case ArcMotionLevel.Full:

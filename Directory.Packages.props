@@ -6,11 +6,6 @@
         <StreamMarkVersion>0.1.1</StreamMarkVersion>
     </PropertyGroup>
     <ItemGroup>
-        <!-- AtomUI and Avalonia are pinned exactly: Arc is rebuilt for every AtomUI release (ADR 0001). -->
-        <PackageVersion Include="AtomUI.Core" Version="[$(AtomUIVersion)]" />
-        <PackageVersion Include="AtomUI.Controls" Version="[$(AtomUIVersion)]" />
-        <PackageVersion Include="AtomUI.Desktop.Controls" Version="[$(AtomUIVersion)]" />
-        <PackageVersion Include="AtomUI.Icons.Shared" Version="[$(AtomUIVersion)]" />
         <PackageVersion Include="Avalonia" Version="[$(AvaloniaVersion)]" />
         <PackageVersion Include="Avalonia.Browser" Version="[$(AvaloniaVersion)]" />
         <PackageVersion Include="Avalonia.Desktop" Version="[$(AvaloniaVersion)]" />
@@ -31,5 +26,8 @@
         <PackageVersion Include="xunit.v3" Version="3.2.2" />
         <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
         <PackageVersion Include="Shouldly" Version="4.3.0" />
+        <!-- Base theme tests: ArcBaseTheme must yield to these themes. -->
+        <PackageVersion Include="Avalonia.Themes.Fluent" Version="[$(AvaloniaVersion)]" />
+        <PackageVersion Include="Avalonia.Themes.Simple" Version="[$(AvaloniaVersion)]" />
     </ItemGroup>
 </Project>

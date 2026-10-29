@@ -109,7 +109,7 @@ internal sealed class PhoneInputPresence : Decorator
         _leaving = true;
         _progress.Jump(0);
         var spec = MotionSpec.Tween(full ? ExitDuration : TimeSpan.FromMilliseconds(Math.Min(100, ReducedDuration.TotalMilliseconds)), ArcEasings.Standard);
-        _progress.AnimateTo(1, spec).ContinueWith(t => Dispatcher.UIThread.Post(() =>
+        _progress.AnimateTo(1, spec).ContinueWith(t => Dispatcher.Post(() =>
         {
             if (t.Result && generation == _generation && !IsPresent)
             {

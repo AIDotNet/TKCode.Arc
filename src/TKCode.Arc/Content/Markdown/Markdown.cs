@@ -263,7 +263,15 @@ public class Markdown : TemplatedControl
     /// or while the first parse runs.
     /// </summary>
     public IReadOnlyList<OutlineItem> GetOutline()
-        => _watched?.Latest is { } snapshot ? DocumentNavigation.Outline(snapshot, 0) : Array.Empty<OutlineItem>();
+    {
+        // Without a view the targets point nowhere. The view check also keeps the answer deterministic: the worker
+        // publishes snapshots on its own thread, so a parse started by setting Text can land at any moment.
+        if (_view is null || _watched?.Latest is not { } snapshot)
+        {
+            return Array.Empty<OutlineItem>();
+        }
+        return DocumentNavigation.Outline(snapshot, 0);
+    }
 
     /// <summary>
     /// Scrolls the document so <paramref name="point"/> (a <see cref="OutlineItem.Target"/> or a selection point) is in
@@ -574,7 +582,8 @@ public class Markdown : TemplatedControl
     {
         if (Interlocked.Exchange(ref _applyPending, 1) == 0)
         {
-            Dispatcher.UIThread.Post(EnsureApplied, DispatcherPriority.Background);
+            // This control's dispatcher: on the worker, Dispatcher.UIThread would make one for the worker when none is current.
+            Dispatcher.Post(EnsureApplied, DispatcherPriority.Background);
         }
     }
 

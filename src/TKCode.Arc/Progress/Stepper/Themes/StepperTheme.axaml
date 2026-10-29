@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.StepperTheme">
     <ControlTheme x:Key="{x:Type arc:Stepper}" TargetType="arc:Stepper">
         <!-- The first and last marker halos extend beyond the stepper's layout slot. -->
         <Setter Property="ClipToBounds" Value="False" />

@@ -1,13 +1,11 @@
-using AtomUI;
 using TKCode.Arc;
 using TKCode.Arc.Gallery;
 using TKCode.Arc.Gallery.Shell;
 using TKCode.Arc.Themes.Pixel;
-using AtomUI.Desktop.Controls;
-using AtomUI.Localization;
 using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using TKCode.Arc.Localization;
 
 [assembly: AvaloniaTestApplication(typeof(TKCode.Arc.Tests.TestAppBuilder))]
 [assembly: AvaloniaTestFramework]
@@ -30,17 +28,11 @@ public static class TestAppBuilder
     private static AppBuilder Build() =>
         AppBuilder.Configure<TestApplication>()
                   .UseHeadless(new AvaloniaHeadlessPlatformOptions())
-                  .UseAtomUI(builder => builder.UseDesktopControls()
-                                               .UseArc()
-                                               .UseArcGallery()
-                                               .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
+                  .UseArc(arc => arc.UseArcControls()
+                                    .UseArcGallery()
+                                    .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
 }
 
-public partial class TestApplication : Application
+public class TestApplication : Application
 {
-    public override void RegisterServices()
-    {
-        base.RegisterServices();
-        ApplicationStartup.Attach(this);
-    }
 }

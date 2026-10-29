@@ -1,8 +1,6 @@
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Pages;
 using TKCode.Arc.Gallery.Shell;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using System.Collections.ObjectModel;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
@@ -71,7 +69,7 @@ public class GallerySmokeTests
         {
             foreach (var dark in new[] { false, true })
             {
-                await TestHelpers.ApplyAsync(dark ? new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build() : null);
+                await TestHelpers.ApplyAsync(dark ? TestHelpers.Dark : null);
                 foreach (var entry in GalleryCatalog.AllEntries.Where(e => GalleryPages.IsImplemented(e.ClassName)))
                 {
                     var page = GalleryPages.Create(entry);

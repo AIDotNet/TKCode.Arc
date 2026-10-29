@@ -1,6 +1,5 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -8,7 +7,6 @@ using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AtomPopup = AtomUI.Desktop.Controls.Popup;
 
 namespace TKCode.Arc;
 
@@ -29,7 +27,7 @@ internal sealed class AiActionsPopup : ArcPopup
         EnterOffset = 0;
         EnterScale = 1;
         // The presence plays the motion; animation priority wins over the local value ArcPopup sets for its own.
-        SetValue(AtomPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
+        SetValue(ArcPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
     }
 
     /// <summary>True for a submenu.</summary>
@@ -70,7 +68,7 @@ internal sealed class AiActionsPopup : ArcPopup
         ? !IsVerticalFlipped
         : IsVerticalFlipped;
 
-    protected override void AdjustPlacementAnchor(CustomPopupPlacement placement, ref bool flipX, ref bool flipY)
+    protected override void AdjustPlacementAnchor(CustomPopupPlacement placement)
     {
         if (IsSubmenu && PlacementTarget is { } target && TopLevel.GetTopLevel(target) is { } topLevel &&
             SubmenuAnchor?.Invoke(topLevel) is { } rect)
@@ -103,7 +101,7 @@ internal sealed class AiActionsPopup : ArcPopup
 /// 120ms linear fade, no transform; Off: instant.
 /// <para>
 /// Code-driven (MotionValue) rather than the popup's own motions: opacity and transform run on two different curves and
-/// durations, a reversal must continue from the values on screen (AtomUI motions restart from fixed start values), and the
+/// durations, a reversal must continue from the values on screen (the popup's motions restart from fixed start values), and the
 /// popup may only close after the exit has played.
 /// </para>
 /// </summary>
@@ -119,7 +117,7 @@ internal sealed class AiActionsPopupPresence : IDisposable
     private readonly MotionValue<Point> _pose;
     private readonly MatrixTransform _transform = new();
     private readonly MatrixTransform _fallbackTransform = new();
-    private BaseMotionActor? _actor;
+    private ArcPopupFrame? _actor;
     private bool _closing;
     private int _generation;
 
@@ -273,11 +271,11 @@ internal sealed class AiActionsPopupPresence : IDisposable
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
-        _actor = Surface.FindAncestorOfType<BaseMotionActor>();
+        _actor = Surface.FindAncestorOfType<ArcPopupFrame>();
         if (_actor is not null)
         {
             _actor.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            _actor.MotionTransform = _transform;
+            _actor.RenderTransform = _transform;
         }
         Apply();
     }

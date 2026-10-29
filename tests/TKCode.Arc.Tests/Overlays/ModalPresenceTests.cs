@@ -2,6 +2,7 @@ using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -67,17 +68,62 @@ public class ModalPresenceTests
     public void Backdrop_Blur_Follows_The_Scrim_And_Respects_Reduce_Transparency()
     {
         var anchor = new Border();
-        var window = TestHelpers.Show(anchor);
+        // A plain window: the blur goes on the content of its layer manager (Arc's base Window theme), under the overlay.
+        var window = new Window { Content = anchor, Width = 400, Height = 300 };
+        ArcMotion.SetLevel(window, ArcMotionLevel.Off);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
         try
         {
             var modal = new ModalPresence(new Border { Width = 100, Height = 100 }, anchor) { BackdropBlur = 7 };
             modal.Open();
             Dispatcher.UIThread.RunJobs();
-            var layers = window.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.VisualLayerManager>().First(m => ReferenceEquals(m.Child, anchor));
+            var layers = window.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.VisualLayerManager>().Single(m => m.Name == "PART_VisualLayerManager");
+            layers.Child!.GetVisualDescendants().ShouldContain(anchor);
             layers.Child!.Effect.ShouldBeAssignableTo<Avalonia.Media.IBlurEffect>()!.Radius.ShouldBe(7, 0.01);
             modal.Close();
             Dispatcher.UIThread.RunJobs();
             layers.Child.Effect.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void An_Overlay_Host_Bounds_The_Modal_And_Skips_The_Backdrop_Blur()
+    {
+        var anchor = new Border();
+        var sibling = new TextBlock { Text = "Stage" };
+        var host = new ArcOverlayHost { Width = 300, Height = 200, Children = { sibling, anchor } };
+        var window = TestHelpers.Show(new StackPanel { Children = { host } });
+        try
+        {
+            ArcOverlayHost.FindHost(anchor).ShouldBe(host);
+            ArcOverlayLayer.Find(anchor).ShouldBe(host.Layer);
+            ArcOverlayLayer.Find(host).ShouldBe(OverlayLayer.GetOverlayLayer(host));
+            host.GetVisualChildren().Last().ShouldBe(host.Layer);
+
+            var modal = new ModalPresence(new Border { Width = 100, Height = 100 }, anchor) { BackdropBlur = 7 };
+            modal.Open().ShouldBeTrue();
+            Dispatcher.UIThread.RunJobs();
+            modal.Host.GetVisualParent().ShouldBe(host.Layer);
+            modal.LayerSize.ShouldBe(new Size(300, 200));
+            modal.Host.Bounds.Size.ShouldBe(new Size(300, 200));
+            host.Layer.Bounds.ShouldBe(new Rect(0, 0, 300, 200));
+            sibling.Effect.ShouldBeNull();
+            anchor.Effect.ShouldBeNull();
+
+            // A child added after the layer still renders below it.
+            var late = new Border();
+            host.Children.Add(late);
+            host.GetVisualChildren().Last().ShouldBe(host.Layer);
+
+            modal.Close();
+            Dispatcher.UIThread.RunJobs();
+            modal.Dispose();
+            host.Layer.Children.Count.ShouldBe(0);
         }
         finally
         {

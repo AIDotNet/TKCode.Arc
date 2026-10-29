@@ -1,4 +1,3 @@
-using AtomUI.Localization;
 
 namespace TKCode.Arc.Localization;
 

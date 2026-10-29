@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PromptVariableFieldsTheme">
 
     <!-- The fields: the grid inside a height spring (smooth) so added and removed fields move the rows below gently. -->
     <ControlTheme x:Key="{x:Type arc:PromptVariableFields}" TargetType="arc:PromptVariableFields">

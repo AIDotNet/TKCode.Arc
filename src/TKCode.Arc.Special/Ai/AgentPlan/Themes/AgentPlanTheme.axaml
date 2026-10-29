@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentPlanTheme">
 
     <!-- The card: a 1px bordered Surface panel (radius 26, no shadow) of header, step list and footer. -->
     <ControlTheme x:Key="{x:Type arc:AgentPlan}" TargetType="arc:AgentPlan">

@@ -184,7 +184,7 @@ internal sealed class ToolCallHeadPanel : Panel
             {
                 slot.Leaving = true;
                 _ = slot.Fade.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard)).ContinueWith(_ =>
-                    Avalonia.Threading.Dispatcher.UIThread.Post(() => FinishLeave(slot, run)), TaskScheduler.Default);
+                    Dispatcher.Post(() => FinishLeave(slot, run)), TaskScheduler.Default);
             }
             else
             {
