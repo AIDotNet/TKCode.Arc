@@ -46,7 +46,7 @@ not to the pill.
 ```
 
 `AgentStatus` derives from Avalonia's `TemplatedControl`. It lives in the Special package: register it with
-`UseArcSpecial()` next to `UseArc()`.
+`UseArcSpecial()` next to `UseArcControls()`.
 
 In an app, drive it from your agent's events. Set `Status`, keep `Activity` to the latest tool call in the present
 tense, list `Steps`, give a `StartedAt` that stays fixed for the whole run, and handle the action events. The pill never

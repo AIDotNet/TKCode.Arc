@@ -1,7 +1,7 @@
 ---
 title: Agent timeline
 summary: 在同一條時間軸上重播多代理執行過程：每個代理的思考、工具呼叫與等待、代理之間的交接，以及時間、token 與成本。
-source-hash: ba648bfd9702
+source-hash: 5696d9478d3e
 ---
 
 <Demo name="Preview" />
@@ -25,7 +25,7 @@ source-hash: ba648bfd9702
 
 ## 用法
 
-未提供資料時，時間軸會顯示一次虛構的範例執行過程，並在第一次它有約五分之一進入可視範圍時開始重播。請在 `UseArc()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。
+未提供資料時，時間軸會顯示一次虛構的範例執行過程，並在第一次它有約五分之一進入可視範圍時開始重播。請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"

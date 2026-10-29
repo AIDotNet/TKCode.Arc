@@ -236,6 +236,4 @@ SOFTWARE.
 
 ## Dependencies
 
-- AtomUI (LGPL-3.0), consumed as published NuGet binaries. Applications using TKCode.Arc also
-  link AtomUI and must follow its license.
 - Avalonia (MIT).

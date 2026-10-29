@@ -1,6 +1,6 @@
 # TKCode.Arc
 
-> TKCode.Arc brings Arc (uiarc.dev) to Avalonia: {{arc-count}} components in Arc's 22 groups, {{block-count}} page-level blocks, a spreadsheet-style data grid and a streaming Markdown renderer, as native Avalonia {{avalonia}} controls built on AtomUI {{atomui}}. Every control derives from an Avalonia base type and reads one set of design tokens, with light and dark appearances, eight accents and spring motion that respects reduced motion. MIT licensed, trimming and NativeAOT compatible.
+> TKCode.Arc brings Arc (uiarc.dev) to Avalonia: {{arc-count}} components in Arc's 22 groups, {{block-count}} page-level blocks, a spreadsheet-style data grid and a streaming Markdown renderer, as native Avalonia {{avalonia}} controls with no other UI framework dependency. Every control derives from an Avalonia base type and reads one set of design tokens, with light and dark appearances, eight accents and spring motion that respects reduced motion. MIT licensed, trimming and NativeAOT compatible.
 
 Version {{version}} (preview: pin the exact version). Each link below is a page as Markdown: when to use the component, when not to and what to use instead, usage in XAML and C#, the source of every live example, the API reference generated from the library (every property with its type and default, events, pseudo-classes), accessibility and motion.
 
@@ -14,25 +14,25 @@ dotnet add package TKCode.Arc.Fonts --version {{version}}   # optional: Geist an
 dotnet add package Avalonia.Fonts.Inter --version {{avalonia}}    # optional: Inter for body text
 ```
 
-Register Arc in AtomUI's builder, and declare the `Application` class `partial` (AtomUI's source generator adds to it; the build stops with `ATOMUILOC008` otherwise):
+Register Arc on the `AppBuilder` with `UseArc(...)`; the `Application` class needs nothing from Arc:
 
 ```csharp
 AppBuilder.Configure<App>()
           .UsePlatformDetect()
           .WithInterFont()
           .WithArcFonts()
-          .UseAtomUI(builder =>
-          {
-              builder.UseDesktopControls();
-              builder.UseArc();
-          });
+          .UseArc(arc => arc
+              .UseArcControls()
+              .WithTheme(t => t.Appearance(ArcAppearance.System)));
+
+ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));   // switch the theme at run time
 ```
 
-Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. `TKCode.Arc.Blocks` (`UseArcBlocks()`) and `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid) are not on NuGet yet: reference those projects from {{repository}}.
+Controls, token resources and markup extensions share one XAML namespace: `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`, as in `<arc:Button Content="Save changes" />`. Other packages register inside the same callback: `TKCode.Arc.Blocks` (`UseArcBlocks()`), `TKCode.Arc.AdvancedCharts` (`UseArcAdvancedCharts()`, the DataGrid), `TKCode.Arc.Special` (`UseArcSpecial()`), `TKCode.Arc.Workflow` (`UseArcWorkflow()`).
 
 ## Rules for agents
 
-- This is Avalonia {{avalonia}} with AtomUI {{atomui}}, not WPF, WinUI or HTML: no `Visibility`, no `DataTemplateSelector`, no `x:Array`, no CSS.
+- This is Avalonia {{avalonia}} with TKCode.Arc, not WPF, WinUI or HTML: no `Visibility`, no `DataTemplateSelector`, no `x:Array`, no CSS.
 - Write the `arc:` prefix. Without it, `Button`, `Slider`, `TreeView` and the other names Arc shares with Avalonia resolve to Avalonia's own controls. In C#, alias one namespace: `using ArcButton = TKCode.Arc.Button;`.
 - Use only the properties, events and enum values in the component's API reference. Anything else is invented and fails at build or run time.
 - Colors, radii, spacing and fonts come from tokens: `{arc:ArcDesignTokenResource Surface}` in XAML, `ArcTokens.Bind(...)` in code. A hard-coded hex color breaks dark mode and the accents.

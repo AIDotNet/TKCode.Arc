@@ -217,7 +217,7 @@ dots.
 
 ### Photos
 
-Slides can show `AsyncImage` photos over a drawn scene, so they still look complete offline.
+Slides can show `ArcImage` photos over a drawn scene, so they still look complete offline.
 
 <Demo name="Photos" />
 

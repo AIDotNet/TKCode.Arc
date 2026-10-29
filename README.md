@@ -2,13 +2,14 @@
 
 English | [简体中文](README.zh-CN.md)
 
-Arc-style components for Avalonia, built on [AtomUI](https://github.com/AtomUI/AtomUI).
+Arc-style components for Avalonia.
 TKCode.Arc ports the free components of [Arc](https://uiarc.dev) — 112 components in 22 groups —
 with Arc's visual language and spring motion.
 
 - Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
-- Depends on AtomUI 6.2.8 and Avalonia 12.1.4 (exact versions), and on
-  [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and code highlighting.
+- Depends on Avalonia 12.1.4 (exact version), on `TKCode.Arc.Foundation` (its own MIT theme, token and language
+  runtime) and on [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and
+  code highlighting. Every package in the chain is MIT licensed; there is no AtomUI dependency since 0.4.
 - Design documents: [design/overview.md](design/overview.md).
 - Live demo: <https://docs.tkcode.si/> (the gallery of every component, in the browser).
 
@@ -16,8 +17,9 @@ with Arc's visual language and spring motion.
 
 | Package | Contents |
 |---|---|
-| `TKCode.Arc` | The components (`UseArc()`), organized like Arc's sidebar, plus a streaming `Markdown` control. |
+| `TKCode.Arc` | The components (`UseArcControls()`), organized like Arc's sidebar, plus a streaming `Markdown` control. |
 | `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. |
+| `TKCode.Arc.Foundation` | The theme, token, language and package runtime (`UseArc(...)`, `ArcTheme`, `ArcLanguage`); from 0.4. |
 | `TKCode.Arc.Icons.Lucide` | The full Lucide set (2155 icons): `LucideIcon` control and `LucideGeometry` markup extension. |
 | `TKCode.Arc.Fonts` | Geist and Geist Mono (`WithArcFonts()`); body text uses Inter from `Avalonia.Fonts.Inter`. |
 
@@ -31,26 +33,28 @@ dotnet add package TKCode.Arc.Fonts --version 0.3.1-preview.6           # option
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.6    # optional: the full Lucide set
 ```
 
-`TKCode.Arc` brings in `TKCode.Arc.Core`. `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
+`TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.4, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
 (the animated AI explainers of the Special components section) are separate packages on NuGet; `TKCode.Arc.Workflow`
 (the workflow canvas, `UseArcWorkflow()`) ships with them too. `TKCode.Arc.Themes.Pixel` (a pixel-art theme, `UseArcPixelTheme()`) and
-`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `WithArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.1-preview.6. Versions carry a `-preview` suffix, so the API may still change between
+`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `UseArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.1-preview.6. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started
+
+The code below is the API on `main` (0.4, not yet on NuGet). Apps on 0.3.x register Arc inside `UseAtomUI(...)`;
+[CHANGELOG.md](CHANGELOG.md) has the migration notes.
 
 ```csharp
 AppBuilder.Configure<App>()
     .UsePlatformDetect()
     .WithInterFont()
     .WithArcFonts()          // optional: Geist display type and Geist Mono code type
-    .UseAtomUI(builder =>
-    {
-        builder.UseDesktopControls();
-        builder.UseArc();
-    });
+    .UseArc(arc => arc
+        .UseArcControls()
+        .WithTheme(t => t.Appearance(ArcAppearance.System)));
 
-public partial class App : Application { }
+// Later, for example from a settings page:
+ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));
 ```
 
 ```xml
@@ -101,6 +105,8 @@ reply.Complete();
 Notes for applications:
 
 - Do not enable `InvariantGlobalization` (number and date formatting needs culture data).
+- NativeAOT with the .NET 11 SDK: set `<UseOptimizedPublish>false</UseOptimizedPublish>`, otherwise the compiled XAML
+  is left out of the published app.
 - Anchored popups (menus, selects, tooltips, popovers) are drawn in the window's overlay layer, so they sit exactly
   `sideOffset` away from their trigger and never cover it.
 - `Button`, `Calendar`, `Carousel`, `ContextMenu`, `DatePicker`, `Slider`, `SplitButton`, `TabItem`, `TimePicker`,
@@ -108,7 +114,7 @@ Notes for applications:
 
 ## Building
 
-Requires the .NET 11 SDK (see `global.json`) and the .NET 10 runtime (AtomUI build tasks run on it).
+Requires the .NET 11 SDK (see `global.json`) and the .NET 10 runtime (the tests and the gallery run on `net10.0`).
 
 ```bash
 dotnet build TKCode.Arc.slnx
@@ -124,5 +130,6 @@ access to Claude, OpenAI and DeepSeek models. Thank you for supporting the proje
 
 ## License
 
-MIT. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for Arc (MIT), Lucide (ISC), fonts (OFL),
-StreamMark, TextMateSharp, Oniguruma and Markdig, and the AtomUI (LGPL-3.0) dependency.
+MIT. Arc depends only on Avalonia (MIT) and MIT packages of its own, so closed-source applications can ship it in a
+single file or a NativeAOT build. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for Arc (MIT), Lucide (ISC),
+fonts (OFL), StreamMark, TextMateSharp, Oniguruma and Markdig.

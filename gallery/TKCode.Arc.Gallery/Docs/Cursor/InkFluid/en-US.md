@@ -32,7 +32,7 @@ moving, a slow stir keeps a little ink drifting so the area never looks frozen.
 ```
 
 `InkFluid` is a `ContentControl` in the Special package. Register the package with `UseArcSpecial()` next to
-`UseArc()`. The ink is drawn on transparent pixels over the control's own background, so give it a `Background`, and a
+`UseArcControls()`. The ink is drawn on transparent pixels over the control's own background, so give it a `Background`, and a
 `CornerRadius` and border if it should look like a card; the ink is clipped to that rounded box. The control is at
 least 240px high.
 

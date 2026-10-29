@@ -1,7 +1,7 @@
 ---
 title: Agent status
 summary: 运行中智能体的实时状态胶囊：标识位于旋转的环中，显示当前步骤与计时；按一下即展开为最近的步骤，并带有暂停、停止与审批控件。
-source-hash: 6b4ca8a10305
+source-hash: 6d0078b450f9
 ---
 
 <Demo name="Preview" />
@@ -35,7 +35,7 @@ source-hash: 6b4ca8a10305
 </UserControl>
 ```
 
-`AgentStatus` 派生自 Avalonia 的 `TemplatedControl`。它位于 Special 包中：请在 `UseArc()` 旁调用 `UseArcSpecial()` 进行注册。
+`AgentStatus` 派生自 Avalonia 的 `TemplatedControl`。它位于 Special 包中：请在 `UseArcControls()` 旁调用 `UseArcSpecial()` 进行注册。
 
 在应用中，请根据智能体的事件驱动它。设置 `Status`，让 `Activity` 保持为最新的工具调用并使用现在时描述，列出 `Steps`，为整个运行提供一个始终不变的 `StartedAt`，并处理各个操作事件。胶囊有数据时从不自行更改状态：按下 Approve 会引发 `ApproveRequested`，由你的代码决定接下来做什么。
 

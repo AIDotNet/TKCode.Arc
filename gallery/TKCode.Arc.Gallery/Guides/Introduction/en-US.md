@@ -5,7 +5,7 @@ title: Introduction
 # Introduction
 
 TKCode.Arc brings [Arc](https://uiarc.dev) to Avalonia: the same component groups, the same visual language and the
-same spring motion, built as native Avalonia controls on top of [AtomUI](https://github.com/AtomUI/AtomUI). It ports
+same spring motion, built as native Avalonia controls that depend on nothing but Avalonia and MIT packages. It ports
 the free Arc components (110 components in 22 groups) and adds page-level blocks, a spreadsheet-style data grid and a
 streaming Markdown renderer, so a desktop product can be assembled from one consistent kit instead of a patchwork of
 styles.
@@ -107,8 +107,9 @@ as small, fast-starting single files.
 
 | Package | Contents | Where |
 |---|---|---|
-| `TKCode.Arc` | The components (`UseArc()`), the streaming `Markdown` control and `CodeBlock`. Brings in `TKCode.Arc.Core`. | NuGet |
-| `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. | NuGet |
+| `TKCode.Arc` | The components (`UseArcControls()`), the streaming `Markdown` control and `CodeBlock`. Brings in `TKCode.Arc.Core`. | NuGet |
+| `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. Brings in `TKCode.Arc.Foundation`. | NuGet |
+| `TKCode.Arc.Foundation` | The theme, token, language and package runtime (`UseArc(...)`, `ArcTheme`, `ArcLanguage`) and its source generator. | NuGet (0.4 and later) |
 | `TKCode.Arc.Fonts` | Geist and Geist Mono (`WithArcFonts()`). | NuGet |
 | `TKCode.Arc.Icons.Lucide` | The full Lucide set (2155 icons): the `LucideIcon` control and the `LucideGeometry` markup extension. | NuGet |
 | `TKCode.Arc.Blocks` | Page-level blocks (`UseArcBlocks()`). | NuGet |
@@ -120,8 +121,8 @@ as small, fast-starting single files.
 ## Requirements and platforms
 
 - **.NET**: the packages target `net8.0`, `net10.0` and `net11.0`.
-- **Avalonia and AtomUI**: Avalonia `12.1.4` and AtomUI `6.2.8`, pinned to exact versions. Use the same versions in
-  your application.
+- **Avalonia**: Avalonia `12.1.4`, pinned to the exact version. Use the same version in your application. Arc has no
+  other UI framework dependency.
 - **Platforms**: desktop on Windows, macOS and Linux. The gallery also runs in the browser through its WebAssembly
   host.
 - **Rendering of text and code**: Markdown and syntax highlighting use StreamMark, which the `TKCode.Arc` package
@@ -152,8 +153,9 @@ TKCode.Arc is in preview. Versions follow [Semantic Versioning](https://semver.o
 ## License
 
 TKCode.Arc is released under the MIT license. It ports Arc (MIT) and uses Lucide (ISC), the Geist fonts (OFL),
-StreamMark, TextMateSharp, Oniguruma and Markdig, and depends on AtomUI (LGPL-3.0). `THIRD-PARTY-NOTICES.md` in the
-repository lists them all.
+StreamMark, TextMateSharp, Oniguruma and Markdig. Every package in the dependency chain, Avalonia included, is under a
+permissive license, so closed-source applications can ship Arc in a single file or a NativeAOT build.
+`THIRD-PARTY-NOTICES.md` in the repository lists them all.
 
 ## Next steps
 

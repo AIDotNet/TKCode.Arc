@@ -1,7 +1,7 @@
 ---
 title: Context window
 summary: 模型的上下文視窗呈現為 200 格的方格，逐段填滿，並帶有壓縮門檻、圖例，以及顯示還剩多少空間的動作。
-source-hash: 8aab979d927a
+source-hash: 10028f4973b8
 ---
 
 <Demo name="Preview" />
@@ -31,7 +31,7 @@ source-hash: 8aab979d927a
 </UserControl>
 ```
 
-`ContextWindow` 是 Special 套件中的 `TemplatedControl`。請在 `UseArc()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。卡片最寬為 744px，並依自身寬度調整，而非視窗的寬度。
+`ContextWindow` 是 Special 套件中的 `TemplatedControl`。請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。卡片最寬為 744px，並依自身寬度調整，而非視窗的寬度。
 
 完全沒有資料（沒有模型、項目、回合或檔案）時，卡片會顯示 `ContextWindowSamples` 提供的虛構範例工作階段：三個範例模型，視窗分別為 1M、512K 與 400K；一個 436K token 的程式設計工作階段；Send message 的五個回合，以及 Attach file 的三個檔案。範例使用它自己的副本，因此 `Items` 保持為空。只要你為卡片提供上述四個清單中的任何一個，卡片就會改用你的資料。
 

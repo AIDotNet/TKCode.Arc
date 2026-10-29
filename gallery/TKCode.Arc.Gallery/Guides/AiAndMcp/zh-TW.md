@@ -1,6 +1,6 @@
 ---
 title: AI 與 MCP
-source-hash: abfe18a713be
+source-hash: ef197b997de4
 ---
 
 # AI 與 MCP
@@ -13,9 +13,9 @@ AI 程式設計助理能很好地配合 TKCode.Arc 使用，因為它需要的�
 
 | 事實 | 重要原因 |
 |---|---|
-| 這是 Avalonia 12 與 AtomUI 6.2.8，而不是 WPF、WinUI 或 HTML。 | 否則助理會混入 WPF 屬性（`Visibility`、`DataTemplateSelector`）或 CSS 的概念。 |
+| 這是 Avalonia 12 與 TKCode.Arc，而不是 WPF、WinUI 或 HTML。 | 否則助理會混入 WPF 屬性（`Visibility`、`DataTemplateSelector`）或 CSS 的概念。 |
 | Arc 控制項位於 `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"`。 | 沒有該前綴時，`Button` 會解析為 Avalonia 自帶的按鈕，失去 Arc 的外觀。 |
-| 應用程式在 `UseAtomUI(...)` 中呼叫 `UseArc()`，並且 `Application` 類別為 `partial`。 | 缺少其中任何一項，都會導致控制項沒有樣式或建置錯誤。 |
+| 應用程式呼叫 `AppBuilder.UseArc(arc => arc.UseArcControls())`，並以 `ArcTheme.Apply(...)` 切換主題。 | 缺少 `UseArcControls()` 時控制項沒有樣式；其他函式庫的主題 API 在這裡並不存在。 |
 | 顏色、圓角與字型來自 `{arc:ArcDesignTokenResource ...}` 或 `ArcTokens`。 | 寫死的十六進位數值會破壞深色模式與強調色。 |
 | 動態效果宣告在 `^:motion-full` 與 `^:motion-reduced` 之下，並遵循 `ArcMotion.Level`。 | 手寫的動畫會忽略減少動態效果的設定。 |
 | 只存在文件中列出的屬性。 | 元件頁面與 API 表格列出了全部屬性；其他屬性都是憑空捏造的。 |
@@ -85,7 +85,8 @@ Claude Code、Cursor 與 GitHub Copilot 等助理會讀取儲存庫中的指示�
 ```text
 ## UI 函式庫：TKCode.Arc
 
-- 介面使用 Avalonia 12.1.4 + AtomUI 6.2.8 + TKCode.Arc。不要使用 WPF 或 WinUI 的 API。
+- 介面使用 Avalonia 12.1.4 + TKCode.Arc。不要使用 WPF 或 WinUI 的 API。
+- 啟動：AppBuilder.UseArc(arc => arc.UseArcControls())；切換主題：ArcTheme.Apply(t => t.Appearance(...))。
 - Arc 控制項使用 xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"（arc:Button、arc:Input 等）。
 - 只使用元件文件頁面或 API 表格中列出的屬性、事件與列舉值。
 - 顏色、圓角、間距與字型：XAML 中使用 {arc:ArcDesignTokenResource Name}，程式碼中使用 ArcTokens.Bind。
@@ -139,7 +140,7 @@ TKCode.Arc 目前尚未提供自己的 MCP 伺服器。在提供之前，有三�
   "mcpServers": {
     "tkcode-arc-docs": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/AtomUI.Arc/gallery/TKCode.Arc.Gallery/Docs"]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/TKCode.Arc/gallery/TKCode.Arc.Gallery/Docs"]
     }
   }
 }

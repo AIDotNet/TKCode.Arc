@@ -2,13 +2,13 @@
 
 [English](README.md) | 简体中文
 
-面向 Avalonia 的 Arc 风格组件库，基于 [AtomUI](https://github.com/AtomUI/AtomUI) 构建。
+面向 Avalonia 的 Arc 风格组件库。
 TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 112 个组件），
 保留 Arc 的视觉语言和弹簧动效。
 
 - 目标框架 `net10.0` 和 `net11.0`；支持桌面平台（Windows、macOS、Linux）。
-- 依赖 AtomUI 6.2.8 和 Avalonia 12.1.4（精确版本），Markdown 与代码高亮依赖
-  [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate)。
+- 依赖 Avalonia 12.1.4（精确版本）、自有的 MIT 主题 / 令牌 / 语言运行时 `TKCode.Arc.Foundation`，Markdown 与代码高亮依赖
+  [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate)。整条依赖链都是 MIT 许可；自 0.4 起不再依赖 AtomUI。
 - 设计文档：[design/overview.md](design/overview.md)。
 - 在线体验站点：<https://docs.tkcode.si/>，在浏览器里查看全部组件。
 
@@ -16,8 +16,9 @@ TKCode.Arc 移植了 [Arc](https://uiarc.dev) 的免费组件（22 个分组共 
 
 | 包 | 内容 |
 |---|---|
-| `TKCode.Arc` | 全部组件（`UseArc()`），目录结构与 Arc 侧边栏一致，另含流式渲染的 `Markdown` 控件。 |
+| `TKCode.Arc` | 全部组件（`UseArcControls()`），目录结构与 Arc 侧边栏一致，另含流式渲染的 `Markdown` 控件。 |
 | `TKCode.Arc.Core` | ArcDesign 令牌与调色板、弹簧动效引擎、共享基础组件、187 个内置 Lucide 图标。 |
+| `TKCode.Arc.Foundation` | 主题、令牌、语言与包注册的运行时（`UseArc(...)`、`ArcTheme`、`ArcLanguage`）；自 0.4 起。 |
 | `TKCode.Arc.Icons.Lucide` | 完整的 Lucide 图标集（2155 个图标）：`LucideIcon` 控件和 `LucideGeometry` 标记扩展。 |
 | `TKCode.Arc.Fonts` | Geist 与 Geist Mono 字体（`WithArcFonts()`）；正文使用 `Avalonia.Fonts.Inter` 提供的 Inter。 |
 
@@ -31,23 +32,25 @@ dotnet add package TKCode.Arc.Fonts --version 0.3.1-preview.6           # 可选
 dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.6    # 可选：完整的 Lucide 图标集
 ```
 
-`TKCode.Arc` 会带上 `TKCode.Arc.Core`。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`
-（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装；工作流画布 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）随 0.3.1-preview.1 起一同发布；像素风主题包 `TKCode.Arc.Themes.Pixel`（`UseArcPixelTheme()`）与移动端首批控件 `TKCode.Arc.Mobile`（`UseArcMobile()`，尚未在真机上验证）自 0.3.1-preview.1 起发布；全局圆角包 `TKCode.Arc.Themes.Corners`（`WithArcCorners()`）自 0.3.1-preview.2 起发布；终端控件 `TKCode.Arc.Terminal`（基于 libghostty-vt 的 `TerminalView`，附带原生库）自 0.3.1-preview.4 起发布。音频播放抽象 `TKCode.Arc.Audio`（媒体类 Block 使用的 `IAudioPlayer`，默认静音模拟）及其平台后端 `TKCode.Arc.Audio.Native`（桌面，miniaudio，`ArcAudioNative.Use()`）与 `TKCode.Arc.Audio.Browser`（WebAssembly，`ArcAudioBrowser.UseAsync()`）自 0.3.1-preview.6 起发布。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
+`TKCode.Arc` 会带上 `TKCode.Arc.Core`（自 0.4 起还有 `TKCode.Arc.Foundation`）。`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 与 `TKCode.Arc.Special`
+（Special components 区的 AI 动画讲解组件）是独立的 NuGet 包，需要时单独安装；工作流画布 `TKCode.Arc.Workflow`（`UseArcWorkflow()`）随 0.3.1-preview.1 起一同发布；像素风主题包 `TKCode.Arc.Themes.Pixel`（`UseArcPixelTheme()`）与移动端首批控件 `TKCode.Arc.Mobile`（`UseArcMobile()`，尚未在真机上验证）自 0.3.1-preview.1 起发布；全局圆角包 `TKCode.Arc.Themes.Corners`（`UseArcCorners()`）自 0.3.1-preview.2 起发布；终端控件 `TKCode.Arc.Terminal`（基于 libghostty-vt 的 `TerminalView`，附带原生库）自 0.3.1-preview.4 起发布。音频播放抽象 `TKCode.Arc.Audio`（媒体类 Block 使用的 `IAudioPlayer`，默认静音模拟）及其平台后端 `TKCode.Arc.Audio.Native`（桌面，miniaudio，`ArcAudioNative.Use()`）与 `TKCode.Arc.Audio.Browser`（WebAssembly，`ArcAudioBrowser.UseAsync()`）自 0.3.1-preview.6 起发布。版本号带 `-preview` 后缀，各版本之间 API 仍可能变化。
 
 ## 快速开始
+
+下面是 `main` 分支上的 API（0.4，尚未发布到 NuGet）。0.3.x 的应用在 `UseAtomUI(...)` 里注册 Arc；迁移说明见
+[CHANGELOG.md](CHANGELOG.md)。
 
 ```csharp
 AppBuilder.Configure<App>()
     .UsePlatformDetect()
     .WithInterFont()
     .WithArcFonts()          // 可选：Geist 展示字体和 Geist Mono 代码字体
-    .UseAtomUI(builder =>
-    {
-        builder.UseDesktopControls();
-        builder.UseArc();
-    });
+    .UseArc(arc => arc
+        .UseArcControls()
+        .WithTheme(t => t.Appearance(ArcAppearance.System)));
 
-public partial class App : Application { }
+// 之后，例如在设置页里：
+ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));
 ```
 
 ```xml
@@ -98,6 +101,7 @@ reply.Complete();
 应用开发注意事项：
 
 - 不要启用 `InvariantGlobalization`（数字和日期格式化依赖区域性数据）。
+- 用 .NET 11 SDK 做 NativeAOT 发布时设置 `<UseOptimizedPublish>false</UseOptimizedPublish>`，否则发布的应用缺少编译后的 XAML。
 - 锚点弹出层（菜单、选择器、工具提示、气泡卡片）绘制在窗口的覆盖层中，与触发元素的距离正好是
   `sideOffset`，不会遮挡触发元素。
 - `Button`、`Calendar`、`Carousel`、`ContextMenu`、`DatePicker`、`Slider`、`SplitButton`、`TabItem`、`TimePicker`、
@@ -105,7 +109,7 @@ reply.Complete();
 
 ## 构建
 
-需要 .NET 11 SDK（见 `global.json`）和 .NET 10 运行时（AtomUI 的构建任务运行在其上）。
+需要 .NET 11 SDK（见 `global.json`）和 .NET 10 运行时（测试与 Gallery 运行在 `net10.0` 上）。
 
 ```bash
 dotnet build TKCode.Arc.slnx
@@ -121,5 +125,5 @@ TKCode.Arc 主要由 [nextco.work](https://nextco.work/) 赞助，其提供低�
 
 ## 许可证
 
-MIT。Arc（MIT）、Lucide（ISC）、字体（OFL）、StreamMark、TextMateSharp、Oniguruma 和 Markdig，
-以及 AtomUI（LGPL-3.0）依赖的许可信息见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。
+MIT。Arc 只依赖 Avalonia（MIT）和自有的 MIT 包，闭源应用可以单文件或 NativeAOT 发布。Arc（MIT）、Lucide（ISC）、
+字体（OFL）、StreamMark、TextMateSharp、Oniguruma 和 Markdig 的许可信息见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。

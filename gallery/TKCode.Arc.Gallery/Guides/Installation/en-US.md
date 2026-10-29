@@ -13,11 +13,12 @@ takes about five minutes on a new project and does not change how the rest of yo
 |---|---|---|
 | .NET | `net10.0` or `net11.0` | The packages target both. |
 | Avalonia | `12.1.4` | Pinned to the exact version the library is built against. |
-| AtomUI | `6.2.8` | `AtomUI.Desktop.Controls`; Arc's theme and token system sit on AtomUI. |
+| TKCode.Arc.Foundation | same as Arc | MIT; the theme, token, language and package runtime. Comes with `TKCode.Arc`. |
 | Fonts (optional) | `Avalonia.Fonts.Inter` | Arc's body text uses Inter; Geist comes from `TKCode.Arc.Fonts`. |
 
-TKCode.Arc is in preview, and AtomUI and Avalonia are pinned to exact versions. Use the same Avalonia version in your
-application; mixing versions leads to restore warnings and, at run time, to missing styles or type load errors.
+TKCode.Arc is in preview, and Avalonia is pinned to an exact version. Besides Avalonia, every Arc package depends only
+on MIT packages of its own. Use the same Avalonia version in your application; mixing versions leads to restore
+warnings and, at run time, to missing styles or type load errors.
 
 ## 1. Add the packages
 
@@ -28,8 +29,8 @@ dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.6    # option
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
 ```
 
-`TKCode.Arc` brings in `TKCode.Arc.Core`, AtomUI and StreamMark. If your solution uses central package management, add
-the versions to `Directory.Packages.props` once and keep the project files version-free:
+`TKCode.Arc` brings in `TKCode.Arc.Core`, `TKCode.Arc.Foundation` and StreamMark. If your solution uses central
+package management, add the versions to `Directory.Packages.props` once and keep the project files version-free:
 
 ```xml
 <ItemGroup>
@@ -45,11 +46,9 @@ restore.
 
 ## 2. Register Arc in the application builder
 
-Arc is registered in AtomUI's builder, next to AtomUI's desktop controls. A typical `Program.cs`:
+Arc is registered on the `AppBuilder` with `UseArc(...)`. A typical `Program.cs`:
 
 ```csharp
-using AtomUI;
-using AtomUI.Desktop.Controls;
 using Avalonia;
 using TKCode.Arc;
 using TKCode.Arc.Fonts;
@@ -64,11 +63,9 @@ internal static class Program
                   .UsePlatformDetect()
                   .WithInterFont()      // Inter for body text (Avalonia.Fonts.Inter)
                   .WithArcFonts()       // Geist for display text, Geist Mono for code (TKCode.Arc.Fonts)
-                  .UseAtomUI(builder =>
-                  {
-                      builder.UseDesktopControls();
-                      builder.UseArc();
-                  });
+                  .UseArc(arc => arc
+                      .UseArcControls()
+                      .WithTheme(t => t.Appearance(ArcAppearance.System).Accent(ArcAccentPreset.Neutral)));
 }
 ```
 
@@ -76,16 +73,15 @@ What each call does:
 
 | Call | Purpose |
 |---|---|
-| `UseAtomUI(...)` | Starts AtomUI's theme manager, design tokens and localization for the application. |
-| `UseDesktopControls()` | AtomUI's desktop control package, which Arc builds on. |
-| `UseArc()` | Registers Arc's controls, themes and tokens. It also registers `TKCode.Arc.Core` (`UseArcCore()`), so you do not call that yourself. |
+| `UseArc(...)` | Starts Arc's theme manager, design tokens and languages once the application is initialized. The callback lists the packages and the initial theme. |
+| `UseArcControls()` | Registers Arc's controls, themes and tokens. It also registers `TKCode.Arc.Core` (`UseArcCore()`), so you do not call that yourself. |
+| `WithTheme(...)` | Optional: the theme the first frame is drawn with (appearance, accent, token overrides). Without it Arc starts light with the `Neutral` accent. See **Theming**. |
 | `WithInterFont()`, `WithArcFonts()` | Register the fonts Arc's type scale is designed for. Without them, text falls back to the system font. |
 
-Declare the `Application` class `partial`. AtomUI's source generator adds its startup code to it, and the build stops
-with `ATOMUILOC008` when the class is not partial:
+The `Application` class needs nothing from Arc: no base class, no `partial` keyword, no styles in `App.axaml`.
 
 ```csharp
-public partial class App : Application
+public class App : Application
 {
     public override void OnFrameworkInitializationCompleted()
     {
@@ -97,6 +93,11 @@ public partial class App : Application
     }
 }
 ```
+
+Arc also styles the Avalonia controls its templates use (`ScrollViewer`, `ScrollBar`, `ItemsControl`, `PathIcon`, the
+text selection handles and the popup hosts). Scroll bars look like Arc's `ScrollArea`: thin, shown while the pointer is
+over the view or while it scrolls, hidden at rest; set `ScrollViewer.AllowAutoHide="False"` to keep them visible. When
+`App.axaml` already includes `FluentTheme` or `SimpleTheme`, Arc leaves these controls to that theme.
 
 ## 3. Use the controls in XAML
 
@@ -159,7 +160,7 @@ Lucide icon, add `TKCode.Arc.Icons.Lucide` and use its namespace:
 ### Blocks and the data grid
 
 `TKCode.Arc.Blocks` (page-level blocks), `TKCode.Arc.AdvancedCharts` (the `DataGrid`) and `TKCode.Arc.Special` (animated
-AI explainers) are separate packages. Add the ones you need and register them next to `UseArc()`:
+AI explainers) are separate packages. Add the ones you need and register them inside `UseArc(...)`:
 
 ```bash
 dotnet add package TKCode.Arc.Blocks --version 0.3.1-preview.6
@@ -167,26 +168,44 @@ dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.1-preview.6
 dotnet add package TKCode.Arc.Special --version 0.3.1-preview.6
 dotnet add package TKCode.Arc.Workflow --version 0.3.1-preview.6
 dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.1-preview.6    # optional: pixel-art theme (UseArcPixelTheme())
-dotnet add package TKCode.Arc.Themes.Corners --version 0.3.1-preview.6    # optional: global corner style (WithArcCorners())
+dotnet add package TKCode.Arc.Themes.Corners --version 0.3.1-preview.6    # optional: global corner style (UseArcCorners())
 dotnet add package TKCode.Arc.Mobile --version 0.3.1-preview.6    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
 ```
 
 ```csharp
-builder.UseDesktopControls();
-builder.UseArc();
-builder.UseArcBlocks();          // TKCode.Arc.Blocks
-builder.UseArcAdvancedCharts();  // TKCode.Arc.AdvancedCharts
-builder.UseArcSpecial();         // TKCode.Arc.Special
+.UseArc(arc => arc
+    .UseArcControls()
+    .UseArcBlocks()            // TKCode.Arc.Blocks
+    .UseArcAdvancedCharts()    // TKCode.Arc.AdvancedCharts
+    .UseArcSpecial()           // TKCode.Arc.Special
+    .UseArcWorkflow()          // TKCode.Arc.Workflow
+    .UseArcPixelTheme()        // TKCode.Arc.Themes.Pixel
+    .UseArcCorners()           // TKCode.Arc.Themes.Corners
+    .UseArcMobile())           // TKCode.Arc.Mobile
 ```
+
+Each package registers the packages it depends on (Blocks registers the controls, for example), and registering one
+twice does nothing.
 
 ### Languages
 
-AtomUI handles the application language. To offer more than one, declare them in the builder; the gallery offers
-English, Simplified Chinese and Traditional Chinese this way:
+Arc handles the application language (namespace `TKCode.Arc.Localization`). To offer more than one, declare them in
+`UseArc(...)`: the first argument is the start-up language, the second the languages the application offers. The
+gallery offers English, Simplified Chinese and Traditional Chinese this way:
 
 ```csharp
-builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);
+.UseArc(arc => arc
+    .UseArcControls()
+    .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]))
+
+// Later, for example from a settings page:
+ArcLanguage.Set(LanguageTags.ZhCN);
 ```
+
+`ArcLanguage.Current` is the current language, `ArcLanguage.Culture` the culture to format numbers and dates with, and
+`ArcLanguage.Changed` is raised after a switch. The packages with built-in text of their own (the `DataGrid`, the
+workflow canvas) ship English, Simplified Chinese and Traditional Chinese. Start-up fails with a list of the missing
+text when an enabled package does not cover a declared language.
 
 Arc controls ship English defaults for their built-in text (for example "Show password" or "Clear search"). The
 controls expose that text as properties or label objects, so you can translate it from your own resources.
@@ -196,6 +215,11 @@ controls expose that text as properties or label objects, so you can translate i
 - **NativeAOT and trimming.** The libraries are trimming- and AOT-compatible and use no reflection. Publish a desktop
   app as a single self-contained file with `-p:PublishAot=true`, or `-p:PublishSingleFile=true --self-contained` when
   you do not use AOT.
+- **.NET SDK 11 and NativeAOT.** The .NET 11 SDK's optimized AOT publish drops the compiled XAML of every Avalonia
+  12.1 application, which then fails at start with `No precompiled XAML found`. Turn it off in the application's
+  project file: `<UseOptimizedPublish>false</UseOptimizedPublish>`.
+- **License.** Arc, its Foundation package and its other dependencies are MIT licensed (Avalonia too), so a closed-source
+  single-file or NativeAOT publish has no LGPL obligations.
 - **Globalization.** Do not enable `InvariantGlobalization`. Number, currency and date formatting in the inputs,
   pickers and charts needs culture data.
 - **macOS.** The repository's `tools/macos` scripts show how the gallery is wrapped into a signed and notarized `.app`;
@@ -203,12 +227,13 @@ controls expose that text as properties or label objects, so you can translate i
 
 ## Building from source
 
-Building the repository needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime, which AtomUI's build tasks
-run on:
+Building the repository needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime (the tests and the
+gallery run on `net10.0`):
 
 ```bash
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
+dotnet test tests/TKCode.Arc.Foundation.Tests
 dotnet test tests/TKCode.Arc.Tests
 dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 ```
@@ -217,16 +242,20 @@ dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Arc controls appear unstyled or empty | `UseArc()` is not called in `UseAtomUI(...)` | Register it after `UseDesktopControls()`. |
-| Build error `ATOMUILOC008` | The `Application` class is not `partial` | Declare it `public partial class App : Application`. |
+| Arc controls appear unstyled or empty | `UseArcControls()` is not called in `UseArc(...)` | Add it to the `UseArc(...)` callback. |
+| `InvalidOperationException` at start-up listing missing text | A language in `UseLanguages` is not covered by an enabled package | Declare only languages the packages ship, or add the missing translations. |
+| `No precompiled XAML found` in a NativeAOT build | The .NET 11 SDK's optimized publish | Set `<UseOptimizedPublish>false</UseOptimizedPublish>`. |
+| `ThemeSwitcher` switches without its transition | The window has no overlay layer | Give the window's template a `VisualLayerManager` with `EnableOverlayLayer="True"`. |
 | Headings and code use the system font | The fonts are not registered | Call `WithInterFont()` and `WithArcFonts()` on the `AppBuilder`. |
 | Wrong number or date formats, or exceptions while formatting | `InvariantGlobalization` is enabled | Remove it from the project file. |
 | `'Button' is an ambiguous reference` | `TKCode.Arc` and `Avalonia.Controls` are both imported | Alias one of them, as shown above. |
 | Restore warnings about Avalonia versions | Another package pulls a different Avalonia | Reference Avalonia `12.1.4` explicitly in the application. |
-| Blocks, `DataGrid` or Special types are not found | The package is not referenced or not registered | Add `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` or `TKCode.Arc.Special` and call `UseArcBlocks()`, `UseArcAdvancedCharts()` or `UseArcSpecial()`. |
+| Blocks, `DataGrid` or Special types are not found | The package is not referenced or not registered | Add `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` or `TKCode.Arc.Special` and call `UseArcBlocks()`, `UseArcAdvancedCharts()` or `UseArcSpecial()` in `UseArc(...)`. |
 
 ## Next steps
 
 - **Theming**: light and dark, the eight accents and the design tokens.
 - **Motion**: motion levels and reduced motion.
 - The component pages: start with Button, Input and Card, which most screens are built from.
+- **Changelog**: *Migrating from 0.3 to 0.4* lists every change for applications that used the AtomUI-based 0.3
+  releases.

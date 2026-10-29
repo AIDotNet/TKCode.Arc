@@ -1,6 +1,6 @@
 # TKCode.Arc documentation
 
-> Every page of {{base}} in one file, for TKCode.Arc {{version}} (Avalonia {{avalonia}}, AtomUI {{atomui}}): the guides, then every component and block. The index with one line per page is {{base}}/llms.txt.
+> Every page of {{base}} in one file, for TKCode.Arc {{version}} (Avalonia {{avalonia}}): the guides, then every component and block. The index with one line per page is {{base}}/llms.txt.
 
 ---
 

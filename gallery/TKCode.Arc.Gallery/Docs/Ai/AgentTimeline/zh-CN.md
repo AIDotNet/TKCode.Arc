@@ -1,7 +1,7 @@
 ---
 title: Agent timeline
 summary: 在同一时间轴上回放一次多智能体运行：每个智能体的思考、工具调用与等待，它们之间的交接，以及时间、token 与费用。
-source-hash: ba648bfd9702
+source-hash: 5696d9478d3e
 ---
 
 <Demo name="Preview" />
@@ -25,7 +25,7 @@ source-hash: ba648bfd9702
 
 ## 用法
 
-没有提供数据时，时间线会展示一次虚构的示例运行，并在它首次有大约五分之一进入视野时开始回放。请在 `UseArc()` 旁调用 `UseArcSpecial()` 注册该包。
+没有提供数据时，时间线会展示一次虚构的示例运行，并在它首次有大约五分之一进入视野时开始回放。请在 `UseArcControls()` 旁调用 `UseArcSpecial()` 注册该包。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"

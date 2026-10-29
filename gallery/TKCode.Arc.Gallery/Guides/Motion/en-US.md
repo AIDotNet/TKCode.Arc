@@ -38,7 +38,7 @@ ArcMotion.SetLevel(mainWindow, ArcMotionLevel.Reduced);
 </StackPanel>
 ```
 
-The theme can set a level for the whole application too, through `WithArc(arc => arc.MotionMode(...))` (see
+The theme can set a level for the whole application too, through `ArcTheme.Apply(t => t.MotionLevel(...))` (see
 **Theming**). The effective level of a control is the lower of the two: the inherited `ArcMotion.Level` and the theme's
 motion mode. A window set to `Full` in a theme set to `Reduced` runs reduced motion.
 

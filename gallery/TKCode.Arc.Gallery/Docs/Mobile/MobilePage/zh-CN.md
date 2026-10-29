@@ -1,7 +1,7 @@
 ---
 title: 移动端页面
 summary: 手机屏幕：页头、内容和页脚，排布在设备的安全区之内。
-source-hash: 7d668709675d
+source-hash: 9c9b9e57e9a2
 ---
 
 <Demo name="Basic" />
@@ -40,7 +40,7 @@ source-hash: 7d668709675d
 </UserControl>
 ```
 
-在 `UseArcCore()` 或 `UseArc()` 旁边用 `UseArcMobile()` 注册这些控件。
+在 `UseArcCore()` 或 `UseArcControls()` 旁边用 `UseArcMobile()` 注册这些控件。
 
 ### 安全区
 

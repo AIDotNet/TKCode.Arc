@@ -219,7 +219,7 @@ offer a new pass. `EmptyContentTemplate` builds the same content from a data tem
 
 ### Photos
 
-Card faces can show `AsyncImage` photos over a drawn scene, so the card still looks complete while the photo loads or
+Card faces can show `ArcImage` photos over a drawn scene, so the card still looks complete while the photo loads or
 when the device is offline. Keep the photo inside the card's fixed height, and let the drawn scene stand in until the
 image arrives.
 

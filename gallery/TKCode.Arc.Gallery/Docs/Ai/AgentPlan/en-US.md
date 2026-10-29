@@ -46,7 +46,7 @@ the built-in simulation when it is approved.
 ```
 
 `AgentPlan` derives from Avalonia's `TemplatedControl` and lives in the Special package; register it with
-`UseArcSpecial()` next to `UseArc()`. The card is as wide as its container up to 560px, reads well from about 320px,
+`UseArcSpecial()` next to `UseArcControls()`. The card is as wide as its container up to 560px, reads well from about 320px,
 and tightens below 420px.
 
 ### Anatomy

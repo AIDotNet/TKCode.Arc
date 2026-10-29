@@ -1,13 +1,120 @@
 ---
 title: 更新日誌
-source-hash: 55098180ce25
+source-hash: 2a8a33522b07
 ---
 
 # 更新日誌
 
 TKCode.Arc 的所有重要變更，最新的在前。版本遵循[語意化版本](https://semver.org/)。版本帶有 `-preview` 後綴期間，API 在各發行版本之間仍可能變動；升級前請閱讀說明，並在專案中固定版本號。同一份清單也保存在儲存庫的 `CHANGELOG.md` 中。
 
-每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+每次發行附帶的 NuGet 套件：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.4 起）、`TKCode.Arc.Fonts` 、`TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 與 `TKCode.Arc.Audio.Browser`。
+
+## 0.4.0-preview.1（未發佈）
+
+Arc 不再依賴 AtomUI。每個套件現在只依賴 Avalonia 與新的 MIT 套件 `TKCode.Arc.Foundation`，整條相依鏈都採用寬鬆授權，閉源應用程式可以把 Arc 以單一檔案或 NativeAOT 方式發佈（issue #25）。應用程式的進入點與主題 API 有變化；控制項、控制項屬性與 XAML（`{arc:ArcDesignTokenResource ...}`、`{arc:XxxTokenResource ...}`）不變。請參閱下文的*從 0.3 遷移到 0.4*。
+
+### 新增
+
+- **Foundation**（新套件 `TKCode.Arc.Foundation`）：主題管理員（`ArcThemeManager`、`ArcTheme`、`ArcThemeState`、`ArcThemeBuilder`）、主題預設集（`ArcThemePreset`）、局部主題（`ArcThemeScope`）、套件註冊（`AppBuilder.UseArc(...)`、`ArcBuilder`）、語言（`ArcLanguage`、`ArcLanguageManager`），以及產生權杖、主題檔與語言目錄的原始碼產生器。不使用反射，相容於裁剪與 NativeAOT。控制項的主題在該型別的控制項第一次使用時才載入。
+- **ArcImage** 與 `ImageSource`（Core）：在背景載入圖片（http、`avares://`、檔案、`data:`、點陣圖），帶共用快取，桌面與瀏覽器皆可使用。
+- **ArcOverlayHost**（Core）：自帶覆疊層的面板，在其中開啟的對話方塊、抽屜與底部面板都限制在它的範圍內。
+- **基礎主題**（Core）：Arc 為其範本用到的 Avalonia 控制項提供自己的主題（`ScrollViewer`、`ScrollBar`、`ItemsControl`、`PathIcon`、`TextSelectionHandle` 與快顯視窗宿主）。應用程式使用 `FluentTheme` 或 `SimpleTheme` 時，它會讓位。
+- **捲軸**與 `ScrollArea` 一致：細長，指標停留在檢視上或捲動時顯示，靜止時隱藏。`ScrollViewer.AllowAutoHide="False"` 可讓它們一直顯示。
+- **圓角主題**：`UseArcCorners()` 與 `t.Corners(style)`；現成的 `ArcCornerPresets.Square` 與 `ArcCornerPresets.Half`。
+- **選單**：較長的選單在 `MaxDropDownHeight` 內捲動。
+- **Gallery**：桌面視窗自行繪製標題列（標誌、標題、釘選按鈕；Windows 與 Linux 上還有視窗按鈕）。
+
+### 變更
+
+- **不相容：進入點。** `AppBuilder.UseAtomUI(b => b.UseDesktopControls().UseArc())` 改為 `AppBuilder.UseArc(arc => arc.UseArcControls())`。`Application` 類別不再需要 `partial`。
+- **不相容：主題 API。** `ThemeConfigBuilder`、`ThemeAlgorithm`、`IThemeManager.ApplyThemeAsync` 與 `WithArc(...)` 由 `ArcTheme.Apply(t => ...)`、`ArcThemeManager.Apply` / `ApplyAsync` 以及 `UseArc` 中的 `WithTheme(...)` 取代。
+- **不相容：Pixel 與 Corners** 改為主題預設集：`t.Pixel()` 與 `t.Corners(style)`。`ArcPixelTheme`、`ArcPixelScope`、`WithArcCorners` 與 `ArcCornerScope` 已移除；預設集會略過應用程式沒有註冊的套件。
+- **不相容：語言**移到 `TKCode.Arc.Localization`（`ArcLanguage`、`ArcLanguageManager`）；`UseLanguages` 在 `ArcBuilder` 上。
+- **不相容：圖片與快顯視窗。** `AsyncImage` 由 `ArcImage` 取代（`IsLoaded` 改為 `IsImageLoaded`）。`ArcPopup` 衍生自 Avalonia 的 `Popup`；`OpenMotion` 與 `CloseMotion` 的型別是 `ArcPopupMotion`，`AdjustPlacementAnchor` 移除了 `ref flipX, ref flipY` 參數，`IsOpen` 會維持為 true 直到退場動態效果結束。`ArcPopupFrame` 取代 `BaseMotionActor`，`ArcOverlayHost` 取代 `ScopeAwareOverlayLayerPanel`。
+- **不相容：行動端權杖識別**改為 `MobileButton`、`MobileCheckbox`、`MobileDialog`、`MobileSwitch` 與 `MobileToast`，不再與桌面控制項同名。
+- Arc 不再與 AtomUI 控制項共用主題；混用兩者的應用程式請留在 0.3.x。
+
+### 修正
+
+- **ToastStack**：在堆疊恢復計時器的過程中關閉某個 Toast，不再中斷恢復。
+- **DataGrid**：篩選清單的搜尋框重新顯示（之前它沒有範本）。
+- **PasswordField**：較長的強度標籤不再與強度條重疊（#23）。
+- **Gallery**：環境變數事件記錄中的文字方塊重新顯示（之前它沒有範本）。
+
+### 從 0.3 遷移到 0.4
+
+1. 刪除所有 `AtomUI.*` 套件參照與 `using AtomUI...;`；Arc 會引入它需要的一切。
+2. 把 `UseAtomUI(...)` 換成 `UseArc(...)`，並把 `UseArc()`（控制項套件）改名為 `UseArcControls()`。其他套件的註冊方法名稱不變，移到 `UseArc` 的回呼中。
+3. 把主題請求換成 `ArcTheme.Apply`。一次變更只寫要改的部分，狀態的其餘部分維持不變。
+4. `App` 類別可以拿掉 `partial` 關鍵字；不再有程式碼產生到它裡面。
+5. 使用 .NET 11 SDK 且 `PublishAot` 時，在應用程式專案中設定 `<UseOptimizedPublish>false</UseOptimizedPublish>`。
+
+```csharp
+// 0.3
+AppBuilder.Configure<App>()
+          .UsePlatformDetect()
+          .UseAtomUI(builder =>
+          {
+              builder.UseDesktopControls();
+              builder.UseArc();
+              builder.UseArcBlocks();
+              builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN]);
+          });
+
+// 0.4
+AppBuilder.Configure<App>()
+          .UsePlatformDetect()
+          .UseArc(arc => arc
+              .UseArcControls()
+              .UseArcBlocks()
+              .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN])
+              .WithTheme(t => t.Appearance(ArcAppearance.System)));
+```
+
+```csharp
+// 0.3
+var builder = new ThemeConfigBuilder()
+    .WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
+    .WithArc(arc => arc.Accent(ArcAccentPreset.Blue).MotionMode(ArcMotionLevel.Reduced));
+await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(),
+                                               ThemeTransitionReason.UserRequest));
+
+// 0.4
+ArcTheme.Apply(t => t
+    .Appearance(ArcAppearance.Dark)
+    .Accent(ArcAccentPreset.Blue)
+    .MotionLevel(ArcMotionLevel.Reduced));
+```
+
+| 0.3（AtomUI） | 0.4 |
+|---|---|
+| `AppBuilder.UseAtomUI(b => ...)`、`UseDesktopControls()` | `AppBuilder.UseArc(arc => ...)` |
+| `UseArc()`（控制項套件） | `UseArcControls()` |
+| `IAtomUIBuilder` 上的 `UseArcCore`、`UseArcBlocks`、`UseArcAdvancedCharts`、`UseArcSpecial`、`UseArcWorkflow`、`UseArcMobile`、`UseArcPixelTheme`、`UseArcGallery` | `ArcBuilder` 上的同名方法；新增 `UseArcCorners()` |
+| `builder.UseLanguages(...)` | `arc.UseLanguages(...)`，參數相同 |
+| `partial class App`、`ApplicationStartup.Attach` | 不再需要 |
+| `ThemeConfigBuilder`、`WithAlgorithms(ThemeAlgorithm.Dark)` | `t.Appearance(ArcAppearance.Dark)`（或 `Light`、`System`） |
+| `IThemeManager.ApplyThemeAsync(new ThemeRequest(...))` | `ArcTheme.Apply(t => ...)`、`ArcThemeManager.Current.Apply` / `ApplyAsync`（請 await，切勿在 UI 執行緒上封鎖等待） |
+| `WithArc(a => a.Accent(preset or color))` | `t.Accent(preset or color)` |
+| `WithArc(a => a.Token(name, value))` | `t.Token(name, value)` |
+| `WithArc(a => a.ControlToken(catalog, control, name, value))` | `t.Token(identity, name, value)` |
+| `WithArc(a => a.MotionMode(level))` | `t.MotionLevel(level)` |
+| `WithArcCorners(style, scope)`、`arc.Corners(style, scope)`、`ArcCornerScope` | `t.Corners(style)`、`ArcCornerPresets` |
+| `ArcPixelTheme.CreateRequest(...)`、`WithArcPixel(...)`、`ArcPixelScope` | `t.Pixel()`、`ArcPixelPresets`；用 `t.RemovePreset(ArcPixelPresets.Slot)` 回到 Arc |
+| `using AtomUI.Localization;` | `using TKCode.Arc.Localization;` |
+| `Application.Current.GetLanguageManager()`、`ILanguageManager` | `ArcLanguageManager.Current` |
+| `GetLocalizer().Get(kind)`、`Format(kind, args)` | `XxxLangResources.Get(kind)`、`XxxLangResources.Format(kind, args)` |
+| `LanguageChanged`、`ChangeLanguage(tag)` | `Changed`、`Set(tag)`（或 `ArcLanguage.Changed`、`ArcLanguage.Set`） |
+| `FormattingCulture`、`CurrentLanguage` | `ArcLanguage.Culture`、`ArcLanguage.Current` |
+| 依目錄覆寫行動端權杖 | 識別 `MobileButton`、`MobileCheckbox`、`MobileDialog`、`MobileSwitch`、`MobileToast` |
+| `AtomUI.Controls.ImageSource`、`AsyncImage`、`IsLoaded` | `TKCode.Arc.ImageSource`、`ArcImage`、`IsImageLoaded` |
+| 以 AtomUI `Popup` 為基礎的 `ArcPopup`、`BaseMotionActor` | 以 Avalonia `Popup` 為基礎的 `ArcPopup`、`ArcPopupFrame`；`OpenMotion` / `CloseMotion` 的型別是 `ArcPopupMotion` |
+| `AdjustPlacementAnchor(placement, ref flipX, ref flipY)` | `AdjustPlacementAnchor(placement)` |
+| `ScopeAwareOverlayLayerPanel` | `ArcOverlayHost` |
+| AtomUI 為 `ScrollViewer`、`ScrollBar`、`ItemsControl` 與快顯視窗宿主提供的主題 | Arc 的基礎主題；捲軸靜止時隱藏（`ScrollViewer.AllowAutoHide="False"` 讓它們一直顯示） |
+
+- **視窗與覆疊層。** 少了 AtomUI 的視窗主題，一般的 Avalonia `Window` 只有在範本中含有 `EnableOverlayLayer="True"` 的 `VisualLayerManager` 時才有覆疊層。`ThemeSwitcher` 的轉場效果需要它；沒有時會直接切換。
+- **AtomUI 控制項。** 同時使用 AtomUI 控制項的應用程式，無法再讓兩者共用同一個主題。在這些畫面遷移到 Arc 之前，請留在 0.3.x。
 
 ## 0.3.1-preview.6 (2026-10-28)
 

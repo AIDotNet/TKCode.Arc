@@ -34,7 +34,7 @@ inside sits on top of the dots and keeps working as usual.
 ```
 
 `DotGrid` is a `ContentControl` in the Special package. Register the package with `UseArcSpecial()` next to
-`UseArc()`. Give the control a height, or let its content size it; it is at least 240px high. The field has no
+`UseArcControls()`. Give the control a height, or let its content size it; it is at least 240px high. The field has no
 background of its own: set `Background`, `BorderBrush`, `BorderThickness` and `CornerRadius` to frame it, and the dots
 are clipped to that rounded box.
 

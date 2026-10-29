@@ -1,7 +1,7 @@
 ---
 title: Agent plan
 summary: 将智能体的计划呈现为可编辑的清单：草稿阶段可以重排、改名和添加步骤，批准后则逐步跟随运行过程。
-source-hash: 0e89f7dff7a5
+source-hash: 2ce58e71cf24
 ---
 
 <Demo name="Preview" />
@@ -34,7 +34,7 @@ source-hash: 0e89f7dff7a5
 </UserControl>
 ```
 
-`AgentPlan` 派生自 Avalonia 的 `TemplatedControl`，位于 Special 包中；请在 `UseArc()` 旁调用 `UseArcSpecial()` 以注册它。卡片的宽度与其容器相同，最宽为 560 px，在约 320 px 时仍然易读，并在小于 420 px 时收紧布局。
+`AgentPlan` 派生自 Avalonia 的 `TemplatedControl`，位于 Special 包中；请在 `UseArcControls()` 旁调用 `UseArcSpecial()` 以注册它。卡片的宽度与其容器相同，最宽为 560 px，在约 320 px 时仍然易读，并在小于 420 px 时收紧布局。
 
 ### 结构
 

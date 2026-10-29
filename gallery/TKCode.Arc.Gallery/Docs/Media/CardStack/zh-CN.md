@@ -1,7 +1,7 @@
 ---
 title: 卡片堆叠
 summary: 逐张审阅卡片，支持划走与撤销。
-source-hash: 19ea9efed1b2
+source-hash: 57ab5ef13cfb
 ---
 
 <Demo name="Shortlist" />
@@ -176,7 +176,7 @@ stack.LabelSelector = item => ((Destination)item!).Name;
 
 ### 照片
 
-卡片正面可以在绘制的场景之上显示 `AsyncImage` 照片，因此卡片在照片加载期间或设备离线时仍然显得完整。照片应保持在卡片固定的高度之内，并让绘制的场景在图片到达之前代为占位。
+卡片正面可以在绘制的场景之上显示 `ArcImage` 照片，因此卡片在照片加载期间或设备离线时仍然显得完整。照片应保持在卡片固定的高度之内，并让绘制的场景在图片到达之前代为占位。
 
 <Demo name="Photos" />
 
