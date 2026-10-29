@@ -23,9 +23,9 @@ warnings and, at run time, to missing styles or type load errors.
 ## 1. Add the packages
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Fonts --version 0.3.1-preview.6           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.6    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.1           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.1    # optional: the full Lucide set
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # optional: Inter for body text
 ```
 
@@ -34,9 +34,9 @@ package management, add the versions to `Directory.Packages.props` once and keep
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.3.1-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.1-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.1-preview.6" />
+    <PackageVersion Include="TKCode.Arc" Version="0.3.2-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.2-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.2-preview.1" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -163,13 +163,13 @@ Lucide icon, add `TKCode.Arc.Icons.Lucide` and use its namespace:
 AI explainers) are separate packages. Add the ones you need and register them inside `UseArc(...)`:
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Special --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Workflow --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.1-preview.6    # optional: pixel-art theme (UseArcPixelTheme())
-dotnet add package TKCode.Arc.Themes.Corners --version 0.3.1-preview.6    # optional: global corner style (UseArcCorners())
-dotnet add package TKCode.Arc.Mobile --version 0.3.1-preview.6    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
+dotnet add package TKCode.Arc.Blocks --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Special --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Workflow --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.2-preview.1    # optional: pixel-art theme (UseArcPixelTheme())
+dotnet add package TKCode.Arc.Themes.Corners --version 0.3.2-preview.1    # optional: global corner style (UseArcCorners())
+dotnet add package TKCode.Arc.Mobile --version 0.3.2-preview.1    # optional: touch-first controls, not yet verified on devices (UseArcMobile())
 ```
 
 ```csharp
@@ -257,5 +257,5 @@ dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 - **Theming**: light and dark, the eight accents and the design tokens.
 - **Motion**: motion levels and reduced motion.
 - The component pages: start with Button, Input and Card, which most screens are built from.
-- **Changelog**: *Migrating from 0.3 to 0.4* lists every change for applications that used the AtomUI-based 0.3
+- **Changelog**: *Migrating from 0.3.1 to 0.3.2* lists every change for applications that used the AtomUI-based 0.3
   releases.

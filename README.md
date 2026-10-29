@@ -9,7 +9,7 @@ with Arc's visual language and spring motion.
 - Targets `net10.0` and `net11.0`; desktop (Windows, macOS, Linux).
 - Depends on Avalonia 12.1.4 (exact version), on `TKCode.Arc.Foundation` (its own MIT theme, token and language
   runtime) and on [StreamMark](https://www.nuget.org/packages/TKCode.StreamMark.Highlighting.TextMate) for Markdown and
-  code highlighting. Every package in the chain is MIT licensed; there is no AtomUI dependency since 0.4.
+  code highlighting. Every package in the chain is MIT licensed; there is no AtomUI dependency since 0.3.2.
 - Design documents: [design/overview.md](design/overview.md).
 - Live demo: <https://docs.tkcode.si/> (the gallery of every component, in the browser).
 
@@ -19,29 +19,29 @@ with Arc's visual language and spring motion.
 |---|---|
 | `TKCode.Arc` | The components (`UseArcControls()`), organized like Arc's sidebar, plus a streaming `Markdown` control. |
 | `TKCode.Arc.Core` | ArcDesign tokens and palette, the spring motion engine, shared primitives, 187 built-in Lucide glyphs. |
-| `TKCode.Arc.Foundation` | The theme, token, language and package runtime (`UseArc(...)`, `ArcTheme`, `ArcLanguage`); from 0.4. |
+| `TKCode.Arc.Foundation` | The theme, token, language and package runtime (`UseArc(...)`, `ArcTheme`, `ArcLanguage`); from 0.3.2. |
 | `TKCode.Arc.Icons.Lucide` | The full Lucide set (2155 icons): `LucideIcon` control and `LucideGeometry` markup extension. |
 | `TKCode.Arc.Fonts` | Geist and Geist Mono (`WithArcFonts()`); body text uses Inter from `Avalonia.Fonts.Inter`. |
 
 ## Install
 
-The latest preview is [`0.3.1-preview.6`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
+The latest preview is [`0.3.2-preview.1`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Fonts --version 0.3.1-preview.6           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.6    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.1           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.1    # optional: the full Lucide set
 ```
 
-`TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.4, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
+`TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.3.2, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
 (the animated AI explainers of the Special components section) are separate packages on NuGet; `TKCode.Arc.Workflow`
 (the workflow canvas, `UseArcWorkflow()`) ships with them too. `TKCode.Arc.Themes.Pixel` (a pixel-art theme, `UseArcPixelTheme()`) and
-`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `UseArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.1-preview.6. Versions carry a `-preview` suffix, so the API may still change between
+`TKCode.Arc.Mobile` (the first touch-first controls, `UseArcMobile()`, not yet verified on devices) are new in 0.3.1-preview.1; `TKCode.Arc.Themes.Corners` (global corner style, `UseArcCorners()`) is new in 0.3.1-preview.2. `TKCode.Arc.Terminal` (`TerminalView` over libghostty-vt, native libraries bundled) is new in 0.3.1-preview.4. `TKCode.Arc.Audio` (the `IAudioPlayer` abstraction behind the media blocks, silent by default) with its backends `TKCode.Arc.Audio.Native` (desktop, miniaudio, `ArcAudioNative.Use()`) and `TKCode.Arc.Audio.Browser` (WebAssembly, `ArcAudioBrowser.UseAsync()`) is new in 0.3.2-preview.1. Versions carry a `-preview` suffix, so the API may still change between
 releases.
 
 ## Getting started
 
-The code below is the API on `main` (0.4, not yet on NuGet). Apps on 0.3.x register Arc inside `UseAtomUI(...)`;
+The code below is the API on `main` (0.4, not yet on NuGet). Apps on 0.3.2-preview.1 register Arc inside `UseAtomUI(...)`;
 [CHANGELOG.md](CHANGELOG.md) has the migration notes.
 
 ```csharp

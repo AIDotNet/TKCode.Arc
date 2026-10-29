@@ -223,7 +223,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for id in TKCode.Arc TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser; do
+          for id in TKCode.Arc TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -297,12 +297,12 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      # The matching .snupkg next to each .nupkg is pushed too. Core goes first, the packages that depend on it after (TKCode.Arc before Blocks, AdvancedCharts and Special; TKCode.Arc.Audio before Blocks and its backends).
+      # The matching .snupkg next to each .nupkg is pushed too. Foundation goes first (Core depends on it), then Core, the packages that depend on it after (TKCode.Arc before Blocks, AdvancedCharts and Special; TKCode.Arc.Audio before Blocks and its backends).
       - name: Push
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
+          for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

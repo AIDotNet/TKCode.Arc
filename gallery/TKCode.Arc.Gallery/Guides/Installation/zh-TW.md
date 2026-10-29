@@ -1,6 +1,6 @@
 ---
 title: 安裝
-source-hash: b89f52eff864
+source-hash: 6cc5bb3b04ce
 ---
 
 # 安裝
@@ -21,9 +21,9 @@ TKCode.Arc 目前處於預覽階段，Avalonia 固定為確切版本。除 Avalo
 ## 1. 加入套件
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Fonts --version 0.3.1-preview.6           # 選用：Geist 與 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.1-preview.6    # 選用：完整的 Lucide 圖示集
+dotnet add package TKCode.Arc --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.1           # 選用：Geist 與 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.1    # 選用：完整的 Lucide 圖示集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選用：內文使用的 Inter
 ```
 
@@ -31,9 +31,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 選�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.3.1-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.1-preview.6" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.1-preview.6" />
+    <PackageVersion Include="TKCode.Arc" Version="0.3.2-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.2-preview.1" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.2-preview.1" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -149,13 +149,13 @@ Arc 自有的圖示字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 個
 `TKCode.Arc.Blocks`（頁面層級區塊）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）與 `TKCode.Arc.Special`（AI 動畫講解）是獨立的套件。依需要加入，並在 `UseArc(...)` 中註冊：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Special --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Workflow --version 0.3.1-preview.6
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.1-preview.6    # 選用：像素風主題（UseArcPixelTheme()）
-dotnet add package TKCode.Arc.Themes.Corners --version 0.3.1-preview.6    # 選用：全域圓角風格（UseArcCorners()）
-dotnet add package TKCode.Arc.Mobile --version 0.3.1-preview.6    # 選用：行動端控制項，尚未在真機上驗證（UseArcMobile()）
+dotnet add package TKCode.Arc.Blocks --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Special --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Workflow --version 0.3.2-preview.1
+dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.2-preview.1    # 選用：像素風主題（UseArcPixelTheme()）
+dotnet add package TKCode.Arc.Themes.Corners --version 0.3.2-preview.1    # 選用：全域圓角風格（UseArcCorners()）
+dotnet add package TKCode.Arc.Mobile --version 0.3.2-preview.1    # 選用：行動端控制項，尚未在真機上驗證（UseArcMobile()）
 ```
 
 ```csharp
@@ -228,4 +228,4 @@ dotnet run --project gallery/TKCode.Arc.Gallery.Desktop -f net10.0
 - **主題**：淺色與深色模式、八種強調色以及設計權杖。
 - **動態效果**：動態效果等級與減少動態效果。
 - 元件頁面：從按鈕、輸入框與卡片開始，它們是大多數畫面的基礎。
-- **更新日誌**：*從 0.3 遷移到 0.4* 列出了使用以 AtomUI 為基礎的 0.3 版本的應用程式需要做的全部變更。
+- **更新日誌**：*從 0.3.1 遷移到 0.3.2* 列出了使用以 AtomUI 為基礎的 0.3.1 版本的應用程式需要做的全部變更。

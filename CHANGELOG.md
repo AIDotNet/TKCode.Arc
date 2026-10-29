@@ -3,18 +3,18 @@
 All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Versioning](https://semver.org/);
 while the version carries a `-preview` suffix the API may still change between releases.
 
-NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.4),
+NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
-## 0.4.0-preview.1 - Unreleased
+## 0.3.2-preview.1 - 2026-10-28
 
 Arc no longer depends on AtomUI. Every package now depends only on Avalonia and on the new MIT package
 `TKCode.Arc.Foundation`, so the whole dependency chain is under permissive licenses and closed-source applications can
 publish Arc as a single file or with NativeAOT (issue #25). The application entry point and the theme API change; the
 controls, their properties and the XAML (`{arc:ArcDesignTokenResource ...}`, `{arc:XxxTokenResource ...}`) do not. See
-*Migrating from 0.3 to 0.4* below.
+*Migrating from 0.3.1 to 0.3.2* below.
 
 ### Added
 
@@ -55,7 +55,8 @@ controls, their properties and the XAML (`{arc:ArcDesignTokenResource ...}`, `{a
   finishes. `ArcPopupFrame` replaces `BaseMotionActor`, and `ArcOverlayHost` replaces `ScopeAwareOverlayLayerPanel`.
 - **Breaking: mobile token identities** are `MobileButton`, `MobileCheckbox`, `MobileDialog`, `MobileSwitch` and
   `MobileToast`, so they no longer share names with the desktop controls.
-- Arc no longer shares its theme with AtomUI controls; applications that mix the two stay on 0.3.x.
+- Arc no longer shares its theme with AtomUI controls; applications that mix the two stay on 0.3.2-preview.1.
+- **Performance**: `Button` builds its loading spinner the first time it loads; `Select` values and field messages shape their text only when needed.
 
 ### Fixed
 
@@ -63,8 +64,10 @@ controls, their properties and the XAML (`{arc:ArcDesignTokenResource ...}`, `{a
 - **DataGrid**: the search box of the filter list is drawn again (it had no template).
 - **PasswordField**: long strength labels no longer overlap the strength bar (#23).
 - **Gallery**: the text box of the env variables event log is drawn again (it had no template).
+- **Popups**: menus, selects and popovers draw their whole shadow again; the popup host clipped it, so their corners looked square.
+- **Gallery**: the swipe actions inbox demo has its header, a live count and avatars, like Arc's.
 
-### Migrating from 0.3 to 0.4
+### Migrating from 0.3.1 to 0.3.2
 
 1. Remove every `AtomUI.*` package reference and `using AtomUI...;` line; Arc brings in what it needs.
 2. Replace `UseAtomUI(...)` with `UseArc(...)` and rename `UseArc()` (the controls) to `UseArcControls()`. The other
@@ -75,7 +78,7 @@ controls, their properties and the XAML (`{arc:ArcDesignTokenResource ...}`, `{a
    project.
 
 ```csharp
-// 0.3
+// 0.3.1
 AppBuilder.Configure<App>()
           .UsePlatformDetect()
           .UseAtomUI(builder =>
@@ -86,7 +89,7 @@ AppBuilder.Configure<App>()
               builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN]);
           });
 
-// 0.4
+// 0.3.2
 AppBuilder.Configure<App>()
           .UsePlatformDetect()
           .UseArc(arc => arc
@@ -97,21 +100,21 @@ AppBuilder.Configure<App>()
 ```
 
 ```csharp
-// 0.3
+// 0.3.1
 var builder = new ThemeConfigBuilder()
     .WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
     .WithArc(arc => arc.Accent(ArcAccentPreset.Blue).MotionMode(ArcMotionLevel.Reduced));
 await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(),
                                                ThemeTransitionReason.UserRequest));
 
-// 0.4
+// 0.3.2
 ArcTheme.Apply(t => t
     .Appearance(ArcAppearance.Dark)
     .Accent(ArcAccentPreset.Blue)
     .MotionLevel(ArcMotionLevel.Reduced));
 ```
 
-| 0.3 (AtomUI) | 0.4 |
+| 0.3.1 (AtomUI) | 0.3.2 |
 |---|---|
 | `AppBuilder.UseAtomUI(b => ...)`, `UseDesktopControls()` | `AppBuilder.UseArc(arc => ...)` |
 | `UseArc()` (the controls) | `UseArcControls()` |
@@ -142,9 +145,9 @@ ArcTheme.Apply(t => t
   template has a `VisualLayerManager` with `EnableOverlayLayer="True"`. `ThemeSwitcher` needs one for its transition;
   without it, it switches directly.
 - **AtomUI controls.** An application that also uses AtomUI controls no longer gets one shared theme for both. Stay on
-  0.3.x until those screens are moved to Arc.
+  0.3.1-preview.6 until those screens are moved to Arc.
 
-## 0.3.1-preview.6 - 2026-10-28
+## 0.3.2-preview.1 - 2026-10-28
 
 ### Added
 
@@ -727,7 +730,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
-[0.3.1-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.5...v0.3.1-preview.6
+[0.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.5...v0.3.2-preview.1
 [0.3.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.4...v0.3.1-preview.5
 [0.3.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.3...v0.3.1-preview.4
 [0.3.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.2...v0.3.1-preview.3
