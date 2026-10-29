@@ -16,7 +16,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             Padding="{TemplateBinding Padding}">
-                        <Panel>
+                        <Panel Name="PART_Layers">
                             <arc:SpringSizeDecorator Name="PART_LabelSlot"
                                                      Axis="Width"
                                                      Spring="Morph"
@@ -27,12 +27,6 @@
                                                     Content="{TemplateBinding Content}"
                                                     ContentTemplate="{TemplateBinding ContentTemplate}" />
                             </arc:SpringSizeDecorator>
-                            <arc:ArcSpinner Name="PART_Spinner"
-                                            IsVisible="False"
-                                            Width="{arc:ButtonTokenResource SpinnerSize}"
-                                            Height="{arc:ButtonTokenResource SpinnerSize}"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center" />
                         </Panel>
                     </Border>
                     <Border Name="PART_FocusRing"
@@ -152,14 +146,11 @@
             </Style>
         </Style>
 
-        <!-- Loading keeps the label width and shows the spinner on top. -->
+        <!-- Loading keeps the label width; the spinner is created on first load (Button.EnsureSpinner) and sits on top. -->
         <Style Selector="^:loading">
             <Setter Property="Cursor" Value="AppStarting" />
             <Style Selector="^ /template/ arc|SpringSizeDecorator#PART_LabelSlot">
                 <Setter Property="Opacity" Value="0" />
-            </Style>
-            <Style Selector="^ /template/ arc|ArcSpinner#PART_Spinner">
-                <Setter Property="IsVisible" Value="True" />
             </Style>
         </Style>
 

@@ -1,5 +1,6 @@
 using Avalonia.Headless.XUnit;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Tests.Buttons;
 
@@ -20,6 +21,28 @@ public class ButtonTests
             button.Classes.Contains(Button.LoadingPseudoClass).ShouldBeTrue();
             button.IsLoading = false;
             button.Classes.Contains(Button.LoadingPseudoClass).ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Spinner_Is_Built_On_First_Load_And_Sized_By_Token()
+    {
+        var button = new Button { Content = "Save" };
+        var window = TestHelpers.Show(button);
+        try
+        {
+            button.GetVisualDescendants().OfType<Primitives.ArcSpinner>().ShouldBeEmpty();
+            button.IsLoading = true;
+            window.UpdateLayout();
+            var spinner = TestHelpers.Descendant<Primitives.ArcSpinner>(button, "PART_Spinner");
+            spinner.IsVisible.ShouldBeTrue();
+            spinner.Width.ShouldBe(16);
+            button.IsLoading = false;
+            spinner.IsVisible.ShouldBeFalse();
         }
         finally
         {

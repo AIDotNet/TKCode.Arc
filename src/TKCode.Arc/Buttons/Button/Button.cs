@@ -1,6 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
+using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -21,6 +24,7 @@ public enum ButtonVariant
 /// shows a spinner while keeping keyboard focus (clicks are swallowed instead of disabling the button).
 /// </summary>
 [PseudoClasses(LoadingPseudoClass, NarrowPseudoClass, WidePseudoClass, RaisedPseudoClass)]
+[TemplatePart("PART_Layers", typeof(Panel))]
 public class Button : AvaloniaButton
 {
     public const string LoadingPseudoClass = ":loading";
@@ -80,6 +84,43 @@ public class Button : AvaloniaButton
 
     #endregion
 
+    // Most buttons never load, so the spinner is built the first time IsLoading turns true, not with every template.
+    private Panel? _content;
+    private ArcSpinner? _spinner;
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _content = e.NameScope.Find<Panel>("PART_Layers");
+        _spinner = null;
+        if (IsLoading)
+        {
+            EnsureSpinner();
+        }
+    }
+
+    private void EnsureSpinner()
+    {
+        if (_content is null)
+        {
+            return;
+        }
+        if (_spinner is null)
+        {
+            _spinner = new ArcSpinner
+            {
+                Name = "PART_Spinner",
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _content.Children.Add(_spinner);
+            var size = _spinner.GetResourceObservable(ButtonTokens.Key(ButtonTokenKind.SpinnerSize));
+            _spinner.Bind(WidthProperty, size);
+            _spinner.Bind(HeightProperty, size);
+        }
+        _spinner.IsVisible = IsLoading;
+    }
+
     protected override void OnClick()
     {
         // Loading swallows activation but keeps focus (aria-busy + aria-disabled instead of disabled).
@@ -96,6 +137,10 @@ public class Button : AvaloniaButton
         if (change.Property == IsLoadingProperty)
         {
             PseudoClasses.Set(LoadingPseudoClass, IsLoading);
+            if (IsLoading || _spinner is not null)
+            {
+                EnsureSpinner();
+            }
         }
         else if (change.Property == ArcSurface.ElevationProperty)
         {

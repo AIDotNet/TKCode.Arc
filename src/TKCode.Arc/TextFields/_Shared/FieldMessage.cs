@@ -607,14 +607,18 @@ public class FieldMessage : Control
                 }
             }
         }
-        if (_digitWidth <= 0)
+        // An empty message (the usual state of a field) shapes nothing: digits and the space are measured on demand.
+        if (_space is null && (_segments.Any(static s => s.TrailingSpace) || _leaving.Any(static s => s.TrailingSpace)))
+        {
+            _space = Shape(" ");
+        }
+        if (_digitWidth <= 0 && _segments.Any(static s => s.IsNumber && s.Columns is not null))
         {
             for (var d = '0'; d <= '9'; d++)
             {
                 _digitWidth = Math.Max(_digitWidth, Glyph(d).WidthIncludingTrailingWhitespace);
             }
         }
-        _space ??= Shape(" ");
         foreach (var segment in _segments)
         {
             if (segment.IsNumber && segment.Columns is { } columns)
