@@ -15,16 +15,23 @@ public partial class SwipeActionsInboxDemo : UserControl
     {
         InitializeComponent();
         Inbox.ItemsSource = _messages;
+        _messages.CollectionChanged += (_, _) => UpdateRemaining();
         Fill();
+    }
+
+    private void UpdateRemaining()
+    {
+        Remaining.Text = _messages.Count == 0 ? "All caught up" : $"{_messages.Count} left to triage";
     }
 
     private void Fill()
     {
         _messages.Clear();
-        _messages.Add(new Message("Maya Chen", "Design review moved to Thursday", "The room is booked from 2pm. Bring the latest flows.", "9:41"));
-        _messages.Add(new Message("Linear", "3 issues assigned to you", "ARC-212 Swipe rows stutter on resize, and two more.", "8:15"));
-        _messages.Add(new Message("Jonas Weber", "Invoice #2041", "Attached is the invoice for October. Thanks again!", "Yesterday"));
-        _messages.Add(new Message("Calendar", "Standup in 10 minutes", "Daily standup · Room 4B · 10:00–10:15", "Yesterday"));
+        _messages.Add(new Message("Maya Chen", "Design review moved to Thursday", "The room is booked from 2pm. Bring the latest flows.", "9:41", 47));
+        _messages.Add(new Message("Daniel Ortiz", "Contract draft for Fernhill", "Two clauses changed since Monday. Legal wants a reply today.", "8:15", 12));
+        _messages.Add(new Message("Priya Nair", "Survey results are in", "Response rate was 38%. The summary deck is in the shared folder.", "Yesterday", 45) { IsUnread = false });
+        _messages.Add(new Message("Jonas Weber", "Invoice #2041", "Attached is the invoice for October. Thanks again!", "Mon", 59) { IsUnread = false });
+        UpdateRemaining();
     }
 
     private void OnActionInvoked(object? sender, SwipeActionInvokedEventArgs e)
@@ -45,6 +52,7 @@ public partial class SwipeActionsInboxDemo : UserControl
         _lastRemoved = message;
         _messages.Remove(message);
         Undo.IsVisible = true;
+        Recovery.IsVisible = true;
         Status.Text = $"{(e.Action.Tone == SwipeActionTone.Danger ? "Deleted" : "Archived")} “{message.Subject}”.";
     }
 
@@ -65,10 +73,11 @@ public partial class SwipeActionsInboxDemo : UserControl
     {
         Fill();
         Undo.IsVisible = false;
-        Status.Text = "Inbox reset.";
+        Recovery.IsVisible = false;
+        Status.Text = "Swipe a message, or use its menu.";
     }
 
-    public sealed class Message(string sender, string subject, string preview, string time) : INotifyPropertyChanged
+    public sealed class Message(string sender, string subject, string preview, string time, int portrait) : INotifyPropertyChanged
     {
         private bool _isUnread = true;
 
@@ -81,6 +90,8 @@ public partial class SwipeActionsInboxDemo : UserControl
         public string Preview { get; } = preview;
 
         public string Time { get; } = time;
+
+        public ImageSource? Photo { get; } = ImageSource.TryParse($"https://i.pravatar.cc/160?img={portrait}", out var source) ? source : null;
 
         public bool IsUnread
         {
