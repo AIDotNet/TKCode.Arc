@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ArenaIdentityTheme">
 
     <!--
         A pane's name slot: 14 / 19.6 medium, Foreground, one line. The face swaps in label mode inside a width spring (Quick)

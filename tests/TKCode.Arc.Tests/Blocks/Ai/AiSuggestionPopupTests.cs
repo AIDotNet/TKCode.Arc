@@ -1,6 +1,6 @@
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Tests.CorePrimitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -16,8 +16,8 @@ public class AiSuggestionPopupTests
 {
     private static Matrix FrameMatrix(AiSuggestionPop pop)
     {
-        var actor = pop.FindAncestorOfType<BaseMotionActor>();
-        var transform = (actor?.MotionTransform ?? pop.RenderTransform) as MatrixTransform;
+        var actor = pop.FindAncestorOfType<ArcPopupFrame>();
+        var transform = (actor?.RenderTransform ?? pop.RenderTransform) as MatrixTransform;
         return transform?.Matrix ?? Matrix.Identity;
     }
 

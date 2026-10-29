@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SecuritySettingsTheme">
     <!--
         The password row: the SettingsRow template with its description in a BlurSwap, so "Last changed …" turns into
         "Updated just now" in place. Part names match SettingsRow's, so its theme still styles the divider, the icon tile,

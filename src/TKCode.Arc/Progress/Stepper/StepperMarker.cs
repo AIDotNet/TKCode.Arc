@@ -213,7 +213,7 @@ internal sealed class StepperMarker : Control
                 outgoing.Exit = CreateValue(0);
                 _leaving.Add(outgoing);
                 outgoing.Exit.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard)).ContinueWith(_ =>
-                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    Dispatcher.Post(() =>
                     {
                         _leaving.Remove(outgoing);
                         InvalidateVisual();

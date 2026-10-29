@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- MIT base package that replaces AtomUI (design/architecture/foundation.md): token runtime, theme publishing,
+         lazy control-theme loading and package registration. References Avalonia only. -->
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Foundation</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Foundation</PackageId>
+        <Description>Theme and token runtime for TKCode.Arc: design tokens, light and dark publishing, lazy control themes and package registration. Depends on Avalonia only.</Description>
+        <PackageTags>avalonia;arc;theme;tokens</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The generator ships inside this package as an analyzer (consumers get it from analyzers/dotnet/cs); Foundation
+             itself declares no tokens, so it neither references nor runs it. -->
+        <ProjectReference Include="../TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
+                          ReferenceOutputAssembly="false" PrivateAssets="all" />
+        <None Include="../TKCode.Arc.Foundation.Generators/bin/$(Configuration)/netstandard2.0/TKCode.Arc.Foundation.Generators.dll"
+              Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        <None Include="buildTransitive/TKCode.Arc.Foundation.targets" Pack="true" PackagePath="build/;buildTransitive/" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Foundation.Tests" />
+    </ItemGroup>
+</Project>

@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.DialogTheme">
 
     <!-- Dialog: fills its parent; a scrim and a centered Surface panel with the title, the message and the actions.
          The panel's scale and opacity and the scrim's opacity are driven by the Dialog's code (one presence value that an

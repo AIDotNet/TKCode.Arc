@@ -1,11 +1,11 @@
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 using Avalonia.Media;
 
 namespace TKCode.Arc.Mobile;
 
 /// <summary>Geometry of <see cref="Dialog"/>: the scrim color, the panel's width and padding.</summary>
-[ControlDesignToken]
+// The desktop TKCode.Arc package declares a DialogToken too, and identities are unique per application.
+[ControlDesignToken(Identity = "MobileDialog")]
 internal sealed class DialogToken : AbstractControlDesignToken
 {
     /// <summary>Color of the scrim behind the panel at full opacity.</summary>

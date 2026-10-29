@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiReasoningDisclosureTheme">
 
     <!--
         A reply head: the 22px lead cell (the model's mark), 6px, the reasoning button; the row is 28px high. Under it the

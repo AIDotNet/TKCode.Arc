@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ScrubInputTheme">
 
     <!-- The number editor: a frameless text box (Arc .input). -->
     <ControlTheme x:Key="{x:Type arc:ScrubInputEditor}" TargetType="arc:ScrubInputEditor">

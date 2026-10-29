@@ -1,8 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    xmlns:atom="https://atomui.net"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AvatarTheme">
     <ControlTheme x:Key="{x:Type arc:Avatar}" TargetType="arc:Avatar">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -19,10 +19,10 @@
                                        Text="{TemplateBinding Initials}"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
-                            <atom:AsyncImage Name="PART_Image"
-                                             IsVisible="False"
-                                             Source="{TemplateBinding Source}"
-                                             Stretch="UniformToFill" />
+                            <arc:ArcImage Name="PART_Image"
+                                          IsVisible="False"
+                                          Source="{TemplateBinding Source}"
+                                          Stretch="UniformToFill" />
                         </Panel>
                     </Border>
                     <arc:PresenceHost Name="PART_StatusHost"
@@ -98,23 +98,23 @@
             <Style Selector="^ /template/ TextBlock#PART_Initials">
                 <Setter Property="IsVisible" Value="False" />
             </Style>
-            <Style Selector="^ /template/ atom|AsyncImage#PART_Image">
+            <Style Selector="^ /template/ arc|ArcImage#PART_Image">
                 <Setter Property="IsVisible" Value="True" />
             </Style>
         </Style>
         <!-- Set only while a photo is still downloading after mount, so cached photos never fade. -->
-        <Style Selector="^:image-loading /template/ atom|AsyncImage#PART_Image">
+        <Style Selector="^:image-loading /template/ arc|ArcImage#PART_Image">
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Effect">
                 <BlurEffect Radius="4" />
             </Setter>
         </Style>
-        <Style Selector="^:motion-reduced:image-loading /template/ atom|AsyncImage#PART_Image">
+        <Style Selector="^:motion-reduced:image-loading /template/ arc|ArcImage#PART_Image">
             <Setter Property="Effect" Value="{x:Null}" />
         </Style>
 
         <Style Selector="^:motion-full">
-            <Style Selector="^:not(:image-loading) /template/ atom|AsyncImage#PART_Image">
+            <Style Selector="^:not(:image-loading) /template/ arc|ArcImage#PART_Image">
                 <Setter Property="Transitions">
                     <Transitions>
                         <arc:ArcDoubleTransition Property="Opacity" Tween="Enter" />

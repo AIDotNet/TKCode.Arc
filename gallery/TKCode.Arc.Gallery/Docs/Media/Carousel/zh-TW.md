@@ -1,7 +1,7 @@
 ---
 title: 輪播
 summary: 透過拖曳、輕掃或方向鍵瀏覽一排投影片。
-source-hash: 4a960604b2d2
+source-hash: 6fd1e19ca14e
 ---
 
 <Demo name="Slides" />
@@ -173,7 +173,7 @@ carousel.SlideLabelFormatter = (index, count) => $"檔案照片 {index + 1}，�
 
 ### 照片
 
-投影片可以在繪製的場景之上顯示 `AsyncImage` 照片，因此離線時看起來仍然完整。
+投影片可以在繪製的場景之上顯示 `ArcImage` 照片，因此離線時看起來仍然完整。
 
 <Demo name="Photos" />
 

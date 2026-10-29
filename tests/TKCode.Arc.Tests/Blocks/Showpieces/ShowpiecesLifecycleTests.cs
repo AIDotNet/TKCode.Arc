@@ -1,7 +1,3 @@
-using AtomUI;
-using AtomUI.Theme;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.Gallery.Demos;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -28,11 +24,10 @@ public class ShowpiecesLifecycleTests
         ("RevenueGlobe", () => new RevenueGlobePreviewDemo()),
     ];
 
-    private static Task ApplyWithoutRunningJobs(ThemeConfig? config)
+    private static Task ApplyWithoutRunningJobs(Action<ArcThemeBuilder>? configure)
     {
-        var manager = Application.Current!.GetThemeManager()!;
-        return manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, config, ThemeTransitionReason.UserRequest),
-            TestContext.Current.CancellationToken);
+        ArcTheme.Manager.Apply(configure is null ? ArcThemeState.Default : ArcThemeState.Default.With(configure));
+        return Task.CompletedTask;
     }
 
     private static void RunQueue()
@@ -82,7 +77,7 @@ public class ShowpiecesLifecycleTests
                 window.Width = 900;
                 window.Height = 700;
                 RunQueue();
-                await ApplyWithoutRunningJobs(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+                await ApplyWithoutRunningJobs(TestHelpers.Dark);
                 window.Content = null;
                 window.Close();
                 RunQueue(name, failures);
@@ -116,7 +111,7 @@ public class ShowpiecesLifecycleTests
                 window.Width = 900;
                 window.Height = 700;
                 RunQueue();
-                await ApplyWithoutRunningJobs(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+                await ApplyWithoutRunningJobs(TestHelpers.Dark);
                 RunQueue(name, failures);
                 await ApplyWithoutRunningJobs(null);
                 RunQueue(name, failures);

@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
@@ -507,7 +505,7 @@ public class AiSourcesRowTests
     {
         var row = Create(expanded: true);
         using var rig = new AiReplyRig(row);
-        await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+        await TestHelpers.ApplyAsync(TestHelpers.Dark);
         try
         {
             rig.Settle();
@@ -523,7 +521,7 @@ public class AiSourcesRowTests
         }
         finally
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+            await TestHelpers.ApplyAsync(null);
         }
     }
 

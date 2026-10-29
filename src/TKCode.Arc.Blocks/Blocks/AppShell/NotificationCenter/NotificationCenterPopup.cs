@@ -1,7 +1,6 @@
 // Ported from Arc's free notification-center block (MIT, Copyright (c) 2026 Elia Kuratli).
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives.PopupPositioning;
@@ -11,7 +10,6 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AtomPopup = AtomUI.Desktop.Controls.Popup;
 
 namespace TKCode.Arc;
 
@@ -32,7 +30,7 @@ internal sealed class NotificationCenterPopup : ArcPopup
         {
             return;
         }
-        var width = placement.PopupSize.Width - placement.Deflate.Left - placement.Deflate.Right;
+        var width = placement.PopupSize.Width - shadow.Left - shadow.Right;
         var client = topLevel.ClientSize.Width;
         if (width <= 0 || width + 2 * CollisionPadding > client)
         {
@@ -54,7 +52,7 @@ internal sealed class NotificationCenterPopup : ArcPopup
 /// played on the popup's motion actor so the floating shadow moves with the panel: it grows out of the bell from 6px
 /// toward it at scale 0.97 while fading in (standard 240ms, enter curve), and leaves in 120ms at half the travel and
 /// scale 0.98. The origin is the panel edge nearest the bell, following a flip to the top. An open and a close
-/// reverse each other from where the panel is. Code-driven because the motion has to run on AtomUI's popup frame
+/// reverse each other from where the panel is. Code-driven because the motion has to run on the popup's frame
 /// (outside any template) and gate the popup's removal on the exit. Reduced motion and Off show and hide the panel at
 /// once (Arc turns the panel animation off for reduced motion). Also reports presses outside the panel and the bell,
 /// and Escape.
@@ -69,7 +67,7 @@ internal sealed class NotificationCenterPresence : IDisposable
     private readonly MotionValue<Point> _pose;
     private readonly MatrixTransform _transform = new();
     private readonly MatrixTransform _fallbackTransform = new();
-    private BaseMotionActor? _actor;
+    private ArcPopupFrame? _actor;
     private Control? _anchor;
     private TopLevel? _topLevel;
     private bool _closing;
@@ -78,7 +76,7 @@ internal sealed class NotificationCenterPresence : IDisposable
     private Size _originSize;
     private bool _originAbove;
     private bool _originKnown;
-    private BaseMotionActor? _originActor;
+    private ArcPopupFrame? _originActor;
 
     public NotificationCenterPresence(NotificationCenterPanel panel)
     {
@@ -91,8 +89,8 @@ internal sealed class NotificationCenterPresence : IDisposable
             EnterOffset = 0,
             EnterScale = 1
         };
-        // The motion runs here, not in AtomUI's popup motion: animation priority wins over ArcPopup's own setting.
-        Popup.SetValue(AtomPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
+        // The motion runs here, not in the popup's own motion: animation priority wins over ArcPopup's own setting.
+        Popup.SetValue(ArcPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
         Popup.Opened += OnPopupOpened;
         _opacity = new MotionValue<double>(panel, 0, MotionVectors.Double);
         _pose = new MotionValue<Point>(panel, new Point(0, 1), MotionVectors.Point);
@@ -210,16 +208,16 @@ internal sealed class NotificationCenterPresence : IDisposable
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
-        _actor = Panel.FindAncestorOfType<BaseMotionActor>();
+        _actor = Panel.FindAncestorOfType<ArcPopupFrame>();
         if (_actor is not null)
         {
             _actor.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            _actor.MotionTransform = _transform;
+            _actor.RenderTransform = _transform;
         }
         Apply();
     }
 
-    /// <summary>The side the panel landed on after AtomUI's flip.</summary>
+    /// <summary>The side the panel landed on after the positioner's flip.</summary>
     private bool IsAbove => Popup.IsVerticalFlipped;
 
     private void Apply()

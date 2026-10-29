@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.LineReplayTheme">
     <!--
         Line replay (Arc Line replay, design reference): the chart column (heading and legend, the readout, the
         self-drawn stage, the transport) and the key moments column beside it from 1000 (under it below, in two columns,

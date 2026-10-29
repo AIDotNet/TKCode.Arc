@@ -1,18 +1,18 @@
 using System.Globalization;
 using System.IO.Compression;
 using System.Text;
-using AtomUI;
-using AtomUI.Localization;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Threading;
 using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 using Shouldly;
 using TKCode.Arc.Motion;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Tests.AdvancedCharts;
 
@@ -105,6 +105,36 @@ public class DataGridChromeTests
     }
 
     [AvaloniaFact]
+    public void The_Value_Checklist_Search_Has_A_Template_And_Filters_The_Values()
+    {
+        // More than seven values show the search field; it used to be a TextBox with no theme, so it drew nothing.
+        var grid = DataGridBehaviorTests.Create();
+        grid.Columns[1].Options = ["Europe", "Asia Pacific", "North America", "Africa", "Oceania", "Middle East", "Latin America", "Nordics", "Baltics"];
+        var window = DataGridBehaviorTests.Show(grid);
+        grid.IsFilterRowOpen = true;
+        Dispatcher.UIThread.RunJobs();
+        grid.OpenSelectFilter(grid.Viewport.FilterRow, grid.Store.AccessorIndex("region"));
+        Dispatcher.UIThread.RunJobs();
+
+        var search = window.GetVisualDescendants().OfType<DataGridFilterBox>().Single(b => b.IsVisible && b.Name is null);
+        search.IsFocused.ShouldBeTrue();
+        search.GetVisualDescendants().OfType<Avalonia.Controls.Presenters.TextPresenter>().ShouldHaveSingleItem();
+        var placeholder = search.GetVisualDescendants().OfType<TextBlock>().Single(t => t.Name == "PART_Placeholder");
+        placeholder.IsVisible.ShouldBeTrue();
+        placeholder.Text.ShouldBe(search.PlaceholderText);
+        placeholder.Bounds.Width.ShouldBeGreaterThan(0);
+
+        window.KeyTextInput("ic");
+        Dispatcher.UIThread.RunJobs();
+        search.Text.ShouldBe("ic");
+        var presenter = search.GetVisualDescendants().OfType<Avalonia.Controls.Presenters.TextPresenter>().Single();
+        presenter.Text.ShouldBe("ic");
+        presenter.Bounds.Width.ShouldBeGreaterThan(0);
+        placeholder.IsVisible.ShouldBeFalse();
+        window.GetVisualDescendants().OfType<Checkbox>().Select(b => b.Content).ShouldBe(["Asia Pacific", "North America", "Africa", "Latin America", "Nordics", "Baltics"]);
+    }
+
+    [AvaloniaFact]
     public void Exports_Write_The_Visible_Columns_In_View_Order_And_Groups_As_Outlines()
     {
         var grid = DataGridBehaviorTests.Create();
@@ -140,20 +170,20 @@ public class DataGridChromeTests
     [AvaloniaFact]
     public void Built_In_Text_Follows_The_Language()
     {
-        var languages = Application.Current!.GetLanguageManager()!;
+        var languages = ArcLanguageManager.Current!;
         var grid = DataGridBehaviorTests.Create();
         grid.Culture = null;
         DataGridBehaviorTests.Show(grid);
         try
         {
-            languages.ChangeLanguage(LanguageTag.Parse("zh-CN"));
+            languages.Set(LanguageTag.Parse("zh-CN"));
             Dispatcher.UIThread.RunJobs();
             grid.RowCountText().ShouldBe("4 行");
             grid.Toolbar!.SearchBox.PlaceholderText.ShouldBe("搜索");
             grid.ClearRange(new DataGridCellRange(0, 2, 0, 2));
             grid.StatusBar!.MessageText.ShouldBe("已清空 1 个单元格");
             grid.EffectiveCulture.TwoLetterISOLanguageName.ShouldBe("zh");
-            languages.ChangeLanguage(LanguageTag.Parse("zh-TW"));
+            languages.Set(LanguageTag.Parse("zh-TW"));
             Dispatcher.UIThread.RunJobs();
             grid.RowCountText().ShouldBe("4 列");
             grid.SetFilter("arr", DataGridFilter.Text(">0"));
@@ -162,7 +192,7 @@ public class DataGridChromeTests
         }
         finally
         {
-            languages.ChangeLanguage(LanguageTag.Parse("en-US"));
+            languages.Set(LanguageTag.Parse("en-US"));
             Dispatcher.UIThread.RunJobs();
         }
     }

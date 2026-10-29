@@ -91,7 +91,7 @@ internal sealed class TreemapCrumbs : Avalonia.Controls.Control, Avalonia.Render
             {
                 var crumb = gone;
                 _ = gone.Presence.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Exit)).ContinueWith(_ =>
-                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    Dispatcher.Post(() =>
                     {
                         _crumbs.Remove(crumb);
                         InvalidateVisual();

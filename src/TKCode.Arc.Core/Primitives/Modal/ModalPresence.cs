@@ -1,6 +1,5 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
-using AtomUI.Controls.Primitives;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -107,7 +106,7 @@ public sealed class ModalPresence : IDisposable
     /// <summary>
     /// Backdrop blur radius in px applied to the window content while the scrim is shown (Arc: dialog 7, drawer 4;
     /// tokens <c>BackdropBlurDialog</c> / <c>BackdropBlurDrawer</c>). Ignored when the <c>ReduceTransparency</c>
-    /// token is on, and inside a scoped overlay panel.
+    /// token is on, and inside an <see cref="ArcOverlayHost"/>.
     /// </summary>
     public double BackdropBlur { get; set; }
 
@@ -518,14 +517,7 @@ public sealed class ModalPresence : IDisposable
 
     #region Layer
 
-    private static Panel? ResolveLayer(Visual anchor)
-    {
-        if (ScopeAwareOverlayLayer.GetLayer(anchor) is { } scoped && scoped.GetVisualParent() is not null)
-        {
-            return scoped;
-        }
-        return OverlayLayer.GetOverlayLayer(anchor);
-    }
+    private static Panel? ResolveLayer(Visual anchor) => ArcOverlayLayer.Find(anchor);
 
     private void OnLayerSizeChanged(object? sender, SizeChangedEventArgs e)
     {
@@ -536,7 +528,7 @@ public sealed class ModalPresence : IDisposable
     private void UpdateLayerSize()
     {
         var size = _layer?.Bounds.Size ?? default;
-        if ((size.Width <= 0 || size.Height <= 0) && _layer is ScopeAwareOverlayLayer { LayerHost: Visual host })
+        if ((size.Width <= 0 || size.Height <= 0) && _layer is ArcOverlayLayer { Host: { } host })
         {
             size = host.Bounds.Size;
         }
@@ -577,8 +569,8 @@ public sealed class ModalPresence : IDisposable
         }
     }
 
-    /// <summary>Window content under the overlay layer (null inside a scoped overlay panel).</summary>
-    internal Visual? BlurTarget => _blurTargetCache ??= _layer is ScopeAwareOverlayLayer { LayerHost: ScopeAwareOverlayLayerPanel }
+    /// <summary>Window content under the overlay layer (null inside an <see cref="ArcOverlayHost"/>).</summary>
+    internal Visual? BlurTarget => _blurTargetCache ??= _layer is ArcOverlayLayer
         ? null
         : _layer is null ? null : ModalStack.FindBlurTarget(_layer);
 

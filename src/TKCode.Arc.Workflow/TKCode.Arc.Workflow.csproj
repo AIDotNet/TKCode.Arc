@@ -5,13 +5,11 @@
         <RootNamespace>TKCode.Arc</RootNamespace>
         <PackageId>TKCode.Arc.Workflow</PackageId>
         <Description>Workflow canvas for TKCode.Arc: show and edit graphs of steps and connections on a dotted canvas, watch a run step by step, pan and zoom, arrange automatically and undo.</Description>
-        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
-        <AtomUIThemeControlCatalog>TKCode.Arc.Workflow</AtomUIThemeControlCatalog>
         <!-- TKCode.Arc and Core contain generated types with identical names. -->
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
     </ItemGroup>
     <ItemGroup>

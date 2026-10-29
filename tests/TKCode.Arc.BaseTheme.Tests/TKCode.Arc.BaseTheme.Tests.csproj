@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- ArcBaseTheme (src/TKCode.Arc.Core/Theme/Base) in an application with no other theme and no Arc setup, so nothing else
+         styles the built-in controls. ArcDesign tokens are written straight into the application's resources under their
+         boxed ArcDesignTokenKind keys, the way the Foundation publishes them. -->
+    <PropertyGroup>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Avalonia.Headless.XUnit" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Themes.Simple" />
+        <ProjectReference Include="../../src/TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
+    </ItemGroup>
+</Project>

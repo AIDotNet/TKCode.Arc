@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CardTheme">
     <!--
         Arc card: Surface, 1px Border, RadiusPanel 26. A mouse lifts it 2px (snappy) while the border strengthens (fast)
         and the shadow rises (standard). Pieces keyed with arc:SharedElement.Key fly into the quick look (P8).

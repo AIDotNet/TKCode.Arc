@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.Foundation.Samples.SampleSwitchTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type arc:SampleSwitch}" TargetType="arc:SampleSwitch">
+        <Setter Property="Width" Value="{arc:SampleSwitchTokenResource TrackWidth}" />
+        <Setter Property="Height" Value="{arc:SampleSwitchTokenResource TrackHeight}" />
+        <Setter Property="Background" Value="{arc:SampleDesignTokenResource ControlTrack}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SampleSwitch">
+                <Border Name="PART_Track"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{arc:SampleDesignTokenResource RadiusPill}">
+                    <Border Name="PART_Thumb"
+                            HorizontalAlignment="Left"
+                            Width="{arc:SampleSwitchTokenResource ThumbSize}"
+                            Height="{arc:SampleSwitchTokenResource ThumbSize}"
+                            Margin="2"
+                            Background="{arc:SampleDesignTokenResource Surface}"
+                            CornerRadius="{arc:SampleDesignTokenResource RadiusPill}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:SampleDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Thumb">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

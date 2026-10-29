@@ -54,7 +54,7 @@ invented model and tools. It starts the first time it is mostly in view and stop
 from Avalonia's `TemplatedControl`. The base supplies the story clock, `IsPlaying`, `Speed`, `AutoPlay`, `IsLooping`,
 the play, step and restart buttons, the polite live region and the reduced-motion opening state. `AgentLoop` adds the
 iterations, the ring and its stations, the lanes and the context stack. Register the package with `UseArcSpecial()`
-next to `UseArc()`.
+next to `UseArcControls()`.
 
 The numbers in the card (tokens, durations, results) are illustrative. Say so in the text around it when the page is
 about a real product.

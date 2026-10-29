@@ -1,7 +1,7 @@
 ---
 title: 移動端頁面
 summary: 手機螢幕：頁首、內容和頁尾，排佈在裝置的安全區之內。
-source-hash: 7d668709675d
+source-hash: 9c9b9e57e9a2
 ---
 
 <Demo name="Basic" />
@@ -40,7 +40,7 @@ source-hash: 7d668709675d
 </UserControl>
 ```
 
-在 `UseArcCore()` 或 `UseArc()` 旁邊用 `UseArcMobile()` 註冊這些控制項。
+在 `UseArcCore()` 或 `UseArcControls()` 旁邊用 `UseArcMobile()` 註冊這些控制項。
 
 ### 安全區
 

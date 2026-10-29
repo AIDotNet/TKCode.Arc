@@ -272,7 +272,7 @@ public class RollingDigits : Control
             {
                 var leaving = gone;
                 gone.Presence.AnimateTo(0, MotionSpec.Spring(ArcSpring.Morph)).ContinueWith(_ =>
-                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    Dispatcher.Post(() =>
                     {
                         _columns.Remove(leaving);
                         InvalidateMeasure();

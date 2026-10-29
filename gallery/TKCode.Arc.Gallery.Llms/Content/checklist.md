@@ -9,7 +9,7 @@ passes. Each line names what to look for in the code.
 - [ ] Every property, event and enum value on an Arc control is in that component's API reference ({{base}}/components/<slug>.md).
 - [ ] C# files that use Arc and `Avalonia.Controls` together alias one of the clashing names (`using ArcButton = TKCode.Arc.Button;`).
 - [ ] No WPF or WinUI API: `Visibility`, `DataTemplateSelector`, `x:Array`, `Trigger`.
-- [ ] Packages are pinned to {{version}}, the application references Avalonia {{avalonia}}, and `UseArc()` is called inside `UseAtomUI(...)` (plus `UseArcBlocks()` or `UseArcAdvancedCharts()` when those are used).
+- [ ] Packages are pinned to {{version}}, the application references Avalonia {{avalonia}}, and `AppBuilder.UseArc(arc => arc.UseArcControls())` is called (plus `UseArcBlocks()` or `UseArcAdvancedCharts()` in the same callback when those are used); the theme is changed with `ArcTheme.Apply(...)`.
 
 ## Tokens and theme
 

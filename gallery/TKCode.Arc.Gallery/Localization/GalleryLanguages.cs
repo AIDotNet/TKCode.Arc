@@ -1,5 +1,5 @@
-using AtomUI.Localization;
 using TKCode.Arc.Gallery.Docs;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Gallery.Localization;
 

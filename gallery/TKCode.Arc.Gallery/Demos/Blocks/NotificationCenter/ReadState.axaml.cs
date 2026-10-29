@@ -29,8 +29,8 @@ public partial class NotificationCenterReadStateDemo : UserControl
         UpdateSummary();
     }
 
-    private static AtomUI.Controls.ImageSource? ImageSourceOf(string url) =>
-        AtomUI.Controls.ImageSource.TryParse(url, out var source) ? source : null;
+    private static ImageSource? ImageSourceOf(string url) =>
+        ImageSource.TryParse(url, out var source) ? source : null;
 
     // Your data store learns about every change from the events; the items' IsRead is already updated.
     private void OnReadChanged(object? sender, NotificationReadChangedEventArgs e)

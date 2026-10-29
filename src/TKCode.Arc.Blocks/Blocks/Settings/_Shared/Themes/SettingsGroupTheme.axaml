@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SettingsGroupTheme">
     <!--
         A settings group. Card: Surface, 1px Border, RadiusPanel (like arc:Card), header, rows, and a tinted footer strip
         clipped to the card's corners. Plain: the same pieces without frame or padding.

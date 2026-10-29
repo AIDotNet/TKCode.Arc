@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AnalyticsSegmentButtonTheme">
     <!--
         A segment of the Analytics segment switch (design reference: Metrics dashboard / KPI drilldown / Journey flow /
         Revenue explorer headers): transparent, Medium label; unselected TextMuted (TextSecondary with .secondary),

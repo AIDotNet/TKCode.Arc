@@ -1,7 +1,7 @@
 ---
 title: Agent loop
 summary: AI 代理會收集上下文、呼叫工具並檢查結果，循環往復直到任務完成。
-source-hash: dc59ab4f64b0
+source-hash: e5ae207d1603
 ---
 
 <Demo name="SampleRun" />
@@ -35,7 +35,7 @@ source-hash: dc59ab4f64b0
 </UserControl>
 ```
 
-`AgentLoop` 衍生自 `Explainer`。`Explainer` 是 Special 套件中動畫 AI 解說控制項的基底類別，而它又衍生自 Avalonia 的 `TemplatedControl`。基底類別提供故事時鐘、`IsPlaying`、`Speed`、`AutoPlay`、`IsLooping`、播放、單步與重新開始按鈕、禮貌即時區域，以及減少動態效果的開啟狀態。`AgentLoop` 另外新增循環內容、圓環與其站點、泳道和上下文堆疊。請在 `UseArc()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。
+`AgentLoop` 衍生自 `Explainer`。`Explainer` 是 Special 套件中動畫 AI 解說控制項的基底類別，而它又衍生自 Avalonia 的 `TemplatedControl`。基底類別提供故事時鐘、`IsPlaying`、`Speed`、`AutoPlay`、`IsLooping`、播放、單步與重新開始按鈕、禮貌即時區域，以及減少動態效果的開啟狀態。`AgentLoop` 另外新增循環內容、圓環與其站點、泳道和上下文堆疊。請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。
 
 卡片中的數字（token、時長、結果）都是示意值。若頁面談的是真實產品，請在卡片周圍的文字中說明這一點。
 

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ArenaPaneTabsTheme">
 
     <!--
         One narrow tab: 52 high, 0 12 inside, two lines centered: the identity (14 / 19.6 medium, the short name once revealed)

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiModelLineTheme">
 
     <!--
         "[mark 14] Lumen Pro 4 · 812 tokens · 18.6s": 12 / 16.8, the parts 8px apart and wrapping 4px apart; the name in

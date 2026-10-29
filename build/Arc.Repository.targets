@@ -7,4 +7,14 @@
         <Using Include="Xunit" />
         <Using Include="Shouldly" />
     </ItemGroup>
+    <!-- Projects that declare tokens ([ControlDesignToken]) or control themes (Themes/*Theme.axaml) set
+         ArcFoundationGenerator=true: they run the Foundation generator as an analyzer and import Foundation's targets
+         (theme files become AvaloniaResource items; design/architecture/foundation.md section 5.4). A package consumer
+         gets both from the TKCode.Arc.Foundation package. -->
+    <ItemGroup Condition="'$(ArcFoundationGenerator)' == 'true'">
+        <ProjectReference Include="$(ArcRepositoryRoot)src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    </ItemGroup>
+    <Import Project="$(ArcRepositoryRoot)src/TKCode.Arc.Foundation/buildTransitive/TKCode.Arc.Foundation.targets"
+            Condition="'$(ArcFoundationGenerator)' == 'true'" />
 </Project>

@@ -1,6 +1,5 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Themes.Corners;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -15,7 +14,7 @@ namespace TKCode.Arc.Tests.Theme;
 /// <summary>The global corner style: square corners everywhere, and nothing but corners changes.</summary>
 public class CornerStyleTests
 {
-    private static ThemeConfig Config(ArcCornerStyle style) => new ThemeConfigBuilder().WithArcCorners(style, ArcCornerScope.All).Build();
+    private static Action<ArcThemeBuilder> Config(ArcCornerStyle style) => t => t.Corners(style);
 
     [AvaloniaFact]
     public async Task Square_Zeroes_The_ArcDesign_Radii_And_Keeps_Every_Other_Token()
@@ -98,9 +97,7 @@ public class CornerStyleTests
         var window = TestHelpers.Show(host);
         try
         {
-            var config = new ThemeConfigBuilder()
-                .WithArc(arc => arc.Accent(ArcAccentPreset.Violet).Corners(ArcCornerStyle.Square, ArcCornerScope.Controls))
-                .Build();
+            Action<ArcThemeBuilder> config = t => t.Accent(ArcAccentPreset.Violet).Corners(ArcCornerStyle.Square);
             var before = Snapshot(host);
             await TestHelpers.ApplyAsync(config);
             var after = Snapshot(host);

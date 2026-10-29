@@ -500,7 +500,7 @@ public class AiUserBubbleTests
     {
         var rig = new Rig();
         rig.Bubble.Copy();
-        ((Avalonia.Controls.Primitives.VisualLayerManager)rig.Window.Content!).Child = null;
+        rig.Window.Content = null;
         rig.Settle();
         rig.Bubble.IsCopied.ShouldBeFalse();
         rig.Schedule.Pending[0].Handle.IsDisposed.ShouldBeTrue();

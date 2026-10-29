@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.MarketTerminalTheme">
     <!--
         Market terminal: three cards in a grid the control arranges by width (chart beside a 340 column from 1080, the
         watchlist and the ticket side by side under the chart from 720, stacked below). The chart card holds the header,

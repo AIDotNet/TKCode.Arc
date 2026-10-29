@@ -69,6 +69,31 @@ public class ToastStackTests
     }
 
     [AvaloniaFact]
+    public void Resuming_Toasts_Whose_Time_Ran_Out_While_Paused_Dismisses_Them()
+    {
+        var (window, stack) = ShowStack();
+        try
+        {
+            stack.Show(new ToastOptions { Title = "First", Duration = TimeSpan.FromMilliseconds(5) });
+            stack.Show(new ToastOptions { Title = "Second", Duration = TimeSpan.FromMilliseconds(5) });
+            // Their time runs out before the dispatcher gets to the timers (a busy UI thread), then a drag pauses the
+            // stack: both are paused with nothing left. Letting go resumes them, and each fires (and is dismissed) at
+            // once, while the stack is still walking its toasts to resume them.
+            Thread.Sleep(30);
+            stack.OnItemDragChanged(true);
+            stack.IsPaused.ShouldBeTrue();
+            stack.OnItemDragChanged(false);
+            stack.IsPaused.ShouldBeFalse();
+            stack.Count.ShouldBe(0);
+            stack.Panel!.Present.ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Hover_Fans_The_Stack_Out_And_Pauses_Timers()
     {
         var (window, stack) = ShowStack();

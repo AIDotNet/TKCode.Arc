@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ChoroplethExplorerTheme">
     <!--
         Choropleth explorer (Arc Analytics › Choropleth explorer, design reference only, ADR 0024): a header (title and
         description, the area switch and the metric switch), then the body: the map column (summary, map, legend) and the

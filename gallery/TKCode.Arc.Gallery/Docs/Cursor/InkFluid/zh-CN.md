@@ -1,7 +1,7 @@
 ---
 title: Ink fluid
 summary: 内容背后的流体模拟：指针搅动柔和的墨水，墨水打旋后淡去；没人操作时，一阵缓慢的搅动让它保持流动。
-source-hash: 9960e34120bf
+source-hash: 5593fd1750d8
 ---
 
 <Demo name="Preview" />
@@ -30,7 +30,7 @@ source-hash: 9960e34120bf
 </UserControl>
 ```
 
-`InkFluid` 是 Special 包中的 `ContentControl`。在 `UseArc()` 旁边调用 `UseArcSpecial()` 注册该包。墨水画在控件自身背景之上的透明像素上，所以要给它一个 `Background`；想让它看起来像卡片时再加上 `CornerRadius` 和边框，墨水会被裁剪在这个圆角框内。控件最小高度为 240px。
+`InkFluid` 是 Special 包中的 `ContentControl`。在 `UseArcControls()` 旁边调用 `UseArcSpecial()` 注册该包。墨水画在控件自身背景之上的透明像素上，所以要给它一个 `Background`；想让它看起来像卡片时再加上 `CornerRadius` 和边框，墨水会被裁剪在这个圆角框内。控件最小高度为 240px。
 
 墨水的颜色来自主题：中性墨水使用前景色 Token，带色墨水使用强调色 Token，因此会跟随亮色、暗色主题和强调色切换。设置 `InkBrush` 或 `AccentInkBrush` 可以分别覆盖。
 

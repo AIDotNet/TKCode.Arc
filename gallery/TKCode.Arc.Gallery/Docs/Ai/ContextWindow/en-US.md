@@ -41,7 +41,7 @@ message, Attach file and Compact now change the window, and a status line under 
 ```
 
 `ContextWindow` is a `TemplatedControl` in the Special package. Register the package with `UseArcSpecial()` next to
-`UseArc()`. The card is at most 744px wide and follows its own width, not the window's.
+`UseArcControls()`. The card is at most 744px wide and follows its own width, not the window's.
 
 Given no data at all (no models, items, turns or files) the card shows the invented sample session from
 `ContextWindowSamples`: three sample models with 1M, 512K and 400K windows, a coding session of 436K tokens, five turns

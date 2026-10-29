@@ -8,7 +8,6 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.Controls;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;

@@ -14,7 +14,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends python3 brotli gzip \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
-# The SDK is the one global.json pins (11.0.100-rc.2). The .NET 10 runtime is needed too: AtomUI's build worker is net10.
+# The SDK is the one global.json pins (11.0.100-rc.2). The .NET 10 runtime is needed too: gallery/TKCode.Arc.Gallery.Llms (run below) targets net10.0.
 COPY global.json .
 RUN curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh \
     && bash /tmp/dotnet-install.sh --jsonfile global.json --install-dir /opt/dotnet \

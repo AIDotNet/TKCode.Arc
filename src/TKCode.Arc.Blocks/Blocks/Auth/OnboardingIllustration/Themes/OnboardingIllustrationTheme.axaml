@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.OnboardingIllustrationTheme">
     <!--
         The onboarding card: at most 440 wide, radius 20, a 1px Border, the raised surface and the raised shadow. On top the
         stage (muted surface, a 1px bottom border, padding 40 / 20 / 16) with the drawing (at most 352 wide, 8:5) and Skip
@@ -10,7 +11,7 @@
         than 410) tightens the padding, shows Back as an arrow and narrows the main button; :unframed drops the frame.
     -->
     <ControlTheme x:Key="{x:Type arc:OnboardingIllustration}" TargetType="arc:OnboardingIllustration">
-        <!-- Shadow and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <!-- Shadow and focus rings reach past the bounds (stated explicitly so an app style that turns clipping on cannot cut them). -->
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">

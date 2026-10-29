@@ -1,7 +1,6 @@
 // Ported from Arc's free notification-center block (MIT, Copyright (c) 2026 Elia Kuratli).
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.Controls;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;

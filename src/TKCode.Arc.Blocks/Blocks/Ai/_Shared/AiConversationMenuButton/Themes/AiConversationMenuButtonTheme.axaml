@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiConversationMenuButtonTheme">
 
     <!--
         The title pill: 34px, pill radius, padding 0 8 0 10, clear at rest. The title (14 / 19.6, medium, Foreground) sits

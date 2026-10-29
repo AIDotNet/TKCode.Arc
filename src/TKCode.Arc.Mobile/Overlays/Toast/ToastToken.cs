@@ -1,10 +1,10 @@
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc.Mobile;
 
 /// <summary>Geometry of <see cref="Toast"/>: the toast's size limits, padding and the gaps around the stack.</summary>
-[ControlDesignToken]
+// The desktop TKCode.Arc package declares a ToastToken too, and identities are unique per application.
+[ControlDesignToken(Identity = "MobileToast")]
 internal sealed class ToastToken : AbstractControlDesignToken
 {
     /// <summary>The smallest height of a toast, a touch target: 44.</summary>

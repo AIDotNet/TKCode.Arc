@@ -1,6 +1,6 @@
 ---
 title: 动效
-source-hash: 09a655958638
+source-hash: 57d2e62976e2
 ---
 
 # 动效
@@ -34,7 +34,7 @@ ArcMotion.SetLevel(mainWindow, ArcMotionLevel.Reduced);
 </StackPanel>
 ```
 
-主题也可以为整个应用设置级别，方法是通过 `WithArc(arc => arc.MotionMode(...))`（参见 **主题**）。控件的实际级别取两者中较低的那个：继承的 `ArcMotion.Level` 与主题的动效模式。在设为 `Reduced` 的主题中，即使窗口设为 `Full`，也会以减弱动效运行。
+主题也可以为整个应用设置级别，方法是通过 `ArcTheme.Apply(t => t.MotionLevel(...))`（参见 **主题**）。控件的实际级别取两者中较低的那个：继承的 `ArcMotion.Level` 与主题的动效模式。在设为 `Reduced` 的主题中，即使窗口设为 `Full`，也会以减弱动效运行。
 
 库本身不会读取操作系统的减少动效偏好。请在应用程序中提供设置（图库的外观面板提供 Full、Reduced 和 Off 三个选项），将其与用户的其他偏好一起保存，并在启动时应用到主窗口。
 

@@ -265,7 +265,7 @@ internal sealed class AgentPlanRow : Control
         }
         _left = done;
         _ = _fade.AnimateTo(0, AgentPlanMotion.Enter(AgentPlanMotion.RowExit)).ContinueWith(
-            _ => Avalonia.Threading.Dispatcher.UIThread.Post(InvalidateMeasure), TaskScheduler.Default);
+            _ => Dispatcher.Post(InvalidateMeasure), TaskScheduler.Default);
         InvalidateMeasure();
     }
 

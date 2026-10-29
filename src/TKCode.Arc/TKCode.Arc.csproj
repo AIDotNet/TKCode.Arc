@@ -4,13 +4,11 @@
         <AssemblyName>TKCode.Arc</AssemblyName>
         <RootNamespace>TKCode.Arc</RootNamespace>
         <PackageId>TKCode.Arc</PackageId>
-        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
-        <AtomUIThemeControlCatalog>TKCode.Arc</AtomUIThemeControlCatalog>
         <!-- Core exposes internals to Arc; both assemblies contain generated types with identical names. -->
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AtomUI.Desktop.Controls" />
         <!-- Markdown rendering and TextMate code highlighting (ADR 0011); brings StreamMark.Avalonia and StreamMark.Core. -->
         <PackageReference Include="TKCode.StreamMark.Highlighting.TextMate" />
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />

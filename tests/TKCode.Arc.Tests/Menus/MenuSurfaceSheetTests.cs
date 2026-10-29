@@ -42,15 +42,8 @@ public class MenuSurfaceSheetTests
         try
         {
             var reference = SheetOpenedAndClosed(host);
-            for (var i = 0; i < 4 && reference.IsAlive; i++)
-            {
-                // The window stays open: its compositor holds what was removed until the next frame is committed.
-                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-                Dispatcher.UIThread.RunJobs();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                Dispatcher.UIThread.RunJobs();
-            }
+            // The window stays open: Collect commits a frame each round, which lets its compositor drop what was removed.
+            TestHelpers.Collect(reference);
             reference.IsAlive.ShouldBeFalse();
         }
         finally

@@ -1,5 +1,3 @@
-using AtomUI;
-using AtomUI.Localization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -9,6 +7,7 @@ using StreamMark.Avalonia;
 using TKCode.Arc.Themes.Corners;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Shell;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.DocShots;
 
@@ -34,7 +33,7 @@ internal static class PageShot
             return 1;
         }
 
-        Application.Current!.GetLanguageManager()!.ChangeLanguage(LanguageTag.Parse(language));
+        ArcLanguage.Set(language);
         var corners = options.Contains("corners=square") ? ArcCornerStyle.Square
             : options.Contains("corners=half") ? ArcCornerStyle.Scale(0.5) : ArcCornerStyle.Default;
         Shooter.ApplyTheme(options.Contains("dark"), corners);

@@ -434,7 +434,7 @@ public partial class DocumentExtraction
                 }
                 DrainQueued = true;
             }
-            Dispatcher.UIThread.Post(() =>
+            _owner.Dispatcher.Post(() =>
             {
                 lock (_gate)
                 {

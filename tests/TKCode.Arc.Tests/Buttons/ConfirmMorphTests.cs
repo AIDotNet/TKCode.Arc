@@ -178,7 +178,9 @@ public class ConfirmMorphTests
             Pump((int)ConfirmMorph.ArmDelay.TotalMilliseconds + 40);
             Part<AvaloniaButton>(morph, "PART_Confirm").Focus(NavigationMethod.Tab);
             Press(window, PhysicalKey.Space);
-            WaitFor(() => morph.State == ConfirmMorphState.Done, 4000).ShouldBeTrue();
+            // A one-second countdown on the wall clock: WaitFor returns when it lands, its default bound only covers a
+            // loaded runner.
+            WaitFor(() => morph.State == ConfirmMorphState.Done).ShouldBeTrue();
             runs.ShouldBe(1);
         }
         finally

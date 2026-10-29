@@ -13,7 +13,6 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
-using AtomUI.Localization;
 using TKCode.Arc.Localization;
 
 namespace TKCode.Arc;
@@ -178,7 +177,7 @@ public partial class DataGrid : TemplatedControl
     public static readonly StyledProperty<string?> EmptyMessageProperty =
         AvaloniaProperty.Register<DataGrid, string?>(nameof(EmptyMessage));
 
-    /// <summary>Culture for formatting and parsing values; null follows the AtomUI language.</summary>
+    /// <summary>Culture for formatting and parsing values; null follows the Arc language.</summary>
     public static readonly StyledProperty<CultureInfo?> CultureProperty =
         AvaloniaProperty.Register<DataGrid, CultureInfo?>(nameof(Culture));
 
@@ -542,7 +541,7 @@ public partial class DataGrid : TemplatedControl
     private DataGridToolbar? _toolbar;
     private DataGridStatusBar? _statusBar;
     private TextBlock? _announcer;
-    private ILanguageManager? _languages;
+    private ArcLanguageManager? _languages;
 
     internal DataGridPalette Palette { get; } = new();
 
@@ -577,7 +576,7 @@ public partial class DataGrid : TemplatedControl
         _store.RowChanged += OnStoreRowChanged;
     }
 
-    /// <summary>The effective formatting culture: <see cref="Culture"/>, else the AtomUI language's formatting culture.</summary>
+    /// <summary>The effective formatting culture: <see cref="Culture"/>, else the Arc language's culture.</summary>
     internal CultureInfo EffectiveCulture => Culture ?? DataGridText.FormattingCulture;
 
     internal bool HasDataSource => DataSource is not null;
@@ -631,7 +630,7 @@ public partial class DataGrid : TemplatedControl
         _languages = DataGridText.Languages;
         if (_languages is not null)
         {
-            _languages.LanguageChanged += OnLanguageChanged;
+            _languages.Changed += OnLanguageChanged;
         }
         // Whether a save dialog exists depends on the top level.
         _toolbar?.UpdateState();
@@ -642,7 +641,7 @@ public partial class DataGrid : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         if (_languages is not null)
         {
-            _languages.LanguageChanged -= OnLanguageChanged;
+            _languages.Changed -= OnLanguageChanged;
             _languages = null;
         }
         CancelBlockRequests();

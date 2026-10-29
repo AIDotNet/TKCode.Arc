@@ -192,7 +192,7 @@ internal sealed class ToolCallStatusGlyph : Control
             var leaving = old;
             _ = old.Opacity.AnimateTo(0, MotionSpec.Tween(SwapFade, easing));
             _ = old.Scale.AnimateTo(0.6, MotionSpec.Spring(SwapSpring)).ContinueWith(_ =>
-                Avalonia.Threading.Dispatcher.UIThread.Post(() => Remove(leaving)), TaskScheduler.Default);
+                Dispatcher.Post(() => Remove(leaving)), TaskScheduler.Default);
         }
         var glyph = new Glyph { Status = status, Opacity = Value(0), Scale = Value(0.6) };
         _glyphs.Add(glyph);

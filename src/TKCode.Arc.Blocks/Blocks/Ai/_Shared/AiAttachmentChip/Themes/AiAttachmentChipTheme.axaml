@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiAttachmentChipTheme">
 
     <!--
         The attachment chip: 212 × 52, 1px Border on Surface, 16 corners, padding 6 8 6 12, 10 between the parts; no hover

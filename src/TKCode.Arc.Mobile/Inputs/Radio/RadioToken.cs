@@ -1,4 +1,3 @@
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc.Mobile;

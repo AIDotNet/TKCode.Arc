@@ -432,8 +432,10 @@ public class MediaPlayerTests
         player.IsAudible.ShouldBeFalse();
         player.Duration.ShouldBe(TimeSpan.FromSeconds(2));
         player.Play();
-        TestHelpers.PumpUntil(() => player.Position > TimeSpan.Zero, 3000).ShouldBeTrue();
-        TestHelpers.PumpUntil(() => !player.IsPlaying, 5000).ShouldBeTrue();
+        // The simulated player reports from a thread-pool timer every 250ms; on a loaded runner that report can take
+        // seconds to arrive, so wait with PumpUntil's default bound (it returns as soon as the report lands).
+        TestHelpers.PumpUntil(() => player.Position > TimeSpan.Zero).ShouldBeTrue();
+        TestHelpers.PumpUntil(() => !player.IsPlaying).ShouldBeTrue();
         player.Position.ShouldBe(TimeSpan.Zero);
     }
 

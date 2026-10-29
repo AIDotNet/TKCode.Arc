@@ -1,11 +1,12 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AnnouncementBarTheme">
     <ControlTheme x:Key="{x:Type arc:AnnouncementBar}" TargetType="arc:AnnouncementBar">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <!-- Shadows, transforms and focus rings reach past the bounds (stated explicitly so an app style that turns clipping on cannot cut them). -->
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -157,7 +158,7 @@
     <ControlTheme x:Key="{x:Type arc:AnnouncementBarRing}" TargetType="arc:AnnouncementBarRing">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <!-- Shadows, transforms and focus rings reach past the bounds (stated explicitly so an app style that turns clipping on cannot cut them). -->
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -202,7 +203,7 @@
     <ControlTheme x:Key="{x:Type arc:AnnouncementBarLink}" TargetType="arc:AnnouncementBarLink">
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
-        <!-- Shadows, transforms and focus rings reach past the bounds (AtomUI clips templated controls by default). -->
+        <!-- Shadows, transforms and focus rings reach past the bounds (stated explicitly so an app style that turns clipping on cannot cut them). -->
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">

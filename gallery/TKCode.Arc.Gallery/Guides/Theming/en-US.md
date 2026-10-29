@@ -13,53 +13,52 @@ your own views and controls.
 
 ## How the theme is built
 
-TKCode.Arc sits on AtomUI's theme system:
+The theme runtime is part of `TKCode.Arc.Foundation`, which `TKCode.Arc` brings in:
 
-1. **AtomUI's theme manager** (`IThemeManager`) owns the active theme and applies it to the application. A theme is a
-   `ThemeConfig` built with `ThemeConfigBuilder`.
-2. **Algorithms** decide the appearance: `ThemeAlgorithm.Default` for light, plus `ThemeAlgorithm.Dark` for dark.
-3. **The ArcDesign identity** holds Arc's own tokens. `WithArc(...)` on the builder sets the accent, overrides tokens
-   and sets the motion mode for that identity.
+1. **The theme manager** (`ArcThemeManager`, one per application, created by `UseArc(...)`) owns the active theme and
+   publishes its tokens to the application's resources.
+2. **The theme state** (`ArcThemeState`) is everything a theme is computed from: the appearance (`Light`, `Dark` or
+   `System`), the accent seed, the motion level, theme presets and token overrides. It is immutable; an
+   `ArcThemeBuilder` describes a change, and what a change does not mention stays as it was.
+3. **The ArcDesign identity** holds Arc's own tokens: colors, radii, type, spacing and motion.
 4. **Control tokens** hold the geometry of individual controls (paddings, widths, offsets) and colors that do not
    depend on the accent.
 
-When a theme is applied, every token is recalculated for the appearance and the accent, and every control that reads a
-token updates in place: no page reload, no restart.
+When a theme is applied, every token is recalculated for the appearance and the accent, only the values that changed
+are written, and every control that reads a token updates in place: no page reload, no restart.
 
 ## Light and dark
 
-Build a theme config and apply it through the theme manager:
+Set the theme the application starts with in `UseArc(...)`, and change it later with `ArcTheme.Apply`:
 
 ```csharp
-using AtomUI;
-using AtomUI.Theme;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc;
 
-public static async Task ApplyAppearanceAsync(bool dark, ArcAccentPreset accent)
-{
-    var builder = new ThemeConfigBuilder();
-    builder = dark
-        ? builder.WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
-        : builder.WithAlgorithms(ThemeAlgorithm.Default);
-    builder = builder.WithArc(arc => arc.Accent(accent));
+// Program.cs: the first frame is drawn with this theme.
+.UseArc(arc => arc
+    .UseArcControls()
+    .WithTheme(t => t.Appearance(ArcAppearance.System).Accent(ArcAccentPreset.Violet)))
 
-    var manager = Application.Current!.GetThemeManager()!;
-    await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(),
-                                                   ThemeTransitionReason.UserRequest));
-}
+// At run time: only the appearance changes, the accent and every other setting stay.
+public static void ApplyAppearance(bool dark)
+    => ArcTheme.Apply(t => t.Appearance(dark ? ArcAppearance.Dark : ArcAppearance.Light));
 ```
 
-Keep the user's choice (light, dark, or following the system) in your settings store and apply it at start-up, before
-the main window is shown, so the first frame already has the right appearance. The gallery's Appearance panel works
-exactly this way.
+`ArcAppearance.System` follows the operating system's light or dark setting and switches with it. `ArcTheme.State` is
+the current state, and `ArcThemeManager.Current` the manager: its `IsDark` says which appearance is showing, and
+`StateChanged` is raised after every change. `ArcThemeManager.ApplyAsync` computes the tokens on a background thread and
+publishes them on the UI thread; await it, and never block on it (`.Wait()`, `.Result`) on the UI thread, which
+deadlocks. A change that names an unknown token or an invalid value throws `ArcThemeException` listing every problem,
+and nothing is changed.
+
+Keep the user's choice (light, dark, or following the system) in your settings store and pass it to `WithTheme` at
+start-up, so the first frame already has the right appearance. The gallery's Appearance panel works exactly this way.
 
 ### The ThemeSwitcher control
 
 For a header or a toolbar, `ThemeSwitcher` is a ready-made light and dark switch with Arc's page transitions (`Reveal`,
 `Eclipse`, `Split` and `Rise`, set with `Variant`). Pressing it raises `ThemeChangeRequested`. If no handler marks the event
-handled, the switcher toggles `ThemeAlgorithm.Dark` itself and keeps the rest of the current theme. Handle the event
+handled, the switcher changes the appearance through `ArcThemeManager` itself and keeps the rest of the current theme. Handle the event
 when the application owns the appearance, for example to save the choice:
 
 ```csharp
@@ -67,9 +66,12 @@ themeSwitcher.ThemeChangeRequested += async (_, e) =>
 {
     e.Handled = true;
     await settings.SaveAppearanceAsync(e.Next);
-    await ApplyAppearanceAsync(e.Next == ThemeSwitcherAppearance.Dark, settings.Accent);
+    ApplyAppearance(e.Next == ThemeSwitcherAppearance.Dark);
 };
 ```
+
+The transition draws on the window's overlay layer. A window whose template has no `VisualLayerManager` with
+`EnableOverlayLayer="True"` switches without it.
 
 ## Accents
 
@@ -148,7 +150,7 @@ When none of the presets matches the brand, pass the brand color itself. Arc der
 from it in the OKLCH color space, so the steps stay perceptually even:
 
 ```csharp
-builder = builder.WithArc(arc => arc.Accent(Color.Parse("#0E7C86")));
+ArcTheme.Apply(t => t.Accent(Color.Parse("#0E7C86")));
 ```
 
 Check the result in both appearances. Very light seeds (yellow, lime) make poor text colors on white; prefer a preset
@@ -265,14 +267,20 @@ like an Arc field, read these instead of copying the numbers.
 
 ## Changing tokens
 
-`WithArc` can override the final value of any ArcDesign token, and set the motion mode for the whole theme:
+`Token(name, value)` overrides the final value of an ArcDesign token, `Token(identity, name, value)` one of a control's
+tokens, and `MotionLevel` sets the motion level for the whole theme:
 
 ```csharp
-builder = builder.WithArc(arc => arc
+ArcTheme.Apply(t => t
     .Accent(ArcAccentPreset.Blue)
     .Token(nameof(ArcDesignTokenKind.Danger), "#D92D20")
-    .MotionMode(ArcMotionLevel.Reduced));
+    .Token("Switch", "TrackWidth", "50")
+    .MotionLevel(ArcMotionLevel.Reduced));
 ```
+
+Values are text, parsed for the token's type (`#RRGGBB`, `12`, `4,8`, `120ms`, an enum member). The identity of a control
+token is its control name; the mobile controls use `MobileButton`, `MobileCheckbox`, `MobileDialog`, `MobileSwitch` and
+`MobileToast`. `ClearTokens()` removes every override.
 
 Change as little as possible. A token change applies everywhere: overriding `Danger` changes every error message,
 destructive button and failed status in the application. Overrides of colors should be checked in both appearances,
@@ -287,14 +295,14 @@ highlight behind a hovered menu row) and the radii that some controls compute wh
 Setting only the four leaves popups, hover backgrounds and checkboxes round.
 
 The `TKCode.Arc.Themes.Corners` package sets all of them with one call and changes nothing but corners: colors, borders,
-shadows and motion stay as they are.
+shadows and motion stay as they are. Register it with `UseArcCorners()` in `UseArc(...)`, then:
 
 ```csharp
 using TKCode.Arc.Themes.Corners;
 
-builder = builder.WithArc(arc => arc
+ArcTheme.Apply(t => t
     .Accent(ArcAccentPreset.Blue)
-    .Corners(ArcCornerStyle.Square, ArcCornerScope.All));
+    .Corners(ArcCornerStyle.Square));
 ```
 
 | Style | Result |
@@ -305,14 +313,16 @@ builder = builder.WithArc(arc => arc
 
 - **Pills and circles.** Radii of 999 and more (pill buttons, round avatars, dots) keep their shape under `Scale`. Only
   `Square` flattens them, so a square style turns round avatars into squares. Use `Scale` to keep them round.
-- **Scope.** `ArcCornerScope` names the control packages the application registers: `Controls`, `Blocks`, `Special`,
-  `AdvancedCharts`, `Workflow`, or `All`. Naming a package the application has not registered fails the whole theme
-  change, so list only the ones you use.
-- **One call.** `WithArc` replaces what an earlier `WithArc` call wrote, so put the accent and the corner style in the same
-  call, as above. `builder.WithArcCorners(style, scope)` is a shortcut for a call that only sets corners.
-- **Scroll bars.** The thumb of AtomUI's scroll bar sits inside every Arc popup and scrolling surface, so the
-  corner style also changes the scroll bar thumb of the whole application, including AtomUI controls that are not Arc's.
-- **Pixel.** The Pixel style is built on the same package and is always square.
+- **Presets.** A corner style is a theme preset (`ArcThemePreset`): a named set of token overrides for light and dark.
+  `Corners(style)` is `Preset(ArcCornerPresets.Create(style))`; `ArcCornerPresets.Square` and `ArcCornerPresets.Half`
+  are ready-made. A preset covers every Arc package and skips the ones the application has not registered.
+- **Replacing.** A corner style fills one slot (`ArcCornerPresets.Slot`), so the next `Corners(...)` replaces it and
+  `Corners(ArcCornerStyle.Default)` removes it. Your own `Token(...)` overrides are applied after presets and win.
+- **Scroll bars.** Scroll bars keep their thin pill shape under every corner style.
+- **Pixel.** The `TKCode.Arc.Themes.Pixel` package (`UseArcPixelTheme()`) adds the Pixel style: square corners, hard
+  shadows, a limited palette for light and dark and pixel fonts. Apply it with `ArcTheme.Apply(t => t.Pixel())` and
+  go back with `t.RemovePreset(ArcPixelPresets.Slot)`. It has its own slot, so a corner style chosen after it changes
+  its corners.
 
 ## Styling a single control
 

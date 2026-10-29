@@ -1,7 +1,7 @@
 ---
 title: Agent plan
 summary: "代理的計畫是一份可編輯的檢查清單：草稿階段可以重新排序、改名與新增步驟，核准後則依序追蹤執行過程。"
-source-hash: 0e89f7dff7a5
+source-hash: 2ce58e71cf24
 ---
 
 <Demo name="Preview" />
@@ -34,7 +34,7 @@ source-hash: 0e89f7dff7a5
 </UserControl>
 ```
 
-`AgentPlan` 衍生自 Avalonia 的 `TemplatedControl`，位於 Special 套件中；請在 `UseArc()` 旁呼叫 `UseArcSpecial()` 來註冊。卡片的寬度與容器相同，最寬 560px，約 320px 寬時仍易於閱讀，低於 420px 時會收緊間距。
+`AgentPlan` 衍生自 Avalonia 的 `TemplatedControl`，位於 Special 套件中；請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊。卡片的寬度與容器相同，最寬 560px，約 320px 寬時仍易於閱讀，低於 420px 時會收緊間距。
 
 ### 結構
 

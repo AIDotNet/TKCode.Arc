@@ -39,7 +39,7 @@ Set `Header`, the content and `Footer`. The mobile controls have their own XAML 
 </UserControl>
 ```
 
-Register the controls with `UseArcMobile()` next to `UseArcCore()` or `UseArc()`.
+Register the controls with `UseArcMobile()` next to `UseArcCore()` or `UseArcControls()`.
 
 ### Safe area
 

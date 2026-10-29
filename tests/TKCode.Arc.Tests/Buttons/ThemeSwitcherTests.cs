@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Provider;
@@ -134,23 +132,56 @@ public class ThemeSwitcherTests
     }
 
     [AvaloniaFact]
-    public void Theme_Config_Keeps_The_Rest_Of_The_Theme_And_Toggles_Dark()
+    public void The_Reveal_Runs_In_A_Plain_Window()
     {
-        var previous = new ThemeConfigBuilder()
-                       .WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Compact)
-                       .WithToken("FontSize", "15")
-                       .WithArc(arc => arc.Accent(ArcAccentPreset.Violet))
-                       .Build();
-        var dark = ThemeSwitcherThemeApplier.Build(previous, null, dark: true, accent: null);
-        dark.Algorithms.ShouldBe([ThemeAlgorithm.Default, ThemeAlgorithm.Compact, ThemeAlgorithm.Dark]);
-        dark.Tokens["FontSize"].ShouldBe("15");
-        dark.Controls.Count.ShouldBe(previous.Controls.Count);
-        var light = ThemeSwitcherThemeApplier.Build(dark, null, dark: false, accent: null);
-        light.Algorithms.ShouldBe([ThemeAlgorithm.Default, ThemeAlgorithm.Compact]);
+        // No layer manager of the test's own: the overlay layer comes from Arc's base Window theme.
+        var trigger = new Border { Width = 40, Height = 20 };
+        var window = new Window { Content = trigger, Width = 400, Height = 300 };
+        Motion.ArcMotion.SetLevel(window, Motion.ArcMotionLevel.Full);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var layer = Avalonia.Controls.Primitives.OverlayLayer.GetOverlayLayer(trigger);
+            layer.ShouldNotBeNull();
+            var snapshotShown = false;
+            var run = ThemeSwitcherTransition.RunAsync(trigger, ThemeSwitcherVariant.Reveal, () =>
+            {
+                snapshotShown = layer.Children.OfType<ThemeSwitcherSnapshot>().Any();
+                return Task.CompletedTask;
+            });
+            snapshotShown.ShouldBeTrue();
+            TestHelpers.PumpUntil(() => run.IsCompleted).ShouldBeTrue();
+            layer.Children.OfType<ThemeSwitcherSnapshot>().ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 
-        // Before any request was observed, the current accent preset is carried over.
-        var fresh = ThemeSwitcherThemeApplier.Build(null, [ThemeAlgorithm.Default], dark: true, accent: ArcAccentPreset.Blue);
-        fresh.Algorithms.ShouldBe([ThemeAlgorithm.Default, ThemeAlgorithm.Dark]);
-        fresh.Controls.Count.ShouldBe(1);
+    [AvaloniaFact]
+    public async Task Theme_Change_Keeps_The_Rest_Of_The_Theme_And_Toggles_Dark()
+    {
+        var host = new Border();
+        var window = TestHelpers.Show(host);
+        try
+        {
+            await TestHelpers.ApplyAsync(t => t.Accent(ArcAccentPreset.Violet).Token("RadiusControl", "3"));
+            await ThemeSwitcherThemeApplier.ApplyAsync(host, dark: true);
+            ArcTheme.State.Appearance.ShouldBe(ArcAppearance.Dark);
+            ArcTheme.State.Accent.ShouldBe(ArcPalette.GetSeed(ArcAccentPreset.Violet));
+            ArcTheme.State.TokenOverrides[ArcThemeState.GlobalIdentity]["RadiusControl"].ShouldBe("3");
+            host.ActualThemeVariant.ShouldBe(Avalonia.Styling.ThemeVariant.Dark);
+
+            await ThemeSwitcherThemeApplier.ApplyAsync(host, dark: false);
+            ArcTheme.State.Appearance.ShouldBe(ArcAppearance.Light);
+            ArcTheme.State.Accent.ShouldBe(ArcPalette.GetSeed(ArcAccentPreset.Violet));
+        }
+        finally
+        {
+            window.Close();
+            await TestHelpers.ApplyAsync(null);
+        }
     }
 }

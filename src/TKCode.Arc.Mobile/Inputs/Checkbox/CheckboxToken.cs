@@ -1,10 +1,10 @@
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc.Mobile;
 
 /// <summary>Geometry of <see cref="Checkbox"/>: a 22px box with 6px corners, a 44px row, a 16px check.</summary>
-[ControlDesignToken]
+// The desktop TKCode.Arc package declares a CheckboxToken too, and identities are unique per application.
+[ControlDesignToken(Identity = "MobileCheckbox")]
 internal sealed class CheckboxToken : AbstractControlDesignToken
 {
     /// <summary>Smallest height of the row: 44.</summary>

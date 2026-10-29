@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RevenueGlobeTheme">
 
     <!-- Replay / Pause / Live: 32px tall, 1px Border, radius 10, Surface; hover SurfaceMuted, press scales to .97. -->
     <ControlTheme x:Key="RevenueGlobeControlButtonTheme" TargetType="Button">

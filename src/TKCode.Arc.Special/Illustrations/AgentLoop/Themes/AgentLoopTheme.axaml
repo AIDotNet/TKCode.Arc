@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentLoopTheme">
 
     <!-- The card: header (title, status, two-line caption), the stage, and the footer with playback and speed. -->
     <ControlTheme x:Key="{x:Type arc:AgentLoop}" TargetType="arc:AgentLoop">

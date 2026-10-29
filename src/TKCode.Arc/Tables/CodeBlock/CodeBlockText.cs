@@ -118,6 +118,7 @@ internal sealed class CodeBlockText : SelectableTextBlock
         _highlightRunning = true;
         var code = _source;
         var language = _sessionLanguage;
+        var dispatcher = Dispatcher;
         _ = Task.Run(() =>
         {
             IReadOnlyList<System.Collections.Immutable.ImmutableArray<HighlightToken>>? lines;
@@ -130,7 +131,7 @@ internal sealed class CodeBlockText : SelectableTextBlock
             {
                 lines = null;
             }
-            Dispatcher.UIThread.Post(() => OnHighlighted(session, code, lines));
+            dispatcher.Post(() => OnHighlighted(session, code, lines));
         });
     }
 

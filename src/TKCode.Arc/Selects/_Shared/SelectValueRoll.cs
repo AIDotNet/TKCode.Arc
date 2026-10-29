@@ -191,7 +191,7 @@ internal sealed class SelectValueRoll : Control
         var spec = full
             ? MotionSpec.Tween(flying ? TimeSpan.FromMilliseconds(120) : ExitDuration, ArcEasings.Standard)
             : MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard);
-        progress.AnimateTo(1, spec).ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() => Remove(layer)),
+        progress.AnimateTo(1, spec).ContinueWith(_ => Dispatcher.Post(() => Remove(layer)),
             TaskScheduler.Default);
     }
 
@@ -276,6 +276,8 @@ internal sealed class SelectValueRoll : Control
         private readonly SelectValueRoll _owner;
         private readonly TranslateTransform _translate = new();
         private TextLayout? _layout;
+        // The unconstrained layout: it measures the layer and, when the text fits, is also the arranged one.
+        private TextLayout? _natural;
         private double _layoutWidth = -1;
         private BlurEffect? _blur;
         private MotionValue<double>? _progress;
@@ -353,6 +355,7 @@ internal sealed class SelectValueRoll : Control
         public void Invalidate()
         {
             _layout = null;
+            _natural = null;
             _iconPen = null;
             InvalidateMeasure();
             InvalidateVisual();
@@ -373,7 +376,7 @@ internal sealed class SelectValueRoll : Control
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var natural = Build(double.PositiveInfinity);
+            var natural = _natural ??= Build(double.PositiveInfinity);
             ContentWidth = Math.Ceiling(natural.WidthIncludingTrailingWhitespace + IconBox);
             var height = Math.Max(natural.Height, HasIcon ? _owner.IconSize : 0);
             return new Size(Math.Min(ContentWidth, availableSize.Width), height);
@@ -384,7 +387,9 @@ internal sealed class SelectValueRoll : Control
             var textWidth = Math.Max(0, finalSize.Width - IconBox);
             if (_layout is null || Math.Abs(textWidth - _layoutWidth) > 0.5)
             {
-                _layout = Build(textWidth);
+                _layout = _natural is { } natural && natural.WidthIncludingTrailingWhitespace <= textWidth
+                    ? natural
+                    : Build(textWidth);
                 _layoutWidth = textWidth;
             }
             return finalSize;

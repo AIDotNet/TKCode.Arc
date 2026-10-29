@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Specialized;
-using AtomUI.Controls;
 using Avalonia;
+using TKCode.Arc.Primitives;
 using Avalonia.Automation;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -14,7 +14,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using TKCode.Arc.Motion;
-using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -32,7 +31,7 @@ namespace TKCode.Arc;
 /// </summary>
 [TemplatePart(ScrollPart, typeof(ScrollViewer))]
 [TemplatePart(CoverPart, typeof(Border))]
-[TemplatePart(CoverImagePart, typeof(AsyncImage))]
+[TemplatePart(CoverImagePart, typeof(ArcImage))]
 [TemplatePart(AvatarPart, typeof(Avatar))]
 [TemplatePart(SharePart, typeof(ProfilePageButton))]
 [TemplatePart(ShareStackPart, typeof(ProfilePageSwapStack))]
@@ -347,7 +346,7 @@ public class ProfilePage : TemplatedControl
 
     private ScrollViewer? _scroll;
     private Border? _cover;
-    private AsyncImage? _coverImage;
+    private ArcImage? _coverImage;
     private Avatar? _avatar;
     private ProfilePageButton? _share;
     private ProfilePageSwapStack? _shareStack;
@@ -441,7 +440,7 @@ public class ProfilePage : TemplatedControl
         var scope = e.NameScope;
         _scroll = scope.Find<ScrollViewer>(ScrollPart);
         _cover = scope.Find<Border>(CoverPart);
-        _coverImage = scope.Find<AsyncImage>(CoverImagePart);
+        _coverImage = scope.Find<ArcImage>(CoverImagePart);
         _avatar = scope.Find<Avatar>(AvatarPart);
         _share = scope.Find<ProfilePageButton>(SharePart);
         _shareStack = scope.Find<ProfilePageSwapStack>(ShareStackPart);

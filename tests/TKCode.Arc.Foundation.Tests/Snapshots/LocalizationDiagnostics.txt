@@ -1,0 +1,14 @@
+ARCF020 Error C/Localization/de-DE.xlf:1 Language file 'C/Localization/de-DE.xlf' cannot be read: the file is named 'de-DE' but declares the language 'fr-FR' (trgLang)
+ARCF020 Error C/Localization/en-GB.xlf:1 Language file 'C/Localization/en-GB.xlf' cannot be read: the root element must be <xliff version="2.x" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+ARCF020 Error C/Localization/fr-FR.xlf:1 Language file 'C/Localization/fr-FR.xlf' cannot be read: The 'unclosed' start tag on line 1 position 9 does not match the end tag of 'xliff'. Line 1, position 20.
+ARCF020 Error C/Localization/notes.xlf:1 Language file 'C/Localization/notes.xlf' cannot be read: the file is named 'notes' but declares the language 'en-US' (srcLang)
+ARCF021 Error A/Localization/zh-CN.xlf:3 'A/Localization/zh-CN.xlf' has no zh-CN text for 'GoodLangResourceKind.Cancel'
+ARCF021 Error A/Localization/zh-TW.xlf:4 'A/Localization/zh-TW.xlf' has no zh-TW text for 'GoodLangResourceKind.Save'
+ARCF022 Warning A/Localization/zh-CN.xlf:16 'A/Localization/zh-CN.xlf' has text for 'Stale', but 'Demo.Bad.GoodLangResourceKind' declares no such member; the text is ignored
+ARCF023 Error A/Localization/zh-CN.xlf:10 'A/Localization/zh-CN.xlf' has text for 'GoodLangResourceKind.Save' twice
+ARCF023 Error B/Localization/zh-TW.xlf:3 'A/Localization/zh-TW.xlf' and 'B/Localization/zh-TW.xlf' both hold the zh-TW text of 'Demo.Bad.GoodLangResourceKind'
+ARCF024 Error :9 Language catalog 'Demo.Bad.OrphanLangResourceKind' has no source-language file (a Localization/<language>.xlf without trgLang whose <file id> is 'Demo.Bad.OrphanLangResourceKind')
+ARCF025 Error A/Localization/zh-CN.xlf:22 'A/Localization/zh-CN.xlf': the zh-CN text of 'GoodLangResourceKind.RowCount' uses placeholders {1} but the source text uses {0}
+ARCF026 Error :12 Language catalog 'Demo.Bad.SameLangResourceKind' gives 'One' and 'Uno' the same value; each member is a resource key and needs its own value
+ARCF026 Error :17 Language catalog 'Demo.Bad.NestedLangResourceKind' is nested in a type; declare it at namespace level
+ARCF027 Warning C/Localization/ja-JP.xlf:3 'C/Localization/ja-JP.xlf' has text for 'Demo.Bad.Unknown', which is not a [LanguageCatalog] enum of this assembly; the text is ignored

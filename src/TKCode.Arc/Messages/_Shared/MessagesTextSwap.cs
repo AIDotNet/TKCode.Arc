@@ -323,7 +323,7 @@ internal sealed class MessagesTextSwap : Control
 
     private void FinishExit(Layer layer, int generation, Task<bool> task)
     {
-        task.ThenOnUiThread(() =>
+        task.ThenOnUiThread(Dispatcher, () =>
         {
             if (layer.Generation == generation && _exiting.Contains(layer))
             {

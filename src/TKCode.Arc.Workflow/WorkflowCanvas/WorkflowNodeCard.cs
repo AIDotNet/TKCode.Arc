@@ -10,8 +10,8 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Threading;
-using AtomUI.Localization;
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc;
 
@@ -120,7 +120,7 @@ public class WorkflowNodeCard : TemplatedControl
     private WorkflowCardPanel? _layout;
     private ContentPresenter? _content;
     private WorkflowNode? _observed;
-    private ILanguageManager? _languages;
+    private ArcLanguageManager? _languages;
 
     static WorkflowNodeCard()
     {
@@ -299,7 +299,7 @@ public class WorkflowNodeCard : TemplatedControl
         _languages = WorkflowText.Languages;
         if (_languages is not null)
         {
-            _languages.LanguageChanged += OnLanguageChanged;
+            _languages.Changed += OnLanguageChanged;
         }
         Refresh();
     }
@@ -311,7 +311,7 @@ public class WorkflowNodeCard : TemplatedControl
         Observe(null);
         if (_languages is not null)
         {
-            _languages.LanguageChanged -= OnLanguageChanged;
+            _languages.Changed -= OnLanguageChanged;
             _languages = null;
         }
     }

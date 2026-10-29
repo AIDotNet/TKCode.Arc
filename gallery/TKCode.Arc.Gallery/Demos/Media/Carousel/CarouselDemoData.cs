@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
-using AtomUI.Controls;
 using TKCode.Arc.Gallery.Pages;
 
 namespace TKCode.Arc.Gallery.Demos;

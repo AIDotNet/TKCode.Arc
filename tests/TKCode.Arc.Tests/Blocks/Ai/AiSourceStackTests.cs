@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -207,7 +205,7 @@ public class AiSourceStackTests
         disc.Classes.ShouldNotContain(AiSourceStackDisc.DarkPseudoClass);
         TestHelpers.ColorOf(disc.Fill).ShouldBe(ArcTokens.GetColor(disc, ArcDesignTokenKind.Surface));
         TestHelpers.ColorOf(disc.Hairline).ShouldBe(ArcTokens.GetColor(disc, ArcDesignTokenKind.BorderSubtle));
-        await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+        await TestHelpers.ApplyAsync(TestHelpers.Dark);
         try
         {
             disc.Classes.ShouldContain(AiSourceStackDisc.DarkPseudoClass);
@@ -217,7 +215,7 @@ public class AiSourceStackTests
         }
         finally
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+            await TestHelpers.ApplyAsync(null);
             window.Close();
         }
     }

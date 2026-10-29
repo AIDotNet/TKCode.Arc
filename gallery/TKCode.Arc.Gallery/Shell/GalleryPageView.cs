@@ -22,7 +22,7 @@ namespace TKCode.Arc.Gallery.Shell;
 /// One component page, laid out like a uiarc.dev docs page: breadcrumb, title, summary, install command and status, the
 /// page content, and a sticky "On this page" list that follows the scroll position. The content is the component's docs
 /// page (<see cref="GalleryDocs"/>) with its live demos (<see cref="GalleryDemoView"/>): "On this page" lists the page's
-/// sections and "Copy page" copies it, in the current AtomUI language. A component without demos (a planned one) shows a
+/// sections and "Copy page" copies it, in the current Arc language. A component without demos (a planned one) shows a
 /// plain body instead, such as its placeholder.
 /// </summary>
 public sealed class GalleryPageView : Grid
@@ -338,7 +338,7 @@ public sealed class GalleryPageView : Grid
     }
 
     /// <summary>
-    /// Shows the summary and the docs page in the current AtomUI language. A page that is not translated falls back to
+    /// Shows the summary and the docs page in the current Arc language. A page that is not translated falls back to
     /// en-US by itself, and a component without a docs page keeps its catalog description.
     /// </summary>
     private void RefreshLanguage()

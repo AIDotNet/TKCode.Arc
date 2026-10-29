@@ -1,7 +1,7 @@
 ---
 title: Gravity well
 summary: 圖塊向指標傾斜、縮小並變暗，彷彿被吸入一口重力井；點擊會讓一道衝擊波滾過整個網格。
-source-hash: 67762547d826
+source-hash: fb2917485c5f
 ---
 
 <Demo name="Preview" />
@@ -32,7 +32,7 @@ source-hash: 67762547d826
 </UserControl>
 ```
 
-`GravityWell` 是 Special 套件中的 `ItemsControl`。在 `UseArc()` 旁呼叫 `UseArcSpecial()` 註冊此套件。每個項目成為一個正方形圖塊，可以直接寫在裡面，也可以由 `ItemsSource` 與 `ItemTemplate` 產生。圖塊把內容裁切到 `TileCornerRadius`（預設 12px），並在內容後方顯示一層柔和表面，讓仍在載入的照片保持位置。圖片用 `Stretch="UniformToFill"` 填滿正方形。
+`GravityWell` 是 Special 套件中的 `ItemsControl`。在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 註冊此套件。每個項目成為一個正方形圖塊，可以直接寫在裡面，也可以由 `ItemsSource` 與 `ItemTemplate` 產生。圖塊把內容裁切到 `TileCornerRadius`（預設 12px），並在內容後方顯示一層柔和表面，讓仍在載入的照片保持位置。圖片用 `Stretch="UniformToFill"` 填滿正方形。
 
 ### 欄數
 

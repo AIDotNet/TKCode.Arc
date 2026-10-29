@@ -317,7 +317,7 @@ public class TextShimmer : Control
         outgoing.Presence.AnimateTo(1, full
                 ? MotionSpec.Tween(ArcMotionPresets.Fast, ArcEasings.Standard)
                 : MotionSpec.Tween(ArcMotionPresets.Instant, s_linear))
-            .ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            .ContinueWith(_ => Dispatcher.Post(() =>
             {
                 _leaving.Remove(leaving);
                 InvalidateVisual();

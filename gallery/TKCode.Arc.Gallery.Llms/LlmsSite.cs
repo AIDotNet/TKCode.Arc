@@ -41,7 +41,7 @@ public static partial class LlmsSite
     /// <summary>The builder call that registers each package's controls.</summary>
     private static readonly Dictionary<string, string> s_registration = new()
     {
-        ["TKCode.Arc"] = "UseArc()",
+        ["TKCode.Arc"] = "UseArcControls()",
         ["TKCode.Arc.Blocks"] = "UseArcBlocks()",
         ["TKCode.Arc.Mobile"] = "UseArcMobile()",
         ["TKCode.Arc.AdvancedCharts"] = "UseArcAdvancedCharts()",
@@ -156,7 +156,7 @@ public static partial class LlmsSite
         markdown.Append("> ").Append(doc.Summary).Append("\n\n");
         markdown.Append("- ").Append(words.Package).Append(s_onNuGet.Contains(package)
             ? string.Format(words.OnNuGet, $"`{package}`", $"`dotnet add package {package} --version {version}`")
-            : string.Format(words.NotOnNuGet, $"`{package}`", Repository, $"`{s_registration.GetValueOrDefault(package, "UseArc()")}`")).Append('\n');
+            : string.Format(words.NotOnNuGet, $"`{package}`", Repository, $"`{s_registration.GetValueOrDefault(package, "UseArcControls()")}`")).Append('\n');
         markdown.Append("- ").Append(words.Namespace).Append("`xmlns:arc=\"https://github.com/AIDotNet/TKCode.Arc\"`\n");
         markdown.Append("- ").Append(words.LivePage).Append(baseUrl).Append(page.Address).Append("\n\n");
         markdown.Append(Shots(baseUrl, doc.CopyMarkdown, $"Docs/{GalleryDocs.FolderOf(className)}"));
@@ -186,7 +186,6 @@ public static partial class LlmsSite
             ["skill-name"] = SkillName,
             ["repository"] = Repository,
             ["version"] = metadata["ArcVersion"],
-            ["atomui"] = metadata["AtomUIVersion"],
             ["avalonia"] = metadata["AvaloniaVersion"],
         };
     }

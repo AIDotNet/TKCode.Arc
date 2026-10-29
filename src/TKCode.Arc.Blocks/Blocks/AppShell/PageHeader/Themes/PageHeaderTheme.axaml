@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PageHeaderTheme">
     <!-- Ported from Arc's free page-header block (page-header.module.css; MIT, Copyright (c) 2026 Elia Kuratli). -->
     <ControlTheme x:Key="{x:Type arc:PageHeader}" TargetType="arc:PageHeader">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />

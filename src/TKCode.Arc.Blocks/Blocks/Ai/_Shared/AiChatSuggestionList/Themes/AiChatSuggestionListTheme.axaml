@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiChatSuggestionListTheme">
 
     <!-- A column of up to three prompt buttons, 6px apart, 368px wide or narrower when the container is (centered). -->
     <ControlTheme x:Key="{x:Type arc:AiChatSuggestionList}" TargetType="arc:AiChatSuggestionList">

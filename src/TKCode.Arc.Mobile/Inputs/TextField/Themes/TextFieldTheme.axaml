@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.TextFieldTheme">
 
     <!-- Text field: a SurfaceMuted fill with a transparent 1px border that turns Accent while focused; an optional icon before the
          text and a clear button after it (a PresenceHost pop) while the field has focus and text. No hover state. The Searchbar is this theme with :search. -->

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.EmptyStatesTheme">
     <!--
         Ported from Arc's free empty-states block (MIT, Copyright (c) 2026 Elia Kuratli): empty-states.module.css.
         A 1px Border card (radius 20, Surface) holding the tab row (at most 460 wide) and the panel (at most 480 wide):
@@ -9,7 +10,7 @@
         and the tab padding follow the block's width in code (Arc's container queries); :narrow and :wide switch sizes.
     -->
     <ControlTheme x:Key="{x:Type arc:EmptyStates}" TargetType="arc:EmptyStates">
-        <!-- Shadows, focus rings and the illustration's parallax reach past the bounds (AtomUI clips templated controls by default). -->
+        <!-- Shadows, focus rings and the illustration's parallax reach past the bounds (stated explicitly so an app style that turns clipping on cannot cut them). -->
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentStatusTheme">
 
     <!-- The pill: an in-flow footprint (its width follows the content on a spring) that holds the surface while the panel is
          closed; the open panel floats in the window's overlay layer so nothing clips it. -->

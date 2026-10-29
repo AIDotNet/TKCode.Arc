@@ -1,6 +1,4 @@
 using TKCode.Arc.DesignTokens;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
@@ -21,7 +19,7 @@ public class ArcDesignTokenTests
             TestHelpers.ColorOf(button.Background).ShouldBe(Color.Parse("#0B0B0B"));
             TestHelpers.ColorOf(button.Foreground).ShouldBe(Color.Parse("#FFFFFF"));
 
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             TestHelpers.ColorOf(button.Background).ShouldBe(Color.Parse("#F2F2F2"));
             TestHelpers.ColorOf(button.Foreground).ShouldBe(Color.Parse("#141414"));
         }
@@ -39,13 +37,10 @@ public class ArcDesignTokenTests
         var window = TestHelpers.Show(host);
         try
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithArc(a => a.Accent(ArcAccentPreset.Violet)).Build());
+            await TestHelpers.ApplyAsync(t => t.Accent(ArcAccentPreset.Violet));
             TestHelpers.ColorOf(Find(host, ArcDesignTokenKind.Accent)).ShouldBe(Color.Parse("#7747FF"));
 
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder()
-                                         .WithAlgorithms(ThemeAlgorithm.Dark)
-                                         .WithArc(a => a.Accent(ArcAccentPreset.Violet))
-                                         .Build());
+            await TestHelpers.ApplyAsync(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));
             TestHelpers.ColorOf(Find(host, ArcDesignTokenKind.Accent)).ShouldBe(Color.Parse("#A78BFF"));
         }
         finally
@@ -62,10 +57,7 @@ public class ArcDesignTokenTests
         var window = TestHelpers.Show(host);
         try
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder()
-                                         .WithAlgorithms(ThemeAlgorithm.Dark)
-                                         .WithToken("ColorPrimary", "#0562EF")
-                                         .Build());
+            await TestHelpers.ApplyAsync(t => t.Appearance(ArcAppearance.Dark).Accent(Color.Parse("#0562EF")));
             TestHelpers.ColorOf(Find(host, ArcDesignTokenKind.Accent)).ShouldBe(Color.Parse("#6BA3FF"));
         }
         finally

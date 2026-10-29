@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PromptRunButtonTheme">
 
     <!--
         Run: 36 high, padding 0 14 0 13, a pill in Accent with AccentForeground 14 / 500; 8px between the 13px glyph slot,

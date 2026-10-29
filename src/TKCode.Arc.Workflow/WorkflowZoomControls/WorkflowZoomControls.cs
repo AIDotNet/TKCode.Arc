@@ -6,7 +6,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
-using AtomUI.Localization;
 using TKCode.Arc.Localization;
 using AvaloniaButton = Avalonia.Controls.Button;
 
@@ -37,7 +36,7 @@ public class WorkflowZoomControls : TemplatedControl
     private WorkflowZoomButton? _zoomIn;
     private WorkflowZoomButton? _fit;
     private WorkflowCanvas? _observed;
-    private ILanguageManager? _languages;
+    private ArcLanguageManager? _languages;
 
     /// <inheritdoc cref="TargetProperty"/>
     public WorkflowCanvas? Target
@@ -98,7 +97,7 @@ public class WorkflowZoomControls : TemplatedControl
         _languages = WorkflowText.Languages;
         if (_languages is not null)
         {
-            _languages.LanguageChanged += OnLanguageChanged;
+            _languages.Changed += OnLanguageChanged;
         }
         Refresh();
     }
@@ -109,7 +108,7 @@ public class WorkflowZoomControls : TemplatedControl
         Observe(null);
         if (_languages is not null)
         {
-            _languages.LanguageChanged -= OnLanguageChanged;
+            _languages.Changed -= OnLanguageChanged;
             _languages = null;
         }
     }

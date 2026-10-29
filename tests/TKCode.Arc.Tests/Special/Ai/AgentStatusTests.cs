@@ -856,12 +856,7 @@ public class AgentStatusTests
         var kept = new AgentStatusStep("a", "Read 12 files", AgentStatusStepState.Done);
         var cleared = new AgentStatusStep("b", "Running tests", AgentStatusStepState.Active);
         var reference = PillOver(sim, kept, cleared);
-        for (var i = 0; i < 4 && reference.IsAlive; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Dispatcher.UIThread.RunJobs();
-        }
+        TestHelpers.Collect(reference);
         reference.IsAlive.ShouldBeFalse();
         // The run and the steps go on without the pill.
         time.Advance(5_000);

@@ -1,5 +1,4 @@
 // Ported from Arc's free notification-center block (MIT, Copyright (c) 2026 Elia Kuratli).
-using AtomUI.Controls;
 using Avalonia;
 using Avalonia.Data;
 using Avalonia.Interactivity;

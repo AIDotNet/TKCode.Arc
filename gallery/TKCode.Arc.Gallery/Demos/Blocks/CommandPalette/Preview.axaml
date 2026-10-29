@@ -1,10 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-             xmlns:atom="using:AtomUI.Controls.Primitives"
              x:Class="TKCode.Arc.Gallery.Demos.CommandPalettePreviewDemo">
     <!-- The panel keeps the palette on this stage: a non-modal dialog needs no scrim, and an app would not need the panel. -->
-    <atom:ScopeAwareOverlayLayerPanel Height="480">
+    <arc:ArcOverlayHost Height="480">
         <StackPanel Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center">
             <arc:Button Content="Open command palette"
                         Variant="Secondary"
@@ -35,5 +34,5 @@
             <arc:CommandPaletteItem Id="invite" Group="Board" Label="Invite a teammate" Description="Send an invitation by email" Icon="{x:Static arc:ArcIcons.Users}" Shortcut="I" />
             <arc:CommandPaletteItem Id="delete" Group="Danger zone" Label="Delete this board" Description="Remove it with all of its tasks" Icon="{x:Static arc:ArcIcons.Trash2}" Keywords="remove" />
         </arc:CommandPaletteDialog>
-    </atom:ScopeAwareOverlayLayerPanel>
+    </arc:ArcOverlayHost>
 </UserControl>

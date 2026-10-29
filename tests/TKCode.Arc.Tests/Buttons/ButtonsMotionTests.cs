@@ -153,8 +153,10 @@ public class ButtonsMotionTests
         using (clock.Install())
         {
             var switcher = new ThemeSwitcher { Variant = ThemeSwitcherVariant.Reveal };
-            // An AtomUI window has the overlay layer the snapshot lives in.
-            var window = new AtomUI.Desktop.Controls.Window { Content = new StackPanel { Children = { switcher } }, Width = 400, Height = 300 };
+            // The overlay layer holds the snapshot. Avalonia's default Window template has none (AtomUI's window had one), so
+            // the content sits in a VisualLayerManager with the overlay layer on, as in GalleryWindow's template.
+            var layers = new VisualLayerManager { EnableOverlayLayer = true, Child = new StackPanel { Children = { switcher } } };
+            var window = new Window { Content = layers, Width = 400, Height = 300 };
             ArcMotion.SetLevel(window, ArcMotionLevel.Full);
             window.Show();
             Dispatcher.UIThread.RunJobs();

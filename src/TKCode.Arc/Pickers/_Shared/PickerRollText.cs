@@ -479,7 +479,7 @@ internal sealed class PickerRollText : Control
             : piece.Fade(enter: false, startY, -dir * ExitTravel * em, 0, ExitBlur, MotionSpec.Tween(ExitDuration, ArcEasings.Standard));
         _ = task.ContinueWith(t =>
         {
-            Dispatcher.UIThread.Post(() =>
+            Dispatcher.Post(() =>
             {
                 if (_leaving.Contains(piece))
                 {
@@ -492,7 +492,7 @@ internal sealed class PickerRollText : Control
 
     private void BeginMotion() => _animating++;
 
-    private void EndMotionTask(Task<bool> task) => Dispatcher.UIThread.Post(EndMotion);
+    private void EndMotionTask(Task<bool> task) => Dispatcher.Post(EndMotion);
 
     private void EndMotion()
     {

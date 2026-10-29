@@ -5,13 +5,11 @@
         <RootNamespace>TKCode.Arc</RootNamespace>
         <PackageId>TKCode.Arc.Blocks</PackageId>
         <Description>Page-level block compositions for TKCode.Arc, built from Arc components. Ports Arc's free blocks and adds original ones.</Description>
-        <AtomUIRegistrationPackageId>$(AssemblyName)</AtomUIRegistrationPackageId>
-        <AtomUIThemeControlCatalog>TKCode.Arc.Blocks</AtomUIThemeControlCatalog>
         <!-- TKCode.Arc and Core contain generated types with identical names. -->
         <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AtomUI.Desktop.Controls" />
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
         <!-- MediaPlayer plays through the audio abstraction; platform backends ship in their own packages (ADR 0028). -->
         <ProjectReference Include="../TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />

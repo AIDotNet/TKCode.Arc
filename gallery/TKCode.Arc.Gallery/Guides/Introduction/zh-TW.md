@@ -1,11 +1,11 @@
 ---
 title: 介紹
-source-hash: ef5b7ba19b53
+source-hash: f9ec58832e79
 ---
 
 # 介紹
 
-TKCode.Arc 將 [Arc](https://uiarc.dev) 帶到 Avalonia：相同的元件分組、相同的視覺語言與相同的彈簧動態效果，以原生 Avalonia 控制項的形式建構在 [AtomUI](https://github.com/AtomUI/AtomUI) 之上。它移植了免費的 Arc 元件（22 個分組中的 110 個元件），並新增頁面層級的區塊、試算表風格的資料表格，以及串流式 Markdown 渲染器，使桌面產品可以由一套一致的工具組組裝而成，而不是拼湊各種樣式。
+TKCode.Arc 將 [Arc](https://uiarc.dev) 帶到 Avalonia：相同的元件分組、相同的視覺語言與相同的彈簧動態效果，以原生 Avalonia 控制項的形式建構，除 Avalonia 與 MIT 套件之外沒有其他相依項目。它移植了免費的 Arc 元件（22 個分組中的 110 個元件），並新增頁面層級的區塊、試算表風格的資料表格，以及串流式 Markdown 渲染器，使桌面產品可以由一套一致的工具組組裝而成，而不是拼湊各種樣式。
 
 本圖庫即是該程式庫的文件。每個元件頁面都根據元件原始碼撰寫，展示可互動的即時範例，並列出產生的 API 參考。
 
@@ -95,8 +95,9 @@ TKCode.Arc 將 [Arc](https://uiarc.dev) 帶到 Avalonia：相同的元件分組�
 
 | 套件 | 內容 | 來源 |
 |---|---|---|
-| `TKCode.Arc` | 元件（`UseArc()`）、串流式 `Markdown` 控制項與 `CodeBlock`。引入 `TKCode.Arc.Core`。 | NuGet |
-| `TKCode.Arc.Core` | ArcDesign 設計權杖與調色盤、彈簧動態效果引擎、共用基礎元件、187 個內建 Lucide 字形。 | NuGet |
+| `TKCode.Arc` | 元件（`UseArcControls()`）、串流式 `Markdown` 控制項與 `CodeBlock`。引入 `TKCode.Arc.Core`。 | NuGet |
+| `TKCode.Arc.Core` | ArcDesign 設計權杖與調色盤、彈簧動態效果引擎、共用基礎元件、187 個內建 Lucide 字形。引入 `TKCode.Arc.Foundation`。 | NuGet |
+| `TKCode.Arc.Foundation` | 主題、權杖、語言與套件註冊的執行階段（`UseArc(...)`、`ArcTheme`、`ArcLanguage`）及其原始碼產生器。 | NuGet（0.4 起） |
 | `TKCode.Arc.Fonts` | Geist 與 Geist Mono（`WithArcFonts()`）。 | NuGet |
 | `TKCode.Arc.Icons.Lucide` | 完整的 Lucide 集（2155 個圖示）：`LucideIcon` 控制項與 `LucideGeometry` 標記延伸。 | NuGet |
 | `TKCode.Arc.Blocks` | 頁面層級區塊（`UseArcBlocks()`）。 | NuGet |
@@ -108,7 +109,7 @@ TKCode.Arc 將 [Arc](https://uiarc.dev) 帶到 Avalonia：相同的元件分組�
 ## 需求與平台
 
 - **.NET**：這些套件以 `net8.0`、`net10.0` 與 `net11.0` 為目標。
-- **Avalonia 與 AtomUI**：Avalonia `12.1.4` 與 AtomUI `6.2.8`，固定為確切版本。請在你的應用程式中使用相同的版本。
+- **Avalonia**：Avalonia `12.1.4`，固定為確切版本。請在你的應用程式中使用相同的版本。Arc 沒有其他 UI 框架相依項目。
 - **平台**：Windows、macOS 與 Linux 桌面版。圖庫也可透過其 WebAssembly 主機在瀏覽器中執行。
 - **文字與程式碼的渲染**：Markdown 與語法醒目提示使用 StreamMark，由 `TKCode.Arc` 套件引入。
 
@@ -126,7 +127,7 @@ TKCode.Arc 處於預覽階段。版本遵循[語意化版本](https://semver.org
 
 ## 授權
 
-TKCode.Arc 以 MIT 授權發佈。它移植了 Arc（MIT），並使用 Lucide（ISC）、Geist 字型（OFL）、StreamMark、TextMateSharp、Oniguruma 與 Markdig，且依賴 AtomUI（LGPL-3.0）。儲存庫中的 `THIRD-PARTY-NOTICES.md` 列出了全部內容。
+TKCode.Arc 以 MIT 授權發佈。它移植了 Arc（MIT），並使用 Lucide（ISC）、Geist 字型（OFL）、StreamMark、TextMateSharp、Oniguruma 與 Markdig。相依鏈中的每個套件（包括 Avalonia）都採用寬鬆授權，閉源應用程式可以把 Arc 以單一檔案或 NativeAOT 方式發佈。儲存庫中的 `THIRD-PARTY-NOTICES.md` 列出了全部內容。
 
 ## 下一步
 

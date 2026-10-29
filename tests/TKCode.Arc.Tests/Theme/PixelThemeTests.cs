@@ -1,7 +1,5 @@
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Themes.Pixel;
-using AtomUI;
-using AtomUI.Theme;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
@@ -12,13 +10,8 @@ namespace TKCode.Arc.Tests.Theme;
 /// <summary>The pixel theme package: token overrides resolve in both appearances and the default can be restored.</summary>
 public class PixelThemeTests
 {
-    private static async Task ApplyPixelAsync(bool dark)
-    {
-        var manager = Avalonia.Application.Current!.GetThemeManager()!;
-        var result = await manager.ApplyThemeAsync(ArcPixelTheme.CreateRequest(dark, scope: ArcPixelScope.All), TestContext.Current.CancellationToken);
-        result.Status.ToString().ShouldNotBe("Failed", result.ToString());
-        Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-    }
+    private static Task ApplyPixelAsync(bool dark)
+        => TestHelpers.ApplyAsync(t => t.Appearance(dark ? ArcAppearance.Dark : ArcAppearance.Light).Pixel());
 
     [AvaloniaTheory]
     [InlineData(false, "#F4F4F4", "#1A1C2C", "#3B5DC9")]
@@ -95,19 +88,19 @@ public class PixelThemeTests
         }
     }
 
-    [AvaloniaTheory]
-    [InlineData(ArcPixelTheme.LightThemeId, "#F4F4F4")]
-    [InlineData(ArcPixelTheme.DarkThemeId, "#1A1C2C")]
-    public async Task Compiled_Theme_Ids_Apply_Without_A_Config(string themeId, string background)
+    [AvaloniaFact]
+    public async Task One_Preset_Follows_The_Appearance_Without_Being_Applied_Again()
     {
         var host = new Border();
         var window = TestHelpers.Show(host);
         try
         {
-            var manager = Avalonia.Application.Current!.GetThemeManager()!;
-            await manager.ApplyThemeAsync(new ThemeRequest(themeId, null, ThemeTransitionReason.UserRequest), TestContext.Current.CancellationToken);
+            await ApplyPixelAsync(dark: false);
+            TestHelpers.ColorOf(Find(host, ArcDesignTokenKind.Background)).ShouldBe(Color.Parse("#F4F4F4"));
+            // The appearance alone changes (as the theme switcher does); the preset brings its dark palette.
+            ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark));
             Avalonia.Threading.Dispatcher.UIThread.RunJobs();
-            TestHelpers.ColorOf(Find(host, ArcDesignTokenKind.Background)).ShouldBe(Color.Parse(background));
+            TestHelpers.ColorOf(Find(host, ArcDesignTokenKind.Background)).ShouldBe(Color.Parse("#1A1C2C"));
             AsRadius(Find(host, ArcDesignTokenKind.RadiusPanel)).ShouldBe(new CornerRadius(0));
         }
         finally
@@ -252,20 +245,22 @@ public class PixelThemeTests
     }
 
     [Fact]
-    public void Config_Without_A_Package_Scope_Names_Only_The_Core_Controls()
+    public void The_Preset_Carries_A_Light_And_A_Dark_Palette_For_Every_Package()
     {
-        ArcPixelTheme.CreateConfig(false, ArcPixelScope.None).Controls.Count.ShouldBe(1);
-        ArcPixelTheme.CreateConfig(false).Controls.Count.ShouldBeGreaterThan(50);
+        var pixel = ArcPixelPresets.Pixel;
+        pixel.LightTokens.Count.ShouldBeGreaterThan(50);
+        pixel.DarkTokens.Count.ShouldBe(pixel.LightTokens.Count);
+        pixel.LightTokens[ArcThemePreset.GlobalIdentity]["Background"].ShouldBe("#F4F4F4");
+        pixel.DarkTokens[ArcThemePreset.GlobalIdentity]["Background"].ShouldBe("#1A1C2C");
     }
 
     [Fact]
     public void Package_Has_No_Controls_And_Only_References_Core()
     {
-        var assembly = typeof(ArcPixelTheme).Assembly;
+        var assembly = typeof(ArcPixelPresets).Assembly;
         assembly.GetExportedTypes().Any(t => typeof(Control).IsAssignableFrom(t)).ShouldBeFalse();
         assembly.GetReferencedAssemblies().Any(a => a.Name == "TKCode.Arc").ShouldBeFalse();
-        ArcPixelTheme.LightThemeId.ShouldStartWith("Arc");
-        ArcPixelTheme.DarkThemeId.ShouldStartWith("Arc");
+        ArcPixelPresets.Name.ShouldStartWith("Arc");
     }
 
     private static CornerRadius AsRadius(object? value) => value switch

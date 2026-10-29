@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
@@ -290,7 +288,7 @@ public class AiAttachmentChipTests
         var chip = Create(Sample("brief.pdf", 1_000, AiAttachmentStatus.Error, error: "Larger than 30 MB"));
         var window = Show(chip);
         var light = TestHelpers.ColorOf(chip.ErrorBorderBrush);
-        await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+        await TestHelpers.ApplyAsync(TestHelpers.Dark);
         try
         {
             var dark = TestHelpers.ColorOf(chip.ErrorBorderBrush);
@@ -299,7 +297,7 @@ public class AiAttachmentChipTests
         }
         finally
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+            await TestHelpers.ApplyAsync(null);
             window.Close();
         }
     }

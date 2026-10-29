@@ -1,6 +1,6 @@
 ---
 title: 主题
-source-hash: 8f4d6266eb37
+source-hash: 65d9e8b78c7c
 ---
 
 # 主题
@@ -11,54 +11,50 @@ TKCode.Arc 中的每一种颜色、圆角、阴影、字体大小和动效时长
 
 ## 主题的构建方式
 
-TKCode.Arc 构建在 AtomUI 的主题系统之上：
+主题运行时属于 `TKCode.Arc.Foundation`，由 `TKCode.Arc` 一并引入：
 
-1. **AtomUI 的主题管理器**（`IThemeManager`）持有当前主题，并将其应用到应用程序。主题是由 `ThemeConfigBuilder` 构建的 `ThemeConfig`。
-2. **算法**决定外观：`ThemeAlgorithm.Default` 用于浅色，`ThemeAlgorithm.Dark` 用于深色。
-3. **ArcDesign 标识**持有 Arc 自己的令牌。构建器上的 `WithArc(...)` 为该标识设置强调色、覆盖令牌并设置动效模式。
+1. **主题管理器**（`ArcThemeManager`，每个应用一个，由 `UseArc(...)` 创建）持有当前主题，并把它的令牌发布到应用的资源中。
+2. **主题状态**（`ArcThemeState`）是计算主题所需的全部输入：外观（`Light`、`Dark` 或 `System`）、强调色种子、动效级别、主题预设和令牌覆盖。它不可变；`ArcThemeBuilder` 描述一次更改，更改中没有提到的部分保持原样。
+3. **ArcDesign 标识**持有 Arc 自己的令牌：颜色、圆角、字体、间距和动效。
 4. **控件令牌**持有单个控件的几何参数（内边距、宽度、偏移量），以及不依赖强调色的颜色。
 
-应用主题时，每个令牌都会根据外观和强调色重新计算，读取令牌的每个控件都会原地更新：无需重新加载页面，也无需重启。
+应用主题时，每个令牌都会根据外观和强调色重新计算，只写入发生变化的值，读取令牌的每个控件都会原地更新：无需重新加载页面，也无需重启。
 
 ## 浅色与深色
 
-构建主题配置，并通过主题管理器应用：
+在 `UseArc(...)` 中设置应用启动时的主题，之后用 `ArcTheme.Apply` 更改：
 
 ```csharp
-using AtomUI;
-using AtomUI.Theme;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc;
 
-public static async Task ApplyAppearanceAsync(bool dark, ArcAccentPreset accent)
-{
-    var builder = new ThemeConfigBuilder();
-    builder = dark
-        ? builder.WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
-        : builder.WithAlgorithms(ThemeAlgorithm.Default);
-    builder = builder.WithArc(arc => arc.Accent(accent));
+// Program.cs：第一帧就使用这个主题绘制。
+.UseArc(arc => arc
+    .UseArcControls()
+    .WithTheme(t => t.Appearance(ArcAppearance.System).Accent(ArcAccentPreset.Violet)))
 
-    var manager = Application.Current!.GetThemeManager()!;
-    await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(),
-                                                   ThemeTransitionReason.UserRequest));
-}
+// 运行时：只改变外观，强调色和其他设置保持不变。
+public static void ApplyAppearance(bool dark)
+    => ArcTheme.Apply(t => t.Appearance(dark ? ArcAppearance.Dark : ArcAppearance.Light));
 ```
 
-将用户的选择（浅色、深色或跟随系统）保存在设置存储中，并在启动时、主窗口显示之前应用，使第一帧就具有正确的外观。图库的外观面板正是这样工作的。
+`ArcAppearance.System` 跟随操作系统的浅色或深色设置，并随之切换。`ArcTheme.State` 是当前状态，`ArcThemeManager.Current` 是管理器：它的 `IsDark` 表示当前显示的是哪种外观，每次更改后都会引发 `StateChanged`。`ArcThemeManager.ApplyAsync` 在后台线程计算令牌，在 UI 线程发布；请 await 它，切勿在 UI 线程上阻塞等待它（`.Wait()`、`.Result`），否则会死锁。如果一次更改中有未知的令牌或无效的值，会抛出 `ArcThemeException` 并列出全部问题，且不做任何更改。
+
+将用户的选择（浅色、深色或跟随系统）保存在设置存储中，并在启动时传给 `WithTheme`，使第一帧就具有正确的外观。图库的外观面板正是这样工作的。
 
 ### ThemeSwitcher 控件
 
-对于页头或工具栏，`ThemeSwitcher` 是现成的浅色/深色切换控件，带有 Arc 的页面过渡效果（通过 `Variant` 设置 `Reveal`、`Eclipse`、`Split` 和 `Rise`）。按下时会触发 `ThemeChangeRequested`。如果没有处理程序将事件标记为已处理，切换器会自行切换到 `ThemeAlgorithm.Dark`，并保留当前主题的其余部分。当应用程序自己掌管外观时（例如需要保存用户的选择），请处理该事件：
+对于页头或工具栏，`ThemeSwitcher` 是现成的浅色/深色切换控件，带有 Arc 的页面过渡效果（通过 `Variant` 设置 `Reveal`、`Eclipse`、`Split` 和 `Rise`）。按下时会触发 `ThemeChangeRequested`。如果没有处理程序将事件标记为已处理，切换器会自行通过 `ArcThemeManager` 更改外观，并保留当前主题的其余部分。当应用程序自己掌管外观时（例如需要保存用户的选择），请处理该事件：
 
 ```csharp
 themeSwitcher.ThemeChangeRequested += async (_, e) =>
 {
     e.Handled = true;
     await settings.SaveAppearanceAsync(e.Next);
-    await ApplyAppearanceAsync(e.Next == ThemeSwitcherAppearance.Dark, settings.Accent);
+    ApplyAppearance(e.Next == ThemeSwitcherAppearance.Dark);
 };
 ```
+
+过渡效果绘制在窗口的覆盖层上。如果窗口模板中没有 `EnableOverlayLayer="True"` 的 `VisualLayerManager`，切换时就没有过渡。
 
 ## 强调色
 
@@ -133,7 +129,7 @@ Arc 提供八种强调色预设。强调色驱动按钮、选中状态、焦点�
 当所有预设都不符合品牌时，直接传入品牌色本身。Arc 会在 OKLCH 色彩空间中由它推导出浅色与深色的强调色系，使各个色阶在视觉上保持均匀：
 
 ```csharp
-builder = builder.WithArc(arc => arc.Accent(Color.Parse("#0E7C86")));
+ArcTheme.Apply(t => t.Accent(Color.Parse("#0E7C86")));
 ```
 
 请在两种外观下检查结果。非常浅的种子色（黄色、青柠色）在白色背景上作为文字颜色效果很差；这类情况下请优先使用预设，或使用品牌色的较深色调。
@@ -243,14 +239,17 @@ var accent = ArcTokens.GetColor(chart, ArcDesignTokenKind.Accent);
 
 ## 更改令牌
 
-`WithArc` 可以覆盖任意 ArcDesign 令牌的最终值，并为整个主题设置动效模式：
+`Token(name, value)` 覆盖某个 ArcDesign 令牌的最终值，`Token(identity, name, value)` 覆盖某个控件的令牌，`MotionLevel` 为整个主题设置动效级别：
 
 ```csharp
-builder = builder.WithArc(arc => arc
+ArcTheme.Apply(t => t
     .Accent(ArcAccentPreset.Blue)
     .Token(nameof(ArcDesignTokenKind.Danger), "#D92D20")
-    .MotionMode(ArcMotionLevel.Reduced));
+    .Token("Switch", "TrackWidth", "50")
+    .MotionLevel(ArcMotionLevel.Reduced));
 ```
+
+值是文本，按令牌的类型解析（`#RRGGBB`、`12`、`4,8`、`120ms`、枚举成员名）。控件令牌的标识就是控件名；移动端控件使用 `MobileButton`、`MobileCheckbox`、`MobileDialog`、`MobileSwitch` 和 `MobileToast`。`ClearTokens()` 会移除全部覆盖。
 
 尽量少改。令牌的修改会应用到所有地方：覆盖 `Danger` 会改变应用中每一条错误提示、每一个破坏性按钮和每一个失败状态。颜色的覆盖值应在两种外观下检查，因为深色模式不会重新计算该覆盖值。
 
@@ -260,14 +259,15 @@ Arc 的圆角偏大：控件 18、面板 26、表面 34。如果产品想要更�
 令牌。这四个只是最上层：模板内部使用的圆角阶梯、约 300 个控件属性各自的圆角令牌（复选框的方框、Combobox 的选项、
 悬停菜单行背后的高亮），以及某些控件在动画中自己计算的圆角，都是另外的值。只改那四个，弹层、悬停背景和复选框仍然是圆的。
 
-`TKCode.Arc.Themes.Corners` 包用一次调用改掉全部，并且只改圆角：颜色、描边、阴影和动效保持不变。
+`TKCode.Arc.Themes.Corners` 包用一次调用改掉全部，并且只改圆角：颜色、描边、阴影和动效保持不变。在 `UseArc(...)` 中用
+`UseArcCorners()` 注册它，然后：
 
 ```csharp
 using TKCode.Arc.Themes.Corners;
 
-builder = builder.WithArc(arc => arc
+ArcTheme.Apply(t => t
     .Accent(ArcAccentPreset.Blue)
-    .Corners(ArcCornerStyle.Square, ArcCornerScope.All));
+    .Corners(ArcCornerStyle.Square));
 ```
 
 | 风格 | 结果 |
@@ -278,13 +278,15 @@ builder = builder.WithArc(arc => arc
 
 - **药丸与圆形。** 半径达到 999 及以上的（药丸按钮、圆形头像、圆点）在 `Scale` 下保持形状，只有 `Square` 会把它们变平，
   所以直角风格会把圆形头像变成方形。想保留圆形，请用 `Scale`。
-- **范围。** `ArcCornerScope` 指明应用注册了哪些控件包：`Controls`、`Blocks`、`Special`、`AdvancedCharts`、`Workflow`，
-  或 `All`。点名了应用没有注册的包，整次主题切换会失败，所以只列实际使用的。
-- **一次调用。** 后一次 `WithArc` 会替换前一次写入的内容，所以像上面这样把强调色和圆角风格放在同一次调用里。
-  只设置圆角时，可以用 `builder.WithArcCorners(style, scope)` 简写。
-- **滚动条。** AtomUI 滚动条的滑块出现在每个 Arc 弹层和滚动区域里，所以圆角风格也会改变整个应用的滚动条滑块，
-  包括不属于 Arc 的 AtomUI 控件。
-- **Pixel。** Pixel 风格建立在同一个包上，始终是直角。
+- **预设。** 圆角风格是一个主题预设（`ArcThemePreset`）：一组带名字、分浅色与深色的令牌覆盖。`Corners(style)` 等于
+  `Preset(ArcCornerPresets.Create(style))`；`ArcCornerPresets.Square` 和 `ArcCornerPresets.Half` 是现成的。预设覆盖所有
+  Arc 包，并跳过应用没有注册的包。
+- **替换。** 圆角风格占用一个槽位（`ArcCornerPresets.Slot`），所以下一次 `Corners(...)` 会替换它，
+  `Corners(ArcCornerStyle.Default)` 会移除它。你自己的 `Token(...)` 覆盖在预设之后应用，优先生效。
+- **滚动条。** 无论哪种圆角风格，滚动条都保持细长的胶囊形状。
+- **Pixel。** `TKCode.Arc.Themes.Pixel` 包（`UseArcPixelTheme()`）提供 Pixel 风格：直角、硬阴影、浅色与深色各一套有限
+  调色板以及像素字体。用 `ArcTheme.Apply(t => t.Pixel())` 应用，用 `t.RemovePreset(ArcPixelPresets.Slot)` 恢复。它有
+  自己的槽位，所以在它之后选择的圆角风格会改变它的圆角。
 
 ## 单个控件的样式
 

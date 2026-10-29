@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DonutChartTheme">
     <!-- Every chart value is drawn by PART_Plot and animated from code (MotionValue): ControlTheme
          transitions cannot reach coordinates inside one self-drawn geometry. Tracks gives the chart its
          motion pseudo-classes so the code reads the cached motion level. -->

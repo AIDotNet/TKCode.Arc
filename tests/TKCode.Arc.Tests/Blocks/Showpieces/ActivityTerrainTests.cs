@@ -1,8 +1,6 @@
 using TKCode.Arc.Gallery.Demos;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -795,7 +793,7 @@ public class ActivityTerrainTests
             Pump();
             var swatch = TestHelpers.Descendant<Panel>(terrain, ActivityTerrain.SwatchesPart).Children.OfType<Border>().First();
             var light = TestHelpers.ColorOf(swatch.Background);
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             Pump();
             var dark = TestHelpers.ColorOf(swatch.Background);
             dark.ShouldNotBe(light);
@@ -837,7 +835,7 @@ public class ActivityTerrainTests
             terrain.HighlightedCell = terrain.Summary.Peak;
             Pump();
             RenderPlots(window);
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             Pump();
             RenderPlots(window);
         }

@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
@@ -644,7 +642,7 @@ public class SemanticZoomTests
         {
             var stage = Stage(map);
             var light = stage.Palette.Surface;
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             Settle();
             stage.Palette.Surface.ShouldNotBe(light);
             using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(new PixelSize(64, 64));
@@ -753,12 +751,7 @@ public class SemanticZoomTests
         var org = SemanticZoomDemoData.Create();
         var map = MapOver(org);
         var panel = PanelOver(org.Teams[0].Projects[0]);
-        for (var i = 0; i < 4 && (map.IsAlive || panel.IsAlive); i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Settle();
-        }
+        TestHelpers.Collect(map, panel);
         map.IsAlive.ShouldBeFalse();
         panel.IsAlive.ShouldBeFalse();
         // The organization goes on without them.

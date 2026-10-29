@@ -20,7 +20,6 @@
     <!-- The versions the text names, from build/Versions.props. -->
     <ItemGroup>
         <AssemblyMetadata Include="ArcVersion" Value="$(ArcVersion)" />
-        <AssemblyMetadata Include="AtomUIVersion" Value="$(AtomUIVersion)" />
         <AssemblyMetadata Include="AvaloniaVersion" Value="$(AvaloniaVersion)" />
     </ItemGroup>
 </Project>

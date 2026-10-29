@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ChatComposerTheme">
     <!--
         Arc chat-thread.module.css, composer: 10px 12px 12px under a subtle top border; the tray of pending files springs
         open above the input row; the attach button sits beside a 21px rounded box that holds the growing field and the

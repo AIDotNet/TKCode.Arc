@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
@@ -666,7 +664,7 @@ public class DocumentPageTests
         {
             page.SetSpan("vendor", s_linked);
             var light = PromptTone.SeriesColor(page, 1);
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             try
             {
                 Settle(window);
@@ -680,7 +678,7 @@ public class DocumentPageTests
             }
             finally
             {
-                await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+                await TestHelpers.ApplyAsync(null);
             }
         }
         finally

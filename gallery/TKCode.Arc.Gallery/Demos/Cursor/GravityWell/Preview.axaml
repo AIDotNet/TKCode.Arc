@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-             xmlns:atom="https://atomui.net"
              xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.GravityWellPreviewDemo">
     <!-- A moodboard of 42 photos in 7 columns. Move over it, click to send a shockwave, or Tab in and use the arrows. -->
@@ -17,8 +16,8 @@
                          Cursor="Cross"
                          ItemsSource="{x:Static demos:GravityWellDemoData.Photos}">
             <arc:GravityWell.ItemTemplate>
-                <DataTemplate x:DataType="atom:ImageSource">
-                    <atom:AsyncImage Source="{Binding}" Stretch="UniformToFill" />
+                <DataTemplate x:DataType="arc:ImageSource">
+                    <arc:ArcImage Source="{Binding}" Stretch="UniformToFill" />
                 </DataTemplate>
             </arc:GravityWell.ItemTemplate>
         </arc:GravityWell>

@@ -1,4 +1,4 @@
-using AtomUI.Controls;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -37,8 +37,8 @@ public sealed class ImageComparePositionChangedEventArgs : RoutedEventArgs
 /// the handle springs it back to the middle. Changing <see cref="Orientation"/> swings the divider a quarter turn.
 /// <para>
 /// <see cref="Before"/> / <see cref="After"/> take any content (an <c>Image</c> with <c>Stretch="UniformToFill"</c>, a
-/// drawing, a control). <see cref="BeforeSource"/> / <see cref="AfterSource"/> load a picture with AtomUI's
-/// <c>AsyncImage</c> on top of that content: it fades in from a soft blur while downloading, and when it fails the
+/// drawing, a control). <see cref="BeforeSource"/> / <see cref="AfterSource"/> load a picture with an
+/// <c>ArcImage</c> on top of that content: it fades in from a soft blur while downloading, and when it fails the
 /// content underneath shows instead.
 /// </para>
 /// </summary>
@@ -49,8 +49,8 @@ public sealed class ImageComparePositionChangedEventArgs : RoutedEventArgs
 [TemplatePart(AfterBottomChipPart, typeof(Control))]
 [TemplatePart(DividerPart, typeof(ImageCompareDivider))]
 [TemplatePart(HandlePart, typeof(ImageCompareHandle))]
-[TemplatePart(BeforeImagePart, typeof(AsyncImage))]
-[TemplatePart(AfterImagePart, typeof(AsyncImage))]
+[TemplatePart(BeforeImagePart, typeof(ArcImage))]
+[TemplatePart(AfterImagePart, typeof(ArcImage))]
 [PseudoClasses(DraggingPseudoClass, BeforeImagePseudoClass, AfterImagePseudoClass, BeforeLoadingPseudoClass, AfterLoadingPseudoClass)]
 public class ImageCompare : TemplatedControl
 {
@@ -91,7 +91,7 @@ public class ImageCompare : TemplatedControl
     public static readonly StyledProperty<object?> AfterProperty =
         AvaloniaProperty.Register<ImageCompare, object?>(nameof(After));
 
-    /// <summary>Picture drawn over <see cref="Before"/> (AtomUI <c>AsyncImage</c>, cover fit).</summary>
+    /// <summary>Picture drawn over <see cref="Before"/> (an <c>ArcImage</c>, cover fit).</summary>
     public static readonly StyledProperty<ImageSource?> BeforeSourceProperty =
         AvaloniaProperty.Register<ImageCompare, ImageSource?>(nameof(BeforeSource));
 
@@ -191,8 +191,8 @@ public class ImageCompare : TemplatedControl
     private Control? _afterBottomChip;
     private ImageCompareDivider? _divider;
     private ImageCompareHandle? _handle;
-    private AsyncImage? _beforeImage;
-    private AsyncImage? _afterImage;
+    private ArcImage? _beforeImage;
+    private ArcImage? _afterImage;
     private ImageSource? _failedBefore;
     private ImageSource? _failedAfter;
 
@@ -575,8 +575,8 @@ public class ImageCompare : TemplatedControl
         _afterBottomChip = e.NameScope.Find<Control>(AfterBottomChipPart);
         _divider = e.NameScope.Find<ImageCompareDivider>(DividerPart);
         _handle = e.NameScope.Find<ImageCompareHandle>(HandlePart);
-        _beforeImage = e.NameScope.Find<AsyncImage>(BeforeImagePart);
-        _afterImage = e.NameScope.Find<AsyncImage>(AfterImagePart);
+        _beforeImage = e.NameScope.Find<ArcImage>(BeforeImagePart);
+        _afterImage = e.NameScope.Find<ArcImage>(AfterImagePart);
         if (_beforeLayer is not null)
         {
             _beforeLayer.Clip = _clip;
@@ -602,8 +602,8 @@ public class ImageCompare : TemplatedControl
 
     private void OnImagePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property == AsyncImage.IsLoadingProperty || e.Property == AsyncImage.IsLoadedProperty ||
-            e.Property == AsyncImage.IsFailedProperty)
+        if (e.Property == ArcImage.IsLoadingProperty || e.Property == ArcImage.IsImageLoadedProperty ||
+            e.Property == ArcImage.IsFailedProperty)
         {
             UpdateImageStates(initial: false);
         }
@@ -615,7 +615,7 @@ public class ImageCompare : TemplatedControl
         UpdateImageState(_afterImage, AfterSource, ref _failedAfter, AfterImagePseudoClass, AfterLoadingPseudoClass, initial);
     }
 
-    private void UpdateImageState(AsyncImage? image, ImageSource? source, ref ImageSource? failed, string showClass,
+    private void UpdateImageState(ArcImage? image, ImageSource? source, ref ImageSource? failed, string showClass,
                                   string loadingClass, bool initial)
     {
         if (source is not null && image is { IsFailed: true })
@@ -625,7 +625,7 @@ public class ImageCompare : TemplatedControl
         var show = source is not null && !ReferenceEquals(failed, source);
         PseudoClasses.Set(showClass, show);
         // Only a picture that is still downloading after mount fades in; a decoded one shows at once.
-        var loading = show && image is { IsLoaded: false } && (image.IsLoading || initial || PseudoClasses.Contains(loadingClass));
+        var loading = show && image is { IsImageLoaded: false } && (image.IsLoading || initial || PseudoClasses.Contains(loadingClass));
         PseudoClasses.Set(loadingClass, loading);
     }
 

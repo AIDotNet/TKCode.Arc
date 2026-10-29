@@ -1,7 +1,7 @@
 ---
 title: Dot grid
 summary: 一片點陣，像透鏡一樣在指標周圍向外鼓起，每次點擊都會向外擴散一圈漣漪。
-source-hash: d97edb6e6314
+source-hash: eea42c7255b6
 ---
 
 <Demo name="Preview" />
@@ -31,7 +31,7 @@ source-hash: d97edb6e6314
 </UserControl>
 ```
 
-`DotGrid` 是 Special 套件中的 `ContentControl`。在 `UseArc()` 旁呼叫 `UseArcSpecial()` 註冊此套件。給控制項一個高度，或讓內容撐開它；最小高度為 240px。點陣本身沒有背景：設定 `Background`、`BorderBrush`、`BorderThickness` 與 `CornerRadius` 為它加上外框，點會被裁切在這個圓角框內。
+`DotGrid` 是 Special 套件中的 `ContentControl`。在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 註冊此套件。給控制項一個高度，或讓內容撐開它；最小高度為 240px。點陣本身沒有背景：設定 `Background`、`BorderBrush`、`BorderThickness` 與 `CornerRadius` 為它加上外框，點會被裁切在這個圓角框內。
 
 ### 用作首屏
 

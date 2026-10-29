@@ -1,7 +1,6 @@
 using System.Collections;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Primitives;
-using AtomUI.Controls;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Collections;

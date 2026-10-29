@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Foundation.Samples.SampleLangResourceKind">
+    <unit id="Save">
+      <segment>
+        <source>Save changes</source>
+      </segment>
+    </unit>
+    <unit id="Cancel">
+      <segment>
+        <source>Cancel</source>
+      </segment>
+    </unit>
+    <unit id="RowCount">
+      <segment>
+        <source>{0} rows</source>
+      </segment>
+    </unit>
+    <unit id="Brand">
+      <segment>
+        <source>Arc</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

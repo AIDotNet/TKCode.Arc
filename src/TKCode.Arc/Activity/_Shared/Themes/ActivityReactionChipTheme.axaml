@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ActivityReactionChipTheme">
     <!--
         Arc's .reaction pill (comment-thread and chat-thread): 26px, 0 9px 0 7px, Surface fill, TextSecondary 12px/500.
         The chosen state mixes the accent (accent-dependent colors stay out of control tokens), drawn as accent layers at

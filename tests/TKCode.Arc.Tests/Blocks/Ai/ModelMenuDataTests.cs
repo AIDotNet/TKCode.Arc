@@ -291,12 +291,7 @@ public class ModelMenuDataTests
     {
         var source = new ObservableCollection<AiModel>(ModelMenuSamples.Models());
         var reference = MenuOverSource(source);
-        for (var i = 0; i < 4 && reference.IsAlive; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Dispatcher.UIThread.RunJobs();
-        }
+        TestHelpers.Collect(reference);
         reference.IsAlive.ShouldBeFalse();
         // The catalog still works (the dead menu's links drop themselves).
         source.Add(ModelMenuSamples.Model("after", "After", "fjord", null, null, null, null));

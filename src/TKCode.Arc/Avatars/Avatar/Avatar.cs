@@ -1,4 +1,4 @@
-using AtomUI.Controls;
+using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -26,7 +26,7 @@ public enum AvatarStatus
 /// A person as a photo or initials. A photo that is still downloading fades in from a soft blur (cached photos
 /// show at once); a failed photo falls back to initials; the status dot pops in on a snappy spring.
 /// </summary>
-[TemplatePart(ImagePart, typeof(AsyncImage))]
+[TemplatePart(ImagePart, typeof(ArcImage))]
 [PseudoClasses(ImageLoadingPseudoClass, ShowImagePseudoClass, FallbackPseudoClass)]
 public class Avatar : TemplatedControl
 {
@@ -81,7 +81,7 @@ public class Avatar : TemplatedControl
         private set => SetAndRaise(HasStatusProperty, ref _hasStatus, value);
     }
 
-    private AsyncImage? _image;
+    private ArcImage? _image;
     private ImageSource? _failedSource;
 
     /// <summary>First letters of the first two words, upper-cased ("Ada Lovelace" → "AL").</summary>
@@ -111,7 +111,7 @@ public class Avatar : TemplatedControl
         {
             _image.PropertyChanged -= OnImagePropertyChanged;
         }
-        _image = e.NameScope.Find<AsyncImage>(ImagePart);
+        _image = e.NameScope.Find<ArcImage>(ImagePart);
         if (_image is not null)
         {
             _image.PropertyChanged += OnImagePropertyChanged;
@@ -121,8 +121,8 @@ public class Avatar : TemplatedControl
 
     private void OnImagePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property == AsyncImage.IsLoadingProperty || e.Property == AsyncImage.IsLoadedProperty ||
-            e.Property == AsyncImage.IsFailedProperty)
+        if (e.Property == ArcImage.IsLoadingProperty || e.Property == ArcImage.IsImageLoadedProperty ||
+            e.Property == ArcImage.IsFailedProperty)
         {
             UpdateImageState(initial: false);
         }
@@ -139,7 +139,7 @@ public class Avatar : TemplatedControl
         PseudoClasses.Set(ShowImagePseudoClass, showImage);
         PseudoClasses.Set(FallbackPseudoClass, source is not null && !showImage);
         // Only a photo that is still downloading after mount fades in; a decoded one shows at once.
-        var loading = showImage && _image is { IsLoaded: false } && (_image.IsLoading || initial || PseudoClasses.Contains(ImageLoadingPseudoClass));
+        var loading = showImage && _image is { IsImageLoaded: false } && (_image.IsLoading || initial || PseudoClasses.Contains(ImageLoadingPseudoClass));
         PseudoClasses.Set(ImageLoadingPseudoClass, loading);
     }
 

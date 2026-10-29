@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BudgetVarianceTheme">
     <!--
         Budget variance: a bordered card with the title, the period switch, the table (built in code from the internal
         parts below) and the legend. Rows share one set of column widths from the token, so the budget ticks line up.

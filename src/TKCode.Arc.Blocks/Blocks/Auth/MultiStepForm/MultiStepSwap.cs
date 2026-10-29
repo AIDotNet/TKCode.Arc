@@ -206,7 +206,7 @@ internal sealed class MultiStepSwap : Control
             layer.Block.Effect = ArcBlur.Get(ExitBlur * p);
         };
         progress.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard))
-            .ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            .ContinueWith(_ => Dispatcher.Post(() =>
             {
                 if (_exiting.Contains(layer))
                 {

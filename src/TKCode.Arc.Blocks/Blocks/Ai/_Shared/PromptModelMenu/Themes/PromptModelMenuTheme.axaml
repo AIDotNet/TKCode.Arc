@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PromptModelMenuTheme">
 
     <!--
         A model row: 38px, padding 0 10, radius 16; columns 16 | 1fr | auto | 14, 10px apart: mark, name (14 / 19.6,

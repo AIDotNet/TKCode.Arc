@@ -950,7 +950,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             _lidValue.Opacity = 1;
             _searchFade.AnimateTo(0, MotionSpec.Tween(TimeSpan.FromMilliseconds(100), ArcEasings.Standard)).ContinueWith(
-                t => Dispatcher.UIThread.Post(() =>
+                t => Dispatcher.Post(() =>
                 {
                     if (t.Result && _searchRow is not null && _searchFade?.Value <= 0.001)
                     {

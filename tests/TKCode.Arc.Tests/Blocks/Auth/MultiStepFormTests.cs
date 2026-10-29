@@ -562,8 +562,8 @@ public class MultiStepFormTests
             // The same step (and control) can be shown by another form.
             var other = new MultiStepForm();
             other.Steps.Add(step);
-            var host = (StackPanel)new StackPanel();
-            ((Avalonia.Controls.Primitives.VisualLayerManager)window.Content!).Child = host;
+            var host = new StackPanel();
+            window.Content = host;
             host.Children.Add(form);
             host.Children.Add(other);
             Dispatcher.UIThread.RunJobs();

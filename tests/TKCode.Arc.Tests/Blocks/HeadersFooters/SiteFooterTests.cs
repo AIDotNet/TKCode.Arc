@@ -622,12 +622,7 @@ public class SiteFooterTests
         });
         // The sample columns are static: they must not keep a default footer either.
         var withSamples = FooterOver(null);
-        for (var i = 0; i < 4 && (withData.IsAlive || withSamples.IsAlive); i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Dispatcher.UIThread.RunJobs();
-        }
+        TestHelpers.Collect(withData, withSamples);
         withData.IsAlive.ShouldBeFalse();
         withSamples.IsAlive.ShouldBeFalse();
         source[0].Links.Add(new SiteFooterLink("Later"));

@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-             xmlns:atom="https://atomui.net"
              xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.CarouselPhotosDemo">
     <arc:Carousel Label="Suites, photographed"
@@ -16,7 +15,7 @@
                     <StackPanel>
                         <Panel Height="200">
                             <ContentControl Content="{Binding Scene, Converter={x:Static demos:CarouselDemoData.Art}}" />
-                            <atom:AsyncImage Source="{Binding Photo}" Stretch="UniformToFill" />
+                            <arc:ArcImage Source="{Binding Photo}" Stretch="UniformToFill" />
                         </Panel>
                         <StackPanel Margin="18,14,18,18" Spacing="4">
                             <TextBlock Text="{Binding Name}"

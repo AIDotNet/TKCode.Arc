@@ -1,4 +1,4 @@
-using AtomUI.Localization;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Gallery.Localization;
 
@@ -171,4 +171,10 @@ public enum GalleryShellLangResourceKind
     PhoneDeviceTablet,
     UpdateAvailable,
     UpdateDownload,
+    WindowPin,
+    WindowUnpin,
+    WindowMinimize,
+    WindowMaximize,
+    WindowRestore,
+    WindowClose,
 }

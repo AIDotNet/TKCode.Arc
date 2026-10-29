@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.ToolbarTheme">
 
     <!-- Toolbar: 44 high, Surface fill with a Border hairline above it; leading / items sharing the width / center / trailing.
          Showing and hiding the bar (slide + fade) is driven by the Toolbar's code, so a toggle mid-flight continues from where the bar is. -->

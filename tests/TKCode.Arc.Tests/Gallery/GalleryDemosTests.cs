@@ -1,4 +1,3 @@
-using AtomUI.Localization;
 using TKCode.Arc.Gallery.Catalog;
 using TKCode.Arc.Gallery.Docs;
 using TKCode.Arc.Gallery.Pages;
@@ -10,6 +9,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Tests.Gallery;
 
@@ -18,7 +18,7 @@ public class GalleryDemosTests
 {
     private static GalleryEntry Entry(string className) => GalleryCatalog.AllEntries.First(e => e.ClassName == className);
 
-    private static ILanguageManager Languages() => global::AtomUI.ApplicationExtensions.GetLanguageManager(Application.Current!)!;
+    private static ArcLanguageManager Languages() => ArcLanguageManager.Current!;
 
     /// <summary>Opens <paramref name="className"/>'s page and waits until StreamMark has parsed and laid out its document.</summary>
     private static async Task<(GalleryPageView Page, Window Window)> OpenDocsPage(string className, double width = 1440)
@@ -73,6 +73,9 @@ public class GalleryDemosTests
                 window.Width = 800;
                 window.Height = 600;
                 Dispatcher.UIThread.RunJobs();
+                // A built-in TextBox has no template of its own (nothing supplies one): a demo uses Arc's fields.
+                control.GetVisualDescendants().OfType<TextBox>().Where(t => t.IsEffectivelyVisible)
+                       .ShouldAllBe(t => t.GetVisualChildren().Any(), demo.Id);
             }
             finally
             {
@@ -252,7 +255,7 @@ public class GalleryDemosTests
         try
         {
             page.SectionTitles[0].ShouldBe("Preview");
-            languages.ChangeLanguage(LanguageTags.ZhCN);
+            languages.Set(LanguageTags.ZhCN);
             Dispatcher.UIThread.RunJobs();
             page.Docs!.Text.ShouldNotBeNull().ShouldContain("## 何时使用");
             for (var i = 0; i < 300 && !page.SectionTitles.Contains("何时使用"); i++)
@@ -267,7 +270,7 @@ public class GalleryDemosTests
         }
         finally
         {
-            languages.ChangeLanguage(LanguageTags.EnUS);
+            languages.Set(LanguageTags.EnUS);
             window.Close();
         }
     }

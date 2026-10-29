@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ShowpieceHoverCardTheme">
     <!--
         The Showpiece hover card: a floating surface (SurfaceRaised, 1px Border, radius 12, ShadowFloating) around the
         content template. Position, fade and scale are code-driven (ShowpieceHoverCard), so no transitions here.

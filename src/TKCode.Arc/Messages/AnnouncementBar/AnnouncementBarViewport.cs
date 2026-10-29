@@ -117,7 +117,7 @@ internal sealed class AnnouncementBarViewport : Control
 
     private void RemoveWhenGone(AnnouncementBarFace face, Task task)
     {
-        task.ThenOnUiThread(() =>
+        task.ThenOnUiThread(Dispatcher, () =>
         {
             if (_exiting.Remove(face))
             {

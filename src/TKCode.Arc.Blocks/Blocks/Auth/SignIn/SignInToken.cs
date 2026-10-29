@@ -1,5 +1,4 @@
 // Ported from Arc's free sign-in block (MIT, Copyright (c) 2026 Elia Kuratli): the sizes of sign-in.module.css.
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 
 namespace TKCode.Arc;

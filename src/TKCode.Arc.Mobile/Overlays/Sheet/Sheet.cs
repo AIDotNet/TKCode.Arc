@@ -526,7 +526,7 @@ public class Sheet : ContentControl
         }
         var spec = MotionSpec.Spring(SpringSpec.FromVisual(0.3, 0));
         _ = _y.AnimateTo(ClosedOffset, spec, velocity).ContinueWith(
-            t => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            t => Dispatcher.Post(() =>
             {
                 if (t.Result)
                 {

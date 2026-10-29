@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SignaturePadTheme">
     <!-- The signature field: the pad, a toolbar (ink color, nib, history, replay, clear) and the export row. -->
     <ControlTheme x:Key="{x:Type arc:SignaturePad}" TargetType="arc:SignaturePad">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />

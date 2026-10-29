@@ -1,8 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    xmlns:atom="https://atomui.net"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ImageCompareTheme">
     <ControlTheme x:Key="{x:Type arc:ImageCompare}" TargetType="arc:ImageCompare">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -18,18 +18,18 @@
                                               Content="{TemplateBinding After}"
                                               HorizontalContentAlignment="Stretch"
                                               VerticalContentAlignment="Stretch" />
-                            <atom:AsyncImage Name="PART_AfterImage"
-                                             Source="{TemplateBinding AfterSource}"
-                                             Stretch="UniformToFill" />
+                            <arc:ArcImage Name="PART_AfterImage"
+                                          Source="{TemplateBinding AfterSource}"
+                                          Stretch="UniformToFill" />
                         </Panel>
                         <Panel Name="PART_BeforeLayer">
                             <ContentPresenter Name="PART_BeforeContent"
                                               Content="{TemplateBinding Before}"
                                               HorizontalContentAlignment="Stretch"
                                               VerticalContentAlignment="Stretch" />
-                            <atom:AsyncImage Name="PART_BeforeImage"
-                                             Source="{TemplateBinding BeforeSource}"
-                                             Stretch="UniformToFill" />
+                            <arc:ArcImage Name="PART_BeforeImage"
+                                          Source="{TemplateBinding BeforeSource}"
+                                          Stretch="UniformToFill" />
                         </Panel>
                         <!-- Captions sit on a frosted chip so they read over any photo, below the divider. -->
                         <Border Name="PART_BeforeChip"
@@ -111,29 +111,29 @@
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
 
-        <Style Selector="^ /template/ atom|AsyncImage">
+        <Style Selector="^ /template/ arc|ArcImage">
             <Setter Property="IsVisible" Value="False" />
         </Style>
-        <Style Selector="^:before-image /template/ atom|AsyncImage#PART_BeforeImage">
+        <Style Selector="^:before-image /template/ arc|ArcImage#PART_BeforeImage">
             <Setter Property="IsVisible" Value="True" />
         </Style>
-        <Style Selector="^:after-image /template/ atom|AsyncImage#PART_AfterImage">
+        <Style Selector="^:after-image /template/ arc|ArcImage#PART_AfterImage">
             <Setter Property="IsVisible" Value="True" />
         </Style>
         <!-- Set only while a picture is still downloading after mount, so cached pictures never fade. -->
-        <Style Selector="^:before-loading /template/ atom|AsyncImage#PART_BeforeImage">
+        <Style Selector="^:before-loading /template/ arc|ArcImage#PART_BeforeImage">
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Effect">
                 <BlurEffect Radius="4" />
             </Setter>
         </Style>
-        <Style Selector="^:after-loading /template/ atom|AsyncImage#PART_AfterImage">
+        <Style Selector="^:after-loading /template/ arc|ArcImage#PART_AfterImage">
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Effect">
                 <BlurEffect Radius="4" />
             </Setter>
         </Style>
-        <Style Selector="^:motion-reduced /template/ atom|AsyncImage">
+        <Style Selector="^:motion-reduced /template/ arc|ArcImage">
             <Setter Property="Effect" Value="{x:Null}" />
         </Style>
 
@@ -146,7 +146,7 @@
                 </Setter>
             </Style>
             <!-- Only the arrival fades (from a soft blur); a new download starts hidden at once. -->
-            <Style Selector="^:not(:before-loading) /template/ atom|AsyncImage#PART_BeforeImage">
+            <Style Selector="^:not(:before-loading) /template/ arc|ArcImage#PART_BeforeImage">
                 <Setter Property="Transitions">
                     <Transitions>
                         <arc:ArcDoubleTransition Property="Opacity" Tween="Enter" />
@@ -154,7 +154,7 @@
                     </Transitions>
                 </Setter>
             </Style>
-            <Style Selector="^:not(:after-loading) /template/ atom|AsyncImage#PART_AfterImage">
+            <Style Selector="^:not(:after-loading) /template/ arc|ArcImage#PART_AfterImage">
                 <Setter Property="Transitions">
                     <Transitions>
                         <arc:ArcDoubleTransition Property="Opacity" Tween="Enter" />

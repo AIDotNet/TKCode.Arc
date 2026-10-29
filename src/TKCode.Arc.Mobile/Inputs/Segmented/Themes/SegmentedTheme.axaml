@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.SegmentedTheme">
 
     <!-- Segmented: a SurfaceMuted track; the segments share the width; the selected one is marked by the track's glider (a Surface block with an outline) and Foreground text. -->
     <ControlTheme x:Key="{x:Type arcm:Segmented}" TargetType="arcm:Segmented">

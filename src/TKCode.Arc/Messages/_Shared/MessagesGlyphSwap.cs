@@ -150,7 +150,7 @@ internal sealed class MessagesGlyphSwap : Control
 
     private void RemoveWhenDone(MessagesGlyphLayer layer, Task<bool> task)
     {
-        task.ThenOnUiThread(() =>
+        task.ThenOnUiThread(Dispatcher, () =>
         {
             if (_exiting == layer)
             {

@@ -972,12 +972,7 @@ public class PageHeaderTests
         var crumbs = new System.Collections.ObjectModel.ObservableCollection<string> { "Northline", "Projects", "Checkout redesign" };
         var action = new PageHeaderAction { Label = "Follow", Icon = ArcIcons.Bell };
         var reference = HeaderOver(crumbs, action);
-        for (var i = 0; i < 4 && reference.IsAlive; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Pump();
-        }
+        TestHelpers.Collect(reference);
         reference.IsAlive.ShouldBeFalse();
         crumbs.Add("Later");
         action.Label = "Following";

@@ -616,7 +616,7 @@ public class PromptVersionMenuTests
         var matrix = presence.CurrentMatrix;
         // Scaled about the top-left corner and moved up toward the pill: the corner stays, only shifted up by 5.
         var surface = host.VersionMenu.Surface!;
-        var actor = surface.FindAncestorOfType<AtomUI.MotionScene.BaseMotionActor>()!;
+        var actor = surface.FindAncestorOfType<ArcPopupFrame>()!;
         var corner = surface.TranslatePoint(default, actor)!.Value;
         matrix.Transform(corner).ShouldBe(new Point(corner.X, corner.Y - 5));
 

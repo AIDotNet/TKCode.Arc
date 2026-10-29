@@ -1,6 +1,6 @@
 ---
 name: {{skill-name}}
-description: Builds and reviews Avalonia interfaces with TKCode.Arc, the Arc design language (uiarc.dev) as native Avalonia controls on AtomUI. Picks the right Arc component or block, installs and registers the packages, wires only documented properties, and applies Arc's rules for design tokens, motion, copy, accessibility and layout. Use when a project references a TKCode.Arc package, uses the XAML namespace https://github.com/AIDotNet/TKCode.Arc or calls UseArc(), or when asked to build or polish an Avalonia screen such as a settings page, form, dashboard, data table, dialog or command palette with Arc.
+description: Builds and reviews Avalonia interfaces with TKCode.Arc, the Arc design language (uiarc.dev) as native Avalonia controls. Picks the right Arc component or block, installs and registers the packages, wires only documented properties, and applies Arc's rules for design tokens, motion, copy, accessibility and layout. Use when a project references a TKCode.Arc package, uses the XAML namespace https://github.com/AIDotNet/TKCode.Arc or calls UseArc(...), or when asked to build or polish an Avalonia screen such as a settings page, form, dashboard, data table, dialog or command palette with Arc.
 ---
 
 # TKCode.Arc
@@ -11,7 +11,7 @@ is a `Button`), so binding, commands, styles and data validation work as usual, 
 design tokens. The quality bar is Arc's: a calm, neutral interface where type, spacing and one considered interaction
 carry the character.
 
-This skill is for TKCode.Arc {{version}} on Avalonia {{avalonia}} and AtomUI {{atomui}}. The documentation index is
+This skill is for TKCode.Arc {{version}} on Avalonia {{avalonia}}. The documentation index is
 {{base}}/llms.txt.
 
 ## Workflow
@@ -22,7 +22,7 @@ Copy this checklist and tick it off:
 Arc task:
 - [ ] 1. Find: an Arc component or block for each region of the screen (components.md)
 - [ ] 2. Read: the page of every component you use, including "When not to use"
-- [ ] 3. Install: packages added, UseArc() registered, Application class partial
+- [ ] 3. Install: packages added, UseArc(arc => arc.UseArcControls()) registered
 - [ ] 4. Wire: documented properties and events only, bound to a view model
 - [ ] 5. Style: tokens for every color, radius, size and font; Arc's motion, not your own
 - [ ] 6. Review: run checklist.md, fix, and run it again until every line passes
@@ -49,18 +49,17 @@ AppBuilder.Configure<App>()
           .UsePlatformDetect()
           .WithInterFont()    // Avalonia.Fonts.Inter
           .WithArcFonts()     // TKCode.Arc.Fonts
-          .UseAtomUI(builder =>
-          {
-              builder.UseDesktopControls();
-              builder.UseArc();
-          });
+          .UseArc(arc => arc
+              .UseArcControls()
+              .WithTheme(t => t.Appearance(ArcAppearance.System)));
 
-public partial class App : Application { }   // partial: AtomUI's generator adds to it (ATOMUILOC008 otherwise)
+// Theme changes at run time name only what changes:
+ArcTheme.Apply(t => t.Appearance(ArcAppearance.Dark).Accent(ArcAccentPreset.Violet));
 ```
 
 XAML uses `xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"` for controls, token resources and markup
 extensions. Blocks (`TKCode.Arc.Blocks`, `UseArcBlocks()`) and the DataGrid (`TKCode.Arc.AdvancedCharts`,
-`UseArcAdvancedCharts()`) are not on NuGet yet: reference the projects from {{repository}}. Full steps:
+`UseArcAdvancedCharts()`) are separate packages, registered in the same `UseArc` callback. Full steps:
 {{base}}/docs/installation.md.
 
 **Wire.** Bind two-way properties (`Text`, `IsChecked`, `SelectedItem`, `Value`) to settable view model properties and

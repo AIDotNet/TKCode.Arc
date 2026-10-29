@@ -2,7 +2,6 @@ using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.Data;
-using AtomPopup = AtomUI.Desktop.Controls.Popup;
 
 namespace TKCode.Arc;
 
@@ -28,7 +27,7 @@ internal sealed class PickerMorphPopup : ArcPopup
         PopupRootShadow = default;
         OverlayHostShadow = default;
         // The surface morphs itself: animation priority wins over ArcPopup's own motion setting.
-        SetValue(AtomPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
+        SetValue(ArcPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
     }
 
     /// <summary>Offset of the popup content's top-left corner from the trigger's (the negative of the surface's Origin).</summary>

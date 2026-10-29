@@ -35,7 +35,7 @@ that rolls out through the grid and flashes each tile's ring as it passes.
 ```
 
 `GravityWell` is an `ItemsControl` in the Special package. Register the package with `UseArcSpecial()` next to
-`UseArc()`. Each item becomes one square tile, either written inline or created from `ItemsSource` and an
+`UseArcControls()`. Each item becomes one square tile, either written inline or created from `ItemsSource` and an
 `ItemTemplate`. The tile clips its content to `TileCornerRadius` (12px by default) and shows a muted surface behind it,
 so photos that are still loading keep their place. Stretch images with `Stretch="UniformToFill"` to fill the square.
 

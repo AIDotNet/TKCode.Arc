@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WorkflowZoomControlsTheme">
 
     <!-- The zoom bar: Surface, 1px Border, radius 10, ShadowResting, 2px padding and gaps; − / readout / + / fit. -->
     <ControlTheme x:Key="{x:Type arc:WorkflowZoomControls}" TargetType="arc:WorkflowZoomControls">

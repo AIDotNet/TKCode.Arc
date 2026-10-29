@@ -1065,12 +1065,7 @@ public class NotificationCenterTests
     {
         var source = new ObservableCollection<NotificationItem>(Many(20));
         var reference = BellOverSource(source);
-        for (var i = 0; i < 4 && reference.IsAlive; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Dispatcher.UIThread.RunJobs();
-        }
+        TestHelpers.Collect(reference);
         reference.IsAlive.ShouldBeFalse();
         // The source still works (the dead bell's link drops itself).
         source.Add(new NotificationItem { Id = "late", Title = "Late" });

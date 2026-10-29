@@ -9,9 +9,12 @@
         <ApplicationManifest Condition="'$(OS)' == 'Windows_NT'"></ApplicationManifest>
         <!-- Icon of the Windows executable. The macOS bundle icon is Assets/AppIcon.icns (tools/macos/bundle.sh). -->
         <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
+        <!-- .NET SDK 11's optimized AOT publish runs PrepareResources before ResolveReferences, ahead of the target where
+             Avalonia 12.1 adds its !AvaloniaResources blob, so a -p:PublishAot=true publish embeds no compiled XAML and fails
+             at startup with "No precompiled XAML found". -->
+        <UseOptimizedPublish>false</UseOptimizedPublish>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AtomUI.Desktop.Controls" />
         <PackageReference Include="Avalonia.Desktop" />
         <PackageReference Include="Avalonia.Fonts.Inter" />
         <ProjectReference Include="../TKCode.Arc.Gallery/TKCode.Arc.Gallery.csproj" />

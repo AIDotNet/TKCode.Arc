@@ -1,0 +1,24 @@
+<!-- Base theme (design/architecture/foundation.md, "基础主题"): the default PathIcon, a 16px glyph filled with the
+     inherited foreground. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.PathIconBaseTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type PathIcon}" TargetType="PathIcon">
+        <Setter Property="Width" Value="{arc:ArcDesignTokenResource GlyphSizeSM}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource GlyphSizeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="PathIcon">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <Viewbox>
+                        <Path Name="PART_Path" Fill="{TemplateBinding Foreground}" Data="{TemplateBinding Data}" Stretch="Uniform" />
+                    </Viewbox>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

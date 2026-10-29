@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.BottomSheetTheme">
     <!-- The declarative sheet renders nothing in place; its BottomSheetSurface rises on the overlay layer.
          No backdrop blur: the dim follows the sheet position instead. -->
     <ControlTheme x:Key="{x:Type arc:BottomSheet}" TargetType="arc:BottomSheet">

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DataFlowTheme">
     <!--
         Illustration frame: a Surface card (RadiusSurface, 1px Border) over a dotted backdrop; the scene canvas scales
         to the width it is given; under it one caption line (BlurSwap) and the play / pause button. Colors reach the

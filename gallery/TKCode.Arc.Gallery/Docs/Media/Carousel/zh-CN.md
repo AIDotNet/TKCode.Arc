@@ -1,7 +1,7 @@
 ---
 title: 轮播
 summary: 通过拖动、轻扫或方向键浏览一排幻灯片。
-source-hash: 4a960604b2d2
+source-hash: 6fd1e19ca14e
 ---
 
 <Demo name="Slides" />
@@ -173,7 +173,7 @@ carousel.SlideLabelFormatter = (index, count) => $"档案照片 {index + 1}，�
 
 ### 照片
 
-幻灯片可以在绘制的场景之上显示 `AsyncImage` 照片，因此离线时看起来仍然完整。
+幻灯片可以在绘制的场景之上显示 `ArcImage` 照片，因此离线时看起来仍然完整。
 
 <Demo name="Photos" />
 

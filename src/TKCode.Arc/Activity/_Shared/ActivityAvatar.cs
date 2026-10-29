@@ -1,4 +1,3 @@
-using AtomUI.Controls;
 using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;

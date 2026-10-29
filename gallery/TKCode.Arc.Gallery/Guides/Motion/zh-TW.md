@@ -1,6 +1,6 @@
 ---
 title: 動態效果
-source-hash: 09a655958638
+source-hash: 57d2e62976e2
 ---
 
 # 動態效果
@@ -34,7 +34,7 @@ ArcMotion.SetLevel(mainWindow, ArcMotionLevel.Reduced);
 </StackPanel>
 ```
 
-主題也可以為整個應用程式設定級別，方法是透過 `WithArc(arc => arc.MotionMode(...))`（參見 **主題**）。控制項的實際級別取兩者中較低的那個：繼承的 `ArcMotion.Level` 與主題的動態效果模式。在設為 `Reduced` 的主題中，即使視窗設為 `Full`，也會以減弱動態效果執行。
+主題也可以為整個應用程式設定級別，方法是透過 `ArcTheme.Apply(t => t.MotionLevel(...))`（參見 **主題**）。控制項的實際級別取兩者中較低的那個：繼承的 `ArcMotion.Level` 與主題的動態效果模式。在設為 `Reduced` 的主題中，即使視窗設為 `Full`，也會以減弱動態效果執行。
 
 程式庫本身不會讀取作業系統的減少動態效果偏好。請在應用程式中提供設定（圖庫的外觀面板提供 Full、Reduced 和 Off 三個選項），將其與使用者的其他偏好一起儲存，並在啟動時套用到主視窗。
 

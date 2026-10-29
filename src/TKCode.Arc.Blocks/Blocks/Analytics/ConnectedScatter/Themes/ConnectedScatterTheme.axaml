@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ConnectedScatterTheme">
     <!--
         Connected scatter (Arc Analytics › Connected scatter, design reference only, ADR 0024): one surface with 24px
         padding and 24px between its sections: the header (title, description and the series switch), the four readouts, the

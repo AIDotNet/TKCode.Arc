@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.SheetTheme">
 
     <!-- Sheet: fills its parent; a scrim and a Surface panel anchored to the bottom with rounded top corners, a grabber and
          title as the handle a finger drags, and the content scrolling in the rest. The panel's position and the scrim's

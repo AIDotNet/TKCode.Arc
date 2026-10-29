@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CancelFlowTheme">
     <!--
         Cancel flow: a card with a step bar (back button, segments, "Step n of m") over a stage. The stage slides between
         step views and sits in a height spring so the card follows the content. The step views are declared in the hidden

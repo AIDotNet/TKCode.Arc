@@ -1,8 +1,6 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
-using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -12,7 +10,7 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// The anchored popup behind a <see cref="MenuSurface"/>: Core <see cref="ArcPopup"/> (placement, flipping, floating
-/// shadow on the motion actor) with the menu families' own enter and exit curves. ArcPopup's P10 motion runs one
+/// shadow on the popup frame) with the menu families' own enter and exit curves. ArcPopup's P10 motion runs one
 /// duration and easing for opacity and transform; Arc menus fade in 160ms while the transform rides a spring
 /// (dropdown: 580ms CSS spring, context: snappy, account: smooth without overshoot), so the motions are replaced
 /// after ArcPopup configures its own. The transform origin and the travel direction are set from the placement that
@@ -57,19 +55,6 @@ internal sealed class MenuSurfacePopup : ArcPopup
             Placement = placement;
         }
         ApplyMotions();
-    }
-
-    /// <summary>Runs the placement again (after the surface changed size while open).</summary>
-    public void Reposition()
-    {
-        if (!IsOpen)
-        {
-            return;
-        }
-        // Offset changes are the public way to make the popup re-run its placement.
-        var offset = VerticalOffset;
-        VerticalOffset = offset + 1;
-        VerticalOffset = offset;
     }
 
     internal static PlacementMode PlacementFor(MenuSide side, MenuAlignment alignment) => (side, alignment) switch
@@ -142,18 +127,13 @@ internal sealed class MenuSurfacePopup : ArcPopup
         CloseMotion = _exit;
     }
 
-    protected override void AdjustPlacementAnchor(CustomPopupPlacement placement, ref bool flipX, ref bool flipY)
+    protected override void AdjustPlacementAnchor(CustomPopupPlacement placement)
     {
         if (_variant != MenuSurfaceVariant.Sheet && _anchorPoint is { } point && PlacementTarget is { } target &&
             TopLevel.GetTopLevel(target) is { } topLevel && target.TranslatePoint(point, topLevel) is { } client)
         {
             // Open at the requested point (keyboard or programmatic) instead of the last pointer position.
-            var previous = placement.AnchorRectangle;
             placement.AnchorRectangle = new Rect(client, new Size(1, 1));
-            if (Math.Abs(previous.X - client.X) > 1 || Math.Abs(previous.Y - client.Y) > 1)
-            {
-                (flipX, flipY) = PredictFlips(placement, topLevel);
-            }
         }
     }
 
@@ -163,16 +143,15 @@ internal sealed class MenuSurfacePopup : ArcPopup
         if (_variant == MenuSurfaceVariant.Sheet && PlacementTarget is { } sheetTarget &&
             TopLevel.GetTopLevel(sheetTarget) is { } sheetTopLevel)
         {
-            // Full width along the bottom edge of the window; the shadow margin hangs below the edge.
+            // Full width along the bottom edge of the window; the shadow room hangs below the edge (the positioner
+            // places the surface without it).
             var clientSize = sheetTopLevel.ClientSize;
             placement.AnchorRectangle = new Rect(0, clientSize.Height, clientSize.Width, 1);
             placement.Anchor = PopupAnchor.Top;
             placement.Gravity = PopupGravity.Top;
-            // A native popup window carries the floating shadow as a margin; an overlay host does not.
-            var native = !overlay && Child is { } child && TopLevel.GetTopLevel(child) is PopupRoot;
-            placement.Offset = new Point(0, native ? shadow.Bottom : 0);
+            placement.Offset = default;
             placement.ConstraintAdjustment = PopupPositionerConstraintAdjustment.None;
-            var height = placement.PopupSize.Height - placement.Deflate.Top - placement.Deflate.Bottom;
+            var height = placement.PopupSize.Height - shadow.Top - shadow.Bottom;
             _enter.Origin = new RelativePoint(0.5, 1, RelativeUnit.Relative);
             _enter.Offset = new Vector(0, Math.Max(height, 0));
             _exit.Origin = _enter.Origin;
@@ -210,7 +189,7 @@ internal sealed class MenuSurfacePopup : ArcPopup
             if (_variant == MenuSurfaceVariant.Account && placement.PopupSize.Width > 0)
             {
                 // Arc user menu: the panel scales out of the avatar's centre, 20px in from the aligned edge.
-                var width = placement.PopupSize.Width - placement.Deflate.Left - placement.Deflate.Right;
+                var width = placement.PopupSize.Width - shadow.Left - shadow.Right;
                 along = _alignment switch
                 {
                     MenuAlignment.Start => 20 / Math.Max(width, 1),
@@ -258,29 +237,16 @@ internal sealed class MenuSurfacePopup : ArcPopup
 
     /// <summary>Unit vector from the menu toward its anchor (0 for point anchors).</summary>
     internal Vector LastTravelDirection { get; private set; }
-
-    private static (bool FlipX, bool FlipY) PredictFlips(CustomPopupPlacement placement, TopLevel topLevel)
-    {
-        var size = placement.PopupSize.Deflate(placement.Deflate);
-        var anchor = placement.AnchorRectangle;
-        var client = topLevel.ClientSize;
-        return (anchor.X + size.Width > client.Width && anchor.X - size.Width >= 0,
-                anchor.Y + size.Height > client.Height && anchor.Y - size.Height >= 0);
-    }
 }
 
 /// <summary>Menu enter: scale (and, for dropdowns, 5px of travel) on a spring curve while the opacity fades quickly.</summary>
-internal sealed class MenuSurfaceEnterMotion : AbstractMotion
+internal sealed class MenuSurfaceEnterMotion : ArcPopupMotion
 {
     public MenuSurfaceEnterMotion()
-        : base(ArcMotionPresets.Fast, ArcEasings.Enter, FillMode.Forward)
     {
+        Scale = 0.97;
     }
 
-    public RelativePoint Origin { get; set; } = new(0.5, 0, RelativeUnit.Relative);
-    public Vector Offset { get; set; }
-    public double Scale { get; private set; } = 0.97;
-    public bool FadeOnly { get; set; }
     public TimeSpan TransformDuration { get; private set; } = ArcMotionPresets.CssSpring;
     public Easing TransformEasing { get; private set; } = ArcEasings.CssSpring;
     public TimeSpan OpacityDuration { get; private set; } = ArcMotionPresets.Fast;
@@ -295,62 +261,28 @@ internal sealed class MenuSurfaceEnterMotion : AbstractMotion
         OpacityEasing = opacityEasing;
     }
 
-    protected override void ConfigureTransitions()
-    {
-        base.ConfigureTransitions();
-        RenderTransformOrigin = Origin;
-        foreach (var transition in Transitions)
-        {
-            if (transition is not TransitionBase timed)
-            {
-                continue;
-            }
-            if (timed.Property == Visual.OpacityProperty)
-            {
-                timed.Duration = OpacityDuration;
-                timed.Easing = OpacityEasing;
-            }
-            else
-            {
-                timed.Duration = FadeOnly ? OpacityDuration : TransformDuration;
-                timed.Easing = TransformEasing;
-            }
-        }
-    }
+    public override MotionSpec OpacitySpec => MotionSpec.Tween(OpacityDuration, OpacityEasing);
 
-    protected override void ConfigureMotionStartValue(BaseMotionActor actor)
-    {
-        actor.Opacity = 0.0;
-        actor.MotionTransform = FadeOnly ? null : BuildTranslateScaleAndTransform(Scale, Scale, Offset.X, Offset.Y);
-    }
-
-    protected override void ConfigureMotionEndValue(BaseMotionActor actor)
-    {
-        actor.Opacity = 1.0;
-        actor.MotionTransform = FadeOnly ? null : BuildTranslateScaleAndTransform(1, 1, 0, 0);
-    }
-
-    protected override void NotifyCompleted(BaseMotionActor actor)
-    {
-        actor.Opacity = 1.0;
-        actor.MotionTransform = null;
-    }
+    public override MotionSpec TransformSpec => MotionSpec.Tween(FadeOnly ? OpacityDuration : TransformDuration, TransformEasing);
 }
 
 /// <summary>Menu exit: shorter than the enter; fades and shrinks slightly toward the anchor.</summary>
-internal sealed class MenuSurfaceExitMotion : AbstractMotion
+internal sealed class MenuSurfaceExitMotion : ArcPopupMotion
 {
     public MenuSurfaceExitMotion()
-        : base(ArcMotionPresets.Instant, ArcEasings.Standard, FillMode.Forward)
     {
+        Scale = 0.98;
     }
 
-    public RelativePoint Origin { get; set; } = new(0.5, 0, RelativeUnit.Relative);
-    public Vector Offset { get; set; }
-    public double Scale { get; private set; } = 0.98;
     public double OffsetFactor { get; private set; }
-    public bool FadeOnly { get; set; }
-    public bool FadesOut { get; set; } = true;
+
+    /// <summary>The exit ends transparent (false: a sheet slides away opaque).</summary>
+    public bool FadesOut
+    {
+        get => Fades;
+        set => Fades = value;
+    }
+
     public TimeSpan ExitDuration { get; private set; } = ArcMotionPresets.Instant;
     public Easing ExitEasing { get; private set; } = ArcEasings.Standard;
 
@@ -362,35 +294,7 @@ internal sealed class MenuSurfaceExitMotion : AbstractMotion
         ExitEasing = easing;
     }
 
-    protected override void ConfigureTransitions()
-    {
-        base.ConfigureTransitions();
-        RenderTransformOrigin = Origin;
-        foreach (var transition in Transitions)
-        {
-            if (transition is TransitionBase timed)
-            {
-                timed.Duration = ExitDuration;
-                timed.Easing = ExitEasing;
-            }
-        }
-    }
+    public override MotionSpec OpacitySpec => MotionSpec.Tween(ExitDuration, ExitEasing);
 
-    protected override void ConfigureMotionStartValue(BaseMotionActor actor)
-    {
-        actor.Opacity = 1.0;
-        actor.MotionTransform = FadeOnly ? null : BuildTranslateScaleAndTransform(1, 1, 0, 0);
-    }
-
-    protected override void ConfigureMotionEndValue(BaseMotionActor actor)
-    {
-        actor.Opacity = FadesOut ? 0.0 : 1.0;
-        actor.MotionTransform = FadeOnly ? null : BuildTranslateScaleAndTransform(Scale, Scale, Offset.X, Offset.Y);
-    }
-
-    protected override void NotifyCompleted(BaseMotionActor actor)
-    {
-        actor.Opacity = 1.0;
-        actor.MotionTransform = null;
-    }
+    public override MotionSpec TransformSpec => OpacitySpec;
 }

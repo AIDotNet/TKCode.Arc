@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ActivityTerrainTheme">
     <!--
         Activity terrain (Arc Activity terrain, design reference): a card with a heading, a toolbar of two segmented
         switches, the body (plot + legend, then the summary: under the plot below 880, in a 224px column from 880) and the

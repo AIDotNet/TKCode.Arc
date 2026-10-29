@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -683,7 +681,7 @@ public class CustomerGalaxyTests
             var success = galaxy.HealthStates.Single(s => s.Tone == GalaxyTone.Success);
             var light = galaxy.ResolveColor(success);
             light.ShouldBe(ArcTokens.GetColor(galaxy, TKCode.Arc.DesignTokens.ArcDesignTokenKind.Success));
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
             Settle();
             var dark = galaxy.ResolveColor(success);
             dark.ShouldNotBe(light);
@@ -708,11 +706,10 @@ public class CustomerGalaxyTests
         var (galaxy, window) = Show();
         try
         {
-            var layers = (Avalonia.Controls.Primitives.VisualLayerManager)window.Content!;
-            layers.Child = null;
+            window.Content = null;
             Settle();
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
-            layers.Child = galaxy;
+            await TestHelpers.ApplyAsync(TestHelpers.Dark);
+            window.Content = galaxy;
             Settle();
             var dark = ArcTokens.GetColor(galaxy, TKCode.Arc.DesignTokens.ArcDesignTokenKind.Success);
             dark.A.ShouldBeGreaterThan((byte)0);

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <RootNamespace>TKCode.Arc.Foundation.Tests</RootNamespace>
+        <!-- Keeps the generated token and theme code on disk under obj/ for inspection. -->
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Headless.XUnit" />
+        <!-- Generator snapshot tests drive the generator in-process. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../src/TKCode.Arc.Foundation/TKCode.Arc.Foundation.csproj" />
+        <!-- Runs on the sample tokens and themes of this project, and is referenced for the snapshot tests. -->
+        <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="Snapshots/**" CopyToOutputDirectory="Never" />
+    </ItemGroup>
+    <ItemGroup Label="Theme preset port">
+        <!-- The Pixel and Corners preset sources, compiled here on their own (without their packages) and checked against
+             tests/Baselines/presets, the overrides of the AtomUI-era themes they replaced (ThemePresetPortTests). -->
+        <Compile Include="../../src/TKCode.Arc.Themes.Corners/CornerEntry.cs" Link="PresetPort/Corners/CornerEntry.cs" />
+        <Compile Include="../../src/TKCode.Arc.Themes.Corners/CornerTable.g.cs" Link="PresetPort/Corners/CornerTable.g.cs" />
+        <Compile Include="../../src/TKCode.Arc.Themes.Corners/AtomUiCornerTable.cs" Link="PresetPort/Corners/AtomUiCornerTable.cs" />
+        <Compile Include="../../src/TKCode.Arc.Themes.Corners/ArcCornerStyle.cs" Link="PresetPort/Corners/ArcCornerStyle.cs" />
+        <Compile Include="../../src/TKCode.Arc.Themes.Corners/CornerValues.cs" Link="PresetPort/Corners/CornerValues.cs" />
+        <Compile Include="../../src/TKCode.Arc.Themes.Corners/ArcCornerPresets.cs" Link="PresetPort/Corners/ArcCornerPresets.cs" />
+        <Compile Include="../../src/TKCode.Arc.Themes.Pixel/ArcPixelPresets.cs" Link="PresetPort/Pixel/ArcPixelPresets.cs" />
+    </ItemGroup>
+    <!-- A package consumer gets this from the package's buildTransitive folder. -->
+    <Import Project="../../src/TKCode.Arc.Foundation/buildTransitive/TKCode.Arc.Foundation.targets" />
+</Project>

@@ -69,6 +69,10 @@ public class GalleryDemoAppTests
     [AvaloniaFact]
     public void The_Sidebar_Highlight_Glides_To_The_Chosen_Page_Through_The_Page_Switch()
     {
+        // The glide runs on frames the test hands out: on the window's own frames a slow page switch (a loaded test run)
+        // lets the spring finish before the assertions look at it.
+        var frames = new ManualFrameClock();
+        using var _ = frames.Install();
         var window = Open();
         ArcMotion.SetLevel(window, ArcMotionLevel.Full);
         try
@@ -88,8 +92,19 @@ public class GalleryDemoAppTests
             // jump it straight onto the row.
             var row = nav.GetVisualDescendants().OfType<GalleryNavRow>().Single(r => r.IsSelected);
             var target = row.TranslatePoint(default, highlight.GetVisualParent()!)!.Value;
+            target.Y.ShouldBeGreaterThan(from.Y + 1);
+            highlight.CurrentRect.Y.ShouldBe(from.Y, 0.5, "no frame has run, so the layout passes have not moved it");
+
+            frames.Advance(TimeSpan.FromMilliseconds(80));
+            Pump();
+            window.UpdateLayout();
+            highlight.CurrentRect.Y.ShouldBeGreaterThan(from.Y);
             highlight.CurrentRect.Y.ShouldBeLessThan(target.Y - 1, "still on its way down from the overview row");
-            highlight.CurrentRect.Y.ShouldBeGreaterThanOrEqualTo(from.Y);
+
+            frames.Advance(TimeSpan.FromSeconds(2));
+            Pump();
+            window.UpdateLayout();
+            highlight.CurrentRect.Y.ShouldBe(target.Y, 0.5);
         }
         finally
         {

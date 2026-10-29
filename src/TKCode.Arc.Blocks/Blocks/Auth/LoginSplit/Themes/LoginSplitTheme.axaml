@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.LoginSplitTheme">
     <!--
         LoginSplit: the form column (header 46 high with 24 32 0 padding; the steps centered in the middle with 40 20 padding;
         the footer with 0 32 24 padding) beside the picture column (muted surface under the picture, 1px border on its left).

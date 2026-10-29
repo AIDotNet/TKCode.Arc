@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.IllustrationPlayButtonTheme">
     <!--
         The play / pause button in an illustration's footer: a 28px ghost circle, muted glyph, SurfaceMuted + Foreground
         on hover, 0.96 press, 2px focus ring for keyboard focus. The glyph swaps through an ArcContentSwap (Pop).

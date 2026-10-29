@@ -36,7 +36,7 @@ parallel speedup.
 ## Usage
 
 Given no data, the timeline shows an invented sample run and replays it the first time it is about a fifth in view.
-Register the package with `UseArcSpecial()` next to `UseArc()`.
+Register the package with `UseArcSpecial()` next to `UseArcControls()`.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"

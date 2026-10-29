@@ -490,7 +490,7 @@ public class DataGridBehaviorTests
         var weak = TestHelpers.ShowAndClose(() => Create(), grid =>
         {
             // A cached page: the grid leaves the tree, then its view model swaps the collection behind it.
-            ((Decorator)grid.Parent!).Child = null;
+            ((Window)grid.Parent!).Content = null;
             grid.ItemsSource = rows;
         });
         TestHelpers.Collect(weak);

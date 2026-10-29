@@ -5825,8 +5825,8 @@
         <target>在内置菜单打开之前触发，可以修改条目或取消菜单。</target>
       </trans-unit>
       <trans-unit id="DataGrid.Culture">
-        <source>Culture for formatting and parsing values; null follows the AtomUI language.</source>
-        <target>格式化和解析值所用的文化；为 null 时跟随 AtomUI 的语言。</target>
+        <source>Culture for formatting and parsing values; null follows the Arc language.</source>
+        <target>格式化和解析值所用的文化；为 null 时跟随 Arc 的语言。</target>
       </trans-unit>
       <trans-unit id="DataGrid.DataSource">
         <source>Loads rows from a server one block at a time as people scroll, instead of `ItemsSource`. The grid is then read only, does not group, hides Select all and exports only checked rows.</source>
@@ -8381,8 +8381,8 @@
         <target>故事切换到另一步骤时引发。</target>
       </trans-unit>
       <trans-unit id="ImageCompare">
-        <source>Before and after, split by a divider (Arc image compare). Drag anywhere to move it: the handle follows 1:1, rubber-bands past the edges and stays where it is released. A press on the image springs the divider there; on touch the press waits for a drag along the divider's axis so the page still scrolls, and a tap moves the divider. Arrow keys step 1% (Shift 10%), PageUp / PageDown 10%, Home and End reveal one side fully, and a double-click on the handle springs it back to the middle. Changing `Orientation` swings the divider a quarter turn. `Before` / `After` take any content (an `Image` with `Stretch="UniformToFill"`, a drawing, a control). `BeforeSource` / `AfterSource` load a picture with AtomUI's `AsyncImage` on top of that content: it fades in from a soft blur while downloading, and when it fails the content underneath shows instead.</source>
-        <target>前后对比，由分隔线分开（Arc 图像对比）。拖动任意位置即可移动：手柄 1:1 跟随，越过边缘时有橡皮筋式回弹，松手后停留在原处。在图像上按下会将分隔线以弹簧方式移动到该处；触摸时需等待沿分隔线方向的拖动，以便页面仍可滚动，轻点则移动分隔线。方向键每次步进 1%（按住 Shift 为 10%），PageUp / PageDown 为 10%，Home 和 End 将一侧完整显示，双击手柄会将其弹回中间。更改 `Orientation` 会使分隔线旋转四分之一圈。`Before` / `After` 可接受任意内容（`Stretch="UniformToFill"` 的 `Image`、绘图或控件）。`BeforeSource` / `AfterSource` 通过 AtomUI 的 `AsyncImage` 在该内容之上加载图片：下载时从柔和的模糊中淡入，加载失败时则显示底层内容。</target>
+        <source>Before and after, split by a divider (Arc image compare). Drag anywhere to move it: the handle follows 1:1, rubber-bands past the edges and stays where it is released. A press on the image springs the divider there; on touch the press waits for a drag along the divider's axis so the page still scrolls, and a tap moves the divider. Arrow keys step 1% (Shift 10%), PageUp / PageDown 10%, Home and End reveal one side fully, and a double-click on the handle springs it back to the middle. Changing `Orientation` swings the divider a quarter turn. `Before` / `After` take any content (an `Image` with `Stretch="UniformToFill"`, a drawing, a control). `BeforeSource` / `AfterSource` load a picture with an `ArcImage` on top of that content: it fades in from a soft blur while downloading, and when it fails the content underneath shows instead.</source>
+        <target>前后对比，由分隔线分开（Arc 图像对比）。拖动任意位置即可移动：手柄 1:1 跟随，越过边缘时有橡皮筋式回弹，松手后停留在原处。在图像上按下会将分隔线以弹簧方式移动到该处；触摸时需等待沿分隔线方向的拖动，以便页面仍可滚动，轻点则移动分隔线。方向键每次步进 1%（按住 Shift 为 10%），PageUp / PageDown 为 10%，Home 和 End 将一侧完整显示，双击手柄会将其弹回中间。更改 `Orientation` 会使分隔线旋转四分之一圈。`Before` / `After` 可接受任意内容（`Stretch="UniformToFill"` 的 `Image`、绘图或控件）。`BeforeSource` / `AfterSource` 通过 `ArcImage` 在该内容之上加载图片：下载时从柔和的模糊中淡入，加载失败时则显示底层内容。</target>
       </trans-unit>
       <trans-unit id="ImageCompare.After">
         <source>The result, shown on the right (or bottom).</source>
@@ -8409,8 +8409,8 @@
         <target>Before 一侧上方的标注（默认“Before”）。</target>
       </trans-unit>
       <trans-unit id="ImageCompare.BeforeSource">
-        <source>Picture drawn over `Before` (AtomUI `AsyncImage`, cover fit).</source>
-        <target>绘制在 `Before` 之上的图片（AtomUI `AsyncImage`，覆盖填充）。</target>
+        <source>Picture drawn over `Before` (an `ArcImage`, cover fit).</source>
+        <target>绘制在 `Before` 之上的图片（`ArcImage`，覆盖填充）。</target>
       </trans-unit>
       <trans-unit id="ImageCompare.Label">
         <source>Accessible name of the divider (default "Before and after").</source>
@@ -13905,8 +13905,8 @@
         <target>当窗口未覆盖首页和末页时，以省略号形式保持它们可见（Arc 中不存在此功能）。</target>
       </trans-unit>
       <trans-unit id="PasswordField">
-        <source>Arc password field: a labeled password input with a reveal toggle inside the frame. The toggle's eye is crossed out by a slash that draws itself (it is never swapped for a second icon), and after the first toggle every switch between dots and characters resolves in place from a light blur. Enter or Space on the toggle shows or hides the password; the toggle reports its pressed state and switches its name between `ShowPasswordText` and `HidePasswordText`.</source>
-        <target>Arc 密码输入框：带标签的密码输入框，外框内有显示切换按钮。切换按钮的眼睛图标上有一条自行绘制的斜线（从不替换为第二个图标）；首次切换之后，圆点与字符之间的每次切换都会通过轻微模糊原地过渡。在切换按钮上按 Enter 或 Space 可显示或隐藏密码；该按钮会报告其按下状态，并在 `ShowPasswordText` 与 `HidePasswordText` 之间切换其名称。</target>
+        <source>Arc password field: a labeled password input with a reveal toggle inside the frame. The toggle's eye is crossed out by a slash that draws itself (it is never swapped for a second icon), and after the first toggle every switch between dots and characters resolves in place from a light blur. Enter or Space on the toggle shows or hides the password; the toggle reports its pressed state and switches its name between `ShowPasswordText` and `HidePasswordText`. The explicit reveal selection persists across focus changes until the user or caller changes `IsRevealed`.</source>
+        <target>Arc 密码输入框：带标签的密码输入框，外框内有显示切换按钮。切换按钮的眼睛图标上有一条自行绘制的斜线（从不替换为第二个图标）；首次切换之后，圆点与字符之间的每次切换都会通过轻微模糊原地过渡。在切换按钮上按 Enter 或 Space 可显示或隐藏密码；该按钮会报告其按下状态，并在 `ShowPasswordText` 与 `HidePasswordText` 之间切换其名称。用户明确选择的显示状态在焦点变化时保持不变，直到用户或调用方更改 `IsRevealed`。</target>
       </trans-unit>
       <trans-unit id="PasswordField.HidePasswordText">
         <source>Name of the toggle while the password is shown.</source>
@@ -19973,8 +19973,8 @@
         <target>显示可拖动字段加高的右下角手柄（Arc：`resize: vertical`）。默认为 true。</target>
       </trans-unit>
       <trans-unit id="ThemeSwitcher">
-        <source>A single light / dark switch for a header: a secondary button that swaps sun and moon on a shared turn and names the next appearance. Pressing it raises `ThemeChangeRequested`; unless a handler marks it handled, the switcher applies the change through AtomUI's theme manager (toggling `ThemeAlgorithm.Dark` and keeping the rest of the current theme) inside the page transition of its `Variant`. Arc hands that transition to the View Transitions API; here the old window is snapshotted into an overlay whose animated clip reveals the new theme beneath (`RunTransitionAsync`, also usable from a handler). Reduced motion switches without a transition.</source>
-        <target>用于页眉的单一明暗切换：一个次要按钮，在共享的转动动画中切换太阳与月亮图标，并标明下一种外观。按下时引发 `ThemeChangeRequested`；除非处理程序将其标记为已处理，否则切换器会通过 AtomUI 的主题管理器应用更改（切换 `ThemeAlgorithm.Dark` 并保留当前主题的其他设置），并在其 `Variant` 的页面过渡中进行。Arc 将该过渡交给 View Transitions API；此处则将旧窗口截取为覆盖层，由其动画裁剪区在下方显示新主题（`RunTransitionAsync`，也可在处理程序中使用）。减少动态效果时直接切换，不做过渡。</target>
+        <source>A single light / dark switch for a header: a secondary button that swaps sun and moon on a shared turn and names the next appearance. Pressing it raises `ThemeChangeRequested`; unless a handler marks it handled, the switcher applies the change through `ArcThemeManager` (changing the appearance and keeping the rest of the current theme) inside the page transition of its `Variant`. Arc hands that transition to the View Transitions API; here the old window is snapshotted into an overlay whose animated clip reveals the new theme beneath (`RunTransitionAsync`, also usable from a handler). Reduced motion switches without a transition.</source>
+        <target>用于页眉的单一明暗切换：一个次要按钮，在共享的转动动画中切换太阳与月亮图标，并标明下一种外观。按下时引发 `ThemeChangeRequested`；除非处理程序将其标记为已处理，否则切换器会通过 `ArcThemeManager` 应用更改（只改变外观，保留当前主题的其他设置），并在其 `Variant` 的页面过渡中进行。Arc 将该过渡交给 View Transitions API；此处则将旧窗口截取为覆盖层，由其动画裁剪区在下方显示新主题（`RunTransitionAsync`，也可在处理程序中使用）。减少动态效果时直接切换，不做过渡。</target>
       </trans-unit>
       <trans-unit id="ThemeSwitcher.Appearance">
         <source>The appearance shown; null follows the control's actual theme variant (default).</source>
@@ -19993,8 +19993,8 @@
         <target>图标旁可见的文字（默认为“切换主题”）。</target>
       </trans-unit>
       <trans-unit id="ThemeSwitcher.ThemeChangeRequested">
-        <source>Raised before the theme changes. Set `Handled` to apply the theme yourself (optionally inside `RunTransitionAsync`); otherwise the switcher applies it through AtomUI's theme manager.</source>
-        <target>主题更改前引发。设置 `Handled` 以自行应用主题（可选择在 `RunTransitionAsync` 中进行）；否则切换器通过 AtomUI 的主题管理器应用。</target>
+        <source>Raised before the theme changes. Set `Handled` to apply the theme yourself (optionally inside `RunTransitionAsync`); otherwise the switcher applies it through `ArcThemeManager`.</source>
+        <target>主题更改前引发。设置 `Handled` 以自行应用主题（可选择在 `RunTransitionAsync` 中进行）；否则切换器通过 `ArcThemeManager` 应用。</target>
       </trans-unit>
       <trans-unit id="ThemeSwitcher.Variant">
         <source>Which page transition to play (default Reveal).</source>

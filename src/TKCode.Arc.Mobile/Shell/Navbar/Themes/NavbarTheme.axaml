@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.NavbarTheme">
 
     <!-- Navbar: 44 high, Surface fill with a Border hairline under it; back button + leading / centered title / trailing, and an optional large title row under it that collapses into the bar. -->
     <ControlTheme x:Key="{x:Type arcm:Navbar}" TargetType="arcm:Navbar">

@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiRunMetaTheme">
 
     <!--
         "[mark 14] Lumen Extract S · $0.0003 · 3.2 s": 12 / 16.8, 7px between the parts; the name in TextSecondary, the cost

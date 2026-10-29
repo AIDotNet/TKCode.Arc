@@ -110,7 +110,7 @@ internal sealed class ToolCallFoldBox : Control
                 {
                     if (t.Result && folding)
                     {
-                        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                        Dispatcher.Post(() =>
                         {
                             if (_folded)
                             {

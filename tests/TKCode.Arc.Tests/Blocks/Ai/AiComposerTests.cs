@@ -1,5 +1,3 @@
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using TKCode.Arc.DesignTokens;
 using Avalonia;
 using Avalonia.Automation;
@@ -54,7 +52,7 @@ public class AiComposerTests
         Border().ShouldBe(Token(ArcDesignTokenKind.BorderStrong));
 
         var light = TestHelpers.ColorOf(composer.Surface.Background);
-        await TestHelpers.ApplyAsync(new ThemeConfigBuilder().WithAlgorithms(ThemeAlgorithm.Dark).Build());
+        await TestHelpers.ApplyAsync(TestHelpers.Dark);
         try
         {
             var dark = TestHelpers.ColorOf(composer.Surface.Background);
@@ -64,7 +62,7 @@ public class AiComposerTests
         }
         finally
         {
-            await TestHelpers.ApplyAsync(new ThemeConfigBuilder().Build());
+            await TestHelpers.ApplyAsync(null);
         }
     }
 

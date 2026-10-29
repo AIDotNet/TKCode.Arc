@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SemanticZoomPanelTheme">
     <!--
         Semantic zoom details panel (Arc Semantic zoom, design reference): kind and name, three numbers (open, blocked in
         the danger color, next due), progress as a 28px percentage over a 4px bar, and the people with their count, avatar

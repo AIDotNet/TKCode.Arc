@@ -1,6 +1,5 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -11,7 +10,6 @@ using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AtomPopup = AtomUI.Desktop.Controls.Popup;
 
 namespace TKCode.Arc;
 
@@ -47,7 +45,7 @@ internal enum OverlayAnchorAlign
 /// (placement, flipping, Arc floating shadow) but plays Arc's motion itself on the popup's motion actor, so the shadow
 /// moves with the surface, the transform origin follows the side the popup actually landed on after flipping, and an
 /// open and a close interrupt each other and reverse from where the surface is. ControlTheme transitions cannot express
-/// this: the motion has to run on AtomUI's popup frame (outside the surface's template), keep separate opacity and
+/// this: the motion has to run on the popup's frame (outside the surface's template), keep separate opacity and
 /// transform timings, and gate the popup removal on the exit.
 /// </summary>
 internal sealed class OverlayAnchoredPresence : IDisposable
@@ -57,7 +55,7 @@ internal sealed class OverlayAnchoredPresence : IDisposable
     private readonly MotionValue<double> _opacity;
     private readonly MotionValue<Point> _pose;
     private readonly MatrixTransform _transform = new();
-    private BaseMotionActor? _actor;
+    private ArcPopupFrame? _actor;
     private Control? _anchor;
     private TopLevel? _anchorTopLevel;
     private OverlayAnchorSide _side;
@@ -76,8 +74,8 @@ internal sealed class OverlayAnchoredPresence : IDisposable
             IsLightDismissEnabled = false,
             WindowManagerAddShadowHint = false
         };
-        // The motion runs here, not in AtomUI's popup motion: animation priority wins over ArcPopup's own setting.
-        Popup.SetValue(AtomPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
+        // The motion runs here, not in the popup's own motion: animation priority wins over ArcPopup's own setting.
+        Popup.SetValue(ArcPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
         Popup.Opened += OnPopupOpened;
         Popup.PositionFlipped += (_, _) => UpdateSide();
         _opacity = new MotionValue<double>(surface, 0, MotionVectors.Double);
@@ -134,9 +132,9 @@ internal sealed class OverlayAnchoredPresence : IDisposable
         _anchor = anchor;
         Popup.PlacementTarget = anchor;
         Popup.MarginToAnchor = margin;
-        // Start / End alignment is applied as an offset from the centred placement: AtomUI's edge-aligned placements
-        // land on the wrong edge in overlay hosting when the popup carries a large shadow.
-        // RequestedPlacement (not Placement) so AtomUI's placement (margin to anchor, flipping) runs even for the default Bottom.
+        // Start / End alignment is applied as an offset from the centred placement (the surface's size along the edge
+        // is known here, and a centred placement flips only across the anchor).
+        // RequestedPlacement: the side ArcPopup resolves (margin to anchor, flipping).
         Popup.RequestedPlacement = ToPlacement(side, OverlayAnchorAlign.Center);
         UpdateAlignmentOffset();
         HookAnchor(anchor);
@@ -274,11 +272,11 @@ internal sealed class OverlayAnchoredPresence : IDisposable
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
-        _actor = Surface.FindAncestorOfType<BaseMotionActor>();
+        _actor = Surface.FindAncestorOfType<ArcPopupFrame>();
         if (_actor is not null)
         {
             _actor.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            _actor.MotionTransform = _transform;
+            _actor.RenderTransform = _transform;
         }
         UpdateSide();
         Apply();
@@ -286,7 +284,7 @@ internal sealed class OverlayAnchoredPresence : IDisposable
 
     private void UpdateSide()
     {
-        // AtomUI flips the requested side when it does not fit; the motion follows the side it landed on.
+        // The positioner flips the requested side when it does not fit; the motion follows the side it landed on.
         var side = _side;
         if (Popup.IsVerticalFlipped)
         {

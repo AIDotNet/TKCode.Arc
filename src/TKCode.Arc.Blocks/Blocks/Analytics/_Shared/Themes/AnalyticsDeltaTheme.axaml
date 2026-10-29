@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AnalyticsDeltaTheme">
     <!--
         Analytics change line (design reference: Metrics dashboard / KPI drilldown 12px 500 tabular, 13px arrow stroke 2,
         gap 2; Success / Danger / TextMuted; colour 160ms (.22, 1, .36, 1), 240ms with :slow-tone; arrow turn 580ms CSS

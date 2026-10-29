@@ -1,35 +1,34 @@
 using System.Globalization;
-using AtomUI;
-using AtomUI.Localization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using TKCode.Arc.Gallery.Docs;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Gallery.Localization;
 
 /// <summary>
-/// The gallery shell's text in the current AtomUI language. Strings live in <c>Localization/*.xlf</c>
-/// (<see cref="GalleryShellLangResourceKind"/>); AtomUI publishes them as application resources keyed by the enum
+/// The gallery shell's text in the current Arc language. Strings live in <c>Localization/*.xlf</c>
+/// (<see cref="GalleryShellLangResourceKind"/>); Arc publishes them as application resources keyed by the enum
 /// value, so <see cref="Bind"/> follows language changes by itself. Text that is composed from state (for example the
 /// "no match" message) is recomputed from <see cref="Track"/>.
 /// </summary>
 public static class GalleryText
 {
-    /// <summary>AtomUI's language manager, or null before the application has started.</summary>
-    public static ILanguageManager? Languages => Application.Current?.GetLanguageManager();
+    /// <summary>The Arc language manager, or null before the application has started.</summary>
+    public static ArcLanguageManager? Languages => ArcLanguageManager.Current;
 
     /// <summary>The current language tag (en-US when there is no language manager).</summary>
-    public static string CurrentLanguage => Languages?.Current.CurrentLanguage.Value ?? GalleryDocs.SourceLanguage;
+    public static string CurrentLanguage => Languages?.Language.Value ?? GalleryDocs.SourceLanguage;
 
     /// <summary>Switches the whole application, the Code tab included, to <paramref name="languageTag"/>.</summary>
-    public static void SetLanguage(string languageTag) => Languages?.ChangeLanguage(LanguageTag.Parse(languageTag));
+    public static void SetLanguage(string languageTag) => Languages?.Set(LanguageTag.Parse(languageTag));
 
     public static string Get(GalleryShellLangResourceKind kind)
-        => Application.Current?.GetLocalizer()?.Get(kind) ?? kind.ToString();
+        => GalleryShellLangResources.Get(kind);
 
     public static string Format(GalleryShellLangResourceKind kind, params object?[] arguments)
-        => Application.Current?.GetLocalizer()?.Format(kind, arguments) ?? kind.ToString();
+        => GalleryShellLangResources.Format(kind, arguments);
 
     /// <summary>Binds <paramref name="property"/> of <paramref name="target"/> to a string; it changes with the language.</summary>
     public static IDisposable Bind(StyledElement target, AvaloniaProperty property, GalleryShellLangResourceKind kind)
@@ -39,7 +38,7 @@ public static class GalleryText
     public static IDisposable BindFormat(StyledElement target, AvaloniaProperty property, GalleryShellLangResourceKind kind,
                                          params object?[] arguments)
         => target.Bind(property, target.GetResourceObservable(kind, pattern => pattern is string text
-            ? string.Format(Languages?.Current.FormattingCulture ?? CultureInfo.CurrentCulture, text, arguments)
+            ? string.Format(ArcLanguage.Culture, text, arguments)
             : pattern));
 
     /// <summary>
@@ -48,7 +47,7 @@ public static class GalleryText
     /// </summary>
     public static void Track(Visual host, Action refresh)
     {
-        ILanguageManager? subscribed = null;
+        ArcLanguageManager? subscribed = null;
         EventHandler<LanguageChangedEventArgs> changed = (_, _) =>
         {
             if (Dispatcher.UIThread.CheckAccess())
@@ -65,7 +64,7 @@ public static class GalleryText
             subscribed = Languages;
             if (subscribed is not null)
             {
-                subscribed.LanguageChanged += changed;
+                subscribed.Changed += changed;
             }
             refresh();
         };
@@ -73,7 +72,7 @@ public static class GalleryText
         {
             if (subscribed is not null)
             {
-                subscribed.LanguageChanged -= changed;
+                subscribed.Changed -= changed;
                 subscribed = null;
             }
         };

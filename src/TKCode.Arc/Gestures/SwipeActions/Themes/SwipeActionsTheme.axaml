@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SwipeActionsTheme">
     <!-- The surface clips every row, so revealed actions never spill past its rounded corners. -->
     <ControlTheme x:Key="{x:Type arc:SwipeActions}" TargetType="arc:SwipeActions">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />

@@ -70,8 +70,8 @@ public class PopupZoomTests
         }
     }
 
-    // AtomUI's popup takes the shadow's corner radius from its direct child (the zoom host): a square shadow shows past
-    // the surface's rounded corners.
+    // The popup frame draws the shadow with its own corner radius, taken from the surface and scaled: a square shadow
+    // would show past the surface's rounded corners.
     [AvaloniaTheory]
     [InlineData(1.0)]
     [InlineData(2.0)]
@@ -109,9 +109,7 @@ public class PopupZoomTests
     }
 
     private static CornerRadius ShadowContainerRadius(Control surface) =>
-        surface.GetVisualAncestors().OfType<AvaloniaObject>()
-               .First(v => v.GetType().Name == "ShadowsAwareContainer")
-               .GetValue(Border.CornerRadiusProperty);
+        surface.GetVisualAncestors().OfType<ArcPopupFrame>().First().CornerRadius;
 
     [AvaloniaFact]
     public void Surface_Returns_The_Assigned_Child_And_Reassigning_Releases_It()
@@ -120,7 +118,7 @@ public class PopupZoomTests
         var popup = new ArcPopup { Child = first };
         popup.Surface.ShouldBeSameAs(first);
         popup.Child.ShouldNotBeSameAs(first);
-        popup.Child.ShouldBeOfType<ArcZoomHost>();
+        popup.Child.ShouldBeOfType<ArcPopupFrame>();
 
         // The same surface can move to another popup (MorphSelect, TimePicker and PhoneInput reassign theirs).
         popup.Child = null;

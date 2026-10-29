@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ReasoningTreeTheme">
 
     <!-- The drawn tree: its inks follow the theme and the accent (the card passes its AccentBrush). -->
     <ControlTheme x:Key="{x:Type arc:ReasoningTreeStage}" TargetType="arc:ReasoningTreeStage">

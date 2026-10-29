@@ -826,5 +826,35 @@
         <source>Download</source>
       </segment>
     </unit>
+    <unit id="WindowPin">
+      <segment>
+        <source>Keep on top</source>
+      </segment>
+    </unit>
+    <unit id="WindowUnpin">
+      <segment>
+        <source>Stop keeping on top</source>
+      </segment>
+    </unit>
+    <unit id="WindowMinimize">
+      <segment>
+        <source>Minimize</source>
+      </segment>
+    </unit>
+    <unit id="WindowMaximize">
+      <segment>
+        <source>Maximize</source>
+      </segment>
+    </unit>
+    <unit id="WindowRestore">
+      <segment>
+        <source>Restore</source>
+      </segment>
+    </unit>
+    <unit id="WindowClose">
+      <segment>
+        <source>Close</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

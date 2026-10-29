@@ -6,13 +6,7 @@ using Avalonia.Threading;
 
 namespace TKCode.Arc.Motion;
 
-/// <summary>Arc motion levels (min of all sources wins).</summary>
-public enum ArcMotionLevel
-{
-    Off = 0,
-    Reduced = 1,
-    Full = 2
-}
+// ArcMotionLevel (min of all sources wins) now comes from TKCode.Arc.Foundation, same name, namespace and values.
 
 /// <summary>
 /// Motion level policy. <see cref="LevelProperty"/> is inherited: set it on a window or any container.

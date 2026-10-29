@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ShowpieceZoomControlsTheme">
     <!--
         The Showpiece zoom bar (Arc Customer galaxy / Semantic zoom, design reference): Surface, 1px Border, radius 10,
         ShadowResting, 2px padding and gaps; − / readout / + / Fit.

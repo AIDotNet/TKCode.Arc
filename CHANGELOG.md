@@ -3,10 +3,146 @@
 All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Versioning](https://semver.org/);
 while the version carries a `-preview` suffix the API may still change between releases.
 
-NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Fonts`,
-`TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
+NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.4),
+`TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
+
+## 0.4.0-preview.1 - Unreleased
+
+Arc no longer depends on AtomUI. Every package now depends only on Avalonia and on the new MIT package
+`TKCode.Arc.Foundation`, so the whole dependency chain is under permissive licenses and closed-source applications can
+publish Arc as a single file or with NativeAOT (issue #25). The application entry point and the theme API change; the
+controls, their properties and the XAML (`{arc:ArcDesignTokenResource ...}`, `{arc:XxxTokenResource ...}`) do not. See
+*Migrating from 0.3 to 0.4* below.
+
+### Added
+
+- **Foundation** (new package `TKCode.Arc.Foundation`): the theme manager (`ArcThemeManager`, `ArcTheme`,
+  `ArcThemeState`, `ArcThemeBuilder`), theme presets (`ArcThemePreset`), local themes (`ArcThemeScope`), package
+  registration (`AppBuilder.UseArc(...)`, `ArcBuilder`), languages (`ArcLanguage`, `ArcLanguageManager`) and a source
+  generator for tokens, theme files and language catalogs. No reflection; trimming and NativeAOT safe. A control's
+  theme loads the first time a control of that type is used.
+- **ArcImage** and `ImageSource` (Core): background image loading (http, `avares://`, files, `data:`, bitmaps) with a
+  shared cache, on desktop and in the browser.
+- **ArcOverlayHost** (Core): a panel with its own overlay layer, so dialogs, drawers and sheets opened inside it stay
+  within it.
+- **Base theme** (Core): Arc's own themes for the Avalonia controls its templates use (`ScrollViewer`, `ScrollBar`,
+  `ItemsControl`, `PathIcon`, `TextSelectionHandle` and the popup hosts). It steps aside when the application uses
+  `FluentTheme` or `SimpleTheme`.
+- **Scroll bars** look like `ScrollArea`: thin, shown while the pointer is over the view or while it scrolls, hidden
+  at rest. `ScrollViewer.AllowAutoHide="False"` keeps them visible.
+- **Corners theme**: `UseArcCorners()` and `t.Corners(style)`; ready-made `ArcCornerPresets.Square` and
+  `ArcCornerPresets.Half`.
+- **Menus**: long menus scroll inside `MaxDropDownHeight`.
+- **Gallery**: the desktop window draws its own title bar (logo, title, pin on top; window buttons on Windows and
+  Linux).
+
+### Changed
+
+- **Breaking: entry point.** `AppBuilder.UseAtomUI(b => b.UseDesktopControls().UseArc())` is now
+  `AppBuilder.UseArc(arc => arc.UseArcControls())`. The `Application` class no longer needs to be `partial`.
+- **Breaking: theme API.** `ThemeConfigBuilder`, `ThemeAlgorithm`, `IThemeManager.ApplyThemeAsync` and `WithArc(...)`
+  are replaced by `ArcTheme.Apply(t => ...)`, `ArcThemeManager.Apply` / `ApplyAsync` and `WithTheme(...)` in `UseArc`.
+- **Breaking: Pixel and Corners** are theme presets: `t.Pixel()` and `t.Corners(style)`. `ArcPixelTheme`,
+  `ArcPixelScope`, `WithArcCorners` and `ArcCornerScope` are removed; a preset skips the packages the application has
+  not registered.
+- **Breaking: languages** move to `TKCode.Arc.Localization` (`ArcLanguage`, `ArcLanguageManager`); `UseLanguages` is
+  on `ArcBuilder`.
+- **Breaking: images and popups.** `AsyncImage` is replaced by `ArcImage` (`IsLoaded` is now `IsImageLoaded`).
+  `ArcPopup` derives from Avalonia's `Popup`; `OpenMotion` and `CloseMotion` are `ArcPopupMotion`,
+  `AdjustPlacementAnchor` lost its `ref flipX, ref flipY` parameters, and `IsOpen` stays true until the exit motion
+  finishes. `ArcPopupFrame` replaces `BaseMotionActor`, and `ArcOverlayHost` replaces `ScopeAwareOverlayLayerPanel`.
+- **Breaking: mobile token identities** are `MobileButton`, `MobileCheckbox`, `MobileDialog`, `MobileSwitch` and
+  `MobileToast`, so they no longer share names with the desktop controls.
+- Arc no longer shares its theme with AtomUI controls; applications that mix the two stay on 0.3.x.
+
+### Fixed
+
+- **ToastStack**: a toast dismissed while the stack resumes its timers no longer breaks the resume.
+- **DataGrid**: the search box of the filter list is drawn again (it had no template).
+- **PasswordField**: long strength labels no longer overlap the strength bar (#23).
+- **Gallery**: the text box of the env variables event log is drawn again (it had no template).
+
+### Migrating from 0.3 to 0.4
+
+1. Remove every `AtomUI.*` package reference and `using AtomUI...;` line; Arc brings in what it needs.
+2. Replace `UseAtomUI(...)` with `UseArc(...)` and rename `UseArc()` (the controls) to `UseArcControls()`. The other
+   package calls keep their names and move into the `UseArc` callback.
+3. Replace theme requests with `ArcTheme.Apply`. A change names only what changes; the rest of the state stays.
+4. The `App` class may drop its `partial` keyword; nothing generates code into it any more.
+5. With the .NET 11 SDK and `PublishAot`, set `<UseOptimizedPublish>false</UseOptimizedPublish>` in the application
+   project.
+
+```csharp
+// 0.3
+AppBuilder.Configure<App>()
+          .UsePlatformDetect()
+          .UseAtomUI(builder =>
+          {
+              builder.UseDesktopControls();
+              builder.UseArc();
+              builder.UseArcBlocks();
+              builder.UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN]);
+          });
+
+// 0.4
+AppBuilder.Configure<App>()
+          .UsePlatformDetect()
+          .UseArc(arc => arc
+              .UseArcControls()
+              .UseArcBlocks()
+              .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN])
+              .WithTheme(t => t.Appearance(ArcAppearance.System)));
+```
+
+```csharp
+// 0.3
+var builder = new ThemeConfigBuilder()
+    .WithAlgorithms(ThemeAlgorithm.Default, ThemeAlgorithm.Dark)
+    .WithArc(arc => arc.Accent(ArcAccentPreset.Blue).MotionMode(ArcMotionLevel.Reduced));
+await manager.ApplyThemeAsync(new ThemeRequest(IThemeManager.DEFAULT_THEME_ID, builder.Build(),
+                                               ThemeTransitionReason.UserRequest));
+
+// 0.4
+ArcTheme.Apply(t => t
+    .Appearance(ArcAppearance.Dark)
+    .Accent(ArcAccentPreset.Blue)
+    .MotionLevel(ArcMotionLevel.Reduced));
+```
+
+| 0.3 (AtomUI) | 0.4 |
+|---|---|
+| `AppBuilder.UseAtomUI(b => ...)`, `UseDesktopControls()` | `AppBuilder.UseArc(arc => ...)` |
+| `UseArc()` (the controls) | `UseArcControls()` |
+| `UseArcCore`, `UseArcBlocks`, `UseArcAdvancedCharts`, `UseArcSpecial`, `UseArcWorkflow`, `UseArcMobile`, `UseArcPixelTheme`, `UseArcGallery` on `IAtomUIBuilder` | The same names on `ArcBuilder`; new `UseArcCorners()` |
+| `builder.UseLanguages(...)` | `arc.UseLanguages(...)`, same arguments |
+| `partial class App`, `ApplicationStartup.Attach` | Not needed |
+| `ThemeConfigBuilder`, `WithAlgorithms(ThemeAlgorithm.Dark)` | `t.Appearance(ArcAppearance.Dark)` (or `Light`, `System`) |
+| `IThemeManager.ApplyThemeAsync(new ThemeRequest(...))` | `ArcTheme.Apply(t => ...)`, `ArcThemeManager.Current.Apply` / `ApplyAsync` (await it; never block on it on the UI thread) |
+| `WithArc(a => a.Accent(preset or color))` | `t.Accent(preset or color)` |
+| `WithArc(a => a.Token(name, value))` | `t.Token(name, value)` |
+| `WithArc(a => a.ControlToken(catalog, control, name, value))` | `t.Token(identity, name, value)` |
+| `WithArc(a => a.MotionMode(level))` | `t.MotionLevel(level)` |
+| `WithArcCorners(style, scope)`, `arc.Corners(style, scope)`, `ArcCornerScope` | `t.Corners(style)`, `ArcCornerPresets` |
+| `ArcPixelTheme.CreateRequest(...)`, `WithArcPixel(...)`, `ArcPixelScope` | `t.Pixel()`, `ArcPixelPresets`; back to Arc with `t.RemovePreset(ArcPixelPresets.Slot)` |
+| `using AtomUI.Localization;` | `using TKCode.Arc.Localization;` |
+| `Application.Current.GetLanguageManager()`, `ILanguageManager` | `ArcLanguageManager.Current` |
+| `GetLocalizer().Get(kind)`, `Format(kind, args)` | `XxxLangResources.Get(kind)`, `XxxLangResources.Format(kind, args)` |
+| `LanguageChanged`, `ChangeLanguage(tag)` | `Changed`, `Set(tag)` (or `ArcLanguage.Changed`, `ArcLanguage.Set`) |
+| `FormattingCulture`, `CurrentLanguage` | `ArcLanguage.Culture`, `ArcLanguage.Current` |
+| Mobile token overrides by catalog | Identities `MobileButton`, `MobileCheckbox`, `MobileDialog`, `MobileSwitch`, `MobileToast` |
+| `AtomUI.Controls.ImageSource`, `AsyncImage`, `IsLoaded` | `TKCode.Arc.ImageSource`, `ArcImage`, `IsImageLoaded` |
+| `ArcPopup` on AtomUI's `Popup`, `BaseMotionActor` | `ArcPopup` on Avalonia's `Popup`, `ArcPopupFrame`; `OpenMotion` / `CloseMotion` are `ArcPopupMotion` |
+| `AdjustPlacementAnchor(placement, ref flipX, ref flipY)` | `AdjustPlacementAnchor(placement)` |
+| `ScopeAwareOverlayLayerPanel` | `ArcOverlayHost` |
+| AtomUI's themes for `ScrollViewer`, `ScrollBar`, `ItemsControl` and the popup hosts | Arc's base theme; scroll bars hide at rest (`ScrollViewer.AllowAutoHide="False"` keeps them) |
+
+- **Windows and overlays.** Without AtomUI's window theme, a plain Avalonia `Window` has no overlay layer unless its
+  template has a `VisualLayerManager` with `EnableOverlayLayer="True"`. `ThemeSwitcher` needs one for its transition;
+  without it, it switches directly.
+- **AtomUI controls.** An application that also uses AtomUI controls no longer gets one shared theme for both. Stay on
+  0.3.x until those screens are moved to Arc.
 
 ## 0.3.1-preview.6 - 2026-10-28
 

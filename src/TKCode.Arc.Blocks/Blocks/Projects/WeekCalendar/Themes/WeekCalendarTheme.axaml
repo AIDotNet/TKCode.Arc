@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.WeekCalendarTheme">
 
     <!-- The block: the toolbar over the framed calendar (sidebar + grid / agenda); the grid parts are built in code. -->
     <ControlTheme x:Key="{x:Type arc:WeekCalendar}" TargetType="arc:WeekCalendar">

@@ -1,9 +1,5 @@
-using AtomUI;
 using TKCode.Arc.DesignTokens;
 using TKCode.Arc.Motion;
-using AtomUI.Theme;
-using AtomUI.Theme.Algorithms;
-using AtomUI.Theme.Configuration;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -27,6 +23,12 @@ internal static class ThemeSwitcherTransition
     {
         var topLevel = TopLevel.GetTopLevel(trigger);
         var layer = OverlayLayer.GetOverlayLayer(trigger);
+        if (topLevel is not null && layer is not null && layer.Bounds.Width <= 0)
+        {
+            // A layer manager creates its overlay layer the first time it is asked for (here, when nothing has opened a
+            // popup yet); one layout pass sizes it.
+            topLevel.UpdateLayout();
+        }
         if (topLevel is null || layer is null || !ArcMotion.IsFull(trigger) || layer.Bounds.Width <= 0 || layer.Bounds.Height <= 0)
         {
             await apply();
@@ -179,84 +181,19 @@ internal sealed class ThemeSwitcherSnapshot : Control
 }
 
 /// <summary>
-/// Applies light or dark through AtomUI's theme manager: the last applied configuration is kept (accent, tokens,
-/// control overrides) and only <c>ThemeAlgorithm.Dark</c> is toggled. Before any request has been observed the
-/// current Arc accent preset is carried over.
+/// Applies light or dark through the application's <see cref="ArcThemeManager"/>: only the appearance changes, the rest of
+/// the theme state (accent, token overrides, motion level) is kept by the manager. The switcher's own appearance follows
+/// <c>ActualThemeVariant</c>, which the manager sets when it publishes.
 /// </summary>
 internal static class ThemeSwitcherThemeApplier
 {
-    private static ThemeConfig? s_lastConfig;
-    private static IThemeManager? s_tracked;
-
-    public static void EnsureTracking()
+    public static Task ApplyAsync(Control context, bool dark)
     {
-        var manager = Application.Current?.GetThemeManager();
-        if (manager is null || ReferenceEquals(manager, s_tracked))
-        {
-            return;
-        }
-        if (s_tracked is not null)
-        {
-            s_tracked.ThemeChanged -= OnThemeChanged;
-        }
-        s_tracked = manager;
-        s_lastConfig = null;
-        manager.ThemeChanged += OnThemeChanged;
-    }
-
-    private static void OnThemeChanged(object? sender, ThemeChangedEventArgs e) => s_lastConfig = e.Request.Config;
-
-    public static async Task ApplyAsync(Control context, bool dark)
-    {
-        EnsureTracking();
-        var manager = Application.Current?.GetThemeManager();
+        var manager = ArcThemeManager.Current;
         if (manager is null)
         {
-            return;
+            return Task.CompletedTask;
         }
-        var config = Build(s_lastConfig, manager.CurrentTheme?.Algorithms, dark, AccentOf(context));
-        var themeId = manager.CurrentTheme?.ThemeId ?? IThemeManager.DEFAULT_THEME_ID;
-        await manager.ApplyThemeAsync(new ThemeRequest(themeId, config, ThemeTransitionReason.UserRequest));
-    }
-
-    private static ArcAccentPreset? AccentOf(Control context)
-    {
-        if (context.TryFindResource(ArcDesignTokenKind.AccentPreset, out var value) && value is string name &&
-            Enum.TryParse<ArcAccentPreset>(name, true, out var preset))
-        {
-            return preset;
-        }
-        return null;
-    }
-
-    internal static ThemeConfig Build(ThemeConfig? previous, IReadOnlyList<ThemeAlgorithm>? current, bool dark, ArcAccentPreset? accent)
-    {
-        var algorithms = (previous?.Algorithms ?? current ?? [ThemeAlgorithm.Default]).Where(a => a != ThemeAlgorithm.Dark).ToList();
-        if (!algorithms.Contains(ThemeAlgorithm.Default))
-        {
-            algorithms.Insert(0, ThemeAlgorithm.Default);
-        }
-        if (dark)
-        {
-            algorithms.Add(ThemeAlgorithm.Dark);
-        }
-        var builder = new ThemeConfigBuilder().WithAlgorithms(algorithms.ToArray());
-        if (previous is not null)
-        {
-            builder = builder.WithInherit(previous.Inherit);
-            foreach (var (name, value) in previous.Tokens)
-            {
-                builder = builder.WithToken(name, value);
-            }
-            foreach (var (identity, control) in previous.Controls)
-            {
-                builder = builder.WithControl(identity, control);
-            }
-        }
-        else if (accent is { } preset && preset != ArcAccentPreset.Neutral)
-        {
-            builder = builder.WithArc(arc => arc.Accent(preset));
-        }
-        return builder.Build();
+        return manager.ApplyAsync(t => t.Appearance(dark ? ArcAppearance.Dark : ArcAppearance.Light));
     }
 }

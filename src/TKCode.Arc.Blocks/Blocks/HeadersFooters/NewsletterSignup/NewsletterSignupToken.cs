@@ -1,5 +1,4 @@
 // Ported from Arc's free newsletter-signup block (MIT, Copyright (c) 2026 Elia Kuratli): newsletter-signup.module.css.
-using AtomUI.Theme.DesignTokens;
 using Avalonia;
 using Avalonia.Media;
 

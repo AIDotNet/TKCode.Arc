@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CustomerGalaxyTheme">
     <!--
         Customer galaxy (Arc Customer galaxy, design reference): a framed surface with a title, a toolbar of grouping
         tabs and a legend, the self-drawn stage with its overlays (cluster labels, card, hint, "Show all", zoom bar) and a

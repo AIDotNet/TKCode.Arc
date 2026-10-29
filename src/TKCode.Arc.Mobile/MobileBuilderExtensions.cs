@@ -1,6 +1,5 @@
-using AtomUI;
-using AtomUI.Generated.TKCodeArcMobile;
 using TKCode.Arc;
+using TKCode.Arc.Generated.TKCodeArcMobile;
 
 namespace TKCode.Arc.Mobile;
 
@@ -11,9 +10,7 @@ public static class ArcMobileBuilderExtensions
     /// <see cref="Navbar"/>, <see cref="Tabbar"/>). Depends on <see cref="ArcCoreBuilderExtensions.UseArcCore"/> and does
     /// not enable the desktop Arc controls.
     /// </summary>
-    public static IAtomUIBuilder UseArcMobile(this IAtomUIBuilder builder)
-        => GeneratedControlPackageRegistration.Definition.Register(builder, static package =>
-        {
-            package.DependsOn(static dependency => dependency.UseArcCore());
-        });
+    public static ArcBuilder UseArcMobile(this ArcBuilder builder)
+        => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
+            .DependsOn(static b => b.UseArcCore())));
 }

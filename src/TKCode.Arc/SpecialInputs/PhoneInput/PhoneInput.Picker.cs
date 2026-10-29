@@ -779,7 +779,7 @@ public partial class PhoneInput
             return;
         }
         _searchFade.AnimateTo(0, MotionSpec.Tween(TimeSpan.FromMilliseconds(100), ArcEasings.Standard)).ContinueWith(
-            t => Dispatcher.UIThread.Post(() =>
+            t => Dispatcher.Post(() =>
             {
                 if (t.Result && !_open && _searchRow is not null)
                 {

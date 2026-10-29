@@ -1,7 +1,7 @@
 ---
 title: Agent status
 summary: 執行中代理的即時狀態膠囊：其標記位於旋轉的環中，顯示目前的活動與計時器；按一下即展開成近期步驟，並提供暫停、停止與核准控制。
-source-hash: 6b4ca8a10305
+source-hash: 6d0078b450f9
 ---
 
 <Demo name="Preview" />
@@ -35,7 +35,7 @@ source-hash: 6b4ca8a10305
 </UserControl>
 ```
 
-`AgentStatus` 衍生自 Avalonia 的 `TemplatedControl`。它位於 Special 套件中：請在 `UseArc()` 旁呼叫 `UseArcSpecial()` 來註冊。
+`AgentStatus` 衍生自 Avalonia 的 `TemplatedControl`。它位於 Special 套件中：請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊。
 
 在應用程式中，請由代理的事件驅動它。設定 `Status`，讓 `Activity` 保持為最新的工具呼叫（使用現在式），列出 `Steps`，給定一個在整個執行過程中固定不變的 `StartedAt`，並處理動作事件。有資料時，膠囊永遠不會自行變更狀態：按下核准會引發 `ApproveRequested`，接下來要怎麼做由你的程式碼決定。
 

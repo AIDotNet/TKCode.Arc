@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
                     xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.ToastTheme">
 
     <!-- Toast: fills its parent without catching touches (the template's Grid has no background); the toasts are built
          in code into PART_Stack, anchored to the bottom, and styled here as Border.toast: an inverted pill (Foreground fill,

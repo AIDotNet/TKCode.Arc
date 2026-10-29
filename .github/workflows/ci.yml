@@ -60,7 +60,7 @@ jobs:
 
       - uses: actions/setup-dotnet@v6
         with:
-          # global.json pins the .NET 11 SDK; the AtomUI build tasks and the test projects run on .NET 10.
+          # global.json pins the .NET 11 SDK; the test projects run on .NET 10.
           global-json-file: global.json
           dotnet-version: 10.0.x
 

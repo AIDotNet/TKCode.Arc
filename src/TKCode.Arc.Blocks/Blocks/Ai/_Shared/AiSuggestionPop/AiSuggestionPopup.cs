@@ -1,6 +1,5 @@
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
-using AtomUI.MotionScene;
 using Avalonia;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
@@ -9,7 +8,6 @@ using Avalonia.Data;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using AtomPopup = AtomUI.Desktop.Controls.Popup;
 
 namespace TKCode.Arc;
 
@@ -102,7 +100,7 @@ internal sealed class AiSuggestionPopupHost : ArcPopup
         EnterOffset = 0;
         EnterScale = 1;
         // The presence plays the motion; animation priority wins over the local value ArcPopup sets for its own.
-        SetValue(AtomPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
+        SetValue(ArcPopup.IsMotionEnabledProperty, false, BindingPriority.Animation);
         Placement = PlacementMode.TopEdgeAlignedLeft;
     }
 
@@ -120,19 +118,6 @@ internal sealed class AiSuggestionPopupHost : ArcPopup
         }
     }
 
-    /// <summary>Runs the placement again (the surface changed size while open, or the line moved).</summary>
-    public void Reposition()
-    {
-        if (!IsOpen)
-        {
-            return;
-        }
-        // Offset changes are the public way to make the popup run its placement again.
-        var offset = VerticalOffset;
-        VerticalOffset = offset + 1;
-        VerticalOffset = offset;
-    }
-
     protected override void OnPlacementResolved(CustomPopupPlacement placement, Thickness shadow, double marginToAnchor,
                                                 bool isOverlayHost, bool flipX, bool flipY)
     {
@@ -148,7 +133,7 @@ internal sealed class AiSuggestionPopupHost : ArcPopup
 /// the same spring; out, 120ms ease-out to 4px toward the line, scale 0.99 and opacity 0. The scale origin is the edge
 /// facing the line, at the trigger. Reduced motion fades in and out in 120ms (linear) without moving; Off is instant.
 /// <para>
-/// Code-driven (<see cref="MotionValue{T}"/>) rather than AtomUI's popup motions: the enter is a spring, a close while
+/// Code-driven (<see cref="MotionValue{T}"/>) rather than the popup's own motions: the enter is a spring, a close while
 /// entering (or an open while leaving, as when "/" is erased and typed again) continues from the values on screen, and
 /// the popup may only close after the exit has played. The surface's height follows the rows on a spring inside the pop;
 /// above the line the popup is placed again on every size change, so its bottom edge stays on the line.
@@ -172,7 +157,7 @@ internal sealed class AiSuggestionPopup : IDisposable
     private readonly MotionValue<Point> _pose;
     private readonly MatrixTransform _transform = new();
     private readonly MatrixTransform _fallbackTransform = new();
-    private BaseMotionActor? _actor;
+    private ArcPopupFrame? _actor;
     private Control? _parented;
     private bool _closing;
     private int _generation;
@@ -420,11 +405,11 @@ internal sealed class AiSuggestionPopup : IDisposable
 
     private void OnPopupOpened(object? sender, EventArgs e)
     {
-        _actor = Pop.FindAncestorOfType<BaseMotionActor>();
+        _actor = Pop.FindAncestorOfType<ArcPopupFrame>();
         if (_actor is not null)
         {
             _actor.RenderTransformOrigin = new RelativePoint(0, 0, RelativeUnit.Absolute);
-            _actor.MotionTransform = _transform;
+            _actor.RenderTransform = _transform;
         }
         Apply();
     }

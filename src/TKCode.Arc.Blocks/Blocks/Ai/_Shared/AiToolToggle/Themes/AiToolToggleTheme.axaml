@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiToolToggleTheme">
 
     <!--
         A tool chip: 36px high, padding 0 12 0 10, a 16px icon (stroke 1.75) 6px before the label (14 / 19.6, tracked

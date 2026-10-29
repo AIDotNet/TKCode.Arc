@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CommentThreadTheme">
     <!--
         Arc's comment-thread: a Surface panel (1px Border, RadiusPanel; 22px once resolved, on the CSS spring) whose height
         follows its content and springs when it morphs between the thread and the resolved chip. Text is text-sm with the

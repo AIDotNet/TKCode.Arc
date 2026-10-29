@@ -393,7 +393,7 @@ internal sealed class MultiSelectChipRow : Panel
             {
                 finished = _opacity.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard));
             }
-            finished.ContinueWith(_ => Avalonia.Threading.Dispatcher.UIThread.Post(done), TaskScheduler.Default);
+            finished.ContinueWith(_ => Dispatcher.Post(done), TaskScheduler.Default);
         }
 
         private double _blurIn;

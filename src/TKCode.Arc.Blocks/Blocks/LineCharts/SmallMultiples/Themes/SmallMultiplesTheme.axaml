@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SmallMultiplesTheme">
     <!--
         Small multiples (Arc Small multiples, design reference): a card with the heading and the controls (sort, scale,
         dim switch), the readout (period, position, total) with the legend, and the trellis of self-drawn panels

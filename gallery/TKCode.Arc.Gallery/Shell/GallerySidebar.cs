@@ -12,7 +12,6 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using AtomTextBox = AtomUI.Desktop.Controls.TextBox;
 
 namespace TKCode.Arc.Gallery.Shell;
 
@@ -74,7 +73,7 @@ public sealed class GallerySidebar : Border
     private readonly Dictionary<string, Item> _byClass = new();
     private readonly Panel _content = new();
     private readonly GlidingIndicator _indicator = new() { IsHitTestVisible = false, Spring = ArcSpring.Snappy };
-    private readonly AtomTextBox _search = new();
+    private readonly GallerySearchBox _search = new();
     private readonly Border _searchBox = new();
     private readonly GallerySegmented _filter = new(GalleryShellLangResourceKind.FilterAll, GalleryShellLangResourceKind.FilterReady, GalleryShellLangResourceKind.FilterPlanned);
     private readonly List<Section> _sections = new();
@@ -197,7 +196,6 @@ public sealed class GallerySidebar : Border
     private Control BuildSearchBox()
     {
         GalleryText.Bind(_search, TextBox.PlaceholderTextProperty, GalleryShellLangResourceKind.SearchComponents);
-        _search.StyleVariant = AtomUI.Controls.InputControlStyleVariant.Borderless;
         _search.BorderThickness = new Thickness(0);
         _search.Padding = new Thickness(0);
         _search.MinHeight = 0;

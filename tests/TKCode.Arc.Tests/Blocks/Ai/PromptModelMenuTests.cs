@@ -450,7 +450,7 @@ public class PromptModelMenuTests
         var presence = host.ModelMenu.Presence!;
         presence.CurrentPose.ShouldBe(new Point(5, 0.97));
         var surface = host.ModelMenu.Surface!;
-        var actor = surface.FindAncestorOfType<AtomUI.MotionScene.BaseMotionActor>()!;
+        var actor = surface.FindAncestorOfType<ArcPopupFrame>()!;
         var corner = surface.TranslatePoint(new Point(surface.Bounds.Width, 0), actor)!.Value;
         var moved = presence.CurrentMatrix.Transform(corner);
         moved.X.ShouldBe(corner.X, 0.001);

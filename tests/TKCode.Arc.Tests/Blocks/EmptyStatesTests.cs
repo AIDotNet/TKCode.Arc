@@ -874,12 +874,7 @@ public class EmptyStatesTests
     {
         var items = new[] { new EmptyStatesItem(EmptyStatesScene.Offline), new EmptyStatesItem(EmptyStatesScene.CaughtUp) };
         var reference = BlockOver(items);
-        for (var i = 0; i < 4 && reference.IsAlive; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Dispatcher.UIThread.RunJobs();
-        }
+        TestHelpers.Collect(reference);
         reference.IsAlive.ShouldBeFalse();
         items[0].Title = "Edited after the block is gone";
         GC.KeepAlive(items);

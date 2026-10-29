@@ -1,0 +1,51 @@
+<!--
+    Base theme (design/architecture/foundation.md, "基础主题"): the touch selection handles of TextBox. A 20px accent
+    drop whose square corner points at the text: top-left for the end handle, mirrored for the start handle, turned
+    to point up for the caret handle. PART_Indicator is the point the handle tracks (Avalonia 12 requires it).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:Class="TKCode.Arc.TextSelectionHandleBaseTheme"
+                    x:ClassModifier="internal">
+    <ControlTheme x:Key="{x:Type TextSelectionHandle}" TargetType="TextSelectionHandle">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="TextSelectionHandle">
+                <Grid>
+                    <Border Padding="0,0,0,10" Background="Transparent" IsHitTestVisible="True">
+                        <Path Name="PART_Handle"
+                              Width="20"
+                              Height="20"
+                              Cursor="Arrow"
+                              RenderTransformOrigin="50%,50%"
+                              Fill="{TemplateBinding Background}"
+                              Data="M0,0 L10,0 A10,10 0 1 1 0,10 Z" />
+                    </Border>
+                    <Border Name="PART_Indicator"
+                            Width="1"
+                            Height="5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            Background="Transparent" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:caret /template/ Path#PART_Handle">
+            <Setter Property="RenderTransform" Value="rotate(45deg)" />
+        </Style>
+        <Style Selector="^:start /template/ Path#PART_Handle">
+            <Setter Property="RenderTransform" Value="scaleX(-1)" />
+        </Style>
+        <Style Selector="^:caret /template/ Border#PART_Indicator">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:start /template/ Border#PART_Indicator">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:end /template/ Border#PART_Indicator">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

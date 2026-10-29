@@ -512,7 +512,7 @@ internal sealed class RolesPermissionsGrid : Control
                 column.Fade.Jump(0);
             }
             _ = column.Size.AnimateTo(0, MotionSpec.Spring(ArcSpring.Smooth)).ContinueWith(
-                _ => Avalonia.Threading.Dispatcher.UIThread.Post(() => Detach(column)),
+                _ => Dispatcher.Post(() => Detach(column)),
                 TaskScheduler.Default);
             if (column.Size.IsAnimating)
             {
@@ -644,7 +644,7 @@ internal sealed class RolesPermissionsGrid : Control
         if (full)
         {
             _ = fold.Expand.AnimateTo(expanded ? 1 : 0, MotionSpec.Spring(ArcSpring.Smooth)).ContinueWith(
-                t => Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                t => Dispatcher.Post(() =>
                 {
                     if (!fold.Expanded && fold.Expand.Value <= 0.001)
                     {

@@ -175,7 +175,7 @@ internal sealed class MorphSelectSurface : Control
         {
             // Settled and open: the shape no longer clips (the face already sits inside it), so hit testing and
             // rendering skip the geometry clip at rest.
-            Task.WhenAll(widthDone, done).ContinueWith(t => Dispatcher.UIThread.Post(() =>
+            Task.WhenAll(widthDone, done).ContinueWith(t => Dispatcher.Post(() =>
             {
                 if (generation == _morphGeneration && t.Result.All(r => r))
                 {

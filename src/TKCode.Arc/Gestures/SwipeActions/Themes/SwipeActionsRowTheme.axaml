@@ -1,7 +1,8 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    x:ClassModifier="internal">
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SwipeActionsRowTheme">
     <!-- The row's More actions button anchors a menu, so a press answers with color, never scale. -->
     <ControlTheme x:Key="SwipeActionsMoreTheme" TargetType="arc:Button">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />

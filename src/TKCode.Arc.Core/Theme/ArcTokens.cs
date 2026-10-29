@@ -1,5 +1,4 @@
 using TKCode.Arc.DesignTokens;
-using AtomUI.Theme.Resources;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data;
@@ -12,8 +11,8 @@ namespace TKCode.Arc;
 public static class ArcTokens
 {
     /// <summary>
-    /// Binds <paramref name="property"/> to an ArcDesign token so it follows theme changes. Uses the raw
-    /// own-token key: AtomUI's <c>CreateControlTokenBinding</c> would wrap the key with the owner type.
+    /// Binds <paramref name="property"/> to an ArcDesign token so it follows theme changes. The key is the
+    /// boxed token kind, the key the theme manager publishes the token under.
     /// </summary>
     public static IDisposable Bind(StyledElement target, AvaloniaProperty property, ArcDesignTokenKind kind,
                                    BindingPriority priority = BindingPriority.Template)
@@ -35,9 +34,29 @@ public static class ArcTokens
         return target;
     }
 
-    /// <summary>Reads the current value of an ArcDesign token for <paramref name="owner"/>'s theme scope.</summary>
+    /// <summary>
+    /// Reads the current value of an ArcDesign token for <paramref name="owner"/>'s theme scope. Color tokens are published
+    /// as brushes; asking for a <see cref="Color"/> unwraps them. Throws when the token is not found (Arc is not set up, or
+    /// the owner is not in a tree that reaches the application's resources) or has another type.
+    /// </summary>
     public static T Get<T>(Control owner, ArcDesignTokenKind kind)
-        => ControlTokenAccessor.Capture<ArcDesign>(owner).GetOwn<T, ArcDesignTokenKind>(kind);
+    {
+        if (!owner.TryFindResource(kind, owner.ActualThemeVariant, out var value))
+        {
+            throw new InvalidOperationException(
+                $"ArcDesign token '{kind}' was not found from {owner.GetType().Name}: is Arc set up (UseArc) and the control in a tree?");
+        }
+        if (value is T typed)
+        {
+            return typed;
+        }
+        if (value is ISolidColorBrush brush && brush.Color is T color)
+        {
+            return color;
+        }
+        throw new InvalidOperationException(
+            $"ArcDesign token '{kind}' is a {value?.GetType().Name ?? "null"}, not a {typeof(T).Name}.");
+    }
 
     /// <summary>
     /// Reads a corner radius token like <see cref="Get{T}"/>, but returns <paramref name="fallback"/> instead of throwing when
@@ -64,7 +83,7 @@ public static class ArcTokens
 
 /// <summary>
 /// One-shot (non-dynamic) ArcDesign token value for properties that cannot take a dynamic resource,
-/// such as <c>Transition.Duration</c>. Mirrors AtomUI's <c>SharedTokenResourceValue</c>.
+/// such as <c>Transition.Duration</c>. Reads the application's current value once.
 /// </summary>
 public sealed class ArcTokenValueExtension : MarkupExtension
 {
