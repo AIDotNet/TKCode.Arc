@@ -1,0 +1,21 @@
+<Project>
+    <!-- Theme files (Themes/*Theme.axaml) get their x:Class type from the Foundation generator. Avalonia's name generator
+         runs beside it, cannot see generated types and would warn AXN0001 for every theme file; it only looks at
+         AvaloniaXaml items, so theme files become AvaloniaResource items instead. Avalonia compiles both item types the
+         same way (AvaloniaXaml is merged into AvaloniaResource before XAML compilation), and both reach generators as
+         AdditionalFiles. A .targets file, because the default AvaloniaXaml items come from Avalonia's props. Set
+         ArcFoundationThemeItems=false to opt out. Projects that reference Foundation as a project import this file. -->
+    <ItemGroup Condition="'$(ArcFoundationThemeItems)' != 'false'">
+        <_ArcFoundationThemeXaml Include="**/Themes/*Theme.axaml" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+        <AvaloniaXaml Remove="@(_ArcFoundationThemeXaml)" />
+        <AvaloniaResource Include="@(_ArcFoundationThemeXaml)" />
+    </ItemGroup>
+    <!-- Language catalogs: the generator reads Localization/<language>.xlf (design/architecture/foundation.md section 12).
+         Only files directly in a Localization folder count, so other xlf files (the gallery's Docs/Api) are left alone.
+         Set ArcFoundationLanguageItems=false to opt out. -->
+    <ItemGroup Condition="'$(ArcFoundationLanguageItems)' != 'false'">
+        <_ArcFoundationLanguageFile Include="**/Localization/*.xlf" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+        <AdditionalFiles Remove="@(_ArcFoundationLanguageFile)" />
+        <AdditionalFiles Include="@(_ArcFoundationLanguageFile)" />
+    </ItemGroup>
+</Project>
