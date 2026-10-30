@@ -1,8 +1,4 @@
 <Project>
-    <ItemGroup Condition="'$(ArcIsLibrary)' == 'true'">
-        <Compile Remove="GeneratedFiles/**" />
-        <None Remove="GeneratedFiles/**" />
-    </ItemGroup>
     <ItemGroup Condition="'$(IsTestProject)' == 'true'">
         <Using Include="Xunit" />
         <Using Include="Shouldly" />

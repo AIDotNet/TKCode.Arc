@@ -1,6 +1,7 @@
 # Regenerates src/TKCode.Arc.Themes.Corners/CornerTable.g.cs: the ArcDesign radius tokens and every radius control token
 # of the Arc packages, with the default value read from the token's source.
-# Input: the Foundation generator's *Token.g.cs files under src/*/GeneratedFiles (they exist after a build), the
+# Input: the Foundation generator's *Token.g.cs files under src/*/GeneratedFiles/<tfm> (they exist after a build; every
+# target framework holds the same tokens, so the copies collapse into one entry), the
 # *Token.cs sources, and tools/corners/double_radii.json (classification of the double-typed radius tokens).
 import collections, glob, json, os, re, sys
 
@@ -21,7 +22,7 @@ classes = json.load(open(os.path.join(here, "double_radii.json"), encoding="utf-
 catalog_of = {"TKCode.Arc.Core": "TKCode.Arc"}
 
 found = collections.defaultdict(dict)  # catalog -> {(control, token): is_double}
-generated = os.path.join(src, "*", "GeneratedFiles", "TKCode.Arc.Foundation.Generators", "*", "*Token.g.cs")
+generated = os.path.join(src, "*", "GeneratedFiles", "*", "TKCode.Arc.Foundation.Generators", "*", "*Token.g.cs")
 for path in sorted(glob.glob(generated)):
     package = os.path.relpath(path, src).split(os.sep)[0]
     catalog = catalog_of.get(package, package)

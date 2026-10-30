@@ -80,6 +80,62 @@ jobs:
       - name: Test (controls, headless Avalonia)
         run: dotnet test tests/TKCode.Arc.Tests --no-build
 
+  # Windows paths use '\', which once switched the library defaults off there without a build error (#31). Build only:
+  # check that every project under src/ still counts as a library, then that it wrote its XML documentation.
+  windows:
+    name: Build (windows-latest)
+    if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Check the library defaults
+        run: |
+          failed=0
+          for project in src/*/*.csproj; do
+            name="$(basename "$project" .csproj)"
+            values="$(dotnet msbuild "$project" -getProperty:ArcIsLibrary -getProperty:IsPackable -getProperty:GenerateDocumentationFile | tr -d '\r')"
+            echo "$name: $(echo "$values" | tr -d ' \n')"
+            if ! echo "$values" | grep -q '"ArcIsLibrary": "true"'; then
+              echo "::error::$name does not count as a library (ArcIsLibrary is not true)"
+              failed=1
+            fi
+            # The analyzer project switches packing and documentation off itself; it ships inside TKCode.Arc.Foundation.
+            if [[ "$name" != *.Generators ]] && ! echo "$values" | grep -q '"IsPackable": "true"'; then
+              echo "::error::$name is not packable"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Build
+        run: dotnet build TKCode.Arc.slnx
+
+      - name: Check the XML documentation
+        run: |
+          failed=0
+          for project in src/*/*.csproj; do
+            name="$(basename "$project" .csproj)"
+            [[ "$name" == *.Generators ]] && continue
+            if ! ls "src/$name"/bin/Debug/*/"$name.xml" > /dev/null 2>&1; then
+              echo "::error::src/$name/bin/Debug/<tfm>/$name.xml is missing"
+              failed=1
+            fi
+          done
+          exit $failed
+
   # libghostty-vt for every RID, built from the commit pinned in native/ghostty/ghostty-upstream.json (+ overlays) with
   # the Zig in native/toolchain.json. Linux cross-compiles the Linux and Windows targets; the macOS targets need the
   # Apple SDK. TKCode.Arc.Terminal ships the results under runtimes/<rid>/native. The same job builds the miniaudio shim of

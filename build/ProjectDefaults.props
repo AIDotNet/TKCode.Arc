@@ -9,7 +9,12 @@
         <ArcTestTargetFramework Condition="'$(ArcTestTargetFramework)' == ''">net10.0</ArcTestTargetFramework>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
-        <ArcIsLibrary Condition="'$(ArcIsLibrary)' == '' and $(MSBuildProjectDirectory.Contains('/src/'))">true</ArcIsLibrary>
+        <!-- A library is a project under the repository's src/ folder. Both paths are normalized (separators, trailing
+             slash) before the prefix test, so this holds on Windows and when the clone itself sits under a src/ folder. -->
+        <_ArcSrcDirectory>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..', 'src'))</_ArcSrcDirectory>
+        <ArcIsLibrary Condition="'$(ArcIsLibrary)' == '' and $([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)').StartsWith('$(_ArcSrcDirectory)'))">true</ArcIsLibrary>
+        <!-- Generated sources written to disk for reading (below) are never compiled again, whatever the project kind. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);GeneratedFiles/**</DefaultItemExcludes>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(ArcIsLibrary)' == 'true'">
@@ -18,7 +23,8 @@
         <IsAotCompatible>true</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
+        <!-- One folder per target framework, so the inner builds never write the same file. -->
+        <CompilerGeneratedFilesOutputPath>GeneratedFiles/$(TargetFramework)</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(ArcIsLibrary)' != 'true'">
