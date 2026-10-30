@@ -8,6 +8,28 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native` and `TKCode.Arc.Audio.Browser`.
 
+## 0.3.2-preview.2 - 2026-10-30
+
+Nested submenus for the menus, row templates for TreeView, bindable inline options and a fix for building on Windows (issues #28, #29, #31 and #32).
+
+### Added
+
+- **TreeView**: `ItemTemplate` lays out the label area of each row with your own content, such as a name with its type, a status dot or a tooltip, while the tree keeps drawing the row, its fills, indent, chevron and icon and stays virtualized (issue #28). `DisabledSelector` and `TreeViewItem.IsDisabled` show nodes that cannot be selected; keyboard focus still reaches them, so a disabled folder still opens. `RowHeight` sets the height of every row, for example for two-line content.
+- **Menus**: nested submenus for `DropdownMenu`, `ContextMenu` and any `MenuSurface` (issue #29). Nest `MenuEntry` elements inside a row (`MenuEntry.Items`, or `MenuEntry.ItemsSource`), or set `ChildrenSelector` for `ItemsSource` data. A row with a submenu shows a chevron and opens the submenu beside the menu on a click, ArrowRight, Enter or Space, or after the pointer rests on it for 100 ms; the pointer can cross other rows on its way into it. ArrowLeft or Escape close one level, Tab closes them all, and choosing a row at any level closes the whole menu and raises `ItemClicked` once. Submenus open on the left when there is no room on the right and keep that direction at deeper levels. New members: `MenuEntry.Items`, `MenuEntry.ItemsSource`, `MenuEntry.HasSubmenu`, the `:submenu-open` pseudo-class, and `ChildrenSelector` on `MenuSurface`, `DropdownMenu` and `ContextMenu`.
+- **Core**: `SubmenuSafeZone` (`TKCode.Arc.Primitives`), the pointer path toward an open submenu, shared by the menus and `ModelMenu`.
+
+### Changed
+
+- **Breaking: inline option types are bindable.** `SegmentedOption`, `RadioOption`, `RadioCardOption`, `BillingToggleOption`, `FilterField`, `FilterOption`, `ReactionOption`, `SliderMark`, `GaugeThreshold`, `ActionSwapState`, `Announcement`, `ChatParticipant` and `HoverCardStat` now derive from `AvaloniaObject`, and their properties are styled properties. Options written inline in XAML take `{Binding ...}` and `{DynamicResource ...}` (for example a localized label), and the control that shows them follows later changes (issue #32). Constructors, object initializers and property names are unchanged, but code compiled against the old types must be rebuilt, and these objects must be created and changed on the UI thread. `FilterChip` stays an immutable value type.
+- `BillingToggle.DefaultOptions` returns new options on each read, so toggles no longer share them.
+- **Menus**: `MenuSurface.ItemClicked` is raised on the outermost surface for rows of every submenu level, so `DropdownMenu.ItemClicked` and `ContextMenu.ItemClicked` report nested rows too.
+
+### Fixed
+
+- **Build on Windows**: projects under `src/` count as libraries again on Windows, so `dotnet pack` produces packages and the XML documentation (the gallery's API tables) is written; generated sources left on disk (`GeneratedFiles/`) are never compiled a second time, and each target framework writes its own `GeneratedFiles/<tfm>` folder (issue #31). CI also builds on Windows.
+- **Corners preset**: the analytics segment switches, KPI drilldown, metrics dashboard, small multiples, team members, source citations and gravity well take their radii from the radius tokens, so `t.Corners(...)` squares or scales them like the rest.
+- **Usage forecast**: with motion off the chart no longer keeps a frame loop running after a change.
+
 ## 0.3.2-preview.1 - 2026-10-28
 
 Arc no longer depends on AtomUI. Every package now depends only on Avalonia and on the new MIT package
@@ -55,7 +77,7 @@ controls, their properties and the XAML (`{arc:ArcDesignTokenResource ...}`, `{a
   finishes. `ArcPopupFrame` replaces `BaseMotionActor`, and `ArcOverlayHost` replaces `ScopeAwareOverlayLayerPanel`.
 - **Breaking: mobile token identities** are `MobileButton`, `MobileCheckbox`, `MobileDialog`, `MobileSwitch` and
   `MobileToast`, so they no longer share names with the desktop controls.
-- Arc no longer shares its theme with AtomUI controls; applications that mix the two stay on 0.3.2-preview.1.
+- Arc no longer shares its theme with AtomUI controls; applications that mix the two stay on 0.3.1-preview.6.
 - **Performance**: `Button` builds its loading spinner the first time it loads; `Select` values and field messages shape their text only when needed.
 
 ### Fixed
@@ -147,7 +169,7 @@ ArcTheme.Apply(t => t
 - **AtomUI controls.** An application that also uses AtomUI controls no longer gets one shared theme for both. Stay on
   0.3.1-preview.6 until those screens are moved to Arc.
 
-## 0.3.2-preview.1 - 2026-10-28
+## 0.3.1-preview.6 - 2026-10-28
 
 ### Added
 
@@ -730,7 +752,9 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
-[0.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.5...v0.3.2-preview.1
+[0.3.2-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.2-preview.1...v0.3.2-preview.2
+[0.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.6...v0.3.2-preview.1
+[0.3.1-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.5...v0.3.1-preview.6
 [0.3.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.4...v0.3.1-preview.5
 [0.3.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.3...v0.3.1-preview.4
 [0.3.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v0.3.1-preview.2...v0.3.1-preview.3

@@ -25,12 +25,12 @@ with Arc's visual language and spring motion.
 
 ## Install
 
-The latest preview is [`0.3.2-preview.1`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
+The latest preview is [`0.3.2-preview.2`](CHANGELOG.md) on [NuGet](https://www.nuget.org/packages/TKCode.Arc):
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.2-preview.1
-dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.1           # optional: Geist and Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.1    # optional: the full Lucide set
+dotnet add package TKCode.Arc --version 0.3.2-preview.2
+dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.2           # optional: Geist and Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.2    # optional: the full Lucide set
 ```
 
 `TKCode.Arc` brings in `TKCode.Arc.Core` (and, from 0.3.2, `TKCode.Arc.Foundation`). `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts` and `TKCode.Arc.Special`
@@ -41,7 +41,7 @@ releases.
 
 ## Getting started
 
-The code below is the API on `main` (0.4, not yet on NuGet). Apps on 0.3.2-preview.1 register Arc inside `UseAtomUI(...)`;
+The code below is the API from 0.3.2-preview.1 on. Apps on 0.3.1 and earlier register Arc inside `UseAtomUI(...)`;
 [CHANGELOG.md](CHANGELOG.md) has the migration notes.
 
 ```csharp

@@ -1,6 +1,6 @@
 ---
 title: 安装
-source-hash: 6cc5bb3b04ce
+source-hash: 919f57d0579d
 ---
 
 # 安装
@@ -21,9 +21,9 @@ TKCode.Arc 目前处于预览阶段，Avalonia 固定为确切版本。除 Avalo
 ## 1. 添加包
 
 ```bash
-dotnet add package TKCode.Arc --version 0.3.2-preview.1
-dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.1           # 可选：Geist 与 Geist Mono
-dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.1    # 可选：完整的 Lucide 图标集
+dotnet add package TKCode.Arc --version 0.3.2-preview.2
+dotnet add package TKCode.Arc.Fonts --version 0.3.2-preview.2           # 可选：Geist 与 Geist Mono
+dotnet add package TKCode.Arc.Icons.Lucide --version 0.3.2-preview.2    # 可选：完整的 Lucide 图标集
 dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可选：正文使用的 Inter
 ```
 
@@ -31,9 +31,9 @@ dotnet add package Avalonia.Fonts.Inter --version 12.1.4                 # 可�
 
 ```xml
 <ItemGroup>
-    <PackageVersion Include="TKCode.Arc" Version="0.3.2-preview.1" />
-    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.2-preview.1" />
-    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.2-preview.1" />
+    <PackageVersion Include="TKCode.Arc" Version="0.3.2-preview.2" />
+    <PackageVersion Include="TKCode.Arc.Fonts" Version="0.3.2-preview.2" />
+    <PackageVersion Include="TKCode.Arc.Icons.Lucide" Version="0.3.2-preview.2" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
 </ItemGroup>
 ```
@@ -149,13 +149,13 @@ Arc 自有的图标字形（`{x:Static arc:ArcIcons.Check}` 以及另外 186 个
 `TKCode.Arc.Blocks`（页面级区块）、`TKCode.Arc.AdvancedCharts`（`DataGrid`）和 `TKCode.Arc.Special`（AI 动画讲解）是独立的包。按需添加，并在 `UseArc(...)` 中注册：
 
 ```bash
-dotnet add package TKCode.Arc.Blocks --version 0.3.2-preview.1
-dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.2-preview.1
-dotnet add package TKCode.Arc.Special --version 0.3.2-preview.1
-dotnet add package TKCode.Arc.Workflow --version 0.3.2-preview.1
-dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.2-preview.1    # 可选：像素风主题（UseArcPixelTheme()）
-dotnet add package TKCode.Arc.Themes.Corners --version 0.3.2-preview.1    # 可选：全局圆角风格（UseArcCorners()）
-dotnet add package TKCode.Arc.Mobile --version 0.3.2-preview.1    # 可选：移动端控件，尚未在真机上验证（UseArcMobile()）
+dotnet add package TKCode.Arc.Blocks --version 0.3.2-preview.2
+dotnet add package TKCode.Arc.AdvancedCharts --version 0.3.2-preview.2
+dotnet add package TKCode.Arc.Special --version 0.3.2-preview.2
+dotnet add package TKCode.Arc.Workflow --version 0.3.2-preview.2
+dotnet add package TKCode.Arc.Themes.Pixel --version 0.3.2-preview.2    # 可选：像素风主题（UseArcPixelTheme()）
+dotnet add package TKCode.Arc.Themes.Corners --version 0.3.2-preview.2    # 可选：全局圆角风格（UseArcCorners()）
+dotnet add package TKCode.Arc.Mobile --version 0.3.2-preview.2    # 可选：移动端控件，尚未在真机上验证（UseArcMobile()）
 ```
 
 ```csharp

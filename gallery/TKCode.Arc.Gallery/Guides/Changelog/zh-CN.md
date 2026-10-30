@@ -1,6 +1,6 @@
 ---
 title: 更新日志
-source-hash: 371384754c7b
+source-hash: 8901f704ede9
 ---
 
 # 更新日志
@@ -8,6 +8,28 @@ source-hash: 371384754c7b
 TKCode.Arc 的所有重要变更，最新的在前。版本遵循[语义化版本](https://semver.org/)。版本带有 `-preview` 后缀期间，API 在各发布版本之间仍可能变化；升级前请阅读说明，并在项目中固定版本号。同样的列表也保存在仓库的 `CHANGELOG.md` 中。
 
 每次发布附带的 NuGet 包：`TKCode.Arc`、`TKCode.Arc.Core`、`TKCode.Arc.Foundation`（0.3.2 起）、`TKCode.Arc.Fonts` `TKCode.Arc.Icons.Lucide`、`TKCode.Arc.Blocks`、`TKCode.Arc.AdvancedCharts` 、`TKCode.Arc.Special`、`TKCode.Arc.Workflow`、`TKCode.Arc.Themes.Pixel`、`TKCode.Arc.Themes.Corners`、`TKCode.Arc.Mobile`、`TKCode.Arc.Terminal`、`TKCode.Arc.Audio`、`TKCode.Arc.Audio.Native` 和 `TKCode.Arc.Audio.Browser`。
+
+## 0.3.2-preview.2（2026-10-30）
+
+菜单支持多级子菜单，TreeView 支持行内容模板，内联选项支持绑定，并修复了 Windows 下的构建问题（issue #28、#29、#31、#32）。
+
+### 新增
+
+- **TreeView**：`ItemTemplate` 用你自己的内容排布每行的标签区，例如名称加类型、状态点或工具提示；行本身、填充、缩进、箭头和图标仍由树绘制，树仍然是虚拟化的（issue #28）。`DisabledSelector` 和 `TreeViewItem.IsDisabled` 显示不能被选中的节点；键盘焦点仍可到达它们，所以禁用的文件夹仍然可以展开。`RowHeight` 设置每一行的高度，例如用于两行内容。
+- **菜单**：`DropdownMenu`、`ContextMenu` 和任意 `MenuSurface` 支持多级子菜单（issue #29）。在一行内嵌套 `MenuEntry` 元素（`MenuEntry.Items`，或 `MenuEntry.ItemsSource`），或为 `ItemsSource` 数据设置 `ChildrenSelector`。带子菜单的行会显示箭头，单击、按 ArrowRight、Enter 或 Space，或指针在其上停留 100 ms 后，子菜单会在菜单旁打开；指针移向子菜单途中经过其他行时不会关闭它。ArrowLeft 或 Escape 关闭一级，Tab 关闭全部，在任意一级选择一行都会关闭整个菜单并只引发一次 `ItemClicked`。右侧放不下时子菜单在左侧打开，更深的层级也沿用这个方向。新增成员：`MenuEntry.Items`、`MenuEntry.ItemsSource`、`MenuEntry.HasSubmenu`、`:submenu-open` 伪类，以及 `MenuSurface`、`DropdownMenu` 和 `ContextMenu` 上的 `ChildrenSelector`。
+- **Core**：`SubmenuSafeZone`（`TKCode.Arc.Primitives`），指针移向已打开子菜单时的路径区域，由菜单和 `ModelMenu` 共用。
+
+### 变更
+
+- **破坏性变更：内联选项类型支持绑定。** `SegmentedOption`、`RadioOption`、`RadioCardOption`、`BillingToggleOption`、`FilterField`、`FilterOption`、`ReactionOption`、`SliderMark`、`GaugeThreshold`、`ActionSwapState`、`Announcement`、`ChatParticipant` 和 `HoverCardStat` 现在派生自 `AvaloniaObject`，属性改为样式属性。在 XAML 中内联书写的选项可以使用 `{Binding ...}` 和 `{DynamicResource ...}`（例如本地化的标签），显示它们的控件也会跟随之后的变化（issue #32）。构造函数、对象初始化器和属性名不变，但基于旧类型编译的代码需要重新编译，并且这些对象必须在 UI 线程上创建和修改。`FilterChip` 仍是不可变的值类型。
+- `BillingToggle.DefaultOptions` 每次读取都返回新的选项，各个切换不再共用同一组选项。
+- **菜单**：各级子菜单中的行都会在最外层菜单面板上引发 `MenuSurface.ItemClicked`，因此 `DropdownMenu.ItemClicked` 和 `ContextMenu.ItemClicked` 也会报告嵌套的行。
+
+### 修复
+
+- **Windows 构建**：Windows 下 `src/` 里的项目重新被识别为库，`dotnet pack` 能正常产包，XML 文档（Gallery 的 API 表）也会生成；磁盘上残留的生成代码（`GeneratedFiles/`）不会再被重复编译，每个目标框架写入各自的 `GeneratedFiles/<tfm>` 目录（issue #31）。CI 也增加了 Windows 构建。
+- **圆角预设**：Analytics 分段切换、KPI 下钻、指标仪表盘、小倍数图、团队成员、来源引用和引力井的圆角改为取自圆角令牌，`t.Corners(...)` 能像其他控件一样把它们改成直角或按比例缩放。
+- **用量预测**：关闭动效时，图表在变化后不再持续运行帧循环。
 
 ## 0.3.2-preview.1（2026-10-28）
 
