@@ -1,9 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.AgentStatusHeaderBarDemo">
     <!-- A header bar that clips its content: the open panel floats over the page instead of being cut off. The left pill
-         grows its panel from the start edge, the right one from the end edge. -->
+         grows its panel from the start edge, the right one from the end edge. Each pill plays its own simulated run. -->
     <Border x:Name="Bar"
             Height="56"
             ClipToBounds="True"
@@ -13,13 +14,21 @@
             BorderBrush="{arc:ArcDesignTokenResource Border}"
             Background="{arc:ArcDesignTokenResource Surface}">
         <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
-            <arc:AgentStatus x:Name="Left" PanelAlignment="Start" VerticalAlignment="Center" />
+            <arc:AgentStatus PanelAlignment="Start" VerticalAlignment="Center">
+                <arc:AgentStatus.Simulation>
+                    <arc:AgentRunSimulation Scenario="{x:Static demos:AgentStatusDemoData.Coding}" />
+                </arc:AgentStatus.Simulation>
+            </arc:AgentStatus>
             <TextBlock Grid.Column="1"
                        Text="Release notes"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-            <arc:AgentStatus x:Name="Right" Grid.Column="2" PanelAlignment="End" VerticalAlignment="Center" />
+            <arc:AgentStatus Grid.Column="2" PanelAlignment="End" VerticalAlignment="Center">
+                <arc:AgentStatus.Simulation>
+                    <arc:AgentRunSimulation Scenario="{x:Static demos:AgentStatusDemoData.Research}" />
+                </arc:AgentStatus.Simulation>
+            </arc:AgentStatus>
         </Grid>
     </Border>
 </UserControl>

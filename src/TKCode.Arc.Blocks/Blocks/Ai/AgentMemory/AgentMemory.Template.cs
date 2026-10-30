@@ -533,7 +533,7 @@ public partial class AgentMemory
             _search.FocusInput(method);
             return;
         }
-        _filters?.FocusSelected();
+        _filters?.FocusSelected(method);
     }
 
     #endregion

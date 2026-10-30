@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiTranslateNarrowDemo">
+    <!-- At 360px the card pads 16px, the status line drops under the controls and the chip shows just the language. -->
+    <arc:AiTranslate Width="360" HorizontalAlignment="Center" Margin="0,12" AutoPlay="False" Value="English">
+        <arc:AiTranslate.Simulation>
+              <arc:AiTranslateSimulation Text="{x:Static demos:AiTranslateDemoData.Text}"
+                                         Translations="{x:Static demos:AiTranslateDemoData.Translations}"
+                                         Author="{x:Static demos:AiTranslateDemoData.Author}"
+                                         Timestamp="{x:Static demos:AiTranslateDemoData.Timestamp}"
+                                         ModelName="{x:Static demos:AiTranslateDemoData.ModelName}"
+                                         Tour="{x:Static demos:AiTranslateDemoData.Tour}" />
+        </arc:AiTranslate.Simulation>
+    </arc:AiTranslate>
+</UserControl>

@@ -203,6 +203,7 @@
         <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         <Setter Property="Padding" Value="{arc:ReleaseReadinessTokenResource RowPadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ReleaseReadinessRow">
                 <Border Name="PART_Frame"

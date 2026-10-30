@@ -1,0 +1,543 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProviderStatusTheme">
+
+    <!--
+        The card: a quiet bordered surface. The header holds the title over the summary (or the error), the countdown ring
+        with its seconds (a spinner and a shimmering "Checking" while a check runs) and a ghost refresh button. Under it a
+        column header (wide cards only), the rows, the skeleton for the first load, the footnote and a hidden live region.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProviderStatus}" TargetType="arc:ProviderStatus">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ProviderStatusTokenResource CardCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderStatus">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <Grid Name="PART_Header"
+                              ColumnDefinitions="*,Auto,Auto"
+                              Margin="{arc:ProviderStatusTokenResource HeaderPadding}">
+                            <StackPanel VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Name="PART_Title"
+                                           FontSize="{arc:ProviderStatusTokenResource TitleFontSize}"
+                                           LineHeight="{arc:ProviderStatusTokenResource TitleLineHeight}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <arc:ArcContentSwap Name="PART_Summary"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Left"
+                                                    TextElement.FontSize="{arc:ProviderStatusTokenResource MetaFontSize}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Countdown"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        Margin="12,0,6,0"
+                                        VerticalAlignment="Center">
+                                <Panel Width="{arc:ProviderStatusTokenResource RingSize}"
+                                       Height="{arc:ProviderStatusTokenResource RingSize}"
+                                       VerticalAlignment="Center">
+                                    <arc:ArcRing Name="PART_Ring"
+                                                 Thickness="{arc:ProviderStatusTokenResource RingThickness}"
+                                                 Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                 TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                    <arc:ArcSpinner Name="PART_Spinner"
+                                                    Thickness="{arc:ProviderStatusTokenResource RingThickness}"
+                                                    Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                    IsVisible="False" />
+                                </Panel>
+                                <Panel VerticalAlignment="Center">
+                                    <TextBlock Name="PART_CountdownText"
+                                               FontSize="{arc:ProviderStatusTokenResource MetaFontSize}"
+                                               LineHeight="{arc:ProviderStatusTokenResource MetaLineHeight}"
+                                               FontFeatures="tnum"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               VerticalAlignment="Center" />
+                                    <arc:ToolCallText Name="PART_CheckingText"
+                                                      FontSize="{arc:ProviderStatusTokenResource MetaFontSize}"
+                                                      LineHeight="{arc:ProviderStatusTokenResource MetaLineHeight}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      VerticalAlignment="Center"
+                                                      IsVisible="False" />
+                                </Panel>
+                            </StackPanel>
+                            <arc:Button Name="PART_Refresh"
+                                        Grid.Column="2"
+                                        Classes="provider-refresh"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RefreshCw}"
+                                              Size="16"
+                                              StrokeThickness="2"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                            </arc:Button>
+                        </Grid>
+                        <arc:ProviderStatusRowPanel Name="PART_Columns"
+                                                    Margin="{arc:ProviderStatusTokenResource RowPadding}"
+                                                    Height="{arc:ProviderStatusTokenResource ColumnHeaderHeight}"
+                                                    StatusWidth="{arc:ProviderStatusTokenResource StatusColumnWidth}"
+                                                    LatencyWidth="{arc:ProviderStatusTokenResource LatencyColumnWidth}"
+                                                    UptimeWidth="{arc:ProviderStatusTokenResource UptimeColumnWidth}"
+                                                    ChevronWidth="{arc:ProviderStatusTokenResource ChevronColumnWidth}"
+                                                    ColumnGap="{arc:ProviderStatusTokenResource ColumnGap}"
+                                                    MarkGap="{arc:ProviderStatusTokenResource MarkGap}"
+                                                    NameShare="{arc:ProviderStatusTokenResource NameShare}"
+                                                    NameMinWidth="{arc:ProviderStatusTokenResource NameMinWidth}"
+                                                    NameMaxWidth="{arc:ProviderStatusTokenResource NameMaxWidth}"
+                                                    TextElement.FontSize="{arc:ProviderStatusTokenResource ColumnHeaderFontSize}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                            <Control Width="{arc:ProviderStatusTokenResource MarkSize}" />
+                            <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" TextAlignment="Right" />
+                            <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center" TextAlignment="Right" />
+                            <Control />
+                        </arc:ProviderStatusRowPanel>
+                        <arc:ProviderStatusRowList Name="PART_Rows" />
+                        <arc:ProviderStatusSkeleton Name="PART_Skeleton"
+                                                    IsVisible="False"
+                                                    RowPadding="{arc:ProviderStatusTokenResource RowPadding}"
+                                                    NarrowRowPadding="{arc:ProviderStatusTokenResource NarrowRowPadding}"
+                                                    RowHeight="{arc:ProviderStatusTokenResource RowHeight}" />
+                        <Border Name="PART_FootnoteBox"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <ContentPresenter Name="PART_Footnote"
+                                              Margin="{arc:ProviderStatusTokenResource RowPadding}"
+                                              Padding="0,12,0,14"
+                                              FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Border>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|Button.provider-refresh">
+            <Setter Property="Width" Value="{arc:ProviderStatusTokenResource RefreshSize}" />
+            <Setter Property="Height" Value="{arc:ProviderStatusTokenResource RefreshSize}" />
+            <Setter Property="MinHeight" Value="{arc:ProviderStatusTokenResource RefreshSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One provider. Wide: a 60px row of columns (mark, name over detail, health, p50 latency, uptime bar, percentage,
+        chevron). Narrow: two lines (name with the latency under it and the health at the right; then the bar and the
+        percentage), and the detail line is left out. A hairline separates rows. An incident row's whole head is a button and
+        its updates open under it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProviderStatusRow}" TargetType="arc:ProviderStatusRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="{arc:ProviderStatusTokenResource RowPadding}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        <Setter Property="HealthIconSize" Value="{arc:ProviderStatusTokenResource HealthIconSize}" />
+        <Setter Property="HealthGap" Value="{arc:ProviderStatusTokenResource HealthGap}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderStatusRow">
+                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                    <StackPanel>
+                        <Panel Name="PART_HeadHost">
+                            <arc:ProviderStatusRowButton Name="PART_Toggle"
+                                                         HorizontalAlignment="Stretch"
+                                                         VerticalAlignment="Stretch"
+                                                         IsVisible="False" />
+                            <arc:ProviderStatusRowPanel Name="PART_Head"
+                                                        Margin="{TemplateBinding Padding}"
+                                                        VerticalAlignment="Center"
+                                                        StatusWidth="{arc:ProviderStatusTokenResource StatusColumnWidth}"
+                                                        LatencyWidth="{arc:ProviderStatusTokenResource LatencyColumnWidth}"
+                                                        UptimeWidth="{arc:ProviderStatusTokenResource UptimeColumnWidth}"
+                                                        ChevronWidth="{arc:ProviderStatusTokenResource ChevronColumnWidth}"
+                                                        ColumnGap="{arc:ProviderStatusTokenResource ColumnGap}"
+                                                        MarkGap="{arc:ProviderStatusTokenResource MarkGap}"
+                                                        NameShare="{arc:ProviderStatusTokenResource NameShare}"
+                                                        NameMinWidth="{arc:ProviderStatusTokenResource NameMinWidth}"
+                                                        NameMaxWidth="{arc:ProviderStatusTokenResource NameMaxWidth}"
+                                                        LineGap="{arc:ProviderStatusTokenResource NarrowLineGap}">
+                                <Panel Width="{arc:ProviderStatusTokenResource MarkSize}"
+                                       Height="{arc:ProviderStatusTokenResource MarkSize}"
+                                       IsHitTestVisible="False">
+                                    <arc:ArcGlyph Name="PART_Mark"
+                                                  Size="{arc:ProviderStatusTokenResource MarkSize}"
+                                                  StrokeThickness="2" />
+                                    <Border Name="PART_Monogram"
+                                            CornerRadius="{arc:ProviderStatusTokenResource MonogramCornerRadius}">
+                                        <TextBlock Name="PART_MonogramText"
+                                                   FontSize="10"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </Border>
+                                </Panel>
+                                <StackPanel VerticalAlignment="Center" IsHitTestVisible="False">
+                                    <TextBlock Name="PART_Name"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="{arc:ProviderStatusTokenResource NameLineHeight}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <arc:ArcContentSwap Name="PART_Detail"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:ProviderStatusTokenResource DetailFontSize}" />
+                                </StackPanel>
+                                <arc:ArcContentSwap Name="PART_Health"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Left"
+                                                    IsHitTestVisible="False" />
+                                <arc:ArcContentSwap Name="PART_Latency"
+                                                    Mode="Label"
+                                                    IsHitTestVisible="False" />
+                                <arc:ProviderStatusUptimeBar Name="PART_Bar"
+                                                             VerticalAlignment="Center"
+                                                             TickGap="{arc:ProviderStatusTokenResource TickGap}"
+                                                             TickCornerRadius="{arc:ProviderStatusTokenResource TickCornerRadius}"
+                                                             TickLift="{arc:ProviderStatusTokenResource TickLift}"
+                                                             OperationalInk="{arc:ArcDesignTokenResource Success}"
+                                                             DegradedInk="{arc:ArcDesignTokenResource Warning}"
+                                                             OutageInk="{arc:ArcDesignTokenResource Danger}"
+                                                             EmptyInk="{arc:ArcDesignTokenResource Border}"
+                                                             FocusInk="{arc:ArcDesignTokenResource FocusRing}" />
+                                <arc:ArcContentSwap Name="PART_Uptime"
+                                                    Mode="Label"
+                                                    HorizontalContentAlignment="Right"
+                                                    IsHitTestVisible="False" />
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="{arc:ProviderStatusTokenResource ChevronColumnWidth}"
+                                              VerticalAlignment="Center"
+                                              RenderTransformOrigin="50%,50%" />
+                            </arc:ProviderStatusRowPanel>
+                        </Panel>
+                        <arc:AiHeightBox Name="PART_Panel" FollowsContent="True" FadeOutDuration="0:0:0.1" CrossClipOverflow="4">
+                            <StackPanel Name="PART_PanelBody" Spacing="12">
+                                <TextBlock Name="PART_IncidentTitle"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ProviderStatusTokenResource NameLineHeight}"
+                                           TextWrapping="Wrap" />
+                                <StackPanel Name="PART_Updates" />
+                                <arc:Button Name="PART_Link"
+                                            Classes="provider-link"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Name="PART_LinkText" VerticalAlignment="Center" />
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ExternalLink}"
+                                                      Size="14"
+                                                      StrokeThickness="2"
+                                                      VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:Button>
+                            </StackPanel>
+                        </arc:AiHeightBox>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ Panel#PART_HeadHost">
+            <Setter Property="MinHeight" Value="{arc:ProviderStatusTokenResource RowHeight}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_PanelBody">
+            <Setter Property="Margin" Value="{arc:ProviderStatusTokenResource PanelPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Monogram">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Detail">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Latency">
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Uptime">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProviderStatusUptimeBar#PART_Bar">
+            <Setter Property="TickHeight" Value="{arc:ProviderStatusTokenResource TickHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.provider-link">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="Margin" Value="-10,-4,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:incident /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:incident:degraded /template/ arc|ArcContentSwap#PART_Detail">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:incident:outage /template/ arc|ArcContentSwap#PART_Detail">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:incident:resolved /template/ arc|ArcContentSwap#PART_Detail">
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:ProviderStatusTokenResource NarrowRowPadding}" />
+        </Style>
+        <Style Selector="^:narrow /template/ Panel#PART_HeadHost">
+            <Setter Property="MinHeight" Value="0" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_Detail">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_Latency">
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="TextElement.FontSize" Value="{arc:ProviderStatusTokenResource DetailFontSize}" />
+            <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ProviderStatusUptimeBar#PART_Bar">
+            <Setter Property="TickHeight" Value="{arc:ProviderStatusTokenResource NarrowTickHeight}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_PanelBody">
+            <Setter Property="Margin" Value="{arc:ProviderStatusTokenResource NarrowRowPadding}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The row button: the whole head, SurfaceMuted at 60% under the pointer (160ms), a keyboard ring just inside the row. -->
+    <ControlTheme x:Key="{x:Type arc:ProviderStatusRowButton}" TargetType="arc:ProviderStatusRowButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderStatusRowButton">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            Opacity="0" />
+                    <Border Name="PART_FocusRing"
+                            Margin="3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:ProviderStatusTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One update of an incident: a rail column with a hairline running between the first and the last dot and a filled
+        dot in the stage's color (Investigating danger, Identified warning, Monitoring accent, Resolved success), then the
+        stage and its time over the message. A new update fades in over 160ms.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ProviderStatusUpdateView}" TargetType="arc:ProviderStatusUpdateView">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderStatusUpdateView">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Panel Width="{arc:ProviderStatusTokenResource RailWidth}">
+                        <Rectangle Name="PART_Line"
+                                   Width="1"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Stretch"
+                                   Fill="{arc:ArcDesignTokenResource Border}" />
+                        <Ellipse Name="PART_Dot"
+                                 Width="{arc:ProviderStatusTokenResource DotSize}"
+                                 Height="{arc:ProviderStatusTokenResource DotSize}"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top" />
+                    </Panel>
+                    <StackPanel Name="PART_Text" Grid.Column="1" Spacing="2">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{TemplateBinding StageText}"
+                                       FontSize="{arc:ProviderStatusTokenResource UpdateFontSize}"
+                                       LineHeight="{arc:ProviderStatusTokenResource UpdateLineHeight}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <TextBlock Text="{TemplateBinding TimeText}"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       LineHeight="{arc:ProviderStatusTokenResource UpdateLineHeight}"
+                                       FontFeatures="tnum"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </StackPanel>
+                        <TextBlock Text="{TemplateBinding Message}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ProviderStatusTokenResource UpdateFontSize}"
+                                   LineHeight="{arc:ProviderStatusTokenResource UpdateLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <!-- The line is centered under the dot and runs from dot to dot. -->
+        <Style Selector="^ /template/ Rectangle#PART_Line">
+            <Setter Property="Margin" Value="{arc:ProviderStatusTokenResource RailLineMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#PART_Dot">
+            <Setter Property="Margin" Value="{arc:ProviderStatusTokenResource DotMargin}" />
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Text">
+            <Setter Property="Margin" Value="{arc:ProviderStatusTokenResource UpdateMargin}" />
+        </Style>
+        <Style Selector="^:identified /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:monitoring /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:resolved /template/ Ellipse#PART_Dot">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:first /template/ Rectangle#PART_Line">
+            <Setter Property="Margin" Value="{arc:ProviderStatusTokenResource RailFirstLineMargin}" />
+        </Style>
+        <Style Selector="^:last /template/ Rectangle#PART_Line">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Height" Value="{arc:ProviderStatusTokenResource RailLastLineHeight}" />
+        </Style>
+        <Style Selector="^:last /template/ StackPanel#PART_Text">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:first:last /template/ Rectangle#PART_Line">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The day tooltip: Arc's inverted tooltip surface, 12px type, the date over the health and uptime and the day's note. -->
+    <ControlTheme x:Key="{x:Type arc:ProviderStatusDayTip}" TargetType="arc:ProviderStatusDayTip">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="Padding" Value="{arc:ProviderStatusTokenResource TipPadding}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProviderStatusDayTip">
+                <Border Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        MaxWidth="{arc:ProviderStatusTokenResource TipMaxWidth}">
+                    <StackPanel Spacing="{arc:ProviderStatusTokenResource TipGap}">
+                        <TextBlock Text="{TemplateBinding DateText}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Data="{TemplateBinding Icon}"
+                                          Size="13"
+                                          StrokeThickness="2"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding HealthText}" VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Uptime"
+                                       Text="{TemplateBinding UptimeText}"
+                                       FontFeatures="tnum"
+                                       Opacity="0.72"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Name="PART_Note"
+                                   Text="{TemplateBinding Note}"
+                                   TextWrapping="Wrap"
+                                   Opacity="0.72" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Note">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Uptime">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:note /template/ TextBlock#PART_Note">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:uptime /template/ TextBlock#PART_Uptime">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:operational /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:degraded /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+        <Style Selector="^:outage /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

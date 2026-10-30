@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TrialBannerCheckoutDemo">
+    <!-- Your own checkout: the handler below stands in for a billing call (1.2s). With "Decline the card" on it throws and
+         the banner offers Try again. Compare plans, snooze and dismiss are handled and logged under the banner. -->
+    <StackPanel Spacing="12" MaxWidth="720">
+        <StackPanel Orientation="Horizontal" Spacing="16">
+            <arc:Switch x:Name="Decline" Content="Decline the card" />
+            <arc:Button Content="Reset" Variant="Ghost" Size="Small" Click="OnReset" />
+        </StackPanel>
+        <arc:TrialBanner x:Name="Banner" DaysLeft="5" />
+        <TextBlock x:Name="Log"
+                   Text="Nothing yet."
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

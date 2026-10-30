@@ -1,7 +1,7 @@
 ---
 title: 多行文本框
 summary: 用于备注、描述和较长文本的多行输入字段。
-source-hash: 7e1f98021e7c
+source-hash: 500366a42911
 ---
 
 <Demo name="LiveCount" />
@@ -60,6 +60,11 @@ source-hash: 7e1f98021e7c
 - **多段落的回复和摘要**：将 `FrameHeight` 设为约 200，增加初始高度，使第一屏就能显示整份草稿。
 - **固定布局，例如仪表板卡片或侧边面板**：设置 `IsResizable="False"`，使卡片保持其几何尺寸。此时字段会滚动其文字。
 - **必须保留用户所选尺寸的字段**：以 `Mode=TwoWay` 绑定 `FrameHeight`，并将该值保存在视图模型或用户设置中。`FrameHeight` 默认为单向。
+- **紧凑卡片中的矮输入框**（评分下方的可选备注、一行提示词）：用 `FrameMinHeight` 降低最小值，它是外框连同边框和内边距的高度。默认尺寸下两行文字需要 66 px，三行需要 85 px。之后手柄也不会拖到新的最小值以下。
+
+```xml
+<arc:Textarea PlaceholderText="Add details (optional)" FrameMinHeight="66" IsResizable="False" />
+```
 
 ### 绑定到视图模型
 
@@ -240,7 +245,7 @@ notes.FrameHeight = 200;
 
 **为什么我输入更多行时字段高度保持不变？** 它保持高度，以免表单布局移动。文字在外框内滚动。让用户拖动手柄，或将 `FrameHeight` 设为任务所需的高度。
 
-**为什么 `FrameHeight` 为 60 时字段仍是 110 px？** 低于 110 px 最小值的任何高度都会被提升到最小值。最小值适用于每个 `Size`，因此 `Small` 不会使字段变矮。
+**为什么 `FrameHeight` 为 60 时字段仍是 110 px？** 低于 110 px 最小值的任何高度都会被提升到最小值。最小值适用于每个 `Size`，因此 `Small` 不会使字段变矮；需要更矮的字段时降低 `FrameMinHeight`。
 
 **用户按 Tab 时字段会插入制表符吗？** 不会。`AcceptsTab` 为 false，因此 Tab 会把焦点移到下一个控件。只有当字段是代码或表格编辑器、且制表符本身就是值时，才设置 `AcceptsTab="True"`。
 

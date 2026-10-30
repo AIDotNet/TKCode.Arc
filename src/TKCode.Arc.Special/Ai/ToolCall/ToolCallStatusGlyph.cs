@@ -179,7 +179,7 @@ internal sealed class ToolCallStatusGlyph : Control
             InvalidateVisual();
             return;
         }
-        var easing = ToolCallCollapsible.EaseOut;
+        var easing = AiHeightBox.EaseOut;
         foreach (var old in _glyphs)
         {
             if (old.Leaving)

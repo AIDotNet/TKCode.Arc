@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PageCurlTemplateDemo">
+    <!-- Pages from data: plain items are built with PageTemplate, and SpreadChanged reports each finished turn. -->
+    <StackPanel Spacing="12" HorizontalAlignment="Center">
+        <arc:PageCurl x:Name="Book"
+                      Label="Field guide"
+                      Width="480"
+                      Tease="False"
+                      Hint="{x:Null}"
+                      SpreadChanged="OnSpreadChanged">
+            <arc:PageCurl.PageTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Panel Margin="22">
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="20" FontWeight="SemiBold"
+                                   FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                   VerticalAlignment="Center"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    </Panel>
+                </DataTemplate>
+            </arc:PageCurl.PageTemplate>
+            <x:String>Ferns</x:String>
+            <x:String>Unfurl in damp shade and need very little.</x:String>
+            <x:String>Lavender</x:String>
+            <x:String>Wants sun, dry feet and a hard prune in spring.</x:String>
+            <x:String>Mint</x:String>
+            <x:String>Give it a pot of its own; it will take the bed otherwise.</x:String>
+            <x:String>Thyme</x:String>
+        </arc:PageCurl>
+        <TextBlock x:Name="Readout" HorizontalAlignment="Center"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" Text="Spread 0" />
+    </StackPanel>
+</UserControl>

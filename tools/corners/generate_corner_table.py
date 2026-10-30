@@ -1,6 +1,6 @@
 # Regenerates src/TKCode.Arc.Themes.Corners/CornerTable.g.cs: the ArcDesign radius tokens and every radius control token
 # of the Arc packages, with the default value read from the token's source.
-# Input: the GeneratedThemeBuildContracts.g.cs files under src/*/GeneratedFiles (they exist after a build), the
+# Input: the Foundation generator's *Token.g.cs files under src/*/GeneratedFiles (they exist after a build), the
 # *Token.cs sources, and tools/corners/double_radii.json (classification of the double-typed radius tokens).
 import collections, glob, json, os, re, sys
 
@@ -14,17 +14,32 @@ catalogs = {
     "TKCode.Arc.Workflow": "Workflow",
 }
 num = r"-?\d+(?:\.\d+)?"
-attr = r'ThemeBuildTokenAttribute\(1, "([^"]*)", "([^"]*)", "([^"]*)", "global::(Avalonia\.CornerRadius|System\.Double)"'
-pattern = re.compile(attr)
+token_doc = re.compile(r"/// <summary>Token <c>(\w+)</c> \((CornerRadius|double)\)\.</summary>")
+identity = re.compile(r'public const string Identity = "([^"]+)";')
 classes = json.load(open(os.path.join(here, "double_radii.json"), encoding="utf-8"))
+# ArcDesign is generated in Core but listed with the Controls catalog (its own ArcDesign field).
+catalog_of = {"TKCode.Arc.Core": "TKCode.Arc"}
 
 found = collections.defaultdict(dict)  # catalog -> {(control, token): is_double}
-for path in glob.glob(os.path.join(src, "*", "GeneratedFiles", "AtomUI.Generator", "*", "GeneratedThemeBuildContracts.g.cs")):
-    for catalog, control, token, clr in pattern.findall(open(path, encoding="utf-8-sig").read()):
-        is_double = clr == "System.Double"
+generated = os.path.join(src, "*", "GeneratedFiles", "TKCode.Arc.Foundation.Generators", "*", "*Token.g.cs")
+for path in sorted(glob.glob(generated)):
+    package = os.path.relpath(path, src).split(os.sep)[0]
+    catalog = catalog_of.get(package, package)
+    if catalog not in catalogs:
+        continue
+    text = open(path, encoding="utf-8-sig").read()
+    m = identity.search(text)
+    if not m:
+        continue
+    control = m.group(1)
+    if package == "TKCode.Arc.Core" and control != "ArcDesign":
+        continue
+    for token, clr in token_doc.findall(text):
+        is_double = clr == "double"
         if is_double and not re.search(r"Radius|Corner", token):
             continue
         found[catalog][(control, token)] = is_double
+
 
 errors = []
 

@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DesignToCodeDropZoneDemo">
+    <!-- Opening on the drop zone: drop a PNG, JPEG or WebP screenshot anywhere on the design side, or press Choose file,
+         which this page answers with the system file picker. Other types and files over 10 MB show an error instead.
+         Without a generator the simulation still writes its pricing card's code over your screenshot, and Use sample
+         brings back its drawn card. -->
+    <Panel MaxWidth="760" Margin="0,12">
+        <arc:DesignToCode x:Name="Card"
+                          Source="{x:Null}"
+                          ChooseFileRequested="OnChooseFile">
+            <arc:DesignToCode.Simulation>
+                <arc:DesignToCodeSimulation Source="{x:Static demos:DesignToCodeDemoData.Source}"
+                                            Regions="{x:Static demos:DesignToCodeDemoData.Regions}"
+                                            Parts="{x:Static demos:DesignToCodeDemoData.Parts}"
+                                            Model="{x:Static demos:DesignToCodeDemoData.Model}"
+                                            FileName="PricingCard.tsx"
+                                            FrameName="Pricing / Pro card"
+                                            PreviewFactory="{x:Static demos:DesignToCodeDemoData.Preview}"
+                                            PreviewAction="{x:Static demos:DesignToCodeDemoData.FlipBilling}" />
+            </arc:DesignToCode.Simulation>
+        </arc:DesignToCode>
+    </Panel>
+</UserControl>

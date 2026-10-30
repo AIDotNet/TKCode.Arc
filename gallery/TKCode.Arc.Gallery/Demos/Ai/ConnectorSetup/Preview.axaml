@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectorSetupPreviewDemo">
+    <!--
+        A simulation (the demo's data) lists eight apps (Code and Drive connected) and, once on screen, plays a short run:
+        Chat connects, then a CRM attempt needs admin approval and is retried. Any press stops the run. Nothing is sent.
+    -->
+    <StackPanel Spacing="12" MaxWidth="520">
+        <Border x:Name="Host">
+            <arc:ConnectorSetup>
+                <arc:ConnectorSetup.Simulation>
+                    <arc:ConnectorSetupSimulation AssistantName="Atlas"
+                                                  Apps="{x:Static demos:ConnectorSetupDemoData.Apps}"
+                                                  Connected="{x:Static demos:ConnectorSetupDemoData.Connected}"
+                                                  Steps="{x:Static demos:ConnectorSetupDemoData.Steps}" />
+                </arc:ConnectorSetup.Simulation>
+            </arc:ConnectorSetup>
+        </Border>
+        <arc:Button Variant="Ghost" Size="Small" HorizontalAlignment="Left" Click="OnReplay">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RotateCcw}" Size="16" VerticalAlignment="Center" />
+                <TextBlock Text="Replay" VerticalAlignment="Center" />
+            </StackPanel>
+        </arc:Button>
+    </StackPanel>
+</UserControl>

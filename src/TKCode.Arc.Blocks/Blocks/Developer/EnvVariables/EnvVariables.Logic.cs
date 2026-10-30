@@ -673,7 +673,8 @@ public partial class EnvVariables
         UpdateAddButtons();
         if (restoreFocus)
         {
-            (opener ?? _addButton)?.Focus(NavigationMethod.Tab);
+            // Cancel clicked with the mouse hands focus back without the keyboard ring.
+            (opener ?? _addButton)?.Focus(BlockFocusModality.For(this));
         }
     }
 
@@ -699,7 +700,7 @@ public partial class EnvVariables
     {
         if (_addButton is { IsVisible: true } add)
         {
-            add.Focus(NavigationMethod.Tab);
+            add.Focus(BlockFocusModality.For(this));
         }
         else
         {

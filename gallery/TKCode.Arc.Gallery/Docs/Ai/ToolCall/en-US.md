@@ -28,7 +28,8 @@ stays one click away.
 ## Usage
 
 Give a row a `ToolCallItem`. Tools are data, not brands: a name for screen readers, a 24 × 24 stroked mark (a Lucide
-glyph) and the phrases for each status. With no item the row shows a sample web search.
+glyph) and the phrases for each status. With no item the row is empty: a wrench and "No tool call" in the muted color,
+with no status and nothing to open (the last row of the statuses demo below). A group with no calls takes no space.
 
 ```xml
 <arc:ToolCall>
@@ -98,9 +99,9 @@ item). Update the call yourself, usually to running and then to success, and set
 a status you drive.
 
 When nobody handles an action, the control keeps a local behaviour so a page without wiring still works: **Deny**
-marks the call denied; **Allow** and **Retry** only simulate a run, and only on the built-in sample data
-(`ToolCallSamples`, `ToolCallSimulation`). On any other data nothing changes. A simulated run says so through the
-row's live region ("This is sample data, so the call is only simulated.").
+marks the call denied; **Allow** and **Retry** go to the `ToolCallSimulation` that appended the call, which runs it on.
+On any other data they change nothing. A simulated run says so through the row's live region ("This is sample data, so
+the call is only simulated.").
 
 ### Opening and folding
 
@@ -114,9 +115,30 @@ group. `ExpandedChanged` tells whether the change was automatic.
 
 `ToolCallSimulation` plays a scripted turn into an observable list on a clock: calls are appended about 225ms apart,
 run for their time and settle; a failing call waits for `Retry`; a call that needs approval waits for `Approve` or
-`Deny`. Bind a group's `ItemsSource` to `Items` and `IsActive` to `IsWorking`. The default script is
-`ToolCallSamples.Script()`; pass a `TimeProvider` to step it in tests. The transcript around the group in the preview
-(the question, the sentence, the answer and Run again) is demo content, not part of the control.
+`Deny`. The package ships no script: you write one from `ToolCallSimulationStep`s, each a `ToolCallItem` (the run
+appends a copy) with an outcome and its timing. Give the simulation to `ToolCallGroup.Simulation`: while the group has no
+calls of its own, it shows the simulation's `Items`, says "Using" while it `IsWorking`, starts the run from the top when
+it comes on screen and stops it when it leaves. Calls in `Items` or `ItemsSource` win over the simulation.
+
+```csharp
+var lookup = new ToolCallItem("orders", "Orders", "Looked up order 1042", ToolCallStatus.Success, ArcIcons.Search)
+{
+    RunningTitle = "Looking up order 1042",
+    Summary = "1 result",
+    Duration = TimeSpan.FromMilliseconds(900)
+};
+group.Simulation = new ToolCallSimulation(
+[
+    new ToolCallSimulationStep(lookup) { Delay = TimeSpan.FromMilliseconds(600) }
+]);
+group.Simulation.Start();                       // Run again: plays from the top
+```
+
+In XAML, set `<arc:ToolCallGroup.Simulation>` to a `ToolCallSimulation` whose `Script` comes from `{x:Static}`, as the
+preview's Code tab shows; give each group its own simulation (it keeps the playback state), the script can be shared.
+Pass a `TimeProvider` to step it in tests. The transcript around the group in the preview (the question, the sentence,
+the answer and Run again) is demo content written by the gallery, and so are the finance team's calls; none of it is
+part of the control.
 
 ### Narrow containers
 
@@ -148,7 +170,7 @@ statuses change at once. Labels, announcements, focus and all content stay.
 ### Common questions
 
 **Can I use a brand logo as the mark?** The mark is any 24 × 24 stroked geometry. Brand logos are yours to license;
-the samples use Lucide glyphs only.
+the demos use Lucide glyphs only.
 
 **Does Allow run the tool?** No. It raises `ApproveRequested`; your code runs the tool and updates the status.
 
@@ -197,15 +219,13 @@ The enums:
 | `ToolCallSimulationState` | `Idle`, `Working`, `WaitingForRetry`, `WaitingForApproval`, `Finished` |
 | `ToolCallSimulationPhase` | `Started`, `CallAppended`, `CallSucceeded`, `CallFailed`, `WaitingForApproval`, `Retried`, `Allowed`, `Denied`, `Finished` |
 
-`ToolCallSamples` holds the invented sample calls and the default script.
-
 ## Accessibility
 
 - The group header and every row are buttons that report whether they are expanded. A row's name reads the tool, the
   phrase and the status: "Tracker: Searched tickets in finance/close Done, 4 results, 1.2s".
 - Status is never color alone: each status has its own icon, failed and waiting calls show a reason line, and the name
   spells the status out.
-- Each row announces status changes through a polite live region, including that a sample call is only simulated.
+- Each row announces status changes through a polite live region, including that a simulated call is only simulated.
 - Retry, Allow and Deny are named with the call they act on: "Allow: Post a status note to #finance-ops". When a
   button goes away focus moves to its row instead of dropping to the page.
 - Input and Output are named groups; the copy buttons confirm through the live region without changing width.

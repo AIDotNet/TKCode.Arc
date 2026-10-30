@@ -42,6 +42,9 @@ public sealed class ToolCallLabels
     /// <summary>The fold button once everything shows.</summary>
     public string ShowLess { get; init; } = "Show less";
 
+    /// <summary>The title of a row with no call (its empty state).</summary>
+    public string EmptyTitle { get; init; } = "No tool call";
+
     /// <summary>The Retry button on a failed call.</summary>
     public string Retry { get; init; } = "Retry";
 
@@ -124,7 +127,7 @@ public sealed class ToolCallLabels
     /// <summary>What a row says when its call is denied (tool, phrase).</summary>
     public Func<string, string, string> AnnounceDenied { get; init; } = (tool, title) => Named(tool, title) + ", denied";
 
-    /// <summary>Added to what a row says when it simulates Allow or Retry on sample data that nobody handles.</summary>
+    /// <summary>Added to what a row says when a <see cref="ToolCallSimulation"/> takes Allow or Retry that nobody handles.</summary>
     public string SimulatedNote { get; init; } = "This is sample data, so the call is only simulated.";
 
     /// <summary>The group header while the agent works with <c>n</c> calls so far.</summary>

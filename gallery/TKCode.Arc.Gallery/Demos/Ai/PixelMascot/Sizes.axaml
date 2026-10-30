@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotSizesDemo">
+    <!-- Scale 1, 2, 3, 4, 6 and 8: 24px to 192px, crisp at every one. -->
+    <WrapPanel ItemSpacing="20" LineSpacing="16" Margin="0,12">
+        <arc:PixelMascot Status="Thinking" Scale="1" VerticalAlignment="Bottom" />
+        <arc:PixelMascot Status="Thinking" Scale="2" VerticalAlignment="Bottom" />
+        <arc:PixelMascot Status="Thinking" Scale="3" VerticalAlignment="Bottom" />
+        <arc:PixelMascot Status="Thinking" Scale="4" VerticalAlignment="Bottom" />
+        <arc:PixelMascot Status="Thinking" Scale="6" VerticalAlignment="Bottom" />
+        <arc:PixelMascot Status="Thinking" Scale="8" VerticalAlignment="Bottom" />
+    </WrapPanel>
+</UserControl>

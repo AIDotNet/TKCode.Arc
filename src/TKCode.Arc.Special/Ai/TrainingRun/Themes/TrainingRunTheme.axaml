@@ -1,0 +1,292 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TrainingRunTheme">
+
+    <!--
+        A fine-tuning job as a card: the head (the base model's mark, the job's name, the model and its details, the status as
+        an icon and a word), the legend over the loss chart, the chart with the epoch progress bar as its step axis, the stats
+        (or the results once it completes), the newest three events, and a footer with the dataset (or the failure, or the
+        endpoint) and the actions. It fills its container up to 640px; under 440px (:narrow) the padding drops to 16px, the
+        stats go to two columns and the footer stacks.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TrainingRun}" TargetType="arc:TrainingRun">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:TrainingRunTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TrainingRunTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:TrainingRunTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TrainingRun">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Spacing="{arc:TrainingRunTokenResource SectionGap}">
+                            <!-- Head -->
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="{arc:TrainingRunTokenResource HeadGap}">
+                                <Panel VerticalAlignment="Center">
+                                    <arc:ArcGlyph Name="PART_ModelGlyph"
+                                                  Size="{arc:TrainingRunTokenResource MarkSize}"
+                                                  IsVisible="False" />
+                                    <Border Name="PART_Monogram"
+                                            Width="{arc:TrainingRunTokenResource MarkSize}"
+                                            Height="{arc:TrainingRunTokenResource MarkSize}"
+                                            CornerRadius="{arc:TrainingRunTokenResource MarkCornerRadius}"
+                                            Background="{arc:ArcDesignTokenResource AccentSubtle}">
+                                        <TextBlock Name="PART_MonogramText"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource AccentStrong}" />
+                                    </Border>
+                                </Panel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="1">
+                                    <TextBlock Name="PART_Title"
+                                               FontSize="{arc:TrainingRunTokenResource TitleFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Name="PART_Subtitle"
+                                               FontSize="{arc:TrainingRunTokenResource SubtitleFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Horizontal"
+                                            VerticalAlignment="Center"
+                                            Spacing="{arc:TrainingRunTokenResource StatusGap}">
+                                    <Panel VerticalAlignment="Center">
+                                        <arc:ArcSpinner Name="PART_Spinner"
+                                                        Width="{arc:TrainingRunTokenResource StatusGlyphSize}"
+                                                        Height="{arc:TrainingRunTokenResource StatusGlyphSize}"
+                                                        Thickness="1.75"
+                                                        Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                        IsVisible="False" />
+                                        <arc:ArcGlyph Name="PART_StatusGlyph" Size="{arc:TrainingRunTokenResource StatusGlyphSize}" />
+                                    </Panel>
+                                    <arc:ArcContentSwap Name="PART_StatusLabel"
+                                                        Classes="training-swap"
+                                                        Mode="Label"
+                                                        VerticalAlignment="Center"
+                                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Legend and chart -->
+                            <StackPanel Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto"
+                                      TextElement.FontSize="{arc:TrainingRunTokenResource LegendFontSize}">
+                                    <StackPanel Orientation="Horizontal" Spacing="14">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Ellipse Width="{arc:TrainingRunTokenResource LegendSwatchSize}"
+                                                     Height="{arc:TrainingRunTokenResource LegendSwatchSize}"
+                                                     VerticalAlignment="Center"
+                                                     Fill="{arc:ArcDesignTokenResource Series1}" />
+                                            <TextBlock Name="PART_TrainLabel" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <TextBlock Name="PART_TrainValue" FontFeatures="tnum" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Ellipse Width="{arc:TrainingRunTokenResource LegendSwatchSize}"
+                                                     Height="{arc:TrainingRunTokenResource LegendSwatchSize}"
+                                                     VerticalAlignment="Center"
+                                                     Fill="{arc:ArcDesignTokenResource Series2}" />
+                                            <TextBlock Name="PART_ValidationLabel" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                            <TextBlock Name="PART_ValidationValue" FontFeatures="tnum" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <TextBlock Name="PART_LegendTail"
+                                               Grid.Column="1"
+                                               Margin="12,0,0,0"
+                                               FontFeatures="tnum"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                                <Panel Height="{arc:TrainingRunTokenResource ChartHeight}">
+                                    <arc:TrainingRunChart Name="PART_Chart" />
+                                    <arc:ToolCallText Name="PART_Activity"
+                                                      Margin="{arc:TrainingRunTokenResource ActivityMargin}"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      IsHitTestVisible="False"
+                                                      Swap="Fade"
+                                                      FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                                      IsVisible="False" />
+                                </Panel>
+                            </StackPanel>
+
+                            <!-- Stats, or the results once the run completes -->
+                            <Panel>
+                                <UniformGrid Name="PART_Stats" Classes="training-stats" Columns="4" />
+                                <UniformGrid Name="PART_Metrics" Classes="training-stats" Columns="4" IsVisible="False" />
+                            </Panel>
+
+                            <!-- The newest three events -->
+                            <arc:TrainingRunEventList Name="PART_Events"
+                                                      RowHeight="{arc:TrainingRunTokenResource EventRowHeight}"
+                                                      GlyphSize="{arc:TrainingRunTokenResource EventGlyphSize}"
+                                                      FontSize="{arc:TrainingRunTokenResource EventFontSize}"
+                                                      MutedBrush="{arc:ArcDesignTokenResource TextMuted}" />
+
+                            <!-- Footer: the dataset, the failure or the endpoint; the actions -->
+                            <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    Padding="{arc:TrainingRunTokenResource FooterPadding}">
+                                <Grid Name="PART_Footer"
+                                      ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto,Auto"
+                                      TextElement.FontSize="{arc:TrainingRunTokenResource FooterFontSize}">
+                                    <arc:ArcContentSwap Name="PART_FooterInfo"
+                                                        Classes="training-swap"
+                                                        Mode="Label"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Left" />
+                                    <StackPanel Name="PART_Actions"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                Spacing="8"
+                                                Margin="12,0,0,0"
+                                                VerticalAlignment="Center">
+                                        <arc:Button Name="PART_Cancel" Classes="training-action" Variant="Secondary" Size="Small" IsVisible="False" />
+                                        <arc:Button Name="PART_Restart" Classes="training-action" Variant="Secondary" Size="Small" IsVisible="False" />
+                                        <arc:Button Name="PART_Pause" Classes="training-action" Variant="Secondary" Size="Small" IsVisible="False" />
+                                        <arc:Button Name="PART_Resume" Classes="training-action" Variant="Primary" Size="Small" IsVisible="False" />
+                                        <arc:Button Name="PART_Retry" Classes="training-action" Variant="Primary" Size="Small" IsVisible="False" />
+                                        <arc:Button Name="PART_Deploy" Classes="training-action" Variant="Primary" Size="Small" IsVisible="False" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ModelGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.training-action">
+            <Setter Property="Height" Value="{arc:TrainingRunTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:TrainingRunTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:TrainingRunTokenResource ActionInlinePadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TrainingRunChart#PART_Chart">
+            <Setter Property="TrainBrush" Value="{arc:ArcDesignTokenResource Series1}" />
+            <Setter Property="ValidationBrush" Value="{arc:ArcDesignTokenResource Series2}" />
+            <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="LabelBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="BandBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+            <Setter Property="ProgressBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+            <Setter Property="Gutter" Value="{arc:TrainingRunTokenResource ChartGutter}" />
+            <Setter Property="FontSize" Value="{arc:TrainingRunTokenResource ChartLabelFontSize}" />
+            <Setter Property="CurveStrokeWidth" Value="{arc:TrainingRunTokenResource CurveStrokeWidth}" />
+            <Setter Property="RawStrokeWidth" Value="{arc:TrainingRunTokenResource RawStrokeWidth}" />
+            <Setter Property="RawOpacity" Value="{arc:TrainingRunTokenResource RawOpacity}" />
+            <Setter Property="HeadDotRadius" Value="{arc:TrainingRunTokenResource HeadDotRadius}" />
+            <Setter Property="SampleDotRadius" Value="{arc:TrainingRunTokenResource SampleDotRadius}" />
+            <Setter Property="BandOpacity" Value="{arc:TrainingRunTokenResource BandOpacity}" />
+            <Setter Property="ProgressHeight" Value="{arc:TrainingRunTokenResource ProgressHeight}" />
+            <Setter Property="EpochGap" Value="{arc:TrainingRunTokenResource EpochGap}" />
+            <Setter Property="ProgressMargin" Value="{arc:TrainingRunTokenResource ProgressMargin}" />
+            <Setter Property="FocusCornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+            <Setter Property="FocusAdorner" Value="{x:Null}" />
+        </Style>
+
+        <Style Selector="^:running /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:paused /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:completed /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <!-- Narrow: 16px padding and the footer's actions under its context. The columns and "Val" are set in code. -->
+        <Style Selector="^:narrow">
+            <Setter Property="Padding" Value="{arc:TrainingRunTokenResource CardPaddingNarrow}" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Actions">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="{arc:TrainingRunTokenResource FooterStackGap}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ArcContentSwap#PART_FooterInfo">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+
+        <!-- Reduced motion: status and footer text change at once (the crossfade is decoration). -->
+        <Style Selector="^:motion-reduced /template/ arc|ArcContentSwap.training-swap">
+            <Setter Property="Mode" Value="None" />
+        </Style>
+        <Style Selector="^:motion-full /template/ UniformGrid.training-stats">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The loss chart draws itself; its colors and geometry come from the card's theme above. -->
+    <ControlTheme x:Key="{x:Type arc:TrainingRunChart}" TargetType="arc:TrainingRunChart">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Cross" />
+    </ControlTheme>
+
+    <!-- One stat or result: a muted label over the value in tabular figures, and a hint line that is always reserved. -->
+    <ControlTheme x:Key="{x:Type arc:TrainingRunStat}" TargetType="arc:TrainingRunStat">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Margin" Value="{arc:TrainingRunTokenResource StatMargin}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TrainingRunStat">
+                <StackPanel Spacing="2">
+                    <TextBlock Text="{TemplateBinding Label}"
+                               FontSize="{arc:TrainingRunTokenResource StatLabelFontSize}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextTrimming="CharacterEllipsis" />
+                    <ContentPresenter Content="{TemplateBinding Value}"
+                                      TextElement.FontSize="{arc:TrainingRunTokenResource StatValueFontSize}"
+                                      TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                      TextElement.FontFeatures="tnum"
+                                      HorizontalAlignment="Left" />
+                    <TextBlock Text="{TemplateBinding Hint}"
+                               MinHeight="{arc:TrainingRunTokenResource StatHintHeight}"
+                               FontSize="{arc:TrainingRunTokenResource StatHintFontSize}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The event log: rows are built in code; their text inherits the card's foreground. -->
+    <ControlTheme x:Key="{x:Type arc:TrainingRunEventList}" TargetType="arc:TrainingRunEventList">
+        <Setter Property="Focusable" Value="False" />
+    </ControlTheme>
+</ResourceDictionary>

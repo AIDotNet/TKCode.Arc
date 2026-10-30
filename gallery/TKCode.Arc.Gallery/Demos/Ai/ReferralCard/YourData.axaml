@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ReferralCardYourDataDemo">
+    <!-- The app owns the referrals. Sending waits for a pretend server (an address with "bounce" in it fails, so the chips
+         stay and the reason shows), share buttons are handled by the app, and "Next webhook" moves the oldest open referral
+         one stage on by replacing the list, as a sign-up or payment webhook would. -->
+    <StackPanel Spacing="12" MaxWidth="560">
+        <arc:ReferralCard x:Name="Card"
+                          Link="https://contoso.example/r/kai-lee"
+                          Reward="25"
+                          Milestone="{x:Static demos:ReferralCardDemoData.Milestone}"
+                          ShareMessage="I use Contoso for invoicing. Join with my link and we both get $25." />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button x:Name="Webhook" Variant="Secondary" Size="Small" Content="Next webhook" />
+            <arc:Button x:Name="Reset" Variant="Ghost" Size="Small" Content="Reset" />
+        </StackPanel>
+        <TextBlock x:Name="Log" TextWrapping="Wrap" FontSize="12" Opacity="0.7" Text="Events show here." />
+    </StackPanel>
+</UserControl>

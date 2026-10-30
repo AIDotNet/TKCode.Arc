@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentCursorYourDocumentDemo">
+    <StackPanel Spacing="12" MaxWidth="680" Margin="0,12">
+        <!-- Your document, your edits, your agent and teammate. It waits for Ask; Accept and Undo hand back the document. -->
+        <arc:AgentCursor x:Name="Card"
+                         AutoPlay="False"
+                         Meta="Leo Park · Updated today"
+                         Accepted="OnAccepted"
+                         Undone="OnUndone" />
+        <TextBlock x:Name="Log"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Press Ask, then accept or undo the changes."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

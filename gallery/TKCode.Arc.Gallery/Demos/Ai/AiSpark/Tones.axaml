@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkTonesDemo">
+    <StackPanel Orientation="Horizontal" Spacing="28" Margin="0,8">
+        <arc:AiSpark Size="40" Status="Thinking" Tone="Accent" Announce="False" />
+        <arc:AiSpark Size="40" Status="Thinking" Tone="Foreground" Announce="False" />
+        <arc:AiSpark Size="40" Status="Thinking" Tone="Muted" Announce="False" />
+        <arc:AiSpark Size="40" Status="Thinking" MarkBrush="#D97706" Announce="False" />
+    </StackPanel>
+</UserControl>

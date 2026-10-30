@@ -1,0 +1,481 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GenerationStatsTheme">
+
+    <!--
+        The stats strip of one model response. Card: a head row (the model's mark and name, the status, Details), four cells
+        split by hairlines (time to first token, speed with a sparkline, output tokens, cost), then the error row and the
+        breakdown, each opening under a hairline. Inline: one quiet wrapping line with the same values, the error row and the
+        breakdown opening as bordered panels below it. Both layouts live in the template; :inline shows one of them.
+    -->
+    <ControlTheme x:Key="{x:Type arc:GenerationStats}" TargetType="arc:GenerationStats">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:GenerationStatsTokenResource CardCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GenerationStats">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <StackPanel>
+                            <!-- Card: head and cells. -->
+                            <StackPanel Name="PART_CardFace">
+                                <Grid Name="PART_Head"
+                                      ColumnDefinitions="Auto,*,Auto,Auto"
+                                      Height="{arc:GenerationStatsTokenResource HeadHeight}"
+                                      Margin="{arc:GenerationStatsTokenResource HeadPadding}">
+                                    <arc:GenerationStatsMark Name="PART_Mark"
+                                                             Classes="gs-mark"
+                                                             Width="{arc:GenerationStatsTokenResource MarkSize}"
+                                                             Height="{arc:GenerationStatsTokenResource MarkSize}"
+                                                             VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ModelName"
+                                               Grid.Column="1"
+                                               Margin="10,0,12,0"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="{arc:GenerationStatsTokenResource ModelFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    <arc:ArcContentSwap Name="PART_Status"
+                                                        Grid.Column="2"
+                                                        Mode="Label"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Right"
+                                                        TextElement.FontSize="{arc:GenerationStatsTokenResource StatusFontSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <arc:GenerationStatsDetailsButton Name="PART_Details"
+                                                                      Grid.Column="3"
+                                                                      Margin="8,0,0,0"
+                                                                      VerticalAlignment="Center" />
+                                </Grid>
+                                <Border Height="1" Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                <Panel>
+                                    <arc:GenerationStatsCells Name="PART_Cells">
+                                        <StackPanel Name="PART_TtftCell" Classes="gs-cell">
+                                            <TextBlock Name="PART_TtftLabel" Classes="gs-cell-label" />
+                                            <Panel Classes="gs-cell-value">
+                                                <arc:GenerationStatsNumber Name="PART_Ttft" Classes="gs-value" />
+                                            </Panel>
+                                        </StackPanel>
+                                        <StackPanel Name="PART_SpeedCell" Classes="gs-cell">
+                                            <TextBlock Name="PART_SpeedLabel" Classes="gs-cell-label" />
+                                            <Grid Classes="gs-cell-value" ColumnDefinitions="Auto,*">
+                                                <arc:GenerationStatsNumber Name="PART_Speed" Classes="gs-value" />
+                                                <arc:GenerationStatsSparkline Name="PART_Sparkline"
+                                                                              Grid.Column="1"
+                                                                              Margin="8,0,0,0"
+                                                                              HorizontalAlignment="Right"
+                                                                              VerticalAlignment="Center"
+                                                                              Width="{arc:GenerationStatsTokenResource SparklineWidth}"
+                                                                              Height="{arc:GenerationStatsTokenResource SparklineHeight}"
+                                                                              Stroke="{arc:ArcDesignTokenResource Accent}" />
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel Name="PART_OutputCell" Classes="gs-cell">
+                                            <TextBlock Name="PART_OutputLabel" Classes="gs-cell-label" />
+                                            <Panel Classes="gs-cell-value">
+                                                <arc:GenerationStatsNumber Name="PART_Output" Classes="gs-value" />
+                                            </Panel>
+                                        </StackPanel>
+                                        <StackPanel Name="PART_CostCell" Classes="gs-cell">
+                                            <TextBlock Name="PART_CostLabel" Classes="gs-cell-label" />
+                                            <Panel Classes="gs-cell-value">
+                                                <arc:GenerationStatsNumber Name="PART_Cost" Classes="gs-value" />
+                                            </Panel>
+                                        </StackPanel>
+                                    </arc:GenerationStatsCells>
+                                    <arc:GenerationStatsCellLines Name="PART_CellLines"
+                                                                  Inset="{arc:GenerationStatsTokenResource CellLineInset}"
+                                                                  LineBrush="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                </Panel>
+                            </StackPanel>
+
+                            <!-- Inline: one wrapping line. -->
+                            <WrapPanel Name="PART_InlineFace"
+                                       ItemSpacing="{arc:GenerationStatsTokenResource InlineGap}"
+                                       LineSpacing="4"
+                                       IsVisible="False"
+                                       TextElement.FontSize="{arc:GenerationStatsTokenResource InlineFontSize}"
+                                       TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+                                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                    <arc:GenerationStatsMark Name="PART_InlineMark"
+                                                             Classes="gs-mark"
+                                                             Width="16"
+                                                             Height="16"
+                                                             VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_InlineModel"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                </StackPanel>
+                                <arc:ArcContentSwap Name="PART_InlineStatus"
+                                                    Mode="Label"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left" />
+                                <StackPanel Classes="gs-inline-item">
+                                    <TextBlock Classes="gs-dot" Text="·" />
+                                    <arc:GenerationStatsNumber Name="PART_InlineTtft" Classes="gs-inline-value" />
+                                    <TextBlock Name="PART_InlineTtftUnit" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Classes="gs-inline-item">
+                                    <TextBlock Classes="gs-dot" Text="·" />
+                                    <arc:GenerationStatsNumber Name="PART_InlineSpeed" Classes="gs-inline-value" />
+                                </StackPanel>
+                                <StackPanel Classes="gs-inline-item">
+                                    <TextBlock Classes="gs-dot" Text="·" />
+                                    <arc:GenerationStatsNumber Name="PART_InlineOutput" Classes="gs-inline-value" />
+                                    <TextBlock Name="PART_InlineOutputUnit" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Classes="gs-inline-item">
+                                    <TextBlock Classes="gs-dot" Text="·" />
+                                    <arc:GenerationStatsNumber Name="PART_InlineCost" Classes="gs-inline-value" />
+                                </StackPanel>
+                                <arc:GenerationStatsDetailsButton Name="PART_InlineDetails" VerticalAlignment="Center" />
+                            </WrapPanel>
+
+                            <!-- The error row: the reason and Retry. -->
+                            <arc:AiHeightBox Name="PART_ErrorBox" KeepsContent="True" CrossClipOverflow="4">
+                                <Border Name="PART_ErrorFrame" Classes="gs-panel">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" Margin="{arc:GenerationStatsTokenResource ErrorPadding}">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                                      Size="16"
+                                                      VerticalAlignment="Center"
+                                                      Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                        <TextBlock Name="PART_ErrorText"
+                                                   Grid.Column="1"
+                                                   Margin="10,0,12,0"
+                                                   VerticalAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="{arc:GenerationStatsTokenResource BreakdownFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                        <arc:Button Name="PART_Retry"
+                                                    Grid.Column="2"
+                                                    Classes="gs-action"
+                                                    Variant="Secondary"
+                                                    Size="Small"
+                                                    VerticalAlignment="Center" />
+                                    </Grid>
+                                </Border>
+                            </arc:AiHeightBox>
+
+                            <!-- The breakdown: latency bar, token table, note and copy. -->
+                            <arc:AiHeightBox Name="PART_BreakdownBox" KeepsContent="True" CrossClipOverflow="4">
+                                <Border Name="PART_BreakdownFrame" Classes="gs-panel">
+                                    <StackPanel Margin="{arc:GenerationStatsTokenResource BreakdownPadding}"
+                                                Spacing="{arc:GenerationStatsTokenResource SectionGap}"
+                                                TextElement.FontSize="{arc:GenerationStatsTokenResource BreakdownFontSize}">
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Name="PART_LatencyHeading" Classes="gs-heading" />
+                                            <arc:GenerationStatsLatencyBar Name="PART_LatencyBar"
+                                                                           Height="{arc:GenerationStatsTokenResource LatencyBarHeight}"
+                                                                           TrackBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                                           FirstBrush="{arc:ArcDesignTokenResource Series2}"
+                                                                           GenerationBrush="{arc:ArcDesignTokenResource Accent}" />
+                                            <WrapPanel ItemSpacing="16" LineSpacing="4">
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Ellipse Width="8" Height="8" VerticalAlignment="Center" Fill="{arc:ArcDesignTokenResource Series2}" />
+                                                    <TextBlock Name="PART_LatencyFirst" Classes="gs-legend" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                                    <Ellipse Width="8" Height="8" VerticalAlignment="Center" Fill="{arc:ArcDesignTokenResource Accent}" />
+                                                    <TextBlock Name="PART_LatencyGeneration" Classes="gs-legend" />
+                                                </StackPanel>
+                                                <TextBlock Name="PART_LatencyTotal" Classes="gs-legend" FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                            </WrapPanel>
+                                        </StackPanel>
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Name="PART_TableCaption" Classes="gs-heading" />
+                                            <StackPanel Name="PART_Table" />
+                                        </StackPanel>
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <ContentPresenter Name="PART_Note"
+                                                              VerticalAlignment="Center"
+                                                              Content="{TemplateBinding Note}"
+                                                              TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                              TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}">
+                                                <ContentPresenter.Styles>
+                                                    <Style Selector="TextBlock">
+                                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                                    </Style>
+                                                </ContentPresenter.Styles>
+                                            </ContentPresenter>
+                                            <arc:CopyButton Name="PART_Copy"
+                                                            Grid.Column="1"
+                                                            Margin="12,0,0,0"
+                                                            IsIconOnly="True"
+                                                            Variant="Plain"
+                                                            VerticalAlignment="Center" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </arc:AiHeightBox>
+                        </StackPanel>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts. -->
+        <Style Selector="^ /template/ StackPanel.gs-cell">
+            <Setter Property="Margin" Value="{arc:GenerationStatsTokenResource CellPadding}" />
+            <Setter Property="Spacing" Value="{arc:GenerationStatsTokenResource CellGap}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.gs-cell-label">
+            <Setter Property="FontSize" Value="{arc:GenerationStatsTokenResource CellLabelFontSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style Selector="^ /template/ Panel.gs-cell-value">
+            <Setter Property="Height" Value="{arc:GenerationStatsTokenResource CellValueHeight}" />
+        </Style>
+        <Style Selector="^ /template/ Grid.gs-cell-value">
+            <Setter Property="Height" Value="{arc:GenerationStatsTokenResource CellValueHeight}" />
+        </Style>
+        <Style Selector="^ /template/ arc|GenerationStatsNumber.gs-value">
+            <Setter Property="FontSize" Value="{arc:GenerationStatsTokenResource CellValueFontSize}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|GenerationStatsNumber.gs-inline-value">
+            <Setter Property="FontSize" Value="{arc:GenerationStatsTokenResource InlineFontSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel.gs-inline-item">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.gs-dot">
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|GenerationStatsMark.gs-mark">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        </Style>
+        <Style Selector="^ /template/ Border.gs-panel">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.gs-heading">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.gs-legend">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.gs-action">
+            <Setter Property="Height" Value="{arc:GenerationStatsTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:GenerationStatsTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:GenerationStatsTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <!-- Inline: no card; the line, then the error row and the breakdown as bordered panels below it. -->
+        <Style Selector="^:inline">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^:inline /template/ Border#PART_Frame">
+            <Setter Property="ClipToBounds" Value="False" />
+        </Style>
+        <Style Selector="^:inline /template/ StackPanel#PART_CardFace">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:inline /template/ WrapPanel#PART_InlineFace">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:inline /template/ Border.gs-panel">
+            <Setter Property="Margin" Value="{arc:GenerationStatsTokenResource InlinePanelMargin}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="CornerRadius" Value="{arc:GenerationStatsTokenResource InlinePanelCornerRadius}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A row of the token table: the name, then three fixed, right-aligned, tabular number columns. -->
+    <ControlTheme x:Key="{x:Type arc:GenerationStatsTableRow}" TargetType="arc:GenerationStatsTableRow">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GenerationStatsTableRow">
+                <Border BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        MinHeight="{arc:GenerationStatsTokenResource TableRowHeight}">
+                    <DockPanel VerticalAlignment="Center">
+                        <TextBlock Name="PART_Cost"
+                                   DockPanel.Dock="Right"
+                                   Classes="gs-number"
+                                   Text="{TemplateBinding Cost}"
+                                   Width="{arc:GenerationStatsTokenResource TableCostWidth}" />
+                        <TextBlock Name="PART_Rate"
+                                   DockPanel.Dock="Right"
+                                   Classes="gs-number"
+                                   Text="{TemplateBinding Rate}"
+                                   Width="{arc:GenerationStatsTokenResource TableRateWidth}" />
+                        <TextBlock Name="PART_Tokens"
+                                   DockPanel.Dock="Right"
+                                   Classes="gs-number"
+                                   Text="{TemplateBinding Tokens}"
+                                   Width="{arc:GenerationStatsTokenResource TableTokensWidth}" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.gs-number">
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^:header">
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+        <Style Selector="^:header /template/ TextBlock">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:total">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+        <Style Selector="^:total /template/ TextBlock">
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:no-rate /template/ TextBlock#PART_Rate">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The status icon: its brushes per shape. -->
+    <ControlTheme x:Key="{x:Type arc:GenerationStatsGlyph}" TargetType="arc:GenerationStatsGlyph">
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+    </ControlTheme>
+
+    <!--
+        Details: 28px, "Details" and a chevron that turns when the breakdown opens; SurfaceMuted at 60% under the pointer
+        (160ms); a keyboard ring 2px outside. :compact keeps only the chevron.
+    -->
+    <ControlTheme x:Key="{x:Type arc:GenerationStatsDetailsButton}" TargetType="arc:GenerationStatsDetailsButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:GenerationStatsTokenResource ActionHeight}" />
+        <Setter Property="MinWidth" Value="{arc:GenerationStatsTokenResource ActionHeight}" />
+        <Setter Property="Padding" Value="{arc:GenerationStatsTokenResource ActionInlinePadding}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GenerationStatsDetailsButton">
+                <Panel>
+                    <Border Name="PART_Hover"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Opacity="0" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                Spacing="4"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   VerticalAlignment="Center" />
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="14"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%" />
+                    </StackPanel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Text">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Content">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Size" Value="16" />
+        </Style>
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:GenerationStatsTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Hover">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

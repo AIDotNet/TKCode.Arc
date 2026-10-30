@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotInlineDemo">
+    <!-- At scale 1 and 2 the mascot sits on a text line next to a shimmering label that carries the detail; the label
+         already says what is happening, so the mascot does not announce. -->
+    <StackPanel Spacing="16" Margin="0,12" MaxWidth="520">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:PixelMascot Status="Thinking" Scale="1" AssistantName="Atlas" Announce="False" />
+            <arc:TextShimmer Text="Atlas is thinking" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <arc:PixelMascot Status="Writing" Scale="2" AssistantName="Atlas" Announce="False" />
+            <arc:TextShimmer Text="Writing the summary" VerticalAlignment="Center" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -146,4 +146,21 @@ public class PasswordFieldTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void The_Prefix_Keeps_The_Input_Gap_While_The_Reveal_Button_Sits_Flush()
+    {
+        var field = new PasswordField { Prefix = new ArcGlyph { Data = ArcIcons.Lock }, Width = 320 };
+        var window = TestHelpers.Show(field);
+        try
+        {
+            var frame = TestHelpers.Descendant<FieldFrame>(field);
+            TestHelpers.Descendant<ContentPresenter>(frame, FieldFrame.PrefixPart).Margin.ShouldBe(new Thickness(0, 0, 8, 0));
+            TestHelpers.Descendant<ContentPresenter>(frame, FieldFrame.SuffixPart).Margin.ShouldBe(default);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

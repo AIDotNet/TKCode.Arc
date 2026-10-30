@@ -1,7 +1,7 @@
 ---
 title: Agent timeline
 summary: 在同一條時間軸上重播多代理執行過程：每個代理的思考、工具呼叫與等待、代理之間的交接，以及時間、token 與成本。
-source-hash: 5696d9478d3e
+source-hash: 39b855da3a3d
 ---
 
 <Demo name="Preview" />
@@ -25,7 +25,7 @@ source-hash: 5696d9478d3e
 
 ## 用法
 
-未提供資料時，時間軸會顯示一次虛構的範例執行過程，並在第一次它有約五分之一進入可視範圍時開始重播。請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。
+未提供資料時，時間軸為空：在空的時間軸上方顯示標題 "Agent run"，沒有可播放的內容。套件不附帶範例執行過程。上方的預覽給它一個由展示庫撰寫的執行過程並設定 `AutoPlay="True"`，因此它會在第一次有約五分之一進入可視範圍時開始重播。請在 `UseArcControls()` 旁呼叫 `UseArcSpecial()` 來註冊該套件。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -46,9 +46,9 @@ source-hash: 5696d9478d3e
 6. **頁尾**：左側為播放或暫停（完成後則重播）、重新開始與速度控制項；右側為圖例（Thinking、Tool call、Waiting、Handoff、Failed），空間不足時則移到控制項下方。
 7. **時間段卡片**：將滑鼠移到時間段上或使其取得焦點，即可看到是哪個代理在哪個模型上做了什麼、它的工具或種類、長度與 token，以及失敗、重試或交接的註記。
 
-### 範例執行過程
+### 預覽中的執行過程
 
-範例是一項虛構的事件調查，名為 "Signup emails bouncing since Mar 3"。協調器規劃三項檢查，並將它們交給狀態監看器、設定稽核員與日誌讀取器，三者平行工作。日誌讀取器的第一次掃描失敗，改用較窄的查詢後第二次就成功。協調器彙整各份報告，由書記撰寫事件說明並歸檔。五個代理、30 個時間段與八次交接，共耗時 26.8 秒、49,920 token、$0.15，並行加速比為 1.5x。`AgentTimelineSamples.CreateIncidentRun()` 會回傳它的新副本，`CreateRefundRun()` 則回傳一個小型的兩代理執行過程。
+預覽重播的是一項由展示庫撰寫的虛構事件調查，名為 "Signup emails bouncing since Mar 3"。協調器規劃三項檢查，並將它們交給狀態監看器、設定稽核員與日誌讀取器，三者平行工作。日誌讀取器的第一次掃描失敗，改用較窄的查詢後第二次就成功。協調器彙整各份報告，由書記撰寫事件說明並歸檔。五個代理、30 個時間段與八次交接，共耗時 26.8 秒、49,920 token，並行加速比為 1.5x。這些代理執行於真實的模型上（Qwen3.8-Max、Grok 4.3、Qwen3.7-Plus、Qwen3.8-Flash 與 Mistral Small 4），每個代理的 `Price` 是其模型牌價的混合價（輸入 token 與輸出 token 按三比一），取自廠商於 2026-10-29 公布的價格，因此費用是虛構的 token 數乘以真實的牌價。任務、時間與 token 數皆為虛構。
 
 ### 你自己的執行過程
 
@@ -206,8 +206,6 @@ timeline.IsLive = false;
 | `AgentTimelinePlaybackAction` | `Play`, `Pause`, `Restart`, `Seek`, `Speed` |
 | `AgentTimelineSummary` | `AgentCount`, `Duration`, `Speedup`, `Tokens`, `Cost` (the `Summary` property) |
 
-`AgentTimelineSamples` 保存虛構的執行過程（`CreateIncidentRun()`、`CreateRefundRun()`）。
-
 ## 無障礙
 
 - 時間軸以其標題命名。每個時間段對輔助技術而言都是一個按鈕，其名稱包含代理、種類、工具、"failed" 或 "retry"、它做了什麼、時間範圍與 token（例如 "Log reader, Tool call, Mail logs, failed: Bounce scan took too long, 3.1s to 5.2s, 430 tokens"，即日誌讀取器、工具呼叫、郵件日誌、失敗：掃描逾時，3.1 秒到 5.2 秒，430 個 token）；釘選的時間段會被讀為已按下。時間段只佔一個 Tab 停駐點，方向鍵則在它們之間移動。
@@ -244,7 +242,7 @@ timeline.IsLive = false;
 
 | 變化 | 完整 | 減少 | 關閉 |
 |---|---|---|---|
-| 開啟 | 進入可視範圍時重播範例 | 以已結束的狀態開啟 | 以已結束的狀態開啟 |
+| 開啟 | 開啟 `AutoPlay` 時，進入可視範圍即重播執行過程 | 以已結束的狀態開啟 | 以已結束的狀態開啟 |
 | 播放 | 依要求播放 | 依要求播放 | 依要求播放 |
 | 作用中時間段的光澤 | 每 1.5 s 橫掃一次 | 無 | 無 |
 | 時間段完成、淡化、懸停 | 160ms | 立即 | 立即 |

@@ -1,0 +1,478 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ResponseFeedbackTheme">
+
+    <!--
+        The reply card: the person's message in a muted bubble at the right, the model's mark and name, the reply, then the
+        action row (copy, regenerate when allowed, the thumbs and the panel under them). The card pads 16px below 480px of
+        width and 24px above.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ResponseFeedback}" TargetType="arc:ResponseFeedback">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ResponseFeedbackTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ResponseFeedbackTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ResponseFeedback">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:ResponseFeedbackTokenResource SectionGap}">
+                        <Border Name="PART_Prompt"
+                                HorizontalAlignment="Right"
+                                Margin="{arc:ResponseFeedbackTokenResource PromptInset}"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:ResponseFeedbackTokenResource PromptCornerRadius}"
+                                Padding="{arc:ResponseFeedbackTokenResource PromptPadding}">
+                            <ContentPresenter Content="{TemplateBinding Prompt}"
+                                              TextWrapping="Wrap"
+                                              LineHeight="{arc:ResponseFeedbackTokenResource BodyLineHeight}"
+                                              Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </Border>
+                        <StackPanel Spacing="{arc:ResponseFeedbackTokenResource ModelBodyGap}">
+                            <StackPanel Orientation="Horizontal" Spacing="{arc:ResponseFeedbackTokenResource ModelGap}">
+                                <arc:ArcGlyph Name="PART_Mark"
+                                              Size="{arc:ResponseFeedbackTokenResource MarkSize}"
+                                              VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding ModelName}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <ContentPresenter Name="PART_Body"
+                                              TextWrapping="Wrap"
+                                              LineHeight="{arc:ResponseFeedbackTokenResource BodyLineHeight}"
+                                              Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        </StackPanel>
+                        <arc:FeedbackActions Name="PART_Actions"
+                                             Rating="{TemplateBinding Rating, Mode=TwoWay}"
+                                             MessageId="{TemplateBinding MessageId}"
+                                             FeedbackHandler="{TemplateBinding FeedbackHandler}"
+                                             NegativeReasons="{TemplateBinding NegativeReasons}"
+                                             PositiveReasons="{TemplateBinding PositiveReasons}"
+                                             AllowComment="{TemplateBinding AllowComment}"
+                                             CommentPlaceholder="{TemplateBinding CommentPlaceholder}"
+                                             CommentMaxLength="{TemplateBinding CommentMaxLength}"
+                                             PrivacyNote="{TemplateBinding PrivacyNote}"
+                                             ThanksMessage="{TemplateBinding ThanksMessage}"
+                                             ThanksDuration="{TemplateBinding ThanksDuration}"
+                                             IsRatingEnabled="{TemplateBinding IsRatingEnabled}"
+                                             Labels="{TemplateBinding Labels}"
+                                             Trailing="{TemplateBinding Trailing}">
+                            <arc:FeedbackActions.Leading>
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:FeedbackActionsTokenResource ActionGap}">
+                                    <arc:CopyButton Name="PART_Copy" IsIconOnly="True" Variant="Plain" />
+                                    <arc:FeedbackRowButton Name="PART_Regenerate"
+                                                           Glyph="{x:Static arc:ArcIcons.RefreshCw}"
+                                                           IsVisible="False" />
+                                </StackPanel>
+                            </arc:FeedbackActions.Leading>
+                        </arc:FeedbackActions>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:ResponseFeedbackTokenResource CompactCardPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The feedback row: leading actions, the two thumbs, an error line with Try again when a rating could not be saved, and
+        trailing content pinned to the end. The panel opens under the row; a polite live region announces what happens.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackActions}" TargetType="arc:FeedbackActions">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackActions">
+                <Grid RowDefinitions="Auto,Auto">
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto" MinHeight="{arc:ArcDesignTokenResource ControlSizeSM}">
+                        <ContentPresenter Content="{TemplateBinding Leading}"
+                                          IsVisible="{TemplateBinding Leading, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          Margin="0,0,2,0"
+                                          VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:FeedbackActionsTokenResource ActionGap}"
+                                    VerticalAlignment="Center">
+                            <arc:FeedbackThumb Name="PART_Up" Glyph="{x:Static arc:ArcIcons.ThumbsUp}" />
+                            <arc:FeedbackThumb Name="PART_Down" Glyph="{x:Static arc:ArcIcons.ThumbsDown}" />
+                        </StackPanel>
+                        <Grid Name="PART_RowError"
+                              Grid.Column="2"
+                              ColumnDefinitions="Auto,*,Auto"
+                              Margin="{arc:FeedbackActionsTokenResource RowErrorMargin}"
+                              VerticalAlignment="Center"
+                              IsVisible="False">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                          Size="{arc:FeedbackActionsTokenResource StatusGlyphSize}"
+                                          Foreground="{arc:ArcDesignTokenResource Danger}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,6,0" />
+                            <TextBlock Name="PART_RowErrorText"
+                                       Grid.Column="1"
+                                       FontSize="{arc:FeedbackActionsTokenResource QuietFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource Danger}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <arc:Button Name="PART_RowRetry"
+                                        Grid.Column="2"
+                                        Classes="feedback-small"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        Margin="6,0,0,0" />
+                        </Grid>
+                        <ContentPresenter Grid.Column="3"
+                                          Content="{TemplateBinding Trailing}"
+                                          VerticalAlignment="Center"
+                                          Margin="8,0,0,0"
+                                          FontSize="{arc:FeedbackActionsTokenResource QuietFontSize}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <Canvas Width="0" Height="0" IsHitTestVisible="False">
+                            <arc:ExplainerAnnouncer Name="PART_Live" />
+                        </Canvas>
+                    </Grid>
+                    <arc:AiHeightBox Name="PART_Panel"
+                                     Grid.Row="1"
+                                     FollowsContent="True"
+                                     FadesWhenReduced="True"
+                                     CrossClipOverflow="6">
+                        <Border Margin="{arc:FeedbackActionsTokenResource PanelMargin}"
+                                Background="{arc:ArcDesignTokenResource Surface}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:FeedbackActionsTokenResource PanelCornerRadius}"
+                                Padding="{arc:FeedbackActionsTokenResource PanelPadding}">
+                            <arc:ArcContentSwap Name="PART_Swap"
+                                                Mode="Label"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </Border>
+                    </arc:AiHeightBox>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button.feedback-small">
+            <Setter Property="Height" Value="{arc:FeedbackActionsTokenResource CloseSize}" />
+            <Setter Property="MinHeight" Value="{arc:FeedbackActionsTokenResource CloseSize}" />
+            <Setter Property="FontSize" Value="{arc:FeedbackActionsTokenResource QuietFontSize}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A thumb: a 36px round toggle; the filled glyph fades in over the outline when it is checked. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackThumb}" TargetType="arc:FeedbackThumb">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackThumb">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:FeedbackThumbGlyph Name="PART_Glyph"
+                                            Data="{TemplateBinding Glyph}"
+                                            Size="{arc:FeedbackActionsTokenResource GlyphSize}"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|FeedbackThumbGlyph#PART_Glyph">
+            <Setter Property="FillAmount" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Style Selector="^ /template/ arc|FeedbackThumbGlyph#PART_Glyph">
+                <Setter Property="FillAmount" Value="1" />
+            </Style>
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|FeedbackThumbGlyph#PART_Glyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="FillAmount" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ arc|FeedbackThumbGlyph#PART_Glyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="FillAmount" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The regenerate action, drawn like the thumbs. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackRowButton}" TargetType="arc:FeedbackRowButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Width" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Height" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackRowButton">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                  Size="{arc:FeedbackActionsTokenResource GlyphSize}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A reason chip: a 28px pill (32px on coarse pointers) that inverts to a solid fill when selected. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackChip}" TargetType="arc:FeedbackChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Height" Value="{arc:FeedbackActionsTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:FeedbackActionsTokenResource ChipPadding}" />
+        <Setter Property="FontSize" Value="{arc:FeedbackActionsTokenResource ChipFontSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackChip">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Background}" />
+        </Style>
+        <Style Selector="^:coarse">
+            <Setter Property="Height" Value="{arc:FeedbackActionsTokenResource CoarseChipHeight}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The panel's form: a title with a close button, the chips, the optional note, then the privacy note (or the error line)
+        beside Cancel and Submit. Below 400px the privacy note and Cancel give way (FeedbackForm hides them).
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackForm}" TargetType="arc:FeedbackForm">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackForm">
+                <StackPanel Spacing="{arc:FeedbackActionsTokenResource PanelGap}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center" />
+                        <arc:Button Name="PART_Close"
+                                    Grid.Column="1"
+                                    Classes="feedback-close"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    Margin="8,-4,-6,-4">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                          Size="{arc:FeedbackActionsTokenResource CloseGlyphSize}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </arc:Button>
+                    </Grid>
+                    <WrapPanel Name="PART_Chips"
+                               ItemSpacing="{arc:FeedbackActionsTokenResource ChipGap}"
+                               LineSpacing="{arc:FeedbackActionsTokenResource ChipGap}" />
+                    <arc:Textarea Name="PART_Note"
+                                  FrameMinHeight="{arc:FeedbackActionsTokenResource NoteMinHeight}"
+                                  IsResizable="False"
+                                  IsLabelVisible="False" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Panel VerticalAlignment="Center" Margin="0,0,12,0">
+                            <TextBlock Name="PART_Footnote"
+                                       FontSize="{arc:FeedbackActionsTokenResource QuietFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <Grid Name="PART_Error" ColumnDefinitions="Auto,*" IsVisible="False" VerticalAlignment="Center">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                              Size="{arc:FeedbackActionsTokenResource StatusGlyphSize}"
+                                              Foreground="{arc:ArcDesignTokenResource Danger}"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,6,0" />
+                                <TextBlock Name="PART_ErrorText"
+                                           Grid.Column="1"
+                                           FontSize="{arc:FeedbackActionsTokenResource QuietFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource Danger}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Panel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                            <arc:Button Name="PART_Secondary" Variant="Ghost" Size="Small" />
+                            <arc:Button Name="PART_Primary" Variant="Primary" Size="Small" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button.feedback-close">
+            <Setter Property="Width" Value="{arc:FeedbackActionsTokenResource CloseSize}" />
+            <Setter Property="Height" Value="{arc:FeedbackActionsTokenResource CloseSize}" />
+            <Setter Property="MinHeight" Value="{arc:FeedbackActionsTokenResource CloseSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The thank-you state: a round success badge whose tick draws once, the thanks and a second line. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackThanks}" TargetType="arc:FeedbackThanks">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackThanks">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Border Width="{arc:FeedbackActionsTokenResource ThanksBadgeSize}"
+                            Height="{arc:FeedbackActionsTokenResource ThanksBadgeSize}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{arc:ArcDesignTokenResource SuccessSubtle}"
+                            VerticalAlignment="Top"
+                            Margin="0,0,10,0">
+                        <arc:StrokeDrawGlyph Name="PART_Tick"
+                                             Data="{x:Static arc:ArcIcons.Check}"
+                                             Size="{arc:FeedbackActionsTokenResource ThanksGlyphSize}"
+                                             StrokeThickness="2.25"
+                                             Foreground="{arc:ArcDesignTokenResource Success}"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="{TemplateBinding Message}"
+                                   FontSize="{arc:FeedbackActionsTokenResource QuietFontSize}"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

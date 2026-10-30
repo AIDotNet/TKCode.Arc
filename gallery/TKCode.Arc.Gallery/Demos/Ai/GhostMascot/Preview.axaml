@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotPreviewDemo">
+    <!-- Pick a status and watch both ghosts blend from the pose they are in. "Auto" leaves Status unset, so the ghosts
+         play through every state on their own and StatusChanged keeps the caption in step. -->
+    <StackPanel Spacing="24" Margin="0,16" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Statuses" SelectedValue="auto" SelectionChanged="OnStatusChanged">
+            <arc:SegmentedOption Value="auto" Label="Auto" />
+            <arc:SegmentedOption Value="Idle" Label="Idle" />
+            <arc:SegmentedOption Value="Listening" Label="Listening" />
+            <arc:SegmentedOption Value="Thinking" Label="Thinking" />
+            <arc:SegmentedOption Value="Writing" Label="Writing" />
+            <arc:SegmentedOption Value="Done" Label="Done" />
+            <arc:SegmentedOption Value="Error" Label="Error" />
+        </arc:SegmentedControl>
+        <StackPanel Orientation="Horizontal" Spacing="40">
+            <arc:GhostMascot x:Name="Hero" Size="144" AssistantName="Atlas" Announce="True" />
+            <StackPanel Spacing="10" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <arc:GhostMascot x:Name="Inline" Size="24" AssistantName="Atlas" />
+                    <TextBlock Text="Atlas" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock x:Name="Caption"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

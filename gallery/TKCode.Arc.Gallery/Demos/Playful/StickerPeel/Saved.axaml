@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StickerPeelSavedDemo">
+    <!-- PositionsChanged reports every placement once a sticker lands; passing them back as Positions restores the layout. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:StickerPeel x:Name="Board" Height="260" Label="Notebook cover" PositionsChanged="OnPositionsChanged">
+            <arc:StickerPeel.Stickers>
+                <arc:StickerPeelItem Id="moon" Label="Moon sticker" Shape="Circle" X="0.25" Y="0.5">
+                    <Border Width="84" Height="84" Background="#22223b">
+                        <PathIcon Width="38" Height="38" Foreground="#f2e9e4"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Data="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                    </Border>
+                </arc:StickerPeelItem>
+                <arc:StickerPeelItem Id="note" Label="Note sticker" Shape="Rounded" X="0.7" Y="0.45" Rotate="6">
+                    <Border Width="120" Height="70" Background="#c9ada7">
+                        <TextBlock Text="notes" FontWeight="SemiBold" Foreground="#22223b"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </arc:StickerPeelItem>
+            </arc:StickerPeel.Stickers>
+        </arc:StickerPeel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Variant="Secondary" Content="Restore saved layout" Click="OnRestore" />
+            <arc:Button Variant="Ghost" Content="Reset" Click="OnReset" />
+        </StackPanel>
+        <TextBlock x:Name="Readout"
+                   Text="Move a sticker to save the layout."
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

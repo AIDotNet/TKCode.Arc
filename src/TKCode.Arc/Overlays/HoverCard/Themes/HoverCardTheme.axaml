@@ -13,5 +13,6 @@
         <Setter Property="CardWidth" Value="{arc:HoverCardTokenResource CardWidth}" />
         <Setter Property="Offset" Value="{arc:HoverCardTokenResource SideOffset}" />
         <Setter Property="CardPadding" Value="{arc:HoverCardTokenResource CardPadding}" />
+        <Setter Property="ClipToBounds" Value="False" />
     </ControlTheme>
 </ResourceDictionary>

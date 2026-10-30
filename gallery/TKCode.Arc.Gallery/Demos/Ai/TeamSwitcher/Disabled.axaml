@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamSwitcherDisabledDemo">
+    <!-- A disabled switcher shows the workspace but does not open, and its shortcuts do nothing. -->
+    <StackPanel MaxWidth="320">
+        <arc:TeamSwitcher IsEnabled="False">
+            <arc:TeamSwitcher.Simulation>
+                <arc:TeamSwitcherSimulation Workspaces="{x:Static demos:TeamSwitcherDemoData.Workspaces}"
+                                            Invites="{x:Static demos:TeamSwitcherDemoData.Invites}"
+                                            CreatedPlan="{x:Static demos:TeamSwitcherDemoData.CreatedPlan}"
+                                            CreatedRole="{x:Static demos:TeamSwitcherDemoData.CreatedRole}" />
+            </arc:TeamSwitcher.Simulation>
+        </arc:TeamSwitcher>
+    </StackPanel>
+</UserControl>

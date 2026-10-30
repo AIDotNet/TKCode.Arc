@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SketchToImagePreviewDemo">
+    <!-- The card paints a scene the Gallery draws in code (SketchToImageDemoData.Alpine). Loop plays the whole pass on its
+         own and starts again. The stage tabs set Status: each stage plays to its end and holds there, and moving back fades
+         to blank paper first. Empty clears the scene and the prompt: the card waits on blank paper. The card fills its
+         container up to 520px. -->
+    <StackPanel Spacing="20" MaxWidth="520">
+        <arc:SegmentedControl x:Name="Stages"
+                              HorizontalAlignment="Center"
+                              SelectedValue="loop"
+                              SelectionChanged="OnStageChanged">
+            <arc:SegmentedOption Value="loop" Label="Loop" />
+            <arc:SegmentedOption Value="Sketching" Label="Sketch" />
+            <arc:SegmentedOption Value="Blocking" Label="Block" />
+            <arc:SegmentedOption Value="Refining" Label="Refine" />
+            <arc:SegmentedOption Value="Done" Label="Done" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:SketchToImage x:Name="Card"
+                           Scene="{x:Static demos:SketchToImageDemoData.Alpine}"
+                           Prompt="{x:Static demos:SketchToImageDemoData.Prompt}" />
+    </StackPanel>
+</UserControl>

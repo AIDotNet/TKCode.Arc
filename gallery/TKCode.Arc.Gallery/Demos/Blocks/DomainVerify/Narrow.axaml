@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.DomainVerifyNarrowDemo">
+    <!-- Below 544 wide the header row leaves and each record stacks: type, name and status, then the value with its copy button. -->
+    <arc:DomainVerify x:Name="Block"
+                      Width="420"
+                      Margin="0,12"
+                      DefaultDomain="docs.northwind.dev"
+                      Provider="{x:Null}"
+                      AutoPlay="False" />
+</UserControl>

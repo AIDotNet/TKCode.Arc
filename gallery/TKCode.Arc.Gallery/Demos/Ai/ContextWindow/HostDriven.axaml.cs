@@ -12,7 +12,8 @@ public partial class ContextWindowHostDrivenDemo : UserControl
     {
         InitializeComponent();
         Card.Models.Add(ContextWindowDemoData.Models().Last());
-        Card.Items.AddRange(ContextWindowDemoData.Items());
+        // Twice the documentation session, so a few replies take the 256K window past 80%.
+        Card.Items.AddRange(ContextWindowDemoData.Items(scale: 2));
         // Your summarizer knows the real size; this one says 5% of what it folds, at least 2,000 tokens.
         Card.Summarizer = folded => Math.Max(2_000, folded.Sum(item => item.Tokens) / 20);
     }

@@ -35,8 +35,9 @@ parallel speedup.
 
 ## Usage
 
-Given no data, the timeline shows an invented sample run and replays it the first time it is about a fifth in view.
-Register the package with `UseArcSpecial()` next to `UseArcControls()`.
+Given no data, the timeline is empty: the title "Agent run" over an empty axis, with nothing to play. The package ships
+no sample run. The preview above gives it a run the gallery writes and sets `AutoPlay="True"`, so it replays the first
+time it is about a fifth in view. Register the package with `UseArcSpecial()` next to `UseArcControls()`.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -66,14 +67,16 @@ Register the package with `UseArcSpecial()` next to `UseArcControls()`.
 7. **Span card**: hover or focus a span to see who did it on which model, what it did, its tool or kind, its length and
    tokens, and notes for a failure, a retry or its handoffs.
 
-### The sample run
+### The preview's run
 
-The sample is an invented incident investigation, "Signup emails bouncing since Mar 3". A coordinator plans three
-checks and hands them to a status watcher, a config auditor and a log reader, which work in parallel. The log reader's
-first scan fails and a narrower query succeeds on the second try. The coordinator combines the reports, has a scribe
-write the incident note and files it. Five agents, 30 spans and eight handoffs take 26.8 seconds, 49,920 tokens and
-$0.15, a 1.5x parallel speedup. `AgentTimelineSamples.CreateIncidentRun()` returns a fresh copy of it, and
-`CreateRefundRun()` a small two-agent run.
+The preview replays an invented incident investigation, "Signup emails bouncing since Mar 3", written by the gallery. A
+coordinator plans three checks and hands them to a status watcher, a config auditor and a log reader, which work in
+parallel. The log reader's first scan fails and a narrower query succeeds on the second try. The coordinator combines
+the reports, has a scribe write the incident note and files it. Five agents, 30 spans and eight handoffs take 26.8
+seconds and 49,920 tokens, a 1.5x parallel speedup. The agents run on real models (Qwen3.8-Max, Grok 4.3, Qwen3.7-Plus,
+Qwen3.8-Flash and Mistral Small 4), and each agent's `Price` is a blend of its model's list prices (three input
+tokens to one output token) as the vendors published them on 2026-10-29, so the cost is the invented token counts at
+real list prices. The task, the timings and the tokens are invented.
 
 ### Your own run
 
@@ -272,8 +275,6 @@ The enums and values:
 | `AgentTimelinePlaybackAction` | `Play`, `Pause`, `Restart`, `Seek`, `Speed` |
 | `AgentTimelineSummary` | `AgentCount`, `Duration`, `Speedup`, `Tokens`, `Cost` (the `Summary` property) |
 
-`AgentTimelineSamples` holds the invented runs (`CreateIncidentRun()`, `CreateRefundRun()`).
-
 ## Accessibility
 
 - The timeline is named by its title. Each span is a button to assistive technology, named with the agent, the kind,
@@ -324,7 +325,7 @@ The enums and values:
 
 | Change | Full | Reduced | Off |
 |---|---|---|---|
-| Opening | Replays the sample when it comes into view | Opens finished | Opens finished |
+| Opening | Replays the run when it comes into view if `AutoPlay` is on | Opens finished | Opens finished |
 | Playback | Plays on request | Plays on request | Plays on request |
 | Shine on active spans | Sweeps every 1.5 s | None | None |
 | Span completion, dimming, hover | 160ms | At once | At once |

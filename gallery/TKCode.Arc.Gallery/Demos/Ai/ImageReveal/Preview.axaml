@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageRevealPreviewDemo">
+    <!-- The canvas in its main states. Simulated plays an ImageRevealSimulation: a looping, simulated generation over three
+         invented pictures painted in code (ImageRevealDemoData). Queued is a job waiting its turn; Failed shows the calm
+         error state with Retry; Empty has no job, image or simulation, so the canvas rests on its plain surface. The canvas
+         fills its container up to 420px here, so its width never follows what it shows. -->
+    <StackPanel Spacing="20" MaxWidth="420">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="simulated"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="simulated" Label="Simulated" />
+            <arc:SegmentedOption Value="queued" Label="Queued" />
+            <arc:SegmentedOption Value="failed" Label="Failed" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:ImageReveal x:Name="Reveal" AspectRatio="1.25">
+            <arc:ImageReveal.Simulation>
+                <arc:ImageRevealSimulation Pictures="{x:Static demos:ImageRevealDemoData.Pictures}" />
+            </arc:ImageReveal.Simulation>
+        </arc:ImageReveal>
+    </StackPanel>
+</UserControl>

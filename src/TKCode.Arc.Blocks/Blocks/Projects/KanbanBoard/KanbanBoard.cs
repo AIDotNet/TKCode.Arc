@@ -270,6 +270,7 @@ public partial class KanbanBoard : TemplatedControl
 
     static KanbanBoard()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<KanbanBoard>(false);
     }
 

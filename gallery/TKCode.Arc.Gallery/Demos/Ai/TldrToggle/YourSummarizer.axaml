@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TldrToggleYourSummarizerDemo">
+    <!-- Your own article and summarizer. This one returns whole results (canned text per length, standing in for a provider
+         that does not stream) and TldrStreams.FromResult paces them into chunks. Completed reports each finished result. -->
+    <StackPanel MaxWidth="680" Spacing="12">
+        <arc:TldrToggle x:Name="Card" />
+        <TextBlock x:Name="Log" Text="Pick Summary or Key points." Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

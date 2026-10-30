@@ -159,16 +159,17 @@ internal class PillFilterBar : TemplatedControl
     internal ScrollViewer? Scroller => _scrollViewer;
 
     /// <summary>
-    /// Focuses the selected pill as the keyboard does (with its focus ring) and scrolls it into view. Returns false when
-    /// there is no selected pill or it cannot take focus (concealed, disabled, not shown).
+    /// Focuses the selected pill as the keyboard does (with its focus ring; <paramref name="method"/> Pointer leaves the
+    /// ring off) and scrolls it into view. Returns false when there is no selected pill or it cannot take focus (concealed,
+    /// disabled, not shown).
     /// </summary>
-    public bool FocusSelected()
+    public bool FocusSelected(NavigationMethod method = NavigationMethod.Tab)
     {
         if (_selected is not { } pill || IsConcealed || !pill.IsEffectivelyVisible || !pill.IsEffectivelyEnabled)
         {
             return false;
         }
-        if (!pill.Focus(NavigationMethod.Tab))
+        if (!pill.Focus(method))
         {
             return false;
         }

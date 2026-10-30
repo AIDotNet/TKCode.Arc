@@ -273,6 +273,7 @@ public partial class EnvVariables : TemplatedControl
 
     static EnvVariables()
     {
+        BlockFocusModality.Watch();
         AffectsMeasure<EnvVariables>(CompactWidthProperty, NarrowWidthProperty);
     }
 

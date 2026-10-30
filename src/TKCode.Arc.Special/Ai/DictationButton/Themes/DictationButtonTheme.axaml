@@ -1,0 +1,168 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DictationButtonTheme">
+
+    <!--
+        The composer: a Surface card (1px Border, RadiusPanel, padding 10) that fills its container. The field (16/24, one to
+        six lines, then it scrolls) springs to each new line; under it the 36px toolbar: the label (the model, the keyboard
+        hints while listening, or an error with its icon), the dictation slot and the 36px accent send. Under the pointer the
+        border darkens a little; with the focus inside it turns BorderStrong. The live region takes no space.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DictationButton}" TargetType="arc:DictationButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Padding" Value="{arc:DictationButtonTokenResource CardPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DictationButton">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel>
+                            <arc:SpringSizeDecorator Name="PART_FieldSpring" Axis="Height" Spring="Quick">
+                                <arc:DictationButtonField Name="PART_Field"
+                                                          Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                          PlaceholderText="{TemplateBinding Placeholder}"
+                                                          MinHeight="{arc:DictationButtonTokenResource FieldMinHeight}"
+                                                          MaxHeight="{arc:DictationButtonTokenResource FieldMaxHeight}" />
+                            </arc:SpringSizeDecorator>
+                            <Grid Name="PART_Toolbar"
+                                  ColumnDefinitions="*,Auto,Auto"
+                                  Height="{arc:DictationButtonTokenResource ToolbarHeight}"
+                                  Margin="{arc:DictationButtonTokenResource ToolbarMargin}">
+                                <Border Name="PART_LabelClip"
+                                        ClipToBounds="True"
+                                        Margin="{arc:DictationButtonTokenResource LabelMargin}">
+                                    <arc:ArcContentSwap Name="PART_Label"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalContentAlignment="Center"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        TextElement.FontSize="{arc:DictationButtonTokenResource LabelFontSize}" />
+                                </Border>
+                                <arc:DictationControl Name="PART_Dictation"
+                                                      Grid.Column="1"
+                                                      Margin="{arc:DictationButtonTokenResource DictationMargin}"
+                                                      Recognizer="{TemplateBinding Recognizer}"
+                                                      Simulation="{TemplateBinding Simulation}"
+                                                      MaxDuration="{TemplateBinding MaxDuration}"
+                                                      Labels="{TemplateBinding Labels}" />
+                                <arc:DictationIconButton Name="PART_Send"
+                                                         Grid.Column="2"
+                                                         Classes="accent"
+                                                         Icon="{x:Static arc:ArcIcons.ArrowUp}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:DictationButtonTokenResource HoverBorder}" />
+        </Style>
+        <Style Selector="^:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The field: a TextBox with no chrome. The padding sits inside the scroller so text scrolls to the edge; while
+        dictating the presenter lays the live words out after the text, guesses in the interim tone.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DictationButtonField}" TargetType="arc:DictationButtonField">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DictationButtonField">
+                <Panel Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                                  VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                                  IsScrollChainingEnabled="True"
+                                  BringIntoViewOnFocusChange="False">
+                        <Panel Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       TextTrimming="CharacterEllipsis"
+                                       IsHitTestVisible="False"
+                                       VerticalAlignment="Top" />
+                            <arc:DictationButtonPresenter Name="PART_TextPresenter"
+                                                          Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                          CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                          CaretIndex="{TemplateBinding CaretIndex}"
+                                                          SelectionStart="{TemplateBinding SelectionStart}"
+                                                          SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                          TextAlignment="{TemplateBinding TextAlignment}"
+                                                          TextWrapping="{TemplateBinding TextWrapping}"
+                                                          LineHeight="{TemplateBinding LineHeight}"
+                                                          LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                          PasswordChar="{TemplateBinding PasswordChar}"
+                                                          RevealPassword="{TemplateBinding RevealPassword}"
+                                                          SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                          SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                          CaretBrush="{TemplateBinding CaretBrush}"
+                                                          VerticalAlignment="Top" />
+                        </Panel>
+                    </ScrollViewer>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Padding" Value="{arc:DictationButtonTokenResource FieldPadding}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="InterimForeground" Value="{arc:DictationButtonTokenResource InterimForeground}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:DictationButtonTokenResource FieldFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:DictationButtonTokenResource FieldLineHeight}" />
+    </ControlTheme>
+</ResourceDictionary>

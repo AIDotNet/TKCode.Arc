@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DesignToCodePreviewDemo">
+    <!-- With no generator the card plays its simulation (the demo's data) on a loop while it is on screen: the scan line
+         finds five regions on a pricing card drawn in code, the code streams in region by region, then the working preview
+         opens. The model credited is real; the plan and prices are invented. Click or press
+         a key inside the card to stop the loop and try it yourself: point at a box or a line, focus a tag, switch to
+         Preview. The card fills its container up to 760px, so its width never follows the streaming code. -->
+    <Panel MaxWidth="760" Margin="0,12">
+        <arc:DesignToCode>
+            <arc:DesignToCode.Simulation>
+                <arc:DesignToCodeSimulation Source="{x:Static demos:DesignToCodeDemoData.Source}"
+                                            Regions="{x:Static demos:DesignToCodeDemoData.Regions}"
+                                            Parts="{x:Static demos:DesignToCodeDemoData.Parts}"
+                                            Model="{x:Static demos:DesignToCodeDemoData.Model}"
+                                            FileName="PricingCard.tsx"
+                                            FrameName="Pricing / Pro card"
+                                            PreviewFactory="{x:Static demos:DesignToCodeDemoData.Preview}"
+                                            PreviewAction="{x:Static demos:DesignToCodeDemoData.FlipBilling}" />
+            </arc:DesignToCode.Simulation>
+        </arc:DesignToCode>
+    </Panel>
+</UserControl>

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageGenerationPreviewDemo">
+    <!-- With no generator the card runs its simulation: it generates once when it scrolls into view, then picks image 1.
+         Pick another image, upscale, vary or download it, or write a prompt and press Cmd/Ctrl + Enter. The pictures are
+         painted in code; nothing is downloaded. -->
+    <Border MaxWidth="640" Margin="0,12">
+        <arc:ImageGeneration>
+            <arc:ImageGeneration.Simulation>
+                <arc:ImageGenerationSimulation Prompt="{x:Static demos:ImageGenerationDemoData.Prompt}"
+                                               Models="{x:Static demos:ImageGenerationDemoData.Models}"
+                                               Suggestions="{x:Static demos:ImageGenerationDemoData.Suggestions}"
+                                               Painter="{x:Static demos:ImageGenerationDemoData.Painter}" />
+            </arc:ImageGeneration.Simulation>
+        </arc:ImageGeneration>
+    </Border>
+</UserControl>

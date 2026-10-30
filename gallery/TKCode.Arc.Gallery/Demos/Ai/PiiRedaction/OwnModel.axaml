@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PiiRedactionOwnModelDemo">
+    <!-- The app passes the signed-in person's name, its own model through Sender and logs what was redacted (types only,
+         never the values next to the prompt). The model here is a stand-in that answers after a short wait. -->
+    <StackPanel MaxWidth="640" Spacing="12" Margin="0,12">
+        <arc:PiiRedaction x:Name="Card"
+                          AutoPlay="False"
+                          ModelName="{x:Static demos:PiiRedactionDemoData.ModelName}"
+                          Redacted="OnRedacted"
+                          ReplyRestored="OnReplyRestored" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Scan, then Send. The log shows what the app sees."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

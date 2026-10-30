@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TrialBannerPreviewDemo">
+    <!-- The banner in its states. Pick how many days are left (or an ended trial, or no trial at all: the empty state), and
+         the variant: a slim banner, a sidebar card or a header pill. Add payment method is simulated (900ms) and shows the
+         upgraded state; dismiss or snooze fold it into the trial pill, which opens it again. The plan, workspace and
+         features are the demo's own (TrialBannerDemoData). The banner fills its container up to 720px. -->
+    <StackPanel Spacing="16" MaxWidth="720">
+        <WrapPanel ItemSpacing="12" LineSpacing="8">
+            <arc:SegmentedControl x:Name="Days" SelectedValue="9" SelectionChanged="OnChanged">
+                <arc:SegmentedOption Value="9" Label="9 days left" />
+                <arc:SegmentedOption Value="2" Label="2 days left" />
+                <arc:SegmentedOption Value="0" Label="Ended" />
+                <arc:SegmentedOption Value="none" Label="No trial" />
+            </arc:SegmentedControl>
+            <arc:SegmentedControl x:Name="Variant" SelectedValue="banner" SelectionChanged="OnChanged">
+                <arc:SegmentedOption Value="banner" Label="Banner" />
+                <arc:SegmentedOption Value="card" Label="Card" />
+                <arc:SegmentedOption Value="pill" Label="Pill" />
+            </arc:SegmentedControl>
+            <arc:Button x:Name="Reset" Content="Reset" Variant="Ghost" Size="Small" Click="OnReset" />
+        </WrapPanel>
+        <arc:TrialBanner x:Name="Banner" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.MeetingSummarySummarizerDemo">
+    <!-- The card calls an async streaming delegate when it comes into view and on Regenerate: it summarizes until the first
+         snapshot, then streams each longer snapshot in place. The delegate here is a stand-in for your model call; every
+         other try fails, to show the error state and Try again. -->
+    <StackPanel MaxWidth="640">
+        <arc:MeetingSummary x:Name="Card" />
+    </StackPanel>
+</UserControl>

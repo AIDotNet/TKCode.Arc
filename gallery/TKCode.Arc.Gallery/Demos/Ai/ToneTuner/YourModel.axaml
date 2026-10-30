@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ToneTunerYourModelDemo">
+    <!-- Your draft and your model: Rewrite is an async function that gets the draft, the tone and a ready made
+         instruction. This demo answers from canned versions after a short wait instead of calling a model. -->
+    <StackPanel MaxWidth="640" Spacing="12" Margin="0,12">
+        <arc:ToneTuner x:Name="Tuner"
+                       RecipientName="Jordan Lee"
+                       RecipientSubject="Re: Export stuck at 80%"
+                       Model="{x:Static demos:ToneTunerDemoData.Model}" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Move a slider or press a voice: the newest rewrite's opening line shows here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

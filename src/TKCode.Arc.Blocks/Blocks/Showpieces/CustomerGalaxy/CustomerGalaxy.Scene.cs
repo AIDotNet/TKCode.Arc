@@ -53,6 +53,7 @@ public partial class CustomerGalaxy : IGalaxyStageHost
 
     static CustomerGalaxy()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<CustomerGalaxy>(false);
     }
 
@@ -962,7 +963,8 @@ public partial class CustomerGalaxy : IGalaxyStageHost
     private void OnShowAllClick(object? sender, RoutedEventArgs e)
     {
         ResetView();
-        _stage?.Focus(NavigationMethod.Tab);
+        // Show all clicked with the mouse: the stage takes focus without the keyboard ring.
+        _stage?.Focus(BlockFocusModality.For(this));
     }
 
     private void OnSortClick(object? sender, RoutedEventArgs e)

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AskYourDataErrorsDemo">
+    <!-- The query throws, so the card shows the database's message verbatim with Try again; the second try succeeds.
+         Stop (the Ask button while it works, or Escape in the field) cancels a run without an error. Simulated. -->
+    <Panel MaxWidth="680">
+        <arc:AskYourData x:Name="Card"
+                         Question="Refunds by week this quarter"
+                         AutoRun="True" />
+    </Panel>
+</UserControl>

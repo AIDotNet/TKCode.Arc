@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TrainingRunNarrowDemo">
+    <!-- Under 440px the padding drops to 16px, the stats go to two columns, the legend reads "Val" and the footer stacks
+         the dataset over the actions. -->
+    <Border MaxWidth="380">
+        <arc:TrainingRun>
+            <arc:TrainingRun.Simulation>
+                <arc:TrainingRunSimulation JobName="support-v4"
+                                           BaseModel="{x:Static demos:TrainingRunDemoData.BaseModel}"
+                                           Details="{x:Static demos:TrainingRunDemoData.Details}"
+                                           Dataset="{x:Static demos:TrainingRunDemoData.Dataset}"
+                                           Hardware="8× H200"
+                                           Endpoint="https://inference.example.com/v1/support-v4" />
+            </arc:TrainingRun.Simulation>
+        </arc:TrainingRun>
+    </Border>
+</UserControl>

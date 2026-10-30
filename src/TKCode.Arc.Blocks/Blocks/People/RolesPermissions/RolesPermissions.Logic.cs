@@ -177,6 +177,7 @@ public partial class RolesPermissions
 
     static RolesPermissions()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<RolesPermissions>(false);
     }
 
@@ -1181,7 +1182,8 @@ public partial class RolesPermissions
         var target = _grid?.RovingElement;
         if (target is not null && target.IsEffectivelyVisible && target.Focusable)
         {
-            target.Focus(NavigationMethod.Tab);
+            // Save or Discard clicked with the mouse: the cell takes focus without the keyboard ring.
+            target.Focus(BlockFocusModality.For(this));
         }
     }
 
@@ -1330,12 +1332,14 @@ public partial class RolesPermissions
         if (_menuFocusTarget is { } target)
         {
             _menuFocusTarget = null;
-            // The menu hands focus back on close; the new column's header (or the neighbour of a removed one) takes it then.
+            // The menu hands focus back on close; the new column's header (or the neighbour of a removed one) takes it then,
+            // with the keyboard ring only when a key made the pick.
+            var method = BlockFocusModality.For(this);
             Dispatcher.UIThread.Post(() =>
             {
                 if (target.IsEffectivelyVisible && target.Focusable)
                 {
-                    target.Focus(NavigationMethod.Tab);
+                    target.Focus(method);
                 }
             }, DispatcherPriority.Background);
         }

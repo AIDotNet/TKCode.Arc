@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderKeysYourApiDemo">
+    <StackPanel Spacing="16" Margin="0,12" MaxWidth="720">
+        <!--
+            TestKey stands in for your server here: it waits a moment, then rejects any key that contains "revoked".
+            KeySaved and KeyRemoved are where you persist; the log shows each event.
+        -->
+        <arc:ProviderKeys x:Name="Card"
+                          Providers="{x:Static demos:ProviderKeysDemoData.Providers}"
+                          KeySaved="OnSaved"
+                          KeyRemoved="OnRemoved"
+                          KeyCopied="OnCopied"
+                          KeysChanged="OnKeysChanged" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Add, rotate or remove a key: each event is logged here. Keys containing &quot;revoked&quot; are rejected."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

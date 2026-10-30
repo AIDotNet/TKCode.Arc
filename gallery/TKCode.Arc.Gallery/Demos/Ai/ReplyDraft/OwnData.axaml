@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReplyDraftOwnDataDemo">
+    <!-- A support ticket with your own quick replies and a writer that returns whole texts, streamed locally in chunks.
+         The texts are canned demo content; nothing is sent. -->
+    <StackPanel Spacing="12" MaxWidth="600">
+        <arc:ReplyDraft x:Name="Draft" AutoPlay="False" />
+        <TextBlock x:Name="Log" TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
+    </StackPanel>
+</UserControl>

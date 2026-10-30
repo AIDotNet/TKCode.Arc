@@ -83,6 +83,13 @@ grip writes the chosen height in pixels, and any value below the 110 px minimum 
   geometry. The field then scrolls its text.
 - **A field that must keep the size the person chose**: bind `FrameHeight` with `Mode=TwoWay` and store the value in the
   view model or in user settings. `FrameHeight` is one-way by default.
+- **A short box inside a compact card** (an optional note under a rating, a one-line prompt): lower the minimum with
+  `FrameMinHeight`, the frame's height with its border and padding. Two lines of text at the default size need 66 px,
+  three need 85 px. The grip then never drags below the new minimum.
+
+```xml
+<arc:Textarea PlaceholderText="Add details (optional)" FrameMinHeight="66" IsResizable="False" />
+```
 
 ### Binding to a view model
 
@@ -286,7 +293,8 @@ description in the same words everywhere it appears, so a reply shows "character
 move. The text scrolls inside the frame. Let the person drag the grip, or set `FrameHeight` to the height the task needs.
 
 **Why does `FrameHeight` of 60 still show a 110 px field?** Any height below the 110 px minimum is raised to the minimum.
-The minimum applies at every `Size`, so `Small` does not make the field shorter.
+The minimum applies at every `Size`, so `Small` does not make the field shorter; lower `FrameMinHeight` for a
+shorter field.
 
 **Does the field insert a tab character when the person presses Tab?** No. `AcceptsTab` is false, so Tab moves focus to
 the next control. Set `AcceptsTab="True"` only when the field is a code or table editor and a tab character is the value.

@@ -54,6 +54,7 @@
                                             Padding="0"
                                             Background="Transparent"
                                             Cursor="Hand"
+                                            ClipToBounds="False"
                                             AutomationProperties.Name="Clear selection">
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">

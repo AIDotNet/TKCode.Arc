@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.UpgradePromptPreviewDemo">
+    <!-- Left: the offer at 50 of 50 AI credits; toggle Monthly and Yearly, then Upgrade (simulated, nothing is charged) or
+         Maybe later. Right: the same prompt after the upgrade, with the new limits. The demo gives the usage and the plan
+         (UpgradePromptDemoData): an invented product's Pro plan and prices that include real models. Without a plan the
+         prompt is empty. -->
+    <WrapPanel ItemSpacing="20" LineSpacing="20" Margin="0,12">
+        <arc:UpgradePrompt Width="420" VerticalAlignment="Top" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+        <arc:UpgradePrompt x:Name="Upgraded" Width="420" VerticalAlignment="Top" Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+    </WrapPanel>
+</UserControl>

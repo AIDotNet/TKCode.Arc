@@ -43,6 +43,7 @@
         </Setter>
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
             <Setter Property="RenderTransform" Value="rotate(0deg)" />

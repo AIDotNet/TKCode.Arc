@@ -169,7 +169,7 @@ internal sealed class DemoSettingsPreferences : Border
     /// </summary>
     private Control Swatches()
     {
-        var panel = new WrapPanel { ItemSpacing = 10, LineSpacing = 10 };
+        var panel = new WrapPanel { ItemSpacing = 10, LineSpacing = 10, ClipToBounds = false };
         AutomationProperties.SetName(panel, "Accent color");
         foreach (var (name, hex, darkCheck, preset) in s_accents)
         {
@@ -194,9 +194,12 @@ internal sealed class DemoSettingsPreferences : Border
                 BorderThickness = default,
                 Width = 28,
                 Height = 28,
+                ClipToBounds = false,
+                // The selected swatch draws its own ring; Avalonia's dotted focus rectangle would sit on top of it.
+                FocusAdorner = null,
                 RenderTransformOrigin = RelativePoint.Center,
                 Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand),
-                Template = new Avalonia.Controls.Templates.FuncControlTemplate<ToggleButton>((owner, _) => new ContentPresenter { [!ContentPresenter.ContentProperty] = owner[!ContentControl.ContentProperty] })
+                Template = new Avalonia.Controls.Templates.FuncControlTemplate<ToggleButton>((owner, _) => new ContentPresenter { ClipToBounds = false, [!ContentPresenter.ContentProperty] = owner[!ContentControl.ContentProperty] })
             };
             AutomationProperties.SetName(button, name);
             button.PointerEntered += (_, _) => button.RenderTransform = new ScaleTransform(1.1, 1.1);

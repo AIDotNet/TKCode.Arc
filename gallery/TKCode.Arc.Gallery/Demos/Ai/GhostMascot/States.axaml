@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotStatesDemo">
+    <!-- Every status side by side. Decorative copies leave Announce off so a screen reader hears one ghost at most. -->
+    <WrapPanel Margin="0,8" ItemSpacing="20" LineSpacing="16" MaxWidth="640">
+        <StackPanel Spacing="6">
+            <arc:GhostMascot Size="80" Status="Idle" />
+            <TextBlock Text="Idle" HorizontalAlignment="Center" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:GhostMascot Size="80" Status="Listening" />
+            <TextBlock Text="Listening" HorizontalAlignment="Center" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:GhostMascot Size="80" Status="Thinking" />
+            <TextBlock Text="Thinking" HorizontalAlignment="Center" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:GhostMascot Size="80" Status="Writing" />
+            <TextBlock Text="Writing" HorizontalAlignment="Center" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:GhostMascot Size="80" Status="Done" />
+            <TextBlock Text="Done" HorizontalAlignment="Center" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <StackPanel Spacing="6">
+            <arc:GhostMascot Size="80" Status="Error" />
+            <TextBlock Text="Error" HorizontalAlignment="Center" FontSize="12" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </WrapPanel>
+</UserControl>

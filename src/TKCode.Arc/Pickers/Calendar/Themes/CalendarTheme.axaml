@@ -12,15 +12,19 @@
                     <Grid ColumnDefinitions="*,Auto"
                           MinHeight="{arc:CalendarTokenResource HeaderMinHeight}"
                           Margin="{arc:CalendarTokenResource HeaderMargin}">
-                        <arc:ArcContentSwap Name="PART_Title"
-                                            Mode="Slide"
-                                            Direction="{TemplateBinding TitleDirection}"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            HorizontalContentAlignment="Left"
-                                            Content="{TemplateBinding MonthTitle}"
-                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
-                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <!-- The month title slides 12px: it stays clipped to its column, while the calendar itself does not
+                             clip (the nav buttons hang 6px past the edge and their focus rings sit outside them). -->
+                        <Panel ClipToBounds="True">
+                            <arc:ArcContentSwap Name="PART_Title"
+                                                Mode="Slide"
+                                                Direction="{TemplateBinding TitleDirection}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                HorizontalContentAlignment="Left"
+                                                Content="{TemplateBinding MonthTitle}"
+                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                                TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        </Panel>
                         <StackPanel Grid.Column="1"
                                     Orientation="Horizontal"
                                     Spacing="2"
@@ -61,6 +65,7 @@
 
         <Setter Property="MaxWidth" Value="328" />
         <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />

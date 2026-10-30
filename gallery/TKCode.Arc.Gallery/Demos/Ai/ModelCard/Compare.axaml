@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelCardCompareDemo">
+    <!-- The compare view: pick a rival from the menu; the better value of each row carries a check and its margin, and the
+         tally says who leads. Rows with a value the vendor does not publish have no winner. -->
+    <Border MaxWidth="640">
+        <arc:ModelCard View="Compare"
+                       CompareWith="gemini-4-argon"
+                       MonthlyTokens="50000000"
+                       Model="{x:Static demos:ModelCardDemoData.Opus}"
+                       Rivals="{x:Static demos:ModelCardDemoData.Frontier}"
+                       Benchmarks="{x:Static demos:ModelCardDemoData.FrontierBenchmarks}"
+                       Labels="{x:Static demos:ModelCardDemoData.Labels}"
+                       Note="{x:Static demos:ModelCardDemoData.Note}" />
+    </Border>
+</UserControl>

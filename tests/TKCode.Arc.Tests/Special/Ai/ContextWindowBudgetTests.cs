@@ -214,21 +214,21 @@ public class ContextWindowBudgetTests
     [Fact]
     public void Samples_Total436K()
     {
-        var items = ContextWindowSamples.CreateItems();
+        var items = ContextWindowTestSample.CreateItems();
         var sums = ContextWindowBudget.Sum(items);
         sums.ShouldBe([3_800, 30_200, 98_000, 0, 304_000]);
         items.Count(i => i.Category == ContextWindowCategory.Messages).ShouldBe(24);
-        var models = ContextWindowSamples.CreateModels();
+        var models = ContextWindowTestSample.CreateModels();
         models.Select(m => m.Window).ShouldBe([1_000_000L, 512_000L, 400_000L]);
         models.Select(m => m.Reserve).ShouldBe([64_000L, 32_000L, 32_000L]);
-        ContextWindowSamples.CreateTurns().Count.ShouldBe(5);
-        ContextWindowSamples.CreateFiles().Count.ShouldBe(3);
+        ContextWindowTestSample.CreateTurns().Count.ShouldBe(5);
+        ContextWindowTestSample.CreateFiles().Count.ShouldBe(3);
     }
 
     [Fact]
     public void Compact_FoldsAllButTheNewestTwoIntoASummaryBeforeThem()
     {
-        var items = ContextWindowSamples.CreateItems();
+        var items = ContextWindowTestSample.CreateItems();
         var result = ContextWindowBudget.Compact(items, 2, null, "Summary")!;
         result.Folded.Count.ShouldBe(22);
         result.FoldedTokens.ShouldBe(279_000);
@@ -247,7 +247,7 @@ public class ContextWindowBudgetTests
     [Fact]
     public void Compact_AddsUpTheSummaryAndNeverFoldsIt()
     {
-        var first = ContextWindowBudget.Compact(ContextWindowSamples.CreateItems(), 2, null, "Summary")!;
+        var first = ContextWindowBudget.Compact(ContextWindowTestSample.CreateItems(), 2, null, "Summary")!;
         var items = first.Items.ToList();
         items.Add(new ContextWindowItem(ContextWindowCategory.Messages, "One more", 30_600));
         var second = ContextWindowBudget.Compact(items, 2, null, "Summary")!;
@@ -263,7 +263,7 @@ public class ContextWindowBudgetTests
     public void Compact_UsesTheSummarizer()
     {
         IReadOnlyList<ContextWindowItem>? seen = null;
-        var result = ContextWindowBudget.Compact(ContextWindowSamples.CreateItems(), 2, folded =>
+        var result = ContextWindowBudget.Compact(ContextWindowTestSample.CreateItems(), 2, folded =>
         {
             seen = folded;
             return 1_234;
@@ -275,8 +275,8 @@ public class ContextWindowBudgetTests
     [Fact]
     public void SampleRhythm_WarnsAtTheNinthSendAndCompactsAtTheThirteenth()
     {
-        var items = ContextWindowSamples.CreateItems().ToList();
-        var turns = ContextWindowSamples.CreateTurns();
+        var items = ContextWindowTestSample.CreateItems().ToList();
+        var turns = ContextWindowTestSample.CreateTurns();
         long Used() => items.Sum(i => i.Tokens);
         for (var n = 1; n <= 13; n++)
         {

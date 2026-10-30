@@ -51,6 +51,7 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
 
         <Style Selector="^:pointerover">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

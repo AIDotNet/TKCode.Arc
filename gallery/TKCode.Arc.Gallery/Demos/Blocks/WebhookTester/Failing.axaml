@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WebhookTesterFailingDemo">
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:WebhookTester x:Name="Block"
+                           AutoPlay="False"
+                           Endpoint="https://api.northwind.dev/webhooks/legacy" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   MaxWidth="560"
+                   Text="Send an event: the legacy endpoint answers 500 until you point the block at another path." />
+    </StackPanel>
+</UserControl>

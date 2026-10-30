@@ -1,0 +1,358 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GhostTextTheme">
+
+    <!--
+        The field: a 1px bordered surface (RadiusControl) holding a quiet label row, the text (a real TextBox whose presenter
+        lays the ghost out after the text) in a box whose height follows the text on a 180ms tween, and a footer row with the
+        app's footer at the start and the key hints and the chip at the end. A single-line field puts the hints and the chip
+        inline after the text and drops the label and footer. Plain drops the border, background and ring. Keyboard focus
+        draws Arc's ring 2px outside the border; pointer focus does not.
+    -->
+    <ControlTheme x:Key="{x:Type arc:GhostText}" TargetType="arc:GhostText">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:GhostTextTokenResource TextFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GhostText">
+                <Panel>
+                    <Border Name="PART_Shell"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Cursor="IBeam"
+                            ClipToBounds="True">
+                        <Grid Name="PART_Grid" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                            <ContentPresenter Name="PART_Label"
+                                              Grid.ColumnSpan="2"
+                                              Cursor="Arrow"
+                                              FontSize="{arc:GhostTextTokenResource LabelFontSize}"
+                                              FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                              IsVisible="False" />
+                            <arc:GhostTextSizeBox Name="PART_HeightBox" Grid.Row="1" Grid.ColumnSpan="2">
+                                <arc:GhostTextEditor Name="PART_Editor" />
+                            </arc:GhostTextSizeBox>
+                            <ContentPresenter Name="PART_Footer"
+                                              Grid.Row="2"
+                                              Cursor="Arrow"
+                                              VerticalAlignment="Center"
+                                              VerticalContentAlignment="Center"
+                                              MinHeight="{arc:GhostTextTokenResource FooterHeight}"
+                                              FontSize="{arc:GhostTextTokenResource FooterFontSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <StackPanel Name="PART_Trail"
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Cursor="Arrow"
+                                        Spacing="{arc:GhostTextTokenResource HintGap}"
+                                        VerticalAlignment="Center">
+                                <StackPanel Name="PART_Hints"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:GhostTextTokenResource HintGap}"
+                                            VerticalAlignment="Center"
+                                            IsVisible="False">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:GhostTextTokenResource ChipGap}">
+                                        <arc:GhostTextKey Name="PART_WordKey" />
+                                        <TextBlock Name="PART_WordHint"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:GhostTextTokenResource ChipFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:GhostTextTokenResource ChipGap}">
+                                        <arc:GhostTextKey Name="PART_EscapeKey" />
+                                        <TextBlock Name="PART_DismissHint"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:GhostTextTokenResource ChipFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <arc:GhostTextChip Name="PART_Chip" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep22}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsHitTestVisible="False"
+                            IsVisible="False" />
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ ContentPresenter#PART_Label">
+            <Setter Property="Padding" Value="{arc:GhostTextTokenResource LabelPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|GhostTextEditor#PART_Editor">
+            <Setter Property="Padding" Value="{arc:GhostTextTokenResource EditorPadding}" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Footer">
+            <Setter Property="Padding" Value="{arc:GhostTextTokenResource FooterPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Trail">
+            <Setter Property="Margin" Value="{arc:GhostTextTokenResource FooterPadding}" />
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:field-focused">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:keyboard-focus /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:GhostTextTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- Single line: the text, then the hints and the chip on the same row; no label or footer. -->
+        <Style Selector="^:single-line">
+            <Style Selector="^ /template/ arc|GhostTextSizeBox#PART_HeightBox">
+                <Setter Property="Grid.ColumnSpan" Value="1" />
+            </Style>
+            <Style Selector="^ /template/ arc|GhostTextEditor#PART_Editor">
+                <Setter Property="AcceptsReturn" Value="False" />
+                <Setter Property="TextWrapping" Value="NoWrap" />
+                <Setter Property="Height" Value="{arc:GhostTextTokenResource SingleLineHeight}" />
+                <Setter Property="Padding" Value="{arc:GhostTextTokenResource SingleLinePadding}" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Trail">
+                <Setter Property="Grid.Row" Value="1" />
+                <Setter Property="Margin" Value="{arc:GhostTextTokenResource SingleLineChipMargin}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Footer">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+
+        <!-- Plain: flush inside the app's own card, which owns the border and the focus style. -->
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <!-- No corners to round off, and the chip sits flush right: its focus ring reaches past the shell. -->
+            <Style Selector="^ /template/ Border#PART_Shell">
+                <Setter Property="ClipToBounds" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_FocusRing">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Label">
+                <Setter Property="Padding" Value="{arc:GhostTextTokenResource PlainLabelPadding}" />
+            </Style>
+            <Style Selector="^ /template/ arc|GhostTextEditor#PART_Editor">
+                <Setter Property="Padding" Value="{arc:GhostTextTokenResource PlainEditorPadding}" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_Footer">
+                <Setter Property="Padding" Value="{arc:GhostTextTokenResource PlainFooterPadding}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Trail">
+                <Setter Property="Margin" Value="{arc:GhostTextTokenResource PlainFooterPadding}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The text field: a TextBox with no chrome. The padding sits inside the scroller so text scrolls to the edge; the
+        presenter lays the ghost out after the text in the ghost ink (TextMuted).
+    -->
+    <ControlTheme x:Key="{x:Type arc:GhostTextEditor}" TargetType="arc:GhostTextEditor">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GhostTextEditor">
+                <Panel Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                                  VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                                  IsScrollChainingEnabled="True"
+                                  BringIntoViewOnFocusChange="False">
+                        <Panel Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <TextBlock Name="PART_Placeholder"
+                                       Foreground="{TemplateBinding PlaceholderForeground}"
+                                       Text="{TemplateBinding PlaceholderText}"
+                                       FontFamily="{TemplateBinding FontFamily}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Top">
+                                <TextBlock.IsVisible>
+                                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                        <Binding ElementName="PART_TextPresenter" Path="PreeditText" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Text" Converter="{x:Static StringConverters.IsNullOrEmpty}" />
+                                    </MultiBinding>
+                                </TextBlock.IsVisible>
+                            </TextBlock>
+                            <arc:GhostTextPresenter Name="PART_TextPresenter"
+                                                    Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                    CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                                    CaretIndex="{TemplateBinding CaretIndex}"
+                                                    SelectionStart="{TemplateBinding SelectionStart}"
+                                                    SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                    TextAlignment="{TemplateBinding TextAlignment}"
+                                                    TextWrapping="{TemplateBinding TextWrapping}"
+                                                    LineHeight="{TemplateBinding LineHeight}"
+                                                    LetterSpacing="{TemplateBinding LetterSpacing}"
+                                                    PasswordChar="{TemplateBinding PasswordChar}"
+                                                    RevealPassword="{TemplateBinding RevealPassword}"
+                                                    SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                    SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                    CaretBrush="{TemplateBinding CaretBrush}"
+                                                    VerticalAlignment="Top" />
+                        </Panel>
+                    </ScrollViewer>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="GhostForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:GhostTextTokenResource TextFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:GhostTextTokenResource TextLineHeight}" />
+    </ControlTheme>
+
+    <!--
+        The chip: a pill (SurfaceMuted) whose content crossfades between states (old out 100ms, new in 160ms, no movement)
+        while its width follows on a 200ms tween anchored to the right edge. Hover lifts its fill; a keyboard ring shows
+        only in the error state, the one state Tab reaches it.
+    -->
+    <ControlTheme x:Key="{x:Type arc:GhostTextChip}" TargetType="arc:GhostTextChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Padding" Value="{arc:GhostTextTokenResource ChipPadding}" />
+        <Setter Property="FontSize" Value="{arc:GhostTextTokenResource ChipFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GhostTextChip">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Height="{arc:GhostTextTokenResource ChipHeight}">
+                        <arc:GhostTextSizeBox IsVertical="False" Duration="0:0:0.2">
+                            <arc:ArcContentSwap Name="PART_Swap"
+                                                Mode="Crossfade"
+                                                Margin="{TemplateBinding Padding}"
+                                                HorizontalAlignment="Right"
+                                                HorizontalContentAlignment="Right"
+                                                VerticalContentAlignment="Center" />
+                        </arc:GhostTextSizeBox>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsHitTestVisible="False"
+                            IsVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A key cap: 18px, a hairline border, 11px medium text; pressed it scales to 92% and darkens for 160ms. -->
+    <ControlTheme x:Key="{x:Type arc:GhostTextKey}" TargetType="arc:GhostTextKey">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:GhostTextTokenResource KeyFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Padding" Value="{arc:GhostTextTokenResource KeyPadding}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:GhostTextKey">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep5}"
+                        Padding="{TemplateBinding Padding}"
+                        MinWidth="{arc:GhostTextTokenResource KeyHeight}"
+                        Height="{arc:GhostTextTokenResource KeyHeight}">
+                    <TextBlock Text="{TemplateBinding Text}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:struck">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

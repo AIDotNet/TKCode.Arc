@@ -33,10 +33,12 @@ moves.
 
 ## Usage
 
-With nothing set, the pill plays a sample run on its own: an invented coding agent that works through six steps and
-stops on an approval that waits for as long as it takes. The preview above adds a switch to a second sample (a research
-agent whose third step fails once, so Retry can be seen) and a Replay button; those two controls belong to the demo,
-not to the pill.
+With nothing set, the pill rests at "Ready": the default mark, named "Agent", with no ring and no timer. The package
+ships no sample run. The preview above plays a simulated run that the gallery writes: a coding agent named after
+Claude Sonnet 5.5 works through six steps and stops on an approval that waits for as long as it takes. Its switch
+moves to a second run (a research agent named after Gemini 4 Argon, whose third step fails once, so Retry can be seen)
+and Replay starts over; the switch, the Replay button and the runs belong to the demo, not to the pill. The model
+names are real; the tasks, files and counts are invented.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -178,26 +180,39 @@ becomes Deny. It is the same button each time, so keyboard focus stays on it. Wh
 
 ### The simulation
 
-The sample run is not part of the control. `AgentRunSimulation` is a driver with no UI that plays an
-`AgentRunScenario` on a timer: it lists the steps, ticks counts, waits for an approval or a failure for as long as it
-takes, and applies Pause, Resume, Stop, Approve, Deny, Retry and Open run to its own state. Give one to
-`AgentStatus.Simulation` and the pill shows it and routes its buttons back; read its `Status`, `Activity`, `Steps` and
-`Notice` yourself to drive any other view.
+A simulated run is for previews, onboarding and tests; your app writes it. `AgentRunScenario` holds the agent, the
+steps, the outcome and the notices; each `AgentRunScenarioStep` has a present-tense label, a past-tense label, an icon, a
+duration, an optional count, an optional approval gate and an optional failure on its first attempt.
+`AgentRunSimulation` is a driver with no UI that plays the scenario on a timer: it lists the steps, ticks counts, waits
+for an approval or a failure for as long as it takes, and applies Pause, Resume, Stop, Approve, Deny, Retry and Open
+run to its own state. Give one to `AgentStatus.Simulation` and the pill starts it once it is on screen, shows it and
+routes its buttons back; read its `Status`, `Activity`, `Steps` and `Notice` yourself to drive any other view.
 
 ```csharp
-var simulation = new AgentRunSimulation(AgentStatusSamples.Research);
+var run = new AgentRunScenario
+{
+    Agent = new AgentModel("Release bot", ArcIcons.Sparkles),
+    Outcome = "2 files touched",
+    Steps =
+    [
+        new() { Id = "read", ActiveLabel = "Reading 12 files", DoneLabel = "Read 12 files",
+                Icon = ArcIcons.Search, Duration = TimeSpan.FromSeconds(2) },
+        new() { Id = "push", ActiveLabel = "Pushing the branch", DoneLabel = "Pushed the branch",
+                Icon = ArcIcons.CloudUpload, Duration = TimeSpan.FromSeconds(1.5),
+                Request = "Waiting on you to push", WaitingLabel = "Approval needed to push" }
+    ]
+};
+var simulation = new AgentRunSimulation(run);
 pill.Simulation = simulation;
 simulation.Replay();                                   // clears the run and starts again after 0.5 s
-simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 s
+simulation.Scenario = otherRun;                        // starts over after 0.9 s
 ```
 
-The start delay is 0.9 seconds (`StartDelay`) and 0.5 seconds after `Replay()` (`ReplayDelay`). A finished or stopped run
-stays as it is until the pill settles it. The timers run on a `TimeProvider`, so a test can step the run with a manual
-clock; the pill takes its own `TimeProvider` property for the timer and the settle delay.
-
-`AgentStatusSamples` has the two invented scenarios, their agents (`CodingAgent`, `ResearchAgent`) and two activities.
-Build your own `AgentRunScenario` from `AgentRunScenarioStep`s: each has a present-tense label, a past-tense label, an
-icon, a duration, an optional count, an optional approval gate and an optional failure on its first attempt.
+In XAML, create one simulation per pill inside `<arc:AgentStatus.Simulation>` and set its `Scenario` from
+`{x:Static}`, as the preview's Code tab shows (the parameterless simulation has an empty run, which stays at Ready). The start delay is 0.9 seconds (`StartDelay`) and 0.5 seconds after `Replay()` (`ReplayDelay`). A
+finished or stopped run stays as it is until the pill settles it. The timers run on a `TimeProvider`, so a test can step
+the run with a manual clock; the pill takes its own `TimeProvider` property for the timer and the settle delay. Setting
+`Simulation` back to null leaves the pill at Ready; the run itself goes on until you `Dispose()` it.
 
 ### Narrow containers
 
@@ -258,7 +273,9 @@ the pill's footprint. The pill keeps its place in the layout.
 
 **How do I show the timer for a run that already started?** Set `StartedAt` to the real start. The pill counts from there.
 
-**What if I give `Status` and a `Simulation`?** The simulation drives the pill and `Status` is ignored.
+**What if I give `Status` and a `Simulation`?** Your data wins: while `Status`, `Activity`, `StartedAt` or a step is
+set, the pill shows them and leaves the simulation alone (it does not start it, and the buttons only raise their
+events). `Agent` alone does not count: it names the simulated run's agent.
 
 **Why does a count not roll like a new activity?** Only a new label and icon roll. A count changes in place, so it can
 tick several times a second.
@@ -283,8 +300,6 @@ tick several times a second.
 
 <!-- api: AgentRunScenarioStep -->
 
-<!-- api: AgentStatusSamples -->
-
 The enums:
 
 | Type | Values |
@@ -299,8 +314,8 @@ The agent is an `AgentModel` (name, a 24 by 24 stroked mark and its brush), shar
 ## Accessibility
 
 - The pill is a button with an expanded state. Its name reads the agent, the activity with its count and the elapsed
-  time ("Juniper Code 3: Checking specs 8 of 12, 0:09 elapsed"); a finished run reads its result.
-- A polite live region announces each new activity and each outcome ("Juniper Code 3: done in 14 seconds, 5 files
+  time ("Claude Sonnet 5.5: Checking specs 8 of 12, 0:09 elapsed"); a finished run reads its result.
+- A polite live region announces each new activity and each outcome ("Claude Sonnet 5.5: done in 14 seconds, 5 files
   touched"), and the result of an action through `Notice`. It does not speak counts or timer ticks.
 - The open panel is a region named "{agent} run details"; the progress bar is a progress bar named "Run progress" with a
   value such as "4 of 6 steps finished".

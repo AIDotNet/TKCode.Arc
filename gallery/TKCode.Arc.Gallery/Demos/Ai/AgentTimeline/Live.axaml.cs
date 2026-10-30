@@ -6,8 +6,8 @@ namespace TKCode.Arc.Gallery.Demos;
 
 public partial class AgentTimelineLiveDemo : UserControl
 {
-    // Replays the sample run as if its events were arriving from a backend right now.
-    private readonly AgentTimelineLiveDriver _driver = new(AgentTimelineSamples.CreateIncidentRun());
+    // Replays the demo's run as if its events were arriving from a backend right now (the driver gets its own copy).
+    private readonly AgentTimelineLiveDriver _driver = new(AgentTimelineDemoData.CreateIncidentRun());
 
     public AgentTimelineLiveDemo()
     {

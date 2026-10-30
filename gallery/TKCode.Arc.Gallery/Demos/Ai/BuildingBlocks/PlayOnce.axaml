@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BuildingBlocksPlayOnceDemo">
+    <!-- With IsLooping off the simulated build plays once, rests on Ready and offers Replay. -->
+    <StackPanel MaxWidth="400" Margin="0,12">
+        <arc:BuildingBlocks IsLooping="False" Duration="0:0:3.6" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiMascotEmptyStateDemo">
+    <!-- Large and idle, its eyes following the pointer anywhere in the window. -->
+    <StackPanel Spacing="12" Margin="0,16" MaxWidth="420">
+        <arc:AiMascot Status="Idle" Size="160" FollowPointer="Page" AssistantName="Atlas" HorizontalAlignment="Center" />
+        <TextBlock Text="How can I help today?"
+                   TextAlignment="Center"
+                   FontSize="{arc:ArcDesignTokenResource TypeXL}"
+                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+        <TextBlock Text="Ask Atlas about your data, your docs or your code."
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

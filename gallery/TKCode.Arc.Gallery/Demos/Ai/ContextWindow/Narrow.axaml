@@ -1,8 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.ContextWindowNarrowDemo">
     <!-- In a 360px column the legend moves under the grid, the cells tighten, the model pill moves under the readout and
          the actions wrap. -->
-    <arc:ContextWindow Width="360" HorizontalAlignment="Center" Margin="0,12" />
+    <arc:ContextWindow Width="360"
+                       HorizontalAlignment="Center"
+                       Margin="0,12"
+                       Models="{x:Static demos:ContextWindowDemoData.SessionModels}"
+                       Items="{x:Static demos:ContextWindowDemoData.SessionItems}"
+                       Turns="{x:Static demos:ContextWindowDemoData.SessionTurns}"
+                       Files="{x:Static demos:ContextWindowDemoData.SessionFiles}" />
 </UserControl>

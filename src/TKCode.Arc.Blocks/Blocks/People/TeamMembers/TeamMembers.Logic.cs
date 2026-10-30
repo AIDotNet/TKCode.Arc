@@ -194,6 +194,7 @@ public partial class TeamMembers
 
     static TeamMembers()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<TeamMembers>(false);
     }
 

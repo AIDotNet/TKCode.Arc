@@ -499,7 +499,8 @@ internal sealed class DataGridFilterCell : TemplatedControl
     {
         if (Column?.Type is DataGridColumnType.Select or DataGridColumnType.Boolean)
         {
-            _select?.Focus(NavigationMethod.Tab);
+            // Reached from the column menu's Filter: no keyboard ring after a click.
+            _select?.Focus(DataGridFocusModality.For(this));
         }
         else
         {

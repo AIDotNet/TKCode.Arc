@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.BuildingBlocksReducedMotionDemo">
+    <!-- Under reduced motion the placeholders, the content and the styling arrive as plain crossfades, nothing travels,
+         and the build plays once. -->
+    <StackPanel MaxWidth="400" Margin="0,12">
+        <arc:BuildingBlocks arc:ArcMotion.Level="Reduced" />
+    </StackPanel>
+</UserControl>

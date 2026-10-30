@@ -61,6 +61,130 @@ public class RollingDigitsTests
         }
     }
 
+    /// <summary>
+    /// Changes 1 → 3 under the frame clock and returns where the ones wheel is after each 1/60 s frame (frame n sits n/60 s
+    /// into the motion, give or take the clock's tick rounding).
+    /// </summary>
+    private static List<double> SampleOnesWheel(RollingDigits digits, ArcMotionLevel level, int frames, out int requestsDuringChange)
+    {
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        digits.Value = 1;
+        digits.UseGrouping = false;
+        var window = TestHelpers.Show(digits, level);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var before = clock.RequestCount;
+            digits.Value = 3;
+            requestsDuringChange = clock.RequestCount - before;
+            var samples = new List<double> { digits.WheelPositions[^1] };
+            for (var i = 0; i < frames; i++)
+            {
+                clock.Advance(TimeSpan.FromSeconds(1.0 / 60.0));
+                samples.Add(digits.WheelPositions[^1]);
+            }
+            return samples;
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Wheel_Spring_Still_Drives_Changes_When_No_Wheel_Motion_Is_Set()
+    {
+        // Source and behavior compatible: the default is null and the wheel follows WheelSpring (smooth by default).
+        new RollingDigits().WheelMotion.ShouldBeNull();
+        new RollingDigits().WheelSpring.ShouldBe(ArcSpring.Smooth);
+        foreach (var preset in new[] { ArcSpring.Smooth, ArcSpring.Quick })
+        {
+            var samples = SampleOnesWheel(new RollingDigits { WheelSpring = preset }, ArcMotionLevel.Full, 30, out _);
+            samples[0].ShouldBe(1);
+            for (var n = 1; n <= 30; n++)
+            {
+                var (x, _) = SpringSolver.Evaluate(ArcMotionPresets.Get(preset), 1 - 3, 0, n / 60.0);
+                samples[n].ShouldBe(3 + x, 1e-4, $"{preset} frame {n}");
+            }
+        }
+    }
+
+    [AvaloniaFact]
+    public void Wheel_Motion_Takes_Any_Spring()
+    {
+        var spring = SpringSpec.FromVisual(0.28, 0);
+        var samples = SampleOnesWheel(new RollingDigits { WheelSpring = ArcSpring.Quick, WheelMotion = MotionSpec.Spring(spring) },
+            ArcMotionLevel.Full, 30, out _);
+        for (var n = 1; n <= 30; n++)
+        {
+            var (x, _) = SpringSolver.Evaluate(spring, -2, 0, n / 60.0);
+            samples[n].ShouldBe(3 + x, 1e-4, $"frame {n}");
+        }
+        // It is not the preset it replaces.
+        var (quick, _) = SpringSolver.Evaluate(ArcMotionPresets.Quick, -2, 0, 6 / 60.0);
+        Math.Abs(samples[6] - (3 + quick)).ShouldBeGreaterThan(0.01);
+    }
+
+    [AvaloniaFact]
+    public void Wheel_Motion_Takes_A_Timed_Ease_And_Lands_On_Time()
+    {
+        var easing = new Avalonia.Animation.Easings.CubicEaseOut();
+        var duration = TimeSpan.FromMilliseconds(240);
+        var samples = SampleOnesWheel(new RollingDigits { WheelMotion = MotionSpec.Tween(duration, easing) }, ArcMotionLevel.Full, 20,
+            out _);
+        // 240ms is 14.4 frames: every frame before it follows the curve, the 15th lands on the digit and stays.
+        for (var n = 1; n <= 14; n++)
+        {
+            samples[n].ShouldBe(1 + 2 * easing.Ease(n / 60.0 / duration.TotalSeconds), 1e-4, $"frame {n}");
+        }
+        samples[15].ShouldBe(3);
+        samples[20].ShouldBe(3);
+    }
+
+    [AvaloniaFact]
+    public void Wheel_Motion_Still_Jumps_Under_Reduced_And_Off_Motion()
+    {
+        // MotionValue runs tweens under reduced motion; the wheel must still jump, as it does with springs.
+        foreach (var level in new[] { ArcMotionLevel.Reduced, ArcMotionLevel.Off })
+        {
+            var tween = MotionSpec.Tween(TimeSpan.FromMilliseconds(600), ArcEasings.Standard);
+            var samples = SampleOnesWheel(new RollingDigits { WheelMotion = tween }, level, 2, out var requests);
+            samples.ShouldAllBe(p => p == 3, level.ToString());
+            requests.ShouldBe(0, level.ToString());
+        }
+    }
+
+    [AvaloniaFact]
+    public void Wheel_Motion_Is_Ignored_By_Instant_Changes_And_The_First_Reveal()
+    {
+        var slow = MotionSpec.Tween(TimeSpan.FromSeconds(1), ArcEasings.Standard);
+        var instant = SampleOnesWheel(new RollingDigits { IsInstant = true, WheelMotion = slow }, ArcMotionLevel.Full, 1, out var requests);
+        instant.ShouldAllBe(p => p == 3);
+        requests.ShouldBe(0);
+
+        // The reveal keeps its own staggered spring (visual duration 0.48s) whatever the wheel motion is.
+        var clock = new ManualFrameClock();
+        using var _ = clock.Install();
+        var digits = new RollingDigits { IsArmed = true, Value = 7, WheelMotion = slow };
+        var window = TestHelpers.Show(digits, ArcMotionLevel.Full);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            digits.IsArmed = false;
+            for (var i = 0; i < 6; i++)
+            {
+                clock.Advance(TimeSpan.FromSeconds(1.0 / 60.0));
+            }
+            var (x, _) = SpringSolver.Evaluate(SpringSpec.FromVisual(0.48, 0), -7, 0, 6 / 60.0);
+            digits.WheelPositions[^1].ShouldBe(7 + x, 1e-4);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [Fact]
     public void Falloff_None_Keeps_Glyphs_Solid_And_Only_Clips()
     {

@@ -1,0 +1,458 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TldrToggleTheme">
+
+    <!--
+        An article card: the header (the source's mark, name, date and reading time; the title; the author), the controls row
+        (the mode switch, and the length slider at the right or, below 520px, under it at full width), the body whose height
+        springs to its content while views crossfade inside it, and a footer with the state, the model and the actions.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggle}" TargetType="arc:TldrToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:TldrToggleTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:TldrToggleTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:TldrToggleTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrToggle">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <StackPanel Spacing="{arc:TldrToggleTokenResource HeaderGap}">
+                            <Grid ColumnDefinitions="Auto,*">
+                                <Panel VerticalAlignment="Center" Margin="0,0,8,0">
+                                    <Border Name="PART_Monogram"
+                                            Width="{arc:TldrToggleTokenResource MonogramSize}"
+                                            Height="{arc:TldrToggleTokenResource MonogramSize}"
+                                            CornerRadius="{arc:TldrToggleTokenResource MonogramCornerRadius}"
+                                            Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                                            IsVisible="False">
+                                        <TextBlock Name="PART_MonogramText"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:TldrToggleTokenResource MonogramFontSize}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Accent}" />
+                                    </Border>
+                                    <arc:ArcGlyph Name="PART_SourceMark"
+                                                  Size="{arc:TldrToggleTokenResource SourceMarkSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                  IsVisible="False" />
+                                </Panel>
+                                <TextBlock Name="PART_Meta"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:TldrToggleTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Grid>
+                            <TextBlock Name="PART_Title"
+                                       TextWrapping="Wrap"
+                                       FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       FontSize="{arc:TldrToggleTokenResource TitleFontSize}"
+                                       LineHeight="{arc:TldrToggleTokenResource TitleLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <StackPanel Name="PART_AuthorRow"
+                                        Orientation="Horizontal"
+                                        Spacing="{arc:TldrToggleTokenResource AuthorGap}">
+                                <arc:Avatar Name="PART_Avatar" Size="Small" VerticalAlignment="Center" />
+                                <TextBlock Name="PART_Author"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontSize="{arc:TldrToggleTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <arc:TldrToggleControlsPanel Name="PART_Controls"
+                                                     Margin="{arc:TldrToggleTokenResource ControlsMargin}"
+                                                     Gap="{arc:TldrToggleTokenResource ControlsGap}"
+                                                     SliderMaxWidth="{arc:TldrToggleTokenResource SliderMaxWidth}">
+                            <arc:SegmentedControl Name="PART_Mode" />
+                            <arc:Slider Name="PART_Length" />
+                        </arc:TldrToggleControlsPanel>
+
+                        <arc:AiHeightBox Name="PART_BodyBox"
+                                         IsExpanded="True"
+                                         FollowsContent="True"
+                                         Margin="{arc:TldrToggleTokenResource BodyMargin}"
+                                         CrossClipOverflow="{arc:TldrToggleTokenResource BodyCrossOverflow}">
+                            <arc:ArcContentSwap Name="PART_Body"
+                                                Mode="Crossfade"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Top" />
+                        </arc:AiHeightBox>
+
+                        <Border BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  Height="{arc:TldrToggleTokenResource FooterHeight}"
+                                  Margin="{arc:TldrToggleTokenResource FooterMargin}">
+                                <arc:ArcContentSwap Name="PART_State"
+                                                    Mode="Crossfade"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left" />
+                                <!-- The model's name is the part that truncates when the footer runs out of room. -->
+                                <Grid Grid.Column="1"
+                                      ColumnDefinitions="Auto,*"
+                                      ColumnSpacing="{arc:TldrToggleTokenResource FooterGap}"
+                                      Margin="{arc:TldrToggleTokenResource ModelMargin}"
+                                      VerticalAlignment="Center">
+                                    <arc:ArcGlyph Name="PART_ModelMark"
+                                                  Size="{arc:TldrToggleTokenResource ModelMarkSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_ModelName"
+                                               Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="{arc:TldrToggleTokenResource FooterFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </Grid>
+                                <arc:ArcContentSwap Name="PART_Actions"
+                                                    Grid.Column="2"
+                                                    Mode="Crossfade"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right" />
+                            </Grid>
+                        </Border>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ModelMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TldrToggleControlsPanel#PART_Controls">
+            <Setter Property="IsStacked" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|TldrToggleControlsPanel#PART_Controls">
+            <Setter Property="IsStacked" Value="True" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:TldrToggleTokenResource CompactCardPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The article: paragraphs with a gap. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleArticleView}" TargetType="arc:TldrToggleArticleView">
+        <Setter Property="Spacing" Value="{arc:TldrToggleTokenResource ParagraphGap}" />
+    </ControlTheme>
+
+    <!-- One paragraph: body type, focusable so a jump can land on it, and its highlight's look. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleParagraph}" TargetType="arc:TldrToggleParagraph">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontSize" Value="{arc:TldrToggleTokenResource BodyFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:TldrToggleTokenResource BodyLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HighlightCornerRadius" Value="{arc:TldrToggleTokenResource HighlightCornerRadius}" />
+        <Setter Property="HighlightOutset" Value="{arc:TldrToggleTokenResource HighlightOutset}" />
+    </ControlTheme>
+
+    <!-- Streamed text: the body's type; each chunk fades in on its own. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleStreamText}" TargetType="arc:TldrToggleStreamText">
+        <Setter Property="FontSize" Value="{arc:TldrToggleTokenResource BodyFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:TldrToggleTokenResource BodyLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+
+    <!-- The key points: rows with a gap. -->
+    <ControlTheme x:Key="{x:Type arc:TldrTogglePointList}" TargetType="arc:TldrTogglePointList">
+        <Setter Property="Spacing" Value="{arc:TldrToggleTokenResource PointGap}" />
+    </ControlTheme>
+
+    <!--
+        A key point: the glyph (a dashed circle that becomes a check when the point is written), the streaming text and the ¶
+        link, which takes its place from the start (no width change) and appears once the list is done.
+    -->
+    <ControlTheme x:Key="{x:Type arc:TldrTogglePointRow}" TargetType="arc:TldrTogglePointRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrTogglePointRow">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Panel Width="{arc:TldrToggleTokenResource PointGlyphSize}"
+                           Height="{arc:TldrToggleTokenResource PointGlyphSize}"
+                           Margin="{arc:TldrToggleTokenResource PointGlyphMargin}"
+                           VerticalAlignment="Top">
+                        <arc:ArcGlyph Name="PART_Pending"
+                                      Data="{x:Static arc:TldrTogglePointRow.PendingGlyph}"
+                                      Size="{arc:TldrToggleTokenResource PointGlyphSize}"
+                                      RenderTransformOrigin="50%,50%" />
+                        <arc:ArcGlyph Name="PART_Done"
+                                      Data="{x:Static arc:ArcIcons.CircleCheck}"
+                                      Size="{arc:TldrToggleTokenResource PointGlyphSize}"
+                                      RenderTransformOrigin="50%,50%" />
+                    </Panel>
+                    <arc:TldrToggleStreamText Name="PART_Text"
+                                              Grid.Column="1"
+                                              Margin="{arc:TldrToggleTokenResource PointTextMargin}" />
+                    <arc:Button Name="PART_Link"
+                                Grid.Column="2"
+                                Variant="Ghost"
+                                Size="Small"
+                                VerticalAlignment="Top"
+                                arc:Tooltip.Tip="{TemplateBinding LinkTip}">
+                        <StackPanel Orientation="Horizontal" Spacing="2">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Pilcrow}"
+                                          Size="{arc:TldrToggleTokenResource LinkGlyphSize}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding NumberText}"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:TldrToggleTokenResource LinkFontSize}" />
+                        </StackPanel>
+                    </arc:Button>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Pending">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Done">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.6)" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Link">
+            <Setter Property="Height" Value="{arc:TldrToggleTokenResource LinkSize}" />
+            <Setter Property="MinHeight" Value="{arc:TldrToggleTokenResource LinkSize}" />
+            <Setter Property="MinWidth" Value="{arc:TldrToggleTokenResource LinkSize}" />
+            <Setter Property="Padding" Value="6,0" />
+            <Setter Property="Margin" Value="8,-2,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Pending">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.6)" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Done">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:linked /template/ arc|Button#PART_Link">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="IsHitTestVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Pending">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Done">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|Button#PART_Link">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- Thinking: one calm shimmering line. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleThinking}" TargetType="arc:TldrToggleThinking">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrToggleThinking">
+                <arc:ToolCallText Name="PART_Label"
+                                  Text="{TemplateBinding Text}"
+                                  IsShimmering="True"
+                                  HorizontalAlignment="Left"
+                                  Height="{arc:TldrToggleTokenResource ThinkingHeight}"
+                                  FontSize="{arc:TldrToggleTokenResource BodyFontSize}"
+                                  LineHeight="{arc:TldrToggleTokenResource BodyLineHeight}"
+                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                  MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A quiet note: an empty article, or a result stopped before any text. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleNote}" TargetType="arc:TldrToggleNote">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrToggleNote">
+                <TextBlock Text="{TemplateBinding Text}"
+                           TextWrapping="Wrap"
+                           FontSize="{arc:TldrToggleTokenResource BodyFontSize}"
+                           LineHeight="{arc:TldrToggleTokenResource BodyLineHeight}"
+                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A failure: an alert with its icon, the message and Try again. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleAlert}" TargetType="arc:TldrToggleAlert">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrToggleAlert">
+                <Border Background="{arc:ArcDesignTokenResource DangerSubtle}"
+                        CornerRadius="{arc:TldrToggleTokenResource AlertCornerRadius}"
+                        Padding="{arc:TldrToggleTokenResource AlertPadding}">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:TldrToggleTokenResource AlertGap}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                      Size="{arc:TldrToggleTokenResource StatusGlyphSize}"
+                                      Margin="0,4,0,0"
+                                      VerticalAlignment="Top"
+                                      Foreground="{arc:ArcDesignTokenResource Danger}" />
+                        <StackPanel Grid.Column="1" Spacing="{arc:TldrToggleTokenResource AlertGap}">
+                            <TextBlock Text="{TemplateBinding Message}"
+                                       TextWrapping="Wrap"
+                                       FontSize="{arc:TldrToggleTokenResource FooterFontSize}"
+                                       LineHeight="20"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                            <arc:Button Name="PART_Retry"
+                                        Variant="Secondary"
+                                        Size="Small"
+                                        HorizontalAlignment="Left"
+                                        Content="{TemplateBinding RetryText}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button#PART_Retry">
+            <Setter Property="Height" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="MinHeight" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="Padding" Value="{arc:TldrToggleTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:TldrToggleTokenResource FooterFontSize}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The footer's state: an icon and a word on one line; Writing shimmers. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleStatus}" TargetType="arc:TldrToggleStatus">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrToggleStatus">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:TldrToggleTokenResource FooterGap}">
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Size="{arc:TldrToggleTokenResource StatusGlyphSize}"
+                                  VerticalAlignment="Center" />
+                    <arc:ToolCallText Name="PART_Label"
+                                      VerticalAlignment="Center"
+                                      FontSize="{arc:TldrToggleTokenResource FooterFontSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The footer's actions: Stop while streaming; Regenerate and Copy once finished. Every target is 32px. -->
+    <ControlTheme x:Key="{x:Type arc:TldrToggleActions}" TargetType="arc:TldrToggleActions">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TldrToggleActions">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <arc:Button Name="PART_Stop"
+                                Variant="Secondary"
+                                Size="Small"
+                                AutomationProperties.Name="{TemplateBinding StopText}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Square}"
+                                          Size="{arc:TldrToggleTokenResource StatusGlyphSize}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding StopText}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </arc:Button>
+                    <arc:Button Name="PART_Regenerate"
+                                Variant="Ghost"
+                                Size="Small"
+                                AutomationProperties.Name="{TemplateBinding RegenerateText}"
+                                arc:Tooltip.Tip="{TemplateBinding RegenerateText}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RefreshCw}"
+                                      Size="{arc:TldrToggleTokenResource ActionGlyphSize}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </arc:Button>
+                    <arc:CopyButton Name="PART_Copy"
+                                    IsIconOnly="True"
+                                    Variant="Plain"
+                                    Value="{TemplateBinding CopyText}"
+                                    AutomationProperties.Name="{TemplateBinding CopyLabel}"
+                                    arc:Tooltip.Tip="{TemplateBinding CopyLabel}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button#PART_Stop">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Height" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="MinHeight" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="Padding" Value="{arc:TldrToggleTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:TldrToggleTokenResource FooterFontSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Regenerate">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Width" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="Height" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="MinHeight" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|CopyButton#PART_Copy">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Width" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="Height" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="MinHeight" Value="{arc:TldrToggleTokenResource ActionSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:running /template/ arc|Button#PART_Stop">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:finished /template/ arc|Button#PART_Regenerate">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:finished /template/ arc|CopyButton#PART_Copy">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

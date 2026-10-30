@@ -1,0 +1,24 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.GhostMascotTheme">
+
+    <!-- The ghost is drawn and animated in code (GhostMascot.Render / .Motion), so there are no transitions here: the
+         theme hands it the ArcDesign inks (they follow theme and accent switches) and the token values. -->
+    <ControlTheme x:Key="{x:Type arc:GhostMascot}" TargetType="arc:GhostMascot">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentForegroundInk" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BackgroundInk" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="RaisedInk" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="HairlineInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="CompactSize" Value="{arc:GhostMascotTokenResource CompactSize}" />
+        <Setter Property="ShadeOpacity" Value="{arc:GhostMascotTokenResource ShadeOpacity}" />
+        <Setter Property="GroundOpacity" Value="{arc:GhostMascotTokenResource GroundOpacity}" />
+        <Setter Property="HairlineWidth" Value="{arc:GhostMascotTokenResource HairlineWidth}" />
+        <Setter Property="EyeDarkMix" Value="{arc:GhostMascotTokenResource EyeDarkMix}" />
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AgentHandoffPreviewDemo">
+    <!-- With no Stage the card plays the simulated support chat it is given: the assistant answers, hands off with a
+         summary and a person takes over. "No one available" plays the transfer that nobody picks up, so Try again shows;
+         Empty has no simulation and no data. The card fills its container up to 560px, so its width never follows the
+         messages. The chat is demo content; the model name is a real one. -->
+    <StackPanel Spacing="20" MaxWidth="560" Margin="0,12">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="handoff"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="handoff" Label="Handoff" />
+            <arc:SegmentedOption Value="unavailable" Label="No one available" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:AgentHandoff x:Name="Chat"
+                          Title="{x:Static demos:AgentHandoffDemoData.Title}"
+                          Subtitle="{x:Static demos:AgentHandoffDemoData.Subtitle}"
+                          AssistantModel="{x:Static demos:AgentHandoffDemoData.AssistantModel}"
+                          ReplyEstimate="{x:Static demos:AgentHandoffDemoData.ReplyEstimate}">
+            <arc:AgentHandoff.Simulation>
+                <arc:AgentHandoffSimulation Script="{x:Static demos:AgentHandoffDemoData.Script}" />
+            </arc:AgentHandoff.Simulation>
+        </arc:AgentHandoff>
+    </StackPanel>
+</UserControl>

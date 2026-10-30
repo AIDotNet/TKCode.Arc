@@ -1,7 +1,7 @@
 ---
 title: Agent status
 summary: 執行中代理的即時狀態膠囊：其標記位於旋轉的環中，顯示目前的活動與計時器；按一下即展開成近期步驟，並提供暫停、停止與核准控制。
-source-hash: 6d0078b450f9
+source-hash: f143ca47a5cb
 ---
 
 <Demo name="Preview" />
@@ -26,7 +26,7 @@ source-hash: 6d0078b450f9
 
 ## 用法
 
-未設定任何內容時，膠囊會自行播放一個範例執行：一個虛構的程式代理，依序完成六個步驟，並在一個等待多久都可以的核准處停下。上方的預覽另外加了一個切換開關，可切換到第二個範例（研究代理，其第三步會失敗一次，好讓你看到重試），以及一個「重播」按鈕；這兩個控制項屬於示範本身，不屬於膠囊。
+未設定任何內容時，膠囊停在「就緒」（Ready）狀態：顯示名為 "Agent" 的預設標記，沒有環，也沒有計時器。套件不附帶任何範例執行。上方的預覽播放的是展示庫撰寫的模擬執行：一個以 Claude Sonnet 5.5 命名的程式代理，依序完成六個步驟，並在一個等待多久都可以的核准處停下。它的切換開關可切換到第二個執行（以 Gemini 4 Argon 命名的研究代理，其第三步會失敗一次，好讓你看到重試），「重播」則從頭開始；切換開關、「重播」按鈕與這些執行都屬於示範本身，不屬於膠囊。模型名稱是真實的；任務、檔案與計數是虛構的。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -136,18 +136,29 @@ pill.ApproveRequested += (_, e) =>
 
 ### 模擬
 
-範例執行不屬於控制項的一部分。`AgentRunSimulation` 是沒有 UI 的驅動器，它會以計時器播放一個 `AgentRunScenario`：列出步驟、推進計數、無限期等待核准或失敗，並把暫停、繼續、停止、核准、拒絕、重試與開啟執行套用到它自己的狀態上。把它交給 `AgentStatus.Simulation`，膠囊就會顯示它並把按鈕的操作導回它；你也可以自行讀取其 `Status`、`Activity`、`Steps` 與 `Notice`，以驅動任何其他檢視。
+模擬執行用於預覽、新手導覽與測試，由你的應用程式撰寫。`AgentRunScenario` 包含代理、步驟、結果與通知；每個 `AgentRunScenarioStep` 都有一個現在式標籤、一個過去式標籤、一個圖示、一段時長、一個可選的計數、一個可選的核准關卡，以及可選的首次嘗試失敗。`AgentRunSimulation` 是沒有 UI 的驅動器，它會以計時器播放該情境：列出步驟、推進計數、無限期等待核准或失敗，並把暫停、繼續、停止、核准、拒絕、重試與開啟執行套用到它自己的狀態上。把它交給 `AgentStatus.Simulation`，膠囊出現在畫面上後就會啟動它、顯示它並把按鈕的操作導回它；你也可以自行讀取其 `Status`、`Activity`、`Steps` 與 `Notice`，以驅動任何其他檢視。
 
 ```csharp
-var simulation = new AgentRunSimulation(AgentStatusSamples.Research);
+var run = new AgentRunScenario
+{
+    Agent = new AgentModel("Release bot", ArcIcons.Sparkles),
+    Outcome = "2 files touched",
+    Steps =
+    [
+        new() { Id = "read", ActiveLabel = "Reading 12 files", DoneLabel = "Read 12 files",
+                Icon = ArcIcons.Search, Duration = TimeSpan.FromSeconds(2) },
+        new() { Id = "push", ActiveLabel = "Pushing the branch", DoneLabel = "Pushed the branch",
+                Icon = ArcIcons.CloudUpload, Duration = TimeSpan.FromSeconds(1.5),
+                Request = "Waiting on you to push", WaitingLabel = "Approval needed to push" }
+    ]
+};
+var simulation = new AgentRunSimulation(run);
 pill.Simulation = simulation;
 simulation.Replay();                                   // clears the run and starts again after 0.5 s
-simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 s
+simulation.Scenario = otherRun;                        // starts over after 0.9 s
 ```
 
-起始延遲為 0.9 秒（`StartDelay`），呼叫 `Replay()` 後為 0.5 秒（`ReplayDelay`）。已完成或已停止的執行會保持原樣，直到膠囊將其回復。計時器執行於 `TimeProvider` 之上，因此測試可以用手動時鐘推進執行過程；膠囊另外提供自己的 `TimeProvider` 屬性，用於計時器與回復延遲。
-
-`AgentStatusSamples` 提供兩個虛構的情境、它們的代理（`CodingAgent`、`ResearchAgent`）與兩個活動。你可以用 `AgentRunScenarioStep` 建立自己的 `AgentRunScenario`：每個步驟都有一個現在式標籤、一個過去式標籤、一個圖示、一段時長、一個可選的計數、一個可選的核准關卡，以及可選的首次嘗試失敗。
+在 XAML 中，請在 `<arc:AgentStatus.Simulation>` 裡為每個膠囊建立一個模擬，並用 `{x:Static}` 設定它的 `Scenario`，寫法見預覽的 Code 分頁（無參數的模擬只有一個空執行，會停在就緒狀態）。起始延遲為 0.9 秒（`StartDelay`），呼叫 `Replay()` 後為 0.5 秒（`ReplayDelay`）。已完成或已停止的執行會保持原樣，直到膠囊將其回復。計時器執行於 `TimeProvider` 之上，因此測試可以用手動時鐘推進執行過程；膠囊另外提供自己的 `TimeProvider` 屬性，用於計時器與回復延遲。把 `Simulation` 設回 null 後，膠囊停在就緒狀態；執行本身會繼續，直到你呼叫 `Dispose()`。
 
 ### 窄容器
 
@@ -198,7 +209,7 @@ simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 
 
 **如何為已經開始的執行顯示計時器？** 把 `StartedAt` 設為真正的開始時間，膠囊就會從那裡開始計算。
 
-**如果同時設定 `Status` 與 `Simulation` 會怎樣？** 由模擬驅動膠囊，`Status` 會被忽略。
+**如果同時設定 `Status` 與 `Simulation` 會怎樣？** 以你的資料為準：只要設定了 `Status`、`Activity`、`StartedAt` 或某個步驟，膠囊就顯示它們，不理會模擬（不會啟動它，按鈕也只引發各自的事件）。單獨設定 `Agent` 不算：它只是為模擬執行的代理命名。
 
 **為什麼計數不像新活動那樣滾動？** 只有新的標籤與圖示會滾動。計數原地變更，因此每秒可以跳動數次。
 
@@ -222,8 +233,6 @@ simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 
 
 <!-- api: AgentRunScenarioStep -->
 
-<!-- api: AgentStatusSamples -->
-
 列舉：
 
 | 類型 | 值 |
@@ -237,8 +246,8 @@ simulation.Scenario = AgentStatusSamples.Coding;       // starts over after 0.9 
 
 ## 無障礙
 
-- 膠囊是一個具有展開狀態的按鈕。其名稱會朗讀代理、帶計數的活動與已經經過的時間（"Juniper Code 3: Checking specs 8 of 12, 0:09 elapsed"）；執行結束後則朗讀其結果。
-- 禮貌即時區域會播報每個新的活動與每個結果（"Juniper Code 3: done in 14 seconds, 5 files touched"），以及透過 `Notice` 傳來的動作結果。它不會播報計數或計時器的跳動。
+- 膠囊是一個具有展開狀態的按鈕。其名稱會朗讀代理、帶計數的活動與已經經過的時間（"Claude Sonnet 5.5: Checking specs 8 of 12, 0:09 elapsed"）；執行結束後則朗讀其結果。
+- 禮貌即時區域會播報每個新的活動與每個結果（"Claude Sonnet 5.5: done in 14 seconds, 5 files touched"），以及透過 `Notice` 傳來的動作結果。它不會播報計數或計時器的跳動。
 - 展開的面板是一個名為 "{agent} run details" 的區域；進度條是名為 "Run progress" 的進度條，其值例如 "4 of 6 steps finished"。
 - 狀態從不只靠顏色：每種狀態都有一個文字（Ready、Paused、Done in、Stopped after）以及不同的環或字符；步驟在執行中使用現在式，完成後使用過去式。
 - 窄容器中的圖示按鈕都有無障礙名稱。被截斷的標籤在膠囊的名稱中以及面板的步驟清單中保持完整。

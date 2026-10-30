@@ -1,0 +1,507 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ImageGenerationTheme">
+
+    <!--
+        A model or aspect chip: 32 high, pill shaped, 10 in from the sides, a 1px Border on no fill, secondary text. Hover:
+        SurfaceMuted. Chosen: SurfaceMuted with the strong border and the foreground. A model chip shows its 16px mark (or its
+        first letter) and springs its name open by its measured width only while chosen; an aspect chip shows a 12px outline of
+        its shape and its label.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImageGenerationChip}" TargetType="arc:ImageGenerationChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="{arc:ImageGenerationTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:ImageGenerationTokenResource ChipPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ImageGenerationTokenResource ChipFontSize}" />
+        <Setter Property="ShapeSize" Value="{arc:ImageGenerationTokenResource ShapeSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImageGenerationChip">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Mark"
+                                          Data="{TemplateBinding Mark}"
+                                          Size="{arc:ImageGenerationTokenResource ChipMarkSize}"
+                                          StrokeThickness="1.75"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          IsVisible="{TemplateBinding Mark, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Monogram"
+                                       Text="{TemplateBinding Monogram}"
+                                       Width="{arc:ImageGenerationTokenResource ChipMarkSize}"
+                                       TextAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       VerticalAlignment="Center"
+                                       IsVisible="False" />
+                            <Border Name="PART_Shape"
+                                    BorderThickness="{arc:ImageGenerationTokenResource ShapeThickness}"
+                                    BorderBrush="{TemplateBinding Foreground}"
+                                    CornerRadius="{arc:ImageGenerationTokenResource ShapeCornerRadius}"
+                                    VerticalAlignment="Center"
+                                    IsVisible="False" />
+                            <arc:SpringSizeDecorator Axis="Width" VerticalAlignment="Center">
+                                <TextBlock Name="PART_Text"
+                                           Text="{TemplateBinding Text}"
+                                           Margin="{arc:ImageGenerationTokenResource ChipTextMargin}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           VerticalAlignment="Center" />
+                            </arc:SpringSizeDecorator>
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:monogram /template/ TextBlock#PART_Monogram">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:shaped /template/ Border#PART_Shape">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:collapses /template/ TextBlock#PART_Text">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:collapses:checked /template/ TextBlock#PART_Text">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A tile: the picture on SurfaceMuted with 12px corners. While it works, a glass pill in the bottom-left corner holds a
+        14px ring and the percentage. A failed tile shows the danger alert with "Failed", a stopped one a square with "Stopped",
+        both with "Retry" under them (pressing the tile retries). Picked: a 2px accent ring and an accent check badge in the
+        top-right corner. Full motion: a done tile's picture zooms 2% on hover and the tile presses to 98.5%.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImageGenerationTile}" TargetType="arc:ImageGenerationTile">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ImageGenerationTokenResource TileCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImageGenerationTile">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <Panel>
+                            <arc:ImageGenerationCanvas Name="PART_Canvas"
+                                                       PlaceholderBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                       CellBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                       RenderTransformOrigin="50%,50%" />
+                            <StackPanel Name="PART_StatusPanel"
+                                        Spacing="4"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        IsHitTestVisible="False"
+                                        IsVisible="False">
+                                <arc:ArcGlyph Name="PART_StatusGlyph"
+                                              Size="{arc:ImageGenerationTokenResource StatusGlyphSize}"
+                                              HorizontalAlignment="Center" />
+                                <TextBlock Name="PART_StatusText"
+                                           HorizontalAlignment="Center"
+                                           FontSize="{arc:ImageGenerationTokenResource StatusFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_RetryText"
+                                           HorizontalAlignment="Center"
+                                           FontSize="{arc:ImageGenerationTokenResource StatusFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </StackPanel>
+                            <Border Name="PART_Pill"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Margin="8"
+                                    Padding="{arc:ImageGenerationTokenResource PillPadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ImageGenerationTokenResource ScrimColor}"
+                                    IsHitTestVisible="False">
+                                <StackPanel Orientation="Horizontal" Spacing="{arc:ImageGenerationTokenResource PillGap}">
+                                    <arc:ArcRing Name="PART_Ring"
+                                                 Width="{arc:ImageGenerationTokenResource RingSize}"
+                                                 Height="{arc:ImageGenerationTokenResource RingSize}"
+                                                 Thickness="{arc:ImageGenerationTokenResource RingThickness}"
+                                                 IsRoundCap="True"
+                                                 Foreground="{arc:ImageGenerationTokenResource ScrimForeground}"
+                                                 TrackBrush="{arc:ImageGenerationTokenResource ScrimTrack}"
+                                                 VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_Percent"
+                                               FontSize="{arc:ImageGenerationTokenResource PercentFontSize}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontFeatures="tnum"
+                                               Foreground="{arc:ImageGenerationTokenResource ScrimForeground}"
+                                               VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </Panel>
+                    </Border>
+                    <Border Name="PART_SelectRing"
+                            IsHitTestVisible="False"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderThickness="{arc:ImageGenerationTokenResource SelectionThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource Accent}" />
+                    <Border Name="PART_Badge"
+                            IsHitTestVisible="False"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="8"
+                            Width="{arc:ImageGenerationTokenResource BadgeSize}"
+                            Height="{arc:ImageGenerationTokenResource BadgeSize}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Background="{arc:ArcDesignTokenResource Accent}">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Check}"
+                                      Size="14"
+                                      StrokeThickness="2.5"
+                                      Foreground="{arc:ArcDesignTokenResource AccentForeground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="{arc:ImageGenerationTokenResource TileFocusMargin}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ImageGenerationTokenResource TileFocusCornerRadius}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with the state live in styles (a template value would win over them). -->
+        <Style Selector="^ /template/ Border#PART_Pill">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:working /template/ Border#PART_Pill">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_SelectRing">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Badge">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_SelectRing">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_Badge">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:failed /template/ StackPanel#PART_StatusPanel">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:stopped /template/ StackPanel#PART_StatusPanel">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ImageGenerationCanvas#PART_Canvas">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^:done:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.985)" />
+            </Style>
+            <Style Selector="^:done:pointerover /template/ arc|ImageGenerationCanvas#PART_Canvas">
+                <Setter Property="RenderTransform" Value="scale(1.02)" />
+            </Style>
+            <Style Selector="^ /template/ arc|ImageGenerationCanvas#PART_Canvas">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Pill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_SelectRing">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Badge">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ Border#PART_Pill">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_SelectRing">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Badge">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A suggested prompt in the empty grid: a 32px pill on Surface with a 1px Border and one line of secondary text that
+        trims to the grid's width. Hover: SurfaceMuted and the foreground.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImageGenerationSuggestion}" TargetType="arc:ImageGenerationSuggestion">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Height" Value="{arc:ImageGenerationTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:ImageGenerationTokenResource SuggestionPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ImageGenerationTokenResource ChipFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImageGenerationSuggestion">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <TextBlock Text="{TemplateBinding Text}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The card: Surface, a 1px Border, 20px corners and 16px padding, at most 640 wide. From the top: the prompt, a row of
+        model chips, aspect chips and Generate, the 2 × 2 grid, and the footer with the status line (it crossfades: 100ms out,
+        160ms in, rising 2px) and Upscale, Vary and Download. Below 420px the aspect chips move to a second row; below 520px the
+        footer stacks, the status over three equal buttons.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ImageGeneration}" TargetType="arc:ImageGeneration">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ImageGenerationTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ImageGenerationTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ImageGenerationTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ImageGeneration">
+                <Panel>
+                    <Border Name="PART_Card"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Spacing="{arc:ImageGenerationTokenResource SectionGap}">
+                            <arc:Textarea Name="PART_Prompt"
+                                          FrameMinHeight="{arc:ImageGenerationTokenResource PromptMinHeight}"
+                                          IsLabelVisible="False"
+                                          IsResizable="False" />
+                            <Grid Name="PART_Controls" ColumnDefinitions="Auto,Auto,*,Auto" RowDefinitions="Auto,Auto">
+                                <StackPanel Name="PART_Models"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:ImageGenerationTokenResource ChipGap}"
+                                            VerticalAlignment="Center" />
+                                <StackPanel Name="PART_Aspects"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:ImageGenerationTokenResource ChipGap}"
+                                            VerticalAlignment="Center" />
+                                <arc:Button Name="PART_Generate"
+                                            Grid.Column="3"
+                                            Variant="Primary"
+                                            Size="Small"
+                                            VerticalAlignment="Center" />
+                            </Grid>
+                            <arc:ImageGenerationGrid Name="PART_Grid"
+                                                     Gap="{arc:ImageGenerationTokenResource GridGap}"
+                                                     MaxGridHeight="{arc:ImageGenerationTokenResource GridMaxHeight}" />
+                            <Grid Name="PART_Footer"
+                                  ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto"
+                                  MinHeight="{arc:ImageGenerationTokenResource FooterHeight}">
+                                <arc:ArcContentSwap Name="PART_Status"
+                                                    Mode="Label"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left"
+                                                    TextElement.FontSize="{arc:ImageGenerationTokenResource FooterFontSize}"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                    TextBlock.TextTrimming="CharacterEllipsis" />
+                                <Grid Name="PART_Actions"
+                                      ColumnDefinitions="*,*,*"
+                                      ColumnSpacing="{arc:ImageGenerationTokenResource ActionGap}"
+                                      VerticalAlignment="Center">
+                                    <arc:Button Name="PART_Upscale" Variant="Secondary" Size="Small" HorizontalAlignment="Stretch" />
+                                    <arc:Button Name="PART_Vary" Grid.Column="1" Variant="Secondary" Size="Small" HorizontalAlignment="Stretch" />
+                                    <arc:Button Name="PART_Download" Grid.Column="2" Variant="Secondary" Size="Small" HorizontalAlignment="Stretch" />
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Values that change with the breakpoints live in styles (a template value would win over them). -->
+        <Style Selector="^ /template/ StackPanel#PART_Aspects">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+        </Style>
+        <Style Selector="^:narrow /template/ StackPanel#PART_Aspects">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="4" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Status">
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Actions">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Margin" Value="12,0,0,0" />
+        </Style>
+        <Style Selector="^:stacked /template/ arc|ArcContentSwap#PART_Status">
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+        <Style Selector="^:stacked /template/ Grid#PART_Actions">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

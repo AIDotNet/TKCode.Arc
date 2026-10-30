@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiCommandPaletteDialogDemo">
+    <!-- The palette as a dialog over the page. In an app leave IsShortcutEnabled on and Cmd+K or Ctrl+K opens it; the
+         gallery turns it off here because its own search uses that key. -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:AiCommandPaletteDialog x:Name="Palette" IsShortcutEnabled="False">
+            <arc:AiCommandPalette ModelName="{x:Static demos:AiCommandPaletteDemoData.ModelName}">
+                <arc:AiCommandPalette.Simulation>
+                    <arc:AiCommandPaletteSimulation Items="{x:Static demos:AiCommandPaletteDemoData.Items}"
+                                                    Questions="{x:Static demos:AiCommandPaletteDemoData.Questions}"
+                                                    Answers="{x:Static demos:AiCommandPaletteDemoData.Answers}" />
+                </arc:AiCommandPalette.Simulation>
+            </arc:AiCommandPalette>
+        </arc:AiCommandPaletteDialog>
+        <arc:Button Content="Open command palette"
+                    Variant="Secondary"
+                    HorizontalAlignment="Left"
+                    arc:AiCommandPaletteDialog.Opens="{Binding #Palette}" />
+        <TextBlock Text="Escape in an empty search, a click outside or choosing a page closes it."
+                   Opacity="0.7" FontSize="12" />
+    </StackPanel>
+</UserControl>

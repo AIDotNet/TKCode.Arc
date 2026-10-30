@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WebhookTesterOtherProductDemo">
+    <!-- Source, SignatureHeader, Events and Secret make it the tester of another product. -->
+    <arc:WebhookTester x:Name="Block"
+                       Margin="0,12"
+                       AutoPlay="False"
+                       Endpoint="https://hooks.northwind.dev/relay"
+                       Secret="rlysec_41pQ9mZc7TgUe2xWv8Ba"
+                       SignatureHeader="webhook-signature" />
+</UserControl>

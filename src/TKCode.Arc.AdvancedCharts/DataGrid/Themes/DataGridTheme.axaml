@@ -542,7 +542,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}"
-                            Padding="{TemplateBinding Padding}">
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
                         <DockPanel>
                             <arc:ArcGlyph DockPanel.Dock="Left"
                                           Data="{x:Static arc:ArcIcons.Search}"
@@ -609,6 +610,7 @@
         <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Style Selector="^:pointerover /template/ Border#PART_Field">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>

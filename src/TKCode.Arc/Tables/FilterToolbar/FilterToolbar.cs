@@ -158,6 +158,7 @@ public class FilterToolbar : TemplatedControl
 
     public FilterToolbar()
     {
+        FocusModality.Watch();
         SetCurrentValue(ActiveFiltersProperty, new AvaloniaList<FilterChip>());
         Fields.CollectionChanged += (_, _) => HasFields = Fields.Count > 0;
     }
@@ -448,18 +449,20 @@ public class FilterToolbar : TemplatedControl
     /// <summary>A removed chip hands focus to its neighbor, or to the Add filter trigger once the list is empty.</summary>
     private void FocusAfterRemoval(int index, IReadOnlyList<FilterChip> filters)
     {
+        // A remove or Clear all clicked with the mouse moves focus on without the keyboard ring.
+        var method = FocusModality.For(this, NavigationMethod.Directional);
         if (filters.Count > 0 && index >= 0)
         {
             var next = filters[Math.Min(index, filters.Count - 1)];
             if (_slots.TryGetValue(next.Id, out var slot) && FindRemove(slot) is { } button)
             {
-                button.Focus(NavigationMethod.Directional);
+                button.Focus(method);
                 return;
             }
         }
         if (_menu is { IsVisible: true } menu)
         {
-            menu.Focus(NavigationMethod.Directional);
+            menu.Focus(method);
         }
     }
 

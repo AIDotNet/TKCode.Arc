@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.InstallSnippetYourFrameworksDemo">
+    <!-- Your own SDK: TypeScript installs packages (so step 1 offers npm, pnpm, yarn and bun), Ruby installs with a
+         command. Ids other than node, python, go and html get a text-only tab. Contoso Labs is invented. -->
+    <arc:InstallSnippet MaxWidth="560"
+                        Title="Call the API in a minute"
+                        Description="Install the SDK, add your key, make a request."
+                        Version="v1.2.0"
+                        KeyPlaceholder="YOUR_CONTOSO_KEY">
+        <arc:InstallSnippetFramework Id="ts" Label="TypeScript" Packages="@contoso-labs/sdk">
+            <arc:InstallSnippetFramework.Key>
+                <arc:InstallSnippetFile FileName=".env" Code="CONTOSO_KEY={{key}}" Description="Keep the key out of the browser." />
+            </arc:InstallSnippetFramework.Key>
+            <arc:InstallSnippetFramework.Code>
+                <arc:InstallSnippetFile FileName="index.ts"
+                                        Code="import { Contoso } from &quot;@contoso-labs/sdk&quot;;&#10;&#10;const contoso = new Contoso(process.env.CONTOSO_KEY);&#10;const reply = await contoso.ping();"
+                                        Description="Make your first request." />
+            </arc:InstallSnippetFramework.Code>
+        </arc:InstallSnippetFramework>
+        <arc:InstallSnippetFramework Id="ruby" Label="Ruby">
+            <arc:InstallSnippetFramework.Install>
+                <arc:InstallSnippetFile FileName="Terminal" Code="gem install contoso-labs" Description="Install the gem." />
+            </arc:InstallSnippetFramework.Install>
+            <arc:InstallSnippetFramework.Key>
+                <arc:InstallSnippetFile FileName=".env" Code="CONTOSO_KEY={{key}}" Description="Keep the key out of version control." />
+            </arc:InstallSnippetFramework.Key>
+            <arc:InstallSnippetFramework.Code>
+                <arc:InstallSnippetFile FileName="app.rb"
+                                        Code="require &quot;contoso&quot;&#10;&#10;contoso = Contoso::Client.new(ENV.fetch(&quot;CONTOSO_KEY&quot;))&#10;reply = contoso.ping"
+                                        Description="Make your first request." />
+            </arc:InstallSnippetFramework.Code>
+        </arc:InstallSnippetFramework>
+    </arc:InstallSnippet>
+</UserControl>

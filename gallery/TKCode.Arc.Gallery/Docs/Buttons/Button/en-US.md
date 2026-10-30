@@ -120,6 +120,15 @@ Use `IsLoading` for work that finishes in a few seconds. For a longer job, such 
 progress in the page (for example a progress indicator or a status line) and keep the button for the request that starts
 the job. A spinner that runs for a minute tells the person nothing about how far the work has come.
 
+`LabelSwapMode` and `LabelSpring` change how the label morphs, for a button that should match quieter copy around it.
+`LabelSwapMode="Label"` trades labels with a plain crossfade (100 ms out, 160 ms in with a 2 px rise, no blur), and
+`LabelSpring="Quick"` lets the width glide to the new label without the slight bounce of the default `Morph` spring.
+Both are opt-in; without them every button keeps the blur swap and the morph spring.
+
+```xml
+<arc:Button Content="{Binding ActionLabel}" LabelSwapMode="Label" LabelSpring="Quick" />
+```
+
 ### Icon-only button
 
 An icon-only button has no visible text, so give it an accessible name. A button that is 48 px wide or narrower is treated

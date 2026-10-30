@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.InstallSnippetYourKeyServiceDemo">
+    <!-- KeyGenerator stands in for your key endpoint (here it waits and invents a key; nothing is sent). The log shows
+         the events an onboarding flow would track: framework and package manager picks, new keys and copies. -->
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:InstallSnippet x:Name="Snippet"
+                            Description="{x:Static demos:InstallSnippetDemoData.Description}"
+                            Version="{x:Static demos:InstallSnippetDemoData.Version}"
+                            FrameworkChanged="OnFrameworkChanged"
+                            PackageManagerChanged="OnPackageManagerChanged"
+                            KeyGenerated="OnKeyGenerated"
+                            Copied="OnCopied">
+            <arc:InstallSnippet.Simulation>
+                <arc:InstallSnippetSimulation Frameworks="{x:Static demos:InstallSnippetDemoData.Frameworks}"
+                                              KeyPrefix="{x:Static demos:InstallSnippetDemoData.KeyPrefix}" />
+            </arc:InstallSnippet.Simulation>
+        </arc:InstallSnippet>
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Pick a framework, generate a key or copy a snippet."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

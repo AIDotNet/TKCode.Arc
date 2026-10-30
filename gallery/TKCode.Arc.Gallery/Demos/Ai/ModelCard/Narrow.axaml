@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelCardNarrowDemo">
+    <!-- In a 360px side pane specs and prices become rows, the estimate drops under the slider, the benchmark switcher moves
+         under its heading, each bar moves under its name and the footer buttons wrap under the model id. -->
+    <Border MaxWidth="360">
+        <arc:ModelCard Model="{x:Static demos:ModelCardDemoData.Opus}"
+                       Rivals="{x:Static demos:ModelCardDemoData.Frontier}"
+                       Benchmarks="{x:Static demos:ModelCardDemoData.FrontierBenchmarks}"
+                       Labels="{x:Static demos:ModelCardDemoData.Labels}"
+                       Note="{x:Static demos:ModelCardDemoData.Note}" />
+    </Border>
+</UserControl>

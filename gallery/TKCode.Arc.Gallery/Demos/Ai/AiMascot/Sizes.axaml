@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiMascotSizesDemo">
+    <!-- 24, 32 and 40 use the compact drawing (tighter framing, bolder eyes and dot, no ground); 64 and up the regular one. -->
+    <WrapPanel ItemSpacing="28" LineSpacing="16" Margin="0,8">
+        <arc:AiMascot Status="Thinking" Size="24" VerticalAlignment="Bottom" />
+        <arc:AiMascot Status="Thinking" Size="32" VerticalAlignment="Bottom" />
+        <arc:AiMascot Status="Thinking" Size="40" VerticalAlignment="Bottom" />
+        <arc:AiMascot Status="Thinking" Size="64" VerticalAlignment="Bottom" />
+        <arc:AiMascot Status="Thinking" Size="96" VerticalAlignment="Bottom" />
+        <arc:AiMascot Status="Thinking" Size="160" VerticalAlignment="Bottom" />
+    </WrapPanel>
+</UserControl>

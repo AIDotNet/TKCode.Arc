@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostTextStreamingDemo">
+    <!-- A pull request description with six rows. Type a few words and pause: the demo model streams a continuation in
+         chunks. Write "timeout" to see the failed state with Retry. -->
+    <arc:GhostText x:Name="Field"
+                   MaxWidth="560"
+                   Rows="6"
+                   Label="Description"
+                   Placeholder="Describe what changed and why"
+                   Footer="Markdown is supported" />
+</UserControl>

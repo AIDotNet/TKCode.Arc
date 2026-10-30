@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CodeSuggestionNarrowDemo">
+    <!-- In a 360px column: the gutter narrows, code drops to 12px, hunk summaries hide (the buttons keep their names) and
+         the footer stacks the status over full width actions. Long lines scroll sideways while the line numbers and the
+         review bars stay put. -->
+    <Border MaxWidth="360">
+        <arc:CodeSuggestion x:Name="Card" />
+    </Border>
+</UserControl>

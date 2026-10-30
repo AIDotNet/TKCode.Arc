@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PageCurlCompactDemo">
+    <!-- A narrow, squarer book with three pages, no count row and no hint: page size follows the width. -->
+    <arc:PageCurl Label="Menu"
+                  Width="288"
+                  PageAspect="0.9"
+                  ShowControls="False"
+                  Hint="{x:Null}"
+                  Tease="False"
+                  HorizontalAlignment="Center">
+        <Viewbox>
+            <Panel Width="200" Height="222" Background="{arc:ArcDesignTokenResource Series4}">
+                <TextBlock Text="Menu" Margin="18" VerticalAlignment="Bottom" FontSize="30" FontWeight="SemiBold"
+                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                           Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+            </Panel>
+        </Viewbox>
+        <Viewbox>
+            <StackPanel Width="200" Height="222" Spacing="6">
+                <TextBlock Text="Starters" Margin="18,22,18,4" FontSize="20" FontWeight="SemiBold"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Pickled radish" Margin="18,0" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Warm olives" Margin="18,0" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Brown butter bread" Margin="18,0" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Viewbox>
+        <Viewbox>
+            <StackPanel Width="200" Height="222" Spacing="6">
+                <TextBlock Text="Mains" Margin="18,22,18,4" FontSize="20" FontWeight="SemiBold"
+                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                <TextBlock Text="Roast squash" Margin="18,0" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                <TextBlock Text="Barley and mushrooms" Margin="18,0" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </Viewbox>
+    </arc:PageCurl>
+</UserControl>

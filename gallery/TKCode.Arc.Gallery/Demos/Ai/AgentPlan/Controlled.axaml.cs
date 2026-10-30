@@ -45,7 +45,7 @@ public partial class AgentPlanControlledDemo : UserControl
         {
             Plan.Steps.Add(new AgentPlanStep(null, title));
         }
-        Plan.Model = new AgentModel("Ember 1", ArcIcons.Sparkles);
+        Plan.Model = AgentPlanDemoData.SmallPlansModel;
         Plan.CanKeepPlanning = true;
         Plan.IsPlanning = false;
     }

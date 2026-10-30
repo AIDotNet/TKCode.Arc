@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StickerPeelPreviewDemo">
+    <!-- Hover a corner, pull it to fold the sticker back, pull far enough to carry it, let go to stick it down. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:StickerPeel x:Name="Lid" Height="340" Label="Laptop lid">
+            <TextBlock Text="Pull a corner. Enter picks a sticker up, arrow keys move it."
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"
+                       Margin="16"
+                       FontSize="12"
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            <arc:StickerPeel.Stickers>
+                <arc:StickerPeelItem Id="ship" Label="Ship it sticker" Shape="Pill" X="0.3" Y="0.35" Rotate="-6">
+                    <Border Width="112" Height="40" Background="#ffd84d">
+                        <TextBlock Text="Ship it" FontWeight="Bold" Foreground="#1f1f1f"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </arc:StickerPeelItem>
+                <arc:StickerPeelItem Id="hello" Label="Hello sticker" Shape="Circle" X="0.68" Y="0.55" Rotate="8">
+                    <Border Width="96" Height="96" Background="#3b82f6">
+                        <TextBlock Text="hello" FontWeight="Bold" FontSize="20" Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </arc:StickerPeelItem>
+                <arc:StickerPeelItem Id="bolt" Label="Lightning sticker" Shape="Rounded" X="0.5" Y="0.25" Rotate="4">
+                    <Border Width="80" Height="80" Background="#ef476f">
+                        <PathIcon Width="40" Height="40" Foreground="White"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Data="M13 2 3 14h8l-1 8 10-12h-8z" />
+                    </Border>
+                </arc:StickerPeelItem>
+                <arc:StickerPeelItem Id="smile" Label="Smile sticker" Shape="Circle" X="0.15" Y="0.7" Rotate="-12">
+                    <Border Width="72" Height="72" Background="#06d6a0">
+                        <TextBlock Text=":)" FontWeight="Bold" FontSize="26" Foreground="#12372a"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </arc:StickerPeelItem>
+            </arc:StickerPeel.Stickers>
+        </arc:StickerPeel>
+        <arc:Button Variant="Secondary" Content="Reset" HorizontalAlignment="Left" Click="OnReset" />
+    </StackPanel>
+</UserControl>

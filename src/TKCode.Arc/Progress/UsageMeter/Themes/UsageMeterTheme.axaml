@@ -70,6 +70,7 @@
             </ControlTemplate>
         </Setter>
         <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
@@ -175,6 +176,7 @@
         <Setter Property="Padding" Value="{arc:UsageMeterTokenResource LegendItemPadding}" />
         <Setter Property="CornerRadius" Value="{arc:UsageMeterTokenResource LegendItemRadius}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Style Selector="^:pointerover">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
         </Style>

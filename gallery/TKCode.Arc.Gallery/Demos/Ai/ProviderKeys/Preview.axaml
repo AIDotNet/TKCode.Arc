@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderKeysPreviewDemo">
+    <!--
+        A sample workspace with real providers and placeholder keys: a connected key, a rejected one and an empty row.
+        Reveal, copy, retest, rotate, remove and add: the simulation tests every key and nothing is sent.
+    -->
+    <arc:ProviderKeys MaxWidth="720"
+                      Margin="0,12"
+                      Providers="{x:Static demos:ProviderKeysDemoData.Providers}"
+                      Keys="{x:Static demos:ProviderKeysDemoData.Keys}"
+                      Description="{x:Static demos:ProviderKeysDemoData.Description}">
+        <arc:ProviderKeys.Simulation>
+            <arc:ProviderKeysSimulation />
+        </arc:ProviderKeys.Simulation>
+    </arc:ProviderKeys>
+</UserControl>

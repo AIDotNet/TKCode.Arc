@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotEmptyStateDemo">
+    <!-- The classic pale sheet in an empty state. The ghost is a fixed 160px square, so the text never reflows. -->
+    <Border MaxWidth="520" Padding="32" Margin="0,8"
+            CornerRadius="{arc:ArcDesignTokenResource RadiusPanel}"
+            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            Background="{arc:ArcDesignTokenResource Surface}">
+        <StackPanel Spacing="10">
+            <arc:GhostMascot Size="160" Status="Idle" Tone="Sheet" AssistantName="Atlas" HorizontalAlignment="Center" />
+            <TextBlock Text="No conversations yet" FontWeight="SemiBold" FontSize="16" HorizontalAlignment="Center" />
+            <TextBlock Text="Ask Atlas anything to get started."
+                       HorizontalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+    </Border>
+</UserControl>

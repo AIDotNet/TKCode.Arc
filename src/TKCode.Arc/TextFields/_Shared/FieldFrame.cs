@@ -66,11 +66,22 @@ public class FieldFrame : ContentControl
     public static readonly StyledProperty<double> SpacingProperty =
         AvaloniaProperty.Register<FieldFrame, double>(nameof(Spacing), 8);
 
+    /// <summary>Gap between the editor and the suffix when it differs from <see cref="Spacing"/> (null uses <see cref="Spacing"/>).</summary>
+    public static readonly StyledProperty<double?> SuffixSpacingProperty =
+        AvaloniaProperty.Register<FieldFrame, double?>(nameof(SuffixSpacing));
+
     /// <summary>Gap between the prefix / suffix and the editor.</summary>
     public double Spacing
     {
         get => GetValue(SpacingProperty);
         set => SetValue(SpacingProperty, value);
+    }
+
+    /// <summary>Gap between the editor and the suffix when it differs from <see cref="Spacing"/>; null uses <see cref="Spacing"/>.</summary>
+    public double? SuffixSpacing
+    {
+        get => GetValue(SuffixSpacingProperty);
+        set => SetValue(SuffixSpacingProperty, value);
     }
 
     private ContentPresenter? _prefix;
@@ -134,14 +145,14 @@ public class FieldFrame : ContentControl
         }
         if (_suffix is not null)
         {
-            _suffix.Margin = new Thickness(Spacing, 0, 0, 0);
+            _suffix.Margin = new Thickness(SuffixSpacing ?? Spacing, 0, 0, 0);
         }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == SpacingProperty)
+        if (change.Property == SpacingProperty || change.Property == SuffixSpacingProperty)
         {
             UpdateSpacing();
         }

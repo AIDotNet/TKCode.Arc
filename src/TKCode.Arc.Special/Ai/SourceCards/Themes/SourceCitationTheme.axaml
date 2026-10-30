@@ -1,0 +1,87 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SourceCitationTheme">
+
+    <!--
+        The inline [n] chip: 16px high, SurfaceMuted with TextSecondary digits like a card's number, accent while its card is
+        highlighted. A transparent box reaches 4px past the sides and 6px past the top and bottom for an enlarged hit area;
+        a negative margin of the same size keeps the text around it where it was.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SourceCitation}" TargetType="arc:SourceCitation">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:SourceCitationTokenResource HitPadding}" />
+        <Setter Property="Margin" Value="{arc:SourceCitationTokenResource HitMargin}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SourceCitation">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <Panel Margin="{arc:SourceCitationTokenResource ChipMargin}">
+                        <Border Name="PART_Chip"
+                                Height="{arc:SourceCitationTokenResource ChipHeight}"
+                                MinWidth="{arc:SourceCitationTokenResource ChipMinWidth}"
+                                Padding="{arc:SourceCitationTokenResource ChipPadding}"
+                                CornerRadius="{arc:SourceCitationTokenResource ChipCornerRadius}">
+                            <TextBlock Name="PART_Text"
+                                       Text="{TemplateBinding NumberText}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:SourceCitationTokenResource ChipFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        </Border>
+                        <Border Name="PART_FocusRing"
+                                Margin="-3"
+                                CornerRadius="8"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                IsVisible="False"
+                                IsHitTestVisible="False" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Border#PART_Chip">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Chip">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:highlighted /template/ Border#PART_Chip">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:highlighted /template/ TextBlock#PART_Text">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Chip">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Text">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SketchToImageFollowRequestDemo">
+    <!-- A simulated request: queued, then early, middle and late steps, then the image is ready. Each step sets Status;
+         the card plays to the end of the stage and waits there. Replay or Generate starts a new request. -->
+    <StackPanel Spacing="16" MaxWidth="520">
+        <arc:SketchToImage x:Name="Card"
+                           Status="Idle"
+                           Scene="{x:Static demos:SketchToImageDemoData.Alpine}"
+                           Prompt="{x:Static demos:SketchToImageDemoData.Prompt}" />
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <arc:Button Content="Generate" Variant="Primary" Size="Small" Click="OnGenerate" />
+            <TextBlock x:Name="Log"
+                       VerticalAlignment="Center"
+                       FontSize="13"
+                       Text="Press Generate to start a request."
+                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

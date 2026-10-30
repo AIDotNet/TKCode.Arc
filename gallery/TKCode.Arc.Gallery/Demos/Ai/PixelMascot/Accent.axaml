@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotAccentDemo">
+    <!-- AccentBrush brands the antenna, chest light, typed bar and sparkles; the eyes glow in a lighter shade of it. -->
+    <WrapPanel ItemSpacing="24" LineSpacing="16" Margin="0,12">
+        <arc:PixelMascot Status="Writing" Scale="3" />
+        <arc:PixelMascot Status="Writing" Scale="3" AccentBrush="#2F6BFF" />
+        <arc:PixelMascot Status="Done" Scale="3" AccentBrush="#12A150" />
+        <arc:PixelMascot Status="Thinking" Scale="3" AccentBrush="#D9480F" />
+    </WrapPanel>
+</UserControl>

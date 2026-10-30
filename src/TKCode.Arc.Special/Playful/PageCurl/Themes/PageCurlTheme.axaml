@@ -1,0 +1,83 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.PageCurlTheme">
+
+    <!--
+        The book: the surface that holds the sheets, a 2px focus ring 4px outside it while keyboard focus is on the book
+        (pointer focus shows none), and under it the page count with previous and next buttons. The status line is the
+        polite live region; it is one pixel and transparent, the visible count is its decorative twin.
+    -->
+    <ControlTheme x:Key="{x:Type arc:PageCurl}" TargetType="arc:PageCurl">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <!-- A turning page lifts past the top and the bottom of the book; templated controls clip by default. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:PageCurl">
+                <StackPanel Spacing="{arc:PageCurlTokenResource ControlsSpacing}">
+                    <Panel>
+                        <arc:PageCurlSurface Name="PART_Surface"
+                                             HintAreaHeight="{arc:PageCurlTokenResource HintAreaHeight}"
+                                             PageShadow="{arc:ArcDesignTokenResource ShadowRaised}"
+                                             ChevronFill="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                             ChevronStroke="{arc:ArcDesignTokenResource Foreground}" />
+                        <Border Name="PART_FocusRing"
+                                IsVisible="False"
+                                IsHitTestVisible="False"
+                                Margin="{arc:PageCurlTokenResource FocusRingMargin}"
+                                BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                                BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                    </Panel>
+                    <StackPanel Name="PART_Controls"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Spacing="12"
+                                IsVisible="{TemplateBinding ShowControls}">
+                        <arc:Button Name="PART_PreviousButton"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    Focusable="True"
+                                    AutomationProperties.Name="Previous page">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}" />
+                        </arc:Button>
+                        <TextBlock Name="PART_Count"
+                                   VerticalAlignment="Center"
+                                   MinWidth="120"
+                                   TextAlignment="Center"
+                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                   AutomationProperties.AccessibilityView="Raw" />
+                        <arc:Button Name="PART_NextButton"
+                                    Variant="Ghost"
+                                    Size="Small"
+                                    Focusable="True"
+                                    AutomationProperties.Name="Next page">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}" />
+                        </arc:Button>
+                    </StackPanel>
+                    <TextBlock Name="PART_Status"
+                               Width="1"
+                               Height="1"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               ClipToBounds="True"
+                               AutomationProperties.LiveSetting="Polite" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A sheet of paper: the page's content on a raised surface with a hairline edge. -->
+    <ControlTheme x:Key="{x:Type arc:PageCurlPage}" TargetType="arc:PageCurlPage">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:PageCurlTokenResource PageRadius}" />
+    </ControlTheme>
+</ResourceDictionary>

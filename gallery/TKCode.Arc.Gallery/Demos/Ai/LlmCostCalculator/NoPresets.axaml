@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.LlmCostCalculatorNoPresetsDemo">
+    <!-- Without Presets the presets row hides; a 90% cache hit rate and a 22-day month (business days only). -->
+    <Border MaxWidth="720">
+        <arc:LlmCostCalculator CacheHitRate="0.9"
+                               DaysPerMonth="22"
+                               Title="Monthly cost, business days"
+                               Models="{x:Static demos:LlmCostCalculatorDemoData.Models}"
+                               Description="{x:Static demos:LlmCostCalculatorDemoData.Description}"
+                               Note="{x:Static demos:LlmCostCalculatorDemoData.BusinessDaysNote}" />
+    </Border>
+</UserControl>

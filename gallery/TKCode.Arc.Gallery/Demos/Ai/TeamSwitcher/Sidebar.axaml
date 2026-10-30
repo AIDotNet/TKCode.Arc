@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TeamSwitcherSidebarDemo">
+    <!-- At the top of a 248px app sidebar: long names and plan lines truncate while the roles and shortcuts keep their
+         width. UsesGlobalShortcuts makes Cmd/Ctrl+1 to 6 work anywhere in the window. The workspaces are the demo's
+         invented ones, passed through a simulation. -->
+    <Border Width="248"
+            HorizontalAlignment="Left"
+            Padding="10"
+            CornerRadius="18"
+            Background="{arc:ArcDesignTokenResource Surface}"
+            BorderBrush="{arc:ArcDesignTokenResource Border}"
+            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}">
+        <StackPanel Spacing="10">
+            <arc:TeamSwitcher UsesGlobalShortcuts="True" Value="wide-world">
+                <arc:TeamSwitcher.Simulation>
+                    <arc:TeamSwitcherSimulation Workspaces="{x:Static demos:TeamSwitcherDemoData.Workspaces}"
+                                                Invites="{x:Static demos:TeamSwitcherDemoData.Invites}"
+                                                CreatedPlan="{x:Static demos:TeamSwitcherDemoData.CreatedPlan}"
+                                                CreatedRole="{x:Static demos:TeamSwitcherDemoData.CreatedRole}" />
+                </arc:TeamSwitcher.Simulation>
+            </arc:TeamSwitcher>
+            <StackPanel Spacing="2" Margin="8,4,8,8">
+                <TextBlock Text="Inbox" Margin="0,6" />
+                <TextBlock Text="Projects" Margin="0,6" />
+                <TextBlock Text="Reports" Margin="0,6" />
+                <TextBlock Text="Settings" Margin="0,6" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

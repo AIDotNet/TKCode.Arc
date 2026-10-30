@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TrialBannerCardDemo">
+    <!-- A sidebar card with your own features: the reasons to pay, three or four rows. The workspace, plan and features are
+         sample content. -->
+    <StackPanel MaxWidth="300" Spacing="12">
+        <arc:TrialBanner Variant="Card"
+                         Plan="Business"
+                         Workspace="Fabrikam"
+                         DaysLeft="6"
+                         TrialDays="30"
+                         LossSummary="audit log and 25 seats">
+            <arc:TrialBanner.Features>
+                <arc:TrialFeature Id="audit" Label="Audit log" Detail="1 year of history" Icon="{x:Static arc:ArcIcons.Shield}" />
+                <arc:TrialFeature Id="roles" Label="Custom roles" Detail="per project" Icon="{x:Static arc:ArcIcons.Key}" />
+                <arc:TrialFeature Id="seats" Label="Team seats" Detail="25 seats" Icon="{x:Static arc:ArcIcons.Users}" />
+            </arc:TrialBanner.Features>
+        </arc:TrialBanner>
+    </StackPanel>
+</UserControl>

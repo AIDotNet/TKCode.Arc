@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.AgentTimelineOwnRunDemo">
     <!-- A finished run of your own opens complete, ready to replay. Click a span to pin it. -->
     <StackPanel Spacing="16" Margin="0,12">
@@ -8,16 +9,13 @@
             <arc:AgentTimeline.Run>
                 <arc:AgentTimelineRun Title="Monthly refund summary">
                     <arc:AgentTimelineRun.Agents>
-                        <arc:AgentTimelineAgent Id="planner" Name="Planner" Price="8">
-                            <arc:AgentTimelineAgent.Model>
-                                <arc:AgentModel Name="Nimbus Pro 3" Mark="{x:Static arc:ArcIcons.Sparkles}" />
-                            </arc:AgentTimelineAgent.Model>
-                        </arc:AgentTimelineAgent>
-                        <arc:AgentTimelineAgent Id="clerk" Name="Data clerk" Price="0.2">
-                            <arc:AgentTimelineAgent.Model>
-                                <arc:AgentModel Name="Nimbus Lite 3" Mark="{x:Static arc:ArcIcons.Sparkles}" />
-                            </arc:AgentTimelineAgent.Model>
-                        </arc:AgentTimelineAgent>
+                        <!-- Real models; each price is a 3:1 blend of the model's list prices from AiModelCatalog. -->
+                        <arc:AgentTimelineAgent Id="planner" Name="Planner"
+                                                Model="{x:Static demos:AgentTimelineDemoData.CoordinatorModel}"
+                                                Price="{x:Static demos:AgentTimelineDemoData.CoordinatorPrice}" />
+                        <arc:AgentTimelineAgent Id="clerk" Name="Data clerk"
+                                                Model="{x:Static demos:AgentTimelineDemoData.ReaderModel}"
+                                                Price="{x:Static demos:AgentTimelineDemoData.ReaderPrice}" />
                     </arc:AgentTimelineRun.Agents>
                     <arc:AgentTimelineRun.Spans>
                         <arc:AgentTimelineSpan AgentId="planner" Kind="Thinking" Start="0" End="1.2"

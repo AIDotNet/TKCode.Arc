@@ -1,0 +1,572 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ReplyDraftTheme">
+
+    <!--
+        A received email with an AI reply under it. The email: a mail glyph, the subject and the time; the sender's avatar,
+        name, address and recipient; the body indented under the avatar (not below 480px). The reply area under a hairline:
+        the model's mark and "Reply with ..." with the status at the right, the quick reply chips, the draft box whose height
+        springs to its content while its views swap, the tone and length groups, and the keyboard hint with Regenerate and
+        Insert.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraft}" TargetType="arc:ReplyDraft">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ReplyDraftTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ReplyDraftTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraft">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <StackPanel Spacing="{arc:ReplyDraftTokenResource HeaderGap}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <arc:ArcGlyph Name="PART_MailMark"
+                                              VerticalAlignment="Center"
+                                              Size="{arc:ReplyDraftTokenResource MailMarkSize}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Name="PART_Subject"
+                                           Grid.Column="1"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           FontSize="{arc:ReplyDraftTokenResource SubjectFontSize}"
+                                           LineHeight="{arc:ReplyDraftTokenResource SubjectLineHeight}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <TextBlock Name="PART_Time"
+                                           Grid.Column="2"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ReplyDraftTokenResource MetaFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:ReplyDraftTokenResource SenderGap}">
+                                <arc:Avatar Name="PART_Avatar" Size="Small" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <!-- The name stays whole; a long address is what truncates. -->
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                                        <TextBlock Name="PART_Sender"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        <TextBlock Name="PART_Address"
+                                                   Grid.Column="1"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontSize="{arc:ReplyDraftTokenResource MetaFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Grid>
+                                    <TextBlock Name="PART_Recipient"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="{arc:ReplyDraftTokenResource MetaFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Name="PART_Body" Spacing="{arc:ReplyDraftTokenResource ParagraphGap}" />
+                        </StackPanel>
+
+                        <Border Name="PART_Reply"
+                                Margin="{arc:ReplyDraftTokenResource ReplyMargin}"
+                                Padding="{arc:ReplyDraftTokenResource ReplyPadding}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <StackPanel Spacing="{arc:ReplyDraftTokenResource ReplyGap}">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                    <arc:ArcGlyph Name="PART_ModelMark"
+                                                  VerticalAlignment="Center"
+                                                  Size="{arc:ReplyDraftTokenResource ModelMarkSize}" />
+                                    <TextBlock Name="PART_Heading"
+                                               Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               FontSize="{arc:ReplyDraftTokenResource ReplyHeadingFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ArcContentSwap Name="PART_Status"
+                                                        Grid.Column="2"
+                                                        Mode="Crossfade"
+                                                        VerticalAlignment="Center"
+                                                        HorizontalContentAlignment="Right" />
+                                </Grid>
+                                <WrapPanel Name="PART_Suggestions"
+                                           ItemSpacing="{arc:ReplyDraftTokenResource ChipGap}"
+                                           LineSpacing="{arc:ReplyDraftTokenResource ChipGap}" />
+                                <Border Name="PART_DraftBox"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                        BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                        CornerRadius="{arc:ReplyDraftTokenResource DraftCornerRadius}"
+                                        Padding="{arc:ReplyDraftTokenResource DraftPadding}">
+                                    <arc:AiHeightBox Name="PART_HeightBox" IsExpanded="True" FollowsContent="True" CrossClipOverflow="4">
+                                        <arc:ArcContentSwap Name="PART_Draft"
+                                                            Mode="Crossfade"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            VerticalContentAlignment="Top" />
+                                    </arc:AiHeightBox>
+                                </Border>
+                                <arc:ReplyDraftControlsPanel Name="PART_Controls"
+                                                             Gap="{arc:ReplyDraftTokenResource ControlsGap}"
+                                                             RowGap="{arc:ReplyDraftTokenResource ControlsRowGap}">
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:ReplyDraftTokenResource GroupLabelGap}">
+                                        <TextBlock Name="PART_ToneLabel"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ReplyDraftTokenResource StatusFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:ReplyDraftOptionGroup Name="PART_Tone" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <Border Width="1"
+                                            Height="{arc:ReplyDraftTokenResource DividerHeight}"
+                                            Background="{arc:ArcDesignTokenResource BorderSubtle}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="{arc:ReplyDraftTokenResource GroupLabelGap}">
+                                        <TextBlock Name="PART_LengthLabel"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:ReplyDraftTokenResource StatusFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <arc:ReplyDraftOptionGroup Name="PART_Length" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </arc:ReplyDraftControlsPanel>
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:ReplyDraftTokenResource ActionGap}">
+                                    <TextBlock Name="PART_Hint"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontSize="{arc:ReplyDraftTokenResource StatusFontSize}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <StackPanel Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                Spacing="{arc:ReplyDraftTokenResource ActionGap}">
+                                        <arc:Button Name="PART_Regenerate" Variant="Ghost" Size="Small">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.RefreshCw}"
+                                                              Size="{arc:ReplyDraftTokenResource ActionGlyphSize}"
+                                                              VerticalAlignment="Center" />
+                                                <TextBlock Name="PART_RegenerateText" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                        <arc:Button Name="PART_Insert" Variant="Primary" Size="Small">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <TextBlock Name="PART_InsertText" VerticalAlignment="Center" />
+                                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CornerDownLeft}"
+                                                              Size="{arc:ReplyDraftTokenResource ActionGlyphSize}"
+                                                              VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </arc:Button>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_ModelMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Body">
+            <Setter Property="Margin" Value="{arc:ReplyDraftTokenResource BodyIndent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ReplyDraftControlsPanel#PART_Controls">
+            <Setter Property="IsStacked" Value="False" />
+        </Style>
+        <Style Selector="^:compact">
+            <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource CompactCardPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ StackPanel#PART_Body">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:narrow /template/ arc|ReplyDraftControlsPanel#PART_Controls">
+            <Setter Property="IsStacked" Value="True" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DraftBox">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DraftBox:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Regenerate">
+            <Setter Property="Height" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource ActionFontSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button#PART_Insert">
+            <Setter Property="Height" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource ActionFontSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_DraftBox">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A paragraph of the received email. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftParagraph}" TargetType="arc:ReplyDraftParagraph">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource BodyFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:ReplyDraftTokenResource BodyLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+    </ControlTheme>
+
+    <!-- A quick reply chip: a pill that is filled with the accent while it steers the draft. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftChip}" TargetType="arc:ReplyDraftChip">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:ReplyDraftTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource ChipPadding}" />
+        <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource ChipFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftChip">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+        <Style Selector="^:coarse">
+            <Setter Property="Height" Value="{arc:ReplyDraftTokenResource ChipHeightCoarse}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A tone or length group: the options on a muted track with the pill gliding under the selected one. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftOptionGroup}" TargetType="arc:ReplyDraftOptionGroup">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftOptionGroup">
+                <Border Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                        Padding="{arc:ReplyDraftTokenResource TrackPadding}">
+                    <Panel>
+                        <arc:GlidingIndicator Name="PART_Indicator"
+                                              Fill="{arc:ArcDesignTokenResource Surface}"
+                                              Stroke="{arc:ArcDesignTokenResource Border}"
+                                              StrokeThickness="1"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                              BoxShadow="{arc:ArcDesignTokenResource ShadowResting}" />
+                        <StackPanel Name="PART_Items" Orientation="Horizontal" Spacing="2" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- One option: its word in the secondary color, solid when selected or hovered. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftOption}" TargetType="arc:ReplyDraftOption">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="{arc:ReplyDraftTokenResource OptionHeight}" />
+        <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource OptionPadding}" />
+        <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource OptionFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftOption">
+                <Panel>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Center" />
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:coarse">
+            <Setter Property="Height" Value="{arc:ReplyDraftTokenResource OptionHeightCoarse}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The draft while it streams: the draft's type; each chunk fades in on its own. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftStreamText}" TargetType="arc:ReplyDraftStreamText">
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource DraftFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:ReplyDraftTokenResource DraftLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+    </ControlTheme>
+
+    <!-- The finished draft: the same type with no frame of its own, editable in place; it dims while a rewrite runs. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftEditor}" TargetType="arc:ReplyDraftEditor">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource DraftFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:ReplyDraftTokenResource DraftLineHeight}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftEditor">
+                <Panel Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextAlignment="{TemplateBinding TextAlignment}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       LetterSpacing="{TemplateBinding LetterSpacing}"
+                                       PasswordChar="{TemplateBinding PasswordChar}"
+                                       RevealPassword="{TemplateBinding RevealPassword}"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}"
+                                       VerticalAlignment="Top" />
+                    </ScrollViewer>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:dimmed">
+            <Setter Property="Opacity" Value="{arc:ReplyDraftTokenResource DimOpacity}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The model reading the email: one calm shimmering line in the draft's type. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftPending}" TargetType="arc:ReplyDraftPending">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftPending">
+                <arc:ToolCallText Text="{TemplateBinding Text}"
+                                  IsShimmering="True"
+                                  HorizontalAlignment="Left"
+                                  FontSize="{arc:ReplyDraftTokenResource DraftFontSize}"
+                                  LineHeight="{arc:ReplyDraftTokenResource DraftLineHeight}"
+                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                  MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- No draft and no auto start: a quiet line and Draft reply. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftEmptyView}" TargetType="arc:ReplyDraftEmptyView">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftEmptyView">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBlock Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ReplyDraftTokenResource DraftFontSize}"
+                               LineHeight="{arc:ReplyDraftTokenResource DraftLineHeight}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <arc:Button Name="PART_Draft"
+                                Grid.Column="1"
+                                Variant="Secondary"
+                                Size="Small"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="{TemplateBinding ButtonText}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Sparkles}"
+                                          Size="{arc:ReplyDraftTokenResource ActionGlyphSize}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding ButtonText}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </arc:Button>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button#PART_Draft">
+            <Setter Property="Height" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource ActionFontSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A failed draft: the alert icon, the message and Try again. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftAlert}" TargetType="arc:ReplyDraftAlert">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftAlert">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:ReplyDraftTokenResource AlertGap}">
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                  Size="{arc:ReplyDraftTokenResource StatusGlyphSize}"
+                                  Margin="0,4,0,0"
+                                  VerticalAlignment="Top"
+                                  Foreground="{arc:ArcDesignTokenResource Danger}" />
+                    <StackPanel Grid.Column="1" Spacing="{arc:ReplyDraftTokenResource AlertGap}">
+                        <TextBlock Text="{TemplateBinding Message}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ReplyDraftTokenResource DraftFontSize}"
+                                   LineHeight="{arc:ReplyDraftTokenResource DraftLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <arc:Button Name="PART_Retry"
+                                    Variant="Secondary"
+                                    Size="Small"
+                                    HorizontalAlignment="Left"
+                                    Content="{TemplateBinding RetryText}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button#PART_Retry">
+            <Setter Property="Height" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ReplyDraftTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ReplyDraftTokenResource ActionPadding}" />
+            <Setter Property="FontSize" Value="{arc:ReplyDraftTokenResource ActionFontSize}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The status: an icon and a word, never color alone; working words shimmer. -->
+    <ControlTheme x:Key="{x:Type arc:ReplyDraftStatusView}" TargetType="arc:ReplyDraftStatusView">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReplyDraftStatusView">
+                <StackPanel Orientation="Horizontal" Spacing="{arc:ReplyDraftTokenResource StatusGap}">
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{TemplateBinding Glyph}"
+                                  Size="{arc:ReplyDraftTokenResource StatusGlyphSize}"
+                                  VerticalAlignment="Center" />
+                    <arc:ToolCallText Name="PART_Label"
+                                      Text="{TemplateBinding Text}"
+                                      IsShimmering="{TemplateBinding IsWorking}"
+                                      VerticalAlignment="Center"
+                                      FontSize="{arc:ReplyDraftTokenResource StatusFontSize}"
+                                      Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:working /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:ready /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:done /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

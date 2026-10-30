@@ -636,6 +636,9 @@ public sealed partial class AgentStatus
         }
     }
 
-    /// <summary>Puts focus on the pill with the keyboard ring (used after Escape and when a focused control disappears).</summary>
-    internal void FocusHead() => _head.Focus(NavigationMethod.Tab);
+    /// <summary>
+    /// Puts focus on the pill (after Escape and when a focused control disappears), with the keyboard ring unless a click
+    /// led here.
+    /// </summary>
+    internal void FocusHead() => _head.Focus(SpecialFocusModality.For(this));
 }

@@ -234,6 +234,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     {
         FocusableProperty.OverrideDefaultValue<MorphSelect>(true);
         SelectionModeProperty.OverrideDefaultValue<MorphSelect>(SelectionMode.Single);
+        FocusModality.Watch();
     }
 
     public MorphSelect()
@@ -883,7 +884,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         SetQuery(string.Empty, fromInput: false);
         if (focusInside || _restoreFocus)
         {
-            Focus(NavigationMethod.Tab);
+            Focus(FocusModality.For(this));
         }
         _restoreFocus = false;
     }
@@ -895,7 +896,8 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         _restoreFocus = restoreFocus;
         if (restoreFocus)
         {
-            Focus(NavigationMethod.Tab);
+            // A pick with the mouse leaves the trigger focused without the keyboard ring.
+            Focus(FocusModality.For(this));
         }
         SetCurrentValue(IsOpenProperty, false);
     }

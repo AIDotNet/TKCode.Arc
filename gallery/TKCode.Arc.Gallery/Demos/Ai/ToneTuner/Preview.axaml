@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ToneTunerPreviewDemo">
+    <!-- A simulation plays an invented billing reply (the draft and its written-out versions come from the demo's data) and
+         tours the voices by itself (original, rewriting, rewritten) until you press or focus anything inside the card.
+         Nothing is sent. It fills its container up to 640px. -->
+    <Border MaxWidth="640" Margin="0,12">
+        <arc:ToneTuner>
+            <arc:ToneTuner.Simulation>
+                <arc:ToneTunerSimulation Text="{x:Static demos:ToneTunerDemoData.Draft}"
+                                         Versions="{x:Static demos:ToneTunerDemoData.Versions}"
+                                         RecipientName="{x:Static demos:ToneTunerDemoData.RecipientName}"
+                                         RecipientSubject="{x:Static demos:ToneTunerDemoData.RecipientSubject}"
+                                         Model="{x:Static demos:ToneTunerDemoData.Model}" />
+            </arc:ToneTuner.Simulation>
+        </arc:ToneTuner>
+    </Border>
+</UserControl>

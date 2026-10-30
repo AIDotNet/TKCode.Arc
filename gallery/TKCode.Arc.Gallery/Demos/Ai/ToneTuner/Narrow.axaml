@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ToneTunerNarrowDemo">
+    <!-- In a 360px column the sliders stack, the chips share one row in equal columns without their icons, the status
+         drops its settings and Copy keeps only its icon. -->
+    <Border MaxWidth="360" Margin="0,12">
+        <arc:ToneTuner AutoPlay="False">
+            <arc:ToneTuner.Simulation>
+                <arc:ToneTunerSimulation Text="{x:Static demos:ToneTunerDemoData.Draft}"
+                                         Versions="{x:Static demos:ToneTunerDemoData.Versions}"
+                                         RecipientName="{x:Static demos:ToneTunerDemoData.RecipientName}"
+                                         RecipientSubject="{x:Static demos:ToneTunerDemoData.RecipientSubject}"
+                                         Model="{x:Static demos:ToneTunerDemoData.Model}" />
+            </arc:ToneTuner.Simulation>
+        </arc:ToneTuner>
+    </Border>
+</UserControl>

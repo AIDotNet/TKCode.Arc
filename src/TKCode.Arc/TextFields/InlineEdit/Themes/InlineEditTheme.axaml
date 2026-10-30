@@ -93,6 +93,7 @@
         <Setter Property="Width" Value="{arc:InlineEditTokenResource ActionSize}" />
         <Setter Property="Height" Value="{arc:InlineEditTokenResource ActionSize}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="RenderTransformOrigin" Value="50%,50%" />
         <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />

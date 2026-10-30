@@ -1,7 +1,7 @@
 ---
 title: 按鈕
 summary: 清楚、反應迅速的操作按鈕，次要狀態保持低調。
-source-hash: 2e7052f3cb01
+source-hash: a6c5d133a709
 ---
 
 <Demo name="Variants" />
@@ -92,6 +92,12 @@ source-hash: 2e7052f3cb01
 ```
 
 `IsLoading` 適用於幾秒內完成的工作。對於耗時更長的任務，例如匯出數千列資料，應在頁面中顯示進度（例如進度指示器或狀態列），讓按鈕只負責發起任務的請求。轉了一分鐘的載入圓環無法告訴人們工作進展到了哪裡。
+
+`LabelSwapMode` 和 `LabelSpring` 改變標籤變形的方式，適合需要與周圍較安靜的文案保持一致的按鈕。`LabelSwapMode="Label"` 以一般交叉淡化替換標籤（100 ms 淡出，160 ms 淡入並上升 2 px，沒有模糊），`LabelSpring="Quick"` 讓寬度滑向新標籤，不帶預設 `Morph` 彈簧的輕微回彈。兩者都需要明確設定；不設定時，每個按鈕仍使用模糊替換和變形彈簧。
+
+```xml
+<arc:Button Content="{Binding ActionLabel}" LabelSwapMode="Label" LabelSpring="Quick" />
+```
 
 ### 純圖示按鈕
 

@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AiMascotTheme">
+
+    <!--
+        The drawing: inks from the ArcDesign tokens (they follow theme and accent switches) and the mascot's own derived
+        colors. All motion is code-driven on the drawing's clock (see AiMascotCanvas), so there are no transitions here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiMascotCanvas}" TargetType="arc:AiMascotCanvas">
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="AccentForegroundInk" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="ForegroundInk" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BackgroundInk" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="SurfaceMutedInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="ShadeInk" Value="{arc:AiMascotTokenResource ShadeColor}" />
+        <Setter Property="GroundInk" Value="{arc:AiMascotTokenResource GroundColor}" />
+        <Setter Property="LineInk" Value="{arc:AiMascotTokenResource LineColor}" />
+        <Setter Property="CompactBelow" Value="{arc:AiMascotTokenResource CompactBelow}" />
+        <Setter Property="BlendDuration" Value="{arc:AiMascotTokenResource BlendDuration}" />
+    </ControlTheme>
+
+    <!--
+        A fixed square of Size px that never reflows its parent; the drawing scales as vector art. The live region for
+        announcements sits outside the image and takes no space.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AiMascot}" TargetType="arc:AiMascot">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AiMascot">
+                <Panel>
+                    <arc:AiMascotCanvas Name="PART_Canvas" />
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

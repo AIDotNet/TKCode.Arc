@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TldrTogglePreviewDemo">
+    <!-- A simulation plays an invented engineering post with summaries and key points written for it (the demo's data);
+         nothing is sent. Once the card has been half in view for a second it opens the summary by itself; switch to Key
+         points, drag the length, then use a ¶ link to jump back to the paragraph. The card fills its container up to 680px,
+         so its width never follows the streaming text. -->
+    <Panel MaxWidth="680">
+        <arc:TldrToggle>
+            <arc:TldrToggle.Simulation>
+                <arc:TldrToggleSimulation Article="{x:Static demos:TldrToggleDemoData.Article}"
+                                          Summaries="{x:Static demos:TldrToggleDemoData.Summaries}"
+                                          KeyPoints="{x:Static demos:TldrToggleDemoData.KeyPoints}"
+                                          Model="{x:Static demos:TldrToggleDemoData.Model}" />
+            </arc:TldrToggle.Simulation>
+        </arc:TldrToggle>
+    </Panel>
+</UserControl>

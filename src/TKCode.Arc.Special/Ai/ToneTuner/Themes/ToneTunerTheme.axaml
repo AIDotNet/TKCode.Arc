@@ -1,0 +1,272 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ToneTunerTheme">
+
+    <!--
+        A brand voice card: the recipient with the changed words count, the voice chips, the formality and detail sliders,
+        the message in a quiet inset whose height springs (bounce free) only when formality or detail change, and a footer
+        with the status, the Changes switch and Copy. Fluid up to 640px; the breakpoints are applied in code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ToneTuner}" TargetType="arc:ToneTuner">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ToneTunerTokenResource MaxCardWidth}" />
+        <Setter Property="StackWidth" Value="{arc:ToneTunerTokenResource StackWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:ToneTunerTokenResource CompactWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ToneTunerTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ToneTunerTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToneTuner">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:ToneTunerTokenResource SectionGap}">
+                        <!-- Header: who the reply is for, and how many words differ from the draft. -->
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <arc:Avatar Name="PART_Avatar"
+                                        Size="Small"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,10,0" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Name="PART_Name"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ToneTunerTokenResource NameLineHeight}"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Name="PART_Subject"
+                                           FontSize="{arc:ToneTunerTokenResource SubjectFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <Border Name="PART_Count"
+                                    Grid.Column="2"
+                                    Margin="8,0,0,0"
+                                    Height="{arc:ToneTunerTokenResource CountHeight}"
+                                    Padding="{arc:ToneTunerTokenResource CountPadding}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource AccentSubtle}"
+                                    VerticalAlignment="Center"
+                                    IsVisible="False">
+                                <TextBlock Name="PART_CountText"
+                                           FontSize="{arc:ToneTunerTokenResource CountFontSize}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource AccentStrong}"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+
+                        <arc:ToneTunerChipRow Name="PART_Chips" Spacing="{arc:ToneTunerTokenResource ChipGap}" />
+
+                        <arc:ToneTunerSliderRow Name="PART_Sliders"
+                                                ColumnGap="{arc:ToneTunerTokenResource SliderColumnGap}"
+                                                RowGap="{arc:ToneTunerTokenResource SliderRowGap}">
+                            <arc:Slider Name="PART_Formality" />
+                            <arc:Slider Name="PART_Detail" />
+                        </arc:ToneTunerSliderRow>
+
+                        <Border Name="PART_MessageCard"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                CornerRadius="{arc:ToneTunerTokenResource MessageCornerRadius}"
+                                Padding="{arc:ToneTunerTokenResource MessagePadding}">
+                            <arc:SpringSizeDecorator Name="PART_MessageBox"
+                                                     Axis="Height"
+                                                     Spring="Settle"
+                                                     CrossClipOverflow="6">
+                                <arc:ToneTunerMessage Name="PART_Message"
+                                                      VerticalAlignment="Top"
+                                                      FontFamily="{TemplateBinding FontFamily}"
+                                                      FontSize="{arc:ToneTunerTokenResource MessageFontSize}"
+                                                      LineHeight="{arc:ToneTunerTokenResource MessageLineHeight}"
+                                                      ParagraphGap="{arc:ToneTunerTokenResource ParagraphGap}"
+                                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                      HighlightBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                      HighlightCornerRadius="{arc:ToneTunerTokenResource HighlightCornerRadius}"
+                                                      HighlightOutset="{arc:ToneTunerTokenResource HighlightOutset}" />
+                            </arc:SpringSizeDecorator>
+                        </Border>
+
+                        <!-- Footer: where the text comes from (a polite live region), Changes and Copy. -->
+                        <Grid ColumnDefinitions="*,Auto,Auto" MinHeight="{arc:ToneTunerTokenResource FooterHeight}">
+                            <DockPanel Name="PART_StatusPanel" VerticalAlignment="Center" LastChildFill="True">
+                                <arc:ArcGlyph Name="PART_StatusGlyph"
+                                              DockPanel.Dock="Left"
+                                              Size="{arc:ToneTunerTokenResource StatusGlyphSize}"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,6,0" />
+                                <arc:Button Name="PART_Retry"
+                                            DockPanel.Dock="Right"
+                                            Classes="tone-action"
+                                            Variant="Secondary"
+                                            Size="Small"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            IsVisible="False" />
+                                <arc:ToolCallText Name="PART_Status"
+                                                  DockPanel.Dock="Left"
+                                                  Swap="Fade"
+                                                  VerticalAlignment="Center"
+                                                  FontSize="{arc:ToneTunerTokenResource StatusFontSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <TextBlock Name="PART_Settings"
+                                           Margin="5,0,0,0"
+                                           VerticalAlignment="Center"
+                                           FontSize="{arc:ToneTunerTokenResource StatusFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           IsVisible="False" />
+                            </DockPanel>
+                            <arc:Switch Name="PART_Changes"
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center" />
+                            <arc:CopyButton Name="PART_Copy"
+                                            Grid.Column="2"
+                                            Variant="Outline"
+                                            VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Switch#PART_Changes">
+            <Setter Property="Margin" Value="12,0" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.tone-action">
+            <Setter Property="Height" Value="{arc:ToneTunerTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ToneTunerTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ToneTunerTokenResource ActionPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:rewriting /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:rewritten /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:compact /template/ arc|Switch#PART_Changes">
+            <Setter Property="Margin" Value="8,0" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        A voice chip: a 32px pill (Surface, a hairline, TextSecondary), SurfaceMuted under the pointer; pressed on, it takes
+        AccentSubtle with an Accent edge and AccentStrong text. A keyboard ring sits 3px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ToneTunerChip}" TargetType="arc:ToneTunerChip">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Height" Value="{arc:ToneTunerTokenResource ChipHeight}" />
+        <Setter Property="Padding" Value="{arc:ToneTunerTokenResource ChipPadding}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ToneTunerChip">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:ToneTunerTokenResource ChipIconGap}"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      Size="{arc:ToneTunerTokenResource ChipIconSize}"
+                                      IsVisible="{TemplateBinding ShowsIcon}"
+                                      VerticalAlignment="Center" />
+                        <TextBlock Name="PART_Label"
+                                   Text="{TemplateBinding Label}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Snappy" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="BorderBrush" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

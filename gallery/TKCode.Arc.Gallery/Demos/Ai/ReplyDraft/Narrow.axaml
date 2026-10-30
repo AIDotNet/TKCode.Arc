@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ReplyDraftNarrowDemo">
+    <!-- In a 380px column the padding drops to 16px, the body loses its avatar indent, the quick replies wrap and Length
+         moves under Tone. -->
+    <StackPanel MaxWidth="380">
+        <arc:ReplyDraft AutoPlay="False">
+            <arc:ReplyDraft.Simulation>
+                <arc:ReplyDraftSimulation Message="{x:Static demos:ReplyDraftDemoData.Message}"
+                                          Suggestions="{x:Static demos:ReplyDraftDemoData.Suggestions}"
+                                          Model="{x:Static demos:ReplyDraftDemoData.Model}"
+                                          Replies="{x:Static demos:ReplyDraftDemoData.Replies}" />
+            </arc:ReplyDraft.Simulation>
+        </arc:ReplyDraft>
+    </StackPanel>
+</UserControl>

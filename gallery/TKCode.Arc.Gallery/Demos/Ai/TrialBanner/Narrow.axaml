@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TrialBannerNarrowDemo">
+    <!-- At phone width (360px) the actions move under the copy, aligned with its left edge, and the second line may wrap. -->
+    <StackPanel Width="360" Spacing="12">
+        <arc:TrialBanner DaysLeft="9" Plan="{x:Static demos:TrialBannerDemoData.Plan}" Workspace="{x:Static demos:TrialBannerDemoData.Workspace}"
+                         LossSummary="{x:Static demos:TrialBannerDemoData.LossSummary}" />
+        <arc:TrialBanner DaysLeft="1" Plan="{x:Static demos:TrialBannerDemoData.Plan}" Workspace="{x:Static demos:TrialBannerDemoData.Workspace}"
+                         LossSummary="{x:Static demos:TrialBannerDemoData.LossSummary}" />
+    </StackPanel>
+</UserControl>

@@ -178,6 +178,7 @@ public class Card : ContentControl
     {
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<Card>(AutomationControlType.Group);
         FocusableProperty.OverrideDefaultValue<Card>(false);
+        FocusModality.Watch();
     }
 
     /// <summary>Opens the quick look (when <see cref="Details"/> is set).</summary>
@@ -667,7 +668,7 @@ public class Card : ContentControl
             _pendingOpen = true;
             return;
         }
-        if (_returnFocusVisible && presence.FindFocusTarget() is InputElement first)
+        if (KeyboardCaused(_returnFocusVisible) && presence.FindFocusTarget() is InputElement first)
         {
             first.Focus(NavigationMethod.Tab);
         }
@@ -774,9 +775,15 @@ public class Card : ContentControl
         }
         if (target.IsEffectivelyVisible && target.IsEffectivelyEnabled)
         {
-            target.Focus(reason == DismissReason.Escape || visible ? NavigationMethod.Tab : NavigationMethod.Unspecified);
+            target.Focus(reason == DismissReason.Escape || KeyboardCaused(visible) ? NavigationMethod.Tab : NavigationMethod.Unspecified);
         }
     }
+
+    /// <summary>
+    /// Whether a key opened or closed the quick look: the last press or key of the window, or (before any) whether the
+    /// title showed the keyboard ring. A click never lights the ring up, even on a title that had it from the keyboard.
+    /// </summary>
+    private bool KeyboardCaused(bool titleHadRing) => FocusModality.LastWasPointer(this) is { } pointer ? !pointer : titleHadRing;
 
     /// <summary>The slots return to the card (it shows again in the same frame).</summary>
     private void HandBack()

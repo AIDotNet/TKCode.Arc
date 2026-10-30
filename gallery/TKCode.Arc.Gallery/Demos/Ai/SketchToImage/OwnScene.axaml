@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SketchToImageOwnSceneDemo">
+    <!-- A scene of your own on the 600 × 400 canvas: pencil lines in drawing order, regions painted back to front (wall,
+         table, fruit, bowl) and a light source at the upper left. The finished picture is the same shapes with gradients;
+         pass Image to resolve into a real picture instead. -->
+    <StackPanel MaxWidth="520">
+        <arc:SketchToImage x:Name="Card" Prompt="A still life: a pear and an apple in a blue bowl, soft window light" />
+    </StackPanel>
+</UserControl>

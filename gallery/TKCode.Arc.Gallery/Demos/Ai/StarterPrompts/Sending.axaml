@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.StarterPromptsSendingDemo">
+    <!-- The app sends: SubmitRequested hands over the message, the starter it came from and a cancellation token, and the
+         task put in Sending drives the footer. Turn on the switch to make the next send fail and show Retry. Press Escape
+         or the stop button while it sends. The request is a two second delay standing in for a chat endpoint. -->
+    <StackPanel Spacing="16" MaxWidth="760">
+        <arc:Switch x:Name="FailNext" Content="Fail the next send" />
+        <arc:StarterPrompts x:Name="Prompts"
+                            Greeting="{x:Static demos:StarterPromptsDemoData.Greeting}"
+                            Placeholder="{x:Static demos:StarterPromptsDemoData.Placeholder}"
+                            ModelName="{x:Static demos:StarterPromptsDemoData.ModelName}"
+                            Count="2" />
+        <TextBlock x:Name="Log" TextWrapping="Wrap" Text="Pick a starter, then press Enter." />
+    </StackPanel>
+</UserControl>

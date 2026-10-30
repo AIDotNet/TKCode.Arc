@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectorSetupOnboardingDemo">
+    <!-- A first-run step: three apps, no search, your own heading and footer. The flow is simulated, nothing is sent. -->
+    <arc:ConnectorSetup x:Name="Setup"
+                        MaxWidth="440"
+                        Title="Bring your work in"
+                        AssistantName="Atlas"
+                        IsSearchable="False"
+                        Footer="You can change this later in Settings, Connections." />
+</UserControl>

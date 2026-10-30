@@ -85,6 +85,8 @@
             <ControlTemplate TargetType="arc:RichTextEditorToolButton">
                 <Border Name="PART_Frame"
                         Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}">
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Content="{TemplateBinding Content}"
@@ -105,6 +107,17 @@
         <Style Selector="^:checked">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <!-- The Docs block handle: a raised chip in the gutter (the block's type and a grip, or "+" on an empty line). -->
+        <Style Selector="^.handle">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^.handle:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
         <Style Selector="^.apply">
             <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />

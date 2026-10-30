@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotLifecycleDemo">
+    <!-- A request mapped to the statuses: sent is thinking, the first token is writing, finished is done, a failure is
+         error, and the mascot settles back to idle two seconds after done. -->
+    <StackPanel Spacing="16" Margin="0,12" MaxWidth="520">
+        <StackPanel Orientation="Horizontal" Spacing="16">
+            <arc:PixelMascot x:Name="Mascot" Status="Idle" Scale="4" AssistantName="Atlas" />
+            <TextBlock x:Name="Caption" Text="Ready" VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Send a request" Variant="Primary" Click="OnSend" />
+            <arc:Button Content="Send and fail" Variant="Secondary" Click="OnFail" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

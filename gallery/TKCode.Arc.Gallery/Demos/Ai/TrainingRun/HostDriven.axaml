@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TrainingRunHostDrivenDemo">
+    <!-- The app drives the card: a timer stands in for the job API and hands it updates with Apply, in bursts of five
+         samples. The card's buttons raise events that the code answers. The numbers are samples. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:TrainingRun x:Name="Run"
+                         Status="Queued"
+                         JobName="receipts-v1"
+                         TotalSteps="600"
+                         Epochs="2"
+                         Eta="0:06:30"
+                         Activity="Waiting for 4× H200 · next in queue" />
+        <TextBlock x:Name="Log"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Starting in a moment…" />
+    </StackPanel>
+</UserControl>

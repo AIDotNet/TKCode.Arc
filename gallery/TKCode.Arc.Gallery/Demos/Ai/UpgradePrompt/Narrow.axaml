@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.UpgradePromptNarrowDemo">
+    <!-- In a 320px column the padding drops to 20, the billing toggle moves under the price and the buttons stay side
+         by side. -->
+    <Border MaxWidth="320" Margin="0,12">
+        <arc:UpgradePrompt Used="50" Limit="50" ResetsOn="Nov 1" Plan="{x:Static demos:UpgradePromptDemoData.ProPlan}" />
+    </Border>
+</UserControl>

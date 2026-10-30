@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveVisitorsYourDataDemo">
+    <!-- The card fed by the app: a timer stands in for your websocket. It sets the count and the pages, pushes each arrival
+         with PushVisitor and each conversion with PushEvent, and pauses its own feed when the person presses pause. The
+         product, pages and people are invented. -->
+    <StackPanel Spacing="12" MaxWidth="640">
+        <arc:LiveVisitors x:Name="Card"
+                          Connection="Connecting"
+                          MaxPages="3"
+                          MaxEvents="3" />
+        <TextBlock x:Name="Log"
+                   FontSize="12"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="Connecting to the stream…" />
+    </StackPanel>
+</UserControl>

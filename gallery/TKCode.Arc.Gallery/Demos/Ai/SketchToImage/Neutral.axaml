@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SketchToImageNeutralDemo">
+    <!-- The neutral tone draws the pencil, pen tip, stage icon and progress line in the foreground color. -->
+    <StackPanel MaxWidth="520">
+        <arc:SketchToImage Tone="Neutral"
+                           Scene="{x:Static demos:SketchToImageDemoData.Alpine}"
+                           Prompt="{x:Static demos:SketchToImageDemoData.GraphitePrompt}" />
+    </StackPanel>
+</UserControl>

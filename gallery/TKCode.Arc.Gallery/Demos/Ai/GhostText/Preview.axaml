@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostTextPreviewDemo">
+    <!-- With no Suggest the field plays the simulation it is given, a pull request description: it types, pauses, a
+         suggestion streams in at the caret, Tab accepts it, Cmd+Right takes the next one word by word, and it starts over.
+         Click it to take over and try the demo model yourself. The field fills its container up to 560px. The text is
+         demo content; the model name is a real one. -->
+    <arc:GhostText MaxWidth="560"
+                   AutomationProperties.Name="{x:Static demos:GhostTextDemoData.LabelText}"
+                   Placeholder="{x:Static demos:GhostTextDemoData.Placeholder}"
+                   Footer="{x:Static demos:GhostTextDemoData.FooterText}"
+                   Model="{x:Static demos:GhostTextDemoData.Model}">
+        <arc:GhostText.Label>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.PenLine}"
+                              Size="13"
+                              VerticalAlignment="Center"
+                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                <TextBlock Text="{x:Static demos:GhostTextDemoData.LabelText}"
+                           VerticalAlignment="Center"
+                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+            </StackPanel>
+        </arc:GhostText.Label>
+        <arc:GhostText.Simulation>
+            <arc:GhostTextSimulation Script="{x:Static demos:GhostTextDemoData.Script}"
+                                     Suggest="{x:Static demos:GhostTextDemoData.Suggest}" />
+        </arc:GhostText.Simulation>
+    </arc:GhostText>
+</UserControl>

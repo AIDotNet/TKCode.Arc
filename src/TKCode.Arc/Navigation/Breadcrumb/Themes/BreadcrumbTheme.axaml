@@ -14,13 +14,14 @@
             <ControlTemplate TargetType="arc:Breadcrumb">
                 <Panel>
                     <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
-                    <Canvas Name="PART_GhostLayer" IsHitTestVisible="False" />
+                    <Canvas Name="PART_GhostLayer" IsHitTestVisible="False" ClipToBounds="True" />
                 </Panel>
             </ControlTemplate>
         </Setter>
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="ClipToBounds" Value="False" />
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type arc:BreadcrumbMenu}" TargetType="arc:BreadcrumbMenu">

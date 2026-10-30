@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeechPlayerPlainDemo">
+    <!-- A reply inside a chat column: the plain variant, your own text, two voices and your own actions after Read aloud.
+         No service is set, so it is a timed simulation with no audio. The model is real (from the catalog); the reply and
+         the voices are invented. -->
+    <StackPanel Spacing="16" MaxWidth="560">
+        <Border HorizontalAlignment="Right"
+                MaxWidth="420"
+                Padding="14,10"
+                CornerRadius="16"
+                Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock Text="Can you sum up last night's incident for the on-call channel?" TextWrapping="Wrap" />
+        </Border>
+        <arc:SpeechPlayer Variant="Plain"
+                          AuthorName="{x:Static demos:SpeechPlayerDemoData.ChatAuthor}"
+                          Text="The checkout service slowed down at 21:40 after a cache node restarted. Requests queued behind cold reads, and p95 latency rose to 4.8 seconds for twelve minutes.&#10;&#10;We failed over to the standby node at 21:52 and latency recovered within two minutes. No orders were lost. A follow-up will warm the cache before any node rejoins.">
+            <arc:SpeechPlayer.Voices>
+                <generic:List x:TypeArguments="arc:SpeechVoice">
+                    <arc:SpeechVoice Id="ava" Name="Ava" Description="Warm and conversational" />
+                    <arc:SpeechVoice Id="leo" Name="Leo" Description="Calm, lower register" />
+                </generic:List>
+            </arc:SpeechPlayer.Voices>
+            <arc:SpeechPlayer.Actions>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <arc:CopyButton IsIconOnly="True"
+                                    Variant="Plain"
+                                    Value="The checkout service slowed down at 21:40 after a cache node restarted." />
+                    <arc:Button Content="Regenerate" Variant="Ghost" Size="Small" />
+                </StackPanel>
+            </arc:SpeechPlayer.Actions>
+        </arc:SpeechPlayer>
+    </StackPanel>
+</UserControl>

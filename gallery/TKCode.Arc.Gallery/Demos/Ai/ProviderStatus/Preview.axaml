@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderStatusPreviewDemo">
+    <!-- The card plays a simulation on simulated checks every 8 seconds. The providers are real; the incidents, latencies
+         and uptime are invented sample data: an outage of the first provider and a slowdown of the second resolve, the
+         third has a short incident, and one check fails to show the error state. The outage starts open. Hover a day of a
+         bar, or Tab to a bar and use the arrow keys. The card fills its column up to 760px, so its width never follows its
+         content. -->
+    <arc:ProviderStatus MaxWidth="760"
+                        ExpandedId="anthropic"
+                        Footnote="{x:Static demos:ProviderStatusDemoData.Footnote}">
+        <arc:ProviderStatus.Simulation>
+            <arc:ProviderStatusSimulation Steps="{x:Static demos:ProviderStatusDemoData.Story}" />
+        </arc:ProviderStatus.Simulation>
+    </arc:ProviderStatus>
+</UserControl>

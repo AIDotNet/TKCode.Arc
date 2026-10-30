@@ -1,0 +1,303 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ReasoningBlockTheme">
+
+    <!--
+        The thinking block of an AI reply as a quiet card: a head row (the mark, the label with its time, Stop or Retry, a
+        chevron at the far end), the latest reasoning streaming under it while the model thinks, and the open part: the steps
+        on a rail with hollow dots, the reason of a failure and a footer with the outcome and a copy button. Plain drops the
+        border and the side padding.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReasoningBlock}" TargetType="arc:ReasoningBlock">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ReasoningBlockTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ReasoningBlockTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReasoningBlock">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <StackPanel>
+                        <Panel Height="{arc:ReasoningBlockTokenResource HeadHeight}">
+                            <arc:ReasoningBlockToggle Name="PART_Toggle"
+                                                      HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Stretch" />
+                            <Grid ColumnDefinitions="*,Auto,Auto" Margin="{TemplateBinding Padding}">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="{arc:ReasoningBlockTokenResource HeadGap}"
+                                            VerticalAlignment="Center"
+                                            IsHitTestVisible="False">
+                                    <arc:ArcGlyph Name="PART_Mark"
+                                                  Size="{arc:ReasoningBlockTokenResource MarkSize}"
+                                                  VerticalAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                        <arc:ToolCallText Name="PART_Label"
+                                                          LineHeight="{arc:ReasoningBlockTokenResource LabelLineHeight}"
+                                                          LetterSpacing="{arc:ReasoningBlockTokenResource LabelLetterSpacing}"
+                                                          Swap="Lift"
+                                                          Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Name="PART_Time"
+                                                   LineHeight="{arc:ReasoningBlockTokenResource LabelLineHeight}"
+                                                   LetterSpacing="{arc:ReasoningBlockTokenResource LabelLetterSpacing}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                   IsVisible="False" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            Margin="8,0,6,0"
+                                            VerticalAlignment="Center">
+                                    <arc:Button Name="PART_Stop"
+                                                Classes="reasoning-action"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                IsVisible="False" />
+                                    <arc:Button Name="PART_Retry"
+                                                Classes="reasoning-action"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                IsVisible="False" />
+                                </StackPanel>
+                                <arc:ArcGlyph Name="PART_Chevron"
+                                              Grid.Column="2"
+                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                              Size="16"
+                                              VerticalAlignment="Center"
+                                              IsHitTestVisible="False"
+                                              RenderTransformOrigin="50%,50%" />
+                            </Grid>
+                        </Panel>
+                        <arc:AiHeightBox Name="PART_PreviewBox" FadeOutDuration="0:0:0.12">
+                            <Border Margin="{TemplateBinding Padding}">
+                                <Border Margin="{arc:ReasoningBlockTokenResource PreviewMargin}"
+                                        Height="{arc:ReasoningBlockTokenResource PreviewHeight}"
+                                        ClipToBounds="True">
+                                    <TextBlock Name="PART_Preview"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="{arc:ReasoningBlockTokenResource PreviewFontSize}"
+                                               LineHeight="{arc:ReasoningBlockTokenResource PreviewLineHeight}"
+                                               TextWrapping="Wrap"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               IsHitTestVisible="False" />
+                                </Border>
+                            </Border>
+                        </arc:AiHeightBox>
+                        <arc:AiHeightBox Name="PART_Body">
+                            <StackPanel Margin="{TemplateBinding Padding}">
+                                <StackPanel Margin="{arc:ReasoningBlockTokenResource BodyPadding}">
+                                    <StackPanel Name="PART_Steps" />
+                                    <TextBlock Name="PART_Error"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:ReasoningBlockTokenResource StepFontSize}"
+                                               LineHeight="{arc:ReasoningBlockTokenResource StepTextLineHeight}"
+                                               Margin="0,0,0,6"
+                                               Foreground="{arc:ArcDesignTokenResource Danger}"
+                                               IsVisible="False" />
+                                    <Grid Name="PART_Footer"
+                                          ColumnDefinitions="*,Auto"
+                                          Height="{arc:ReasoningBlockTokenResource FooterHeight}"
+                                          Margin="{arc:ReasoningBlockTokenResource FooterMargin}">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="{arc:ReasoningBlockTokenResource StatusGap}"
+                                                    VerticalAlignment="Center">
+                                            <arc:ArcGlyph Name="PART_StatusGlyph"
+                                                          Size="{arc:ReasoningBlockTokenResource StatusGlyphSize}"
+                                                          VerticalAlignment="Center" />
+                                            <TextBlock Name="PART_StatusText"
+                                                       FontSize="{arc:ReasoningBlockTokenResource StatusFontSize}"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        </StackPanel>
+                                        <arc:CopyButton Name="PART_Copy"
+                                                        Grid.Column="1"
+                                                        IsIconOnly="True"
+                                                        Variant="Plain"
+                                                        VerticalAlignment="Center" />
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        </arc:AiHeightBox>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.reasoning-action">
+            <Setter Property="Height" Value="{arc:ReasoningBlockTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:ReasoningBlockTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:ReasoningBlockTokenResource ActionInlinePadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:expanded /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:stopped /template/ arc|ArcGlyph#PART_StatusGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:error /template/ arc|ArcGlyph#PART_Mark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Mark">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Foreground" Tween="Standard" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The head button: the whole head row, SurfaceMuted at 60% under the pointer (160ms), a keyboard ring 2px inside the edge. -->
+    <ControlTheme x:Key="{x:Type arc:ReasoningBlockToggle}" TargetType="arc:ReasoningBlockToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReasoningBlockToggle">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            Opacity="0" />
+                    <Border Name="PART_FocusRing"
+                            Margin="2"
+                            CornerRadius="{arc:ReasoningBlockTokenResource CardCornerRadius}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:ReasoningBlockTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One step: a column for the rail (a hairline running through the step, a hollow dot at the heading's first line) and the
+        text. The first step's line starts at its dot, the last one's ends there, so the rail only runs between dots.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ReasoningStepView}" TargetType="arc:ReasoningStepView">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ReasoningStepView">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Panel Width="{arc:ReasoningBlockTokenResource RailWidth}">
+                        <Rectangle Name="PART_Line"
+                                   Width="{arc:ReasoningBlockTokenResource RailLineWidth}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Stretch"
+                                   Fill="{arc:ArcDesignTokenResource Border}" />
+                        <Ellipse Name="PART_Dot"
+                                 Width="{arc:ReasoningBlockTokenResource DotSize}"
+                                 Height="{arc:ReasoningBlockTokenResource DotSize}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Top"
+                                 Margin="{arc:ReasoningBlockTokenResource DotMargin}"
+                                 Fill="{arc:ArcDesignTokenResource Surface}"
+                                 Stroke="{arc:ArcDesignTokenResource BorderStrong}"
+                                 StrokeThickness="{arc:ReasoningBlockTokenResource DotStrokeWidth}" />
+                    </Panel>
+                    <StackPanel Grid.Column="1"
+                                Margin="0,0,0,0"
+                                Spacing="{arc:ReasoningBlockTokenResource StepTextGap}">
+                        <TextBlock Name="PART_Heading"
+                                   Text="{TemplateBinding Heading}"
+                                   IsVisible="{TemplateBinding HasHeading}"
+                                   FontSize="{arc:ReasoningBlockTokenResource StepFontSize}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:ReasoningBlockTokenResource StepHeadingLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{arc:ReasoningBlockTokenResource StepFontSize}"
+                                   LineHeight="{arc:ReasoningBlockTokenResource StepTextLineHeight}"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <Border Height="{arc:ReasoningBlockTokenResource StepGap}" />
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Rectangle#PART_Line">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:first /template/ Rectangle#PART_Line">
+            <Setter Property="Margin" Value="{arc:ReasoningBlockTokenResource RailFirstMargin}" />
+        </Style>
+        <Style Selector="^:last /template/ Rectangle#PART_Line">
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Height" Value="{arc:ReasoningBlockTokenResource RailCenter}" />
+        </Style>
+        <Style Selector="^:first:last /template/ Rectangle#PART_Line">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

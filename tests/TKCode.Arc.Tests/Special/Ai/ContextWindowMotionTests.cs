@@ -20,6 +20,11 @@ public class ContextWindowMotionTests
     {
         var timers = new ContextWindowTestTimers();
         var card = new ContextWindow { Timers = timers, VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top };
+        // The library ships no sample session: play the same one ContextWindowTests uses.
+        card.Models.AddRange(ContextWindowTestSample.CreateModels());
+        card.Items.AddRange(ContextWindowTestSample.CreateItems());
+        card.Turns.AddRange(ContextWindowTestSample.CreateTurns());
+        card.Files.AddRange(ContextWindowTestSample.CreateFiles());
         var window = TestHelpers.Show(card, level);
         window.Width = 792;
         window.Height = 900;

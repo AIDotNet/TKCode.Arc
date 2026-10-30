@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StarterPromptsOwnComposerDemo">
+    <!-- The built-in composer is off and the cards fill an Arc Textarea of the app's own instead: PromptSelected carries the
+         starter, and its Prompt is the full text. -->
+    <StackPanel Spacing="16" MaxWidth="760">
+        <arc:StarterPrompts x:Name="Prompts"
+                            ShowsComposer="False"
+                            Greeting="Good morning, Maya"
+                            Description="{x:Null}"
+                            Count="2" />
+        <arc:Textarea x:Name="Composer"
+                      Label="Your composer"
+                      Placeholder="Pick a starter above" />
+        <TextBlock x:Name="Picked" Text="Nothing picked yet." />
+    </StackPanel>
+</UserControl>

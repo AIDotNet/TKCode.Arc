@@ -63,16 +63,17 @@ public sealed class ToolCallExpandedChangedEventArgs : RoutedEventArgs
 /// Bind <see cref="Item"/> and change the item in place as the call moves on. Allow, Deny and Retry raise
 /// <see cref="ApproveRequested"/>, <see cref="DenyRequested"/> and <see cref="RetryRequested"/> (they bubble, so a
 /// <see cref="ToolCallGroup"/> or any parent can handle them): update the call's status yourself and set <c>Handled</c>.
-/// When nothing handles them, Deny marks the call denied here; Allow and Retry only simulate a run on the built-in sample
-/// data (<see cref="ToolCallSamples"/>) and change nothing otherwise. With no item the row shows a sample web search.
+/// When nothing handles them, Deny marks the call denied here; Allow and Retry go to the <see cref="ToolCallSimulation"/>
+/// that appended the call, and change nothing otherwise. With no item the row is empty: a wrench and "No tool call"
+/// (<see cref="ToolCallLabels.EmptyTitle"/>) without a status, and it does not open.
 /// On its own the row sits in a 1px bordered Surface frame (radius 16, 4px in); inside a group it is flush.
 /// </para>
 /// </summary>
 [TemplatePart(TogglePart, typeof(ToolCallHeadButton))]
 [TemplatePart(HeadPart, typeof(ToolCallHeadPanel))]
-[TemplatePart(BodyPart, typeof(ToolCallCollapsible))]
+[TemplatePart(BodyPart, typeof(AiHeightBox))]
 [PseudoClasses(RunningPseudoClass, SuccessPseudoClass, ErrorPseudoClass, ApprovalPseudoClass, DeniedPseudoClass,
-    ExpandedPseudoClass, CompactPseudoClass, TightPseudoClass, FlushPseudoClass, HeadHoverPseudoClass)]
+    ExpandedPseudoClass, CompactPseudoClass, TightPseudoClass, FlushPseudoClass, HeadHoverPseudoClass, EmptyPseudoClass)]
 public class ToolCall : TemplatedControl
 {
     internal const string TogglePart = "PART_Toggle";
@@ -97,10 +98,9 @@ public class ToolCall : TemplatedControl
     /// <summary>Below this width the meta is hidden.</summary>
     internal const double TightWidth = 370;
 
-    /// <summary>How long a simulated retry runs (and an allowed sample call without a duration).</summary>
-    internal static readonly TimeSpan SimulatedRun = TimeSpan.FromMilliseconds(700);
+    internal const string EmptyPseudoClass = ":empty";
 
-    /// <summary>The call shown. Change it in place; the row follows every change. Null shows a sample web search.</summary>
+    /// <summary>The call shown. Change it in place; the row follows every change. Null shows the empty row.</summary>
     public static readonly StyledProperty<ToolCallItem?> ItemProperty =
         AvaloniaProperty.Register<ToolCall, ToolCallItem?>(nameof(Item));
 
@@ -121,7 +121,7 @@ public class ToolCall : TemplatedControl
     public static readonly StyledProperty<IDataTemplate?> OutputTemplateProperty =
         AvaloniaProperty.Register<ToolCall, IDataTemplate?>(nameof(OutputTemplate));
 
-    /// <summary>The call on screen: <see cref="Item"/>, or the sample when it is null.</summary>
+    /// <summary>The call on screen: <see cref="Item"/>, or an empty call when it is null.</summary>
     public static readonly DirectProperty<ToolCall, ToolCallItem> DisplayedItemProperty =
         AvaloniaProperty.RegisterDirect<ToolCall, ToolCallItem>(nameof(DisplayedItem), o => o.DisplayedItem);
 
@@ -142,11 +142,11 @@ public class ToolCall : TemplatedControl
         RoutedEvent.Register<ToolCall, ToolCallExpandedChangedEventArgs>(nameof(ExpandedChanged), RoutingStrategies.Direct);
 
     private ToolCallItem? _observed;
-    private ToolCallItem? _sample;
+    private ToolCallItem? _empty;
     private ToolCallItem? _item;
     private ToolCallHeadButton? _toggle;
     private ToolCallHeadPanel? _head;
-    private ToolCallCollapsible? _body;
+    private AiHeightBox? _body;
     private ToolCallText? _title;
     private ArcGlyph? _mark;
     private TextBlock? _note;
@@ -163,17 +163,18 @@ public class ToolCall : TemplatedControl
     private bool _compact;
     private bool _tight;
     private string? _pendingNote;
-    private ITimer? _simulation;
 
     static ToolCall()
     {
+        SpecialFocusModality.Watch();
         AffectsMeasure<ToolCall>(IsFlushProperty);
     }
 
-    /// <summary>Creates a row (showing the sample until <see cref="Item"/> is set).</summary>
+    /// <summary>Creates a row (empty until <see cref="Item"/> is set).</summary>
     public ToolCall()
     {
         _shownStatus = ToolCallStatus.Success;
+        PseudoClasses.Set(EmptyPseudoClass, true);
     }
 
     /// <inheritdoc cref="ItemProperty"/>
@@ -193,7 +194,7 @@ public class ToolCall : TemplatedControl
     public IDataTemplate? OutputTemplate { get => GetValue(OutputTemplateProperty); set => SetValue(OutputTemplateProperty, value); }
 
     /// <inheritdoc cref="DisplayedItemProperty"/>
-    public ToolCallItem DisplayedItem => _item ?? SampleItem;
+    public ToolCallItem DisplayedItem => _item ?? EmptyItem;
 
     /// <inheritdoc cref="ApproveRequestedEvent"/>
     public event EventHandler<ToolCallActionEventArgs>? ApproveRequested
@@ -223,9 +224,6 @@ public class ToolCall : TemplatedControl
         remove => RemoveHandler(ExpandedChangedEvent, value);
     }
 
-    /// <summary>The clock of the local sample simulation (tests replace it).</summary>
-    internal TimeProvider Time { get; set; } = TimeProvider.System;
-
     /// <summary>Raised when the person opened or closed the row (not the app).</summary>
     internal event EventHandler? UserToggled;
 
@@ -239,7 +237,7 @@ public class ToolCall : TemplatedControl
     internal ToolCallHeadPanel? Head => _head;
 
     /// <summary>The Input / Output box.</summary>
-    internal ToolCallCollapsible? Body => _body;
+    internal AiHeightBox? Body => _body;
 
     /// <summary>The title.</summary>
     internal ToolCallText? TitleText => _title;
@@ -263,11 +261,18 @@ public class ToolCall : TemplatedControl
     /// <summary>The meta as shown ("4 results · 1.2s"), or null.</summary>
     internal string? MetaText => ToolCallFormat.MetaText(DisplayedItem, Labels, _compact, _tight);
 
-    private ToolCallItem SampleItem => _sample ??= ToolCallSamples.WebSearch();
+    /// <summary>Whether the row has no call (<see cref="Item"/> is null).</summary>
+    internal bool IsEmpty => _item is null;
 
-    /// <summary>Opens or closes the row as the person would (counts as their toggle).</summary>
+    private ToolCallItem EmptyItem => _empty ??= new ToolCallItem();
+
+    /// <summary>Opens or closes the row as the person would (counts as their toggle); an empty row does not open.</summary>
     internal void ToggleByUser()
     {
+        if (IsEmpty && !IsExpanded)
+        {
+            return;
+        }
         SetCurrentValue(IsExpandedProperty, !IsExpanded);
         UserToggled?.Invoke(this, EventArgs.Empty);
     }
@@ -294,7 +299,7 @@ public class ToolCall : TemplatedControl
         var scope = e.NameScope;
         _toggle = scope.Find<ToolCallHeadButton>(TogglePart);
         _head = scope.Find<ToolCallHeadPanel>(HeadPart);
-        _body = scope.Find<ToolCallCollapsible>(BodyPart);
+        _body = scope.Find<AiHeightBox>(BodyPart);
         _mark = scope.Find<ArcGlyph>("PART_Mark");
         _title = scope.Find<ToolCallText>("PART_Title");
         _note = scope.Find<TextBlock>("PART_Note");
@@ -365,7 +370,7 @@ public class ToolCall : TemplatedControl
             {
                 Observe(item);
             }
-            CancelSimulation();
+            PseudoClasses.Set(EmptyPseudoClass, _item is null);
             _shownStatus = item.Status;
             Refresh(animate: false);
             RebuildBody();
@@ -448,10 +453,6 @@ public class ToolCall : TemplatedControl
             var status = DisplayedItem.Status;
             var changed = status != _shownStatus;
             _shownStatus = status;
-            if (status is not ToolCallStatus.Running)
-            {
-                CancelSimulation();
-            }
             Refresh(animate: true);
             if (changed)
             {
@@ -525,6 +526,7 @@ public class ToolCall : TemplatedControl
         var item = DisplayedItem;
         var labels = Labels;
         var status = item.Status;
+        var empty = IsEmpty;
         UpdateStatusClasses(status);
         if (_mark is not null)
         {
@@ -540,12 +542,14 @@ public class ToolCall : TemplatedControl
         }
         if (_title is not null)
         {
-            _title.Text = item.TitleFor(status);
-            _title.IsShimmering = status == ToolCallStatus.Running;
+            _title.Text = empty ? labels.EmptyTitle : item.TitleFor(status);
+            _title.IsShimmering = !empty && status == ToolCallStatus.Running;
         }
         if (_status is not null)
         {
             _status.Status = status;
+            // An empty row has no status to show.
+            _status.IsVisible = !empty;
         }
         if (_head is not null)
         {
@@ -595,14 +599,15 @@ public class ToolCall : TemplatedControl
                 // Focus on a button that is going away moves to the row, instead of dropping to the page.
                 if (_toggle is not null && _head.ActionsPart is { } actions && actions.IsKeyboardFocusWithin)
                 {
-                    _toggle.Focus(NavigationMethod.Tab);
+                    // Allow or Deny clicked with the mouse: no keyboard ring on the row.
+                    _toggle.Focus(SpecialFocusModality.For(this));
                 }
                 _head.SetShown(ToolCallHeadSlot.Actions, false, animate);
             }
         }
         if (_toggle is not null)
         {
-            AutomationProperties.SetName(_toggle, ToolCallFormat.RowName(item, labels));
+            AutomationProperties.SetName(_toggle, empty ? labels.EmptyTitle : ToolCallFormat.RowName(item, labels));
         }
     }
 
@@ -654,7 +659,7 @@ public class ToolCall : TemplatedControl
             // Focus inside the old panel moves to the row before the panel is replaced.
             if (_body.Content is { IsKeyboardFocusWithin: true })
             {
-                _toggle?.Focus(NavigationMethod.Tab);
+                _toggle?.Focus(SpecialFocusModality.For(this));
             }
             _body.Content = BuildBody();
         }
@@ -705,8 +710,8 @@ public class ToolCall : TemplatedControl
     }
 
     /// <summary>
-    /// Raises an action; when nothing handled it, a simulation that drives the call takes it, Deny marks the call denied,
-    /// and Allow / Retry simulate a run on sample data only.
+    /// Raises an action; when nothing handled it, the simulation that drives the call takes it, or else Deny marks the call
+    /// denied (Allow and Retry change nothing).
     /// </summary>
     internal void Act(RoutedEvent<ToolCallActionEventArgs> action)
     {
@@ -737,40 +742,9 @@ public class ToolCall : TemplatedControl
             }
             return;
         }
-        if (action == DenyRequestedEvent)
+        if (action == DenyRequestedEvent && item.Status == ToolCallStatus.Approval)
         {
-            if (item.Status == ToolCallStatus.Approval)
-            {
-                item.Status = ToolCallStatus.Denied;
-            }
-            return;
+            item.Status = ToolCallStatus.Denied;
         }
-        if (!item.IsSample)
-        {
-            return;
-        }
-        var expected = action == RetryRequestedEvent ? ToolCallStatus.Error : ToolCallStatus.Approval;
-        if (item.Status != expected)
-        {
-            return;
-        }
-        var runFor = action == RetryRequestedEvent ? SimulatedRun : item.Duration ?? SimulatedRun;
-        _pendingNote = Labels.SimulatedNote;
-        CancelSimulation();
-        item.Status = ToolCallStatus.Running;
-        _simulation = ToolCallTimer.After(Time, runFor, () =>
-        {
-            _simulation = null;
-            if (item.Status == ToolCallStatus.Running)
-            {
-                item.Status = ToolCallStatus.Success;
-            }
-        });
-    }
-
-    private void CancelSimulation()
-    {
-        _simulation?.Dispose();
-        _simulation = null;
     }
 }

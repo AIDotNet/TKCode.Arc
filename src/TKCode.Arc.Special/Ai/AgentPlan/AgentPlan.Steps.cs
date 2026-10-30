@@ -16,9 +16,8 @@ public partial class AgentPlan
     private readonly HashSet<AgentPlanStep> _watchedSteps = new(ReferenceEqualityComparer.Instance);
     private bool _attached;
     private AgentPlanStatus _simulatedStatus = AgentPlanStatus.Draft;
-    private AgentPlanSimulation? _defaultSimulation;
     private AgentPlanSimulation? _attachedSimulation;
-    private bool _sampleFilled;
+    private bool _simulationFilled;
     private bool _inBatch;
     private bool _hadFocus;
     private AgentPlanStep? _streamStep;
@@ -48,8 +47,10 @@ public partial class AgentPlan
         }
         else if (change.Property == SimulationProperty)
         {
-            if (_attachedSimulation is not null && TopLevel.GetTopLevel(this) is not null)
+            if (Status is null && TopLevel.GetTopLevel(this) is not null)
             {
+                // The old simulation stops and takes its draft with it; the new one starts from its own.
+                ReleaseSimulation(clearDraft: true);
                 AttachSimulation();
             }
         }
@@ -80,8 +81,8 @@ public partial class AgentPlan
     {
         if (Status is not null)
         {
-            _attachedSimulation?.Detach();
-            _attachedSimulation = null;
+            // Controlled from now on: the steps stay for the host to drive.
+            ReleaseSimulation(clearDraft: false);
         }
         else if (TopLevel.GetTopLevel(this) is not null)
         {
@@ -98,13 +99,15 @@ public partial class AgentPlan
         WatchSteps();
         if (Status is null)
         {
-            if (_attachedSimulation is null)
+            if (!ReferenceEquals(_attachedSimulation, Simulation))
             {
+                // Replaced while off screen.
+                ReleaseSimulation(clearDraft: true);
                 AttachSimulation();
             }
             else
             {
-                _attachedSimulation.Wake();
+                _attachedSimulation?.Wake();
             }
         }
     }
@@ -121,13 +124,40 @@ public partial class AgentPlan
     private void AttachSimulation()
     {
         _attachedSimulation?.Detach();
-        var simulation = Simulation ?? (_defaultSimulation ??= new AgentPlanSimulation());
-        _attachedSimulation = simulation;
-        var filled = simulation.Attach(this);
-        if (filled)
+        _attachedSimulation = Simulation;
+        if (_attachedSimulation is { } simulation && simulation.Attach(this))
         {
-            _sampleFilled = true;
+            _simulationFilled = true;
         }
+        if (_built)
+        {
+            RefreshAll(animate: false);
+        }
+    }
+
+    /// <summary>
+    /// Stops driving the plan with the attached simulation; with <paramref name="clearDraft"/> the steps it filled in go
+    /// too and the plan is a draft again.
+    /// </summary>
+    private void ReleaseSimulation(bool clearDraft)
+    {
+        if (_attachedSimulation is null)
+        {
+            return;
+        }
+        _attachedSimulation.Detach();
+        _attachedSimulation = null;
+        if (clearDraft)
+        {
+            if (_simulationFilled)
+            {
+                Steps.Clear();
+            }
+            SetCurrentValue(IsPlanningProperty, false);
+            SetCurrentValue(CanKeepPlanningProperty, true);
+            ((IAgentPlanSimulationHost)this).SetSimulatedStatus(AgentPlanStatus.Draft);
+        }
+        _simulationFilled = false;
         if (_built)
         {
             RefreshAll(animate: false);
@@ -231,19 +261,21 @@ public partial class AgentPlan
     {
         var status = CurrentStatus;
         var failed = AgentPlanFormat.FailedIndex(Steps);
+        // A button clicked with the mouse hands focus on without the keyboard ring.
+        var method = SpecialFocusModality.For(this);
         if (status == AgentPlanStatus.Draft)
         {
-            return _approveButton.IsEffectivelyEnabled && _approveButton.Focus(NavigationMethod.Tab);
+            return _approveButton.IsEffectivelyEnabled && _approveButton.Focus(method);
         }
         if (failed >= 0 && Steps[failed] is { } step && _rows.TryGetValue(step, out var row))
         {
-            return row.Retry.Focus(NavigationMethod.Tab);
+            return row.Retry.Focus(method);
         }
         if (status == AgentPlanStatus.Done)
         {
-            return _startOverButton.Focus(NavigationMethod.Tab);
+            return _startOverButton.Focus(method);
         }
-        return _pauseButton.Focus(NavigationMethod.Tab);
+        return _pauseButton.Focus(method);
     }
 
     // Announcements -------------------------------------------------------------------------------------------------------

@@ -24,8 +24,9 @@ namespace TKCode.Arc;
 /// </summary>
 /// <remarks>
 /// <para>
-/// With no <see cref="Status"/> the plan runs the built-in <see cref="AgentPlanSimulation"/> (an invented sample when there
-/// are no <see cref="Steps"/>), as the Arc preview does. With a <see cref="Status"/> the plan is controlled: the control never
+/// With no <see cref="Status"/> the plan runs its <see cref="Simulation"/> when one is set (the simulation's draft when there
+/// are no <see cref="Steps"/>), as the Arc preview does; with neither it is a draft of its own <see cref="Steps"/> (empty:
+/// "Nothing is planned yet") whose buttons only raise their events. With a <see cref="Status"/> the plan is controlled: the control never
 /// changes the status or a step's state, activity, error or time; every action is reported through its events
 /// (<see cref="Approved"/>, <see cref="Changed"/>, <see cref="StepAction"/>, <see cref="KeepPlanningRequested"/>,
 /// <see cref="PauseChanged"/>, <see cref="StartOverRequested"/>) and you update <see cref="Status"/> and the steps. Draft
@@ -134,6 +135,7 @@ public partial class AgentPlan : TemplatedControl, IAgentPlanSimulationHost
 
     static AgentPlan()
     {
+        SpecialFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<AgentPlan>(false);
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<AgentPlan>(AutomationControlType.Group);
     }
@@ -163,14 +165,14 @@ public partial class AgentPlan : TemplatedControl, IAgentPlanSimulationHost
         set => SetValue(StatusProperty, value);
     }
 
-    /// <summary>What the plan is for, under the header and in the plan's accessible name. Null shows the sample's goal while the sample runs.</summary>
+    /// <summary>What the plan is for, under the header and in the plan's accessible name. Null shows the simulation's goal while one runs.</summary>
     public string? Goal
     {
         get => GetValue(GoalProperty);
         set => SetValue(GoalProperty, value);
     }
 
-    /// <summary>The model that wrote the plan: its mark leads the header and the agent's notes, its name shows in the header while the plan is a draft. Null shows the sample's model while the sample runs, otherwise none.</summary>
+    /// <summary>The model that wrote the plan: its mark leads the header and the agent's notes, its name shows in the header while the plan is a draft. Null shows the simulation's model while one runs, otherwise none.</summary>
     public AgentModel? Model
     {
         get => GetValue(ModelProperty);
@@ -191,7 +193,7 @@ public partial class AgentPlan : TemplatedControl, IAgentPlanSimulationHost
         set => SetValue(LabelsProperty, value);
     }
 
-    /// <summary>The script of the built-in simulation (used only while <see cref="Status"/> is null); null runs the invented sample.</summary>
+    /// <summary>A simulated agent with your script, used only while <see cref="Status"/> is null: it fills an empty plan with its draft and runs it. Null (the default) leaves the plan to its own steps and events.</summary>
     public AgentPlanSimulation? Simulation
     {
         get => GetValue(SimulationProperty);

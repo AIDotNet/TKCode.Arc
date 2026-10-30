@@ -11,5 +11,6 @@
             </ControlTemplate>
         </Setter>
         <Setter Property="Offset" Value="{arc:PopoverTokenResource SideOffset}" />
+        <Setter Property="ClipToBounds" Value="False" />
     </ControlTheme>
 </ResourceDictionary>

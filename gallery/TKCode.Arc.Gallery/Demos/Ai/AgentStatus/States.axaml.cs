@@ -8,15 +8,15 @@ public partial class AgentStatusStatesDemo : UserControl
     public AgentStatusStatesDemo()
     {
         InitializeComponent();
-        var agent = AgentStatusSamples.CodingAgent;
+        var agent = AgentStatusDemoData.CodingAgent;
         var started = DateTimeOffset.UtcNow - TimeSpan.FromSeconds(74);
         Add(AgentStatusRunState.Idle, null, agent, started);
         Add(AgentStatusRunState.Working, new AgentStatusActivity("Checking specs", ArcIcons.Search, 8, 12), agent, started);
         Add(AgentStatusRunState.NeedsInput, new AgentStatusActivity("Needs your approval to deploy", ArcIcons.Search), agent, started);
         Add(AgentStatusRunState.Paused, new AgentStatusActivity("Checking specs", ArcIcons.Search, 8, 12), agent, started);
         Add(AgentStatusRunState.Done, new AgentStatusActivity("5 files touched"), agent, started, DateTimeOffset.UtcNow - TimeSpan.FromSeconds(14));
-        Add(AgentStatusRunState.Failed, new AgentStatusActivity("Fetch failed · 2 pages did not load"), AgentStatusSamples.ResearchAgent, started);
-        Add(AgentStatusRunState.Stopped, null, AgentStatusSamples.ResearchAgent, started, DateTimeOffset.UtcNow - TimeSpan.FromSeconds(7));
+        Add(AgentStatusRunState.Failed, new AgentStatusActivity("Fetch failed · 2 pages did not load"), AgentStatusDemoData.ResearchAgent, started);
+        Add(AgentStatusRunState.Stopped, null, AgentStatusDemoData.ResearchAgent, started, DateTimeOffset.UtcNow - TimeSpan.FromSeconds(7));
     }
 
     private void Add(AgentStatusRunState state, AgentStatusActivity? activity, AgentModel agent, DateTimeOffset started, DateTimeOffset? ended = null)

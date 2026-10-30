@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
              x:Class="TKCode.Arc.Gallery.Demos.ToolCallStatusesDemo">
-    <!-- Every status as a lone call, each in its own frame. Tools are data: a name, a Lucide mark and the phrases. -->
+    <!-- Every status as a lone call, each in its own frame. Tools are data: a name, a Lucide mark and the phrases. The
+         last row has no item: the empty row, with no status and nothing to open. -->
     <StackPanel Spacing="12" MaxWidth="640">
         <arc:ToolCall>
             <arc:ToolCallItem Id="r" ToolName="Warehouse" ToolMark="{x:Static arc:ArcIcons.Database}" Status="Running"
@@ -26,5 +27,6 @@
             <arc:ToolCallItem Id="d" ToolName="Chat" ToolMark="{x:Static arc:ArcIcons.MessageCircle}" Status="Denied"
                               Title="Post a status note to #finance-ops" />
         </arc:ToolCall>
+        <arc:ToolCall />
     </StackPanel>
 </UserControl>

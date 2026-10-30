@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.LlmCostCalculatorNarrowDemo">
+    <!-- In a 380px column the sliders stack, the total moves under the heading, each bar takes its own line under the model
+         name and the breakdown wraps into two columns. -->
+    <Border MaxWidth="380">
+        <arc:LlmCostCalculator Models="{x:Static demos:LlmCostCalculatorDemoData.Models}"
+                               Presets="{x:Static demos:LlmCostCalculatorDemoData.Presets}"
+                               Description="{x:Static demos:LlmCostCalculatorDemoData.Description}"
+                               Note="{x:Static demos:LlmCostCalculatorDemoData.Note}" />
+    </Border>
+</UserControl>

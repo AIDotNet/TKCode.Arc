@@ -26,8 +26,9 @@ public enum RollingDigitsFalloff
 
 /// <summary>
 /// P14 odometer: every digit is a wheel of ten glyphs keyed by place value (999 → 1,000 keeps the ones column),
-/// turning in the direction the whole number moved. New columns grow in on the morph spring; changes ride the
-/// smooth spring; the first reveal (when <see cref="IsArmed"/> turns false) staggers per digit. Drawn in
+/// turning in the direction the whole number moved. New columns grow in on the morph spring; changes ride
+/// <see cref="WheelSpring"/> (smooth) or, when set, <see cref="WheelMotion"/> (any spring or timed ease); the first
+/// reveal (when <see cref="IsArmed"/> turns false) staggers per digit. Drawn in
 /// <see cref="Render"/> with cached glyphs: no per-digit controls, no layout during the roll.
 /// </summary>
 public class RollingDigits : Control
@@ -60,6 +61,15 @@ public class RollingDigits : Control
     public static readonly StyledProperty<ArcSpring> WheelSpringProperty =
         AvaloniaProperty.Register<RollingDigits, ArcSpring>(nameof(WheelSpring), ArcSpring.Smooth);
 
+    /// <summary>
+    /// Motion for changes after the first reveal when the presets are not enough: any spring
+    /// (<c>MotionSpec.Spring(SpringSpec.FromVisual(0.28, 0))</c>) or a timed ease
+    /// (<c>MotionSpec.Tween(TimeSpan.FromMilliseconds(240), easing)</c>). Null (the default) uses <see cref="WheelSpring"/>.
+    /// Reduced and Off motion still jump.
+    /// </summary>
+    public static readonly StyledProperty<MotionSpec?> WheelMotionProperty =
+        AvaloniaProperty.Register<RollingDigits, MotionSpec?>(nameof(WheelMotion));
+
     /// <summary>When true each wheel turns the short way round (9 → 0 goes up by one) instead of following the value.</summary>
     public static readonly StyledProperty<bool> IsShortestTurnProperty =
         AvaloniaProperty.Register<RollingDigits, bool>(nameof(IsShortestTurn));
@@ -89,6 +99,10 @@ public class RollingDigits : Control
     public bool IsArmed { get => GetValue(IsArmedProperty); set => SetValue(IsArmedProperty, value); }
     public bool UseGrouping { get => GetValue(UseGroupingProperty); set => SetValue(UseGroupingProperty, value); }
     public ArcSpring WheelSpring { get => GetValue(WheelSpringProperty); set => SetValue(WheelSpringProperty, value); }
+
+    /// <inheritdoc cref="WheelMotionProperty"/>
+    public MotionSpec? WheelMotion { get => GetValue(WheelMotionProperty); set => SetValue(WheelMotionProperty, value); }
+
     public bool IsShortestTurn { get => GetValue(IsShortestTurnProperty); set => SetValue(IsShortestTurnProperty, value); }
     public double GlyphPitch { get => GetValue(GlyphPitchProperty); set => SetValue(GlyphPitchProperty, value); }
     public RollingDigitsFalloff Falloff { get => GetValue(FalloffProperty); set => SetValue(FalloffProperty, value); }
@@ -103,6 +117,10 @@ public class RollingDigits : Control
 
     /// <summary>Wheel targets of the digit columns, most significant first (tests: which way the wheels turned).</summary>
     internal IReadOnlyList<double> WheelTargets => _columns.Where(c => c.IsDigit && !c.Leaving).Select(c => c.Target).ToList();
+
+    /// <summary>Where the digit wheels are drawn now, most significant first (tests: how the wheels move).</summary>
+    internal IReadOnlyList<double> WheelPositions =>
+        _columns.Where(c => c.IsDigit && !c.Leaving).Select(c => c.Position?.Value ?? c.Target).ToList();
 
     private string _formatted = string.Empty;
 
@@ -315,7 +333,7 @@ public class RollingDigits : Control
         else
         {
             var spec = column.Revealed
-                ? MotionSpec.Spring(WheelSpring)
+                ? WheelMotion ?? MotionSpec.Spring(WheelSpring)
                 : MotionSpec.Spring(SpringSpec.FromVisual(0.48, 0), TimeSpan.FromSeconds(Math.Min(column.Order * 0.035, 0.25)));
             _ = column.Position?.AnimateTo(column.Target, spec);
         }

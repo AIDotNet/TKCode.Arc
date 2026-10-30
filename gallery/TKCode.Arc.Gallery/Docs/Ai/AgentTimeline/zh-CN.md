@@ -1,7 +1,7 @@
 ---
 title: Agent timeline
 summary: 在同一时间轴上回放一次多智能体运行：每个智能体的思考、工具调用与等待，它们之间的交接，以及时间、token 与费用。
-source-hash: 5696d9478d3e
+source-hash: 39b855da3a3d
 ---
 
 <Demo name="Preview" />
@@ -25,7 +25,7 @@ source-hash: 5696d9478d3e
 
 ## 用法
 
-没有提供数据时，时间线会展示一次虚构的示例运行，并在它首次有大约五分之一进入视野时开始回放。请在 `UseArcControls()` 旁调用 `UseArcSpecial()` 注册该包。
+没有提供数据时，时间线为空：在空的时间轴上方显示标题 "Agent run"，没有可播放的内容。包里不附带示例运行。上方的预览给它一个由展示库编写的运行并设置 `AutoPlay="True"`，因此它会在首次有大约五分之一进入视野时开始回放。请在 `UseArcControls()` 旁调用 `UseArcSpecial()` 注册该包。
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -46,9 +46,9 @@ source-hash: 5696d9478d3e
 6. **页脚**：左侧为播放或暂停（运行结束后则为重新播放）、重新开始以及速度控件；右侧为图例（思考、工具调用、等待、交接、失败），空间不足时移到控件下方。
 7. **时间段卡片**：将鼠标悬停或聚焦到某个时间段上，即可看到由谁完成、使用哪个模型、做了什么、它的工具或类型、时长与 token，以及失败、重试或交接的说明。
 
-### 示例运行
+### 预览中的运行
 
-示例是一次虚构的事故排查，标题为 "Signup emails bouncing since Mar 3"（注册邮件自 3 月 3 日起被退回）。一个协调者规划了三项检查，并将它们交给状态监视器、配置审计员和日志读取员，三者并行工作。日志读取员的第一次扫描失败，缩小范围后的查询在第二次尝试时成功。协调者汇总各份报告，由记录员撰写事件说明并归档。五个智能体、30 个时间段和八次交接，共耗时 26.8 秒、49,920 个 token，费用为 $0.15，并行加速比为 1.5x。`AgentTimelineSamples.CreateIncidentRun()` 会返回它的一份新副本，`CreateRefundRun()` 则返回一个较小的双智能体运行。
+预览回放的是一次由展示库编写的虚构事故排查，标题为 "Signup emails bouncing since Mar 3"（注册邮件自 3 月 3 日起被退回）。一个协调者规划了三项检查，并将它们交给状态监视器、配置审计员和日志读取员，三者并行工作。日志读取员的第一次扫描失败，缩小范围后的查询在第二次尝试时成功。协调者汇总各份报告，由记录员撰写事件说明并归档。五个智能体、30 个时间段和八次交接，共耗时 26.8 秒、49,920 个 token，并行加速比为 1.5x。这些智能体运行在真实的模型上（Qwen3.8-Max、Grok 4.3、Qwen3.7-Plus、Qwen3.8-Flash 和 Mistral Small 4），每个智能体的 `Price` 是其模型标价的混合价（输入 token 与输出 token 按三比一），取自厂商在 2026-10-29 公布的价格，因此费用是虚构的 token 数乘以真实的标价。任务、时间和 token 数都是虚构的。
 
 ### 你自己的运行
 
@@ -206,8 +206,6 @@ timeline.IsLive = false;
 | `AgentTimelinePlaybackAction` | `Play`, `Pause`, `Restart`, `Seek`, `Speed` |
 | `AgentTimelineSummary` | `AgentCount`, `Duration`, `Speedup`, `Tokens`, `Cost` (the `Summary` property) |
 
-`AgentTimelineSamples` 保存虚构的运行（`CreateIncidentRun()`、`CreateRefundRun()`）。
-
 ## 无障碍
 
 - 时间线以其标题命名。对辅助技术而言，每个时间段都是一个按钮，名称包含智能体、类型、工具、"failed" 或 "retry"、它做了什么、时间范围以及 token 数（例如 "Log reader, Tool call, Mail logs, failed: Bounce scan took too long, 3.1s to 5.2s, 430 tokens"）；被固定的时间段会被读作已按下。时间段整体只占一个 Tab 停靠点，方向键在它们之间移动。
@@ -244,7 +242,7 @@ timeline.IsLive = false;
 
 | 变化 | 完整 | 减弱 | 关闭 |
 |---|---|---|---|
-| 打开 | 首次进入视野时回放示例 | 以结束状态打开 | 以结束状态打开 |
+| 打开 | 开启 `AutoPlay` 时，首次进入视野即回放运行 | 以结束状态打开 | 以结束状态打开 |
 | 回放 | 应读者请求而播放 | 应读者请求而播放 | 应读者请求而播放 |
 | 活动时间段的光泽 | 每 1.5 秒扫过一次 | 无 | 无 |
 | 时间段完成、变暗、悬停 | 160ms | 立即 | 立即 |

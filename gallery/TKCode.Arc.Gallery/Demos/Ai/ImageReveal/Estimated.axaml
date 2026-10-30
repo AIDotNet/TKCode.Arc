@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageRevealEstimatedDemo">
+    <!-- A backend with no progress events: the status is Generating and the pill estimates over Duration (8s). The canvas
+         keeps the calm queued look until the image exists; Image arrived sets Source and Done, and the band sweeps it in. -->
+    <StackPanel Spacing="12" MaxWidth="360">
+        <arc:ImageReveal x:Name="Reveal"
+                         Status="Generating"
+                         Duration="0:0:8"
+                         AspectRatio="0.8"
+                         AltText="A sunlit greenhouse with citrus trees" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Image arrived" Variant="Secondary" Size="Small" Click="OnArrived" />
+            <arc:Button Content="Start over" Variant="Ghost" Size="Small" Click="OnStartOver" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

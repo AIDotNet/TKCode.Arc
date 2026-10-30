@@ -99,7 +99,7 @@ internal sealed class AvailabilitySlotSwap : Control
             // The focused row left with its list: focus the selected row of the new one (or its first).
             var buttons = content.GetVisualDescendants().OfType<InputElement>().Where(b => b.Focusable).ToList();
             var target = buttons.OfType<AvailabilitySlotButton>().FirstOrDefault(b => b.IsChecked == true) ?? buttons.FirstOrDefault();
-            target?.Focus(NavigationMethod.Directional);
+            target?.Focus(BlockFocusModality.For(this, NavigationMethod.Directional));
         }
     }
 
@@ -115,7 +115,8 @@ internal sealed class AvailabilitySlotSwap : Control
         InvalidateMeasure();
         if (restoreFocus)
         {
-            content.GetVisualDescendants().OfType<AvailabilitySlotButton>().FirstOrDefault(b => b.IsChecked == true)?.Focus(NavigationMethod.Directional);
+            content.GetVisualDescendants().OfType<AvailabilitySlotButton>().FirstOrDefault(b => b.IsChecked == true)
+                ?.Focus(BlockFocusModality.For(this, NavigationMethod.Directional));
         }
     }
 

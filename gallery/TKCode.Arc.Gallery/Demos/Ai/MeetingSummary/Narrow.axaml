@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.MeetingSummaryNarrowDemo">
+    <!-- In a 380px column the attendee stack moves under the date and owners show their first name, so the meta under each
+         item stays on one line. AutoPlay="False" starts on the finished notes. -->
+    <StackPanel MaxWidth="380">
+        <arc:MeetingSummary AutoPlay="False">
+            <arc:MeetingSummary.Simulation>
+                <arc:MeetingSummarySimulation Meeting="{x:Static demos:MeetingSummaryDemoData.Meeting}"
+                                              Model="{x:Static demos:MeetingSummaryDemoData.Model}"
+                                              ReferenceFormats="{x:Static demos:MeetingSummaryDemoData.ReferenceFormats}"
+                                              FirstReferenceNumber="{x:Static demos:MeetingSummaryDemoData.FirstReferenceNumber}" />
+            </arc:MeetingSummary.Simulation>
+        </arc:MeetingSummary>
+    </StackPanel>
+</UserControl>

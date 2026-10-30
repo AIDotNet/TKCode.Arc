@@ -1,7 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.ContextWindowPreviewDemo">
-    <!-- With no data the card shows its sample session: send, attach, compact, switch models or point at the legend. -->
-    <arc:ContextWindow Margin="0,12" />
+    <!-- A coding session (invented items and token counts) on real models with their context windows: send, attach,
+         compact, switch models or point at the legend. Switching to a smaller window compacts. -->
+    <arc:ContextWindow Margin="0,12"
+                       Models="{x:Static demos:ContextWindowDemoData.SessionModels}"
+                       Items="{x:Static demos:ContextWindowDemoData.SessionItems}"
+                       Turns="{x:Static demos:ContextWindowDemoData.SessionTurns}"
+                       Files="{x:Static demos:ContextWindowDemoData.SessionFiles}" />
 </UserControl>

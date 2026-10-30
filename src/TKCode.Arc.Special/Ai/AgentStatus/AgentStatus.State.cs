@@ -17,7 +17,6 @@ public sealed partial class AgentStatus
 
     private readonly AgentStatusRunClock _clock = new();
     private AgentRunSimulation? _sim;
-    private AgentRunSimulation? _autoSim;
     private AgentStatusRunState _lastStatus;
     private bool _statusSeen;
     private bool _settled;
@@ -36,17 +35,24 @@ public sealed partial class AgentStatus
     private AgentModel? _markModel;
     private bool _refreshing;
 
-    private AgentStatusRunState EffStatus => _sim?.Status ?? Status;
+    /// <summary>
+    /// The simulation that drives the pill: <see cref="Simulation"/> while the app gives no run data of its own
+    /// (<see cref="Status"/>, <see cref="Activity"/>, <see cref="StartedAt"/> or <see cref="Steps"/>); the app's data wins.
+    /// </summary>
+    private AgentRunSimulation? ActiveSim => _sim is not null && !HasHostData() ? _sim : null;
 
-    private AgentStatusActivity? EffActivity => _sim is not null ? _sim.Activity : Activity;
+    private AgentStatusRunState EffStatus => ActiveSim?.Status ?? Status;
 
-    private IReadOnlyList<AgentStatusStep> EffSteps => _sim is not null ? _sim.Steps : _steps;
+    private AgentStatusActivity? EffActivity => ActiveSim is { } sim ? sim.Activity : Activity;
 
-    private AgentModel EffAgent => _sim?.Agent ?? Agent ?? s_defaultAgent;
+    private IReadOnlyList<AgentStatusStep> EffSteps => ActiveSim is { } sim ? sim.Steps : _steps;
 
-    private DateTimeOffset? EffStartedAt => _sim is not null ? _sim.StartedAt : StartedAt;
+    /// <summary>The app's <see cref="Agent"/> when set, else the simulated run's agent.</summary>
+    private AgentModel EffAgent => Agent ?? ActiveSim?.Agent ?? s_defaultAgent;
 
-    private DateTimeOffset? EffEndedAt => _sim is not null ? _sim.EndedAt : EndedAt;
+    private DateTimeOffset? EffStartedAt => ActiveSim is { } sim ? sim.StartedAt : StartedAt;
+
+    private DateTimeOffset? EffEndedAt => ActiveSim is { } sim ? sim.EndedAt : EndedAt;
 
     private static readonly AgentModel s_defaultAgent = new();
 
@@ -65,11 +71,11 @@ public sealed partial class AgentStatus
             old.Changed -= OnSimulationChanged;
         }
         _sim = sim;
-        // A host's simulation (and its steps) can outlive the pill: the pill listens only while attached.
+        // A host's simulation (and its steps) can outlive the pill: the pill listens only while attached. It starts the
+        // run once it drives the pill (see Refresh).
         if (sim is not null && _attached)
         {
             sim.Changed += OnSimulationChanged;
-            sim.Start();
         }
         Refresh();
     }
@@ -117,8 +123,9 @@ public sealed partial class AgentStatus
 
     private void OnStepChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => Refresh();
 
+    /// <summary>Whether the app gives run data of its own; <see cref="Agent"/> alone does not count (it names the agent).</summary>
     private bool HasHostData() =>
-        IsSet(StatusProperty) || IsSet(ActivityProperty) || IsSet(AgentProperty) || IsSet(StartedAtProperty) || _steps.Count > 0;
+        IsSet(StatusProperty) || IsSet(ActivityProperty) || IsSet(StartedAtProperty) || _steps.Count > 0;
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -126,13 +133,7 @@ public sealed partial class AgentStatus
         _attached = true;
         ResourcesChanged += OnResourcesChanged;
         RefreshRadii();
-        if (Simulation is null && !HasHostData())
-        {
-            _autoSim = new AgentRunSimulation(AgentStatusSamples.Coding, TimeProvider);
-            SetCurrentValue(SimulationProperty, _autoSim);
-        }
         WatchData(true);
-        _sim?.Start();
         ApplyLevel();
         Refresh();
         if (IsExpanded)
@@ -151,15 +152,6 @@ public sealed partial class AgentStatus
         StopTick();
         StopSettle();
         ReleasePanel();
-        if (_autoSim is not null)
-        {
-            _autoSim.Dispose();
-            if (ReferenceEquals(Simulation, _autoSim))
-            {
-                ClearValue(SimulationProperty);
-            }
-            _autoSim = null;
-        }
     }
 
     /// <summary>Brings every part in line with the inputs: face, buttons, body, sizes and announcements.</summary>
@@ -172,6 +164,12 @@ public sealed partial class AgentStatus
         _refreshing = true;
         try
         {
+            // A simulation starts once it drives an attached pill (its Ready delay first); its change event arrives
+            // while refreshing and is covered by this refresh.
+            if (_attached && ActiveSim is { IsStarted: false } sim)
+            {
+                sim.Start();
+            }
             RefreshCore();
         }
         finally
@@ -277,13 +275,13 @@ public sealed partial class AgentStatus
         }
     }
 
-    private string? EffNotice => _sim is not null ? _sim.Notice : Notice;
+    private string? EffNotice => ActiveSim is { } sim ? sim.Notice : Notice;
 
     /// <summary>Says a new activity or outcome once, and an action's notice with it; never the count or the timer.</summary>
     private void Announce(AgentStatusLabels labels, LabelInfo info)
     {
         var notice = EffNotice;
-        var version = _sim?.NoticeVersion ?? 0;
+        var version = ActiveSim?.NoticeVersion ?? 0;
         var noticeChanged = !string.IsNullOrEmpty(notice) && (notice != _lastNotice || version != _lastNoticeVersion);
         var keyChanged = _lastKey is not null && info.Key != _lastKey;
         if (_lastKey is not null && (keyChanged || noticeChanged))

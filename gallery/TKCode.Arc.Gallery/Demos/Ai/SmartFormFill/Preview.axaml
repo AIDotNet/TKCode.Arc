@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SmartFormFillPreviewDemo">
+    <!-- A simulation plays the demo's texts with their hand-checked results: the card pastes a sample, fills the form field
+         by field, checks a guess and undoes it, in a loop, until you click or type inside it. Try sample, the paste area and
+         Fill work as they would with a real model (other text is read by a few plain rules); nothing is sent. The people and
+         companies are invented. -->
+    <arc:SmartFormFill MaxWidth="860" Margin="0,12">
+        <arc:SmartFormFill.Simulation>
+            <arc:SmartFormFillSimulation Samples="{x:Static demos:SmartFormFillDemoData.Samples}"
+                                         ModelName="{x:Static demos:SmartFormFillDemoData.ModelName}" />
+        </arc:SmartFormFill.Simulation>
+    </arc:SmartFormFill>
+</UserControl>

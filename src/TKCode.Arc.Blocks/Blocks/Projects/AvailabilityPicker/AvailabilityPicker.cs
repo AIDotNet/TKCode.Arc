@@ -285,6 +285,7 @@ public partial class AvailabilityPicker : TemplatedControl
 
     static AvailabilityPicker()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<AvailabilityPicker>(false);
     }
 

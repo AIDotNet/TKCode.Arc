@@ -78,6 +78,9 @@
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <!-- The card clips its content on PART_Frame; the control itself does not, so a :plain group's edge controls keep
+             their whole focus ring. -->
+        <Setter Property="ClipToBounds" Value="False" />
 
         <!-- Token values that :plain overrides are set by styles: token markup in a template is a local value. -->
         <Style Selector="^ /template/ Grid#PART_Header">

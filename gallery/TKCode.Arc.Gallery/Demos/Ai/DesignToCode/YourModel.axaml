@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.DesignToCodeYourModelDemo">
+    <!-- The card wired to an app generator. Here a stand-in backend first reports the regions it found, then streams
+         code in uneven chunks tagged with the region they implement; a real one would read events from your model's
+         stream and stop when the token is cancelled. The preview factory stands in for a sandboxed renderer. -->
+    <StackPanel Spacing="12" MaxWidth="760" Margin="0,12">
+        <arc:DesignToCode x:Name="Card"
+                          Source="{x:Static demos:DesignToCodeDemoData.Source}"
+                          FileName="ProCard.tsx"
+                          Completed="OnCompleted" />
+        <TextBlock x:Name="Log"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Press Generate code to run the stand-in backend."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

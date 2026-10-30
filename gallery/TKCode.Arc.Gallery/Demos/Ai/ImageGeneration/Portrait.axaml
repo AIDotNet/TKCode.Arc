@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageGenerationPortraitDemo">
+    <!-- A portrait batch: the grid keeps the 4:5 shape and caps its height at 420px, so it stays compact. -->
+    <Border MaxWidth="640" Margin="0,12">
+        <arc:ImageGeneration SelectedAspectId="4:5"
+                             SelectedModelId="atlas-3-pro"
+                             Prompt="A ceramic coffee cup on a sunlit windowsill, soft morning shadows">
+            <arc:ImageGeneration.Simulation>
+                <arc:ImageGenerationSimulation Models="{x:Static demos:ImageGenerationDemoData.Models}"
+                                               Suggestions="{x:Static demos:ImageGenerationDemoData.Suggestions}"
+                                               Painter="{x:Static demos:ImageGenerationDemoData.Painter}" />
+            </arc:ImageGeneration.Simulation>
+        </arc:ImageGeneration>
+    </Border>
+</UserControl>

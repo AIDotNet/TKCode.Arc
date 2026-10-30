@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkPreviewDemo">
+    <!-- Pick a status and watch every spark blend from the pose it is in. "Auto" leaves Status unset, so the sparks play
+         through idle, thinking, writing and done on their own. -->
+    <StackPanel Spacing="28" Margin="0,16" MaxWidth="600">
+        <arc:SegmentedControl x:Name="Statuses" SelectedValue="auto" SelectionChanged="OnStatusChanged">
+            <arc:SegmentedOption Value="auto" Label="Auto" />
+            <arc:SegmentedOption Value="Idle" Label="Idle" />
+            <arc:SegmentedOption Value="Thinking" Label="Thinking" />
+            <arc:SegmentedOption Value="Generating" Label="Generating" />
+            <arc:SegmentedOption Value="Done" Label="Done" />
+            <arc:SegmentedOption Value="Error" Label="Error" />
+        </arc:SegmentedControl>
+        <StackPanel Orientation="Horizontal" Spacing="40">
+            <arc:AiSpark x:Name="Hero" Size="72" />
+            <StackPanel Spacing="16" VerticalAlignment="Center">
+                <arc:AiSpark x:Name="Pill" Variant="Pill" Announce="False" />
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <arc:AiSpark x:Name="Avatar" Variant="Avatar" Announce="False" />
+                    <TextBlock x:Name="Caption"
+                               VerticalAlignment="Center"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

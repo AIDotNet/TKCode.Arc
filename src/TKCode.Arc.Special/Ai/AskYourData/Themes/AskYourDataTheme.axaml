@@ -1,0 +1,371 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AskYourDataTheme">
+
+    <!--
+        Natural language to chart in one card: the question field (the source at its start, Ask at its end), the Generated
+        SQL panel (a row that opens the syntax tinted query in a scrolling well), then the stage: a header with the status
+        glyph, the title and its quiet line and the chart switch, over the body of the current state (suggestions, the
+        running count over a breathing skeleton, the result with its legend, chart area and insight, or the error with Try
+        again). A zero-height polite live region narrates the run.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AskYourData}" TargetType="arc:AskYourData">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:AskYourDataTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:AskYourDataTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AskYourData">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:AskYourDataTokenResource SectionGap}">
+                        <arc:Input Name="PART_Field">
+                            <arc:Input.Prefix>
+                                <StackPanel Name="PART_Source"
+                                            Orientation="Horizontal"
+                                            Spacing="6"
+                                            VerticalAlignment="Center"
+                                            IsHitTestVisible="False">
+                                    <arc:ArcGlyph Name="PART_SourceMark"
+                                                  Size="{arc:AskYourDataTokenResource SourceGlyphSize}"
+                                                  VerticalAlignment="Center" />
+                                    <TextBlock Name="PART_SourceName"
+                                               VerticalAlignment="Center"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <Border Width="1"
+                                            Height="16"
+                                            Margin="2,0,2,0"
+                                            VerticalAlignment="Center"
+                                            Background="{arc:ArcDesignTokenResource Border}" />
+                                </StackPanel>
+                            </arc:Input.Prefix>
+                            <arc:Input.Suffix>
+                                <arc:Button Name="PART_Ask" Classes="ayd-ask" Variant="Primary" Size="Small">
+                                    <arc:ArcGlyph Name="PART_AskGlyph"
+                                                  Size="{arc:AskYourDataTokenResource AskGlyphSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource AccentForeground}" />
+                                </arc:Button>
+                            </arc:Input.Suffix>
+                        </arc:Input>
+
+                        <Border Name="PART_SqlBlock"
+                                IsVisible="False"
+                                Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:AskYourDataTokenResource SqlCornerRadius}"
+                                ClipToBounds="True">
+                            <StackPanel>
+                                <Panel Height="{arc:AskYourDataTokenResource SqlRowHeight}">
+                                    <arc:AskYourDataSqlToggle Name="PART_SqlToggle"
+                                                              HorizontalAlignment="Stretch"
+                                                              VerticalAlignment="Stretch" />
+                                    <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto"
+                                          Margin="{arc:AskYourDataTokenResource SqlRowPadding}">
+                                        <arc:ToolCallStatusGlyph Name="PART_SqlStatus"
+                                                                 VerticalAlignment="Center"
+                                                                 IsHitTestVisible="False" />
+                                        <TextBlock Name="PART_SqlTitle"
+                                                   Grid.Column="1"
+                                                   Margin="8,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="13"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   IsHitTestVisible="False" />
+                                        <arc:ArcContentSwap Name="PART_SqlMeta"
+                                                            Grid.Column="2"
+                                                            Mode="Label"
+                                                            Margin="8,0,8,0"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalContentAlignment="Left"
+                                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                            TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                            IsHitTestVisible="False" />
+                                        <arc:CopyButton Name="PART_CopySql"
+                                                        Grid.Column="3"
+                                                        IsIconOnly="True"
+                                                        Variant="Plain"
+                                                        VerticalAlignment="Center" />
+                                        <arc:ArcGlyph Name="PART_SqlChevron"
+                                                      Grid.Column="4"
+                                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                      Size="16"
+                                                      Margin="4,0,6,0"
+                                                      VerticalAlignment="Center"
+                                                      IsHitTestVisible="False"
+                                                      RenderTransformOrigin="50%,50%" />
+                                    </Grid>
+                                </Panel>
+                                <arc:AiHeightBox Name="PART_SqlFold" FadeOutDuration="0:0:0.12" CrossClipOverflow="4">
+                                    <Border Margin="{arc:AskYourDataTokenResource SqlWellMargin}"
+                                            Background="{arc:ArcDesignTokenResource Surface}"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                            CornerRadius="{arc:AskYourDataTokenResource SqlWellCornerRadius}"
+                                            ClipToBounds="True">
+                                        <ScrollViewer Name="PART_SqlScroll"
+                                                      Classes="ayd-well"
+                                                      Focusable="True"
+                                                      HorizontalScrollBarVisibility="Auto"
+                                                      VerticalScrollBarVisibility="Disabled">
+                                            <arc:AskYourDataRevealText Name="PART_Sql"
+                                                                       Margin="{arc:AskYourDataTokenResource SqlPadding}"
+                                                                       FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                                       FontSize="{arc:AskYourDataTokenResource SqlFontSize}"
+                                                                       LineHeight="{arc:AskYourDataTokenResource SqlLineHeight}"
+                                                                       TextWrapping="NoWrap"
+                                                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </arc:AiHeightBox>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Name="PART_Stage"
+                                    MinHeight="{arc:AskYourDataTokenResource StageMinHeight}"
+                                    Spacing="12">
+                            <Grid Name="PART_Header"
+                                  ColumnDefinitions="Auto,*,Auto"
+                                  MinHeight="{arc:AskYourDataTokenResource HeaderMinHeight}">
+                                <arc:ToolCallStatusGlyph Name="PART_StageStatus"
+                                                         VerticalAlignment="Top"
+                                                         Margin="0,3,10,0"
+                                                         IsHitTestVisible="False" />
+                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                    <arc:ArcContentSwap Name="PART_Title"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:AskYourDataTokenResource TitleFontSize}"
+                                                        TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ArcContentSwap Name="PART_Subtitle"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        TextElement.FontSize="{arc:AskYourDataTokenResource SubtitleFontSize}"
+                                                        TextElement.Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <arc:SegmentedControl Name="PART_Switch"
+                                                      Grid.Column="2"
+                                                      Margin="12,0,0,0"
+                                                      VerticalAlignment="Top"
+                                                      IsVisible="False" />
+                            </Grid>
+
+                            <Panel Name="PART_Body">
+                                <StackPanel Name="PART_SuggestionsView" Spacing="10" IsVisible="False">
+                                    <TextBlock Name="PART_SuggestionsTitle"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    <WrapPanel Name="PART_Suggestions" ItemSpacing="8" LineSpacing="8" />
+                                </StackPanel>
+
+                                <StackPanel Name="PART_RunningView" Spacing="12" IsVisible="False">
+                                    <StackPanel Orientation="Horizontal" Spacing="6" Height="20">
+                                        <Panel Name="PART_RowsCell" VerticalAlignment="Center">
+                                            <TextBlock Name="PART_RowsReserve"
+                                                       Opacity="0"
+                                                       FontSize="{arc:AskYourDataTokenResource CountFontSize}"
+                                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                       FontFeatures="+tnum" />
+                                            <arc:RollingDigits Name="PART_Rows"
+                                                               HorizontalAlignment="Right"
+                                                               UseGrouping="True"
+                                                               IsArmed="True"
+                                                               FontSize="{arc:AskYourDataTokenResource CountFontSize}"
+                                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                        </Panel>
+                                        <TextBlock Name="PART_RowsLabel"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="{arc:AskYourDataTokenResource CountFontSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </StackPanel>
+                                    <arc:AskYourDataSkeleton Name="PART_Skeleton"
+                                                             Height="{arc:AskYourDataTokenResource ChartHeight}"
+                                                             Fill="{arc:ArcDesignTokenResource SurfaceMuted}" />
+                                </StackPanel>
+
+                                <StackPanel Name="PART_ResultView" Spacing="12" IsVisible="False">
+                                    <arc:SegmentedControl Name="PART_CompactSwitch"
+                                                          HorizontalAlignment="Stretch"
+                                                          IsVisible="False" />
+                                    <WrapPanel Name="PART_Legend"
+                                               ItemSpacing="{arc:AskYourDataTokenResource LegendGap}"
+                                               LineSpacing="6" />
+                                    <Panel Name="PART_ViewArea" Height="{arc:AskYourDataTokenResource ChartHeight}">
+                                        <arc:AskYourDataChart Name="PART_BarChart" Kind="Bar" />
+                                        <arc:AskYourDataChart Name="PART_LineChart" Kind="Line" IsVisible="False" />
+                                        <arc:AskYourDataTable Name="PART_Table" IsVisible="False" />
+                                    </Panel>
+                                    <arc:AskYourDataRevealText Name="PART_Insight"
+                                                               TextWrapping="Wrap"
+                                                               MinHeight="{arc:AskYourDataTokenResource InsightHeight}"
+                                                               LineHeight="{arc:AskYourDataTokenResource InsightLineHeight}"
+                                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+
+                                <StackPanel Name="PART_ErrorView" Spacing="12" IsVisible="False">
+                                    <Border Name="PART_ErrorWell"
+                                            Background="{arc:ArcDesignTokenResource DangerSubtle}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep12}"
+                                            Padding="{arc:AskYourDataTokenResource ErrorPadding}">
+                                        <SelectableTextBlock Name="PART_ErrorText"
+                                                             TextWrapping="Wrap"
+                                                             FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                             FontSize="{arc:AskYourDataTokenResource SqlFontSize}"
+                                                             LineHeight="{arc:AskYourDataTokenResource SqlLineHeight}"
+                                                             Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    </Border>
+                                    <arc:Button Name="PART_Retry"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </Panel>
+                        </StackPanel>
+
+                        <Panel Height="0" ClipToBounds="True">
+                            <arc:ExplainerAnnouncer Name="PART_Live" />
+                        </Panel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_SourceMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_SqlChevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^ /template/ arc|ToolCallStatusGlyph">
+            <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="SuccessBrush" Value="{arc:ArcDesignTokenResource Success}" />
+            <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.ayd-ask">
+            <Setter Property="Width" Value="{arc:AskYourDataTokenResource AskSize}" />
+            <Setter Property="Height" Value="{arc:AskYourDataTokenResource AskSize}" />
+            <Setter Property="MinHeight" Value="{arc:AskYourDataTokenResource AskSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,-6,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.ayd-chip">
+            <Setter Property="Height" Value="{arc:AskYourDataTokenResource ChipHeight}" />
+            <Setter Property="MinHeight" Value="{arc:AskYourDataTokenResource ChipHeight}" />
+            <Setter Property="Padding" Value="{arc:AskYourDataTokenResource ChipPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        </Style>
+        <Style Selector="^ /template/ arc|AskYourDataChart">
+            <Setter Property="Series1Brush" Value="{arc:ArcDesignTokenResource Series1}" />
+            <Setter Property="Series2Brush" Value="{arc:ArcDesignTokenResource Series2}" />
+            <Setter Property="Series3Brush" Value="{arc:ArcDesignTokenResource Series3}" />
+            <Setter Property="Series4Brush" Value="{arc:ArcDesignTokenResource Series4}" />
+            <Setter Property="GridBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+            <Setter Property="AxisBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="TooltipBackground" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="TooltipBorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="SecondaryBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="SurfaceBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+            <Setter Property="FontSize" Value="11" />
+        </Style>
+
+        <Style Selector="^:sql-open /template/ arc|ArcGlyph#PART_SqlChevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_SqlChevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.3" Bounce="0" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The Generated SQL row: SurfaceMuted at 60% under the pointer (160ms), a keyboard ring 2px inside the edge. -->
+    <ControlTheme x:Key="{x:Type arc:AskYourDataSqlToggle}" TargetType="arc:AskYourDataSqlToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AskYourDataSqlToggle">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            Opacity="0" />
+                    <Border Name="PART_FocusRing"
+                            Margin="2"
+                            CornerRadius="{arc:AskYourDataTokenResource SqlWellCornerRadius}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="{arc:AskYourDataTokenResource HoverOpacity}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Hover">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The table view: a scrolling well for wide tables, the cells built in code. -->
+    <ControlTheme x:Key="{x:Type arc:AskYourDataTable}" TargetType="arc:AskYourDataTable">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AskYourDataTable">
+                <ScrollViewer Name="PART_Scroll"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid Name="PART_Grid" />
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The SQL and the insight: selectable, revealed in chunks; the selection in the accent's subtle tint. -->
+    <ControlTheme x:Key="{x:Type arc:AskYourDataRevealText}" TargetType="arc:AskYourDataRevealText">
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+    </ControlTheme>
+</ResourceDictionary>

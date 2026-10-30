@@ -1,0 +1,245 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DomainVerifyTheme">
+
+    <!--
+        The custom domain card (Arc Domain verify, design reference). Framed: a card with a 1px Border, radius 26 and
+        Surface, up to 680 wide. From the top: the title 16/17.6 500 and the description 14/19.6 TextSecondary (at most
+        520 wide) with the close button at the right once a domain is added; the add area (heading, hint, the domain field
+        and the "Add domain" button) or the domain row (globe, host, DNS provider line, status); the column header
+        (Type, Name, Value, Status; hidden when compact) over the records, or over three dimmed placeholder rows with the
+        empty-state line; the footer strip with the status line at the left and the action at the right. The records are
+        built in code (DomainVerifyRow); the swaps between statuses are ArcContentSwap crossfades.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DomainVerify}" TargetType="arc:DomainVerify">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:DomainVerifyTokenResource MaxWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="CompactWidth" Value="{arc:DomainVerifyTokenResource CompactWidth}" />
+        <Setter Property="RowPadding" Value="{arc:DomainVerifyTokenResource RowPadding}" />
+        <Setter Property="CompactRowPadding" Value="{arc:DomainVerifyTokenResource CompactRowPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DomainVerify">
+                <Border Name="PART_Frame"
+                        ClipToBounds="True"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <StackPanel>
+                        <Border Name="PART_Header">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <StackPanel>
+                                    <TextBlock Name="PART_Title"
+                                               FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="17.6"
+                                               LetterSpacing="-0.16"
+                                               TextTrimming="CharacterEllipsis"
+                                               AutomationProperties.HeadingLevel="2"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_Description"
+                                               Margin="0,2,0,0"
+                                               HorizontalAlignment="Left"
+                                               MaxWidth="{arc:DomainVerifyTokenResource DescriptionMaxWidth}"
+                                               TextWrapping="Wrap"
+                                               LineHeight="19.6"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                                <arc:Button Name="PART_Remove"
+                                            Grid.Column="1"
+                                            Variant="Ghost"
+                                            Size="Small"
+                                            IsVisible="False"
+                                            VerticalAlignment="Top"
+                                            HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <Border Name="PART_AddArea"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <StackPanel Spacing="12">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Name="PART_AddHeading"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="19.6"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <TextBlock Name="PART_AddHint"
+                                               LineHeight="19.6"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                </StackPanel>
+                                <StackPanel Spacing="6">
+                                    <TextBlock Name="PART_DomainLabel"
+                                               FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="16.8"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               AutomationProperties.AccessibilityView="Raw" />
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                        <arc:Input Name="PART_Domain" IsLabelVisible="False" />
+                                        <arc:Button Name="PART_Add"
+                                                    Grid.Column="1"
+                                                    Variant="Primary"
+                                                    VerticalAlignment="Top" />
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Name="PART_DomainArea"
+                                IsVisible="False"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Name="PART_DomainIcon"
+                                        Width="32"
+                                        Height="32"
+                                        VerticalAlignment="Top"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}" />
+                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                    <TextBlock Name="PART_DomainText"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               LineHeight="19.6"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ArcContentSwap Name="PART_DomainDetail"
+                                                        Mode="Label"
+                                                        HorizontalContentAlignment="Left"
+                                                        AutomationProperties.AccessibilityView="Raw" />
+                                </StackPanel>
+                                <arc:ArcContentSwap Name="PART_DomainStatus"
+                                                    Grid.Column="2"
+                                                    Mode="Label"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Right"
+                                                    AutomationProperties.AccessibilityView="Raw" />
+                            </Grid>
+                        </Border>
+
+                        <Border Name="PART_RecordsFrame"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <StackPanel>
+                                <Border Name="PART_ColumnHeaderFrame"
+                                        Background="{arc:DomainVerifyTokenResource StripBackground}"
+                                        Padding="20,8"
+                                        AutomationProperties.AccessibilityView="Raw">
+                                    <Grid Name="PART_ColumnHeader" ColumnDefinitions="72,*,1.6*,128" ColumnSpacing="16">
+                                        <TextBlock FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Grid.Column="1"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Grid.Column="2"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                        <TextBlock Grid.Column="3"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                    </Grid>
+                                </Border>
+                                <Panel>
+                                    <StackPanel Name="PART_Records" IsVisible="False" />
+                                    <StackPanel Name="PART_Placeholders"
+                                                Opacity="{arc:DomainVerifyTokenResource PlaceholderOpacity}"
+                                                IsHitTestVisible="False"
+                                                Focusable="False"
+                                                AutomationProperties.AccessibilityView="Raw" />
+                                    <Border Name="PART_Empty"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Padding="12,6"
+                                            Background="{arc:ArcDesignTokenResource Surface}"
+                                            BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                                        <TextBlock Name="PART_EmptyText"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   LineHeight="16.8"
+                                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    </Border>
+                                </Panel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Name="PART_Footer"
+                                IsVisible="False"
+                                MinHeight="{arc:DomainVerifyTokenResource FooterHeight}"
+                                Padding="20,10"
+                                Background="{arc:DomainVerifyTokenResource StripBackground}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <arc:ArcContentSwap Name="PART_FooterStatus"
+                                                    Mode="Label"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalContentAlignment="Left"
+                                                    AutomationProperties.AccessibilityView="Raw" />
+                                <arc:Button Name="PART_FooterAction"
+                                            Grid.Column="1"
+                                            Size="Small"
+                                            Variant="Primary"
+                                            VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                        <arc:DeveloperAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:not(:framed)">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:DomainVerifyTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_AddArea">
+            <Setter Property="Padding" Value="{arc:DomainVerifyTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_DomainArea">
+            <Setter Property="Padding" Value="{arc:DomainVerifyTokenResource SectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:DomainVerifyTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_AddArea">
+            <Setter Property="Padding" Value="{arc:DomainVerifyTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_DomainArea">
+            <Setter Property="Padding" Value="{arc:DomainVerifyTokenResource CompactSectionPadding}" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_ColumnHeaderFrame">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:compact /template/ Border#PART_Footer">
+            <Setter Property="Padding" Value="16,10" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AskYourDataPreviewDemo">
+    <!-- With no model wired the card plays its simulation (the demo's data): it asks "Weekly signups by plan since August"
+         once it is on screen, streams the SQL, rolls the rows scanned and builds the chart. Pick a suggestion, switch to
+         lines or the table, or type a question of your own (the simulation answers signups, MRR and churn; anything else
+         matches no rows). The card fills its container up to 680px, so its width never follows the streaming text. Every
+         number is invented. -->
+    <Panel MaxWidth="680">
+        <arc:AskYourData>
+            <arc:AskYourData.Simulation>
+                <arc:AskYourDataSimulation Question="Weekly signups by plan since August"
+                                           Suggestions="{x:Static demos:AskYourDataDemoData.Suggestions}"
+                                           Source="{x:Static demos:AskYourDataDemoData.Source}"
+                                           Answers="{x:Static demos:AskYourDataDemoData.Answers}"
+                                           Fallback="{x:Static demos:AskYourDataDemoData.Fallback}" />
+            </arc:AskYourData.Simulation>
+        </arc:AskYourData>
+    </Panel>
+</UserControl>

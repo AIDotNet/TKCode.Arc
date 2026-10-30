@@ -534,7 +534,7 @@ internal sealed class DemoAuditLog : UserControl
             _owner = owner;
             Item = item;
 
-            var avatar = new Avatar { DisplayName = item.Actor.Name, Size = AvatarSize.Small, VerticalAlignment = VerticalAlignment.Center };
+            var avatar = new Avatar { DisplayName = item.Actor.Name, Source = DemoPhotos.For(item.Actor.Name), Size = AvatarSize.Small, VerticalAlignment = VerticalAlignment.Center };
 
             var summary = new TextBlock { TextWrapping = TextWrapping.Wrap, FontSize = DemoUi.BodySize };
             ArcTokens.Bind(summary, TextBlock.ForegroundProperty, ArcDesignTokenKind.Foreground);

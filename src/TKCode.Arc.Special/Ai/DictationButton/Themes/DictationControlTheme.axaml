@@ -1,0 +1,233 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DictationControlTheme">
+
+    <!--
+        The mic's slot, anchored on the right. Idle: a 36px ghost mic. Dictating: a 216px SurfaceMuted pill with 4px padding,
+        the 28px cancel, the waveform, the timer (12px tabular numerals in a reserved width) and the 28px accent Insert where
+        the mic was. Denied or failed: Try again with the same icon as the toolbar's message. The live region takes no space.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DictationControl}" TargetType="arc:DictationControl">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DictationControl">
+                <Panel>
+                    <arc:DictationPill Name="PART_Pill"
+                                       Height="{arc:DictationControlTokenResource ButtonSize}"
+                                       HorizontalAlignment="Right"
+                                       Fill="{arc:ArcDesignTokenResource SurfaceMuted}">
+                        <arc:DictationIconButton Name="PART_Mic"
+                                                 Width="{arc:DictationControlTokenResource ButtonSize}"
+                                                 Height="{arc:DictationControlTokenResource ButtonSize}"
+                                                 IconSize="{arc:DictationControlTokenResource IconSize}" />
+                        <Grid Name="PART_Recording"
+                              Width="{arc:DictationControlTokenResource PillWidth}"
+                              Margin="0"
+                              ColumnDefinitions="Auto,*,Auto,Auto"
+                              IsVisible="False"
+                              Opacity="0">
+                            <arc:DictationIconButton Name="PART_Cancel"
+                                                     Classes="pill"
+                                                     Icon="{x:Static arc:ArcIcons.X}"
+                                                     Margin="4,0,0,0" />
+                            <arc:DictationWaveform Name="PART_Waveform"
+                                                   Grid.Column="1"
+                                                   Height="{arc:DictationControlTokenResource WaveformHeight}"
+                                                   Margin="{arc:DictationControlTokenResource WaveformMargin}"
+                                                   BarWidth="{arc:DictationControlTokenResource BarWidth}"
+                                                   BarGap="{arc:DictationControlTokenResource BarGap}"
+                                                   BarMinHeight="{arc:DictationControlTokenResource BarMinHeight}"
+                                                   VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Timer"
+                                       Grid.Column="2"
+                                       Width="{arc:DictationControlTokenResource TimerWidth}"
+                                       Margin="{arc:DictationControlTokenResource TimerMargin}"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontFeatures="tnum"
+                                       FontSize="{arc:DictationControlTokenResource TimerFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <arc:DictationIconButton Name="PART_Insert"
+                                                     Grid.Column="3"
+                                                     Classes="pill accent"
+                                                     Icon="{x:Static arc:ArcIcons.Check}"
+                                                     Margin="0,0,4,0" />
+                        </Grid>
+                        <arc:DictationIconButton Name="PART_Retry"
+                                                 Classes="retry"
+                                                 Height="{arc:DictationControlTokenResource ButtonSize}"
+                                                 IsVisible="False"
+                                                 Opacity="0" />
+                    </arc:DictationPill>
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|DictationWaveform#PART_Waveform">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The dictation icon buttons. Default (the mic, send): a 36px circle, an 18px glyph in TextSecondary; under a mouse or
+        pen Foreground 6% under a Foreground glyph, pressed 10%. "pill": 28px with a 16px glyph. "accent": Accent fill and
+        AccentForeground glyph (Insert, send), AccentStrong under the pointer. "retry": the glyph and a label in a pill as wide
+        as its text. Busy crossfades the glyph into a spinner. Keyboard focus draws the 2px ring 2px outside.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DictationIconButton}" TargetType="arc:DictationIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Width" Value="{arc:DictationControlTokenResource ButtonSize}" />
+        <Setter Property="Height" Value="{arc:DictationControlTokenResource ButtonSize}" />
+        <Setter Property="IconSize" Value="{arc:DictationControlTokenResource IconSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:DictationControlTokenResource RetryFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DictationIconButton">
+                <Panel>
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Name="PART_Content"
+                                Orientation="Horizontal"
+                                Margin="{TemplateBinding Padding}"
+                                Spacing="{arc:DictationControlTokenResource RetryGap}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <Panel>
+                            <arc:ArcGlyph Name="PART_Icon"
+                                          Data="{TemplateBinding Icon}"
+                                          Size="{TemplateBinding IconSize}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                            <arc:ArcSpinner Name="PART_Spinner"
+                                            Width="{TemplateBinding IconSize}"
+                                            Height="{TemplateBinding IconSize}"
+                                            Thickness="2"
+                                            Foreground="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            IsVisible="{TemplateBinding IsBusy}" />
+                        </Panel>
+                        <TextBlock Name="PART_Text"
+                                   Text="{TemplateBinding Text}"
+                                   VerticalAlignment="Center"
+                                   IsVisible="False"
+                                   Foreground="{TemplateBinding Foreground}" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:busy /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:DictationControlTokenResource HoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:DictationControlTokenResource PressedBackground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.45" />
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+
+        <Style Selector="^.pill">
+            <Setter Property="Width" Value="{arc:DictationControlTokenResource PillButtonSize}" />
+            <Setter Property="Height" Value="{arc:DictationControlTokenResource PillButtonSize}" />
+            <Setter Property="IconSize" Value="{arc:DictationControlTokenResource PillIconSize}" />
+        </Style>
+        <Style Selector="^.pill /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-2" />
+        </Style>
+        <Style Selector="^.accent">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^.accent:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^.accent:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^.retry">
+            <Setter Property="Width" Value="NaN" />
+            <Setter Property="Padding" Value="{arc:DictationControlTokenResource RetryPadding}" />
+            <Setter Property="IconSize" Value="{arc:DictationControlTokenResource PillIconSize}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.retry /template/ TextBlock#PART_Text">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^.retry /template/ Border#PART_FocusRing">
+            <Setter Property="Margin" Value="-2" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Icon">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:DictationWaveform}" TargetType="arc:DictationWaveform">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+    </ControlTheme>
+</ResourceDictionary>

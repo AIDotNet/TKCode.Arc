@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiTranslatePreviewDemo">
+    <!-- A simulation plays an invented French release note (the text and its translations come from the demo's data),
+         toured through English, Deutsch, 日本語 and Português, then back to the original. Nothing is sent. Click or press a
+         key inside the card to stop the tour and pick yourself. The card fills its container up to 620px, so its width
+         never follows the streaming text. -->
+    <StackPanel MaxWidth="620" Margin="0,12">
+        <arc:AiTranslate>
+            <arc:AiTranslate.Simulation>
+                <arc:AiTranslateSimulation Text="{x:Static demos:AiTranslateDemoData.Text}"
+                                           Translations="{x:Static demos:AiTranslateDemoData.Translations}"
+                                           Author="{x:Static demos:AiTranslateDemoData.Author}"
+                                           Timestamp="{x:Static demos:AiTranslateDemoData.Timestamp}"
+                                           ModelName="{x:Static demos:AiTranslateDemoData.ModelName}"
+                                           Tour="{x:Static demos:AiTranslateDemoData.Tour}" />
+            </arc:AiTranslate.Simulation>
+        </arc:AiTranslate>
+    </StackPanel>
+</UserControl>

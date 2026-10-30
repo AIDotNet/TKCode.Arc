@@ -1,7 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.AgentTimelinePreviewDemo">
-    <!-- With no run the timeline shows its invented sample and replays it the first time it scrolls into view. -->
-    <arc:AgentTimeline Margin="0,12" />
+    <!-- The demo's run (AgentTimelineDemoData: real models at their list prices, an invented incident) replays the first
+         time it scrolls into view because AutoPlay is on. With no run the timeline is empty. -->
+    <arc:AgentTimeline Margin="0,12" AutoPlay="True" Run="{x:Static demos:AgentTimelineDemoData.IncidentRun}" />
 </UserControl>

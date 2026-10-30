@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.StickerPeelBadgesDemo">
+    <!-- A shelf of earned badges: the content of the surface is drawn under the stickers. -->
+    <arc:StickerPeel Height="300" MaxWidth="640" Label="Badge shelf">
+        <Border Height="2" VerticalAlignment="Bottom" Margin="24,0,24,48"
+                Background="{arc:ArcDesignTokenResource BorderStrong}" />
+        <arc:StickerPeel.Stickers>
+            <arc:StickerPeelItem Id="first" Label="First build badge" Shape="Circle" X="0.16" Y="0.55" Rotate="-8">
+                <Border Width="76" Height="76" Background="#fb8500">
+                    <TextBlock Text="1st" FontWeight="Bold" FontSize="22" Foreground="White"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </arc:StickerPeelItem>
+            <arc:StickerPeelItem Id="streak" Label="Seven day streak badge" Shape="Pill" X="0.42" Y="0.4" Rotate="5">
+                <Border Width="124" Height="36" Background="#8338ec">
+                    <TextBlock Text="7 day streak" FontWeight="SemiBold" Foreground="White"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </arc:StickerPeelItem>
+            <arc:StickerPeelItem Id="star" Label="Star badge" Shape="Rounded" X="0.7" Y="0.55" Rotate="-4">
+                <Border Width="76" Height="76" Background="#ffbe0b">
+                    <PathIcon Width="38" Height="38" Foreground="#3a2a00"
+                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                              Data="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
+                </Border>
+            </arc:StickerPeelItem>
+            <arc:StickerPeelItem Id="team" Label="Team player badge" Shape="Rounded" X="0.88" Y="0.35" Rotate="9">
+                <Border Width="84" Height="56" Background="#00b4d8">
+                    <TextBlock Text="Team" FontWeight="Bold" Foreground="White"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </arc:StickerPeelItem>
+        </arc:StickerPeel.Stickers>
+    </arc:StickerPeel>
+</UserControl>

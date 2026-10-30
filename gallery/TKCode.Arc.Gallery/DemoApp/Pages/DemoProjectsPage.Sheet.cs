@@ -114,7 +114,7 @@ public sealed partial class DemoProjectsList
             var person = DemoData.Person(id);
             var avatar = new Avatar
             {
-                DisplayName = person.Name,
+                DisplayName = person.Name, Source = DemoPhotos.For(person.Name),
                 Size = AvatarSize.Small,
                 Status = DemoData.Profile(id).IsOnline ? AvatarStatus.Online : AvatarStatus.Offline,
                 VerticalAlignment = VerticalAlignment.Center

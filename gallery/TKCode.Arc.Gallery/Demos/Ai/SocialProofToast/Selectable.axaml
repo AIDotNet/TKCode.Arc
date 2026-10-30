@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SocialProofToastSelectableDemo">
+    <!-- IsSelectable makes each toast a button (open pricing or a customer story); Limit stops after five toasts so the
+         page stays calm. The line underneath logs what the stack reports. -->
+    <StackPanel Spacing="12" MaxWidth="400">
+        <arc:SocialProofToast x:Name="Stack" IsSelectable="True" Limit="5" Interval="0:0:3" Prefill="1">
+            <arc:SocialProofToast.Simulation>
+                <arc:SocialProofToastSimulation Events="{x:Static demos:SocialProofToastDemoData.Events}" />
+            </arc:SocialProofToast.Simulation>
+        </arc:SocialProofToast>
+        <TextBlock x:Name="Log"
+                   Text="Press a toast, or dismiss one."
+                   FontSize="13"
+                   TextTrimming="CharacterEllipsis"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

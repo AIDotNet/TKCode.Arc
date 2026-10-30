@@ -124,7 +124,7 @@ internal sealed class ToolCallMarkStack : Control
                     disc.Progress = Value(0, measure: true);
                     disc.Fade = Value(0, measure: false);
                     _ = disc.Progress.AnimateTo(1, MotionSpec.Spring(JoinSpring));
-                    _ = disc.Fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, ToolCallCollapsible.EaseOut));
+                    _ = disc.Fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Fast, AiHeightBox.EaseOut));
                 }
             }
             else

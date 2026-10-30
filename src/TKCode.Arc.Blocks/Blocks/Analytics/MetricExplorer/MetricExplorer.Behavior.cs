@@ -109,6 +109,7 @@ public partial class MetricExplorer
 
     static MetricExplorer()
     {
+        BlockFocusModality.Watch();
         FocusableProperty.OverrideDefaultValue<MetricExplorer>(false);
     }
 
@@ -431,7 +432,9 @@ public partial class MetricExplorer
             _announcer?.Announce(string.Format(CultureInfo.CurrentCulture, ClosedAnnouncementFormat, _series.Length));
             if (_closedByUser)
             {
-                Dispatcher.UIThread.Post(() => _stage?.FocusCard(index), DispatcherPriority.Loaded);
+                // Closed with a click: the card takes focus back without the keyboard ring.
+                var method = BlockFocusModality.For(this);
+                Dispatcher.UIThread.Post(() => _stage?.FocusCard(index, method), DispatcherPriority.Loaded);
             }
         }
         _openedByKeyboard = false;

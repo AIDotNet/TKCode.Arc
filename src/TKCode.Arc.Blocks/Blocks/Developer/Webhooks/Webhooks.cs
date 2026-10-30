@@ -235,6 +235,7 @@ public partial class Webhooks : TemplatedControl
     /// <summary>Creates the block.</summary>
     public Webhooks()
     {
+        BlockFocusModality.Watch();
         Endpoints = new AvaloniaList<WebhookEndpoint>();
         EventTypes = new AvaloniaList<WebhookEventType>();
         InitializeView();

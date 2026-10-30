@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ModelCardPreviewDemo">
+    <!-- Pick a model above the card: every price, limit and score rolls in place and the card keeps its size. Flip Compare,
+         drag the volume slider or point at a benchmark row. Real models with their list prices and the Terminal-Bench 4.0
+         scores their vendors publish; a score a vendor does not publish reads as not published. -->
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Picker" HorizontalAlignment="Center" SelectionChanged="OnPicked" />
+        <arc:ModelCard x:Name="Card"
+                       Model="{x:Static demos:ModelCardDemoData.Opus}"
+                       Rivals="{x:Static demos:ModelCardDemoData.Frontier}"
+                       Benchmarks="{x:Static demos:ModelCardDemoData.FrontierBenchmarks}"
+                       Labels="{x:Static demos:ModelCardDemoData.Labels}"
+                       Note="{x:Static demos:ModelCardDemoData.Note}" />
+        <TextBlock HorizontalAlignment="Center"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                   Text="{x:Static demos:ModelCardDemoData.Note}" />
+    </StackPanel>
+</UserControl>

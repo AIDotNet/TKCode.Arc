@@ -4,11 +4,11 @@ namespace TKCode.Arc;
 
 /// <summary>
 /// A scripted agent run for <see cref="AgentRunSimulation"/>: the agent, its steps with their timing, the outcome and the
-/// notices the simulation announces for each action. <see cref="AgentStatusSamples"/> has two invented runs. Data only.
+/// notices the simulation announces for each action. Your app writes the run; nothing ships with the package. Data only.
 /// </summary>
 public sealed class AgentRunScenario
 {
-    /// <summary>A short id ("coding", "research").</summary>
+    /// <summary>A short id for your own use, such as "coding".</summary>
     public string Id { get; init; } = string.Empty;
 
     /// <summary>The agent that runs.</summary>

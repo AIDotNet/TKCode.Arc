@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiWorkflowPreviewDemo">
+    <!-- The card in its main states. Sample plays a simulation of a support flow (the demo's data) until you press inside
+         it; Failing stops on a step that fails so Retry can resume it; Empty lists the triggers to start from; Loading
+         shows skeleton steps. The card fills its container up to 640px. The models are real; every person, company and
+         number is invented. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="sample"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="sample" Label="Sample" />
+            <arc:SegmentedOption Value="failing" Label="Failing" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+            <arc:SegmentedOption Value="loading" Label="Loading" />
+        </arc:SegmentedControl>
+        <Border x:Name="Host">
+            <arc:AiWorkflow>
+                <arc:AiWorkflow.Simulation>
+                    <arc:AiWorkflowSimulation Title="Escalate urgent support email"
+                                              Description="Runs on every new email to support@example.com"
+                                              Steps="{x:Static demos:AiWorkflowDemoData.Steps}"
+                                              Catalog="{x:Static demos:AiWorkflowDemoData.Catalog}" />
+                </arc:AiWorkflow.Simulation>
+            </arc:AiWorkflow>
+        </Border>
+    </StackPanel>
+</UserControl>

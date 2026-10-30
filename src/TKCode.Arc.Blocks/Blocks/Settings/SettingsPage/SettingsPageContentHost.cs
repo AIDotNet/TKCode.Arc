@@ -7,8 +7,8 @@ using TKCode.Arc.Motion;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The content area of a <see cref="SettingsPage"/>. Two pooled presenters take turns: the incoming section rises 6px
-/// and fades in (standard, enter easing) while the outgoing one stays where it was and fades out (fast). Coming back to
+/// The content area of a <see cref="SettingsPage"/>. Two pooled presenters take turns: the outgoing section stays where it
+/// was and fades out (fast); once it is gone the incoming one rises 6px and fades in (standard, enter easing). Coming back to
 /// the section that is still leaving swaps the two presenters' roles, so a section control is never in two places.
 /// Reduced motion crossfades in place; Off switches at once. Only the incoming section takes part in layout.
 /// Code-driven because the section controls are reused across swaps (a control has one visual parent), which a
@@ -116,6 +116,16 @@ internal sealed class SettingsPageContentHost : Control
         slot.Translate.Y = full ? Rise * (1 - from) : 0;
         slot.Progress ??= CreateProgress(slot);
         slot.Progress.Jump(from);
+        // The two sections' text must never be on screen together (it reads as overlapping glyphs): a section that
+        // starts from nothing waits for the one leaving to finish fading out.
+        if (from == 0 && _exiting is not null)
+        {
+            await Task.Delay(full ? ArcMotionPresets.Fast : TimeSpan.FromMilliseconds(100));
+            if (slot.Generation != generation)
+            {
+                return;
+            }
+        }
         var spec = full
             ? MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Enter)
             : MotionSpec.Tween(TimeSpan.FromMilliseconds(120), ArcEasings.Standard);

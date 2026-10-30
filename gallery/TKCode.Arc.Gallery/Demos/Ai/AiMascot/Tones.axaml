@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiMascotTonesDemo">
+    <!-- Accent (the default), Ink, Soft, and a brand color with light eyes. -->
+    <WrapPanel ItemSpacing="28" LineSpacing="16" Margin="0,8">
+        <arc:AiMascot Status="Idle" Size="96" Tone="Accent" />
+        <arc:AiMascot Status="Idle" Size="96" Tone="Ink" />
+        <arc:AiMascot Status="Idle" Size="96" Tone="Soft" />
+        <arc:AiMascot Status="Thinking" Size="96" BodyColor="#7747FF" EyeColor="White" />
+    </WrapPanel>
+</UserControl>

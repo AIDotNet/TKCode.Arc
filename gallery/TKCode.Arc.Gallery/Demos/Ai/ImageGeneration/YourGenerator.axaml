@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageGenerationYourGeneratorDemo">
+    <!-- A generator of your own (here the simulation, with image 3 failing on its first try): press the failed tile to
+         retry it, or press Stop while the batch runs. -->
+    <Border MaxWidth="640" Margin="0,12">
+        <arc:ImageGeneration x:Name="Card" AutoGenerate="True">
+            <arc:ImageGeneration.Simulation>
+                <arc:ImageGenerationSimulation Prompt="{x:Static demos:ImageGenerationDemoData.Prompt}"
+                                               Models="{x:Static demos:ImageGenerationDemoData.Models}"
+                                               Suggestions="{x:Static demos:ImageGenerationDemoData.Suggestions}"
+                                               Painter="{x:Static demos:ImageGenerationDemoData.Painter}" />
+            </arc:ImageGeneration.Simulation>
+        </arc:ImageGeneration>
+    </Border>
+</UserControl>

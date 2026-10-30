@@ -1,7 +1,7 @@
 ---
 title: Tool call
 summary: 智能体对话记录中的一行工具调用：工具、它做了什么以及结果如何，点开即可看到调用的输入与输出，并在行内完成审批与重试。
-source-hash: 034f5a63d7bf
+source-hash: 545a5441aa1e
 ---
 
 <Demo name="Preview" />
@@ -24,7 +24,7 @@ source-hash: 034f5a63d7bf
 
 ## 用法
 
-提供一个 `ToolCallItem` 给行。工具是数据，而非品牌：供屏幕阅读器使用的名称、一个 24 × 24 的描边标记（Lucide 图标）以及每种状态对应的短语。若不提供项，该行显示一次示例网络搜索。
+提供一个 `ToolCallItem` 给行。工具是数据，而非品牌：供屏幕阅读器使用的名称、一个 24 × 24 的描边标记（Lucide 图标）以及每种状态对应的短语。若不提供项，该行为空：以弱化颜色显示一个扳手和 "No tool call"，没有状态，也无法展开（见下方状态演示的最后一行）。没有调用的分组不占空间。
 
 ```xml
 <arc:ToolCall>
@@ -80,7 +80,7 @@ JSON 基于 `System.Text.Json.Nodes` 构建，由我们自己的一个小型词�
 
 分组会引发 `ApproveRequested`、`DenyRequested` 和 `RetryRequested`（它们从行冒泡上来，并携带该项）。由你自己更新调用，通常先变为运行中，再变为成功，并设置 `Handled`。控件从不改变你驱动的状态。
 
-如果无人处理某个操作，控件会保留本地行为，使没有接线的页面也能工作：**拒绝**将调用标记为已拒绝；**允许**与**重试**只模拟一次运行，且仅限内置示例数据（`ToolCallSamples`、`ToolCallSimulation`）。对于其他数据，什么都不会改变。模拟运行会通过该行的实时区域说明这一点（"This is sample data, so the call is only simulated."）。
+如果无人处理某个操作，控件会保留本地行为，使没有接线的页面也能工作：**拒绝**将调用标记为已拒绝；**允许**与**重试**会交给追加该调用的 `ToolCallSimulation`，由它继续运行。对于其他数据，它们什么都不改变。模拟运行会通过该行的实时区域说明这一点（"This is sample data, so the call is only simulated."）。
 
 ### 展开与折叠
 
@@ -88,7 +88,23 @@ JSON 基于 `System.Text.Json.Nodes` 构建，由我们自己的一个小型词�
 
 ### 模拟
 
-`ToolCallSimulation` 按时钟把一段预设的回合播放进一个可观察列表：调用约每 225ms 追加一次，运行其时长后结束；失败的调用等待 `Retry`；需要审批的调用等待 `Approve` 或 `Deny`。将分组的 `ItemsSource` 绑定到 `Items`，并将 `IsActive` 绑定到 `IsWorking`。默认脚本是 `ToolCallSamples.Script()`；传入 `TimeProvider` 即可在测试中逐步推进。预览中分组周围的对话记录（问题、句子、答案以及 "Run again" 按钮）是演示内容，不属于控件的一部分。
+`ToolCallSimulation` 按时钟把一段预设的回合播放进一个可观察列表：调用约每 225ms 追加一次，运行其时长后结束；失败的调用等待 `Retry`；需要审批的调用等待 `Approve` 或 `Deny`。包里不附带任何脚本：你用 `ToolCallSimulationStep` 编写脚本，每一步是一个 `ToolCallItem`（运行时追加它的副本），加上结果与时序。把模拟交给 `ToolCallGroup.Simulation`：分组没有自己的调用时，会显示模拟的 `Items`，在它 `IsWorking` 时显示 "Using"，出现在屏幕上时从头开始运行，离开时停止。`Items` 或 `ItemsSource` 中的调用优先于模拟。
+
+```csharp
+var lookup = new ToolCallItem("orders", "Orders", "Looked up order 1042", ToolCallStatus.Success, ArcIcons.Search)
+{
+    RunningTitle = "Looking up order 1042",
+    Summary = "1 result",
+    Duration = TimeSpan.FromMilliseconds(900)
+};
+group.Simulation = new ToolCallSimulation(
+[
+    new ToolCallSimulationStep(lookup) { Delay = TimeSpan.FromMilliseconds(600) }
+]);
+group.Simulation.Start();                       // Run again: plays from the top
+```
+
+在 XAML 中，把 `<arc:ToolCallGroup.Simulation>` 设为一个 `ToolCallSimulation`，其 `Script` 来自 `{x:Static}`，写法见预览的 Code 标签；每个分组使用自己的模拟（它保存播放状态），脚本可以共享。传入 `TimeProvider` 即可在测试中逐步推进。预览中分组周围的对话记录（问题、句子、答案以及 "Run again" 按钮）是展示库编写的演示内容，财务团队的那些调用也是；它们都不属于控件。
 
 ### 窄容器
 
@@ -116,7 +132,7 @@ JSON 基于 `System.Text.Json.Nodes` 构建，由我们自己的一个小型词�
 
 ### 常见问题
 
-**我可以把品牌标志用作标记吗？** 标记可以是任意 24 × 24 的描边几何图形。品牌标志需要你自行取得授权；示例只使用 Lucide 图标。
+**我可以把品牌标志用作标记吗？** 标记可以是任意 24 × 24 的描边几何图形。品牌标志需要你自行取得授权；演示只使用 Lucide 图标。
 
 **允许会运行工具吗？** 不会。它会引发 `ApproveRequested`；由你的代码运行工具并更新状态。
 
@@ -165,13 +181,11 @@ JSON 基于 `System.Text.Json.Nodes` 构建，由我们自己的一个小型词�
 | `ToolCallSimulationState` | `Idle`, `Working`, `WaitingForRetry`, `WaitingForApproval`, `Finished` |
 | `ToolCallSimulationPhase` | `Started`, `CallAppended`, `CallSucceeded`, `CallFailed`, `WaitingForApproval`, `Retried`, `Allowed`, `Denied`, `Finished` |
 
-`ToolCallSamples` 保存虚构的示例调用与默认脚本。
-
 ## 无障碍
 
 - 分组标题与每一行都是按钮，并报告其是否展开。一行的名称会读出工具、短语与状态，例如："Tracker: Searched tickets in finance/close Done, 4 results, 1.2s"。
 - 状态从不只依赖颜色：每种状态都有各自的图标，失败与等待中的调用会显示原因行，名称中也把状态拼写出来。
-- 每一行都通过礼貌级别的实时区域播报状态变化，包括示例调用只是模拟这一点。
+- 每一行都通过礼貌级别的实时区域播报状态变化，包括模拟的调用只是模拟这一点。
 - 重试、允许与拒绝都以其所作用的调用命名："Allow: Post a status note to #finance-ops"。当按钮消失时，焦点会移到其所在的行，而不是落回页面。
 - 输入与输出是有名称的分组；复制按钮通过实时区域确认，且不改变宽度。
 - 指针焦点不显示焦点环；键盘焦点在行内显示 2px 的焦点环，因此不会被裁切。

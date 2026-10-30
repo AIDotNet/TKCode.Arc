@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SpeechPlayerPreviewDemo">
+    <!-- The player has no text, so it reads its SpeechSimulation once it is in view and loops through two voices until you
+         interact: an invented travel reply credited to a real model, and four invented voices (SpeechPlayerDemoData). Slow
+         service waits three seconds for speech (Preparing); Failure shows the error with Retry; Empty has no text and no
+         simulation, so Read aloud waits disabled. Every option is simulated: no audio plays. The card fills its container
+         up to 640px. -->
+    <StackPanel Spacing="20" MaxWidth="640">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="sample"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="sample" Label="Sample" />
+            <arc:SegmentedOption Value="slow" Label="Slow service" />
+            <arc:SegmentedOption Value="error" Label="Failure" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:SpeechPlayer x:Name="Player">
+            <arc:SpeechPlayer.Simulation>
+                <arc:SpeechSimulation Text="{x:Static demos:SpeechPlayerDemoData.Reply}"
+                                      AuthorName="{x:Static demos:SpeechPlayerDemoData.Author}"
+                                      Voices="{x:Static demos:SpeechPlayerDemoData.Voices}" />
+            </arc:SpeechPlayer.Simulation>
+        </arc:SpeechPlayer>
+    </StackPanel>
+</UserControl>

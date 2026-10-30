@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.PixelMascotInStepDemo">
+    <!-- One shared PixelMascotLoop keeps several mascots in step: each binds its Status to the loop's Status. -->
+    <UserControl.Resources>
+        <arc:PixelMascotLoop x:Key="SharedLoop" />
+    </UserControl.Resources>
+    <WrapPanel ItemSpacing="24" LineSpacing="16" Margin="0,12">
+        <arc:PixelMascot Scale="2" Announce="False" Status="{Binding Status, Source={StaticResource SharedLoop}}" />
+        <arc:PixelMascot Scale="3" Announce="False" Status="{Binding Status, Source={StaticResource SharedLoop}}" />
+        <arc:PixelMascot Scale="4" Announce="False" Status="{Binding Status, Source={StaticResource SharedLoop}}" />
+    </WrapPanel>
+</UserControl>

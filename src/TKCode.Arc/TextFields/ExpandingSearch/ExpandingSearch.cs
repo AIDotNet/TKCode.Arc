@@ -203,6 +203,7 @@ public class ExpandingSearch : TemplatedControl
     {
         AffectsMeasure<ExpandingSearch>(ExpandedWidthProperty);
         FocusableProperty.OverrideDefaultValue<ExpandingSearch>(false);
+        FocusModality.Watch();
     }
 
     public ExpandingSearch()
@@ -479,7 +480,8 @@ public class ExpandingSearch : TemplatedControl
         ApplyExpandedState(animate: true);
         if (returnFocus)
         {
-            _trigger?.Focus(NavigationMethod.Tab);
+            // A result clicked with the mouse hands focus back without the keyboard ring.
+            _trigger?.Focus(FocusModality.For(this));
         }
         MorphTo(_collapsed);
         RefreshPanel();

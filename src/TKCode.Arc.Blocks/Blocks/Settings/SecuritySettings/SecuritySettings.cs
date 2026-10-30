@@ -400,6 +400,7 @@ public class SecuritySettings : TemplatedControl
 
     public SecuritySettings()
     {
+        BlockFocusModality.Watch();
         _signOutOthers = new ConfirmMorph
         {
             Tone = ConfirmMorphTone.Danger,
@@ -977,7 +978,8 @@ public class SecuritySettings : TemplatedControl
             _changePassword.IsEnabled = true;
             if (focusWasInside)
             {
-                _changePassword.Focus(NavigationMethod.Tab);
+                // Cancel clicked with the mouse hands focus back without the keyboard ring.
+                _changePassword.Focus(BlockFocusModality.For(this));
             }
         }
         // Without a spring the decorator is already closed; otherwise the form hides once the height reaches zero.
@@ -1494,7 +1496,8 @@ public class SecuritySettings : TemplatedControl
         {
             next = _ordered[i].IsLeaving ? null : _ordered[i].SignOutButton;
         }
-        next?.Focus(NavigationMethod.Tab);
+        // Sign out clicked with the mouse moves focus on without the keyboard ring.
+        next?.Focus(BlockFocusModality.For(this));
     }
 
     #endregion

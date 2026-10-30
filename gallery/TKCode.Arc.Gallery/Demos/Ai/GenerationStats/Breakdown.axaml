@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GenerationStatsBreakdownDemo">
+    <!-- A finished response in a dev panel with the breakdown open: the latency bar, the token table with rates and cost,
+         a note on where the rates come from and a button that copies the stats as JSON. -->
+    <Panel MaxWidth="720">
+        <arc:GenerationStats x:Name="Stats" IsExpanded="True" />
+    </Panel>
+</UserControl>

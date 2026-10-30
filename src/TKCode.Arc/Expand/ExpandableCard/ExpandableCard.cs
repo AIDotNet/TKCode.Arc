@@ -98,6 +98,7 @@ public class ExpandableCard : HeaderedContentControl
     {
         FocusableProperty.OverrideDefaultValue<ExpandableCard>(false);
         AffectsMeasure<ExpandableCard>(CollapsedWidthProperty, ExpandedWidthProperty);
+        FocusModality.Watch();
     }
 
     /// <summary>Current (animated) card width (tests).</summary>
@@ -181,8 +182,8 @@ public class ExpandableCard : HeaderedContentControl
     {
         if (!expanded && _details is { IsKeyboardFocusWithin: true })
         {
-            // Closed details are inert: focus never stays inside them.
-            _trigger?.Focus(NavigationMethod.Tab);
+            // Closed details are inert: focus never stays inside them (the keyboard ring follows keys only).
+            _trigger?.Focus(FocusModality.For(this));
         }
         var spec = BoxSpec(expanded);
         _panel?.SetExpanded(expanded, spec);

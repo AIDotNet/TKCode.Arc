@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ImageRevealGeneratorDemo">
+    <!-- A Generator stands in for an image service: it reports 30 steps, hands over the picture with its first report and
+         returns it at the end. Fail the next run to see the error state; Retry runs the generator again. -->
+    <StackPanel Spacing="12" MaxWidth="360">
+        <arc:ImageReveal x:Name="Reveal"
+                         AspectRatio="0.8"
+                         AltText="A sunlit greenhouse with citrus trees" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Generate again" Variant="Secondary" Size="Small" Click="OnGenerate" />
+            <arc:Button Content="Fail the next run" Variant="Ghost" Size="Small" Click="OnFailNext" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

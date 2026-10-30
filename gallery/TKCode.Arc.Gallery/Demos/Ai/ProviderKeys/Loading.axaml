@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ProviderKeysLoadingDemo">
+    <!-- While keys load, placeholder rows keep the real row geometry, so nothing moves when the keys arrive. -->
+    <StackPanel Spacing="12" Margin="0,12" MaxWidth="720">
+        <arc:Switch Content="Loading" IsChecked="{Binding #Card.IsLoading, Mode=TwoWay}" HorizontalAlignment="Left" />
+        <arc:ProviderKeys x:Name="Card"
+                          IsLoading="True"
+                          Providers="{x:Static demos:ProviderKeysDemoData.Providers}"
+                          Keys="{x:Static demos:ProviderKeysDemoData.Keys}">
+            <arc:ProviderKeys.Simulation>
+                <arc:ProviderKeysSimulation />
+            </arc:ProviderKeys.Simulation>
+        </arc:ProviderKeys>
+    </StackPanel>
+</UserControl>

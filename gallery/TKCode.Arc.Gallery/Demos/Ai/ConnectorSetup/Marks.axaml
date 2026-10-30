@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ConnectorSetupMarksDemo">
+    <!-- The built-in marks, your own glyph, a letter when there is no glyph, and a larger size. -->
+    <WrapPanel ItemSpacing="12" LineSpacing="12" MaxWidth="520">
+        <arc:ConnectorMark Kind="Chat" />
+        <arc:ConnectorMark Kind="Code" />
+        <arc:ConnectorMark Kind="Docs" />
+        <arc:ConnectorMark Kind="Drive" />
+        <arc:ConnectorMark Kind="Issues" />
+        <arc:ConnectorMark Kind="Calendar" />
+        <arc:ConnectorMark Kind="Mail" />
+        <arc:ConnectorMark Kind="Crm" />
+        <arc:ConnectorMark Kind="Database" />
+        <arc:ConnectorMark Kind="Analytics" />
+        <arc:ConnectorMark Glyph="{x:Static arc:ArcIcons.Cloud}" GlyphBrush="{arc:ArcDesignTokenResource Accent}" />
+        <arc:ConnectorMark Monogram="Wingtip" />
+        <arc:ConnectorMark Kind="Chat" Size="28" />
+    </WrapPanel>
+</UserControl>

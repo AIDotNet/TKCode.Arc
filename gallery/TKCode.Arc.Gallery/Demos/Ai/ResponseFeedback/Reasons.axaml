@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:generic="using:System.Collections.Generic"
+             x:Class="TKCode.Arc.Gallery.Demos.ResponseFeedbackReasonsDemo">
+    <!-- Reasons of your own for a coding assistant, no note field and no follow-up row after a thumbs up. -->
+    <StackPanel MaxWidth="600" Margin="0,12" Spacing="8">
+        <TextBlock TextWrapping="Wrap"
+                   LineHeight="22"
+                   Text="Rename the column in a migration, then update the two queries in OrderRepository that select it." />
+        <arc:FeedbackActions AllowComment="False" PrivacyNote="{x:Null}">
+            <arc:FeedbackActions.NegativeReasons>
+                <generic:List x:TypeArguments="x:String">
+                    <x:String>Wrong code</x:String>
+                    <x:String>Didn't compile</x:String>
+                    <x:String>Outdated API</x:String>
+                    <x:String>Off topic</x:String>
+                </generic:List>
+            </arc:FeedbackActions.NegativeReasons>
+            <arc:FeedbackActions.PositiveReasons>
+                <generic:List x:TypeArguments="x:String" />
+            </arc:FeedbackActions.PositiveReasons>
+        </arc:FeedbackActions>
+    </StackPanel>
+</UserControl>

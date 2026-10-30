@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiCommandPaletteWiredDemo">
+    <!-- Your own pages and actions, and a responder that streams its answer (here a canned one). -->
+    <StackPanel Spacing="12" Margin="0,12">
+        <arc:AiCommandPalette x:Name="Palette" ModelName="Assistant" ResultsHeight="340">
+            <arc:AiCommandPaletteItem Id="home" Label="Home" Group="Pages" Icon="{x:Static arc:ArcIcons.House}"
+                                      Shortcut="G H" IsSuggested="True" />
+            <arc:AiCommandPaletteItem Id="deployments" Label="Deployments" Group="Pages" Icon="{x:Static arc:ArcIcons.Server}"
+                                      Meta="3 running" Shortcut="G D" IsSuggested="True" Keywords="builds releases" />
+            <arc:AiCommandPaletteItem Id="logs" Label="Logs" Group="Pages" Icon="{x:Static arc:ArcIcons.Terminal}"
+                                      Keywords="errors output" />
+            <arc:AiCommandPaletteItem Id="usage" Label="Usage" Group="Pages" Icon="{x:Static arc:ArcIcons.ChartBar}"
+                                      Meta="Billing" Keywords="cost limits bandwidth" />
+            <arc:AiCommandPaletteItem Id="new-project" Label="New project" Group="Actions" Icon="{x:Static arc:ArcIcons.Plus}"
+                                      Shortcut="N" IsSuggested="True" />
+            <arc:AiCommandPaletteItem Id="env" Label="Add environment variable" Group="Actions" Icon="{x:Static arc:ArcIcons.Key}"
+                                      Keywords="secret config" />
+        </arc:AiCommandPalette>
+        <TextBlock x:Name="Log" Text="Choose a page, or press Tab and ask why the last deploy failed."
+                   Opacity="0.7" FontSize="12" TextWrapping="Wrap" />
+    </StackPanel>
+</UserControl>

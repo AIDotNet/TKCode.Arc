@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.SocialProofToastPreviewDemo">
+    <!-- With no events the stack plays its SocialProofToastSimulation, an invented feed (SocialProofToastDemoData): a toast
+         every 4 seconds, two already showing. Hover it (or Tab into it) to pause and fan it out; dismiss any toast. The
+         stack fills its container up to 400px, so its width never follows the text. Every name, company and place is
+         invented. -->
+    <StackPanel Spacing="16" MaxWidth="400">
+        <arc:SocialProofToast x:Name="Stack" Prefill="2">
+            <arc:SocialProofToast.Simulation>
+                <arc:SocialProofToastSimulation Events="{x:Static demos:SocialProofToastDemoData.Events}" />
+            </arc:SocialProofToast.Simulation>
+        </arc:SocialProofToast>
+        <Grid ColumnDefinitions="*,Auto">
+            <arc:Switch x:Name="Paused" Content="Paused" VerticalAlignment="Center" />
+            <arc:Button Grid.Column="1" Content="Restart" Variant="Secondary" Size="Small" Click="OnRestart" />
+        </Grid>
+    </StackPanel>
+</UserControl>

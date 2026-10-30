@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.PiiRedactionPlaygroundDemo">
+    <!-- No autoplay and a blank field: paste a message and press Scan, or Cmd/Ctrl+Enter in the field. The built-in
+         detector flags emails, card numbers that pass Luhn, phone numbers, introductions and the names listed; the reply
+         is simulated. Try "This is Orrin Pell, reach me at orrin@example.com or 555-0175." -->
+    <Panel MaxWidth="640" Margin="0,12">
+        <arc:PiiRedaction AutoPlay="False" Message="" ModelName="{x:Static demos:PiiRedactionDemoData.ModelName}" />
+    </Panel>
+</UserControl>

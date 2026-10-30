@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.LlmCostCalculatorYourPricesDemo">
+    <!-- Your own price list (here a team's approved models at their vendors' list prices), your own presets, a 70% cache
+         hit rate and a description that says where the prices come from. The lines under the panel follow SelectedCost and
+         SelectedModelChanged. -->
+    <StackPanel Spacing="8" MaxWidth="720">
+        <arc:LlmCostCalculator x:Name="Calculator"
+                               CacheHitRate="0.7"
+                               SelectedId="claude-sonnet-5-5" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+        <TextBlock x:Name="Picked"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.WebhookTesterNarrowDemo">
+    <!-- 390 wide: the request and the response stack, and the delivery rows lose their time. -->
+    <arc:WebhookTester x:Name="Block"
+                       Width="390"
+                       Margin="0,12"
+                       HorizontalAlignment="Center"
+                       AutoPlay="False" />
+</UserControl>

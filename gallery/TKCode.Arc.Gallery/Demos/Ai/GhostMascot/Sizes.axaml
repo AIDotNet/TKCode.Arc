@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostMascotSizesDemo">
+    <!-- A size ladder while writing: under 56px the compact drawing takes over (no shadow, heavier pen and line). -->
+    <WrapPanel Margin="0,8" ItemSpacing="20" LineSpacing="16" MaxWidth="640">
+        <arc:GhostMascot Size="24" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:GhostMascot Size="32" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:GhostMascot Size="48" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:GhostMascot Size="64" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:GhostMascot Size="96" Status="Writing" VerticalAlignment="Bottom" />
+        <arc:GhostMascot Size="160" Status="Writing" VerticalAlignment="Bottom" />
+    </WrapPanel>
+</UserControl>

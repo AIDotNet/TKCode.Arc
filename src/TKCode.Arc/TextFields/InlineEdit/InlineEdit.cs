@@ -260,6 +260,7 @@ public class InlineEdit : TemplatedControl
     static InlineEdit()
     {
         FocusableProperty.OverrideDefaultValue<InlineEdit>(false);
+        FocusModality.Watch();
     }
 
     // ---- template ------------------------------------------------------------------------------------------------
@@ -700,7 +701,8 @@ public class InlineEdit : TemplatedControl
         UpdateMessage();
         if (focusDisplay)
         {
-            _display?.Focus(NavigationMethod.Tab);
+            // Save and Cancel clicked with the mouse hand focus back without the keyboard ring.
+            _display?.Focus(FocusModality.For(this));
         }
     }
 

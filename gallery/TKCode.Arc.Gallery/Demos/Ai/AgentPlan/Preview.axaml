@@ -1,7 +1,18 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
              x:Class="TKCode.Arc.Gallery.Demos.AgentPlanPreviewDemo">
-    <!-- No steps and no status: the plan shows the invented sample draft and runs the built-in simulation. -->
-    <arc:AgentPlan MaxWidth="560" />
+    <!-- No steps and no status: the plan takes its draft from the simulation the demo gives it (AgentPlanDemoData: a
+         real model's name, an invented task) and runs it. Without a simulation it would say "Nothing is planned yet". -->
+    <arc:AgentPlan MaxWidth="560">
+        <arc:AgentPlan.Simulation>
+            <arc:AgentPlanSimulation Goal="{x:Static demos:AgentPlanDemoData.Goal}"
+                                     Model="{x:Static demos:AgentPlanDemoData.Model}"
+                                     Steps="{x:Static demos:AgentPlanDemoData.Steps}"
+                                     Suggestions="{x:Static demos:AgentPlanDemoData.Suggestions}"
+                                     GenericScript="{x:Static demos:AgentPlanDemoData.GenericScript}"
+                                     Summary="{x:Static demos:AgentPlanDemoData.Summary}" />
+        </arc:AgentPlan.Simulation>
+    </arc:AgentPlan>
 </UserControl>

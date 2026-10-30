@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkInlineDemo">
+    <!-- Size matches the text and Tone="Inherit" takes the text's color. -->
+    <StackPanel Spacing="16" Margin="0,8" MaxWidth="560">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+            <arc:AiSpark Size="16" Tone="Inherit" Status="Generating" Announce="False" />
+            <TextBlock Text="Drafting a reply to Maya Chen" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Spacing="6"
+                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}">
+            <arc:AiSpark Size="14" Tone="Inherit" Status="Thinking" Announce="False" />
+            <TextBlock Text="Reading 12 files" FontSize="14" VerticalAlignment="Center" />
+        </StackPanel>
+        <arc:Button Variant="Primary" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <arc:AiSpark Size="16" Tone="Inherit" Status="Idle" Announce="False" />
+                <TextBlock Text="Generate summary" />
+            </StackPanel>
+        </arc:Button>
+    </StackPanel>
+</UserControl>

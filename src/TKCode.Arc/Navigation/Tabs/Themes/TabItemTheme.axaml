@@ -13,7 +13,8 @@
                     <Border Name="PART_Frame"
                             Background="{TemplateBinding Background}"
                             CornerRadius="{arc:TabItemTokenResource TriggerRadius}"
-                            Padding="{TemplateBinding Padding}">
+                            Padding="{TemplateBinding Padding}"
+                            ClipToBounds="True">
                         <ContentPresenter Name="PART_HeaderPresenter"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
@@ -40,6 +41,7 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
 
         <Style Selector="^:pointerover">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

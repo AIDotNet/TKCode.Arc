@@ -1,0 +1,279 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ConnectorSetupTheme">
+
+    <!--
+        The "Connect your tools" card: a heading with a line under it, a search field, the list of apps (60px rows divided by
+        hairlines) and a footer note with a lock. A hidden polite live region announces each step.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ConnectorSetup}" TargetType="arc:ConnectorSetup">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:ConnectorSetupTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ConnectorSetupTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:ConnectorSetupTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConnectorSetup">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <TextBlock Name="PART_Title"
+                                   AutomationProperties.HeadingLevel="2"
+                                   FontSize="{arc:ArcDesignTokenResource TypeBase}"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                   LineHeight="{arc:ConnectorSetupTokenResource TitleLineHeight}"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                        <TextBlock Name="PART_Description"
+                                   Margin="{arc:ConnectorSetupTokenResource DescriptionMargin}"
+                                   LineHeight="{arc:ConnectorSetupTokenResource DescriptionLineHeight}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                        <arc:SearchField Name="PART_Search"
+                                         Margin="{arc:ConnectorSetupTokenResource SearchMargin}"
+                                         Size="Small"
+                                         IsLabelVisible="False" />
+                        <StackPanel Name="PART_List" Margin="{arc:ConnectorSetupTokenResource ListMargin}" />
+                        <TextBlock Name="PART_Empty"
+                                   Margin="0,16"
+                                   HorizontalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                   IsVisible="False" />
+                        <Grid Name="PART_Footer"
+                              ColumnDefinitions="Auto,*"
+                              ColumnSpacing="8"
+                              Margin="{arc:ConnectorSetupTokenResource FooterMargin}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Lock}"
+                                          Size="{arc:ConnectorSetupTokenResource FooterGlyphSize}"
+                                          VerticalAlignment="Top"
+                                          Margin="0,1,0,0"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <ContentPresenter Name="PART_FooterContent"
+                                              Grid.Column="1"
+                                              TextWrapping="Wrap"
+                                              FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                              LineHeight="{arc:ConnectorSetupTokenResource FooterLineHeight}"
+                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        </Grid>
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        One app: a hairline above it (none on the first), the mark, the name over one status line, one action, and the 2px
+        progress hairline along the bottom while it connects. The access details open under it, aligned with the text.
+        The status line and the action swap in single cells, so the row stays 60px tall.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ConnectorSetupRow}" TargetType="arc:ConnectorSetupRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConnectorSetupRow">
+                <StackPanel>
+                    <StackPanel.Styles>
+                        <!-- The cells are built in code, so their look is styled here rather than per template part. -->
+                        <Style Selector="TextBlock.connector-status">
+                            <Setter Property="FontSize" Value="{arc:ConnectorSetupTokenResource StatusFontSize}" />
+                            <Setter Property="LineHeight" Value="{arc:ConnectorSetupTokenResource StatusLineHeight}" />
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                        </Style>
+                        <Style Selector="TextBlock.connector-count">
+                            <Setter Property="FontFeatures" Value="tnum" />
+                        </Style>
+                        <Style Selector="TextBlock.connector-error">
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+                        </Style>
+                        <Style Selector="arc|ArcGlyph.connector-error-glyph">
+                            <Setter Property="Size" Value="{arc:ConnectorSetupTokenResource StatusGlyphSize}" />
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+                        </Style>
+                        <Style Selector="arc|Button.connector-action">
+                            <Setter Property="Height" Value="{arc:ConnectorSetupTokenResource ActionHeight}" />
+                            <Setter Property="MinHeight" Value="{arc:ConnectorSetupTokenResource ActionHeight}" />
+                            <Setter Property="Padding" Value="{arc:ConnectorSetupTokenResource ActionPadding}" />
+                            <Setter Property="FontSize" Value="{arc:ConnectorSetupTokenResource ActionFontSize}" />
+                            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+                        </Style>
+                        <Style Selector="arc|Button.connector-disconnect">
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+                            <Setter Property="Margin" Value="{arc:ConnectorSetupTokenResource DisconnectMargin}" />
+                        </Style>
+                        <Style Selector="TextBlock.connector-question">
+                            <Setter Property="FontSize" Value="{arc:ConnectorSetupTokenResource ScopeFontSize}" />
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+                        </Style>
+                        <Style Selector="TextBlock.connector-scope-text">
+                            <Setter Property="FontSize" Value="{arc:ConnectorSetupTokenResource ScopeFontSize}" />
+                            <Setter Property="LineHeight" Value="{arc:ConnectorSetupTokenResource ScopeLineHeight}" />
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+                        </Style>
+                        <Style Selector="arc|ArcGlyph.connector-scope-glyph">
+                            <Setter Property="Size" Value="{arc:ConnectorSetupTokenResource ScopeGlyphSize}" />
+                            <Setter Property="Margin" Value="0,3,0,0" />
+                            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+                        </Style>
+                    </StackPanel.Styles>
+                    <Panel Height="{arc:ConnectorSetupTokenResource RowHeight}">
+                        <Rectangle Name="PART_Divider"
+                                   Height="1"
+                                   VerticalAlignment="Top"
+                                   Fill="{arc:ArcDesignTokenResource BorderSubtle}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              ColumnSpacing="{arc:ConnectorSetupTokenResource RowGap}"
+                              VerticalAlignment="Center">
+                            <arc:ConnectorMark Name="PART_Mark" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Name="PART_Name"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           LineHeight="{arc:ConnectorSetupTokenResource NameLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:ArcContentSwap Name="PART_Status"
+                                                    Height="{arc:ConnectorSetupTokenResource StatusLineHeight}"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center" />
+                            </StackPanel>
+                            <arc:ArcContentSwap Name="PART_Action"
+                                                Grid.Column="2"
+                                                HorizontalContentAlignment="Right"
+                                                VerticalContentAlignment="Center"
+                                                VerticalAlignment="Center" />
+                        </Grid>
+                        <arc:ConnectorSetupHairline Name="PART_Hairline"
+                                                    Height="{arc:ConnectorSetupTokenResource HairlineHeight}"
+                                                    VerticalAlignment="Bottom"
+                                                    Fill="{arc:ArcDesignTokenResource Accent}" />
+                    </Panel>
+                    <arc:AiHeightBox Name="PART_Details" FadeOutDuration="0:0:0.1" DisablesInputWhileClosing="True" CrossClipOverflow="6">
+                        <StackPanel Margin="{arc:ConnectorSetupTokenResource DetailsMargin}" Spacing="6">
+                            <TextBlock Name="PART_ScopesHeading"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <StackPanel Name="PART_Scopes" Spacing="{arc:ConnectorSetupTokenResource ScopeGap}" />
+                            <arc:ArcContentSwap Name="PART_Confirm"
+                                                Margin="{arc:ConnectorSetupTokenResource ConfirmMargin}"
+                                                HorizontalContentAlignment="Stretch"
+                                                VerticalContentAlignment="Center" />
+                        </StackPanel>
+                    </arc:AiHeightBox>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^.first /template/ Rectangle#PART_Divider">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap">
+            <Setter Property="Mode" Value="None" />
+        </Style>
+        <!-- Status lines and actions crossfade: out 100ms, in 160ms rising 2px. Reduced motion swaps at once. -->
+        <Style Selector="^:motion-full /template/ arc|ArcContentSwap">
+            <Setter Property="Mode" Value="Label" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A connected app's button: a check, "Connected" and a chevron that turns over while the access details are open. -->
+    <ControlTheme x:Key="{x:Type arc:ConnectorSetupConnectedButton}" TargetType="arc:ConnectorSetupConnectedButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Height" Value="{arc:ConnectorSetupTokenResource ActionHeight}" />
+        <Setter Property="Padding" Value="{arc:ConnectorSetupTokenResource ActionPadding}" />
+        <Setter Property="FontSize" Value="{arc:ConnectorSetupTokenResource ActionFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ConnectorSetupConnectedButton">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <arc:ArcGlyph Name="PART_Check"
+                                          Data="{x:Static arc:ArcIcons.Check}"
+                                          Size="{arc:ConnectorSetupTokenResource ActionGlyphSize}"
+                                          VerticalAlignment="Center" />
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:ConnectorSetupTokenResource ActionGlyphSize}"
+                                          VerticalAlignment="Center"
+                                          RenderTransformOrigin="50%,50%" />
+                        </StackPanel>
+                    </Border>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Check">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^[IsExpanded=True] /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^[IsExpanded=True]">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.LiveVisitorsNarrowDemo">
+    <!-- In a 380px column the two lists stack, the padding drops to 16 and the map scales with the card. Long paths and
+         cities end in an ellipsis; counts and times keep their columns. -->
+    <Border MaxWidth="380">
+        <arc:LiveVisitors IsPauseVisible="False">
+            <arc:LiveVisitors.Simulation>
+                <arc:LiveVisitorsSimulation TypicalCount="{x:Static demos:LiveVisitorsDemoData.TypicalCount}"
+                                            Cities="{x:Static demos:LiveVisitorsDemoData.Cities}"
+                                            SitePages="{x:Static demos:LiveVisitorsDemoData.SitePages}"
+                                            Conversions="{x:Static demos:LiveVisitorsDemoData.Conversions}" />
+            </arc:LiveVisitors.Simulation>
+        </arc:LiveVisitors>
+    </Border>
+</UserControl>

@@ -14,7 +14,6 @@
                            Size="{TemplateBinding Size}">
                     <arc:FieldFrame Name="PART_Frame"
                                     Cursor="IBeam"
-                                    MinHeight="{arc:TextareaTokenResource FrameMinHeight}"
                                     Padding="{arc:TextareaTokenResource FramePadding}"
                                     Height="{TemplateBinding FrameHeight}"
                                     VerticalContentAlignment="Stretch"
@@ -75,6 +74,7 @@
             </ControlTemplate>
         </Setter>
 
+        <Setter Property="FrameMinHeight" Value="{arc:TextareaTokenResource FrameMinHeight}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />

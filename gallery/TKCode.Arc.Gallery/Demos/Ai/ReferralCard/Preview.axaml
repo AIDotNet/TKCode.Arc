@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.ReferralCardPreviewDemo">
+    <!-- Sample plays a ReferralCardSimulation of the demo's program once on screen: a friend subscribes, another signs up
+         and subscribes, and the fifth paid referral unlocks the milestone. Fresh is a program with no invites yet (type
+         addresses and press Enter; sending is simulated). Unlocked is a program past its goal. The card fills its container
+         up to 560px. People, addresses, the reward and the milestone are invented (ReferralCardDemoData). -->
+    <StackPanel Spacing="20" MaxWidth="560">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="sample"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="sample" Label="Sample" />
+            <arc:SegmentedOption Value="fresh" Label="Fresh" />
+            <arc:SegmentedOption Value="unlocked" Label="Unlocked" />
+        </arc:SegmentedControl>
+        <ContentControl x:Name="Host" />
+    </StackPanel>
+</UserControl>

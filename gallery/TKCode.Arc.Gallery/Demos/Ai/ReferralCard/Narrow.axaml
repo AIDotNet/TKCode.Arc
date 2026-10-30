@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ReferralCardNarrowDemo">
+    <!-- In a 380px side pane the share buttons take their own full row under the link and the milestone line keeps room for
+         two lines, so it never pushes the list down when it changes. -->
+    <Border MaxWidth="380">
+        <arc:ReferralCard Link="{x:Static demos:ReferralCardDemoData.Link}"
+                          Reward="{x:Static demos:ReferralCardDemoData.Reward}"
+                          Milestone="{x:Static demos:ReferralCardDemoData.Milestone}"
+                          Referrals="{x:Static demos:ReferralCardDemoData.StartingProgram}" />
+    </Border>
+</UserControl>

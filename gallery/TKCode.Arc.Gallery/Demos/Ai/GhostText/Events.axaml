@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GhostTextEventsDemo">
+    <!-- Accepted, Dismissed and StatusChanged feed an acceptance-rate log; the buttons drive the field through its
+         methods (Request asks now without waiting for a pause). -->
+    <StackPanel MaxWidth="560" Spacing="12">
+        <arc:GhostText x:Name="Field"
+                       Rows="3"
+                       Text="Fixes the flaky checkout test"
+                       AutomationProperties.Name="Description" />
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Ask now" Variant="Secondary" Size="Small" Click="OnAsk" />
+            <arc:Button Content="Accept word" Variant="Secondary" Size="Small" Click="OnWord" />
+            <arc:Button Content="Accept all" Variant="Secondary" Size="Small" Click="OnAll" />
+            <arc:Button Content="Dismiss" Variant="Ghost" Size="Small" Click="OnDismiss" />
+        </WrapPanel>
+        <TextBlock x:Name="Log"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

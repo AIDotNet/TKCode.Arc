@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.GenerationStatsStreamingDemo">
+    <!-- The strip wired to a stream: Send starts a request (a timer stands in for the model), Stop ends it early and
+         Send and fail makes it fail half way so Retry shows. -->
+    <StackPanel MaxWidth="720" Spacing="12">
+        <arc:GenerationStats x:Name="Stats" Status="Idle" RetryRequested="OnRetry" />
+        <WrapPanel ItemSpacing="8" LineSpacing="8">
+            <arc:Button Content="Send" Variant="Primary" Size="Small" Click="OnSend" />
+            <arc:Button Content="Stop" Variant="Secondary" Size="Small" Click="OnStop" />
+            <arc:Button Content="Send and fail" Variant="Ghost" Size="Small" Click="OnSendAndFail" />
+        </WrapPanel>
+    </StackPanel>
+</UserControl>

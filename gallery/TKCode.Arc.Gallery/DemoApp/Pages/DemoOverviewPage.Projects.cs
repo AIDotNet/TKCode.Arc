@@ -149,17 +149,17 @@ public sealed partial class DemoOverviewPage
     {
         var person = OverviewData.Person(project.Lead);
         var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
-        row.Children.Add(new Avatar { DisplayName = person.Name, Size = AvatarSize.Small });
+        row.Children.Add(new Avatar { DisplayName = person.Name, Source = DemoPhotos.For(person.Name), Size = AvatarSize.Small });
         row.Children.Add(PersonCard(person, DemoUi.Line(person.Name, ArcDesignTokenKind.Foreground)));
         return row;
     }
 
     private static Control TeamCell(OverviewProject project)
     {
-        var group = new AvatarGroup { Size = AvatarSize.Small, MaxVisibleCount = 3, Label = $"{project.Name} team", HorizontalAlignment = HorizontalAlignment.Left };
+        var group = new AvatarGroup { Size = AvatarSize.Small, MaxVisibleCount = 3, Label = $"{project.Name} team", HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(8, 4) };
         foreach (var id in project.Team)
         {
-            group.Items.Add(new AvatarGroupMember { DisplayName = OverviewData.Person(id).Name });
+            group.Items.Add(new AvatarGroupMember { DisplayName = OverviewData.Person(id).Name, Source = DemoPhotos.For(OverviewData.Person(id).Name) });
         }
         return group;
     }
@@ -287,7 +287,7 @@ public sealed partial class DemoOverviewPage
             var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
             row.Children.Add(new Avatar
             {
-                DisplayName = person.Name, Size = AvatarSize.Small, Status = person.Online ? AvatarStatus.Online : AvatarStatus.Offline
+                DisplayName = person.Name, Source = DemoPhotos.For(person.Name), Size = AvatarSize.Small, Status = person.Online ? AvatarStatus.Online : AvatarStatus.Offline
             });
             var text = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
             text.Children.Add(DemoUi.Text(person.Name, ArcDesignTokenKind.Foreground, 14, FontWeight.Medium));

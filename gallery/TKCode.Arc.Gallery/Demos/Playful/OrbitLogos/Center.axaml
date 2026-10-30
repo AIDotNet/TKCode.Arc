@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OrbitLogosCenterDemo">
+    <!--
+        Your own mark in the centre, a slower orbit and one logo open from the start. The switch pauses the rings the way
+        a page-level motion control would.
+    -->
+    <StackPanel Spacing="16" MaxWidth="900">
+        <arc:Switch x:Name="Pause" Content="Pause the orbit" />
+        <arc:OrbitLogos Speed="0.5"
+                        DefaultSelected="Quillpen"
+                        IsPaused="{Binding #Pause.IsChecked}">
+            <arc:OrbitLogos.Center>
+                <TextBlock Text="Acme"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="{arc:ArcDesignTokenResource TypeLG}" />
+            </arc:OrbitLogos.Center>
+            <arc:OrbitLogo Name="Quillpen" Category="Writing" Color="#8A5CF6"
+                           Icon="M4 20L16 8l4 4L8 24zM17 7l2-2 4 4-2 2z"
+                           Description="Drafts release notes from your merged changes." />
+            <arc:OrbitLogo Name="Markup" Category="Writing"
+                           Icon="M3 4h18v4H3zM3 10h12v4H3zM3 16h18v4H3z"
+                           Description="Publishes docs straight from the repository." />
+            <arc:OrbitLogo Name="Lenscap" Category="Media" Color="#E5603E"
+                           Icon="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"
+                           Description="Resizes and serves every image you upload." />
+            <arc:OrbitLogo Name="Reelio" Category="Media"
+                           Icon="M5 4l15 8-15 8z"
+                           Description="Streams product videos without a player to maintain." />
+        </arc:OrbitLogos>
+    </StackPanel>
+</UserControl>

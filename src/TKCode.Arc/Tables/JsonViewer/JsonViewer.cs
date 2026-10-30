@@ -366,6 +366,7 @@ public class JsonViewer : TemplatedControl
     static JsonViewer()
     {
         AutomationProperties.LandmarkTypeProperty.OverrideDefaultValue<JsonViewer>(AutomationLandmarkType.Region);
+        FocusModality.Watch();
     }
 
     public JsonViewer()
@@ -733,7 +734,8 @@ public class JsonViewer : TemplatedControl
         {
             return;
         }
-        _panel.Realize(IndexOfId(_active))?.Focus(NavigationMethod.Directional);
+        // A row clicked with the mouse (Show more, a fold) keeps focus on its row without the keyboard ring.
+        _panel.Realize(IndexOfId(_active))?.Focus(FocusModality.For(this, NavigationMethod.Directional));
     }
 
     /// <summary>

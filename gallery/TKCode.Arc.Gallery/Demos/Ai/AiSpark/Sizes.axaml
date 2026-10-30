@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.AiSparkSizesDemo">
+    <!-- A size ladder: decorative copies set Announce="False" so screen readers hear one voice. Under 18px the diagonals
+         become dots and small marks get heavier rays; from 40px up two particles orbit while writing. -->
+    <WrapPanel Margin="0,8" ItemSpacing="24" LineSpacing="16" MaxWidth="640">
+        <arc:AiSpark Size="12" Status="Generating" Announce="False" />
+        <arc:AiSpark Size="16" Status="Generating" Announce="False" />
+        <arc:AiSpark Size="24" Status="Generating" Announce="False" />
+        <arc:AiSpark Size="32" Status="Generating" Announce="False" />
+        <arc:AiSpark Size="48" Status="Generating" Announce="False" />
+        <arc:AiSpark Size="64" Status="Generating" Announce="False" />
+        <arc:AiSpark Size="96" Status="Generating" Announce="False" />
+    </WrapPanel>
+</UserControl>

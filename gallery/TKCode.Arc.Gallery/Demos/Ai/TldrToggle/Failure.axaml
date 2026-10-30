@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.TldrToggleFailureDemo">
+    <!-- The first request fails with an alert and Try again; the next one streams. The simulation is wrapped by hand, so
+         IsSimulated keeps "Simulated, nothing was sent" in the announcements and the error text. -->
+    <Panel MaxWidth="680">
+        <arc:TldrToggle x:Name="Card" Mode="Summary" AutoPlay="False" IsSimulated="True" />
+    </Panel>
+</UserControl>

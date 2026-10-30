@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.LlmCostCalculatorPreviewDemo">
+    <!-- Real models at their vendors' list prices (the date they were checked is in the line under the heading), invented
+         workload presets, and the loading, error and empty states. Drag a slider or pick a preset and the rows re-rank; Try
+         again in the error state loads the prices again. The panel fills its container up to 720px, so its width never
+         follows the figures. -->
+    <StackPanel Spacing="20" MaxWidth="720">
+        <arc:SegmentedControl x:Name="Scenario"
+                              HorizontalAlignment="Center"
+                              SelectedValue="prices"
+                              SelectionChanged="OnScenarioChanged">
+            <arc:SegmentedOption Value="prices" Label="Prices" />
+            <arc:SegmentedOption Value="loading" Label="Loading" />
+            <arc:SegmentedOption Value="error" Label="Error" />
+            <arc:SegmentedOption Value="empty" Label="Empty" />
+        </arc:SegmentedControl>
+        <arc:LlmCostCalculator x:Name="Calculator"
+                               AllowsRetry="True"
+                               Models="{x:Static demos:LlmCostCalculatorDemoData.Models}"
+                               Presets="{x:Static demos:LlmCostCalculatorDemoData.Presets}"
+                               Description="{x:Static demos:LlmCostCalculatorDemoData.Description}"
+                               Note="{x:Static demos:LlmCostCalculatorDemoData.Note}" />
+    </StackPanel>
+</UserControl>

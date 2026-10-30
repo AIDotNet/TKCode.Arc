@@ -1,0 +1,188 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentCursorTheme">
+
+    <!--
+        A live document card. The header: the agent's avatar (its mark on a tint of its color) with the teammate's avatar
+        overlapping it, the status line (an icon and a label that crossfade, shimmering while the agent works) and Ask, Stop,
+        Run again or Retry. The document: the title, a muted meta line, headings and paragraphs; its bottom padding keeps room
+        for the review bar so the card never changes height. Over both: the cursor layer (decorative, no input) and the
+        floating review bar at the bottom center. Fluid up to 680px; under 480px the document padding tightens.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentCursor}" TargetType="arc:AgentCursor">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="MaxWidth" Value="{arc:AgentCursorTokenResource CardMaxWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentCursor">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel Name="PART_Stage">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      Margin="{arc:AgentCursorTokenResource HeaderPadding}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border Name="PART_AgentAvatar"
+                                                Width="{arc:AgentCursorTokenResource AvatarSize}"
+                                                Height="{arc:AgentCursorTokenResource AvatarSize}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                BorderBrush="{arc:ArcDesignTokenResource Surface}"
+                                                BorderThickness="2"
+                                                ZIndex="1">
+                                            <arc:ArcGlyph Name="PART_AgentMark"
+                                                          Size="{arc:AgentCursorTokenResource AgentMarkSize}"
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center" />
+                                        </Border>
+                                        <Border Name="PART_TeammateRing"
+                                                Margin="{arc:AgentCursorTokenResource TeammateOverlap}"
+                                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                                BorderBrush="{arc:ArcDesignTokenResource Surface}"
+                                                BorderThickness="2"
+                                                VerticalAlignment="Center">
+                                            <arc:Avatar Name="PART_TeammateAvatar"
+                                                        Size="Small"
+                                                        Width="{arc:AgentCursorTokenResource AvatarSize}"
+                                                        Height="{arc:AgentCursorTokenResource AvatarSize}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <arc:ArcContentSwap Name="PART_Status"
+                                                        Grid.Column="1"
+                                                        Margin="12,0,8,0"
+                                                        Mode="Crossfade"
+                                                        HorizontalContentAlignment="Left"
+                                                        VerticalAlignment="Center"
+                                                        ClipToBounds="False" />
+                                    <arc:Button Name="PART_Action"
+                                                Grid.Column="2"
+                                                Classes="agent-cursor-action"
+                                                Variant="Secondary"
+                                                Size="Small"
+                                                VerticalAlignment="Center"
+                                                IsVisible="False" />
+                                </Grid>
+                            </Border>
+                            <StackPanel Name="PART_Document"
+                                        Margin="{arc:AgentCursorTokenResource DocumentPadding}" />
+                        </DockPanel>
+                        <Border Name="PART_ReviewBar"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
+                                Height="{arc:AgentCursorTokenResource ReviewBarHeight}"
+                                Margin="{arc:AgentCursorTokenResource ReviewBarMargin}"
+                                Padding="{arc:AgentCursorTokenResource ReviewBarPadding}"
+                                Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="{arc:AgentCursorTokenResource ReviewBarGap}"
+                                        VerticalAlignment="Center">
+                                <TextBlock Name="PART_ReviewText"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,6,0"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                <arc:Button Name="PART_Undo"
+                                            Classes="agent-cursor-action"
+                                            Variant="Ghost"
+                                            Size="Small" />
+                                <arc:Button Name="PART_Accept"
+                                            Classes="agent-cursor-action"
+                                            Variant="Primary"
+                                            Size="Small" />
+                            </StackPanel>
+                        </Border>
+                        <!-- The cursors, over the document and the review bar (the teammate reaches for Accept). -->
+                        <Canvas Name="PART_Overlay"
+                                IsHitTestVisible="False"
+                                ClipToBounds="False" />
+                        <arc:ExplainerAnnouncer Name="PART_Announcer" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|Button.agent-cursor-action">
+            <Setter Property="Height" Value="{arc:AgentCursorTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:AgentCursorTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:AgentCursorTokenResource ActionPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+
+        <Style Selector="^:compact /template/ StackPanel#PART_Document">
+            <Setter Property="Margin" Value="{arc:AgentCursorTokenResource CompactDocumentPadding}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A block of the document; the kind comes as a class (title, heading, paragraph, meta). -->
+    <ControlTheme x:Key="{x:Type arc:AgentCursorTextView}" TargetType="arc:AgentCursorTextView">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="LineHeight" Value="{arc:AgentCursorTokenResource ParagraphLineHeight}" />
+        <Setter Property="Margin" Value="{arc:AgentCursorTokenResource ParagraphMargin}" />
+        <Setter Property="FlagBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="SelectionOpacity" Value="{arc:AgentCursorTokenResource SelectionOpacity}" />
+        <Setter Property="TintOpacity" Value="{arc:AgentCursorTokenResource TintOpacity}" />
+        <Setter Property="TintCornerRadius" Value="{arc:AgentCursorTokenResource TintCornerRadius}" />
+        <Setter Property="TintOutset" Value="{arc:AgentCursorTokenResource TintOutset}" />
+        <Setter Property="FlagStrokeWidth" Value="{arc:AgentCursorTokenResource FlagStrokeWidth}" />
+        <Setter Property="FlagAmplitude" Value="{arc:AgentCursorTokenResource FlagAmplitude}" />
+        <Setter Property="FlagWavelength" Value="{arc:AgentCursorTokenResource FlagWavelength}" />
+        <Style Selector="^.title">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource DisplayFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:AgentCursorTokenResource TitleLineHeight}" />
+            <Setter Property="Margin" Value="{arc:AgentCursorTokenResource TitleMargin}" />
+        </Style>
+        <Style Selector="^.heading">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="LineHeight" Value="{arc:AgentCursorTokenResource HeadingLineHeight}" />
+            <Setter Property="Margin" Value="{arc:AgentCursorTokenResource HeadingMargin}" />
+        </Style>
+        <Style Selector="^.meta">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="LineHeight" Value="{arc:AgentCursorTokenResource MetaLineHeight}" />
+            <Setter Property="Margin" Value="{arc:AgentCursorTokenResource MetaMargin}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A cursor: the arrow outlined in the surface color and its tag. -->
+    <ControlTheme x:Key="{x:Type arc:AgentCursorPointer}" TargetType="arc:AgentCursorPointer">
+        <Setter Property="OutlineBrush" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="OutlineWidth" Value="{arc:AgentCursorTokenResource CursorOutlineWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TagFontSize" Value="{arc:AgentCursorTokenResource TagFontSize}" />
+        <Setter Property="TagHeight" Value="{arc:AgentCursorTokenResource TagHeight}" />
+        <Setter Property="TagPadding" Value="{arc:AgentCursorTokenResource TagPadding}" />
+        <Setter Property="TagCornerRadius" Value="{arc:AgentCursorTokenResource TagCornerRadius}" />
+        <Setter Property="PortraitSize" Value="{arc:AgentCursorTokenResource TagPortraitSize}" />
+        <Setter Property="LightText" Value="{arc:AgentCursorTokenResource TagLightText}" />
+        <Setter Property="DarkText" Value="{arc:AgentCursorTokenResource TagDarkText}" />
+    </ControlTheme>
+</ResourceDictionary>

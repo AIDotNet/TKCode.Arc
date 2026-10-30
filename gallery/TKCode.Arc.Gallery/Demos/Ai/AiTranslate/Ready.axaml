@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.AiTranslateReadyDemo">
+    <!-- Translations made ahead of time, no byline (no Author). The source language is passed, so the chip reads Written
+         in. Value starts on English, so the card translates as soon as it is shown. Only English and Português are ready:
+         pick Deutsch to see the failure and Retry. -->
+    <StackPanel MaxWidth="620" Spacing="12" Margin="0,12">
+        <arc:AiTranslate x:Name="Card"
+                         Text="Hemos actualizado los precios del plan Equipo. Los clientes actuales mantienen su tarifa hasta enero."
+                         SourceLanguage="Spanish"
+                         Value="English"
+                         ModelName="{x:Static demos:AiTranslateDemoData.ModelName}" />
+        <TextBlock x:Name="Log"
+                   TextWrapping="Wrap"
+                   FontSize="13"
+                   Text="Failures are logged here."
+                   Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+    </StackPanel>
+</UserControl>

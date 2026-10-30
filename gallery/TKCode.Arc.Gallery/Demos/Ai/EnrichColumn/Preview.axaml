@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.EnrichColumnPreviewDemo">
+    <!-- A simulation of seven invented companies (the demo's data) runs when the column first comes into view: cells
+         queue, shimmer while they work, then settle into a value with its source. One company has no source on its first
+         attempt, so it fails; hover its row (or Tab to it) and retry. Nothing is sent. The model is real. The card fills
+         its container, which stops at 760px. -->
+    <Border MaxWidth="760" Margin="0,12">
+        <arc:EnrichColumn>
+            <arc:EnrichColumn.Simulation>
+                <arc:EnrichColumnSimulation Title="Target accounts"
+                                            Column="{x:Static demos:EnrichColumnDemoData.Column}"
+                                            Model="{x:Static demos:EnrichColumnDemoData.Model}"
+                                            Rows="{x:Static demos:EnrichColumnDemoData.Rows}"
+                                            Answers="{x:Static demos:EnrichColumnDemoData.Answers}" />
+            </arc:EnrichColumn.Simulation>
+        </arc:EnrichColumn>
+    </Border>
+</UserControl>

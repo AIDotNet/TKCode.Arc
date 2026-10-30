@@ -61,6 +61,7 @@
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="TextBlock.LineHeight" Value="{arc:BreadcrumbItemTokenResource LabelLineHeight}" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
 
         <Style Selector="^ /template/ Border#PART_Underline">
             <Setter Property="Opacity" Value="0" />

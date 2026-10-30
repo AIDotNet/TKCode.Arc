@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.CubeMascotColorsDemo">
+    <!-- The default accent body; a brand blue body with white features; a warm body with its own top and side anchors;
+         and a cube without the ground. -->
+    <WrapPanel Margin="0,8" ItemSpacing="28" LineSpacing="16" MaxWidth="640">
+        <arc:CubeMascot Size="96" Status="Idle" />
+        <arc:CubeMascot Size="96" Status="Writing" BodyBrush="#4F6BFF" FaceBrush="White" />
+        <arc:CubeMascot Size="96" Status="Done"
+                        BodyBrush="#E8774A" TopBrush="#F6B48F" SideBrush="#B24F2B" FaceBrush="#2B1308" SparkleBrush="#E8A93A" />
+        <arc:CubeMascot Size="96" Status="Thinking" ShowsGround="False" />
+    </WrapPanel>
+</UserControl>

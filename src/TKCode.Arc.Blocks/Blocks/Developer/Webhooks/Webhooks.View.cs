@@ -579,7 +579,9 @@ public partial class Webhooks
         }
         if (focusInside)
         {
-            Dispatcher.UIThread.Post(() => FocusDelivery(SelectedDelivery, NavigationMethod.Tab), DispatcherPriority.Loaded);
+            // An endpoint picked with the mouse: its delivery takes focus without the keyboard ring.
+            var method = BlockFocusModality.For(this);
+            Dispatcher.UIThread.Post(() => FocusDelivery(SelectedDelivery, method), DispatcherPriority.Loaded);
         }
     }
 

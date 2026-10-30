@@ -1,0 +1,279 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SocialProofToastTheme">
+
+    <!--
+        A stack of social proof toasts. Inline, the control holds the stack and fills its container's width; a corner
+        position moves the stack into the window's overlay layer. The toasts' places are sprung from code.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SocialProofToast}" TargetType="arc:SocialProofToast">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SocialProofToast">
+                <Panel Name="PART_Host" ClipToBounds="False" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The panel the toasts stack in: the geometry the code springs them with. -->
+    <ControlTheme x:Key="{x:Type arc:SocialProofToastStack}" TargetType="arc:SocialProofToastStack">
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CardHeight" Value="{arc:SocialProofToastTokenResource CardHeight}" />
+        <Setter Property="FanGap" Value="{arc:SocialProofToastTokenResource FanGap}" />
+        <Setter Property="StackStep" Value="{arc:SocialProofToastTokenResource StackStep}" />
+        <Setter Property="StackScaleStep" Value="{arc:SocialProofToastTokenResource StackScaleStep}" />
+        <Setter Property="EnterOffset" Value="{arc:SocialProofToastTokenResource EnterOffset}" />
+        <Setter Property="ExitScale" Value="{arc:SocialProofToastTokenResource ExitScale}" />
+        <Setter Property="CornerWidth" Value="{arc:SocialProofToastTokenResource CornerWidth}" />
+        <Setter Property="CornerInset" Value="{arc:SocialProofToastTokenResource CornerInset}" />
+        <Setter Property="CompactInset" Value="{arc:SocialProofToastTokenResource CompactInset}" />
+        <Setter Property="CompactBreakpoint" Value="{arc:SocialProofToastTokenResource CompactBreakpoint}" />
+    </ControlTheme>
+
+    <!--
+        One toast, 64px high: the mark, the sentence (the name in medium weight) over the meta, time and verified badge,
+        each truncated on one line, and a dismiss button that shows on hover or keyboard focus (always on touch). The
+        content of a covered toast fades out in 160ms so text never overlaps.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SocialProofToastCard}" TargetType="arc:SocialProofToastCard">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep16}" />
+        <Setter Property="Padding" Value="{arc:SocialProofToastTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="NameBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Height" Value="{arc:SocialProofToastTokenResource CardHeight}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SocialProofToastCard">
+                <Panel>
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowRaised}" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-4"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <Grid Name="PART_Content"
+                          ColumnDefinitions="Auto,*,Auto"
+                          Margin="{TemplateBinding Padding}">
+                        <Panel Width="{arc:SocialProofToastTokenResource SlotSize}"
+                               Height="{arc:SocialProofToastTokenResource SlotSize}"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False">
+                            <arc:Avatar Name="PART_Avatar"
+                                        Size="Medium"
+                                        AutomationProperties.AccessibilityView="Raw" />
+                            <Border Name="PART_Monogram"
+                                    Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                    IsVisible="False">
+                                <Panel>
+                                    <TextBlock Name="PART_Initial"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                                    <arc:ArcGlyph Name="PART_Logo"
+                                                  Size="{arc:SocialProofToastTokenResource LogoSize}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                  IsVisible="False" />
+                                </Panel>
+                            </Border>
+                        </Panel>
+                        <StackPanel Grid.Column="1"
+                                    Margin="{arc:SocialProofToastTokenResource TextMargin}"
+                                    VerticalAlignment="Center"
+                                    IsHitTestVisible="False">
+                            <TextBlock Name="PART_Title"
+                                       LineHeight="{arc:SocialProofToastTokenResource TitleLineHeight}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       MaxLines="1" />
+                            <!-- The meta and time, then the badge right after them; the meta truncates first. -->
+                            <arc:SocialProofToastMetaRow Spacing="{arc:SocialProofToastTokenResource BadgeSpacing}">
+                                <TextBlock Name="PART_Meta"
+                                           FontSize="{arc:SocialProofToastTokenResource MetaFontSize}"
+                                           LineHeight="{arc:SocialProofToastTokenResource MetaLineHeight}"
+                                           TextTrimming="CharacterEllipsis"
+                                           TextWrapping="NoWrap"
+                                           MaxLines="1"
+                                           VerticalAlignment="Center"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <StackPanel Name="PART_Badge"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:SocialProofToastTokenResource BadgeGap}"
+                                            IsVisible="False">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleCheck}"
+                                                  Size="{arc:SocialProofToastTokenResource BadgeGlyphSize}"
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{arc:ArcDesignTokenResource Success}" />
+                                    <TextBlock Name="PART_BadgeText"
+                                               FontSize="{arc:SocialProofToastTokenResource MetaFontSize}"
+                                               LineHeight="{arc:SocialProofToastTokenResource MetaLineHeight}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                </StackPanel>
+                            </arc:SocialProofToastMetaRow>
+                        </StackPanel>
+                        <arc:SocialProofToastDismiss Name="PART_Dismiss"
+                                                     Grid.Column="2"
+                                                     VerticalAlignment="Center" />
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ Grid#PART_Content">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^ /template/ arc|SocialProofToastDismiss#PART_Dismiss">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <!-- The mark's slot: round (a person's own mark), a rounded square for a company. -->
+        <Style Selector="^ /template/ Border#PART_Monogram">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+        <Style Selector="^:company /template/ Border#PART_Monogram">
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
+        </Style>
+
+        <Style Selector="^:covered /template/ Grid#PART_Content">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:pointerover /template/ arc|SocialProofToastDismiss#PART_Dismiss">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:focus-within /template/ arc|SocialProofToastDismiss#PART_Dismiss">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:touch /template/ arc|SocialProofToastDismiss#PART_Dismiss">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:selectable:pointerover /template/ Border#PART_Surface">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:selectable:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Grid#PART_Content">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|SocialProofToastDismiss#PART_Dismiss">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Surface">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                        <arc:ArcBrushTransition Property="BorderBrush" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+        <!-- Reduced motion keeps the fades. -->
+        <Style Selector="^:motion-reduced">
+            <Style Selector="^ /template/ Grid#PART_Content">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|SocialProofToastDismiss#PART_Dismiss">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- The dismiss button: 24px round, an X in the muted text color, SurfaceMuted under the pointer, a ring on keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:SocialProofToastDismiss}" TargetType="arc:SocialProofToastDismiss">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Width" Value="{arc:SocialProofToastTokenResource DismissSize}" />
+        <Setter Property="Height" Value="{arc:SocialProofToastTokenResource DismissSize}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SocialProofToastDismiss">
+                <Panel>
+                    <Border Name="PART_Fill"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}"
+                                  Size="{arc:SocialProofToastTokenResource DismissGlyphSize}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Foreground="{TemplateBinding Foreground}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

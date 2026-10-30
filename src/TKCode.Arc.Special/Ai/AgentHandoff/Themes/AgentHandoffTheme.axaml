@@ -1,0 +1,691 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.AgentHandoffTheme">
+
+    <!--
+        A support chat card: a header (the assistant's mark or the person's avatar, the title over a muted subtitle, the
+        status pill), the thread (a focusable log that scrolls inside and stays pinned to the newest row, its rows hung on a
+        thin timeline at the left) and the composer. Fixed height, fills its container up to 560px; below 400px the padding
+        tightens and bubbles widen.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoff}" TargetType="arc:AgentHandoff">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Height" Value="{arc:AgentHandoffTokenResource CardHeight}" />
+        <Setter Property="MaxWidth" Value="{arc:AgentHandoffTokenResource CardMaxWidth}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="CompactWidth" Value="{arc:AgentHandoffTokenResource CompactWidth}" />
+        <Setter Property="BubbleFraction" Value="{arc:AgentHandoffTokenResource BubbleFraction}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:AgentHandoffTokenResource CardCornerRadius}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoff">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <Grid RowDefinitions="Auto,*,Auto">
+                            <Border Name="PART_Header"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <arc:ArcContentSwap Name="PART_HeaderMark"
+                                                        Mode="Crossfade"
+                                                        VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1"
+                                                Margin="{arc:AgentHandoffTokenResource ContentMargin}"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Name="PART_Title"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxLines="1" />
+                                        <TextBlock Name="PART_Subtitle"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                   Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxLines="1"
+                                                   IsVisible="False" />
+                                    </StackPanel>
+                                    <Border Name="PART_StatusPill"
+                                            Grid.Column="2"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Height="{arc:AgentHandoffTokenResource StatusHeight}"
+                                            Padding="{arc:AgentHandoffTokenResource StatusPadding}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+                                        <arc:ArcContentSwap Name="PART_Status"
+                                                            Mode="Label"
+                                                            VerticalAlignment="Center"
+                                                            TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                            TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Panel Grid.Row="1">
+                                <ScrollViewer Name="PART_Scroller"
+                                              Focusable="True"
+                                              FocusAdorner="{x:Null}"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <arc:AiHeightBox Name="PART_Spring" VerticalAlignment="Top" IsExpanded="True" FollowsContent="True">
+                                        <StackPanel Name="PART_Rows" />
+                                    </arc:AiHeightBox>
+                                </ScrollViewer>
+                                <Border Name="PART_ThreadFocus"
+                                        Margin="2"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                                        BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                                        BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                        IsHitTestVisible="False"
+                                        IsVisible="False" />
+                            </Panel>
+                            <Border Name="PART_Composer"
+                                    Grid.Row="2"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <arc:Input Name="PART_Input" VerticalAlignment="Center" />
+                                    <arc:Button Name="PART_Send"
+                                                Grid.Column="1"
+                                                Classes="handoff-send"
+                                                Variant="Primary"
+                                                VerticalAlignment="Center">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowUp}" Size="18" />
+                                    </arc:Button>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <arc:ExplainerAnnouncer Name="PART_Live" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Non-triggered values of template parts (state styles cannot override local template values). -->
+        <Style Selector="^ /template/ Border#PART_Header">
+            <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource HeaderPadding}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Rows">
+            <Setter Property="Margin" Value="{arc:AgentHandoffTokenResource ThreadPadding}" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_Composer">
+            <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource ComposerPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.handoff-send">
+            <Setter Property="Width" Value="{arc:AgentHandoffTokenResource SendSize}" />
+            <Setter Property="Height" Value="{arc:AgentHandoffTokenResource SendSize}" />
+            <Setter Property="MinHeight" Value="{arc:AgentHandoffTokenResource SendSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        </Style>
+
+        <Style Selector="^:thread-focus /template/ Border#PART_ThreadFocus">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <Style Selector="^:compact">
+            <Setter Property="BubbleFraction" Value="{arc:AgentHandoffTokenResource BubbleFractionCompact}" />
+            <Style Selector="^ /template/ Border#PART_Header">
+                <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource HeaderPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_Rows">
+                <Setter Property="Margin" Value="{arc:AgentHandoffTokenResource ThreadPaddingCompact}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Composer">
+                <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource ComposerPaddingCompact}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A row: the timeline gutter (line above and below the marker, or straight through) and the content. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffRow}" TargetType="arc:AgentHandoffRow">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource RowPadding}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffRow">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Panel Width="{arc:AgentHandoffTokenResource GutterWidth}">
+                        <Rectangle Name="PART_LineAbove"
+                                   Width="{arc:AgentHandoffTokenResource RailLineWidth}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   Fill="{arc:ArcDesignTokenResource Border}"
+                                   IsVisible="False" />
+                        <Rectangle Name="PART_LineBelow"
+                                   Width="{arc:AgentHandoffTokenResource RailLineWidth}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Stretch"
+                                   Fill="{arc:ArcDesignTokenResource Border}"
+                                   IsVisible="False" />
+                        <arc:AgentHandoffTravelDot Name="PART_Travel"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Stretch"
+                                                   IsTravelling="{TemplateBinding IsTravelling}"
+                                                   DotSize="{arc:AgentHandoffTokenResource TravelDotSize}"
+                                                   TrackWidth="{arc:AgentHandoffTokenResource RailLineWidth}"
+                                                   DotBrush="{arc:ArcDesignTokenResource Accent}"
+                                                   TrackBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                                   IsVisible="False" />
+                        <ContentPresenter Name="PART_Marker"
+                                          Content="{TemplateBinding Marker}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Top" />
+                    </Panel>
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Grid.Column="1"
+                                      Margin="{arc:AgentHandoffTokenResource ContentMargin}"
+                                      Padding="{TemplateBinding Padding}"
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalContentAlignment="Stretch" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ Rectangle#PART_LineAbove">
+            <Setter Property="Height" Value="{arc:AgentHandoffTokenResource StepMarkerCenter}" />
+        </Style>
+        <Style Selector="^ /template/ Rectangle#PART_LineBelow">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ arc|AgentHandoffTravelDot#PART_Travel">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_Marker">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style Selector="^:line-above /template/ Rectangle#PART_LineAbove">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:line-below /template/ Rectangle#PART_LineBelow">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- A marker row: the line meets the marker's center from above and leaves it below. -->
+        <Style Selector="^:line-below /template/ Rectangle#PART_LineBelow">
+            <Setter Property="Margin" Value="{arc:AgentHandoffTokenResource StepLineBelowMargin}" />
+        </Style>
+        <Style Selector="^:pending /template/ arc|AgentHandoffTravelDot#PART_Travel">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- The handoff card's row: its marker sits level with the card's title. -->
+        <Style Selector="^:card">
+            <Style Selector="^ /template/ ContentPresenter#PART_Marker">
+                <Setter Property="Margin" Value="{arc:AgentHandoffTokenResource CardMarkerMargin}" />
+            </Style>
+            <Style Selector="^ /template/ Rectangle#PART_LineAbove">
+                <Setter Property="Height" Value="{arc:AgentHandoffTokenResource CardMarkerCenter}" />
+            </Style>
+            <Style Selector="^:line-below /template/ Rectangle#PART_LineBelow">
+                <Setter Property="Margin" Value="{arc:AgentHandoffTokenResource CardLineBelowMargin}" />
+            </Style>
+            <Style Selector="^ /template/ arc|AgentHandoffTravelDot#PART_Travel">
+                <Setter Property="Margin" Value="{arc:AgentHandoffTokenResource TravelMargin}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A round marker: a stroked glyph on the surface inside a hairline ring, or an avatar. Header markers are larger. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffMarker}" TargetType="arc:AgentHandoffMarker">
+        <Setter Property="Width" Value="{arc:AgentHandoffTokenResource MarkerSize}" />
+        <Setter Property="Height" Value="{arc:AgentHandoffTokenResource MarkerSize}" />
+        <Setter Property="GlyphSize" Value="{arc:AgentHandoffTokenResource MarkerGlyphSize}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffMarker">
+                <Panel>
+                    <Border Name="PART_Ring"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Name="PART_Glyph"
+                                      Data="{TemplateBinding Glyph}"
+                                      Size="{TemplateBinding GlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                    <arc:Avatar Name="PART_Avatar"
+                                DisplayName="{TemplateBinding PersonName}"
+                                Source="{TemplateBinding Photo}"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                IsVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:accent">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:success">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:avatar /template/ Border#PART_Ring">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:avatar /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="FontSize" Value="10" />
+        </Style>
+        <Style Selector="^.header">
+            <Setter Property="Width" Value="{arc:AgentHandoffTokenResource HeaderMarkSize}" />
+            <Setter Property="Height" Value="{arc:AgentHandoffTokenResource HeaderMarkSize}" />
+            <Setter Property="GlyphSize" Value="{arc:AgentHandoffTokenResource HeaderMarkGlyphSize}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^.header:avatar /template/ arc|Avatar#PART_Avatar">
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A step: the title over the marker's height, then the meta in the muted color, one line, truncated. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffStep}" TargetType="arc:AgentHandoffStep">
+        <Setter Property="MetaBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:AgentHandoffTokenResource StepFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffStep">
+                <TextBlock Name="PART_Text"
+                           LineHeight="{arc:AgentHandoffTokenResource StepLineHeight}"
+                           TextTrimming="CharacterEllipsis"
+                           MaxLines="1" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- A bubble: the customer's on the right in the accent, the assistant's muted, the person's on the surface with a hairline. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffBubble}" TargetType="arc:AgentHandoffBubble">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:AgentHandoffTokenResource BubbleCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource BubblePadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffBubble">
+                <StackPanel>
+                    <Border Name="PART_Bubble"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <arc:AgentHandoffStreamText Name="PART_Text"
+                                                    Foreground="{TemplateBinding Foreground}"
+                                                    LineHeight="{arc:AgentHandoffTokenResource MessageLineHeight}" />
+                    </Border>
+                    <TextBlock Name="PART_Time"
+                               Text="{TemplateBinding Time}"
+                               IsVisible="{TemplateBinding HasTime}"
+                               HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                               Margin="{arc:AgentHandoffTokenResource TimeMargin}"
+                               FontSize="{arc:AgentHandoffTokenResource TimeFontSize}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:customer">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+        <Style Selector="^:agent">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Typing: the assistant's shimmering Thinking line, or a person's dots in a small bubble. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffTypingView}" TargetType="arc:AgentHandoffTypingView">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffTypingView">
+                <Panel>
+                    <arc:ToolCallText Name="PART_Thinking"
+                                      Text="{TemplateBinding Text}"
+                                      IsShimmering="True"
+                                      Margin="2,2,0,2"
+                                      LineHeight="{arc:AgentHandoffTokenResource MessageLineHeight}"
+                                      FontSize="{arc:AgentHandoffTokenResource StepFontSize}"
+                                      Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                      MutedForeground="{arc:ArcDesignTokenResource TextMuted}" />
+                    <Border Name="PART_DotsBubble"
+                            IsVisible="False"
+                            CornerRadius="{arc:AgentHandoffTokenResource BubbleCornerRadius}"
+                            Padding="{arc:AgentHandoffTokenResource TypingPadding}"
+                            Background="{arc:ArcDesignTokenResource Surface}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}">
+                        <arc:AgentHandoffTypingDots Name="PART_Dots"
+                                                    DotSize="{arc:AgentHandoffTokenResource TypingDotSize}"
+                                                    Gap="{arc:AgentHandoffTokenResource TypingDotGap}"
+                                                    Fill="{arc:ArcDesignTokenResource TextMuted}" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:agent /template/ arc|ToolCallText#PART_Thinking">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:agent /template/ Border#PART_DotsBubble">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- Talk to a person: a pill quick reply with a person glyph; SurfaceMuted under the pointer, a ring outside on keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffSuggestion}" TargetType="arc:AgentHandoffSuggestion">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Height" Value="{arc:AgentHandoffTokenResource SuggestionHeight}" />
+        <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource SuggestionPadding}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:AgentHandoffTokenResource StepFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffSuggestion">
+                <Panel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.User}"
+                                          Size="14"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            <TextBlock Text="{TemplateBinding Text}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A status with its icon: a spinner while transferring, a person, a check or an alert, in the status color. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffStatusLabel}" TargetType="arc:AgentHandoffStatusLabel">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffStatusLabel">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Panel Width="{TemplateBinding GlyphSize}"
+                           Height="{TemplateBinding GlyphSize}"
+                           Margin="0,0,6,0"
+                           VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Glyph" Size="{TemplateBinding GlyphSize}" />
+                        <arc:ArcSpinner Name="PART_Spinner"
+                                        IsVisible="False"
+                                        Width="{TemplateBinding GlyphSize}"
+                                        Height="{TemplateBinding GlyphSize}"
+                                        Foreground="{arc:ArcDesignTokenResource Accent}" />
+                    </Panel>
+                    <TextBlock Grid.Column="1"
+                               Text="{TemplateBinding Text}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:transferring /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:transferring /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:connected /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:resolved /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:unavailable /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The handoff card: the status title and a detail line with Cancel or Try again at the right, the person once they
+        join, then the summary the assistant passed on behind a toggle.
+    -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffCard}" TargetType="arc:AgentHandoffCard">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:AgentHandoffTokenResource HandoffCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource HandoffPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffCard">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:AgentHandoffTokenResource HandoffGap}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel VerticalAlignment="Center">
+                                <arc:ArcContentSwap Name="PART_Title"
+                                                    Mode="Label"
+                                                    TextElement.FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                                <TextBlock Name="PART_Detail"
+                                           Text="{TemplateBinding Detail}"
+                                           Margin="22,2,0,0"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <arc:Button Name="PART_Action"
+                                        Grid.Column="1"
+                                        Classes="handoff-action"
+                                        Variant="Secondary"
+                                        Size="Small"
+                                        VerticalAlignment="Top"
+                                        IsVisible="False" />
+                        </Grid>
+                        <Grid Name="PART_Person" ColumnDefinitions="Auto,*" IsVisible="False">
+                            <arc:Avatar DisplayName="{TemplateBinding PersonName}"
+                                        Source="{TemplateBinding PersonPhoto}"
+                                        Size="Small" />
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding PersonName}"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxLines="1" />
+                                <TextBlock Text="{TemplateBinding PersonRole}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxLines="1" />
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Name="PART_SummarySection" IsVisible="False">
+                            <Rectangle Height="1" Fill="{arc:ArcDesignTokenResource BorderSubtle}" Margin="0,0,0,2" />
+                            <arc:AgentHandoffSummaryToggle Name="PART_SummaryToggle" Text="{TemplateBinding ToggleText}" />
+                            <arc:AiHeightBox Name="PART_Summary">
+                                <StackPanel Margin="{arc:AgentHandoffTokenResource SummaryMargin}" Spacing="8">
+                                    <TextBlock Name="PART_Issue"
+                                               TextWrapping="Wrap"
+                                               FontSize="{arc:AgentHandoffTokenResource StepFontSize}"
+                                               LineHeight="{arc:AgentHandoffTokenResource MessageLineHeight}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                    <StackPanel Name="PART_Fields" Spacing="{arc:AgentHandoffTokenResource SummaryFieldGap}" />
+                                </StackPanel>
+                            </arc:AiHeightBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|Button.handoff-action">
+            <Setter Property="Height" Value="{arc:AgentHandoffTokenResource ActionHeight}" />
+            <Setter Property="MinHeight" Value="{arc:AgentHandoffTokenResource ActionHeight}" />
+            <Setter Property="Padding" Value="{arc:AgentHandoffTokenResource ActionPadding}" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^:person /template/ Grid#PART_Person">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:summary /template/ StackPanel#PART_SummarySection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </ControlTheme>
+
+    <!-- The summary toggle: the label and a chevron that turns; SurfaceMuted under the pointer; a ring inside on keyboard focus. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffSummaryToggle}" TargetType="arc:AgentHandoffSummaryToggle">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Height" Value="{arc:AgentHandoffTokenResource SummaryToggleHeight}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffSummaryToggle">
+                <Panel Background="Transparent">
+                    <Border Name="PART_Hover"
+                            Margin="-6,0"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            Opacity="0" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-6,0"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                    <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.FileText}"
+                                      Size="14"
+                                      Margin="0,0,8,0"
+                                      VerticalAlignment="Center"
+                                      Foreground="{TemplateBinding Foreground}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding Text}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   MaxLines="1" />
+                        <arc:ArcGlyph Name="PART_Chevron"
+                                      Grid.Column="2"
+                                      Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                      Size="14"
+                                      VerticalAlignment="Center"
+                                      RenderTransformOrigin="50%,50%"
+                                      Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+        </Style>
+        <Style Selector="^[IsExpanded=True] /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="RenderTransform" Value="rotate(180deg)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Hover">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Style Selector="^ /template/ Border#PART_Hover">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    </Transitions>
+                </Setter>
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <arc:SpringTransformOperationsTransition Property="RenderTransform" Spring="Smooth" />
+                    </Transitions>
+                </Setter>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!-- A fact of the summary: a muted label column, the value beside it. -->
+    <ControlTheme x:Key="{x:Type arc:AgentHandoffFieldRow}" TargetType="arc:AgentHandoffFieldRow">
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:AgentHandoffFieldRow">
+                <Grid ColumnDefinitions="Auto,*">
+                    <TextBlock Text="{TemplateBinding Label}"
+                               Width="{arc:AgentHandoffTokenResource SummaryLabelWidth}"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1" />
+                    <TextBlock Grid.Column="1"
+                               Text="{TemplateBinding Value}"
+                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                               TextWrapping="Wrap" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

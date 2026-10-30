@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.ToneTunerFailureDemo">
+    <!-- When the rewrite function throws, the text stays, the status says Couldn't rewrite and Retry runs it again.
+         This demo fails every other request. -->
+    <Border MaxWidth="640" Margin="0,12">
+        <arc:ToneTuner x:Name="Tuner"
+                       RecipientName="{x:Static demos:ToneTunerDemoData.RecipientName}"
+                       RecipientSubject="{x:Static demos:ToneTunerDemoData.RecipientSubject}"
+                       Model="{x:Static demos:ToneTunerDemoData.Model}" />
+    </Border>
+</UserControl>

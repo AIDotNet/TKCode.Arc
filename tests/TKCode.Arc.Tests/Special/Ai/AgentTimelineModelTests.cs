@@ -13,7 +13,7 @@ public class AgentTimelineModelTests
 {
     private static AgentTimelineModel Sample()
     {
-        var run = AgentTimelineSamples.CreateIncidentRun();
+        var run = AgentTimelineTestRuns.CreateIncidentRun();
         return AgentTimelineModel.Build(run.Agents, run.Spans, run.Handoffs, run.Duration);
     }
 
@@ -283,7 +283,7 @@ public class AgentTimelineModelTests
     [Fact]
     public void Default_Span_Name_Reads_Everything_The_Card_Shows()
     {
-        var run = AgentTimelineSamples.CreateIncidentRun();
+        var run = AgentTimelineTestRuns.CreateIncidentRun();
         var labels = new AgentTimelineLabels();
         var logs = run.Agents.Single(a => a.Id == "logs");
         var failed = run.Spans.Single(s => s.Status == AgentTimelineSpanStatus.Failed);

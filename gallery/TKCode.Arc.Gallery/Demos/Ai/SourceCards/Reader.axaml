@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.SourceCardsReaderDemo">
+    <!-- SourceInvoked marked handled opens the source in your own reader instead of the browser. A failed search keeps
+         what arrived and offers Retry (AllowsRetry), which raises RetryRequested. -->
+    <StackPanel Spacing="16" MaxWidth="640">
+        <arc:SourceCards x:Name="Cards"
+                         Max="4"
+                         Duration="0:0:1.8"
+                         AllowsRetry="True"
+                         SourceInvoked="OnSourceInvoked"
+                         RetryRequested="OnRetry" />
+        <Border CornerRadius="12" Padding="14,10" Background="{arc:ArcDesignTokenResource SurfaceMuted}">
+            <TextBlock x:Name="Reader" Text="Press a card to read it here." TextWrapping="Wrap" />
+        </Border>
+        <arc:Button Variant="Secondary" Size="Small" HorizontalAlignment="Left" Click="OnFail" Content="Fail the search" />
+    </StackPanel>
+</UserControl>

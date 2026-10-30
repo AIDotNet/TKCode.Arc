@@ -19,8 +19,8 @@ fails.
   to quiet text, and a footer that ends with the total time and a one-line summary.
 - **Work that can fail halfway**: a failed step stops the run and shows its reason with Retry and Skip, instead of
   hiding the failure in a log.
-- **Trying the whole journey in a page or a demo**: with no data and no status the card plays an invented plan on a
-  built-in simulation, so every state can be seen without an agent.
+- **Trying the whole journey in a page or a demo**: give the card an `AgentPlanSimulation` with your own script and it
+  plays the plan, so every state can be seen without an agent.
 
 ## When not to use
 
@@ -35,8 +35,11 @@ fails.
 
 ## Usage
 
-With no `Steps` and no `Status`, the card shows an invented draft (adding full-text search to a help center) and runs
-the built-in simulation when it is approved.
+With no `Steps`, no `Status` and no `Simulation`, the card is an empty draft: "Nothing is planned yet. Add a step, or let
+the agent keep planning." with Add step, Keep planning and a disabled Approve plan; its buttons only raise their events.
+The package ships no sample plan. The preview above gives the card a simulation the gallery writes: GPT-6.1 Sol (a real
+model's name) drafts a plan for adding full-text search to a help center (an invented task), and the simulation runs it
+once it is approved.
 
 ```xml
 <UserControl xmlns="https://github.com/avaloniaui"
@@ -132,9 +135,10 @@ Retry or Skip it goes back to Pause.
 
 ### The simulation
 
-`AgentPlanSimulation` is the built-in agent that runs when `Status` is null. It is event-driven: one timer waits per
-state change, nothing runs while the plan is idle, Pause keeps the time that was left and Resume continues from there.
-It answers the same buttons a host would. Its beats follow the measured journey (at 1× speed):
+`AgentPlanSimulation` is a simulated agent for previews, onboarding and tests: set it as `Simulation` and it runs while
+`Status` is null. It is event-driven: one timer waits per state change, nothing runs while the plan is idle, Pause keeps
+the time that was left and Resume continues from there. It answers the same buttons a host would. Its beats follow the
+measured journey (at 1× speed):
 
 | Beat | Time |
 |---|---|
@@ -147,12 +151,18 @@ It answers the same buttons a host would. Its beats follow the measured journey 
 | Retry → first new line, then 577ms, then 465ms → done | 555ms |
 | Skip → the next step starts | 277ms |
 
-In the sample the agent inserts a step after the third step's second line (417ms later) and the test step fails once
-after its last line, then waits for Retry or Skip for as long as it takes. A step that has no script (one you added) runs
-`GenericScript`: three activity lines and 30 seconds. Scripts are found by step id, so a renamed step keeps its script and
-a removed one is skipped. Start over returns to the draft the run started from, with every suggestion available again.
+Your app writes everything the simulation says: `Steps` (the draft, each an `AgentPlanScriptedStep` with an
+`AgentPlanStepScript` of activity lines and a time, an optional failure and an optional step the agent inserts),
+`Suggestions` for Keep planning, `GenericScript` for a step that has no script (one you added; without it such a step
+finishes with no lines and no time), and `Goal`, `Model` and `Summary`, which show unless the plan sets its own. In the
+preview the agent inserts a step after the third step's second line (417ms later) and the test step fails once after its
+last line, then waits for Retry or Skip for as long as it takes. Scripts are found by step id, so a renamed step keeps its
+script and a removed one is skipped. Start over returns to the draft the run started from, with every suggestion available
+again. The data is read when the plan attaches the simulation; create one per plan, since it keeps the run's state. In
+XAML, set `<arc:AgentPlan.Simulation>` to an `AgentPlanSimulation` whose properties come from `{x:Static}`, as the
+preview's Code tab shows. Setting `Simulation` back to null takes its draft away and leaves the plan empty.
 
-Give the simulation your own steps, suggestions and summary to demo another journey:
+Here the words are replaced too, and the simulation is set from code:
 
 <Demo name="Labels" />
 
@@ -217,8 +227,8 @@ verbs with `AgentPlanActivityIcons.Set`.
 
 ### Common questions
 
-**Does the plan run anything?** No. It shows a plan and, with no `Status`, plays an invented simulation. Real work is
-yours: answer `Approved` and update the steps.
+**Does the plan run anything?** No. It shows a plan and, with no `Status`, plays the `Simulation` you give it, if any.
+Real work is yours: answer `Approved` and update the steps.
 
 **How do I show a step the agent added?** Insert an `AgentPlanStep` with `NoteKind = AgentPlanNoteKind.AddedByAgent`
 while the plan runs. It slides in, gets a wash and a note, and is announced.
@@ -264,12 +274,9 @@ The enums:
 | `AgentPlanChangeKind` | `Rename`, `Move`, `Remove`, `Add`, `SuggestionStreamed` |
 | `AgentPlanStepActionKind` | `Retry`, `Skip` |
 
-`AgentPlanSamples` holds the invented sample (`Steps`, `Suggestions`, `GenericScript`, `Goal`, `Summary`,
-`CreateModel()`, `CreateSteps()`), so a page can start from it and change one step.
-
 ## Accessibility
 
-- The card is a group named after the model and the goal ("Lumen 2 Pro plan: Add full-text search to the help center").
+- The card is a group named after the model and the goal ("GPT-6.1 Sol plan: Add full-text search to the help center").
   The steps are an ordered list, so a screen reader announces the count and each position.
 - While the plan runs, every step announces its state in words (Pending, In progress, Done, Failed, Skipped) before its
   title. Each state also has its own shape, so it never rests on color.

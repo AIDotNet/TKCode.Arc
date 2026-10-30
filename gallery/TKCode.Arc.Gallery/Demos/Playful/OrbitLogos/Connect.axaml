@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             x:Class="TKCode.Arc.Gallery.Demos.OrbitLogosConnectDemo">
+    <!--
+        Connect runs your own task. The card shows Connecting until it ends and Try again if it fails: the first attempt
+        here fails on purpose, the second works. The title shows the open logo; the buttons open one from outside.
+    -->
+    <StackPanel Spacing="16" MaxWidth="900">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <arc:Button Content="Open Parcel" Variant="Secondary" Click="OnOpenParcel" />
+            <arc:Button Content="Close" Variant="Ghost" Click="OnClose" />
+            <TextBlock x:Name="Status"
+                       VerticalAlignment="Center"
+                       Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+        </StackPanel>
+        <arc:OrbitLogos x:Name="Orbit" Label="Shipping tools" SelectionChanged="OnSelectionChanged">
+            <arc:OrbitLogo Id="parcel" Name="Parcel" Category="Shipping" Color="#E0A12B"
+                           Icon="M12 2l9 5v10l-9 5-9-5V7z"
+                           Description="Prints labels and tracks every box." />
+            <arc:OrbitLogo Name="Routely" Category="Shipping"
+                           Icon="M3 11l18-8-8 18-2-8z"
+                           Description="Picks the cheapest route for each order." />
+            <arc:OrbitLogo Name="Dockside" Category="Shipping" Color="#3AA6D8"
+                           Icon="M4 14h16l-2 6H6zM11 3h2v9h-2z"
+                           Description="Tells the warehouse what arrives today." />
+            <arc:OrbitLogo Name="Tallyman" Category="Inventory"
+                           Icon="M4 4h4v16H4zM10 4h4v16h-4zM16 4h4v16h-4z"
+                           Description="Counts stock and warns before a shelf runs dry." />
+            <arc:OrbitLogo Name="Binwise" Category="Inventory" Color="#2FA37C"
+                           Icon="M3 8l9-5 9 5v11H3z"
+                           Description="Maps each product to its bin." />
+        </arc:OrbitLogos>
+    </StackPanel>
+</UserControl>

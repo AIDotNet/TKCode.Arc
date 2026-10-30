@@ -1,0 +1,528 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SpeechPlayerTheme">
+
+    <!--
+        Read aloud for an AI reply: the author line, the reply as paragraphs and one 32px dock (36px on touch) where the action
+        row and the compact player trade places (the old one fades out over 100ms, the new one fades in over 160ms with a 2px
+        rise), so the card never changes size. Plain drops the border and the padding.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayer}" TargetType="arc:SpeechPlayer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="MaxWidth" Value="{arc:SpeechPlayerTokenResource MaxCardWidth}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:SpeechPlayerTokenResource CardCornerRadius}" />
+        <Setter Property="Padding" Value="{arc:SpeechPlayerTokenResource CardPadding}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpeechPlayer">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel>
+                        <StackPanel Name="PART_Author"
+                                    Orientation="Horizontal"
+                                    Spacing="6"
+                                    Height="{arc:SpeechPlayerTokenResource AuthorHeight}"
+                                    Margin="{arc:SpeechPlayerTokenResource AuthorMargin}">
+                            <arc:ArcGlyph Name="PART_AuthorMark"
+                                          Size="{arc:SpeechPlayerTokenResource AuthorMarkSize}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Name="PART_AuthorName"
+                                       FontSize="{arc:SpeechPlayerTokenResource AuthorFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Name="PART_Paragraphs" Spacing="{arc:SpeechPlayerTokenResource ParagraphGap}" />
+                        <arc:ArcContentSwap Name="PART_Dock"
+                                            Mode="Label"
+                                            Margin="{arc:SpeechPlayerTokenResource DockMargin}"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Center" />
+                        <!-- The polite status region: read by screen readers, never seen. -->
+                        <arc:ExplainerAnnouncer Name="PART_Status" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_AuthorMark">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcContentSwap#PART_Dock">
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource DockHeight}" />
+        </Style>
+        <Style Selector="^:touch /template/ arc|ArcContentSwap#PART_Dock">
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource DockTouchHeight}" />
+        </Style>
+        <Style Selector="^:plain">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A paragraph of the reply: 15/24 body text, the spoken word on AccentSubtle, words to come at 58%. -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerParagraph}" TargetType="arc:SpeechPlayerParagraph">
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:SpeechPlayerTokenResource ReplyFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:SpeechPlayerTokenResource ReplyLineHeight}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HighlightCornerRadius" Value="{arc:SpeechPlayerTokenResource HighlightCornerRadius}" />
+        <Setter Property="HighlightOutset" Value="{arc:SpeechPlayerTokenResource HighlightOutset}" />
+        <Setter Property="UpcomingOpacity" Value="{arc:SpeechPlayerTokenResource UpcomingOpacity}" />
+        <Setter Property="GlideDuration" Value="{arc:SpeechPlayerTokenResource HighlightGlide}" />
+    </ControlTheme>
+
+    <!-- The action row: Read aloud, then the app's actions or Copy, Good response and Bad response. -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerActionRow}" TargetType="arc:SpeechPlayerActionRow">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpeechPlayerActionRow">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="{arc:SpeechPlayerTokenResource DockGap}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <arc:SpeechPlayerTextButton Name="PART_ReadAloud" Icon="{x:Static arc:ArcIcons.Volume2}" />
+                    <ContentPresenter Name="PART_Actions" VerticalAlignment="Center" />
+                    <StackPanel Name="PART_Defaults"
+                                Orientation="Horizontal"
+                                Spacing="{arc:SpeechPlayerTokenResource DockGap}"
+                                VerticalAlignment="Center">
+                        <arc:CopyButton Name="PART_Copy"
+                                        IsIconOnly="True"
+                                        Variant="Plain"
+                                        VerticalAlignment="Center" />
+                        <arc:SpeechPlayerIconButton Name="PART_Good" Icon="{x:Static arc:ArcIcons.ThumbsUp}" />
+                        <arc:SpeechPlayerIconButton Name="PART_Bad" Icon="{x:Static arc:ArcIcons.ThumbsDown}" />
+                    </StackPanel>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:touch /template/ arc|SpeechPlayerTextButton">
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+        </Style>
+        <Style Selector="^:touch /template/ arc|SpeechPlayerIconButton">
+            <Setter Property="Width" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The compact player: play | 0:04 ━━━━━○──── 0:22 | 1× | Ava ⌄ | ✕. While preparing the times and the bar give way to a
+        shimmering "Preparing Ava's voice"; after a failure to an alert icon with "Couldn't generate audio" and the reason.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerControls}" TargetType="arc:SpeechPlayerControls">
+        <!-- Templated controls clip by default; the buttons' focus rings reach past the edges. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="NarrowWidth" Value="{arc:SpeechPlayerTokenResource NarrowWidth}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpeechPlayerControls">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" VerticalAlignment="Center">
+                    <arc:SpeechPlayerPlayButton Name="PART_Play" Margin="6,0,8,0" />
+                    <Panel Grid.Column="1" VerticalAlignment="Center">
+                        <Grid Name="PART_Timeline" ColumnDefinitions="Auto,*,Auto">
+                            <TextBlock Name="PART_Elapsed"
+                                       Classes="speech-time"
+                                       TextAlignment="Right" />
+                            <arc:SpeechPlayerProgress Name="PART_Progress"
+                                                      Grid.Column="1"
+                                                      Height="20"
+                                                      Margin="6,0"
+                                                      VerticalAlignment="Center" />
+                            <TextBlock Name="PART_Total"
+                                       Grid.Column="2"
+                                       Classes="speech-time"
+                                       TextAlignment="Left" />
+                        </Grid>
+                        <arc:ToolCallText Name="PART_Preparing"
+                                          VerticalAlignment="Center"
+                                          FontSize="{arc:SpeechPlayerTokenResource DockFontSize}"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          MutedForeground="{arc:ArcDesignTokenResource TextMuted}"
+                                          Swap="Fade" />
+                        <Grid Name="PART_Failure" ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CircleAlert}"
+                                          Size="14"
+                                          Margin="0,0,6,0"
+                                          VerticalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource Danger}" />
+                            <TextBlock Name="PART_Error"
+                                       Grid.Column="1"
+                                       FontSize="{arc:SpeechPlayerTokenResource DockFontSize}"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Panel>
+                    <arc:SpeechPlayerTextButton Name="PART_Speed" Grid.Column="2" Margin="6,0,0,0">
+                        <Panel Name="PART_SpeedLabels" />
+                    </arc:SpeechPlayerTextButton>
+                    <arc:SpeechPlayerTextButton Name="PART_Voice" Grid.Column="3">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <Panel Name="PART_VoiceLabels" />
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="14"
+                                          VerticalAlignment="Center" />
+                        </StackPanel>
+                    </arc:SpeechPlayerTextButton>
+                    <arc:SpeechPlayerIconButton Name="PART_Stop"
+                                                Grid.Column="4"
+                                                Icon="{x:Static arc:ArcIcons.X}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock.speech-time">
+            <Setter Property="FontSize" Value="{arc:SpeechPlayerTokenResource TimeFontSize}" />
+            <Setter Property="FontFeatures" Value="tnum" />
+            <Setter Property="MinWidth" Value="{arc:SpeechPlayerTokenResource TimeMinWidth}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|ToolCallText#PART_Preparing">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_Failure">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:preparing /template/ arc|ToolCallText#PART_Preparing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:failed /template/ Grid#PART_Failure">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:preparing /template/ Grid#PART_Timeline">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:failed /template/ Grid#PART_Timeline">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:narrow /template/ TextBlock#PART_Total">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|SpeechPlayerPlayButton#PART_Play">
+            <Setter Property="Width" Value="{arc:SpeechPlayerTokenResource IconButtonSize}" />
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonSize}" />
+        </Style>
+        <Style Selector="^:touch /template/ arc|SpeechPlayerPlayButton#PART_Play">
+            <Setter Property="Width" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+        </Style>
+        <Style Selector="^:touch /template/ arc|SpeechPlayerTextButton">
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+        </Style>
+        <Style Selector="^:touch /template/ arc|SpeechPlayerIconButton">
+            <Setter Property="Width" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+            <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonTouchSize}" />
+        </Style>
+    </ControlTheme>
+
+    <!-- A quiet text button of the dock: TextSecondary, SurfaceMuted and Foreground under the pointer, a keyboard ring. -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerTextButton}" TargetType="arc:SpeechPlayerTextButton">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontSize" Value="{arc:SpeechPlayerTokenResource DockFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Padding" Value="{arc:SpeechPlayerTokenResource TextButtonPadding}" />
+        <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpeechPlayerTextButton">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="6"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center">
+                        <arc:ArcGlyph Name="PART_Icon"
+                                      Data="{TemplateBinding Icon}"
+                                      Size="16"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                      VerticalAlignment="Center" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- A square icon button of the dock; :active is the chosen feedback (full color). -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerIconButton}" TargetType="arc:SpeechPlayerIconButton">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:SpeechPlayerTokenResource IconButtonSize}" />
+        <Setter Property="Height" Value="{arc:SpeechPlayerTokenResource IconButtonSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpeechPlayerIconButton">
+                <Panel>
+                    <Border Name="PART_Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <arc:ArcGlyph Name="PART_Glyph"
+                                  Data="{TemplateBinding Icon}"
+                                  Size="{arc:SpeechPlayerTokenResource IconSize}"
+                                  Foreground="{TemplateBinding Foreground}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-2"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep10}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:active">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        The play button: a Foreground disc with a Surface glyph. Play, pause, play again, retry and the spinner sit in one
+        cell; the shown one is at full size and opacity, the others at 60% and transparent, and they trade places with a
+        bounce-free 0.26s spring and a 160ms fade (reduced motion: the fade only).
+    -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerPlayButton}" TargetType="arc:SpeechPlayerPlayButton">
+        <!-- Templated controls clip by default; keyboard focus rings sit outside the box. -->
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SpeechPlayerPlayButton">
+                <Panel>
+                    <Border Name="PART_Disc"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                    <arc:ArcGlyph Name="PART_PlayGlyph"
+                                  Classes="layer"
+                                  Data="{x:Static arc:ArcIcons.Play}"
+                                  Size="14"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <arc:ArcGlyph Name="PART_PauseGlyph"
+                                  Classes="layer"
+                                  Data="{x:Static arc:ArcIcons.Pause}"
+                                  Size="14"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <arc:ArcGlyph Name="PART_ReplayGlyph"
+                                  Classes="layer"
+                                  Data="{x:Static arc:ArcIcons.RotateCcw}"
+                                  Size="14"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <arc:ArcGlyph Name="PART_RetryGlyph"
+                                  Classes="layer"
+                                  Data="{x:Static arc:ArcIcons.RefreshCw}"
+                                  Size="14"
+                                  Foreground="{TemplateBinding Foreground}" />
+                    <arc:ArcSpinner Name="PART_Spinner"
+                                    Classes="layer"
+                                    Width="14"
+                                    Height="14"
+                                    Foreground="{TemplateBinding Foreground}" />
+                    <Border Name="PART_FocusRing"
+                            Margin="-3"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}"
+                            IsVisible="False"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ :is(Control).layer">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.6)" />
+        </Style>
+        <Style Selector="^:not(:playing):not(:finished):not(:failed):not(:preparing) /template/ arc|ArcGlyph#PART_PlayGlyph">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:playing /template/ arc|ArcGlyph#PART_PauseGlyph">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:finished /template/ arc|ArcGlyph#PART_ReplayGlyph">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:failed /template/ arc|ArcGlyph#PART_RetryGlyph">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:preparing /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Disc">
+            <Setter Property="Opacity" Value="0.86" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full /template/ :is(Control).layer">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.26" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ :is(Control).layer">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Disc">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- One option of the speed or voice button; every option sits in one cell and only the chosen one shows. -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerChoice}" TargetType="arc:SpeechPlayerChoice">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="FontFeatures" Value="tnum" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Style Selector="^:shown">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The progress bar: ControlTrack track, Accent fill and thumb; hover, focus and drag thicken it and scale the thumb in. -->
+    <ControlTheme x:Key="{x:Type arc:SpeechPlayerProgress}" TargetType="arc:SpeechPlayerProgress">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="TrackBrush" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        <Setter Property="FillBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="ThumbBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FocusBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+        <Setter Property="TrackThickness" Value="{arc:SpeechPlayerTokenResource TrackThickness}" />
+        <Setter Property="TrackActiveThickness" Value="{arc:SpeechPlayerTokenResource TrackActiveThickness}" />
+        <Setter Property="ThumbSize" Value="{arc:SpeechPlayerTokenResource ThumbSize}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Emphasis" Value="0" />
+        <Style Selector="^:pointerover">
+            <Setter Property="Emphasis" Value="1" />
+        </Style>
+        <Style Selector="^:focus-visible">
+            <Setter Property="Emphasis" Value="1" />
+        </Style>
+        <Style Selector="^:dragging">
+            <Setter Property="Emphasis" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Emphasis" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
