@@ -101,8 +101,32 @@
         <target>新状态提交时触发：由按下、停留时间结束或动作成功后引起。</target>
       </trans-unit>
       <trans-unit id="ActionSwapState">
-        <source>One face of an `ActionSwap`.</source>
-        <target>`ActionSwap` 的一个面。</target>
+        <source>One face of an `ActionSwap`. Its properties can be bound in XAML (for example localized labels); the control follows later changes.</source>
+        <target>`ActionSwap` 的一个外观状态。它的属性可以在 XAML 中绑定（例如本地化的标签）；控件会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="ActionSwapState.HoldFor">
+        <source>How long to hold this state before moving on by itself, for brief confirmations such as "Sent". Zero holds it.</source>
+        <target>停留在此状态多久后自动前进，用于“已发送”这类简短确认。为零时一直停留。</target>
+      </trans-unit>
+      <trans-unit id="ActionSwapState.Icon">
+        <source>A 16px Lucide-style glyph before the label (24x24 stroke path, see `ArcIcons`).</source>
+        <target>标签前的 16px Lucide 风格图标（24x24 描边路径，见 `ArcIcons`）。</target>
+      </trans-unit>
+      <trans-unit id="ActionSwapState.Id">
+        <source>Identifies the state in `Value`.</source>
+        <target>在 `Value` 中标识该状态。</target>
+      </trans-unit>
+      <trans-unit id="ActionSwapState.Label">
+        <source>The label, also the accessible name while the state is shown.</source>
+        <target>标签文字，显示该状态时也是无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="ActionSwapState.PendingLabel">
+        <source>Shown while `AsyncAction` runs on the way into this state, such as "Sending" before "Sent". Without it the pill folds into a round spinner.</source>
+        <target>在进入此状态的途中 `AsyncAction` 运行时显示，例如“已发送”之前的“正在发送”。不设置时胶囊会收拢成一个圆形加载指示器。</target>
+      </trans-unit>
+      <trans-unit id="ActionSwapState.Tone">
+        <source>The tone of the pill while this state is shown.</source>
+        <target>显示此状态时胶囊的色调。</target>
       </trans-unit>
       <trans-unit id="ActionSwapValueChangedEventArgs">
         <source>Arguments of `ValueChanged`.</source>
@@ -2929,8 +2953,24 @@
         <target>要显示的数字；数值变化时，各位数字会以动画过渡到新值。</target>
       </trans-unit>
       <trans-unit id="Announcement">
-        <source>One message of an `AnnouncementBar`.</source>
-        <target>`AnnouncementBar` 的一条消息。</target>
+        <source>One message of an `AnnouncementBar`. Its properties can be bound in XAML (for example a localized message); the bar follows later changes.</source>
+        <target>`AnnouncementBar` 中的一条消息。它的属性可以在 XAML 中绑定（例如本地化的消息）；公告栏会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="Announcement.Action">
+        <source>Optional call to action after the message.</source>
+        <target>消息后面可选的行动号召。</target>
+      </trans-unit>
+      <trans-unit id="Announcement.Countdown">
+        <source>Optional live countdown after the message.</source>
+        <target>消息后面可选的实时倒计时。</target>
+      </trans-unit>
+      <trans-unit id="Announcement.Id">
+        <source>Stable id, reported to events.</source>
+        <target>稳定的 id，会报告给事件。</target>
+      </trans-unit>
+      <trans-unit id="Announcement.Message">
+        <source>The message text.</source>
+        <target>消息文本。</target>
       </trans-unit>
       <trans-unit id="AnnouncementBar">
         <source>Arc announcement bar: a slim banner for the top of a page. It rotates 2–4 short messages (the next one rises from below while the bar springs to the new height), pauses on hover, focus or a minimized window, and with `IsNavigationVisible` adds previous, next and a pause ring that fills over `Interval`. Messages can carry a call to action and a live countdown. Dismissing collapses the height so the page below eases up; with a `DismissalKey` the dismissal is remembered (`IMessageStorage`).</source>
@@ -3893,8 +3933,24 @@
         <target>`Value` 变化时引发，附带旧值和新值。</target>
       </trans-unit>
       <trans-unit id="BillingToggleOption">
-        <source>One billing period of a `BillingToggle` (Arc `BillingToggleOption`).</source>
-        <target>`BillingToggle` 的一个计费周期（Arc `BillingToggleOption`）。</target>
+        <source>One billing period of a `BillingToggle` (Arc `BillingToggleOption`). Its properties can be bound in XAML; the toggle follows later changes.</source>
+        <target>`BillingToggle` 的一个计费周期（Arc `BillingToggleOption`）。它的属性可以在 XAML 中绑定；切换会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="BillingToggleOption.ActiveBadge">
+        <source>Badge text once this option is selected, e.g. "You save $48". Defaults to `Badge`.</source>
+        <target>该选项被选中后的徽标文字，例如“为你节省 $48”。默认为 `Badge`。</target>
+      </trans-unit>
+      <trans-unit id="BillingToggleOption.Badge">
+        <source>Short savings note, e.g. "Save 20%".</source>
+        <target>简短的优惠说明，例如“省 20%”。</target>
+      </trans-unit>
+      <trans-unit id="BillingToggleOption.Label">
+        <source>The option text, such as "Yearly"; falls back to `Value`.</source>
+        <target>选项文字，例如“按年”；未设置时使用 `Value`。</target>
+      </trans-unit>
+      <trans-unit id="BillingToggleOption.Value">
+        <source>The value reported as `Value`.</source>
+        <target>作为 `Value` 报告的值。</target>
       </trans-unit>
       <trans-unit id="BottomSheet">
         <source>A modal sheet that rises from the bottom edge and rests at one or more heights (detents): trip details, share options, filters, map and media views where a peek is useful before the full view. One motion value drives the sheet: a drag follows the pointer 1:1, rubber-bands past the tallest detent, and on release projects 0.2s of its velocity to pick the nearest detent or close; a flick faster than 320px/s always moves at least one detent. The dim is a function of the sheet position. The grabber answers ArrowUp / ArrowDown / Home / End and toggles between the lowest and highest detent; reading keys on the sheet open it fully before scrolling; touch drags on the content move the sheet until it is fully open. Under reduced motion detents jump and the sheet fades. The sheet position is a `MotionValue`, not a ControlTheme transition: a drag writes it every move, a release hands the pointer velocity to the spring, and the scrim is computed from it each frame.</source>
@@ -6380,6 +6436,10 @@
         <source>Secondary actions kept close to the selected object (Arc context menu). Wraps its `Content` and opens a menu at the pointer on right-click, or under the target (12px in, 8px below) on a plain click, a tap, the ContextMenu key or Shift+F10. The menu grows from the pointer on a snappy spring, rows press with a tint, and it closes on any scroll, resize or outside press instead of repositioning. Avoid it on targets that need their own click. To give any control a right-click menu without wrapping it, attach a surface: `&lt;Border&gt;&lt;arc:ContextMenu.Menu&gt;&lt;arc:MenuSurface&gt;…&lt;/arc:MenuSurface&gt;&lt;/arc:ContextMenu.Menu&gt;&lt;/Border&gt;`.</source>
         <target>靠近所选对象的次要操作（Arc 上下文菜单）。包裹其 `Content`，在右键时于指针处打开菜单，或在普通点击、轻触、ContextMenu 键或 Shift+F10 时在目标下方（向内 12px、向下 8px）打开。菜单以轻快的弹簧从指针处展开，菜单项按下时会着色，滚动、调整大小或外部按压时会关闭而不是重新定位。避免用于本身需要单击功能的目标。若要让任意控件拥有右键菜单而无需包裹，可附加一个表面：`&lt;Border&gt;&lt;arc:ContextMenu.Menu&gt;&lt;arc:MenuSurface&gt;…&lt;/arc:MenuSurface&gt;&lt;/arc:ContextMenu.Menu&gt;&lt;/Border&gt;`。</target>
       </trans-unit>
+      <trans-unit id="ContextMenu.ChildrenSelector">
+        <source>Children of an `ItemsSource` item: a non-empty result makes its row open a submenu of those children (same signature as `TreeView.ChildrenSelector`; applied at every level).</source>
+        <target>`ItemsSource` 中某一项的子项：返回非空结果时，该项所在的行会打开由这些子项组成的子菜单（签名与 `TreeView.ChildrenSelector` 相同；在各级都会应用）。</target>
+      </trans-unit>
       <trans-unit id="ContextMenu.Closed">
         <source>Raised when the menu closes.</source>
         <target>菜单关闭时引发。</target>
@@ -8337,12 +8397,16 @@
         <target>面板所固定的边缘（默认为 Right）。</target>
       </trans-unit>
       <trans-unit id="DropdownMenu">
-        <source>A focused list of actions anchored to a labelled trigger (Arc dropdown menu). The trigger shows an optional icon, the `Label` (a new label rises in from a soft blur while the trigger width springs) and a chevron that turns on the CSS spring while open. The menu grows from the trigger edge on Arc's 580ms CSS spring with a 160ms fade, one highlight glides between rows for the pointer and jumps for the keyboard, and rows fade in with a short stagger. Rows are declared inline (`&lt;arc:MenuEntry Header="Rename" Icon="{x:Static arc:ArcIcons.Pencil}"/&gt;`) or supplied with `ItemsSource`. Replace the built-in trigger with `Trigger` (any control; buttons toggle the menu on click and never press-scale). Enter, Space or ArrowDown on the trigger open the menu on the first row; Escape closes it and returns focus to the trigger.</source>
-        <target>锚定在带标签触发器上的聚焦操作列表（Arc 下拉菜单）。触发器显示可选图标、`Label`（新标签从柔和模糊中升起，同时触发器宽度以弹簧变化）以及在打开时通过 CSS 弹簧转动的箭头。菜单以 Arc 的 580ms CSS 弹簧从触发器边缘展开，伴随 160ms 淡入；一个高亮会在行之间为指针滑动，为键盘则直接跳转；各行以短促的错落时序淡入。行可以内联声明（`&lt;arc:MenuEntry Header="Rename" Icon="{x:Static arc:ArcIcons.Pencil}"/&gt;`），也可通过 `ItemsSource` 提供。可用 `Trigger` 替换内置触发器（任意控件；按钮在点击时切换菜单，且从不产生按压缩放）。在触发器上按 Enter、Space 或 ArrowDown 会在第一行打开菜单；Escape 关闭菜单并将焦点返回触发器。</target>
+        <source>A focused list of actions anchored to a labelled trigger (Arc dropdown menu). The trigger shows an optional icon, the `Label` (a new label rises in from a soft blur while the trigger width springs) and a chevron that turns on the CSS spring while open. The menu grows from the trigger edge on Arc's 580ms CSS spring with a 160ms fade, one highlight glides between rows for the pointer and jumps for the keyboard, and rows fade in with a short stagger. Rows are declared inline (`&lt;arc:MenuEntry Header="Rename" Icon="{x:Static arc:ArcIcons.Pencil}"/&gt;`) or supplied with `ItemsSource`. Replace the built-in trigger with `Trigger` (any control; buttons toggle the menu on click and never press-scale). Enter, Space or ArrowDown on the trigger open the menu on the first row; Escape closes it and returns focus to the trigger. Rows with child rows open submenus (nest `MenuEntry` elements, or set `ChildrenSelector` for `ItemsSource` data); `ItemClicked` reports rows of every level.</source>
+        <target>锚定在带标签触发器上的聚焦操作列表（Arc 下拉菜单）。触发器显示可选图标、`Label`（新标签从柔和模糊中升起，同时触发器宽度以弹簧变化）以及在打开时通过 CSS 弹簧转动的箭头。菜单以 Arc 的 580ms CSS 弹簧从触发器边缘展开，伴随 160ms 淡入；一个高亮会在行之间为指针滑动，为键盘则直接跳转；各行以短促的错落时序淡入。行可以内联声明（`&lt;arc:MenuEntry Header="Rename" Icon="{x:Static arc:ArcIcons.Pencil}"/&gt;`），也可通过 `ItemsSource` 提供。可用 `Trigger` 替换内置触发器（任意控件；按钮在点击时切换菜单，且从不产生按压缩放）。在触发器上按 Enter、Space 或 ArrowDown 会在第一行打开菜单；Escape 关闭菜单并将焦点返回触发器。带子行的行会打开子菜单（嵌套 `MenuEntry` 元素，或为 `ItemsSource` 数据设置 `ChildrenSelector`）；`ItemClicked` 会报告各级的行。</target>
       </trans-unit>
       <trans-unit id="DropdownMenu.Alignment">
         <source>Menu alignment against the trigger (Arc: end).</source>
         <target>菜单相对触发器的对齐方式（Arc：end）。</target>
+      </trans-unit>
+      <trans-unit id="DropdownMenu.ChildrenSelector">
+        <source>Children of an `ItemsSource` item: a non-empty result makes its row open a submenu of those children (same signature as `TreeView.ChildrenSelector`; applied at every level).</source>
+        <target>`ItemsSource` 中某一项的子项：返回非空结果时，该项所在的行会打开由这些子项组成的子菜单（签名与 `TreeView.ChildrenSelector` 相同；在各级都会应用）。</target>
       </trans-unit>
       <trans-unit id="DropdownMenu.Closed">
         <source>Raised when the menu closes.</source>
@@ -9689,8 +9753,20 @@
         <target>已应用的筛选条件，以标签形式显示：“标签 · 值”。ID 为字段 ID，因此每个字段对应一个标签。</target>
       </trans-unit>
       <trans-unit id="FilterField">
-        <source>A filterable field of the Add filter menu: pick the field, then one of its options.</source>
-        <target>“添加筛选”菜单中的可筛选字段：先选择字段，再选择其中一个选项。</target>
+        <source>A filterable field of the Add filter menu: pick the field, then one of its options. Its properties can be bound in XAML; an open menu follows later changes. Chips already applied keep the label they were created with.</source>
+        <target>“添加筛选”菜单中的一个可筛选字段：先选字段，再选它的一个选项。它的属性可以在 XAML 中绑定；打开的菜单会跟随之后的变化。已经应用的筛选标签保留创建时的标签文字。</target>
+      </trans-unit>
+      <trans-unit id="FilterField.Icon">
+        <source>Optional 24x24 stroked glyph shown before the label.</source>
+        <target>显示在标签前的可选 24x24 描边图标。</target>
+      </trans-unit>
+      <trans-unit id="FilterField.Id">
+        <source>Stable id; also the id of the chip the field produces, so there is one chip per field.</source>
+        <target>稳定的 id；也是该字段生成的筛选标签的 id，因此每个字段只有一个标签。</target>
+      </trans-unit>
+      <trans-unit id="FilterField.Label">
+        <source>The field's name in the menu and on its chip ("Status").</source>
+        <target>字段在菜单和筛选标签上的名称（“状态”）。</target>
       </trans-unit>
       <trans-unit id="FilterToolbar">
         <source>Arc's filter toolbar: keep collection filters close and easy to reset. Applied filters are removable chips ("Status · Open") whose slots open and close on a spring so neighbors slide along, a changed value morphs in place, Clear all appears while any filter is applied, and the Add filter menu picks a field, then a value (one chip per field). An optional search field sits with the actions. `ActiveFilters` is two-way and a mutable list is updated in place; `FiltersChanged` reports every change, and changes are announced.</source>
@@ -9901,8 +9977,20 @@
         <target>定义 `Value` 属性。</target>
       </trans-unit>
       <trans-unit id="GaugeThreshold">
-        <source>A band that starts at `From` (in value units). The highest band the value reaches sets the ring's tone and names the state under the number, so the state never rests on color alone.</source>
-        <target>从 `From`（以数值单位计）开始的一个区间。数值所达到的最高区间决定环形的色调，并在数字下方标明状态，因此状态不仅依靠颜色来表达。</target>
+        <source>A band that starts at `From` (in value units). The highest band the value reaches sets the ring's tone and names the state under the number, so the state never rests on color alone. Its properties can be bound in XAML (for example a localized label); the gauge follows later changes.</source>
+        <target>从 `From`（以数值单位计）开始的区间。数值达到的最高区间决定圆环的色调，并在数字下方给出状态名称，因此状态从不只靠颜色表达。它的属性可以在 XAML 中绑定（例如本地化的标签）；仪表会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="GaugeThreshold.From">
+        <source>Lowest value of the band, in the gauge's value units.</source>
+        <target>区间的最小值，使用仪表的数值单位。</target>
+      </trans-unit>
+      <trans-unit id="GaugeThreshold.Label">
+        <source>State name shown under the number, such as "Healthy".</source>
+        <target>显示在数字下方的状态名称，例如“健康”。</target>
+      </trans-unit>
+      <trans-unit id="GaugeThreshold.Tone">
+        <source>Ring and label color while the value is in this band.</source>
+        <target>数值处于此区间时圆环和标签的颜色。</target>
       </trans-unit>
       <trans-unit id="GenerationModel">
         <source>The model that answered: its name as people know it, your key for its provider, its API id and, optionally, its mark.</source>
@@ -10513,8 +10601,16 @@
         <target>以标签 / 数值成对的形式显示，并排成可自动换行的数字行。</target>
       </trans-unit>
       <trans-unit id="HoverCardStat">
-        <source>A number shown in a `HoverCardProfile` (value over its label).</source>
-        <target>在 `HoverCardProfile` 中显示的数字（数值位于标签之上）。</target>
+        <source>A number shown in a `HoverCardProfile` (value over its label). Its properties can be bound in XAML; the card follows later changes.</source>
+        <target>`HoverCardProfile` 中显示的一个数字（数值在上，标签在下）。它的属性可以在 XAML 中绑定；卡片会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="HoverCardStat.Label">
+        <source>What the number counts ("Followers"), under the number.</source>
+        <target>这个数字统计的内容（“关注者”），显示在数字下方。</target>
+      </trans-unit>
+      <trans-unit id="HoverCardStat.Value">
+        <source>The number as shown ("1.2k").</source>
+        <target>显示出来的数字（“1.2k”）。</target>
       </trans-unit>
       <trans-unit id="ISpeechAudio">
         <source>The playback of fetched speech, supplied by the app (an audio element, a platform player, or an adapter over `IAudioPlayer`). The `SpeechPlayer` drives it and reads `Position` on every frame while it plays, so its position is the player's clock. All calls come from the UI thread.</source>
@@ -14149,8 +14245,8 @@
         <target>在 `@` 之后提供的人员。</target>
       </trans-unit>
       <trans-unit id="MenuEntry">
-        <source>One row of a `MenuSurface`: a leading icon (a Lucide `Geometry` such as `{x:Static arc:ArcIcons.Pencil}`, or any control), a header, an optional shortcut hint and the check or radio indicator of toggle rows. Rows never draw their own hover or focus fill: the surface's shared highlight glides to the row under the pointer and jumps to the keyboard position. Activation runs `Command`, raises `Click` and the surface's `ItemClicked`, then closes the menu unless `StaysOpenOnClick` is set.</source>
-        <target>`MenuSurface` 中的一行：前导图标（Lucide `Geometry`，例如 `{x:Static arc:ArcIcons.Pencil}`，或任意控件）、标题、可选的快捷键提示，以及切换行的勾选或单选指示器。各行不绘制自己的悬停或焦点填充：由菜单面板共享的高亮会滑动到指针所在的行，并跳到键盘所在的位置。激活时会执行 `Command`、引发 `Click` 和菜单面板的 `ItemClicked`，然后关闭菜单，除非设置了 `StaysOpenOnClick`。</target>
+        <source>One row of a `MenuSurface`: a leading icon (a Lucide `Geometry` such as `{x:Static arc:ArcIcons.Pencil}`, or any control), a header, an optional shortcut hint and the check or radio indicator of toggle rows. Rows never draw their own hover or focus fill: the surface's shared highlight glides to the row under the pointer and jumps to the keyboard position. Activation runs `Command`, raises `Click` and the surface's `ItemClicked`, then closes the menu unless `StaysOpenOnClick` is set. A row with child rows (`Items` declared inline, or `ItemsSource`) opens a submenu instead: it shows a chevron, and a click, Enter, Space or ArrowRight opens the submenu beside the menu (hovering opens it after a short delay). Rows inside a submenu can open their own submenus.</source>
+        <target>`MenuSurface` 中的一行：前导图标（Lucide `Geometry`，例如 `{x:Static arc:ArcIcons.Pencil}`，或任意控件）、标题、可选的快捷键提示，以及切换行的勾选或单选指示器。各行不绘制自己的悬停或焦点填充：由菜单面板共享的高亮会滑动到指针所在的行，并跳到键盘所在的位置。激活时会执行 `Command`、引发 `Click` 和菜单面板的 `ItemClicked`，然后关闭菜单，除非设置了 `StaysOpenOnClick`。带子行的行（内联声明的 `Items`，或 `ItemsSource`）则改为打开子菜单：它会显示箭头，单击、Enter、Space 或 ArrowRight 会在菜单旁打开子菜单（悬停片刻后也会打开）。子菜单中的行还可以打开自己的子菜单。</target>
       </trans-unit>
       <trans-unit id="MenuEntry.Click">
         <source>Raised when the row is activated (pointer release, Enter or Space), before the menu closes.</source>
@@ -14171,6 +14267,10 @@
       <trans-unit id="MenuEntry.HasSeparatorBefore">
         <source>Draws a separator line above the row (Arc's `separatorBefore`).</source>
         <target>在行的上方绘制分隔线（Arc 的 `separatorBefore`）。</target>
+      </trans-unit>
+      <trans-unit id="MenuEntry.HasSubmenu">
+        <source>True when the row opens a submenu (it has child rows): it shows a chevron instead of a shortcut hint and opens the submenu instead of running `Command` or raising `Click`.</source>
+        <target>行会打开子菜单（它有子行）时为 true：它显示箭头而不是快捷键提示，并且会打开子菜单，而不是执行 `Command` 或引发 `Click`。</target>
       </trans-unit>
       <trans-unit id="MenuEntry.Header">
         <source>The row label (strings ellipsize; any content is accepted). Also the typeahead text unless `TextSearch.Text` is set.</source>
@@ -14199,6 +14299,10 @@
       <trans-unit id="MenuEntry.IsDestructive">
         <source>Danger text and icon, and a danger-tinted highlight. Put destructive rows last and name what they destroy.</source>
         <target>危险文本和图标，并使用危险色调的高亮。破坏性行应放在最后，并写明将被破坏的对象。</target>
+      </trans-unit>
+      <trans-unit id="MenuEntry.ItemsSource">
+        <source>Rows of the submenu this row opens, from data (use it or inline `Items`, not both). Items are turned into rows the way the menu's own items are: `MenuEntry` instances are used as is.</source>
+        <target>此行所打开子菜单的行，来自数据（与内联的 `Items` 二选一，不要同时使用）。各项转换为行的方式与菜单自身的项相同：`MenuEntry` 实例按原样使用。</target>
       </trans-unit>
       <trans-unit id="MenuEntry.StaysOpenOnClick">
         <source>Keeps the menu open after activation (toggles that people flip several times).</source>
@@ -16824,6 +16928,46 @@
         <source>Arguments of `ValueChanged`.</source>
         <target>`ValueChanged` 的参数。</target>
       </trans-unit>
+      <trans-unit id="PageCurl">
+        <source>A small book or magazine that opens on its cover (Arc Page curl, design reference). Tap the right page to go forward and the left page to go back, or drag a page: it folds along a line that follows the pointer, showing its back, a lit curl and a shadow on the page below. A page count with previous and next buttons sits underneath.</source>
+        <target>一本从封面开始翻开的小书或小杂志（Arc Page curl，设计参考）。轻点右页向前翻，轻点左页向后翻，或者拖动书页：它沿着跟随指针的折线翻折，露出背面、一道被照亮的卷边，以及落在下一页上的阴影。下方有页码以及上一页、下一页按钮。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.Hint">
+        <source>The hint under the lower outer corner, shown until the first interaction. Null hides it.</source>
+        <target>位于外侧下角下方的提示，在第一次交互之前显示。设为 Null 则隐藏。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.Label">
+        <source>The accessible name of the book.</source>
+        <target>书的无障碍名称。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.PageAspect">
+        <source>A page's width divided by its height.</source>
+        <target>页宽除以页高。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.PageTemplate">
+        <source>The template that builds a page from an item that is not a control.</source>
+        <target>为非控件条目生成页面的模板。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.ShowControls">
+        <source>Whether the page count with previous and next buttons shows under the book.</source>
+        <target>是否在书下方显示页码以及上一页、下一页按钮。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.Spread">
+        <source>The spread on show: 0 is the closed cover, spread `n` shows pages `2n` and `2n + 1`. Two-way.</source>
+        <target>当前显示的跨页：0 为合上的封面，第 `n` 个跨页显示第 `2n` 与 `2n + 1` 页。双向。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.SpreadChanged">
+        <source>Raised when a page finishes turning, by a drag, a tap, a key or a button.</source>
+        <target>一页翻完时触发，无论由拖动、点按、按键还是按钮引起。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.SpreadCount">
+        <source>The number of spreads: the closed cover plus one per two pages.</source>
+        <target>跨页的数量：合上的封面加上每两页一个。</target>
+      </trans-unit>
+      <trans-unit id="PageCurl.Tease">
+        <source>Whether the cover corner curls once when the book first comes into view, and a little on hover until the first turn.</source>
+        <target>书第一次进入视野时封面一角是否卷起一次，以及在第一次翻页之前悬停时是否轻轻卷起。</target>
+      </trans-unit>
       <trans-unit id="PageHeader">
         <source>The frame of a project or record page (Arc page header block): a fixed header with breadcrumbs, a large title with a status badge, a description, a meta row, actions and tabs, over the scrolling body of the selected tab. Scrolling the body past 16px folds the header into a compact bar (the breadcrumbs give way to the title and its status, which scrolls back to the top when chosen); it opens again only near the top (4px), so it never flickers. Secondary actions fold into the "More actions" menu when the breadcrumbs would get less than 240px, and return at 272px. Tab counts roll digit by digit, a 2px indicator glides between tabs, and panels slide in from the side of travel. Breakpoints follow the control's own width: below 560px the padding tightens, the root crumb and the compact badge hide and the title steps down a size; below 460px the primary action shows only its icon. Ported from Arc's free page-header block (MIT, Copyright (c) 2026 Elia Kuratli) and made data driven: tabs are `PageHeaderTab` items (or data items with `ItemTemplate` and `ContentTemplate`), actions are `PageHeaderAction`s.</source>
         <target>项目或记录页面（Arc 页头区块）的框架：顶部固定的页头，包含面包屑、带状态徽标的大号标题、描述、元信息行、操作和标签，下方是所选标签的可滚动正文。正文滚动超过 16px 时，页头折叠为紧凑栏（面包屑让位于标题及其状态；选择标题时会滚回顶部）；只有回到顶部附近（4px 以内）才会重新展开，因此不会闪烁。当面包屑可用宽度将小于 240px 时，次要操作折叠进“More actions”菜单，宽度达到 272px 时重新展开。标签计数逐位滚动，2px 指示条在标签之间滑动，面板从移动方向一侧滑入。断点依据控件自身的宽度：低于 560px 时内边距收紧，根面包屑和紧凑徽标隐藏，标题降一级字号；低于 460px 时主要操作只显示图标。移植自 Arc 的免费页头区块（MIT，Copyright (c) 2026 Elia Kuratli），并改为数据驱动：标签为 `PageHeaderTab` 项（或带有 `ItemTemplate` 和 `ContentTemplate` 的数据项），操作为 `PageHeaderAction`。</target>
@@ -18373,8 +18517,36 @@
         <target>事件的一条更新。</target>
       </trans-unit>
       <trans-unit id="RadioCardOption">
-        <source>One option of `RadioCards` (Arc `RadioCardOption`): a label with optional description, a meta value (price, estimate), a decorative icon, and a reason shown in place of the description when the option is disabled.</source>
-        <target>`RadioCards` 的一个选项（Arc 的 `RadioCardOption`）：包含标签（可选描述）、元数据值（价格、预估时长）、装饰性图标，以及选项被禁用时代替描述显示的原因。</target>
+        <source>One option of `RadioCards` (Arc `RadioCardOption`): a label with optional description, a meta value (price, estimate), a decorative icon, and a reason shown in place of the description when the option is disabled. Its properties can be bound in XAML; the cards follow later changes.</source>
+        <target>`RadioCards` 的一个选项（Arc `RadioCardOption`）：一个标签，可选的描述、元信息（价格、估算）、装饰图标，以及选项禁用时代替描述显示的原因。它的属性可以在 XAML 中绑定；卡片组会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.Description">
+        <source>One or two short lines under the label.</source>
+        <target>标签下方的一两行简短说明。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.DisabledReason">
+        <source>Short reason shown in place of the description when the option is disabled.</source>
+        <target>选项禁用时代替描述显示的简短原因。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.Icon">
+        <source>Decorative 18px icon beside the label: a Lucide `Geometry` (for example `ArcIcons.Zap`) or any content.</source>
+        <target>标签旁的 18px 装饰图标：Lucide `Geometry`（例如 `ArcIcons.Zap`）或任意内容。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.IsDisabled">
+        <source>A disabled card cannot be selected and is skipped by the arrow keys.</source>
+        <target>禁用的卡片不能被选中，方向键会跳过它。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.Label">
+        <source>Card title (text or any content); falls back to `Value`.</source>
+        <target>卡片标题（文字或任意内容）；未设置时使用 `Value`。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.Meta">
+        <source>A price, estimate or other value: under the text in a grid card, at the end of a list row.</source>
+        <target>价格、估算或其他数值：在网格卡片中位于文字下方，在列表行中位于行尾。</target>
+      </trans-unit>
+      <trans-unit id="RadioCardOption.Value">
+        <source>The value reported as the group's `SelectedValue`.</source>
+        <target>作为卡片组 `SelectedValue` 报告的值。</target>
       </trans-unit>
       <trans-unit id="RadioCards">
         <source>Arc radio cards: selectable option cards for choices that need more than a label (plans, shipping speeds, regions). One selection ring springs from card to card, so the eye follows the change, and a 6px dot pops into the chosen card's indicator. Behaves as a radio group: one tab stop, arrows (mirrored in right-to-left) move and select, Home / End jump to the ends and Enter / Space select. Disabled cards are skipped and show their reason. Cards come from `ItemsSource` or inline `RadioCardOption` items; `SelectedValue` (two-way) is the selected option's value.</source>
@@ -18397,8 +18569,24 @@
         <target>Arc 单选组：从一组可见选项中选择其一。一个高亮框（`ControlOn` 边框加淡色填充）会以形变弹簧滑动到所选行，新的圆点弹入，旧的圆点缩小消失，因此变化看起来像一次连贯的物理移动。方向键走同样的路径；整个组只有一个 Tab 停靠点（所选行）。选项来自 `ItemsSource` 或内联的 `RadioOption` 项；`SelectedValue`（双向绑定）为所选选项的 `Value`。`Header` 为图例，也是该组的无障碍名称。</target>
       </trans-unit>
       <trans-unit id="RadioOption">
-        <source>One option of a `RadioGroup` (Arc `{ value, label, description? }`). Use it in `ItemsSource` or inline in XAML; the group reports `Value` as its `SelectedValue`.</source>
-        <target>`RadioGroup` 的一个选项（Arc 的 `{ value, label, description? }`）。可用于 `ItemsSource` 或 XAML 内联；该组会将 `Value` 作为其 `SelectedValue` 报告。</target>
+        <source>One option of a `RadioGroup` (Arc `{ value, label, description? }`). Use it in `ItemsSource` or inline in XAML; the group reports `Value` as its `SelectedValue`. Its properties can be bound in XAML; the group follows later changes.</source>
+        <target>`RadioGroup` 的一个选项（Arc `{ value, label, description? }`）。可放在 `ItemsSource` 中，或在 XAML 中内联书写；选项组把 `Value` 作为它的 `SelectedValue` 报告。它的属性可以在 XAML 中绑定；选项组会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="RadioOption.Description">
+        <source>Secondary line under the label; wraps on narrow widths.</source>
+        <target>标签下方的第二行文字；窄宽度时会换行。</target>
+      </trans-unit>
+      <trans-unit id="RadioOption.IsDisabled">
+        <source>A disabled option cannot be selected and is skipped by the arrow keys.</source>
+        <target>禁用的选项不能被选中，方向键会跳过它。</target>
+      </trans-unit>
+      <trans-unit id="RadioOption.Label">
+        <source>Row title; falls back to `Value`.</source>
+        <target>行标题；未设置时使用 `Value`。</target>
+      </trans-unit>
+      <trans-unit id="RadioOption.Value">
+        <source>The value reported as the group's `SelectedValue`.</source>
+        <target>作为选项组 `SelectedValue` 报告的值。</target>
       </trans-unit>
       <trans-unit id="RangeRule">
         <source>Fails a number outside `Minimum` and `Maximum`; empty values and other types pass.</source>
@@ -18409,8 +18597,20 @@
         <target>单个回应的状态（Arc 的 `Reaction`）：选择它的人数，以及观看者是否已选择。计数降为零的回应会离开回应栏。</target>
       </trans-unit>
       <trans-unit id="ReactionOption">
-        <source>One reaction the picker offers (Arc's `ReactionOption`): an id, a label and a 24×24 Lucide glyph.</source>
-        <target>选取器提供的一个回应（Arc 的 `ReactionOption`）：包含 id、标签和一个 24×24 的 Lucide 图形。</target>
+        <source>One reaction the picker offers (Arc's `ReactionOption`): an id, a label and a 24×24 Lucide glyph. Its properties can be bound in XAML (for example a localized label); the bar follows later changes.</source>
+        <target>选择器提供的一种表情回应（Arc 的 `ReactionOption`）：一个 id、一个标签和一个 24×24 Lucide 图标。它的属性可以在 XAML 中绑定（例如本地化的标签）；回应栏会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="ReactionOption.Icon">
+        <source>24×24 Lucide geometry (`ArcIcons` or `Parse`), drawn with a 1.75 stroke.</source>
+        <target>24×24 Lucide 几何图形（`ArcIcons` 或 `Parse`），以 1.75 的描边绘制。</target>
+      </trans-unit>
+      <trans-unit id="ReactionOption.Id">
+        <source>Stable id, matched by `Id`.</source>
+        <target>稳定的 id，与 `Id` 对应。</target>
+      </trans-unit>
+      <trans-unit id="ReactionOption.Label">
+        <source>Name shown in the picker caption and tooltips, and read by assistive technology ("Love").</source>
+        <target>显示在选择器说明和提示中、并由辅助技术读出的名称（“喜爱”）。</target>
       </trans-unit>
       <trans-unit id="Reactions">
         <source>Arc reactions: a bar of reaction pills with counts plus an add button that opens a compact picker, like Slack's reactions on a comment, post or release note. One tap adds or removes the viewer's reaction: the count rolls (only the digits that change, in the direction it moved), the icon gets a velocity kick that stacks on quick taps (P27), the viewer's own reactions take the accent and a filled glyph. Pills scale in out of a blur and leave the bar when their count reaches zero while the rest glide into place (P26, P19); a new row grows the bar on a spring (P6). Hovering or focusing a pill shows its label and who reacted (`Tooltip`). Keyboard: Enter / Space toggles a pill or opens the picker; in the picker every arrow moves and wraps, Home / End jump, Enter picks, Escape closes and returns focus to the add button. Each change is announced politely.</source>
@@ -20869,8 +21069,24 @@
         <target>指针或键盘焦点已到达某个分段（该分段可能尚未被选中）。</target>
       </trans-unit>
       <trans-unit id="SegmentedOption">
-        <source>One option of a `SegmentedControl` (Arc `Segment`): a short label and optional accessory.</source>
-        <target>`SegmentedControl` 的一个选项（Arc 的 `Segment`）：一个简短的标签和可选的附件。</target>
+        <source>One option of a `SegmentedControl` (Arc `Segment`): a short label and optional accessory. Its properties can be bound in XAML (for example a localized label); the control follows later changes.</source>
+        <target>`SegmentedControl` 的一个选项（Arc `Segment`）：简短的标签和可选的附加内容。它的属性可以在 XAML 中绑定（例如本地化的标签）；控件会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="SegmentedOption.Accessory">
+        <source>Optional content after the label, such as a badge or a count.</source>
+        <target>标签后可选的内容，例如徽标或计数。</target>
+      </trans-unit>
+      <trans-unit id="SegmentedOption.IsDisabled">
+        <source>A disabled segment cannot be selected and is skipped by the arrow keys.</source>
+        <target>禁用的分段不能被选中，方向键会跳过它。</target>
+      </trans-unit>
+      <trans-unit id="SegmentedOption.Label">
+        <source>Segment text; falls back to `Value`. Keep it short: segments never wrap or shrink.</source>
+        <target>分段文字；未设置时使用 `Value`。请保持简短：分段从不换行或收缩。</target>
+      </trans-unit>
+      <trans-unit id="SegmentedOption.Value">
+        <source>The value reported as the control's `SelectedValue`.</source>
+        <target>作为控件 `SelectedValue` 报告的值。</target>
       </trans-unit>
       <trans-unit id="Select">
         <source>Arc select: a labelled, compact choice field with a keyboard friendly menu (Radix Select semantics). The shown value rolls in the direction of the list, the menu drops from the trigger, a highlight glides between options and the chosen option carries a check. Use it for short, fixed lists such as regions or sort orders. Options come from `ItemsSource` (any objects, `SelectOption` records) or inline `SelectItem` children; labels use `TextSelector`, `DisplayMemberBinding` or `ToString()`, values use `ValueSelector`, `SelectedValueBinding` or the item. Keyboard: Enter, Space and the arrows open; arrows, Home / End and PageUp / PageDown move the highlight; Enter or Space picks; Escape closes without a change; typing jumps to the next matching option (and picks it directly while the menu is closed).</source>
@@ -22637,8 +22853,16 @@
         <target>格式化读数、气泡及朗读的数值（默认：en-US，并保留步长的小数位数）。</target>
       </trans-unit>
       <trans-unit id="SliderMark">
-        <source>A mark on a `Slider` or `ElasticSlider` track. A mark without a label draws a tick; a mark with a label also prints it under the track, and clicking the label moves there. On an elastic slider marks are detents the dragged thumb clicks into.</source>
-        <target>`Slider` 或 `ElasticSlider` 轨道上的刻度。没有标签的刻度只画出一个短线；带标签的刻度还会将标签打印在轨道下方，点击标签即可移动到该处。在弹性滑块上，刻度是被拖动的滑块会“咔嗒”卡入的档位。</target>
+        <source>A mark on a `Slider` or `ElasticSlider` track. A mark without a label draws a tick; a mark with a label also prints it under the track, and clicking the label moves there. On an elastic slider marks are detents the dragged thumb clicks into. Its properties can be bound in XAML; the slider follows later changes.</source>
+        <target>`Slider` 或 `ElasticSlider` 轨道上的刻度。没有标签的刻度只画一个刻度线；带标签的刻度还会把标签印在轨道下方，点击标签会移动到那里。在弹性滑块上，刻度是拖动滑块时会卡入的停靠点。它的属性可以在 XAML 中绑定；滑块会跟随之后的变化。</target>
+      </trans-unit>
+      <trans-unit id="SliderMark.Label">
+        <source>Text printed under the track; without it the mark is a bare tick.</source>
+        <target>印在轨道下方的文字；没有它时刻度只是一条刻度线。</target>
+      </trans-unit>
+      <trans-unit id="SliderMark.Value">
+        <source>Where the mark sits, in the slider's value units.</source>
+        <target>刻度所在的位置，使用滑块的数值单位。</target>
       </trans-unit>
       <trans-unit id="SlopeChart">
         <source>A before / after comparison on two shared axes (Arc "Slope chart"). Lines draw in from the first column to the second on first view; labels push apart instead of overlapping and connect back to their dots with thin leaders; rank movement sits beside each end value. A new dataset slides every line, dot and label to its new place on the shared morph spring. Hover or the arrow keys (in end-value order) bring one line forward and show a tooltip.</source>
@@ -25956,6 +26180,10 @@
         <source>Children of a data item (null or empty: a file). Not needed for `TreeViewItem` nodes.</source>
         <target>数据项的子项（为 null 或空时：表示文件）。`TreeViewItem` 节点无需设置。</target>
       </trans-unit>
+      <trans-unit id="TreeView.DisabledSelector">
+        <source>Returns true for data items that are shown dimmed and cannot be selected or invoked (inline nodes use `IsDisabled`). Keyboard focus can still reach them, so a disabled folder still opens.</source>
+        <target>对显示为变暗、不能被选中或激活的数据项返回 true（内联节点使用 `IsDisabled`）。键盘焦点仍可到达它们，所以禁用的文件夹仍然可以展开。</target>
+      </trans-unit>
       <trans-unit id="TreeView.HeaderSelector">
         <source>Row label of a data item; `ToString()` when not set.</source>
         <target>数据项的行标签；未设置时使用 `ToString()`。</target>
@@ -25976,9 +26204,17 @@
         <source>A row was clicked or activated with Enter / Space (Arc `onSelect`), even when already selected.</source>
         <target>行被点击或通过 Enter / Space 激活时引发（Arc 的 `onSelect`），即使该行已被选中。</target>
       </trans-unit>
+      <trans-unit id="TreeView.ItemTemplate">
+        <source>Content of each row's label area (after the chevron and icon), built from the node: a data item or a `TreeViewItem`. The tree still draws the row: height, fills, indent, guides, chevron and icon. Rows are pooled, so a template is built once per pooled row and scrolling only changes its data. A template that does not match a node leaves it to the `DataTemplates` of the tree and its ancestors. When null the tree draws the header text. Type-ahead and screen readers use `HeaderSelector` either way.</source>
+        <target>每行标签区（箭头和图标之后）的内容，由节点构建：数据项或 `TreeViewItem`。行仍由树绘制：高度、填充、缩进、参考线、箭头和图标。行是池化的，所以模板为每个池化的行只构建一次，滚动时只更换它的数据。不匹配某个节点的模板会把该节点交给树及其祖先的 `DataTemplates`。为 null 时树绘制标题文字。无论哪种情况，键入跳转和读屏软件都使用 `HeaderSelector`。</target>
+      </trans-unit>
       <trans-unit id="TreeView.ItemsSource">
         <source>Root nodes from data; takes precedence over `Items`.</source>
         <target>来自数据的根节点；优先于 `Items`。</target>
+      </trans-unit>
+      <trans-unit id="TreeView.RowHeight">
+        <source>Height of every row in pixels, including the 2px gap above it (default 38, from the theme). All rows share it, so the tree stays virtualized; raise it for two-line content.</source>
+        <target>每一行的高度（像素），包含其上方 2px 的间距（默认 38，来自主题）。所有行共用这个高度，所以树仍然是虚拟化的；两行内容时调高它。</target>
       </trans-unit>
       <trans-unit id="TreeView.SelectedItem">
         <source>The selected node (two-way). Setting it to a hidden node opens its ancestors.</source>
@@ -26007,6 +26243,10 @@
       <trans-unit id="TreeViewItem.Icon">
         <source>Optional 24x24 stroked glyph (for example an `ArcIcons` member) replacing the folder / file icon.</source>
         <target>可选的 24x24 描边图标（例如 `ArcIcons` 成员），用于替代文件夹或文件图标。</target>
+      </trans-unit>
+      <trans-unit id="TreeViewItem.IsDisabled">
+        <source>A disabled node is shown dimmed and cannot be selected or invoked. Keyboard focus can still reach it, so a disabled folder still opens and its children stay reachable.</source>
+        <target>禁用的节点显示为变暗，不能被选中或激活。键盘焦点仍可到达它，所以禁用的文件夹仍然可以展开，其子项仍然可以访问。</target>
       </trans-unit>
       <trans-unit id="TreeViewItem.IsExpanded">
         <source>Whether the folder is open (two-way; the tree keeps it in sync).</source>
@@ -27903,46 +28143,6 @@
       <trans-unit id="WorkflowZoomControls.Target">
         <source>The canvas the buttons zoom.</source>
         <target>按钮所缩放的画布。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl">
-        <source>A small book or magazine that opens on its cover (Arc Page curl, design reference). Tap the right page to go forward and the left page to go back, or drag a page: it folds along a line that follows the pointer, showing its back, a lit curl and a shadow on the page below. A page count with previous and next buttons sits underneath.</source>
-        <target>一本从封面开始翻开的小书或小杂志（Arc Page curl，设计参考）。轻点右页向前翻，轻点左页向后翻，或者拖动书页：它沿着跟随指针的折线翻折，露出背面、一道被照亮的卷边，以及落在下一页上的阴影。下方有页码以及上一页、下一页按钮。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.Hint">
-        <source>The hint under the lower outer corner, shown until the first interaction. Null hides it.</source>
-        <target>位于外侧下角下方的提示，在第一次交互之前显示。设为 Null 则隐藏。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.Label">
-        <source>The accessible name of the book.</source>
-        <target>书的无障碍名称。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.PageAspect">
-        <source>A page's width divided by its height.</source>
-        <target>页宽除以页高。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.PageTemplate">
-        <source>The template that builds a page from an item that is not a control.</source>
-        <target>为非控件条目生成页面的模板。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.ShowControls">
-        <source>Whether the page count with previous and next buttons shows under the book.</source>
-        <target>是否在书下方显示页码以及上一页、下一页按钮。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.Spread">
-        <source>The spread on show: 0 is the closed cover, spread `n` shows pages `2n` and `2n + 1`. Two-way.</source>
-        <target>当前显示的跨页：0 为合上的封面，第 `n` 个跨页显示第 `2n` 与 `2n + 1` 页。双向。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.SpreadChanged">
-        <source>Raised when a page finishes turning, by a drag, a tap, a key or a button.</source>
-        <target>一页翻完时触发，无论由拖动、点按、按键还是按钮引起。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.SpreadCount">
-        <source>The number of spreads: the closed cover plus one per two pages.</source>
-        <target>跨页的数量：合上的封面加上每两页一个。</target>
-      </trans-unit>
-      <trans-unit id="PageCurl.Tease">
-        <source>Whether the cover corner curls once when the book first comes into view, and a little on hover until the first turn.</source>
-        <target>书第一次进入视野时封面一角是否卷起一次，以及在第一次翻页之前悬停时是否轻轻卷起。</target>
       </trans-unit>
     </body>
   </file>
