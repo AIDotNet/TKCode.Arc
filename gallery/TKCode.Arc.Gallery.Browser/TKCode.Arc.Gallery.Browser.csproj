@@ -1,26 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.WebAssembly">
     <PropertyGroup>
-        <TargetFramework>net10.0-browser</TargetFramework>
+        <TargetFramework>net11.0-browser</TargetFramework>
         <RootNamespace>TKCode.Arc.Gallery.Browser</RootNamespace>
         <IsPackable>false</IsPackable>
         <NoWarn>$(NoWarn);CS0436</NoWarn>
         <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
-        <!-- Skia's WebAssembly code is linked only with WasmBuildNative (needs the wasm-tools-net10 workload). -->
+        <!-- Skia's WebAssembly code is linked only with WasmBuildNative (needs the wasm-tools workload). -->
         <WasmBuildNative>true</WasmBuildNative>
+        <!-- .NET 11 links with Emscripten 6, and the Onigwrap package (TextMateSharp's Oniguruma) has WebAssembly archives only up
+             to Emscripten 3.1.56. Its targets take native/onigwrap/<Emscripten version>/st/libonigwrap.a from here instead, built
+             from the same sources by tools/onigwrap/build-wasm.sh (run it again when a .NET update brings another Emscripten). -->
+        <OnigwrapWasmLibraryPath>$(MSBuildThisFileDirectory)native/onigwrap</OnigwrapWasmLibraryPath>
         <!-- Publishing trims the app with ILLink; builds and dotnet run do not. -p:PublishTrimmed=false publishes untrimmed; the
              boot-list pruning below then applies instead. -->
         <PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_IsPublishing)' == 'true'">true</PublishTrimmed>
-        <!-- Publishing also compiles the .NET code ahead of time to WebAssembly (the SDK allows it only for a trimmed publish; the
-             wasm-tools-net10 workload that WasmBuildNative needs brings the compiler). Measured 2026-10-24 in Edge with the CPU four
-             times slower than an M5: opening an Accordion row on its docs page cost the main thread 6.7 ms a frame and dropped about
-             6 frames interpreted, 3.0 ms and none compiled. The cost: the startup download grows from 13.5 to 26 MB (brotli) and the
-             publish takes about 12 minutes longer. Builds and dotnet run stay interpreted; -p:RunAOTCompilation=false publishes
-             without it. Emscripten's -Oz made the compiled code no smaller (26.06 against 26.05 MB), so the defaults stay.
-             The compiling happens in the SDK's nested publish build, which clears _IsPublishing and passes it on as _WasmIsPublishing. -->
-        <!-- Off by default since 2026-10-24: the compiled build of 0.3.0-preview.5 crashed at startup on docs.tkcode.si ("memory access out of
-             bounds" inside dotnet.native.wasm, the page stays on "Starting..."), reproduced locally in headless Edge; the same publish
-             with -p:RunAOTCompilation=false starts in 3 s. Pass -p:ArcAot=true to publish compiled again once that is understood. -->
-        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And '$(ArcAot)' == 'true' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
+        <!-- A Release publish also compiles the .NET code ahead of time to WebAssembly (the SDK allows it only for a trimmed publish;
+             the wasm-tools workload brings the compiler). Measured 2026-10-30 on .NET 11 in headless Edge with the CPU four times
+             slower than an M5: opening the Changelog guide (StreamMark parsing and laying out a long document) kept the main thread
+             busy about 3.7 s interpreted and 1.2 to 1.35 s compiled. Builds and dotnet run stay interpreted; -p:ArcAot=false publishes
+             interpreted. The compiling happens in the SDK's nested publish build, which clears _IsPublishing and passes it on as
+             _WasmIsPublishing. The 0.3.0-preview.5 build that crashed at startup ("memory access out of bounds", 2026-10-24) was the
+             AtomUI one; the .NET 11 build without AtomUI starts and walks the pages. -->
+        <RunAOTCompilation Condition="'$(RunAOTCompilation)' == '' And '$(ArcAot)' != 'false' And ('$(_IsPublishing)' == 'true' Or '$(_WasmIsPublishing)' == 'true') And '$(PublishTrimmed)' == 'true' And '$(Configuration)' == 'Release'">true</RunAOTCompilation>
         <!-- Publishing also shrinks the boot list (ArcWasmUnusedAssembly and ArcWasmLazyAssembly below); builds and dotnet run keep
              everything. -p:ArcWasmPrune=false publishes with everything, -p:ArcWasmPrune=true shrinks a build as well. -->
         <ArcWasmPrune Condition="'$(ArcWasmPrune)' == ''">$(_IsPublishing)</ArcWasmPrune>
@@ -35,8 +36,29 @@
         <ProjectReference Include="../../src/TKCode.Arc.Audio.Browser/TKCode.Arc.Audio.Browser.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
+    <!-- .NET 11 WebAssembly needs Skia and HarfBuzz compiled with a newer Emscripten than the SkiaSharp 3.119 that Avalonia 12.1 brings:
+         the versions Avalonia.Browser takes for net11.0-browser on its main branch (AvaloniaUI/Avalonia#22196, Avalonia 12.2), whose
+         archives are built with Emscripten 5.0.6 and link with the workload's 6.x. SkiaSharp 4.152 to 4.154 pick their 3.1.56 archives
+         for .NET 11 again (mono/SkiaSharp#5082); move on once a release ships Emscripten 6 archives (mono/SkiaSharp#5271). -->
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp" VersionOverride="4.151.2" />
+        <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" VersionOverride="4.151.2" />
+        <PackageReference Include="HarfBuzzSharp" VersionOverride="14.2.1.200" />
+        <PackageReference Include="HarfBuzzSharp.NativeAssets.WebAssembly" VersionOverride="14.2.1.200" />
+    </ItemGroup>
     <ItemGroup>
         <StaticWebAssetFingerprintPattern Include="JS" Pattern="*.js" Expression="#[.{fingerprint}]!" />
+    </ItemGroup>
+
+    <!-- Compiled ahead of time, these would make half of the native code (Blocks 61 MB of objects, Special 31, the Gallery's pages and
+         demos 26; all of the rest 114) for UI that is built once when its page opens. They stay interpreted, like the whole app
+         before; the controls, Avalonia, Skia, StreamMark and the runtime are compiled. Measured 2026-10-30 (brotli, headless Edge,
+         CPU four times slower): startup download 14.4 MB interpreted, 22.0 MB like this, 29.0 MB with everything compiled; opening
+         the Changelog guide 3.7 s / 1.0 s / 1.2 s of main-thread work, opening the Blocks section 2.5 s / 2.0 s / 2.0 s. The SDK's item
+         for assemblies "too big to compile" (WasmApp.Common.targets) is internal, so check it after a .NET update: if it disappears,
+         everything is compiled again and the startup download grows. -p:ArcAotEverything=true compiles these too. -->
+    <ItemGroup Condition="'$(ArcAotEverything)' != 'true'">
+        <_AOT_InternalForceInterpretAssemblies Include="TKCode.Arc.Blocks.dll;TKCode.Arc.Special.dll;TKCode.Arc.Gallery.dll" />
     </ItemGroup>
 
     <!-- The two lists below are for a publish without trimming (-p:PublishTrimmed=false). A trimmed publish needs neither: ILLink drops what

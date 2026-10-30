@@ -24,7 +24,7 @@ jobs:
   image:
     name: Build and push the Gallery image
     runs-on: ubuntu-latest
-    # The publish compiles the .NET code ahead of time to WebAssembly (about 12 minutes on an M5, more on a runner).
+    # The publish compiles the .NET code ahead of time to WebAssembly (about 11 minutes on an M5, more on a runner).
     timeout-minutes: 90
     permissions:
       contents: read

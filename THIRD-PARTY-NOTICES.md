@@ -147,7 +147,9 @@ and paints the result in its own palette.
 
 TextMateSharp runs its regular expressions on the native Oniguruma library through Onigwrap (native libraries per
 runtime identifier). Onigwrap: MIT License, Copyright (c) 2024 Aikawa Yataro, derived from fluentCODE/onigwrap
-(MIT License, Copyright (c) 2015 Fluent Solutions). Oniguruma:
+(MIT License, Copyright (c) 2015 Fluent Solutions). The Gallery's WebAssembly host links
+`gallery/TKCode.Arc.Gallery.Browser/native/onigwrap/<version>/st/libonigwrap.a`, compiled from Onigwrap 1.0.11 and
+Oniguruma 6.9.10 by `tools/onigwrap/build-wasm.sh` (the package has no build for the Emscripten of .NET 11). Oniguruma:
 
 ```
 Copyright (c) 2002-2021  K.Kosako  <kkosako0@gmail.com>
