@@ -1,7 +1,7 @@
 ---
 title: 树视图
 summary: 浏览嵌套的文件夹与结构化内容。
-source-hash: 3a486b8c5441
+source-hash: a4b719513550
 ---
 
 <Demo name="FileTree" />
@@ -22,7 +22,7 @@ source-hash: 3a486b8c5441
 - **页面层级中的当前位置**：用 `Breadcrumb`，它显示路径并可返回上级。
 - **一份 JSON 文档的键与值**：用 `JsonViewer`，它在键旁显示值，并支持搜索和复制。
 - **用户会重新排序的扁平列表**：用 `ReorderableList`。树的同级节点之间没有拖动排序。
-- **人们按列比较、字段相同的记录**：用 `Table`。树每个节点只显示一个标签，没有列。
+- **人们按列比较、字段相同的记录**：用 `Table`。树没有可以排序或比较的列。
 
 ## 用法
 
@@ -52,11 +52,11 @@ source-hash: 3a486b8c5441
 ### 结构
 
 1. **外框**：表面背景，1 px 边框（边框色），16 px 圆角，内边距为 8、6、8、8 px。将 `HorizontalAlignment` 设为 `Stretch`（默认值）时，树会填满其宽度。
-2. **行**：高 36 px，下方 2 px 间距，因此每行占用 38 px 的空间。行的圆角为 10 px，左右内边距为 10 px。
+2. **行**：高 36 px，下方 2 px 间距，因此每行占用 38 px 的空间。`RowHeight` 统一改变每一行的高度。行的圆角为 10 px，左右内边距为 10 px。
 3. **缩进**：每级 18 px。设置 `ShowIndentGuides` 后，一条使用边框色的短分支线会把嵌套行连接到其父级。
 4. **箭头**：文件夹上的箭头，文件夹展开时箭头会转动。
 5. **图标**（`ShowIcons`、`IconSelector`、`TreeViewItem.Icon`）：标签前 16 px 的位置。文件夹显示展开状态的文件夹图标；文件显示文件图标。`Icon` 与 `IconSelector` 接受 24 × 24 的图形，例如 `ArcIcons` 的成员。`ShowIcons` 为 false 时，标签从缩进处开始。
-6. **标签**（`Header`、`HeaderSelector`）：行文字，使用次要文字颜色。当前活动的行使用前景色。
+6. **标签**（`Header`、`HeaderSelector`、`ItemTemplate`）：行文字，使用次要文字颜色。当前活动的行使用前景色，禁用的行使用弱化文字颜色。`ItemTemplate` 用你自己的内容替换这段文字。
 7. **行填充**：悬停填充与选中填充，均使用弱化的表面色。选中填充会从一行平滑滑向另一行。
 8. **文件色调**：`.ts` 与 `.tsx` 文件，以及 `.css`、`.md`、`.json` 文件，带有文件类型色调。其他文件使用弱化的文字颜色。
 9. **焦点环**：由控件绘制，仅用于键盘焦点。
@@ -149,6 +149,62 @@ Tree.HeaderSelector = item => ((FileNode)item).Name;
 ```csharp
 tree.ShowIcons = true;
 tree.IconSelector = item => ((FileNode)item).Children is null ? ArcIcons.File : ArcIcons.Folder;
+```
+
+### 富内容行
+
+当一行需要不止一个标签时设置 `ItemTemplate`：名称加类型、行尾的状态点、工具提示。模板填充箭头和图标之后的标签区。行高、填充、缩进、参考线、箭头和图标仍由树绘制，所以展开、选中和虚拟化照常工作。行是池化的：模板为每个池化的行只构建一次，滚动时只更换它的数据，所以请绑定到节点，而不是只读取一次。
+
+<Demo name="RichRows" />
+
+```xml
+<arc:TreeView x:Name="Tree" Width="320">
+    <arc:TreeView.ItemTemplate>
+        <DataTemplate>
+            <DockPanel Background="Transparent" ToolTip.Tip="{Binding Path}">
+                <Ellipse DockPanel.Dock="Right" Width="6" Height="6"
+                         Fill="{arc:ArcDesignTokenResource Success}"
+                         IsVisible="{Binding IsIndexed}" />
+                <DockPanel VerticalAlignment="Center">
+                    <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" />
+                    <TextBlock DockPanel.Dock="Left" Margin="4,0,0,0" Text=":"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               IsVisible="{Binding IsColumn}" />
+                    <TextBlock Margin="4,0,0,0" Text="{Binding Detail}" TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </DockPanel>
+            </DockPanel>
+        </DataTemplate>
+    </arc:TreeView.ItemTemplate>
+</arc:TreeView>
+```
+
+```csharp
+Tree.ItemsSource = tables;
+Tree.ChildrenSelector = item => ((SchemaNode)item).Columns;
+Tree.HeaderSelector = item => ((SchemaNode)item).Name;          // type-ahead and screen readers
+Tree.DisabledSelector = item => ((SchemaNode)item).IsGenerated;  // shown, not selectable
+```
+
+- 模板中的文字使用该行的标签颜色：平时为次要文字颜色，悬停和选中的行为前景色，禁用的行为弱化文字颜色。需要保持弱化的部分（例如类型）请自行设置 `Foreground`。
+- 在默认行高下，内容请保持一行。需要标题加副标题时，调高 `RowHeight`，例如设为 56。所有行等高，所以树仍然是虚拟化的。
+- 键入跳转和行的无障碍名称使用 `HeaderSelector`，未设置时使用 `ToString()`。即使模板已经显示了文字，也请设置它。
+- 带 `DataType` 的模板只用于匹配的节点。其他节点使用树或其祖先的 `DataTemplates`，所以文件夹和叶子可以显示得不同。
+- 内容中的按钮和文本框可以正常使用。Enter 和 Space 交给拥有焦点的控件，方向键仍在行之间移动，在文本框中输入的按键留在文本框中。只有获得焦点的行，其内容才在 Tab 顺序中。
+
+### 禁用的节点
+
+`DisabledSelector` 标记显示出来但不能选中的数据项，例如自动生成的列，或在你的应用中当前用户无权打开的文件夹。内联节点使用 `TreeViewItem.IsDisabled`。禁用的行会变暗，没有悬停填充。点击、Enter、Space 或设置新的 `SelectedItem` 都不会选中它，也不会触发 `ItemInvoked`。键盘焦点仍可到达它，所以禁用的文件夹可以用方向键或点击展开，其子项仍然可以访问。
+
+```xml
+<arc:TreeView Width="280">
+    <arc:TreeViewItem Header="reports" IsExpanded="True">
+        <arc:TreeViewItem Header="2025-summary.md" />
+        <arc:TreeViewItem Header="archive" IsDisabled="True">
+            <arc:TreeViewItem Header="2023-summary.md" />
+        </arc:TreeViewItem>
+    </arc:TreeViewItem>
+</arc:TreeView>
 ```
 
 ### 从代码展开与折叠
@@ -257,6 +313,8 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 
 **树能选中多个节点吗？** 不能。`SelectedItem` 只保存一个节点，键盘会忽略 Control、Alt 和 Meta 等修饰键。当人们必须选择多条记录时，请使用设置了 `IsSelectable` 的 `Table`。
 
+**一行能显示标签以外的内容吗？** 能。设置 `ItemTemplate` 自己排布标签区，例如名称加类型，或在行尾放一个状态点。请继续设置 `HeaderSelector`，供键入跳转和读屏软件使用。
+
 **树会对节点排序吗？** 不会。它按你提供的顺序显示节点，因此绑定前请先对源数据排序。
 
 ## API 参考
@@ -279,6 +337,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 - 只有获得焦点的行处于 Tab 顺序中。方向键、Home 与 End、PageUp 与 PageDown 在行之间移动。
 - 右方向键展开文件夹或进入其第一个子项，左方向键收起文件夹或移到其父行。
 - Enter 或 Space 选中该行并切换文件夹的展开状态。键入名称会移到下一个以该文字开头的行。
+- 禁用的行会报告自己处于禁用状态，键盘仍可到达，所以它的名称仍会被朗读。
 - 焦点环仅为键盘焦点而绘制。图标和缩进参考线不会被朗读。
 
 ### 键盘
@@ -290,7 +349,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已打开 {e.Item}";
 | `Left` | 收起已展开的文件夹；否则移到父行 |
 | `Home` / `End` | 移到第一行或最后一行可见行 |
 | `PageUp` / `PageDown` | 大约移动一屏的行数 |
-| `Enter` / `Space` | 选中该行，触发 `ItemInvoked`，并切换文件夹的展开状态 |
+| `Enter` / `Space` | 选中该行，触发 `ItemInvoked`，并切换文件夹的展开状态；在禁用的行上只切换文件夹 |
 | 字母键 | 移到下一个标签以所键入文字开头的行 |
 
 树会忽略使用 Control、Alt 或 Meta 的按键，因此窗口的快捷键仍然有效。

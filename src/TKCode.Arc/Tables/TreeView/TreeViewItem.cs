@@ -31,6 +31,13 @@ public class TreeViewItem : StyledElement
     public static readonly StyledProperty<bool> IsExpandedProperty =
         AvaloniaProperty.Register<TreeViewItem, bool>(nameof(IsExpanded), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>
+    /// A disabled node is shown dimmed and cannot be selected or invoked. Keyboard focus can still reach it, so a
+    /// disabled folder still opens and its children stay reachable.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsDisabledProperty =
+        AvaloniaProperty.Register<TreeViewItem, bool>(nameof(IsDisabled));
+
     private readonly AvaloniaList<TreeViewItem> _items = new();
 
     public TreeViewItem()
@@ -75,6 +82,13 @@ public class TreeViewItem : StyledElement
         set => SetValue(IsExpandedProperty, value);
     }
 
+    /// <inheritdoc cref="IsDisabledProperty"/>
+    public bool IsDisabled
+    {
+        get => GetValue(IsDisabledProperty);
+        set => SetValue(IsDisabledProperty, value);
+    }
+
     /// <summary>Child nodes.</summary>
     [Content]
     public AvaloniaList<TreeViewItem> Items => _items;
@@ -91,7 +105,7 @@ public class TreeViewItem : StyledElement
         {
             NotifyOwner(structure: true, expansion: true);
         }
-        else if (change.Property == HeaderProperty || change.Property == IconProperty)
+        else if (change.Property == HeaderProperty || change.Property == IconProperty || change.Property == IsDisabledProperty)
         {
             NotifyOwner(structure: false);
         }

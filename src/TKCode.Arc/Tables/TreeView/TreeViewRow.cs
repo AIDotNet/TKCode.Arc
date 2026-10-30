@@ -5,7 +5,9 @@ using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 
@@ -25,6 +27,7 @@ internal sealed class TreeViewNode
     public Geometry? Icon { get; set; }
     public bool HasChildren { get; set; }
     public bool IsExpanded { get; set; }
+    public bool IsDisabled { get; set; }
 }
 
 /// <summary>Resolved colors, pens and metrics shared by all rows of one tree.</summary>
@@ -38,6 +41,7 @@ internal sealed class TreeViewPalette
     public Color ActiveForeground { get; set; }
     public IBrush? HoverFill { get; set; }
     public IBrush? Muted { get; set; }
+    public Color MutedColor { get; set; }
     public IBrush? Guide { get; set; }
     public IPen? FocusRing { get; set; }
     public IBrush? TypeScript { get; set; }
@@ -107,11 +111,17 @@ internal sealed class TreeViewRowsPanel : TablesTreeRowsPanel
 /// gliding highlight underneath. Its motion (chevron spring, folder pop, hover and label color) uses
 /// <see cref="MotionValue{T}"/> because the row draws these parts itself; there are no child properties for
 /// ControlTheme transitions to target.
+/// With <see cref="TreeView.ItemTemplate"/> the label area holds a <see cref="Avalonia.Controls.Presenters.ContentPresenter"/>
+/// instead of the drawn label. It stays with the row through pooling (only its content changes) and is laid out at
+/// the full slot height, so it is clipped rather than squashed while the row opens or closes.
 /// </summary>
 internal sealed class TreeViewRow : TablesTreeRow
 {
     private readonly TreeViewRowsPanel _panel;
     private readonly SolidColorBrush _labelBrush = new();
+    private readonly SolidColorBrush _contentBrush = new();
+    private ContentPresenter? _content;
+    private readonly Cursor _hand;
     private MotionValue<double>? _hover;
     private MotionValue<double>? _emphasis;
     private MotionValue<double>? _rotation;
@@ -127,10 +137,11 @@ internal sealed class TreeViewRow : TablesTreeRow
     public TreeViewRow(TreeViewRowsPanel panel)
     {
         _panel = panel;
-        Cursor = new Cursor(StandardCursorType.Hand);
+        _hand = new Cursor(StandardCursorType.Hand);
+        Cursor = _hand;
     }
 
-    private TreeView? Owner => _panel.Owner;
+    internal TreeView? Owner => _panel.Owner;
 
     private TreeViewPalette? Palette => Owner?.Palette;
 
@@ -141,11 +152,21 @@ internal sealed class TreeViewRow : TablesTreeRow
     /// <summary>Current chevron angle in degrees (tests).</summary>
     internal double ChevronAngle => _rotation?.Value ?? (Node?.IsExpanded == true ? 90 : 0);
 
+    /// <summary>The presenter of the row's templated content, when the tree has an item template.</summary>
+    internal ContentPresenter? ContentPresenter => _content;
+
+    /// <summary>Whether the row draws its header text itself (no item template).</summary>
+    internal bool DrawsLabel => _content is null;
+
+    /// <summary>Left edge of the label area (tests).</summary>
+    internal double LabelLeft => Palette is { } p && Node is { } node ? LabelX(p, node) : 0;
+
     protected override void OnBound(object? previous, bool sameKey)
     {
         var node = Node;
         if (node is null)
         {
+            // A pooled row keeps its content control: rebinding it to the next node only swaps the data.
             _layout = null;
             _layoutText = null;
             _hover?.Jump(0);
@@ -155,6 +176,8 @@ internal sealed class TreeViewRow : TablesTreeRow
         }
         var owner = Owner;
         IsTabStop = owner?.IsTabStopKey(node.Item) == true && !IsGhost;
+        Cursor = node.IsDisabled && !node.HasChildren ? null : _hand;
+        UpdateContent(owner, node);
         var full = IsLoaded && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
         var angle = node.IsExpanded ? 90.0 : 0.0;
         if (sameKey && node.IsExpanded != _wasExpanded && full)
@@ -176,7 +199,12 @@ internal sealed class TreeViewRow : TablesTreeRow
             _hover?.Jump(IsPointerOver ? 1 : 0);
             _naturalWidth = double.NaN;
         }
-        var target = IsSelected || (_hover?.Target ?? 0) > 0.5 ? 1.0 : 0.0;
+        if (node.IsDisabled)
+        {
+            // A disabled row has no hover fill.
+            _hover?.Jump(0);
+        }
+        var target = Emphasis();
         if (!sameKey || !full)
         {
             _emphasis?.Jump(target);
@@ -189,11 +217,14 @@ internal sealed class TreeViewRow : TablesTreeRow
         {
             _layout = null;
         }
+        UpdateContentForeground();
         AutomationProperties.SetName(this, node.Label);
         AutomationProperties.SetPositionInSet(this, node.Position);
         AutomationProperties.SetSizeOfSet(this, node.SetSize);
         AutomationProperties.SetHelpText(this, string.Create(CultureInfo.InvariantCulture, $"level {node.Depth}"));
     }
+
+    private double Emphasis() => IsSelected || (_hover?.Target ?? 0) > 0.5 ? 1.0 : 0.0;
 
     private MotionValue<double> CreateValue(double initial)
     {
@@ -202,12 +233,81 @@ internal sealed class TreeViewRow : TablesTreeRow
         return value;
     }
 
+    private MotionValue<double> CreateEmphasis(double initial)
+    {
+        var value = CreateValue(initial);
+        value.Changed += _ => UpdateContentForeground();
+        return value;
+    }
+
+    /// <summary>Adds, updates or drops the templated content of the label area.</summary>
+    private void UpdateContent(TreeView? owner, TreeViewNode node)
+    {
+        var template = owner?.ItemTemplate;
+        if (template is null)
+        {
+            if (_content is not null)
+            {
+                VisualChildren.Remove(_content);
+                LogicalChildren.Remove(_content);
+                _content = null;
+                InvalidateMeasure();
+            }
+            return;
+        }
+        if (_content is null)
+        {
+            // Both set before it joins the tree, so its first measure builds the template once.
+            _content = new ContentPresenter
+            {
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Foreground = _contentBrush,
+                Content = node.Item,
+                ContentTemplate = template
+            };
+            LogicalChildren.Add(_content);
+            VisualChildren.Add(_content);
+            InvalidateMeasure();
+        }
+        else
+        {
+            // Content first: a template is never built without its node (a FuncDataTemplate<T> would get null).
+            if (!ReferenceEquals(_content.Content, node.Item))
+            {
+                _content.Content = node.Item;
+            }
+            if (!ReferenceEquals(_content.ContentTemplate, template))
+            {
+                _content.ContentTemplate = template;
+            }
+        }
+        // Only the tab-stop row's content joins the Tab order, so Tab does not walk every row's buttons.
+        KeyboardNavigation.SetTabNavigation(_content, IsTabStop ? KeyboardNavigationMode.Continue : KeyboardNavigationMode.None);
+    }
+
+    /// <summary>Text color for the templated content: the label color of the row's state.</summary>
+    private void UpdateContentForeground()
+    {
+        if (_content is null || Palette is not { } p || Node is not { } node)
+        {
+            return;
+        }
+        var color = node.IsDisabled
+            ? p.MutedColor
+            : Lerp(p.Foreground, p.ActiveForeground, Math.Clamp(_emphasis?.Value ?? (IsSelected ? 1 : 0), 0, 1));
+        if (_contentBrush.Color != color)
+        {
+            _contentBrush.Color = color;
+        }
+    }
+
     #region Input
 
     protected override void OnPointerEntered(PointerEventArgs e)
     {
         base.OnPointerEntered(e);
-        if (e.Pointer.Type != PointerType.Touch && Node is not null && !IsGhost)
+        if (e.Pointer.Type != PointerType.Touch && Node is { IsDisabled: false } && !IsGhost)
         {
             AnimateHover(1);
         }
@@ -223,7 +323,7 @@ internal sealed class TreeViewRow : TablesTreeRow
     private void AnimateHover(double target)
     {
         _hover ??= CreateValue(0);
-        _emphasis ??= CreateValue(IsSelected ? 1 : 0);
+        _emphasis ??= CreateEmphasis(IsSelected ? 1 : 0);
         var emphasis = Math.Max(target, IsSelected ? 1 : 0);
         if (ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full)
         {
@@ -294,7 +394,7 @@ internal sealed class TreeViewRow : TablesTreeRow
 
     internal void SelectFromAutomation()
     {
-        if (Node is { } node && Owner is { } owner)
+        if (Node is { IsDisabled: false } node && Owner is { } owner)
         {
             owner.SelectedItem = node.Item;
         }
@@ -319,6 +419,18 @@ internal sealed class TreeViewRow : TablesTreeRow
         {
             return new Size(0, height);
         }
+        var labelX = LabelX(p, node);
+        if (_content is not null)
+        {
+            var contentWidth = double.IsInfinity(availableSize.Width)
+                ? double.PositiveInfinity
+                : Math.Max(0, availableSize.Width - labelX - p.InlinePadding);
+            _content.Measure(new Size(contentWidth, Math.Max(0, height - p.RowGap)));
+            if (double.IsInfinity(availableSize.Width))
+            {
+                return new Size(labelX + _content.DesiredSize.Width + p.InlinePadding, height);
+            }
+        }
         if (!double.IsInfinity(availableSize.Width))
         {
             return new Size(availableSize.Width, height);
@@ -328,7 +440,19 @@ internal sealed class TreeViewRow : TablesTreeRow
             using var natural = CreateLayout(p, node.Label, double.PositiveInfinity);
             _naturalWidth = natural.WidthIncludingTrailingWhitespace;
         }
-        return new Size(LabelX(p, node) + _naturalWidth + p.InlinePadding, height);
+        return new Size(labelX + _naturalWidth + p.InlinePadding, height);
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        if (_content is not null && Palette is { } p && Node is { } node)
+        {
+            // The full slot, not the row's current height: an opening or closing row clips its content.
+            var labelX = LabelX(p, node);
+            _content.Arrange(new Rect(labelX, p.RowGap, Math.Max(0, finalSize.Width - labelX - p.InlinePadding),
+                Math.Max(0, p.SlotHeight - p.RowGap)));
+        }
+        return finalSize;
     }
 
     private TextLayout CreateLayout(TreeViewPalette p, string text, double maxWidth)
@@ -391,18 +515,21 @@ internal sealed class TreeViewRow : TablesTreeRow
             DrawIcon(context, p, node, new Point(left + 14 + p.Gap + 8, centerY));
         }
 
-        var emphasis = _emphasis?.Value ?? (IsSelected ? 1 : 0);
-        _labelBrush.Color = Lerp(p.Foreground, p.ActiveForeground, Math.Clamp(emphasis, 0, 1));
-        var maxWidth = width - labelX - p.InlinePadding;
-        if (_layout is null || _layoutVersion != p.Version || Math.Abs(_layoutWidth - maxWidth) > 0.5 || !ReferenceEquals(_layoutText, node.Label))
+        if (_content is null)
         {
-            _layout?.Dispose();
-            _layout = CreateLayout(p, node.Label, maxWidth);
-            _layoutText = node.Label;
-            _layoutWidth = maxWidth;
-            _layoutVersion = p.Version;
+            var emphasis = _emphasis?.Value ?? (IsSelected ? 1 : 0);
+            _labelBrush.Color = node.IsDisabled ? p.MutedColor : Lerp(p.Foreground, p.ActiveForeground, Math.Clamp(emphasis, 0, 1));
+            var maxWidth = width - labelX - p.InlinePadding;
+            if (_layout is null || _layoutVersion != p.Version || Math.Abs(_layoutWidth - maxWidth) > 0.5 || !ReferenceEquals(_layoutText, node.Label))
+            {
+                _layout?.Dispose();
+                _layout = CreateLayout(p, node.Label, maxWidth);
+                _layoutText = node.Label;
+                _layoutWidth = maxWidth;
+                _layoutVersion = p.Version;
+            }
+            _layout.Draw(context, new Point(labelX, centerY - _layout.Height / 2));
         }
-        _layout.Draw(context, new Point(labelX, centerY - _layout.Height / 2));
 
         if (IsFocused && p.FocusRing is { } ring && Classes.Contains(":focus-visible"))
         {
@@ -414,7 +541,8 @@ internal sealed class TreeViewRow : TablesTreeRow
     {
         if (node.Icon is { } custom)
         {
-            var brush = node.HasChildren ? (node.IsExpanded || IsSelected ? p.FolderActive : p.FolderRest) : ToneOf(p, node.Label);
+            var brush = node.IsDisabled ? p.Muted
+                : node.HasChildren ? (node.IsExpanded || IsSelected ? p.FolderActive : p.FolderRest) : ToneOf(p, node.Label);
             if (p.PenFor(brush, 1.7) is { } pen)
             {
                 DrawGlyph(context, custom, pen, center, 16, 0, 1, 1);
@@ -423,14 +551,14 @@ internal sealed class TreeViewRow : TablesTreeRow
         }
         if (!node.HasChildren)
         {
-            if (p.PenFor(ToneOf(p, node.Label), 1.7) is { } filePen)
+            if (p.PenFor(node.IsDisabled ? p.Muted : ToneOf(p, node.Label), 1.7) is { } filePen)
             {
                 DrawGlyph(context, ArcIcons.File, filePen, center, 16, 0, 1, 1);
             }
             return;
         }
         var active = node.IsExpanded || IsSelected;
-        if (p.PenFor(active ? p.FolderActive : p.FolderRest, 1.7) is not { } folderPen)
+        if (p.PenFor(node.IsDisabled ? p.Muted : active ? p.FolderActive : p.FolderRest, 1.7) is not { } folderPen)
         {
             return;
         }
@@ -507,6 +635,8 @@ internal sealed class TreeViewRow : TablesTreeRow
         protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.TreeItem;
 
         protected override string? GetNameCore() => Row.Node?.Label;
+
+        protected override bool IsEnabledCore() => Row.Node is not { IsDisabled: true } && base.IsEnabledCore();
 
         public ExpandCollapseState ExpandCollapseState => Row.Node is not { HasChildren: true } node
             ? ExpandCollapseState.LeafNode

@@ -30,8 +30,8 @@ stays responsive.
 - **The keys and values of one JSON document**: use `JsonViewer`, which shows the values beside their keys and
   supports search and copy.
 - **A flat list that the user reorders**: use `ReorderableList`. A tree has no drag order between siblings.
-- **Records with the same fields that people compare by column**: use `Table`. A tree shows one label per
-  node and no columns.
+- **Records with the same fields that people compare by column**: use `Table`. A tree has no columns to sort or
+  compare.
 
 ## Usage
 
@@ -65,16 +65,17 @@ Inline `Items` suit a fixed navigation tree that you write in XAML. For data fro
 
 1. **Frame**: the surface background with a 1 px border in the border color, a 16 px corner radius and 8, 6, 8, 8 px
    padding. The tree fills its width when you set `HorizontalAlignment` to `Stretch`, the default.
-2. **Row**: 36 px tall with a 2 px gap below it, so each row takes a 38 px slot. Rows have a 10 px corner radius and
-   10 px inline padding.
+2. **Row**: 36 px tall with a 2 px gap below it, so each row takes a 38 px slot. `RowHeight` changes the slot for every
+   row. Rows have a 10 px corner radius and 10 px inline padding.
 3. **Indent**: 18 px for each level. With `ShowIndentGuides` a short branch line in the border color joins nested rows
    to their parent.
 4. **Chevron**: on a folder, the arrow that turns when the folder opens.
 5. **Icon** (`ShowIcons`, `IconSelector`, `TreeViewItem.Icon`): a 16 px slot before the label. Folders show a folder
    icon that opens; files show a file icon. `Icon` and `IconSelector` take a 24 by 24 glyph, such as an `ArcIcons`
    member. With `ShowIcons` false the label starts at the indent.
-6. **Label** (`Header`, `HeaderSelector`): the row text in the secondary text color. The active row uses the
-   foreground color.
+6. **Label** (`Header`, `HeaderSelector`, `ItemTemplate`): the row text in the secondary text color. The active row
+   uses the foreground color, and a disabled row the muted color. `ItemTemplate` replaces the text with your own
+   content.
 7. **Row fills**: a hover fill and a selection fill, both in the muted surface color. The selection fill glides from
    row to row.
 8. **File tints**: `.ts` and `.tsx` files, and `.css`, `.md` and `.json` files, take a file-type tint. Other files use
@@ -175,6 +176,77 @@ the usual source.
 ```csharp
 tree.ShowIcons = true;
 tree.IconSelector = item => ((FileNode)item).Children is null ? ArcIcons.File : ArcIcons.Folder;
+```
+
+### Rich row content
+
+Set `ItemTemplate` when a row needs more than one label: a name and a type, a status dot at the end, a tooltip. The
+template fills the label area after the chevron and the icon. The tree still draws the row height, the fills, the
+indent, the guides, the chevron and the icon, so opening, selection and virtualization work as before. Rows are
+pooled: the template is built once for each pooled row and scrolling only changes its data, so bind to the node
+rather than reading it once.
+
+<Demo name="RichRows" />
+
+```xml
+<arc:TreeView x:Name="Tree" Width="320">
+    <arc:TreeView.ItemTemplate>
+        <DataTemplate>
+            <DockPanel Background="Transparent" ToolTip.Tip="{Binding Path}">
+                <Ellipse DockPanel.Dock="Right" Width="6" Height="6"
+                         Fill="{arc:ArcDesignTokenResource Success}"
+                         IsVisible="{Binding IsIndexed}" />
+                <DockPanel VerticalAlignment="Center">
+                    <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" />
+                    <TextBlock DockPanel.Dock="Left" Margin="4,0,0,0" Text=":"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               IsVisible="{Binding IsColumn}" />
+                    <TextBlock Margin="4,0,0,0" Text="{Binding Detail}" TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </DockPanel>
+            </DockPanel>
+        </DataTemplate>
+    </arc:TreeView.ItemTemplate>
+</arc:TreeView>
+```
+
+```csharp
+Tree.ItemsSource = tables;
+Tree.ChildrenSelector = item => ((SchemaNode)item).Columns;
+Tree.HeaderSelector = item => ((SchemaNode)item).Name;          // type-ahead and screen readers
+Tree.DisabledSelector = item => ((SchemaNode)item).IsGenerated;  // shown, not selectable
+```
+
+- Text in the template takes the label color of the row: the secondary text color at rest, the foreground color on
+  the hovered and the selected row, and the muted color on a disabled row. Set `Foreground` on parts that stay muted,
+  such as the type.
+- Keep the content to one line at the default height. For a title with a subtitle, raise `RowHeight`, for example to
+  56. Every row takes the same height, so the tree stays virtualized.
+- Type-ahead and the accessible name of a row use `HeaderSelector`, or `ToString()` when it is not set. Set it even
+  when the template shows the text.
+- A template with a `DataType` applies to matching nodes only. Other nodes use the `DataTemplates` of the tree or its
+  ancestors, so folders and leaves can look different.
+- Buttons and text boxes in the content work. Enter and Space go to the control that has focus, the arrow keys still
+  move between rows, and keys typed into a text box stay in it. Only the content of the focused row is in the Tab
+  order.
+
+### Disabled nodes
+
+`DisabledSelector` marks data items that are shown but cannot be selected, such as generated columns or folders the
+person cannot open in your app. An inline node uses `TreeViewItem.IsDisabled`. A disabled row is dimmed and has no
+hover fill. A click, Enter, Space or a new `SelectedItem` does not select it, and it does not raise `ItemInvoked`.
+Keyboard focus still reaches it, so a disabled folder opens with the arrow keys or a click and its children stay
+reachable.
+
+```xml
+<arc:TreeView Width="280">
+    <arc:TreeViewItem Header="reports" IsExpanded="True">
+        <arc:TreeViewItem Header="2025-summary.md" />
+        <arc:TreeViewItem Header="archive" IsDisabled="True">
+            <arc:TreeViewItem Header="2023-summary.md" />
+        </arc:TreeViewItem>
+    </arc:TreeViewItem>
+</arc:TreeView>
 ```
 
 ### Expanding and collapsing from code
@@ -295,6 +367,9 @@ scrolls the row into view. Use `ScrollIntoView` when you want to reveal a node w
 **Can the tree select several nodes?** No. `SelectedItem` holds one node, and the keyboard ignores modifier keys
 such as Control, Alt and Meta. Use a `Table` with `IsSelectable` when people must pick several records.
 
+**Can a row show more than its label?** Yes. Set `ItemTemplate` to lay out the label area yourself, for example a
+name with its type, or a status dot at the end. Keep `HeaderSelector` set for type-ahead and screen readers.
+
 **Does the tree sort its nodes?** No. It shows the nodes in the order you supply them, so sort the source before you
 bind it.
 
@@ -318,6 +393,7 @@ bind it.
 - Only the focused row is in the Tab order. Arrow keys, Home and End, PageUp and PageDown move between rows.
 - Right arrow opens a folder or enters its first child. Left arrow closes a folder or moves to its parent.
 - Enter or Space selects the row and toggles a folder. Typing a name moves to the next row that starts with it.
+- A disabled row reports that it is disabled and stays reachable with the keyboard, so its name is still read.
 - The focus ring is drawn for keyboard focus only. Icons and indent guides are not announced.
 
 ### Keyboard
@@ -329,7 +405,7 @@ bind it.
 | `Left` | Close an open folder; otherwise move to the parent row |
 | `Home` / `End` | Move to the first or last visible row |
 | `PageUp` / `PageDown` | Move by about one screen of rows |
-| `Enter` / `Space` | Select the row, raise `ItemInvoked`, and toggle a folder |
+| `Enter` / `Space` | Select the row, raise `ItemInvoked`, and toggle a folder; on a disabled row only toggle a folder |
 | Letters | Move to the next row whose label starts with the typed text |
 
 The tree ignores key presses that use Control, Alt or Meta, so shortcuts of the window still work.

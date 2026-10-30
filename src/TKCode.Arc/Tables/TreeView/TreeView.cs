@@ -8,12 +8,14 @@ using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Metadata;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaTreeView = Avalonia.Controls.TreeView;
 
 namespace TKCode.Arc;
@@ -76,6 +78,30 @@ public class TreeView : TemplatedControl
     public static readonly StyledProperty<Func<object, Geometry?>?> IconSelectorProperty =
         AvaloniaProperty.Register<TreeView, Func<object, Geometry?>?>(nameof(IconSelector));
 
+    /// <summary>
+    /// Content of each row's label area (after the chevron and icon), built from the node: a data item or a
+    /// <see cref="TreeViewItem"/>. The tree still draws the row: height, fills, indent, guides, chevron and icon. Rows
+    /// are pooled, so a template is built once per pooled row and scrolling only changes its data. A template that
+    /// does not match a node leaves it to the <c>DataTemplates</c> of the tree and its ancestors. When null the tree
+    /// draws the header text. Type-ahead and screen readers use <see cref="HeaderSelector"/> either way.
+    /// </summary>
+    public static readonly StyledProperty<IDataTemplate?> ItemTemplateProperty =
+        AvaloniaProperty.Register<TreeView, IDataTemplate?>(nameof(ItemTemplate));
+
+    /// <summary>
+    /// Returns true for data items that are shown dimmed and cannot be selected or invoked (inline nodes use
+    /// <see cref="TreeViewItem.IsDisabled"/>). Keyboard focus can still reach them, so a disabled folder still opens.
+    /// </summary>
+    public static readonly StyledProperty<Func<object, bool>?> DisabledSelectorProperty =
+        AvaloniaProperty.Register<TreeView, Func<object, bool>?>(nameof(DisabledSelector));
+
+    /// <summary>
+    /// Height of every row in pixels, including the 2px gap above it (default 38, from the theme). All rows share it,
+    /// so the tree stays virtualized; raise it for two-line content.
+    /// </summary>
+    public static readonly StyledProperty<double> RowHeightProperty =
+        AvaloniaProperty.Register<TreeView, double>(nameof(RowHeight), double.NaN);
+
     public static readonly StyledProperty<object?> SelectedItemProperty =
         AvaloniaProperty.Register<TreeView, object?>(nameof(SelectedItem), defaultBindingMode: BindingMode.TwoWay);
 
@@ -136,13 +162,23 @@ public class TreeView : TemplatedControl
         RowForegroundProperty, RowActiveForegroundProperty, RowHoverFillProperty, SelectionFillProperty, MutedForegroundProperty,
         GuideBrushProperty, FocusRingBrushProperty, TypeScriptBrushProperty, StylesheetBrushProperty, MarkdownBrushProperty,
         JsonBrushProperty, RowSlotHeightProperty, IndentWidthProperty, FontFamilyProperty, FontSizeProperty, ShowIndentGuidesProperty,
-        ShowIconsProperty
+        ShowIconsProperty, RowHeightProperty
     ];
 
     public IEnumerable? ItemsSource { get => GetValue(ItemsSourceProperty); set => SetValue(ItemsSourceProperty, value); }
     public Func<object, IEnumerable?>? ChildrenSelector { get => GetValue(ChildrenSelectorProperty); set => SetValue(ChildrenSelectorProperty, value); }
     public Func<object, string?>? HeaderSelector { get => GetValue(HeaderSelectorProperty); set => SetValue(HeaderSelectorProperty, value); }
     public Func<object, Geometry?>? IconSelector { get => GetValue(IconSelectorProperty); set => SetValue(IconSelectorProperty, value); }
+
+    /// <inheritdoc cref="ItemTemplateProperty"/>
+    [InheritDataTypeFromItems(nameof(ItemsSource))]
+    public IDataTemplate? ItemTemplate { get => GetValue(ItemTemplateProperty); set => SetValue(ItemTemplateProperty, value); }
+
+    /// <inheritdoc cref="DisabledSelectorProperty"/>
+    public Func<object, bool>? DisabledSelector { get => GetValue(DisabledSelectorProperty); set => SetValue(DisabledSelectorProperty, value); }
+
+    /// <inheritdoc cref="RowHeightProperty"/>
+    public double RowHeight { get => GetValue(RowHeightProperty); set => SetValue(RowHeightProperty, value); }
 
     /// <summary>The selected node (two-way). Setting it to a hidden node opens its ancestors.</summary>
     public object? SelectedItem { get => GetValue(SelectedItemProperty); set => SetValue(SelectedItemProperty, value); }
@@ -195,6 +231,9 @@ public class TreeView : TemplatedControl
     internal IBrush? JsonBrush { get => GetValue(JsonBrushProperty); set => SetValue(JsonBrushProperty, value); }
     internal double RowSlotHeight { get => GetValue(RowSlotHeightProperty); set => SetValue(RowSlotHeightProperty, value); }
     internal double IndentWidth { get => GetValue(IndentWidthProperty); set => SetValue(IndentWidthProperty, value); }
+
+    /// <summary>The row slot in use: <see cref="RowHeight"/> when set, else the theme's.</summary>
+    internal double EffectiveRowHeight => RowHeight > 0 ? RowHeight : RowSlotHeight;
 
     #endregion
 
@@ -315,6 +354,10 @@ public class TreeView : TemplatedControl
 
     private Geometry? IconOf(object item) => item is TreeViewItem tvi ? tvi.Icon : IconSelector?.Invoke(item);
 
+    private bool DisabledOf(object item) => item is TreeViewItem tvi ? tvi.IsDisabled : DisabledSelector?.Invoke(item) == true;
+
+    private bool IsDisabledItem(object? item) => item is not null && (_nodes.TryGetValue(item, out var node) ? node.IsDisabled : DisabledOf(item));
+
     private int IndexOf(object? item) => _panel?.IndexOfKey(item) ?? (item is null ? -1 : _rows.FindIndex(r => Equals(((TreeViewNode)r).Item, item)));
 
     private void Rebuild(bool animate, object? staggerAfter = null)
@@ -358,7 +401,7 @@ public class TreeView : TemplatedControl
     private bool FocusManagerFocusIsInsideRemovedRow()
     {
         var focused = TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement();
-        return focused is null || (focused is TreeViewRow row && (row.IsGhost || row.Model is null));
+        return focused is null || (RowOf(focused) is { } row && (row.IsGhost || row.Model is null));
     }
 
     private int IndexInRows(object key) => _panel?.IndexOfKey(key) ?? _rows.FindIndex(r => Equals(((TreeViewNode)r).Item, key));
@@ -406,6 +449,7 @@ public class TreeView : TemplatedControl
             node.SetSize = size;
             node.Label = LabelOf(item);
             node.Icon = IconOf(item);
+            node.IsDisabled = DisabledOf(item);
             var grandChildren = ChildrenOf(item);
             node.HasChildren = HasAny(grandChildren);
             node.IsExpanded = node.HasChildren && IsItemExpanded(item);
@@ -561,6 +605,7 @@ public class TreeView : TemplatedControl
         {
             node.Label = LabelOf(item);
             node.Icon = IconOf(item);
+            node.IsDisabled = DisabledOf(item);
             _panel?.RowFor(item)?.Refresh();
         }
     }
@@ -749,6 +794,15 @@ public class TreeView : TemplatedControl
     /// <summary>Selects and raises <see cref="ItemInvoked"/> (click, Enter, Space).</summary>
     private void Invoke(TreeViewNode node)
     {
+        if (node.IsDisabled)
+        {
+            // Shown but not selectable: a disabled folder still opens and closes.
+            if (node.HasChildren)
+            {
+                ToggleExpanded(node.Item);
+            }
+            return;
+        }
         SetCurrentValue(SelectedItemProperty, node.Item);
         RaiseEvent(new TreeViewItemEventArgs(ItemInvokedEvent, node.Item));
         if (node.HasChildren)
@@ -759,7 +813,7 @@ public class TreeView : TemplatedControl
 
     internal void OnRowClicked(TreeViewRow row)
     {
-        if (row.Model is not TreeViewNode node)
+        if (row.Model is not TreeViewNode node || (node.IsDisabled && !node.HasChildren))
         {
             return;
         }
@@ -778,7 +832,13 @@ public class TreeView : TemplatedControl
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
-        if (e.Handled || e.Source is not TreeViewRow { Model: TreeViewNode node } || (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt | KeyModifiers.Meta)) != 0)
+        if (e.Handled || (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt | KeyModifiers.Meta)) != 0
+            || KeyRowOf(e.Source, out var fromContent) is not { Model: TreeViewNode node })
+        {
+            return;
+        }
+        // Enter and Space inside a row's content belong to that content (a button, a check box).
+        if (fromContent && e.Key is Key.Enter or Key.Space)
         {
             return;
         }
@@ -791,7 +851,7 @@ public class TreeView : TemplatedControl
             case Key.End:
             case Key.PageDown:
             case Key.PageUp:
-                _navigator.PageSize = Math.Max(1, (int)((_panel?.Bounds.Height ?? 380) / Math.Max(1, RowSlotHeight)) - 1);
+                _navigator.PageSize = Math.Max(1, (int)((_panel?.Bounds.Height ?? 380) / Math.Max(1, EffectiveRowHeight)) - 1);
                 if (_navigator.Navigate(index, e.Key) is { } target)
                 {
                     MoveFocus(target, NavigationMethod.Directional);
@@ -834,7 +894,7 @@ public class TreeView : TemplatedControl
     protected override void OnTextInput(TextInputEventArgs e)
     {
         base.OnTextInput(e);
-        if (e.Handled || string.IsNullOrWhiteSpace(e.Text) || e.Source is not TreeViewRow { Model: TreeViewNode node })
+        if (e.Handled || string.IsNullOrWhiteSpace(e.Text) || KeyRowOf(e.Source, out _) is not { Model: TreeViewNode node })
         {
             return;
         }
@@ -843,6 +903,41 @@ public class TreeView : TemplatedControl
             MoveFocus(target, NavigationMethod.Directional);
             e.Handled = true;
         }
+    }
+
+    /// <summary>The row that holds <paramref name="element"/> (the row itself or an element of its content).</summary>
+    private static TreeViewRow? RowOf(object? element)
+    {
+        for (var visual = element as Visual; visual is not null; visual = visual.GetVisualParent())
+        {
+            if (visual is TreeViewRow row)
+            {
+                return row;
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// The row whose keys <paramref name="source"/> raises, or null when the tree must leave them alone: text typed
+    /// into a text box inside a row's content stays there.
+    /// </summary>
+    private TreeViewRow? KeyRowOf(object? source, out bool fromContent)
+    {
+        fromContent = false;
+        for (var visual = source as Visual; visual is not null; visual = visual.GetVisualParent())
+        {
+            if (visual is TreeViewRow row)
+            {
+                return ReferenceEquals(row.Owner, this) ? row : null;
+            }
+            if (visual is TextBox)
+            {
+                return null;
+            }
+            fromContent = true;
+        }
+        return null;
     }
 
     #endregion
@@ -907,9 +1002,22 @@ public class TreeView : TemplatedControl
             UpdateSourceLogicalItems();
             Rebuild(animate: false);
         }
-        else if (change.Property == ChildrenSelectorProperty || change.Property == HeaderSelectorProperty || change.Property == IconSelectorProperty)
+        else if (change.Property == ChildrenSelectorProperty || change.Property == HeaderSelectorProperty || change.Property == IconSelectorProperty
+                 || change.Property == DisabledSelectorProperty)
         {
             Rebuild(animate: false);
+        }
+        else if (change.Property == ItemTemplateProperty)
+        {
+            // Realized rows rebuild their content now; pooled rows pick the template up when they are bound again.
+            if (_panel is not null)
+            {
+                foreach (var row in _panel.RealizedRows)
+                {
+                    row.Refresh();
+                }
+                _panel.InvalidateMeasure();
+            }
         }
         else if (change.Property == SelectedItemProperty)
         {
@@ -925,6 +1033,20 @@ public class TreeView : TemplatedControl
     {
         if (_syncingSelection)
         {
+            return;
+        }
+        if (IsDisabledItem(newItem))
+        {
+            // A disabled node cannot become the selection; a two-way binding gets the previous item back.
+            _syncingSelection = true;
+            try
+            {
+                SetCurrentValue(SelectedItemProperty, oldItem);
+            }
+            finally
+            {
+                _syncingSelection = false;
+            }
             return;
         }
         if (newItem is not null && !_nodes.ContainsKey(newItem))
@@ -952,6 +1074,7 @@ public class TreeView : TemplatedControl
         p.ActiveForeground = ColorOf(RowActiveForeground);
         p.HoverFill = RowHoverFill;
         p.Muted = MutedForeground;
+        p.MutedColor = ColorOf(MutedForeground);
         p.Guide = GuideBrush;
         p.FocusRing = FocusRingBrush is { } ring ? new Pen(ring, 2) : null;
         p.TypeScript = TypeScriptBrush;
@@ -962,14 +1085,14 @@ public class TreeView : TemplatedControl
         p.FolderActive = RowActiveForeground;
         p.FontFamily = FontFamily;
         p.FontSize = FontSize;
-        p.SlotHeight = RowSlotHeight;
+        p.SlotHeight = EffectiveRowHeight;
         p.Indent = IndentWidth;
         p.ShowGuides = ShowIndentGuides;
         p.ShowIcons = ShowIcons;
         p.Version++;
         if (_panel is not null)
         {
-            _panel.RowHeight = RowSlotHeight;
+            _panel.RowHeight = EffectiveRowHeight;
             _panel.Highlight.Fill = SelectionFill;
             foreach (var row in _panel.RealizedRows)
             {

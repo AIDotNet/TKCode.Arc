@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+             xmlns:demos="using:TKCode.Arc.Gallery.Demos"
+             x:Class="TKCode.Arc.Gallery.Demos.TreeViewRichRowsDemo">
+    <StackPanel Spacing="12">
+        <arc:TreeView x:Name="Tree"
+                      HorizontalAlignment="Left"
+                      Width="320"
+                      SelectionChanged="OnSelectionChanged">
+            <arc:TreeView.ItemTemplate>
+                <DataTemplate x:DataType="demos:TreeViewSchemaNode">
+                    <DockPanel Background="Transparent" ToolTip.Tip="{Binding Path}">
+                        <Ellipse DockPanel.Dock="Right"
+                                 Width="6"
+                                 Height="6"
+                                 Margin="8,0,2,0"
+                                 VerticalAlignment="Center"
+                                 Fill="{arc:ArcDesignTokenResource Success}"
+                                 IsVisible="{Binding IsIndexed}"
+                                 ToolTip.Tip="Indexed" />
+                        <!-- A DockPanel (not a StackPanel) gives the last text the remaining width, so it trims. -->
+                        <DockPanel VerticalAlignment="Center">
+                            <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" />
+                            <TextBlock DockPanel.Dock="Left"
+                                       Margin="4,0,0,0"
+                                       Text=":"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       IsVisible="{Binding IsColumn}" />
+                            <TextBlock Margin="4,0,0,0"
+                                       Text="{Binding Detail}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </DockPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </arc:TreeView.ItemTemplate>
+        </arc:TreeView>
+        <TextBlock x:Name="Selected"
+                   Text="SelectedItem: (none)"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+    </StackPanel>
+</UserControl>

@@ -1,7 +1,7 @@
 ---
 title: 樹狀檢視
 summary: 瀏覽巢狀的資料夾與結構化內容。
-source-hash: 3a486b8c5441
+source-hash: a4b719513550
 ---
 
 <Demo name="FileTree" />
@@ -22,7 +22,7 @@ source-hash: 3a486b8c5441
 - **頁面階層中的目前位置**：用 `Breadcrumb`，它顯示路徑並可返回上層。
 - **一份 JSON 文件的鍵與值**：用 `JsonViewer`，它在鍵旁顯示值，並支援搜尋和複製。
 - **使用者會重新排序的扁平清單**：用 `ReorderableList`。樹的同層節點之間沒有拖曳排序。
-- **使用者依欄位比較、欄位相同的紀錄**：用 `Table`。樹每個節點只顯示一個標籤，沒有欄位。
+- **使用者依欄位比較、欄位相同的紀錄**：用 `Table`。樹沒有可以排序或比較的欄位。
 
 ## 用法
 
@@ -52,11 +52,11 @@ source-hash: 3a486b8c5441
 ### 結構
 
 1. **外框**：表面背景，1 px 邊框（邊框色），16 px 圓角，內距為 8、6、8、8 px。將 `HorizontalAlignment` 設為 `Stretch`（預設值）時，樹會填滿其寬度。
-2. **列**：高 36 px，下方 2 px 間距，因此每列占用 38 px 的空間。列的圓角為 10 px，左右內距為 10 px。
+2. **列**：高 36 px，下方 2 px 間距，因此每列占用 38 px 的空間。`RowHeight` 統一改變每一列的高度。列的圓角為 10 px，左右內距為 10 px。
 3. **縮排**：每層 18 px。設定 `ShowIndentGuides` 後，一條使用邊框色的短分支線會把巢狀列連接到其上層。
 4. **箭頭**：資料夾上的箭頭，資料夾展開時箭頭會轉動。
 5. **圖示**（`ShowIcons`、`IconSelector`、`TreeViewItem.Icon`）：標籤前 16 px 的位置。資料夾顯示展開狀態的資料夾圖示；檔案顯示檔案圖示。`Icon` 與 `IconSelector` 接受 24 × 24 的圖形，例如 `ArcIcons` 的成員。`ShowIcons` 為 false 時，標籤從縮排處開始。
-6. **標籤**（`Header`、`HeaderSelector`）：列文字，使用次要文字顏色。目前啟用的列使用前景色。
+6. **標籤**（`Header`、`HeaderSelector`、`ItemTemplate`）：列文字，使用次要文字顏色。目前啟用的列使用前景色，停用的列使用弱化文字顏色。`ItemTemplate` 以你自己的內容取代這段文字。
 7. **列填色**：懸停填色與選取填色，均使用淡化的表面色。選取填色會從一列平滑滑向另一列。
 8. **檔案色調**：`.ts` 與 `.tsx` 檔案，以及 `.css`、`.md`、`.json` 檔案，帶有檔案類型色調。其他檔案使用淡化的文字顏色。
 9. **焦點框**：由控制項繪製，僅用於鍵盤焦點。
@@ -149,6 +149,62 @@ Tree.HeaderSelector = item => ((FileNode)item).Name;
 ```csharp
 tree.ShowIcons = true;
 tree.IconSelector = item => ((FileNode)item).Children is null ? ArcIcons.File : ArcIcons.Folder;
+```
+
+### 豐富內容列
+
+當一列需要不只一個標籤時設定 `ItemTemplate`：名稱加型別、列尾的狀態點、工具提示。範本填滿箭頭和圖示之後的標籤區。列高、填色、縮排、參考線、箭頭和圖示仍由樹繪製，所以展開、選取和虛擬化照常運作。列是池化的：範本為每個池化的列只建立一次，捲動時只更換它的資料，所以請繫結到節點，而不是只讀取一次。
+
+<Demo name="RichRows" />
+
+```xml
+<arc:TreeView x:Name="Tree" Width="320">
+    <arc:TreeView.ItemTemplate>
+        <DataTemplate>
+            <DockPanel Background="Transparent" ToolTip.Tip="{Binding Path}">
+                <Ellipse DockPanel.Dock="Right" Width="6" Height="6"
+                         Fill="{arc:ArcDesignTokenResource Success}"
+                         IsVisible="{Binding IsIndexed}" />
+                <DockPanel VerticalAlignment="Center">
+                    <TextBlock DockPanel.Dock="Left" Text="{Binding Name}" />
+                    <TextBlock DockPanel.Dock="Left" Margin="4,0,0,0" Text=":"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                               IsVisible="{Binding IsColumn}" />
+                    <TextBlock Margin="4,0,0,0" Text="{Binding Detail}" TextTrimming="CharacterEllipsis"
+                               Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                </DockPanel>
+            </DockPanel>
+        </DataTemplate>
+    </arc:TreeView.ItemTemplate>
+</arc:TreeView>
+```
+
+```csharp
+Tree.ItemsSource = tables;
+Tree.ChildrenSelector = item => ((SchemaNode)item).Columns;
+Tree.HeaderSelector = item => ((SchemaNode)item).Name;          // type-ahead and screen readers
+Tree.DisabledSelector = item => ((SchemaNode)item).IsGenerated;  // shown, not selectable
+```
+
+- 範本中的文字使用該列的標籤顏色：平時為次要文字顏色，滑鼠停留和選取的列為前景色，停用的列為弱化文字顏色。需要保持弱化的部分（例如型別）請自行設定 `Foreground`。
+- 在預設列高下，內容請保持一行。需要標題加副標題時，調高 `RowHeight`，例如設為 56。所有列等高，所以樹仍然是虛擬化的。
+- 鍵入跳轉和列的無障礙名稱使用 `HeaderSelector`，未設定時使用 `ToString()`。即使範本已經顯示了文字，也請設定它。
+- 帶 `DataType` 的範本只用於相符的節點。其他節點使用樹或其祖系的 `DataTemplates`，所以資料夾和葉節點可以顯示得不同。
+- 內容中的按鈕和文字方塊可以正常使用。Enter 和 Space 交給擁有焦點的控制項，方向鍵仍在列之間移動，在文字方塊中輸入的按鍵留在文字方塊中。只有取得焦點的列，其內容才在 Tab 順序中。
+
+### 停用的節點
+
+`DisabledSelector` 標記顯示出來但不能選取的資料項，例如自動產生的欄位，或在你的應用程式中目前使用者無權開啟的資料夾。內嵌節點使用 `TreeViewItem.IsDisabled`。停用的列會變暗，沒有滑鼠停留填色。點選、Enter、Space 或設定新的 `SelectedItem` 都不會選取它，也不會觸發 `ItemInvoked`。鍵盤焦點仍可到達它，所以停用的資料夾可以用方向鍵或點選展開，其子項仍然可以存取。
+
+```xml
+<arc:TreeView Width="280">
+    <arc:TreeViewItem Header="reports" IsExpanded="True">
+        <arc:TreeViewItem Header="2025-summary.md" />
+        <arc:TreeViewItem Header="archive" IsDisabled="True">
+            <arc:TreeViewItem Header="2023-summary.md" />
+        </arc:TreeViewItem>
+    </arc:TreeViewItem>
+</arc:TreeView>
 ```
 
 ### 從程式碼展開與收合
@@ -257,6 +313,8 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 
 **樹能選取多個節點嗎？** 不能。`SelectedItem` 只保存一個節點，鍵盤會忽略 Control、Alt 和 Meta 等修飾鍵。當使用者必須選取多筆紀錄時，請使用設定了 `IsSelectable` 的 `Table`。
 
+**一列能顯示標籤以外的內容嗎？** 能。設定 `ItemTemplate` 自行排版標籤區，例如名稱加型別，或在列尾放一個狀態點。請繼續設定 `HeaderSelector`，供鍵入跳轉和螢幕閱讀器使用。
+
 **樹會對節點排序嗎？** 不會。它依你提供的順序顯示節點，因此繫結前請先對來源資料排序。
 
 ## API 參考
@@ -279,6 +337,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 - 只有取得焦點的列在 Tab 順序中。方向鍵、Home 與 End、PageUp 與 PageDown 在列之間移動。
 - 右方向鍵展開資料夾或進入其第一個子項目，左方向鍵收合資料夾或移到其上層列。
 - Enter 或 Space 選取該列並切換資料夾的展開狀態。鍵入名稱會移到下一個以該文字開頭的列。
+- 停用的列會回報自己處於停用狀態，鍵盤仍可到達，所以它的名稱仍會被朗讀。
 - 焦點框僅為鍵盤焦點而繪製。圖示與縮排參考線不會被朗讀。
 
 ### 鍵盤
@@ -290,7 +349,7 @@ tree.ItemExpanded += (_, e) => log.Text = $"已開啟 {e.Item}";
 | `Left` | 收合已展開的資料夾；否則移到上層列 |
 | `Home` / `End` | 移到第一列或最後一列可見列 |
 | `PageUp` / `PageDown` | 大約移動一個畫面的列數 |
-| `Enter` / `Space` | 選取該列，觸發 `ItemInvoked`，並切換資料夾的展開狀態 |
+| `Enter` / `Space` | 選取該列，觸發 `ItemInvoked`，並切換資料夾的展開狀態；在停用的列上只切換資料夾 |
 | 字母鍵 | 移到下一個標籤以所鍵入文字開頭的列 |
 
 樹會忽略使用 Control、Alt 或 Meta 的按鍵，因此視窗的快速鍵仍然有效。
