@@ -323,6 +323,8 @@ public class ChatThread : ItemsControl
     private ActivityLiveRegion? _logRegion;
     private INotifyCollectionChanged? _typingSource;
     private bool _watching;
+    // Participants may be a view model's, and their properties may be bound: they are observed only while attached.
+    private readonly ObservedItems _observedParticipants;
     private readonly TranslateTransform _contentTranslate = new();
     private MotionValue<double>? _contentY;
     private MotionValue<double>? _scrollMotion;
@@ -355,6 +357,7 @@ public class ChatThread : ItemsControl
     {
         _bodies = new ChatThreadBodies(this);
         ItemsView.CollectionChanged += OnMessagesChanged;
+        _observedParticipants = new ObservedItems(_ => Rebuild());
     }
 
     #region Public API
@@ -484,6 +487,7 @@ public class ChatThread : ItemsControl
             message.PropertyChanged += OnMessagePropertyChanged;
         }
         WatchTyping(TypingParticipantIds);
+        _observedParticipants.Observe(Participants);
         _bodies.CatchUp();
         Rebuild();
     }
@@ -499,6 +503,7 @@ public class ChatThread : ItemsControl
             message.PropertyChanged -= OnMessagePropertyChanged;
         }
         WatchTyping(null);
+        _observedParticipants.Observe(null);
     }
 
     private void WatchTyping(IEnumerable<string>? typing)
@@ -547,6 +552,10 @@ public class ChatThread : ItemsControl
             if (change.Property == ReadByProperty)
             {
                 CaptureReceipts();
+            }
+            if (change.Property == ParticipantsProperty)
+            {
+                _observedParticipants.Observe(_watching ? Participants : null);
             }
             if (change.Property == CurrentUserIdProperty || change.Property == MessageFormatProperty)
             {

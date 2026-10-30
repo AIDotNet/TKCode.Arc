@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -165,8 +166,9 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public object? EndContent { get => GetValue(EndContentProperty); set => SetValue(EndContentProperty, value); }
 
     private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
-    // Marks may be a view model's list: it is observed only while the slider is shown, and re-read when it comes back.
-    private INotifyCollectionChanged? _observedMarks;
+    // Marks may be a view model's list, and their properties may be bound: they are observed only while the slider is
+    // shown, and re-read when it comes back.
+    private readonly ObservedItems _observedMarks;
     private bool _watching;
 
     /// <summary>Ticks on the track; labeled marks also print under it and are clickable.</summary>
@@ -241,6 +243,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     public Slider()
     {
+        _observedMarks = new ObservedItems(_ => UpdateMarks());
         for (var i = 0; i < 2; i++)
         {
             var index = i;
@@ -465,15 +468,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     /// <summary>Listens to the current marks while shown (and to nothing otherwise).</summary>
     private void WatchMarks()
     {
-        if (_observedMarks is not null)
-        {
-            _observedMarks.CollectionChanged -= OnMarksChanged;
-        }
-        _observedMarks = _watching ? _marks as INotifyCollectionChanged : null;
-        if (_observedMarks is not null)
-        {
-            _observedMarks.CollectionChanged += OnMarksChanged;
-        }
+        _observedMarks.Observe(_watching ? _marks : null);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -491,8 +486,6 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         _watching = false;
         WatchMarks();
     }
-
-    private void OnMarksChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateMarks();
 
     private void UpdateMarks()
     {

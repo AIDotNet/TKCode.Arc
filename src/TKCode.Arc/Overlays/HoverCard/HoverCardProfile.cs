@@ -9,9 +9,20 @@ using Avalonia.Media;
 
 namespace TKCode.Arc;
 
-/// <summary>A number shown in a <see cref="HoverCardProfile"/> (value over its label).</summary>
-public sealed class HoverCardStat
+/// <summary>
+/// A number shown in a <see cref="HoverCardProfile"/> (value over its label). Its properties can be bound in XAML; the
+/// card follows later changes.
+/// </summary>
+public sealed class HoverCardStat : AvaloniaObject
 {
+    /// <summary>What the number counts ("Followers"), under the number.</summary>
+    public static readonly StyledProperty<string> LabelProperty =
+        AvaloniaProperty.Register<HoverCardStat, string>(nameof(Label), string.Empty);
+
+    /// <summary>The number as shown ("1.2k").</summary>
+    public static readonly StyledProperty<string> ValueProperty =
+        AvaloniaProperty.Register<HoverCardStat, string>(nameof(Value), string.Empty);
+
     public HoverCardStat()
     {
     }
@@ -22,9 +33,11 @@ public sealed class HoverCardStat
         Value = value;
     }
 
-    public string Label { get; set; } = string.Empty;
+    /// <inheritdoc cref="LabelProperty"/>
+    public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    public string Value { get; set; } = string.Empty;
+    /// <inheritdoc cref="ValueProperty"/>
+    public string Value { get => GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
 }
 
 /// <summary>

@@ -72,8 +72,9 @@ public class Gauge : Control
     private readonly MotionValue<Color> _ringColor;
     private readonly MotionValue<Color> _textColor;
     private IList<GaugeThreshold> _thresholds;
-    // The bands list may be a view model's: it is observed only while the gauge is shown, and re-read when it comes back.
-    private AvaloniaList<GaugeThreshold>? _observedThresholds;
+    // The bands list may be a view model's, and the bands' properties may be bound: they are observed only while the
+    // gauge is shown, and re-read when it comes back.
+    private readonly ObservedItems _observedThresholds;
     private bool _watching;
     private GaugeThreshold[] _bands = [];
     private GaugeThreshold? _live;
@@ -93,6 +94,7 @@ public class Gauge : Control
     /// <summary>Creates a gauge.</summary>
     public Gauge()
     {
+        _observedThresholds = new ObservedItems(_ => OnThresholdsChanged());
         _palette = new ChartsBPalette(this, OnPaletteChanged);
         _reveal = new ChartsBReveal(this, 0.5, _ => Sync());
         _sweep = new MotionValue<double>(this, 0, MotionVectors.Double);
@@ -251,18 +253,8 @@ public class Gauge : Control
     /// <summary>Listens to the current bands list while shown (and to nothing otherwise).</summary>
     private void WatchThresholds()
     {
-        if (_observedThresholds is not null)
-        {
-            _observedThresholds.CollectionChanged -= OnThresholdsCollectionChanged;
-        }
-        _observedThresholds = _watching ? _thresholds as AvaloniaList<GaugeThreshold> : null;
-        if (_observedThresholds is not null)
-        {
-            _observedThresholds.CollectionChanged += OnThresholdsCollectionChanged;
-        }
+        _observedThresholds.Observe(_watching ? _thresholds : null);
     }
-
-    private void OnThresholdsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnThresholdsChanged();
 
     private void OnThresholdsChanged()
     {

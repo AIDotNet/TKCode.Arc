@@ -88,7 +88,8 @@ public class AgentLoop : Explainer
 
     private static readonly ExplainerModel s_sampleModel = AgentLoopDefaults.CreateModel();
     private static readonly IReadOnlyList<AgentLoopIteration> s_sampleRun = AgentLoopDefaults.CreateIterations();
-    private static readonly SegmentedOption[] s_speeds =
+    // Options are UI objects (bindable AvaloniaObjects), so each loop has its own.
+    private readonly SegmentedOption[] _speeds =
     [
         new SegmentedOption(0.5, "0.5×"),
         new SegmentedOption(1.0, "1×"),
@@ -237,7 +238,7 @@ public class AgentLoop : Explainer
         _captionText = null;
         if (_speed is not null)
         {
-            _speed.ItemsSource = s_speeds;
+            _speed.ItemsSource = _speeds;
             _speed.SelectionChanged += OnSpeedSelectionChanged;
         }
         _stage?.Attach(this);
@@ -677,9 +678,9 @@ public class AgentLoop : Explainer
             return;
         }
         var index = -1;
-        for (var i = 0; i < s_speeds.Length; i++)
+        for (var i = 0; i < _speeds.Length; i++)
         {
-            if (s_speeds[i].Value is double value && Math.Abs(value - Speed) < 0.001)
+            if (_speeds[i].Value is double value && Math.Abs(value - Speed) < 0.001)
             {
                 index = i;
             }

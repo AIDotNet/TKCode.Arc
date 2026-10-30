@@ -218,6 +218,10 @@ public class AnnouncementBar : TemplatedControl
     private static string StorageKeyFor(string key) => $"arc-announcement:{key}";
 
     private readonly MotionTimeline _ring;
+    // The messages' properties may be bound: they are followed while the bar is shown. The messages may be a view
+    // model's (ItemsSource), so they are not observed otherwise.
+    private readonly ObservedItems _observedMessages;
+    private bool _observing;
     private MessagesPresenceFrame? _presence;
     private AnnouncementBarViewport? _viewport;
     private AvaloniaButton? _previous;
@@ -244,6 +248,7 @@ public class AnnouncementBar : TemplatedControl
     public AnnouncementBar()
     {
         Messages.CollectionChanged += (_, _) => OnMessagesChanged();
+        _observedMessages = new ObservedItems(OnMessageChanged);
         // P22: the ring is the rotation clock, a Core timeline (pausable timer, reported every frame).
         _ring = new MotionTimeline(this);
         _ring.Changed += v => RingProgress = v;
@@ -362,6 +367,10 @@ public class AnnouncementBar : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _observing = true;
+        _observedMessages.Observe(Items);
+        // A message may have changed while the bar was away.
+        RefreshCurrent();
         ReadDismissal();
         if (TopLevel.GetTopLevel(this) is Window window)
         {
@@ -373,6 +382,8 @@ public class AnnouncementBar : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _observing = false;
+        _observedMessages.Observe(null);
         _windowStateSubscription?.Dispose();
         _windowStateSubscription = null;
         _ring.Pause();
@@ -446,6 +457,7 @@ public class AnnouncementBar : TemplatedControl
         }
         else if (change.Property == ItemsSourceProperty)
         {
+            _observedMessages.Observe(_observing ? Items : null);
             OnMessagesChanged();
         }
         else if (change.Property == IsNavigationVisibleProperty || change.Property == IsDismissibleProperty ||
@@ -491,6 +503,21 @@ public class AnnouncementBar : TemplatedControl
         ShowCurrent(animate: false);
         UpdateControls();
         UpdateRunning(restart: true);
+    }
+
+    private void OnMessageChanged(AvaloniaObject? message)
+    {
+        if (message is not null && ReferenceEquals(message, Current))
+        {
+            RefreshCurrent();
+        }
+    }
+
+    /// <summary>Shows the current message's new text in place: no transition, and the rotation clock keeps running.</summary>
+    private void RefreshCurrent()
+    {
+        _shownIndex = -1;
+        ShowCurrent(animate: false);
     }
 
     private void OnIndexChanged()

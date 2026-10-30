@@ -99,6 +99,9 @@ internal sealed class FilterMenuList : Control
 
     public int Current { get; private set; }
 
+    /// <summary>True when the list was last focused or moved with the keyboard (its highlight and ring show).</summary>
+    public bool UsesKeyboard => !_pointerMode;
+
     /// <summary>Chooses a row; the flag is true for keyboard activation.</summary>
     public Action<Row, bool>? Chosen { get; set; }
 

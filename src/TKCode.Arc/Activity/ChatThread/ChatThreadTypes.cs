@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 
@@ -47,9 +48,24 @@ public enum ChatMessageFormat
     Markdown
 }
 
-/// <summary>A person in the conversation (Arc <c>ChatParticipant</c>).</summary>
-public sealed class ChatParticipant
+/// <summary>
+/// A person in the conversation (Arc <c>ChatParticipant</c>). Its properties can be bound in XAML; the thread follows
+/// later changes.
+/// </summary>
+public sealed class ChatParticipant : AvaloniaObject
 {
+    /// <summary>Stable id, matched by <see cref="ChatMessage.AuthorId"/>.</summary>
+    public static readonly StyledProperty<string> IdProperty =
+        AvaloniaProperty.Register<ChatParticipant, string>(nameof(Id), string.Empty);
+
+    /// <summary>Display name ("Sam Rivera"); initials show when there is no <see cref="Avatar"/>.</summary>
+    public static readonly StyledProperty<string> NameProperty =
+        AvaloniaProperty.Register<ChatParticipant, string>(nameof(Name), string.Empty);
+
+    /// <summary>Portrait URL (http(s), file or avares).</summary>
+    public static readonly StyledProperty<string?> AvatarProperty =
+        AvaloniaProperty.Register<ChatParticipant, string?>(nameof(Avatar));
+
     /// <summary>Creates an empty participant (for XAML).</summary>
     public ChatParticipant()
     {
@@ -63,14 +79,14 @@ public sealed class ChatParticipant
         Avatar = avatar;
     }
 
-    /// <summary>Stable id, matched by <see cref="ChatMessage.AuthorId"/>.</summary>
-    public string Id { get; set; } = string.Empty;
+    /// <inheritdoc cref="IdProperty"/>
+    public string Id { get => GetValue(IdProperty); set => SetValue(IdProperty, value); }
 
-    /// <summary>Display name ("Sam Rivera"); initials show when there is no <see cref="Avatar"/>.</summary>
-    public string Name { get; set; } = string.Empty;
+    /// <inheritdoc cref="NameProperty"/>
+    public string Name { get => GetValue(NameProperty); set => SetValue(NameProperty, value); }
 
-    /// <summary>Portrait URL (http(s), file or avares).</summary>
-    public string? Avatar { get; set; }
+    /// <inheritdoc cref="AvatarProperty"/>
+    public string? Avatar { get => GetValue(AvatarProperty); set => SetValue(AvatarProperty, value); }
 }
 
 /// <summary>A file or picture attached to a message (Arc <c>ChatAttachment</c>).</summary>

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -38,9 +39,28 @@ public sealed class FilterChip : IEquatable<FilterChip>
     public override string ToString() => Text;
 }
 
-/// <summary>One value a <see cref="FilterField"/> can take. <see cref="Hint"/> sits at the end of the row, for example a count.</summary>
-public sealed class FilterOption
+/// <summary>
+/// One value a <see cref="FilterField"/> can take. <see cref="Hint"/> sits at the end of the row, for example a count.
+/// Its properties can be bound in XAML; an open menu follows later changes.
+/// </summary>
+public sealed class FilterOption : AvaloniaObject
 {
+    /// <summary>The option's key; also the text shown when there is no <see cref="Label"/>.</summary>
+    public static readonly StyledProperty<string> ValueProperty =
+        AvaloniaProperty.Register<FilterOption, string>(nameof(Value), string.Empty);
+
+    /// <summary>The text shown for the option; falls back to <see cref="Value"/>.</summary>
+    public static readonly StyledProperty<string?> LabelProperty =
+        AvaloniaProperty.Register<FilterOption, string?>(nameof(Label));
+
+    /// <summary>Short text at the end of the row, for example a count.</summary>
+    public static readonly StyledProperty<string?> HintProperty =
+        AvaloniaProperty.Register<FilterOption, string?>(nameof(Hint));
+
+    /// <summary>Optional 24x24 stroked glyph (for example <see cref="ArcIcons"/>).</summary>
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<FilterOption, Geometry?>(nameof(Icon));
+
     public FilterOption()
     {
     }
@@ -52,22 +72,40 @@ public sealed class FilterOption
         Hint = hint;
     }
 
-    public string Value { get; set; } = string.Empty;
+    /// <inheritdoc cref="ValueProperty"/>
+    public string Value { get => GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
 
-    public string? Label { get; set; }
+    /// <inheritdoc cref="LabelProperty"/>
+    public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    public string? Hint { get; set; }
+    /// <inheritdoc cref="HintProperty"/>
+    public string? Hint { get => GetValue(HintProperty); set => SetValue(HintProperty, value); }
 
-    /// <summary>Optional 24x24 stroked glyph (for example <see cref="ArcIcons"/>).</summary>
-    public Geometry? Icon { get; set; }
+    /// <inheritdoc cref="IconProperty"/>
+    public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
     /// <summary>The text shown for the option (and stored as the chip value).</summary>
     public string Text => Label ?? Value;
 }
 
-/// <summary>A filterable field of the Add filter menu: pick the field, then one of its options.</summary>
-public sealed class FilterField
+/// <summary>
+/// A filterable field of the Add filter menu: pick the field, then one of its options. Its properties can be bound in
+/// XAML; an open menu follows later changes. Chips already applied keep the label they were created with.
+/// </summary>
+public sealed class FilterField : AvaloniaObject
 {
+    /// <summary>Stable id; also the id of the chip the field produces, so there is one chip per field.</summary>
+    public static readonly StyledProperty<string> IdProperty =
+        AvaloniaProperty.Register<FilterField, string>(nameof(Id), string.Empty);
+
+    /// <summary>The field's name in the menu and on its chip ("Status").</summary>
+    public static readonly StyledProperty<string> LabelProperty =
+        AvaloniaProperty.Register<FilterField, string>(nameof(Label), string.Empty);
+
+    /// <summary>Optional 24x24 stroked glyph shown before the label.</summary>
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<FilterField, Geometry?>(nameof(Icon));
+
     public FilterField()
     {
     }
@@ -82,13 +120,16 @@ public sealed class FilterField
         }
     }
 
-    public string Id { get; set; } = string.Empty;
+    /// <inheritdoc cref="IdProperty"/>
+    public string Id { get => GetValue(IdProperty); set => SetValue(IdProperty, value); }
 
-    public string Label { get; set; } = string.Empty;
+    /// <inheritdoc cref="LabelProperty"/>
+    public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    /// <summary>Optional 24x24 stroked glyph shown before the label.</summary>
-    public Geometry? Icon { get; set; }
+    /// <inheritdoc cref="IconProperty"/>
+    public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
+    /// <summary>The values the field can take (the XAML content of the field).</summary>
     [Content]
     public AvaloniaList<FilterOption> Options { get; } = new();
 }

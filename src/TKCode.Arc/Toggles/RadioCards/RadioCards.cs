@@ -95,7 +95,7 @@ public class RadioCards : SelectingItemsControl
 
     public RadioCards()
     {
-        _host = new TogglesGroupHost(this, flipInRtl: true);
+        _host = new TogglesGroupHost(this, flipInRtl: true, ApplyOption);
         SelectedValueBinding = TogglesValueBinding.Create();
         SelectionChanged += (_, _) => _host.OnSelectionChanged();
     }
@@ -115,12 +115,23 @@ public class RadioCards : SelectingItemsControl
             return;
         }
         card.IsListLayout = Layout == RadioCardsLayout.List;
-        if (item is RadioCardOption option)
+        ApplyOption(card, item);
+    }
+
+    private static void ApplyOption(Control container, object? item)
+    {
+        if (container is RadioCard card && item is RadioCardOption option)
         {
             card.Content = option.Label ?? option.Value?.ToString();
             card.Description = option.Description;
             card.Meta = option.Meta;
-            card.Icon = option.Icon is Geometry geometry ? new ArcGlyph { Data = geometry, Size = 18 } : option.Icon;
+            card.Icon = option.Icon switch
+            {
+                // Re-applied when any property of the option changes: keep the glyph that already shows this geometry.
+                Geometry geometry when card.Icon is ArcGlyph shown && ReferenceEquals(shown.Data, geometry) => shown,
+                Geometry geometry => new ArcGlyph { Data = geometry, Size = 18 },
+                var icon => icon
+            };
             card.DisabledReason = option.DisabledReason;
             card.IsEnabled = !option.IsDisabled;
         }

@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -100,8 +101,9 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     public object? EndIcon { get => GetValue(EndIconProperty); set => SetValue(EndIconProperty, value); }
 
     private IList<SliderMark> _marks = new AvaloniaList<SliderMark>();
-    // Marks may be a view model's list: it is observed only while the slider is shown, and re-read when it comes back.
-    private INotifyCollectionChanged? _observedMarks;
+    // Marks may be a view model's list, and their properties may be bound: they are observed only while the slider is
+    // shown, and re-read when it comes back.
+    private readonly ObservedItems _observedMarks;
     private bool _watching;
 
     /// <summary>Detents: a dragged thumb clicks into each one and holds for a few pixels. Labels print under the track.</summary>
@@ -168,6 +170,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     public ElasticSlider()
     {
+        _observedMarks = new ObservedItems(_ => UpdateMarks());
         _position = Create(0, OnMoved);
         _lag = Create(0, OnMoved);
         _over = Create(0, OnMoved);
@@ -352,15 +355,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <summary>Listens to the current marks while shown (and to nothing otherwise).</summary>
     private void WatchMarks()
     {
-        if (_observedMarks is not null)
-        {
-            _observedMarks.CollectionChanged -= OnMarksChanged;
-        }
-        _observedMarks = _watching ? _marks as INotifyCollectionChanged : null;
-        if (_observedMarks is not null)
-        {
-            _observedMarks.CollectionChanged += OnMarksChanged;
-        }
+        _observedMarks.Observe(_watching ? _marks : null);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -378,8 +373,6 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         _watching = false;
         WatchMarks();
     }
-
-    private void OnMarksChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateMarks();
 
     private void UpdateMarks()
     {

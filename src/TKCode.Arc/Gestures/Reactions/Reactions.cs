@@ -1,3 +1,4 @@
+using TKCode.Arc.Primitives;
 using System.Collections.Specialized;
 using TKCode.Arc.Motion;
 using Avalonia;
@@ -80,8 +81,9 @@ public class Reactions : TemplatedControl
         AvaloniaProperty.RegisterDirect<Reactions, bool>(nameof(IsPickerOpen), o => o.IsPickerOpen);
 
     private IList<ReactionOption> _options = new AvaloniaList<ReactionOption>();
-    // Options may be a view model's list: it is observed only while the bar is shown, and re-read when it comes back.
-    private INotifyCollectionChanged? _observedOptions;
+    // Options may be a view model's list, and their properties may be bound: they are observed only while the bar is
+    // shown, and re-read when it comes back.
+    private readonly ObservedItems _observedOptions;
     private bool _watching;
     private bool _isPickerOpen;
 
@@ -94,7 +96,7 @@ public class Reactions : TemplatedControl
             if (SetAndRaise(OptionsProperty, ref _options, value ?? new AvaloniaList<ReactionOption>()))
             {
                 WatchOptions();
-                OnOptionsChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnOptionsChanged(this, s_reset);
             }
         }
     }
@@ -136,6 +138,7 @@ public class Reactions : TemplatedControl
 
     public Reactions()
     {
+        _observedOptions = new ObservedItems(_ => OnOptionsChanged(this, s_reset));
         AutomationProperties.SetName(this, Label);
     }
 
@@ -211,6 +214,8 @@ public class Reactions : TemplatedControl
         }
     }
 
+    private static readonly NotifyCollectionChangedEventArgs s_reset = new(NotifyCollectionChangedAction.Reset);
+
     private void OnOptionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Sync(animate: false);
@@ -220,15 +225,7 @@ public class Reactions : TemplatedControl
     /// <summary>Listens to the current options while shown (and to nothing otherwise).</summary>
     private void WatchOptions()
     {
-        if (_observedOptions is not null)
-        {
-            _observedOptions.CollectionChanged -= OnOptionsChanged;
-        }
-        _observedOptions = _watching ? _options as INotifyCollectionChanged : null;
-        if (_observedOptions is not null)
-        {
-            _observedOptions.CollectionChanged += OnOptionsChanged;
-        }
+        _observedOptions.Observe(_watching ? _options : null);
     }
 
     #endregion

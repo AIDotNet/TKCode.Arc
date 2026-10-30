@@ -42,29 +42,56 @@ public enum ActionSwapPhase
     Failed
 }
 
-/// <summary>One face of an <see cref="ActionSwap"/>.</summary>
-public sealed class ActionSwapState
+/// <summary>
+/// One face of an <see cref="ActionSwap"/>. Its properties can be bound in XAML (for example localized labels); the
+/// control follows later changes.
+/// </summary>
+public sealed class ActionSwapState : AvaloniaObject
 {
     /// <summary>Identifies the state in <see cref="ActionSwap.Value"/>.</summary>
-    public string Id { get; set; } = string.Empty;
+    public static readonly StyledProperty<string> IdProperty =
+        AvaloniaProperty.Register<ActionSwapState, string>(nameof(Id), string.Empty);
 
     /// <summary>The label, also the accessible name while the state is shown.</summary>
-    public string Label { get; set; } = string.Empty;
+    public static readonly StyledProperty<string> LabelProperty =
+        AvaloniaProperty.Register<ActionSwapState, string>(nameof(Label), string.Empty);
 
     /// <summary>A 16px Lucide-style glyph before the label (24x24 stroke path, see <see cref="ArcIcons"/>).</summary>
-    public Geometry? Icon { get; set; }
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<ActionSwapState, Geometry?>(nameof(Icon));
 
     /// <summary>The tone of the pill while this state is shown.</summary>
-    public ActionSwapTone Tone { get; set; }
+    public static readonly StyledProperty<ActionSwapTone> ToneProperty =
+        AvaloniaProperty.Register<ActionSwapState, ActionSwapTone>(nameof(Tone));
 
     /// <summary>
     /// Shown while <see cref="ActionSwap.AsyncAction"/> runs on the way into this state, such as "Sending" before "Sent".
     /// Without it the pill folds into a round spinner.
     /// </summary>
-    public string? PendingLabel { get; set; }
+    public static readonly StyledProperty<string?> PendingLabelProperty =
+        AvaloniaProperty.Register<ActionSwapState, string?>(nameof(PendingLabel));
 
     /// <summary>How long to hold this state before moving on by itself, for brief confirmations such as "Sent". Zero holds it.</summary>
-    public TimeSpan HoldFor { get; set; }
+    public static readonly StyledProperty<TimeSpan> HoldForProperty =
+        AvaloniaProperty.Register<ActionSwapState, TimeSpan>(nameof(HoldFor));
+
+    /// <inheritdoc cref="IdProperty"/>
+    public string Id { get => GetValue(IdProperty); set => SetValue(IdProperty, value); }
+
+    /// <inheritdoc cref="LabelProperty"/>
+    public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+
+    /// <inheritdoc cref="IconProperty"/>
+    public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
+
+    /// <inheritdoc cref="ToneProperty"/>
+    public ActionSwapTone Tone { get => GetValue(ToneProperty); set => SetValue(ToneProperty, value); }
+
+    /// <inheritdoc cref="PendingLabelProperty"/>
+    public string? PendingLabel { get => GetValue(PendingLabelProperty); set => SetValue(PendingLabelProperty, value); }
+
+    /// <inheritdoc cref="HoldForProperty"/>
+    public TimeSpan HoldFor { get => GetValue(HoldForProperty); set => SetValue(HoldForProperty, value); }
 }
 
 /// <summary>Arguments of <see cref="ActionSwap.ValueChanged"/>.</summary>
@@ -152,6 +179,8 @@ public class ActionSwap : AvaloniaButton
         RoutedEvent.Register<ActionSwap, ActionSwapValueChangedEventArgs>(nameof(ValueChanged), RoutingStrategies.Bubble);
 
     private readonly AvaloniaList<ActionSwapState> _states = new();
+    // The states' properties may be bound: they are followed while the control is shown (the list itself always).
+    private readonly ObservedItems _observedStates;
 
     /// <inheritdoc cref="StatesProperty"/>
     public AvaloniaList<ActionSwapState> States => _states;
@@ -215,6 +244,13 @@ public class ActionSwap : AvaloniaButton
     public ActionSwap()
     {
         _states.CollectionChanged += OnStatesChanged;
+        _observedStates = new ObservedItems(state =>
+        {
+            if (state is not null)
+            {
+                Refresh();
+            }
+        });
     }
 
     private int ActiveIndex
@@ -252,12 +288,16 @@ public class ActionSwap : AvaloniaButton
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _observedStates.Observe(_states);
+        // The states may have changed while the control was away.
+        Refresh();
         RefreshHold();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _observedStates.Observe(null);
         // Pending work finishes into nothing, and no timer outlives the control.
         _run++;
         _holdTimer?.Stop();

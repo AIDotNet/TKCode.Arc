@@ -1,10 +1,26 @@
+using Avalonia;
 using Avalonia.Media;
 
 namespace TKCode.Arc;
 
-/// <summary>One reaction the picker offers (Arc's <c>ReactionOption</c>): an id, a label and a 24×24 Lucide glyph.</summary>
-public sealed class ReactionOption
+/// <summary>
+/// One reaction the picker offers (Arc's <c>ReactionOption</c>): an id, a label and a 24×24 Lucide glyph. Its properties
+/// can be bound in XAML (for example a localized label); the bar follows later changes.
+/// </summary>
+public sealed class ReactionOption : AvaloniaObject
 {
+    /// <summary>Stable id, matched by <see cref="Reaction.Id"/>.</summary>
+    public static readonly StyledProperty<string> IdProperty =
+        AvaloniaProperty.Register<ReactionOption, string>(nameof(Id), string.Empty);
+
+    /// <summary>Name shown in the picker caption and tooltips, and read by assistive technology ("Love").</summary>
+    public static readonly StyledProperty<string> LabelProperty =
+        AvaloniaProperty.Register<ReactionOption, string>(nameof(Label), string.Empty);
+
+    /// <summary>24×24 Lucide geometry (<see cref="ArcIcons"/> or <see cref="ArcIcons.Parse"/>), drawn with a 1.75 stroke.</summary>
+    public static readonly StyledProperty<Geometry?> IconProperty =
+        AvaloniaProperty.Register<ReactionOption, Geometry?>(nameof(Icon));
+
     public ReactionOption()
     {
     }
@@ -16,14 +32,14 @@ public sealed class ReactionOption
         Icon = icon;
     }
 
-    /// <summary>Stable id, matched by <see cref="Reaction.Id"/>.</summary>
-    public string Id { get; set; } = string.Empty;
+    /// <inheritdoc cref="IdProperty"/>
+    public string Id { get => GetValue(IdProperty); set => SetValue(IdProperty, value); }
 
-    /// <summary>Name shown in the picker caption and tooltips, and read by assistive technology ("Love").</summary>
-    public string Label { get; set; } = string.Empty;
+    /// <inheritdoc cref="LabelProperty"/>
+    public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    /// <summary>24×24 Lucide geometry (<see cref="ArcIcons"/> or <see cref="ArcIcons.Parse"/>), drawn with a 1.75 stroke.</summary>
-    public Geometry? Icon { get; set; }
+    /// <inheritdoc cref="IconProperty"/>
+    public Geometry? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 }
 
 /// <summary>

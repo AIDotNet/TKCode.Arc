@@ -86,6 +86,9 @@ public class FilterMenu : TemplatedControl
     private bool _openedByKeyboard;
     private bool _restoreFocus;
     private bool _syncing;
+    // While the panel is open it follows its fields and the shown field's options, whose properties may be bound.
+    private readonly ObservedItems _observedFields;
+    private readonly ObservedItems _observedOptions;
 
     static FilterMenu()
     {
@@ -96,6 +99,8 @@ public class FilterMenu : TemplatedControl
     {
         Cursor = new Cursor(StandardCursorType.Hand);
         FocusAdorner = null;
+        _observedFields = new ObservedItems(_ => RefreshStep());
+        _observedOptions = new ObservedItems(_ => RefreshStep());
     }
 
     internal FilterMenuList? CurrentList => _list;
@@ -118,6 +123,8 @@ public class FilterMenu : TemplatedControl
         _title.Content = Label;
         _backHost!.IsPresent = false;
         ShowStep(FieldRows(), direction: -1, animate: false);
+        _observedFields.Observe(Fields);
+        _observedOptions.Observe(null);
         var popup = _popup!;
         popup.Placement = Alignment == FilterMenuAlignment.End ? PlacementMode.BottomEdgeAlignedRight : PlacementMode.BottomEdgeAlignedLeft;
         if (popup.Parent is null)
@@ -212,6 +219,7 @@ public class FilterMenu : TemplatedControl
                 return;
             }
             _field = field;
+            _observedOptions.Observe(field.Options);
             _title!.Direction = 1;
             _title.Content = field.Label;
             _backHost!.IsPresent = true;
@@ -234,11 +242,41 @@ public class FilterMenu : TemplatedControl
         }
         var key = _field.Id;
         _field = null;
+        _observedOptions.Observe(null);
         _title!.Direction = -1;
         _title.Content = Label;
         _backHost!.IsPresent = false;
         ShowStep(FieldRows(), direction: -1, animate: true);
         FocusStep(keyboard, key);
+    }
+
+    /// <summary>A shown field or option changed: rebuild the current step in place, keeping the focused row.</summary>
+    private void RefreshStep()
+    {
+        if (_list is not { } shown || _stage is null || _popup is not { IsOpen: true })
+        {
+            return;
+        }
+        if (_field is { } field)
+        {
+            _title!.Content = field.Label;
+        }
+        var index = shown.Current;
+        var focused = shown.IsFocused;
+        var keyboard = shown.UsesKeyboard;
+        ShowStep(_field is { } current ? ValueRows(current) : FieldRows(), _stage.Direction, animate: false);
+        if (!focused)
+        {
+            return;
+        }
+        var list = _list!;
+        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+        {
+            if (ReferenceEquals(list, _list))
+            {
+                list.FocusRow(index, keyboard);
+            }
+        }, Avalonia.Threading.DispatcherPriority.Loaded);
     }
 
     private void FocusStep(bool keyboard, string? key)
@@ -344,6 +382,8 @@ public class FilterMenu : TemplatedControl
     private void OnPopupClosed(object? sender, EventArgs e)
     {
         SetOpen(false);
+        _observedFields.Observe(null);
+        _observedOptions.Observe(null);
         if (_popup is { IsOpen: false } popup && popup.Parent is not null)
         {
             ((ISetLogicalParent)popup).SetParent(null);
@@ -463,6 +503,8 @@ public class FilterMenu : TemplatedControl
         {
             popup.IsOpen = false;
         }
+        _observedFields.Observe(null);
+        _observedOptions.Observe(null);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new TriggerPeer(this);

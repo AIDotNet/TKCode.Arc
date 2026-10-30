@@ -119,8 +119,11 @@ public class BillingToggle : SelectingItemsControl
 
     #endregion
 
-    /// <summary>Arc's default options: Monthly, and Yearly with "Save 20%".</summary>
-    public static IReadOnlyList<BillingToggleOption> DefaultOptions { get; } =
+    /// <summary>
+    /// Arc's default options: Monthly, and Yearly with "Save 20%". Each read returns new options (they are UI objects, so
+    /// toggles do not share them).
+    /// </summary>
+    public static IReadOnlyList<BillingToggleOption> DefaultOptions =>
     [
         new BillingToggleOption("monthly", "Monthly"),
         new BillingToggleOption("yearly", "Yearly", "Save 20%")
@@ -139,7 +142,7 @@ public class BillingToggle : SelectingItemsControl
 
     public BillingToggle()
     {
-        _host = new TogglesGroupHost(this, flipInRtl: false);
+        _host = new TogglesGroupHost(this, flipInRtl: false, ApplyOption);
         SelectedValueBinding = TogglesValueBinding.Create();
         SelectionChanged += (_, _) => _host.OnSelectionChanged();
         ItemsView.CollectionChanged += (_, _) => EnsureSelection();
@@ -181,15 +184,20 @@ public class BillingToggle : SelectingItemsControl
         {
             return;
         }
-        if (item is BillingToggleOption data)
+        ApplyOption(option, item);
+        option.IsLarge = Size == BillingToggleSize.Large;
+        option.ActiveBadgeBackground = _activeBadgeBackground;
+        option.ActiveBadgeForeground = _activeBadgeForeground;
+    }
+
+    private static void ApplyOption(Control container, object? item)
+    {
+        if (container is BillingToggleItem option && item is BillingToggleOption data)
         {
             option.Content = data.Label ?? data.Value;
             option.Badge = data.Badge;
             option.ActiveBadge = data.ActiveBadge;
         }
-        option.IsLarge = Size == BillingToggleSize.Large;
-        option.ActiveBadgeBackground = _activeBadgeBackground;
-        option.ActiveBadgeForeground = _activeBadgeForeground;
     }
 
     protected override void ContainerForItemPreparedOverride(Control container, object? item, int index)

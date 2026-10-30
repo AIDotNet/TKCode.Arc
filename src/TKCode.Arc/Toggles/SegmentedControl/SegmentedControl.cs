@@ -77,7 +77,7 @@ public class SegmentedControl : SelectingItemsControl
 
     public SegmentedControl()
     {
-        _host = new TogglesGroupHost(this, flipInRtl: false);
+        _host = new TogglesGroupHost(this, flipInRtl: false, ApplyOption);
         SelectedValueBinding = TogglesValueBinding.Create();
         SelectionChanged += (_, _) =>
         {
@@ -96,6 +96,11 @@ public class SegmentedControl : SelectingItemsControl
     protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
     {
         base.PrepareContainerForItemOverride(container, item, index);
+        ApplyOption(container, item);
+    }
+
+    private static void ApplyOption(Control container, object? item)
+    {
         if (container is SegmentedItem segment && item is SegmentedOption option)
         {
             segment.Content = option.Label ?? option.Value?.ToString();

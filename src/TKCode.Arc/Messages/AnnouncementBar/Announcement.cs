@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Interactivity;
 
 namespace TKCode.Arc;
@@ -29,20 +30,39 @@ public sealed class AnnouncementCountdown
     public string? Label { get; set; }
 }
 
-/// <summary>One message of an <see cref="AnnouncementBar"/>.</summary>
-public sealed class Announcement
+/// <summary>
+/// One message of an <see cref="AnnouncementBar"/>. Its properties can be bound in XAML (for example a localized
+/// message); the bar follows later changes.
+/// </summary>
+public sealed class Announcement : AvaloniaObject
 {
     /// <summary>Stable id, reported to events.</summary>
-    public string Id { get; set; } = string.Empty;
+    public static readonly StyledProperty<string> IdProperty =
+        AvaloniaProperty.Register<Announcement, string>(nameof(Id), string.Empty);
 
     /// <summary>The message text.</summary>
-    public string Message { get; set; } = string.Empty;
+    public static readonly StyledProperty<string> MessageProperty =
+        AvaloniaProperty.Register<Announcement, string>(nameof(Message), string.Empty);
 
     /// <summary>Optional call to action after the message.</summary>
-    public AnnouncementAction? Action { get; set; }
+    public static readonly StyledProperty<AnnouncementAction?> ActionProperty =
+        AvaloniaProperty.Register<Announcement, AnnouncementAction?>(nameof(Action));
 
     /// <summary>Optional live countdown after the message.</summary>
-    public AnnouncementCountdown? Countdown { get; set; }
+    public static readonly StyledProperty<AnnouncementCountdown?> CountdownProperty =
+        AvaloniaProperty.Register<Announcement, AnnouncementCountdown?>(nameof(Countdown));
+
+    /// <inheritdoc cref="IdProperty"/>
+    public string Id { get => GetValue(IdProperty); set => SetValue(IdProperty, value); }
+
+    /// <inheritdoc cref="MessageProperty"/>
+    public string Message { get => GetValue(MessageProperty); set => SetValue(MessageProperty, value); }
+
+    /// <inheritdoc cref="ActionProperty"/>
+    public AnnouncementAction? Action { get => GetValue(ActionProperty); set => SetValue(ActionProperty, value); }
+
+    /// <inheritdoc cref="CountdownProperty"/>
+    public AnnouncementCountdown? Countdown { get => GetValue(CountdownProperty); set => SetValue(CountdownProperty, value); }
 }
 
 /// <summary>Look of an <see cref="AnnouncementBar"/>.</summary>
